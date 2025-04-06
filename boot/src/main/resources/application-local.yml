@@ -1,0 +1,115 @@
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    eureka-connection-idle-timeout-seconds: 10
+    initial-instance-info-replication-interval-seconds: 10
+    registry-fetch-interval-seconds: 10
+    serviceUrl:
+      defaultZone: http://${DISCOVERY_SECURITY_USER_NAME:discovery}:${DISCOVERY_SECURITY_USER_PASSWORD:discovery}@${DISCOVERY_HOST:localhost}:${DISCOVERY_PORT:1801}/eureka/
+  instance:
+    app-name: '@artifactId@'
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
+    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
+    health-check-url-path: /actuator/health
+
+xcan:
+  trace:
+    enabled: true
+  cloud:
+    gmApiUrlPrefix: http://${APIS_HOST:local-apis.xcan.cloud}/gm
+  event:
+    gmApiUrlPrefix: http://${APIS_HOST:local-apis.xcan.cloud}/gm
+  datasource:
+    extra:
+      dbType: '@databaseType@'
+      entityPackages:
+        - cloud.xcan.angus.idgen.entity
+        - cloud.xcan.angus.core.gm.domain
+        - cloud.xcan.angus.api.commonlink
+    hikari:
+      readOnly: false
+      connectionTestQuery: SELECT 1 FROM DUAL
+      poolName: xcanHikariCP
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      maximumPoolSize: 30
+      minimumIdle: 10
+    mysql:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:mysql://${GM_MYSQL_HOST:local-mw.xcan.cloud}:${GM_MYSQL_PORT:3306}/${GM_MYSQL_DB:xcan_gm}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+      username: ${GM_MYSQL_USER:gm}
+      password: ${GM_MYSQL_PWD:3Jsi1ss7Hvu}
+      schema:
+        - mysql/idgen-schema.sql
+    postgresql:
+      driverClassName: org.postgresql.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:postgresql://${GM_POSTGRES_HOST:local-mw.xcan.cloud}:${GM_POSTGRES_PORT:5432}/${GM_POSTGRES_DB:xcan_gm}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+      username: ${GM_POSTGRES_USER:gm}
+      password: ${GM_POSTGRES_PWD:3Jsi1ss7Hvu}
+      schema:
+        - postgres/idgen-schema.sql
+    commonlink:
+      mysql:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://${COMMON_MYSQL_HOST:local-mw.xcan.cloud}:${COMMON_MYSQL_PORT:3306}/${COMMON_MYSQL_DB:xcan_commonlink}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+        username: ${COMMON_MYSQL_USER:commonlink}
+        password: ${COMMON_MYSQL_PWD:LUYSMvzdVR0}
+      postgresql:
+        driverClassName: org.postgresql.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://${COMMON_POSTGRES_HOST:local-mw.xcan.cloud}:${COMMON_POSTGRES_PORT:5432}/${COMMON_POSTGRES_DB:xcan_commonlink}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+        username: ${COMMON_POSTGRES_USER:commonlink}
+        password: ${COMMON_POSTGRES_PWD:LUYSMvzdVR0}
+  redis:
+    host: ${GM_REDIS_HOST:local-mw.xcan.cloud}
+    port: ${GM_REDIS_PORT:6379}
+    password: ${GM_REDIS_PWD:AcMMebXwmXPgrlC@ccH}
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 5
+    enabled: true
+
+spring:
+  security:
+    oauth2:
+      resource-server:
+        opaque-token:
+          client-id: client-credentials-introspect-client
+          client-secret: secret
+          introspection-uri: http://${APIS_HOST:local-apis.xcan.cloud}/gm/oauth2/introspect
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 200
+          time_zone: ${info.app.timezone}
+        order_inserts: true
+        order_updates: true
+        enable_lazy_load_no_trans: true
+        session_factory:
+          statement_inspector: cloud.xcan.angus.core.jpa.interceptor.TenantInterceptor
+    database: '@databaseType@'
+    database-platform: '@databaseDialect@'
+    open-in-view: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.engine.QueryParameters: debug
+    org.hibernate.engine.query.HQLQueryPlan: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.springframework.security: debug
+    org.springframework.messaging: debug

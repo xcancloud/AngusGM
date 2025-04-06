@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Notification</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .logo {
+      width: 45px;
+      height: 45px;
+      margin-bottom: 10px;
+      background-color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #6a11cb;
+    }
+
+    .content {
+      padding: 40px;
+      background-color: #ffffff;
+    }
+
+    .footer {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    .title {
+      margin-left: 10px;
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      display: inline-flex
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #e9ecef;
+      margin: 30px 0;
+    }
+
+    .highlight {
+      background-color: #e9ecef;
+      border-radius: 6px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">E</div>
+    <div class="logo">E</div>
+    <div class="title">Event Notification</div>
+  </div>
+  <div class="content">
+    <p><strong>Dear User：</strong>${content}</p>
+    <div class="highlight">
+      <p><strong>Important Reminder：</strong></p>
+      <ul>
+        <li>This email was sent automatically by the system; please do not reply. If you have any
+          questions, please contact the administrator.
+        </li>
+        <li>To cancel event notifications, please modify the configuration in AngusTester under
+          "Configuration" - "Events" or in AngusGM under "Events."
+        </li>
+      </ul>
+    </div>
+    <div class="divider"></div>
+    <p>If you need further assistance or support, please check the help information or feel free to
+      contact our customer service team.</p>
+    <div class="button-container">
+      <a href="https://www.xcan.cloud/help" class="button">Learn More</a>
+    </div>
+  </div>
+  <div class="footer">
+    <p>&copy; 2024 XCan Company. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>
