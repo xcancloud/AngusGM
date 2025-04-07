@@ -1,5 +1,7 @@
 # Public Data Tables
 
+[English](COMMON_LINK_SCHEMA.md) | [中文](COMMON_LINK_SCHEMA_zh.md)
+
 Leveraging Federated/DBlink database technology, this project aggregates public data from various business databases to provide a unified data source and JPA Repository access interfaces.
 
 ***Key Benefits:***
