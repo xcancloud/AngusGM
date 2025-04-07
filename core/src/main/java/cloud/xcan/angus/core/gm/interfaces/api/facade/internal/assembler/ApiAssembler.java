@@ -25,7 +25,7 @@ public class ApiAssembler {
     return new Api()
         .setServiceId(dto.getServiceId())
         .setName(dto.getName())
-        .setCode(dto.getCode())
+        .setOperationId(dto.getOperationId())
         .setUri(dto.getUri())
         .setMethod(dto.getMethod())
         .setType(dto.getType())
@@ -38,7 +38,7 @@ public class ApiAssembler {
 
   public static Api updateDtoToDomain(ApiUpdateDto dto) {
     return new Api().setName(dto.getName())
-        .setCode(dto.getCode())
+        .setOperationId(dto.getOperationId())
         .setUri(dto.getUri())
         .setMethod(dto.getMethod())
         .setType(dto.getType())
@@ -56,7 +56,7 @@ public class ApiAssembler {
         .setId(dto.getId())
         .setServiceId(isNull(dto.getId()) ? dto.getServiceId() : null)
         .setName(dto.getName())
-        .setCode(dto.getCode())
+        .setOperationId(dto.getOperationId())
         .setUri(dto.getUri())
         .setMethod(dto.getMethod())
         .setType(dto.getType())
@@ -67,7 +67,7 @@ public class ApiAssembler {
 
   public static ApiDetailVo toApiDetailVo(Api api) {
     return new ApiDetailVo().setId(api.getId())
-        .setCode(api.getCode())
+        .setOperationId(api.getOperationId())
         .setName(api.getName())
         .setDescription(api.getDescription())
         .setMethod(api.getMethod())
@@ -88,7 +88,7 @@ public class ApiAssembler {
 
   public static ApiInfoVo toInfo(Api api) {
     return new ApiInfoVo().setId(api.getId())
-        .setCode(api.getCode())
+        .setCode(api.getOperationId())
         .setName(api.getName())
         .setEnabled(api.getEnabled())
         .setDescription(api.getDescription())

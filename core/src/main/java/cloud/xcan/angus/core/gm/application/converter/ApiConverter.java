@@ -109,7 +109,7 @@ public class ApiConverter {
   public static Api assembleParsedApi(Service serviceDb, ApiType apiType, String key,
       Operation operation, String description, HttpMethod method) {
     return getBaseApi(serviceDb, key, apiType, safeResourceName(operation, operation.getTags()))
-        .setCode(safeServiceCode(operation.getOperationId()))
+        .setOperationId(safeServiceCode(operation.getOperationId()))
         .setScopes(safeScope(operation.getSecurity()))
         .setName(safeServiceName(operation.getSummary()))
         .setDescription(description)

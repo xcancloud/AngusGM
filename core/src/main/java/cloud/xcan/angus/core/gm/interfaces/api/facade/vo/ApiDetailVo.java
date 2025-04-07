@@ -18,7 +18,7 @@ public class ApiDetailVo {
 
   private String name;
 
-  private String code;
+  private String operationId;
 
   private String uri;
 

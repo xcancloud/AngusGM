@@ -75,7 +75,7 @@ public class ApiLogsQueryImpl implements ApiLogsQuery {
           if (isNotEmpty(methodApis)) {
             for (Api methodApi : methodApis) {
               if (PathMatchers.getPathMatcher().match(methodApi.getUri(), apiLog.getUri())) {
-                apiLog.setApiCode(methodApi.getCode()).setApiName(methodApi.getName())
+                apiLog.setApiCode(methodApi.getOperationId()).setApiName(methodApi.getName())
                     .setResourceName(methodApi.getResourceName());
               }
             }

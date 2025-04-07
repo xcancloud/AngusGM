@@ -67,7 +67,7 @@ public class AppListRepoMysql extends AbstractSearchRepository<App> implements A
     String apiIdEqualValue = CriteriaUtils.findFirstValue(criteria, "apiId",
         SearchOperation.EQUAL);
     if (isNotEmpty(apiIdInValue) || isNotEmpty(apiIdEqualValue)) {
-      sql.append(" INNER JOIN authority tag ON a.id = auth.source_id");
+      sql.append(" INNER JOIN api_operation_id tag ON a.id = auth.source_id");
       if (isNotBlank(apiIdInValue)) {
         apiIdInValue = safeStringInValue(apiIdInValue);
         sql.append(" AND auth.app_id IN (").append(apiIdInValue).append(")");

@@ -13,7 +13,7 @@ public class AuthorityConverter {
         .setSource(ApiAuthoritySource.APP)
         .setSourceId(app.getId()).setSourceEnabled(app.getEnabled())
         .setAppId(app.getId()).setAppEnabled(app.getEnabled())
-        .setApiId(api.getId()).setApiOperationId(api.getCode())
+        .setApiId(api.getId()).setApiOperationId(api.getOperationId())
         .setApiEnabled(api.getEnabled())
         .setServiceId(api.getServiceId()).setServiceCode(api.getServiceCode())
         .setServiceEnabled(null);
@@ -24,7 +24,7 @@ public class AuthorityConverter {
         .setSource(ApiAuthoritySource.APP_FUNC).setSourceId(func.getId())
         .setSourceEnabled(func.getEnabled())
         .setAppId(app.getId()).setAppEnabled(app.getEnabled())
-        .setApiId(api.getId()).setApiOperationId(api.getCode()).setApiEnabled(api.getEnabled())
+        .setApiId(api.getId()).setApiOperationId(api.getOperationId()).setApiEnabled(api.getEnabled())
         .setServiceId(api.getServiceId()).setServiceCode(api.getServiceCode())
         .setServiceEnabled(api.getServiceEnabled());
   }

@@ -15,15 +15,15 @@ public interface ApiAuthorityRepo extends BaseRepository<ApiAuthority, Long> {
   List<ApiAuthority> findByServiceIdIn(Collection<Long> serviceIds);
 
   @Modifying
-  @Query(value = "DELETE FROM authority WHERE source_id IN ?1 AND source = ?2", nativeQuery = true)
+  @Query(value = "DELETE FROM oauth2_api_authority WHERE source_id IN ?1 AND source = ?2", nativeQuery = true)
   void deleteBySourceIdInAndSource(Collection<Long> sourceIds, String source);
 
   @Modifying
-  @Query(value = "DELETE FROM authority WHERE api_id IN ?1", nativeQuery = true)
+  @Query(value = "DELETE FROM oauth2_api_authority WHERE api_id IN ?1", nativeQuery = true)
   void deleteByApiIdIn(Collection<Long> apiIds);
 
   @Modifying
-  @Query(value = "DELETE FROM authority WHERE service_code IN ?1", nativeQuery = true)
+  @Query(value = "DELETE FROM oauth2_api_authority WHERE service_code IN ?1", nativeQuery = true)
   void deleteByServiceCodeIn(Collection<String> serviceCodes);
 
 }

@@ -42,7 +42,7 @@ public class ApiReplaceDto {
   @Length(max = MAX_CODE_LENGTH_X5)
   @Schema(description = "Api code or OAS operation id.", example = "user:add",
       maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
-  private String code;
+  private String operationId;
 
   @NotEmpty
   @Length(max = MAX_URI_LENGTH)

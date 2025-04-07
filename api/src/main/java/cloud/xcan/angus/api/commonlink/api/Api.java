@@ -38,7 +38,8 @@ public class Api extends AuditingEntity<Api, Long> {
   /**
    * OSA3 operationId
    */
-  private String code;
+  @Column(name ="operation_id")
+  private String operationId;
 
   /**
    * OSA3 SecurityRequirement

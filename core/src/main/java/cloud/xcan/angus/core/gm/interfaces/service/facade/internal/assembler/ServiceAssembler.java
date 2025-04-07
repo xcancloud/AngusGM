@@ -87,7 +87,7 @@ public class ServiceAssembler {
 
   public static Api addApiDtoToDomain(ServiceApiAddDto dto) {
     return new Api().setName(dto.getName())
-        .setCode(dto.getCode())
+        .setOperationId(dto.getCode())
         .setUri(dto.getUri())
         .setMethod(dto.getMethod())
         .setType(dto.getType())
@@ -120,7 +120,7 @@ public class ServiceAssembler {
     return new ServiceApiVo().setId(api.getId())
         .setName(api.getName())
         .setUri(api.getUri())
-        .setCode(api.getCode())
+        .setCode(api.getOperationId())
         .setMethod(api.getMethod())
         .setType(api.getType())
         .setResourceName(api.getResourceName())

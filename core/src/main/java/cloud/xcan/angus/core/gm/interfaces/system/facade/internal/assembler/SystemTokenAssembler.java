@@ -105,7 +105,7 @@ public class SystemTokenAssembler {
             .setApis(resources.stream().map(
                     x -> new AuthorizedResourceApiVo()
                         .setId(x.getApi().getId())
-                        .setCode(x.getApi().getCode())
+                        .setCode(x.getApi().getOperationId())
                         .setName(x.getApi().getName())
                         .setDescription(x.getApi().getDescription()))
                 .collect(Collectors.toList())));

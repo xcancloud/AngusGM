@@ -37,7 +37,7 @@ public class ApiUpdateDto {
 
   @Length(max = MAX_CODE_LENGTH_X5)
   @Schema(description = "Api code or OAS operation id.", example = "user:add", maxLength = MAX_CODE_LENGTH)
-  private String code;
+  private String operationId;
 
   @Length(max = MAX_URI_LENGTH)
   @Schema(description = "Api http URI.", example = "/api/v1/user", maxLength = MAX_URI_LENGTH)
