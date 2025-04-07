@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.api.facade.dto;
 
-import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X5;
+import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_DESC_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_OPENAPI_DOC_DESC_LENGTH;
@@ -39,9 +39,9 @@ public class ApiReplaceDto {
   private String name;
 
   @NotEmpty
-  @Length(max = MAX_CODE_LENGTH_X5)
+  @Length(max = MAX_CODE_LENGTH)
   @Schema(description = "Api code or OAS operation id.", example = "user:add",
-      maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
+      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String operationId;
 
   @NotEmpty
