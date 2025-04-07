@@ -57,7 +57,7 @@ public class JdbcUserAuthoritiesLazyServiceImpl implements JdbcUserAuthoritiesLa
         .collect(Collectors.toList()));
 
     // 2. Assemble the apis resource authorization of user
-    // TODO loading from oauth2_api_authority
+    // TODO loading from auth_api_authority
 
     // 3. Assemble the operation tenant authorization roles of user
     if (isOperationClientSignIn(user.getClientSource()) && user.isToUser()) {

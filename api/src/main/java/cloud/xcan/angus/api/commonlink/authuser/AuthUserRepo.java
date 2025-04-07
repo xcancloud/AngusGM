@@ -25,7 +25,7 @@ public interface AuthUserRepo extends BaseRepository<AuthUser, Long> {
   AuthUser findByUsername(String username);
 
   @Query(value =
-      "SELECT a.api_operation_id FROM oauth2_api_authority a "
+      "SELECT a.api_operation_id FROM auth_api_authority a "
           + "  WHERE a.service_code = ?1 AND a.api_id IN ( "
           + "   SELECT pf.id"
           + "     FROM auth_policy_func pf, app_func af"
@@ -47,7 +47,7 @@ public interface AuthUserRepo extends BaseRepository<AuthUser, Long> {
       Collection<Long> deptIds, Long tenantId);
 
   @Query(value =
-      "SELECT a.api_operation_id FROM oauth2_api_authority a "
+      "SELECT a.api_operation_id FROM auth_api_authority a "
           + "  WHERE a.api_id IN ( "
           + "   SELECT pf.id"
           + "     FROM auth_policy_func pf, app_func af"

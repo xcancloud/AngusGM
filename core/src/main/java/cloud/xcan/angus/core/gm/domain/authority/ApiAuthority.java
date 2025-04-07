@@ -18,7 +18,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Accessors(chain = true)
 @Entity
-@Table(name = "oauth2_api_authority")
+@Table(name = "auth_api_authority")
 public class ApiAuthority extends EntitySupport<ApiAuthority, Long> {
 
   @Id
