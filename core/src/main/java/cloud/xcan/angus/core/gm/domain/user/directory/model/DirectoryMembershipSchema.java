@@ -27,7 +27,8 @@ public class DirectoryMembershipSchema {
    */
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the group members from the group", example = "memberUid", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading the group members from the group",
+      example = "memberUid", maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String groupMemberAttribute;
 
   /**
@@ -35,7 +36,8 @@ public class DirectoryMembershipSchema {
    */
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading a user's groups", example = "gidNumber", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading a user's groups",
+      example = "gidNumber", maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String memberGroupAttribute;
 
 }

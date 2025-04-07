@@ -21,12 +21,14 @@ public class DirectoryGroupSchema {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "LDAP attribute objectClass value to search for when loading groups", example = "posixGroup", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "LDAP attribute objectClass value to search for when loading groups",
+      example = "posixGroup", maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
   private String objectClass;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "The filter to use when searching group objects", example = "(objectClass=posixGroup)", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The filter to use when searching group objects",
+      example = "(objectClass=posixGroup)", maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
   private String objectFilter;
 
   //Warning:: Not found in OPENLDAP query result, this may be a wrong idea.
@@ -37,11 +39,13 @@ public class DirectoryGroupSchema {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the group name", example = "cn", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading the group name", example = "cn",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String nameAttribute;
 
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the group description")
+  @Schema(description = "The attribute field to use when loading the group description",
+      maxLength = MAX_CODE_LENGTH_X2)
   private String descriptionAttribute;
 
   @NotNull

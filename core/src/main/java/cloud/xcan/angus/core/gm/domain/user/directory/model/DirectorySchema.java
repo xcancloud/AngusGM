@@ -18,15 +18,18 @@ public class DirectorySchema {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "Base DN, Root node in LDAP from which to search for users and groups.", example = "dc=example,dc=org", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Base DN, Root node in LDAP from which to search for users and groups.",
+      example = "dc=example,dc=org", maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
   private String baseDn;
 
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "Additional User DN, Prepended to the base DN to limit the scope when searching for users.", example = "ou=user")
+  @Schema(description = "Additional User DN, Prepended to the base DN to limit the scope when searching for users.",
+      example = "ou=user", maxLength = MAX_CODE_LENGTH_X5)
   private String additionalUserDn;
 
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "Additional Group DN, Prepended to the base DN to limit the scope when searching for groups.", example = "ou=group")
+  @Schema(description = "Additional Group DN, Prepended to the base DN to limit the scope when searching for groups.",
+      example = "ou=group", maxLength = MAX_CODE_LENGTH_X5)
   private String additionalGroupDn;
 
 }

@@ -23,12 +23,14 @@ public class DirectoryUserSchema implements Serializable {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "The LDAP user object class type to use when loading users", example = "posixAccount", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The LDAP user object class type to use when loading users", example = "posixAccount",
+      maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
   private String objectClass;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "The filter to use when searching user objects", example = "(objectclass=posixAccount)", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The filter to use when searching user objects", example = "(objectclass=posixAccount)",
+      maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
   private String objectFilter;
 
   //Warning:: Not found in OPENLDAP query result, this may be a wrong idea.
@@ -39,43 +41,50 @@ public class DirectoryUserSchema implements Serializable {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "Attribute field corresponding to user unique name", example = "uid", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Attribute field corresponding to user unique name", example = "uid",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String usernameAttribute;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the user first name", example = "givenName", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading the user first name", example = "givenName",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String firstNameAttribute;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the user last name", example = "sn", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading the user last name", example = "sn",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String lastNameAttribute;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the user full name (Fullname)", example = "cn", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading the user full name (Fullname)", example = "cn",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String displayNameAttribute;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the user email", example = "mail", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "The attribute field to use when loading the user email", example = "mail",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String emailAttribute;
 
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when loading the user mobile", example = "mobile")
+  @Schema(description = "The attribute field to use when loading the user mobile", example = "mobile",
+      maxLength = MAX_CODE_LENGTH_X2)
   private String mobileAttribute;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The attribute field to use when manipulating a user password", example = "userPassword", requiredMode = RequiredMode.REQUIRED)
-  private String passdAttribute;
+  @Schema(description = "The attribute field to use when manipulating a user password", example = "userPassword",
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  private String passwordAttribute;
 
   /**
    * The OPENLDAP password format of x is the same as that of AAS PasswordEncoder
    */
   @Schema(description = "Choose the encryption algorithm used for passwords on your directory")
-  private PassdEncoderType passdEncoderType;
+  private PassdEncoderType passwordEncoderType;
 
   @NotNull
   @Schema(description = "Force ignore the same identity(unique name, email, mobile) user", requiredMode = RequiredMode.REQUIRED)
