@@ -53,7 +53,6 @@ public class EventTemplate extends AuditingEntity<EventTemplate, Long> {
   @Column(name = "app_code")
   private String appCode;
 
-  @Column(name = "private0")
   private Boolean private0;
 
   /**

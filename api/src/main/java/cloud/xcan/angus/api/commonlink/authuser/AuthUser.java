@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
 @Entity
 @Table(name = "oauth2_user")
 public class AuthUser extends CustomOAuth2User {
-  // Fields -> Do in parent class.
+  // Build Fields -> Do in parent class.
 
   private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
@@ -77,8 +77,9 @@ public class AuthUser extends CustomOAuth2User {
   @Column(name = "full_name")
   protected String fullName;
 
-  @Column(name = "password_strength")
-  protected String passwordStrength;
+  protected String mobile;
+
+  protected String email;
 
   @Column(name = "sys_admin")
   protected boolean sysAdmin;
@@ -86,12 +87,11 @@ public class AuthUser extends CustomOAuth2User {
   @Column(name = "to_user")
   protected boolean toUser;
 
-  protected String mobile;
-
-  protected String email;
-
   @Column(name = "main_dept_id")
   protected String mainDeptId;
+
+  @Column(name = "password_strength")
+  protected String passwordStrength;
 
   @Column(name = "password_expired_date")
   protected Instant passwordExpiredDate;
@@ -229,59 +229,6 @@ public class AuthUser extends CustomOAuth2User {
     return new AuthUserBuilder();
   }
 
-  /**
-   * <p>
-   * <b>WARNING:</b> This method is considered unsafe for production and is only
-   * intended for sample applications.
-   * </p>
-   * <p>
-   * Creates a user and automatically encodes the provided password using
-   * {@code PasswordEncoderFactories.createDelegatingPasswordEncoder()}. For example:
-   * </p>
-   *
-   * <pre>
-   * <code>
-   * UserDetails user = AuthUser.withDefaultPasswordEncoder()
-   *     .username("user")
-   *     .password("password")
-   *     .roles("USER")
-   *     .build();
-   * // outputs {bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG
-   * System.out.println(user.getPassword());
-   * </code> </pre>
-   * <p>
-   * This is not safe for production (it is intended for getting started experience) because the
-   * password "password" is compiled into the source code and then is included in memory at the time
-   * of creation. This means there are still ways to recover the plain text password making it
-   * unsafe. It does provide a slight improvement to using plain text passwords since the
-   * UserDetails password is securely hashed. This means if the UserDetails password is accidentally
-   * exposed, the password is securely stored.
-   * <p>
-   * In a production setting, it is recommended to hash the password ahead of time. For example:
-   *
-   * <pre>
-   * <code>
-   * PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-   * // outputs {bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG
-   * // remember the password that is printed out and use in the next step
-   * System.out.println(encoder.encode("password"));
-   * </code> </pre>
-   *
-   * <pre>
-   * <code>
-   * UserDetails user = AuthUser.withUsername("user")
-   *     .password("{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG")
-   *     .roles("USER")
-   *     .build();
-   * </code> </pre>
-   *
-   * @return a AuthUserBuilder that automatically encodes the password with the default
-   * PasswordEncoder
-   * @deprecated Using this method is not considered safe for production, but is acceptable for
-   * demos and getting started. For production purposes, ensure the password is encoded externally.
-   * See the method Javadoc for additional details. There are no plans to remove this support. It is
-   * deprecated to indicate that this is considered insecure for production purposes.
-   */
   @Deprecated
   public static AuthUserBuilder defaultPasswordEncoder() {
     log.warn("AuthUser.withDefaultPasswordEncoder() is considered unsafe for production "
@@ -308,9 +255,6 @@ public class AuthUser extends CustomOAuth2User {
 
     @Override
     public int compare(GrantedAuthority g1, GrantedAuthority g2) {
-      // Neither should ever be null as each entry is checked before adding it to
-      // the set. If the authority is null, it is a custom authority and should
-      // precede others.
       if (g2.getAuthority() == null) {
         return -1;
       }
@@ -322,10 +266,6 @@ public class AuthUser extends CustomOAuth2User {
 
   }
 
-  /**
-   * Builds the user to be added. At minimum the username, password, and authorities should
-   * provided. The remaining attributes have reasonable defaults.
-   */
   public static final class AuthUserBuilder {
 
     /**
@@ -372,116 +312,43 @@ public class AuthUser extends CustomOAuth2User {
     private AuthUserBuilder() {
     }
 
-    /**
-     * Populates the username. This attribute is required.
-     *
-     * @param username the username. Cannot be null.
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder username(String username) {
       Assert.notNull(username, "username cannot be null");
       this.username = username;
       return this;
     }
 
-    /**
-     * Populates the password. This attribute is not required.
-     *
-     * @param password the password. Can be null.
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder password(String password) {
       this.password = password;
       return this;
     }
 
-    /**
-     * Defines if the account is disabled or not. Default is false.
-     *
-     * @param disabled true if the account is disabled, false otherwise
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder disabled(boolean disabled) {
       this.disabled = disabled;
       return this;
     }
 
-    /**
-     * Encodes the current password (if non-null) and any future passwords supplied to
-     * {@link #password(String)}.
-     *
-     * @param encoder the encoder to use
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder passwordEncoder(Function<String, String> encoder) {
       Assert.notNull(encoder, "encoder cannot be null");
       this.passwordEncoder = encoder;
       return this;
     }
 
-    /**
-     * Defines if the account is expired or not. Default is false.
-     *
-     * @param accountExpired true if the account is expired, false otherwise
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder accountExpired(boolean accountExpired) {
       this.accountExpired = accountExpired;
       return this;
     }
 
-    /**
-     * Defines if the account is locked or not. Default is false.
-     *
-     * @param accountLocked true if the account is locked, false otherwise
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder accountLocked(boolean accountLocked) {
       this.accountLocked = accountLocked;
       return this;
     }
 
-    /**
-     * Defines if the credentials are expired or not. Default is false.
-     *
-     * @param credentialsExpired true if the credentials are expired, false otherwise
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder credentialsExpired(boolean credentialsExpired) {
       this.credentialsExpired = credentialsExpired;
       return this;
     }
 
-    /**
-     * Populates the roles. This method is a shortcut for calling {@link #authorities(String...)},
-     * but automatically prefixes each entry with "ROLE_". This means the following:
-     *
-     * <code>
-     * builder.roles("USER","ADMIN");
-     * </code>
-     * <p>
-     * is equivalent to
-     *
-     * <code>
-     * builder.authorities("ROLE_USER","ROLE_ADMIN");
-     * </code>
-     *
-     * <p>
-     * This attribute is required, but can also be populated with {@link #authorities(String...)}.
-     * </p>
-     *
-     * @param roles the roles for this user (i.e. USER, ADMIN, etc). Cannot be null, contain null
-     *              values or start with "ROLE_"
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     */
     public AuthUserBuilder roles(String... roles) {
       List<GrantedAuthority> authorities = new ArrayList<>(roles.length);
       for (String role : roles) {
@@ -492,27 +359,11 @@ public class AuthUser extends CustomOAuth2User {
       return authorities(authorities);
     }
 
-    /**
-     * Populates the authorities. This attribute is required.
-     *
-     * @param authorities the authorities for this user. Cannot be null, or contain null values
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     * @see #roles(String...)
-     */
     public AuthUserBuilder authorities(GrantedAuthority... authorities) {
       Assert.notNull(authorities, "authorities cannot be null");
       return authorities(Arrays.asList(authorities));
     }
 
-    /**
-     * Populates the authorities. This attribute is required.
-     *
-     * @param authorities the authorities for this user. Cannot be null, or contain null values
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     * @see #roles(String...)
-     */
     public AuthUserBuilder authorities(
         Collection<? extends GrantedAuthority> authorities) {
       Assert.notNull(authorities, "authorities cannot be null");
@@ -520,15 +371,6 @@ public class AuthUser extends CustomOAuth2User {
       return this;
     }
 
-    /**
-     * Populates the authorities. This attribute is required.
-     *
-     * @param authorities the authorities for this user (i.e. ROLE_USER, ROLE_ADMIN, etc). Cannot be
-     *                    null, or contain null values
-     * @return the {@link AuthUserBuilder} for method chaining (i.e. to populate additional
-     * attributes for this user)
-     * @see #roles(String...)
-     */
     public AuthUserBuilder authorities(String... authorities) {
       Assert.notNull(authorities, "authorities cannot be null");
       return authorities(AuthorityUtils.createAuthorityList(authorities));

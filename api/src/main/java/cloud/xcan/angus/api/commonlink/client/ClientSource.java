@@ -13,6 +13,7 @@ public enum ClientSource implements EnumMessage<String> {
 
   XCAN_TP_SIGNIN,
   XCAN_OP_SIGNIN,
+  XCAN_SYS_INTROSPECT, // for /oauth2/introspect
   XCAN_USER_TOKEN,
   XCAN_SYS_TOKEN,
   XCAN_2P_SIGNIN;

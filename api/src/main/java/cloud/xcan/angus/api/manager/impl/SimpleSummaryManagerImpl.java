@@ -111,7 +111,7 @@ public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
       /**
        * <pre>
        *  * ------------ Results ----------
-       *  * -- source|gender|admin_flag|enabled|locked|COUNT(id)
+       *  * -- source|gender|admin|enabled|locked|COUNT(id)
        *  * -- ----------------------
        *  * -- BACKGROUND_ADDED	MALE	0	0	1	1
        *  * -- BACKGROUND_ADDED	MALE	0	1	0	14

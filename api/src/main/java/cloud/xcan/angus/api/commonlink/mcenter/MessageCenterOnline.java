@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "mcenter_online")
+@Table(name = "message_center_online")
 @Setter
 @Getter
 @Accessors(chain = true)
