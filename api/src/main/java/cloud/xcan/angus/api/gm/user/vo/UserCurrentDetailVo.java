@@ -22,7 +22,7 @@ public class UserCurrentDetailVo implements Serializable {
 
   private String username;
 
-  private String fullname;
+  private String fullName;
 
   private String firstName;
 

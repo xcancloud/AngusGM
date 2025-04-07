@@ -277,29 +277,29 @@ public class UserManagerImpl implements UserManager {
     }
     if (names.size() != userBases.size()) {
       Collection<String> namesDb = userBases.stream()
-          .map(UserBase::getFullname).collect(Collectors.toSet());
+          .map(UserBase::getFullName).collect(Collectors.toSet());
       names.removeAll(namesDb);
       throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{names.iterator().next()});
     }
     for (UserBase user : userBases) {
       checkUserValid(user);
     }
-    return userBases.stream().collect(Collectors.groupingBy(UserBase::getFullname));
+    return userBases.stream().collect(Collectors.groupingBy(UserBase::getFullName));
   }
 
   @Override
   public void checkUserValid(User user) {
     if (!user.getEnabled()) {
       throw CommProtocolException
-          .of(USER_DISABLED_T, USER_DISABLED_KEY, new Object[]{user.getFullname()});
+          .of(USER_DISABLED_T, USER_DISABLED_KEY, new Object[]{user.getFullName()});
     }
     if (user.getLocked()) {
       throw CommProtocolException
-          .of(USER_LOCKED_T, USER_LOCKED_KEY, new Object[]{user.getFullname()});
+          .of(USER_LOCKED_T, USER_LOCKED_KEY, new Object[]{user.getFullName()});
     }
     if (user.getExpired()) {
       throw CommProtocolException
-          .of(USER_EXPIRED_T, USER_EXPIRED_KEY, new Object[]{user.getFullname()});
+          .of(USER_EXPIRED_T, USER_EXPIRED_KEY, new Object[]{user.getFullName()});
     }
   }
 
@@ -307,15 +307,15 @@ public class UserManagerImpl implements UserManager {
   public void checkUserValid(UserBase userBase) {
     if (!userBase.getEnabled()) {
       throw CommProtocolException
-          .of(USER_DISABLED_T, USER_DISABLED_KEY, new Object[]{userBase.getFullname()});
+          .of(USER_DISABLED_T, USER_DISABLED_KEY, new Object[]{userBase.getFullName()});
     }
     if (userBase.getLocked()) {
       throw CommProtocolException
-          .of(USER_LOCKED_T, USER_LOCKED_KEY, new Object[]{userBase.getFullname()});
+          .of(USER_LOCKED_T, USER_LOCKED_KEY, new Object[]{userBase.getFullName()});
     }
     if (userBase.getExpired()) {
       throw CommProtocolException
-          .of(USER_EXPIRED_T, USER_EXPIRED_KEY, new Object[]{userBase.getFullname()});
+          .of(USER_EXPIRED_T, USER_EXPIRED_KEY, new Object[]{userBase.getFullName()});
     }
   }
 
@@ -684,7 +684,7 @@ public class UserManagerImpl implements UserManager {
           UserBase user = userDbMap.get(Long.parseLong(userId.toString()));
           if (nonNull(user)) {
             if (hasName) {
-              setPropertyValue(target, fullNameField, user.getFullname());
+              setPropertyValue(target, fullNameField, user.getFullName());
             }
             if (hasAvatar) {
               setPropertyValue(target, userAvatarField, user.getAvatar());

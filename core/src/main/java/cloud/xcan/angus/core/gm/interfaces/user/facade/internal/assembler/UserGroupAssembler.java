@@ -22,7 +22,7 @@ public class UserGroupAssembler {
         .setGroupEnabled(groupUser.getGroupEnabled())
         .setGroupRemark(groupUser.getGroupRemark())
         .setUserId(groupUser.getUserId())
-        .setFullname(groupUser.getFullname())
+        .setFullName(groupUser.getFullName())
         .setCreatedBy(groupUser.getCreatedBy())
         .setCreatedDate(groupUser.getCreatedDate())
         .setAvatar(groupUser.getAvatar())
@@ -50,7 +50,7 @@ public class UserGroupAssembler {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("createdDate")
         .orderByFields("createdDate")
-        .matchSearchFields("fullname")
+        .matchSearchFields("fullName")
         .build();
     return new GenericSpecification<>(filters);
   }

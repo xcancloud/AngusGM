@@ -46,7 +46,7 @@ public class MessageCenterOnlineAssembler {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("userId")
-        .matchSearchFields("fullname", "remoteAddress")
+        .matchSearchFields("fullName", "remoteAddress")
         .orderByFields("id", "userId")
         .build();
     return new GenericSpecification<>(filters);
@@ -56,7 +56,7 @@ public class MessageCenterOnlineAssembler {
     // Build the final filters
     return new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("userId")
-        .matchSearchFields("fullname", "remoteAddress")
+        .matchSearchFields("fullName", "remoteAddress")
         .orderByFields("id", "userId")
         .build();
   }

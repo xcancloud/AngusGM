@@ -153,7 +153,7 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
       + "UNION SELECT gu.group_id as orgId FROM group_user gu WHERE gu.user_id = ?1", nativeQuery = true)
   List<Long> findOrgIdsById(Long id);
 
-  @Query(value = "SELECT id, fullname name FROM user0 WHERE id IN ?1 UNION SELECT id, name FROM dept WHERE id IN ?1 UNION SELECT id, name FROM group0 WHERE id IN ?1", nativeQuery = true)
+  @Query(value = "SELECT id, full_name name FROM user0 WHERE id IN ?1 UNION SELECT id, name FROM dept WHERE id IN ?1 UNION SELECT id, name FROM group0 WHERE id IN ?1", nativeQuery = true)
   List<IdAndName> findOrgIdAndNameByIds(Collection<?> orgIds);
 
   @Query(value = "SELECT du.dept_id as orgId FROM dept_user du WHERE du.user_id = ?1 "
@@ -175,7 +175,7 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
   @Query(value = "SELECT * FROM user0 u WHERE u.id = ?1", nativeQuery = true)
   User findUserByUserId(Long id);
 
-  @Query(value = "SELECT u FROM User u WHERE u.fullname like %?1% and  u.enabled = true")
+  @Query(value = "SELECT u FROM User u WHERE u.fullName like %?1% and  u.enabled = true")
   List<User> findByFullNameLike(String fullName);
 
   /**
@@ -209,7 +209,7 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
    */
   @Query(value =
       "SELECT u.* FROM user0 u WHERE u.tenant_id =?1 AND u.enabled = 1 AND u.deleted = 0 "
-          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then fullname like CONCAT('%',?4,'%') else 1=1 end"
+          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then full_name like CONCAT('%',?4,'%') else 1=1 end"
           + " AND u.id IN ("
           + "  SELECT uid.id FROM ("
           + "    SELECT id FROM user0 WHERE tenant_id = ?1 AND id IN (?2) "
@@ -218,7 +218,7 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
           + "  ) uid "
           + ") ", countQuery =
       "SELECT count(*) FROM user0 u WHERE u.tenant_id =?1 AND u.enabled = 1 AND u.deleted = 0 "
-          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then fullname like CONCAT('%',?4,'%') else 1=1 end"
+          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then full_name like CONCAT('%',?4,'%') else 1=1 end"
           + " AND u.id IN ("
           + "  SELECT uid.id FROM ("
           + "    SELECT id FROM user0 WHERE tenant_id = ?1 AND id IN (?2) "
@@ -232,17 +232,17 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
 
   @Query(value =
       "SELECT u.* FROM user0 u WHERE u.tenant_id =?1 AND u.enabled = 1 AND u.deleted = 0 "
-          + " AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then fullname like CONCAT('%',?3,'%') else 1=1 end",
+          + " AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then full_name like CONCAT('%',?3,'%') else 1=1 end",
       countQuery =
           "SELECT count(*) FROM user0 u WHERE u.tenant_id =?1 AND u.enabled = 1 AND u.deleted = 0 "
-              + " AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then fullname like CONCAT('%',?3,'%') else 1=1 end",
+              + " AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then full_name like CONCAT('%',?3,'%') else 1=1 end",
       nativeQuery = true)
   Page<User> findAllValidByIdAndName(Long tenantId, Collection<?> idsFilter,
       String nameFilter, Pageable pageable);
 
   @Query(value =
       "SELECT u.* FROM user0 u WHERE u.tenant_id =?1 AND u.enabled = 1 AND u.deleted = 0"
-          + " AND case when CONCAT(?4,'') IS NOT NULL then id IN (?4) else 1=1 end AND case when CONCAT(?5,'') IS NOT NULL then fullname like CONCAT('%',?5,'%') else 1=1 end"
+          + " AND case when CONCAT(?4,'') IS NOT NULL then id IN (?4) else 1=1 end AND case when CONCAT(?5,'') IS NOT NULL then full_name like CONCAT('%',?5,'%') else 1=1 end"
           + " AND u.id IN ("
           + "  SELECT uid.id FROM ("
           + "    SELECT id FROM user0 WHERE tenant_id = ?1 AND id NOT IN (?2) AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end"
@@ -251,7 +251,7 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
           + "  ) uid "
           + ") ", countQuery =
       "SELECT count(*) FROM user0 u WHERE u.tenant_id =?1 AND u.enabled = 1 AND u.deleted = 0"
-          + " AND case when CONCAT(?4,'') IS NOT NULL then id IN (?4) else 1=1 end AND case when CONCAT(?5,'') IS NOT NULL then fullname like CONCAT('%',?5,'%') else 1=1 end"
+          + " AND case when CONCAT(?4,'') IS NOT NULL then id IN (?4) else 1=1 end AND case when CONCAT(?5,'') IS NOT NULL then full_name like CONCAT('%',?5,'%') else 1=1 end"
           + " AND u.id IN ("
           + "  SELECT uid.id FROM ("
           + "    SELECT id FROM user0 WHERE tenant_id = ?1 AND id NOT IN (?2) AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end"

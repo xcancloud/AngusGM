@@ -36,8 +36,8 @@ public class OperationLog extends TenantEntity<OperationLog, Long> {
   @Column(name = "user_id")
   private Long userId;
 
-  @Column(name = "fullname")
-  private String fullname;
+  @Column(name = "full_name")
+  private String fullName;
 
   @Column
   private String description;

@@ -33,7 +33,7 @@ public class UserDeptAssembler {
         .setDeptHead(deptUser.getDeptHead())
         .setHasSubDept(deptUser.getHasSubDept())
         .setUserId(deptUser.getUserId())
-        .setFullname(deptUser.getFullname())
+        .setFullName(deptUser.getFullName())
         .setCreatedBy(deptUser.getCreatedBy())
         .setCreatedDate(deptUser.getCreatedDate())
         .setAvatar(deptUser.getAvatar())
@@ -62,7 +62,7 @@ public class UserDeptAssembler {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("createdDate")
         .orderByFields("createdDate")
-        .matchSearchFields("fullname")
+        .matchSearchFields("fullName")
         .build();
     return new GenericSpecification<>(filters);
   }

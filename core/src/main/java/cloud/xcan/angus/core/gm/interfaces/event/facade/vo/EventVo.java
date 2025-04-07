@@ -28,7 +28,7 @@ public class EventVo implements Serializable {
 
   private Long userId;
 
-  private String fullname;
+  private String fullName;
 
   private Long tenantId;
 

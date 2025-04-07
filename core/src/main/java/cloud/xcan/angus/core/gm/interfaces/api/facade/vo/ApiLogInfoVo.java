@@ -20,7 +20,7 @@ public class ApiLogInfoVo implements Serializable {
   private Long tenantId;
   private String tenantName;
   private Long userId;
-  private String fullname;
+  private String fullName;
   private String requestId;
   private String serviceCode;
   private String serviceName;

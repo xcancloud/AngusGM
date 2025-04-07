@@ -72,7 +72,7 @@ public class TenantAddDto implements Serializable {
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer full name.", example = "James Jones",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
-  private String fullname;
+  private String fullName;
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer title.", example = "CTO",

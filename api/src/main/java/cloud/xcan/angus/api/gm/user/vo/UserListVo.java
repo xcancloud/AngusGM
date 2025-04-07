@@ -19,7 +19,7 @@ public class UserListVo implements Serializable {
 
   private String username;
 
-  private String fullname;
+  private String fullName;
 
   private String firstName;
 

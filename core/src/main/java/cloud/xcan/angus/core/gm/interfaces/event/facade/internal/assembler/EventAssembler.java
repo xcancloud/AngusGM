@@ -42,7 +42,7 @@ public class EventAssembler {
     return eventContents.stream().map(eventContent -> {
       Event event = new Event();
       event.setUserId(nullSafe(eventContent.getUserId(), -1L));
-      event.setFullname(eventContent.getFullname());
+      event.setFullName(eventContent.getFullName());
       event.setTenantId(nullSafe(eventContent.getTenantId(), OWNER_TENANT_ID));
       event.setTenantName(eventContent.getTenantName());
       event.setDescription(eventContent.getDescription());
@@ -62,7 +62,7 @@ public class EventAssembler {
   public static EventVo toVo(Event event, String eventAddress) {
     return new EventVo().setId(event.getId())
         .setUserId(event.getUserId())
-        .setFullname(event.getFullname())
+        .setFullName(event.getFullName())
         .setTenantId(event.getTenantId())
         .setTenantName(event.getTenantName())
         .setPushStatus(event.getPushStatus())
@@ -85,7 +85,7 @@ public class EventAssembler {
 
   public static EventDetailVo toDetailVo(Event event, String eventAddress) {
     return new EventDetailVo().setId(event.getId())
-        .setUserId(event.getUserId()).setFullname(event.getFullname())
+        .setUserId(event.getUserId()).setFullName(event.getFullName())
         .setTenantId(event.getTenantId()).setTenantName(event.getTenantName())
         .setPushStatus(event.getPushStatus())
         .setName(event.getName())
@@ -184,7 +184,7 @@ public class EventAssembler {
       sb.append("> Tenant Name: ").append(source.getTenantName()).append(br);
       if (Objects.nonNull(source.getUserId())) {
         sb.append("> User Id: ").append(source.getUserId()).append(br);
-        sb.append("> User Fullname: ").append(source.getFullname()).append(br);
+        sb.append("> User Fullname: ").append(source.getFullName()).append(br);
       }
     }
     if (event.getType().exceptional) {

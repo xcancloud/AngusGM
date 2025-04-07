@@ -63,8 +63,8 @@ public class Event extends TenantEntity<Event, Long> {
   @Column(name = "user_id")
   private Long userId;
 
-  @Column(name = "fullname")
-  private String fullname;
+  @Column(name = "full_name")
+  private String fullName;
 
   @Column(name = "target_type")
   private String targetType;

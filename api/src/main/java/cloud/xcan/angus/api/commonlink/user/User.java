@@ -49,7 +49,8 @@ public class User extends TenantAuditingEntity<User, Long> {
   private String lastName;
 
   @ResourceName
-  private String fullname;
+  @Column(name = "full_name")
+  private String fullName;
 
   private String username;
 
@@ -179,7 +180,7 @@ public class User extends TenantAuditingEntity<User, Long> {
   public boolean notSameInDirectory(Tenant tenantDb, User user, boolean syncMobile) {
     // firstNameAttribute/lastNameAttribute/displayNameAttribute/emailAttribute/mobileAttribute/passdAttribute/passdEncoderType
     boolean modified = !this.firstName.equals(user.getFirstName())
-        || !this.lastName.equals(user.getLastName()) || !this.fullname.equals(user.getFullname())
+        || !this.lastName.equals(user.getLastName()) || !this.fullName.equals(user.getFullName())
         || !this.email.equals(
         user.getEmail()) /*|| !this.password.equals(user.getPassd()) <- LDAP-PROXY */
         || !tenantDb.getRealNameStatus().equals(user.getTenantRealNameStatus());
@@ -187,7 +188,7 @@ public class User extends TenantAuditingEntity<User, Long> {
   }
 
   public UserInfo toUserInfo() {
-    return new UserInfo().setId(id).setFullname(fullname).setAvatar(avatar).setEmail(email)
+    return new UserInfo().setId(id).setFullName(fullName).setAvatar(avatar).setEmail(email)
         .setMobile(mobile);
   }
 

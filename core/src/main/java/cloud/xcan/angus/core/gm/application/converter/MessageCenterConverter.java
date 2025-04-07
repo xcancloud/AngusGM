@@ -12,7 +12,7 @@ public class MessageCenterConverter {
     MessageCenterOnline mCenterOnline = new MessageCenterOnline();
     mCenterOnline.setTenantId(user.getTenantId());
     mCenterOnline.setUserId(user.getId())
-        .setFullname(getUserFullname())
+        .setFullName(getUserFullname())
         // TODO MessageCenterConnectionListener#SessionConnectEvent#Object source, Message<byte[]> message, @Nullable Principal user
         // Read from Principal user
         .setUserAgent(""/*user.getUserAgent()*/) //

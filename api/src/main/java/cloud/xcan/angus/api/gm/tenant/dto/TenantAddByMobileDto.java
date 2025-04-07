@@ -42,7 +42,7 @@ public class TenantAddByMobileDto implements Serializable {
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer full name.", example = "James Jones", maxLength = MAX_NAME_LENGTH)
-  private String fullname;
+  private String fullName;
 
   @Length(max = MAX_ITC_LENGTH)
   @Schema(description = "International telephone area code.",

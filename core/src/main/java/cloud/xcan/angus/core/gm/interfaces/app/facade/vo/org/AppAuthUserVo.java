@@ -14,7 +14,7 @@ public class AppAuthUserVo {
 
   private Long id;
 
-  private String fullname;
+  private String fullName;
 
   private String avatar;
 

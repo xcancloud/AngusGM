@@ -89,7 +89,7 @@ public class EventTemplateAssembler {
       receivers.setId(template.getReceivers().getId())
           .setReceiverTypes(template.getReceivers().getReceiverTypes())
           .setReceivers(isEmpty(users) ? null : users.stream()
-              .map(x -> new UserName().setId(x.getId()).setFullname(x.getFullname()))
+              .map(x -> new UserName().setId(x.getId()).setFullName(x.getFullName()))
               .collect(Collectors.toSet()))
           .setNoticeTypes(template.getReceivers().getNoticeTypes());
       receiveSetting.setReceivers(receivers);

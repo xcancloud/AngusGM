@@ -47,7 +47,7 @@ public class ApiLog extends TenantEntity<ApiLog, Long> {
   @Column(name = "user_id")
   private Long userId;
 
-  private String fullname;
+  private String fullName;
 
   @Column(name = "request_id")
   private String requestId;

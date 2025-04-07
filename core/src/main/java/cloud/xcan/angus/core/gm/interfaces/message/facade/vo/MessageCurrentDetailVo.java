@@ -20,7 +20,7 @@ public class MessageCurrentDetailVo {
   private Long userId;
 
   @NameJoinField(id = "userId", repository = "commonUserBaseRepo")
-  private String fullname;
+  private String fullName;
 
   private LocalDateTime sendDate;
 

@@ -65,7 +65,7 @@ public class TenantUpdateDto implements Serializable {
   //@NotEmpty // Registered user firstName is empty
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer full name.", example = "James Jones")
-  private String fullname;
+  private String fullName;
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer title.", example = "CTO", maxLength = MAX_NAME_LENGTH)
@@ -115,7 +115,7 @@ public class TenantUpdateDto implements Serializable {
   }
 
   public boolean hasModifyUser() {
-    return isNotEmpty(firstName) || isNotEmpty(lastName) || isNotEmpty(fullname)
+    return isNotEmpty(firstName) || isNotEmpty(lastName) || isNotEmpty(fullName)
         || isNotEmpty(title) || isNotEmpty(itc) || isNotEmpty(country) || isNotEmpty(mobile)
         || isNotEmpty(email);
   }

@@ -55,7 +55,7 @@ public class UserAssembler {
         .setUsername(username)
         .setFirstName(stringSafe(dto.getFirstName()))
         .setLastName(stringSafe(dto.getLastName()))
-        .setFullname(stringSafe(dto.getFullname(), genFullname()))
+        .setFullName(stringSafe(dto.getFullName(), genFullname()))
         .setItc(dto.getItc())
         .setCountry(dto.getCountry())
         .setMobile(stringSafe(dto.getMobile()))
@@ -108,7 +108,7 @@ public class UserAssembler {
   }
 
   public static UserAddDto addTenantToUserAddDto(TenantAddDto dto) {
-    return new UserAddDto().setFullname(stringSafe(dto.getFullname()))
+    return new UserAddDto().setFullName(stringSafe(dto.getFullName()))
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
         .setEmail(dto.getEmail())
@@ -123,7 +123,7 @@ public class UserAssembler {
   }
 
   public static UserAddDto addTenantToUserAddDto(TenantAddByMobileDto dto) {
-    return new UserAddDto().setFullname(stringSafe(dto.getFullname()))
+    return new UserAddDto().setFullName(stringSafe(dto.getFullName()))
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
         .setEmail(dto.getEmail())
@@ -142,7 +142,7 @@ public class UserAssembler {
         .setUsername(dto.getUsername())
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
-        .setFullname(dto.getFullname())
+        .setFullName(dto.getFullName())
         .setItc(dto.getItc())
         .setCountry(dto.getCountry())
         .setMobile(dto.getMobile())
@@ -164,7 +164,7 @@ public class UserAssembler {
         .setUsername(stringSafe(dto.getUsername()))
         .setFirstName(stringSafe(dto.getFirstName()))
         .setLastName(stringSafe(dto.getLastName()))
-        .setFullname(stringSafe(dto.getFullname()))
+        .setFullName(stringSafe(dto.getFullName()))
         .setItc(dto.getItc())
         .setCountry(dto.getCountry())
         .setMobile(stringSafe(dto.getMobile()))
@@ -196,7 +196,7 @@ public class UserAssembler {
     return new UserDetailVo()
         .setId(user.getId())
         .setUsername(user.getUsername())
-        .setFullname(user.getFullname())
+        .setFullName(user.getFullName())
         .setFirstName(user.getFirstName())
         .setPasswordStrength(user.getPasswordStrength())
         .setLastName(user.getLastName())
@@ -248,7 +248,7 @@ public class UserAssembler {
     return new UserListVo().setId(user.getId())
         .setId(user.getId())
         .setUsername(user.getUsername())
-        .setFullname(user.getFullname())
+        .setFullName(user.getFullName())
         .setFirstName(user.getFirstName())
         .setLastName(user.getLastName())
         .setItc(user.getItc())
@@ -289,7 +289,7 @@ public class UserAssembler {
       return users.stream()
           .map(x -> new UserSysAdminVo()
               .setId(x.getId())
-              .setFullname(x.getFullname())
+              .setFullName(x.getFullName())
               .setFirstName(x.getFirstName())
               .setLastName(x.getLastName())
               .setCountry(x.getCountry())
@@ -354,8 +354,8 @@ public class UserAssembler {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("fullname", "mobile", "title", "username")
-        .orderByFields("id", "fullname", "createdDate")
+        .matchSearchFields("fullName", "mobile", "title", "username")
+        .orderByFields("id", "fullName", "createdDate")
         //.inAndNotFields("tagId")
         .build();
     return new GenericSpecification<>(filters);
@@ -365,8 +365,8 @@ public class UserAssembler {
     // Build the final filters
     return new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("fullname", "mobile", "title", "username")
-        .orderByFields("id", "fullname", "createdDate")
+        .matchSearchFields("fullName", "mobile", "title", "username")
+        .orderByFields("id", "fullName", "createdDate")
         //.inAndNotFields("tagId")
         .build();
   }

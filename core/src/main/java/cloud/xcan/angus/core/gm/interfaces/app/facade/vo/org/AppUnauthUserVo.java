@@ -12,7 +12,7 @@ public class AppUnauthUserVo {
 
   private Long id;
 
-  private String fullname;
+  private String fullName;
 
   private String avatar;
 

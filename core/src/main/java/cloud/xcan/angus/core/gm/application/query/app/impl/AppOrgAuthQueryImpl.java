@@ -135,7 +135,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         Set<String> userIdsFilter = findAllIdInAndEqualValues(
             spec.getCriteria(), "id", true);
         String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "fullname", true);
+            "fullName", true);
 
         Page<User> userPage = tenantAllUserAuth || isEmpty(allAuthOrgIds) ?
             userRepo.findAllValidByIdAndName(tenantId,
@@ -497,7 +497,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         Set<String> userIdsFilter = findAllIdInAndEqualValues(
             spec.getCriteria(), "id", true);
         String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "fullname", true);
+            "fullName", true);
         List<Long> allAuthOrgIds = authPolicyOrgRepo.findAllAuthOrgIdsByAuthPolices(appId,
             tenantId, null);
         if (isEmpty(allAuthOrgIds)) {

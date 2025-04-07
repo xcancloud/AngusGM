@@ -53,7 +53,7 @@ public class UserConverter {
         .id(user.getId().toString())
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
-        .fullName(user.getFullname())
+        .fullName(user.getFullName())
         .passwordStrength(calcPasswordStrength(stringSafe(user.getPassword())).getValue())
         .sysAdmin(user.getSysAdmin())
         .toUser(false)
@@ -88,7 +88,7 @@ public class UserConverter {
   public static void assembleUserInfo(User userDb, User user) {
     userDb.setFirstName(user.getFirstName())
         .setLastName(user.getLastName())
-        .setFullname(user.getFullname())
+        .setFullName(user.getFullName())
         .setUsername(user.getUsername())
         .setTitle(user.getTitle())
         .setGender(user.getGender())
@@ -123,7 +123,7 @@ public class UserConverter {
         .setDeptName(convert(objects[7], String.class))
         .setDeptCode(convert(objects[8], String.class))
         .setUserId(convert(objects[9], Long.class))
-        .setFullname(convert(objects[10], String.class))
+        .setFullName(convert(objects[10], String.class))
         .setAvatar(convert(objects[11], String.class))
         .setMobile(convert(objects[12], String.class));
     deptUser.setTenantId(convert(objects[1], Long.class));
@@ -141,7 +141,7 @@ public class UserConverter {
         .setGroupEnabled(convert(objects[7], Boolean.class))
         .setGroupRemark(convert(objects[8], String.class))
         .setUserId(convert(objects[9], Long.class))
-        .setFullname(convert(objects[10], String.class))
+        .setFullName(convert(objects[10], String.class))
         .setAvatar(convert(objects[11], String.class))
         .setMobile(convert(objects[12], String.class));
     groupUser.setTenantId(convert(objects[1], Long.class));
@@ -152,7 +152,7 @@ public class UserConverter {
     DirectoryUserSchema userMode = ldap.getUserSchemaData();
     User user = new User().setId(getCachedUidGenerator().getUID())
         .setUsername(convertIfAbsent(attrs, userMode.getUsernameAttribute()))
-        .setFullname(convertIfAbsent(attrs, userMode.getDisplayNameAttribute()))
+        .setFullName(convertIfAbsent(attrs, userMode.getDisplayNameAttribute()))
         .setFirstName(convertIfAbsent(attrs, userMode.getFirstNameAttribute()))
         .setLastName(convertIfAbsent(attrs, userMode.getLastNameAttribute()))
         .setPassword(generatePassword(ldap.getUserSchemaData().getPassdEncoderType(),

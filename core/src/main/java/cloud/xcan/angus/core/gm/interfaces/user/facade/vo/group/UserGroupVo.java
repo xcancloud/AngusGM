@@ -29,7 +29,7 @@ public class UserGroupVo implements Serializable {
 
   private Long userId;
 
-  private String fullname;
+  private String fullName;
 
   private String mobile;
 

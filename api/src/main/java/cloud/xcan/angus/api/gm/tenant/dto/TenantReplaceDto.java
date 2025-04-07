@@ -74,7 +74,7 @@ public class TenantReplaceDto implements Serializable {
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer full name.", example = "James Jones",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
-  private String fullname;
+  private String fullName;
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "System administer title.", example = "CTO", maxLength = MAX_NAME_LENGTH)
@@ -126,7 +126,7 @@ public class TenantReplaceDto implements Serializable {
   }
 
   public boolean hasModifyUser() {
-    return isNotEmpty(firstName) || isNotEmpty(lastName) || isNotEmpty(fullname)
+    return isNotEmpty(firstName) || isNotEmpty(lastName) || isNotEmpty(fullName)
         || isNotEmpty(title) || isNotEmpty(itc) || isNotEmpty(country) || isNotEmpty(mobile)
         || isNotEmpty(email);
   }

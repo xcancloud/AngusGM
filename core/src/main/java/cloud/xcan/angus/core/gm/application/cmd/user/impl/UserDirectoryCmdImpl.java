@@ -739,7 +739,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         if (userLdap.notSameInDirectory(tenantDb, userDb, syncMobile)) {
           userDb.setFirstName(userLdap.getFirstName())
               .setLastName(userLdap.getLastName())
-              .setFullname(userLdap.getFullname())
+              .setFullName(userLdap.getFullName())
               .setUsername(userLdap.getUsername())
               .setEmail(userLdap.getEmail())
               .setMobile(userLdap.getMobile())

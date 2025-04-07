@@ -25,7 +25,8 @@ public class MessageCenterOnline extends TenantEntity<MessageCenterOnline, Long>
   @Column(name = "user_id")
   private Long userId;
 
-  private String fullname;
+  @Column(name = "full_name")
+  private String fullName;
 
   @Column(name = "user_agent")
   private String userAgent;

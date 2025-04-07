@@ -340,7 +340,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
       if (nonNull(userDirectory) && nonNull(userDirectory.getEnabled())
           && userDirectory.getEnabled()) {
         PrincipalContext.addExtension("userDirectory", userDirectory);
-        PrincipalContext.addExtension("fullname", user.getFullName()); // LDAP -> CN
+        PrincipalContext.addExtension("fullName", user.getFullName()); // LDAP -> CN
         PrincipalContext.addExtension("ldapProxyPassword", user.getPassword());
       }
     }

@@ -60,7 +60,7 @@ public class DeptUser extends TenantEntity<DeptUser, Long> implements TenantAwar
   private Dept dept;
 
   @Transient
-  private String fullname;
+  private String fullName;
   @Transient
   private String avatar;
   @Transient

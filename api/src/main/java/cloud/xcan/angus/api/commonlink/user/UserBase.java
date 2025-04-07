@@ -2,6 +2,7 @@ package cloud.xcan.angus.api.commonlink.user;
 
 import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -26,7 +27,8 @@ public class UserBase extends TenantEntity<UserBase, Long> {
   private String username;
 
   @ResourceName
-  private String fullname;
+  @Column(name = "full_name")
+  private String fullName;
 
   private String mobile;
 
@@ -43,7 +45,7 @@ public class UserBase extends TenantEntity<UserBase, Long> {
   private Boolean locked;
 
   public UserInfo toUserInfo() {
-    return new UserInfo().setId(id).setFullname(fullname).setAvatar(avatar)
+    return new UserInfo().setId(id).setFullName(fullName).setAvatar(avatar)
         .setEmail(email).setMobile(mobile);
   }
 

@@ -51,7 +51,7 @@ public class AuthPolicyUserAssembler {
     UserListVo userListVo = new UserListVo().setId(user.getId())
         .setId(user.getId())
         .setUsername(user.getUsername())
-        .setFullname(user.getFullname())
+        .setFullName(user.getFullName())
         .setFirstName(user.getFirstName())
         .setLastName(user.getLastName())
         .setItc(user.getItc())
@@ -88,8 +88,8 @@ public class AuthPolicyUserAssembler {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("fullname", "mobile", "title", "username")
-        .orderByFields("id", "fullname", "createdDate")
+        .matchSearchFields("fullName", "mobile", "title", "username")
+        .orderByFields("id", "fullName", "createdDate")
         //.inAndNotFields("tagId")
         .build();
     return new GenericSpecification<>(filters);

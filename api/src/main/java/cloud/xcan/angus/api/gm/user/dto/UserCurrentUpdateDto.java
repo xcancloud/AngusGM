@@ -34,7 +34,7 @@ public class UserCurrentUpdateDto implements Serializable {
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "User full name.", example = "James Jones", maxLength = MAX_NAME_LENGTH)
-  private String fullname;
+  private String fullName;
 
   @Length(max = MAX_LANDLINE_LENGTH)
   @Schema(description = "User landline.", example = "010-88287890", maxLength = MAX_NAME_LENGTH)

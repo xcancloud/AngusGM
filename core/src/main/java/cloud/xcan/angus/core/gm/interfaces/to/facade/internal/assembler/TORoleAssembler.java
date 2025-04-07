@@ -83,7 +83,7 @@ public class TORoleAssembler {
         .map(user -> new TORoleUserVo()
             .setId(user.getId())
             .setUsername(user.getUsername())
-            .setFullname(user.getFullname())
+            .setFullName(user.getFullName())
             .setAvatar(user.getAvatar())
             .setEmail(user.getEmail())
             .setMobile(user.getMobile())

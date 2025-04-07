@@ -14,7 +14,7 @@ public class TORoleUserVo {
 
   private String username;
 
-  private String fullname;
+  private String fullName;
 
   private String avatar;
 

@@ -60,7 +60,7 @@ public class GroupUser extends TenantEntity<GroupUser, Long> implements TenantAw
   @Transient
   private String username;
   @Transient
-  private String fullname;
+  private String fullName;
   @Transient
   private String avatar;
   @Transient

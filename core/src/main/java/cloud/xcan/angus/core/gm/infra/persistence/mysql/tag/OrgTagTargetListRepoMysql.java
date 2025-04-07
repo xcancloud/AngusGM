@@ -54,7 +54,7 @@ public class OrgTagTargetListRepoMysql extends AbstractSearchRepository<OrgTagTa
   public String getReturnFieldsCondition(Set<SearchCriteria> criteria, Object[] params) {
     String targetType = findFirstValue(criteria, "targetType");
     if (OrgTargetType.USER.getValue().equals(targetType)) {
-      return "a.id, a.tenant_id, a.created_by, a.created_date, t.id tagId, t.name tagName, org.created_by targetCreatedBy, org.created_date targetCreatedDate, org.id targetId, org.fullname targetName, 'USER' targetType";
+      return "a.id, a.tenant_id, a.created_by, a.created_date, t.id tagId, t.name tagName, org.created_by targetCreatedBy, org.created_date targetCreatedDate, org.id targetId, org.full_name targetName, 'USER' targetType";
     } else if (OrgTargetType.GROUP.getValue().equals(targetType)) {
       return "a.id, a.tenant_id, a.created_by, a.created_date, t.id tagId, t.name tagName, org.created_by targetCreatedBy, org.created_date targetCreatedDate, org.id targetId, org.name targetName, 'GROUP' targetType";
     } else if (OrgTargetType.DEPT.getValue().equals(targetType)) {
@@ -114,14 +114,14 @@ public class OrgTagTargetListRepoMysql extends AbstractSearchRepository<OrgTagTa
     }
     if (StringUtils.isNotBlank(targetNameEqualValue)) {
       if (OrgTargetType.USER.getValue().equals(targetType)) {
-        sql.append(" AND org.fullname = '").append(targetNameEqualValue).append("'");
+        sql.append(" AND org.full_name = '").append(targetNameEqualValue).append("'");
       } else {
         sql.append(" AND org.name = '").append(targetNameEqualValue).append("'");
       }
     }
     if (StringUtils.isNotBlank(targetNameMatchValue)) {
       if (OrgTargetType.USER.getValue().equals(targetType)) {
-        sql.append(" AND org.fullname like '").append(targetNameMatchValue).append("%'");
+        sql.append(" AND org.full_name like '").append(targetNameMatchValue).append("%'");
       } else {
         sql.append(" AND org.name like '").append(targetNameMatchValue).append("%'");
       }

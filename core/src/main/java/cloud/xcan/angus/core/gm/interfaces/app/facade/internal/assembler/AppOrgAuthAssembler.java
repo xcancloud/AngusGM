@@ -52,7 +52,7 @@ public class AppOrgAuthAssembler {
 
   public static AppAuthUserVo toAuthUserVo(User user) {
     return new AppAuthUserVo().setId(user.getId())
-        .setFullname(user.getFullname())
+        .setFullName(user.getFullName())
         .setAvatar(user.getAvatar())
         .setGlobalAuth((Boolean) getExtension("globalAuth"))
         .setPolicies(toAuthPolicyOrgVos(getExtension(String.valueOf(user.getId()))));
@@ -128,7 +128,7 @@ public class AppOrgAuthAssembler {
 
   public static AppUnauthUserVo toUnAuthUserVo(User user) {
     return new AppUnauthUserVo().setId(user.getId())
-        .setFullname(user.getFullname())
+        .setFullName(user.getFullName())
         .setAvatar(user.getAvatar());
   }
 
@@ -159,7 +159,7 @@ public class AppOrgAuthAssembler {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .inAndNotFields("id")
-        .matchSearchFields("fullname")
+        .matchSearchFields("fullName")
         .orderByFields("id")
         .build();
     return new GenericSpecification<>(filters);
@@ -182,7 +182,7 @@ public class AppOrgAuthAssembler {
         .matchSearchFields("name")
         .orderByFields("id")
         .build();
-    return new GenericSpecification<>(filters);
+    return new GenericSpecification<Group>(filters);
   }
 
   public static GenericSpecification<AuthPolicy> getAuthPolicySpecification(
@@ -200,13 +200,13 @@ public class AppOrgAuthAssembler {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .matchSearchFields("name")
         .build();
-    return new GenericSpecification<>(filters);
+    return new GenericSpecification<Tenant>(filters);
   }
 
   public static GenericSpecification<User> getUnAuthUserSpecification(UnAuthUserFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
-        .matchSearchFields("fullname")
+        .matchSearchFields("fullName")
         .build();
     return new GenericSpecification<>(filters);
   }

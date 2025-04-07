@@ -48,7 +48,7 @@ public class DeptUserListRepoMysql extends AbstractSearchRepository<DeptUser> im
 
   @Override
   public String getReturnFieldsCondition(Set<SearchCriteria> criteria, Object[] params) {
-    return "a.id, a.tenant_id, a.dept_head, a.main_dept ,a.created_by, a.created_date, t.id deptId, t.name deptName, t.code deptCode, org.id userId, org.fullname fullname, org.avatar, org.mobile";
+    return "a.id, a.tenant_id, a.dept_head, a.main_dept ,a.created_by, a.created_date, t.id deptId, t.name deptName, t.code deptCode, org.id userId, org.full_name fullName, org.avatar, org.mobile";
   }
 
   public static StringBuilder assembleTagJoinCondition(Set<SearchCriteria> criteria) {
@@ -57,8 +57,8 @@ public class DeptUserListRepoMysql extends AbstractSearchRepository<DeptUser> im
     String deptNameEqualValue = findFirstValueAndRemove(criteria, "deptName", EQUAL);
     String deptNameMatchValue = findFirstValueAndRemove(criteria, "deptName", MATCH_END);
     String userIdEqualValue = findFirstValueAndRemove(criteria, "userId", EQUAL);
-    String fullnameEqualValue = findFirstValueAndRemove(criteria, "fullname", EQUAL);
-    String fullnameMatchValue = findFirstValueAndRemove(criteria, "fullname", MATCH_END);
+    String fullNameEqualValue = findFirstValueAndRemove(criteria, "fullName", EQUAL);
+    String fullNameMatchValue = findFirstValueAndRemove(criteria, "fullName", MATCH_END);
     Long tenantId = getOptTenantId();
     sql.append(" INNER JOIN dept t ON a.dept_id = t.id ")
         .append(" AND t.tenant_id = ").append(tenantId);
@@ -76,11 +76,11 @@ public class DeptUserListRepoMysql extends AbstractSearchRepository<DeptUser> im
     if (StringUtils.isNotBlank(userIdEqualValue)) {
       sql.append(" AND org.id = ").append(userIdEqualValue);
     }
-    if (StringUtils.isNotBlank(fullnameEqualValue)) {
-      sql.append(" AND org.fullname = ").append(fullnameEqualValue);
+    if (StringUtils.isNotBlank(fullNameEqualValue)) {
+      sql.append(" AND org.full_name = ").append(fullNameEqualValue);
     }
-    if (StringUtils.isNotBlank(fullnameMatchValue)) {
-      sql.append(" AND org.fullname like '").append(fullnameMatchValue).append("%'");
+    if (StringUtils.isNotBlank(fullNameMatchValue)) {
+      sql.append(" AND org.full_name like '").append(fullNameMatchValue).append("%'");
     }
     return sql;
   }

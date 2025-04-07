@@ -25,7 +25,7 @@ public class UserDetailVo implements Serializable {
 
   private String username;
 
-  private String fullname;
+  private String fullName;
 
   private String firstName;
 

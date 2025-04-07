@@ -16,6 +16,6 @@ public class UnAuthUserFindDto extends PageQuery {
   private Long id;
 
   @Schema(description = "Unauthorized user full name.")
-  private String fullname;
+  private String fullName;
 
 }

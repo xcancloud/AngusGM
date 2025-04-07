@@ -267,7 +267,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Update oauth2 user
         Tenant tenantDb = tenantQuery.checkAndFind(userDb.getTenantId());
         authUserCmd.replace0(replaceToAuthUser(userDb, tenantDb), false);
-        return IdKey.of(userDb.getId(), userDb.getFullname());
+        return IdKey.of(userDb.getId(), userDb.getFullName());
       }
     }.execute();
   }

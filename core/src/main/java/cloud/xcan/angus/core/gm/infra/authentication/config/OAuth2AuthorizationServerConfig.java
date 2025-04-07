@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.infra.authentication.config;
 
 import static cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProviderUtils.DEFAULT_ENCODING_ID;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getExtension;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
@@ -136,9 +137,9 @@ final class LdapPasswordConnection implements PasswordEncoder {
   @Override
   public boolean matches(CharSequence rawPassword, String encodedPassword) {
     // return rawPassword.toString().equals(encodedPassword);
-    Object ou = getExtension("fullname"); // CN
-    if (Objects.isNull(ou)) {
-      log.warn("Directory fullname not found in context");
+    Object ou = getExtension("fullName"); // CN
+    if (isNull(ou)) {
+      log.warn("Directory full name not found in context");
       return false;
     }
     Object ldap = getExtension("userDirectory");

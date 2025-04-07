@@ -20,6 +20,6 @@ public class AuthAppOrgUserSearchDto extends PageQuery {
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "Authorized user full name.")
-  private String fullname;
+  private String fullName;
 
 }

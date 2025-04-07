@@ -45,7 +45,7 @@ public class UserSignConverter {
         .setEmail(stringSafe(user.getEmail()))
         .setSysAdmin(user.isSysAdmin())
         .setFirstName("").setLastName("")
-        .setFullname(genFullname()).setUsername(genUsername())
+        .setFullName(genFullname()).setUsername(genUsername())
         .setGender(Gender.UNKNOWN)
         .setSignupAccount(SignupType.valueOf(user.getSignupType()).isEmail()
             ? user.getEmail() : user.getMobile())
@@ -105,7 +105,7 @@ public class UserSignConverter {
             .clientId(clientId)
             .requestId(PrincipalContext.getRequestId())
             .userId(Long.valueOf(user.getId()))
-            .fullname(user.getFullName())
+            .fullName(user.getFullName())
             .tenantId(Long.valueOf(user.getTenantId()))
             .tenantName(user.getTenantName())
             .description(MessageHolder
@@ -124,7 +124,7 @@ public class UserSignConverter {
             .clientId(clientId)
             .requestId(PrincipalContext.getRequestId())
             .userId(Long.valueOf(user.getId()))
-            .fullname(user.getFullName())
+            .fullName(user.getFullName())
             .tenantId(Long.valueOf(user.getTenantId()))
             .tenantName(null)
             .description(

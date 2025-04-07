@@ -22,7 +22,7 @@ public class OperationLogVo implements Serializable {
 
   private Long userId;
 
-  private String fullname;
+  private String fullName;
 
   private String description;
 

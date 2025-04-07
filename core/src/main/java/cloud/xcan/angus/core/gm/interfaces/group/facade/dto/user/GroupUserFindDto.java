@@ -19,7 +19,7 @@ public class GroupUserFindDto extends PageQuery {
 
   private Long userId;
 
-  private String fullname;
+  private String fullName;
 
   private LocalDateTime createdDate;
 

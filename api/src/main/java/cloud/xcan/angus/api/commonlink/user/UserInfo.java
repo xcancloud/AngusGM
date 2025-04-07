@@ -18,7 +18,7 @@ public class UserInfo implements Serializable {
 
   private String username;
 
-  private String fullname;
+  private String fullName;
 
   private String mobile;
 
@@ -36,7 +36,7 @@ public class UserInfo implements Serializable {
     }
     return Objects.equals(id, userInfo.id)
         && Objects.equals(username, userInfo.username)
-        && Objects.equals(fullname, userInfo.fullname)
+        && Objects.equals(fullName, userInfo.fullName)
         && Objects.equals(mobile, userInfo.mobile)
         && Objects.equals(email, userInfo.email)
         && Objects.equals(avatar, userInfo.avatar);
@@ -44,6 +44,6 @@ public class UserInfo implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, fullname, mobile, email, avatar);
+    return Objects.hash(id, username, fullName, mobile, email, avatar);
   }
 }
