@@ -6,7 +6,7 @@ import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.authority.ApiAuthority;
 import cloud.xcan.angus.core.gm.domain.authority.ApiAuthoritySource;
 
-public class AuthorityConverter {
+public class ApiAuthorityConverter {
 
   public static ApiAuthority toAppAuthority(App app, Api api, Long id) {
     return new ApiAuthority().setId(id)

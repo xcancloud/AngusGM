@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.authority.impl;
 
-import static cloud.xcan.angus.core.gm.application.converter.AuthorityConverter.toAppAuthority;
+import static cloud.xcan.angus.core.gm.application.converter.ApiAuthorityConverter.toAppAuthority;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.commonlink.api.Api;

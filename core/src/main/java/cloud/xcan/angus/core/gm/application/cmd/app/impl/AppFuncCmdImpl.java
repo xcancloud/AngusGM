@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.app.impl;
 
-import static cloud.xcan.angus.core.gm.application.converter.AuthorityConverter.toFuncAuthority;
+import static cloud.xcan.angus.core.gm.application.converter.ApiAuthorityConverter.toFuncAuthority;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
