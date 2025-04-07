@@ -26,15 +26,15 @@ public class TenantSettingAssembler {
         .setDefaultTimeZone(data.getDefaultTimeZone());
   }
 
-  public static Security updateToSecuritt(SecurityTo dto) {
+  public static Security updateToSecurity(SecurityTo dto) {
     return new Security().setSigninLimit(dto.getSigninLimit())
-        .setPasswordPolicy(dto.getPassdPolicy())
+        .setPasswordPolicy(dto.getPasswordPolicy())
         .setSignupAllow(dto.getSignupAllow()).setAlarm(dto.getAlarm());
   }
 
   public static SecurityTo toSecurityTo(Security data) {
     return new SecurityTo().setSigninLimit(data.getSigninLimit())
-        .setPassdPolicy(data.getPasswordPolicy())
+        .setPasswordPolicy(data.getPasswordPolicy())
         .setSignupAllow(data.getSignupAllow()).setAlarm(data.getAlarm());
   }
 

@@ -73,7 +73,7 @@ public class UserCurrentDetailVo implements Serializable {
 
   private LocalDateTime lastModifiedDate;
 
-  private PasswordStrength passdStrength;
+  private PasswordStrength passwordStrength;
 
   private Boolean passwordExpired;
 

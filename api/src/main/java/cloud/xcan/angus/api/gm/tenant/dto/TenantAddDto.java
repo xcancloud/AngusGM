@@ -106,7 +106,7 @@ public class TenantAddDto implements Serializable {
   @Passd(allowNull = true)
   @Schema(description = "System administer password.", example = "Passd@123",
       minLength = MIN_PASSWORD_LENGTH, maxLength = MAX_COUNTRY_LENGTH)
-  private String passd;
+  private String password;
 
   @Valid
   private PersonalCert personalCert;

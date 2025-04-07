@@ -33,11 +33,11 @@ public class SigninLimit extends ValueObjectSupport<SigninLimit> {
 
   @Range(min = 1, max = MAX_PASSWORD_ERROR_INTERVAL)
   @Schema(description = "Calculate password error interval.")
-  private Integer passdErrorIntervalInMinutes = DEFAULT_PASSWORD_ERROR_INTERVAL;
+  private Integer passwordErrorIntervalInMinutes = DEFAULT_PASSWORD_ERROR_INTERVAL;
 
   @Range(min = 1, max = MAX_LOCKED_PASSWORD_ERROR_NUM)
   @Schema(description = "Number of locked account and password errors.")
-  private Integer lockedPassdErrorNum = DEFAULT_LOCKED_PASSWORD_ERROR_NUM;
+  private Integer lockedPasswordErrorNum = DEFAULT_LOCKED_PASSWORD_ERROR_NUM;
 
   @Range(min = 1, max = Integer.MAX_VALUE)
   @Schema(description = "Duration of account locking.")

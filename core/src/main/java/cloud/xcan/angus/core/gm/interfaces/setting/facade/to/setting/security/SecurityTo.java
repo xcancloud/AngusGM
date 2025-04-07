@@ -27,7 +27,7 @@ public class SecurityTo implements Serializable {
 
   @Valid
   @Schema(description = "Password security policy configuration")
-  private PasswordPolicy passdPolicy;
+  private PasswordPolicy passwordPolicy;
 
   @Valid
   @Schema(description = "Security policy alarm configuration")

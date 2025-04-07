@@ -13,7 +13,7 @@ public interface AuthUserSignQuery {
 
   List<AuthUser> checkSms(String mobile, SmsBizKey bizKey, String verificationCode);
 
-  void checkMinPassdLengthByTenantSetting(Long tenantId, String passd);
+  void checkMinPasswordLengthByTenantSetting(Long tenantId, String password);
 
   SettingTenant checkAndFindSettingTenant(Long tenantId);
 }

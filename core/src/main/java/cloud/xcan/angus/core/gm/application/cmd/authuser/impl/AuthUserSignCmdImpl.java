@@ -298,7 +298,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         authUserQuery.checkUserValid(userDb);
 
         // Check the password length
-        authUserSignQuery.checkMinPassdLengthByTenantSetting(
+        authUserSignQuery.checkMinPasswordLengthByTenantSetting(
             Long.valueOf(userDb.getTenantId()), newPassword);
       }
 
@@ -406,7 +406,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
       SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
       // When sign-in limit is enabled
       if (signinLimit.getEnabled()) {
-        Integer errorNum = signinLimit.getLockedPassdErrorNum();
+        Integer errorNum = signinLimit.getLockedPasswordErrorNum();
         int lockedDurationInMinutes = signinLimit.getLockedDurationInMinutes();
         if (parseInt(passwordErrorNum) >= errorNum) {
           stringRedisService.set(passwordLockedCacheKey, String.valueOf(lockedDurationInMinutes),
@@ -438,9 +438,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     // When sign-in limit is enabled
     SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
     if (signinLimit.getEnabled()
-        && Integer.parseInt(passwordErrorNum) >= signinLimit.getLockedPassdErrorNum()) {
+        && Integer.parseInt(passwordErrorNum) >= signinLimit.getLockedPasswordErrorNum()) {
       stringRedisService.set(passwordLockedCacheKey, passwordErrorNum,
-          signinLimit.getPassdErrorIntervalInMinutes(), TimeUnit.MINUTES);
+          signinLimit.getPasswordErrorIntervalInMinutes(), TimeUnit.MINUTES);
       stringRedisService.delete(passwordErrorNumCacheKey);
     }
   }

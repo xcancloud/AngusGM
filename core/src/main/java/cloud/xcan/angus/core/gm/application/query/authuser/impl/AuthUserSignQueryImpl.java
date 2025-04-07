@@ -102,7 +102,7 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
   }
 
   @Override
-  public void checkMinPassdLengthByTenantSetting(Long tenantId, String password) {
+  public void checkMinPasswordLengthByTenantSetting(Long tenantId, String password) {
     SettingTenant settingTenant = checkAndFindSettingTenant(tenantId);
     assertTrue(Objects.isNull(settingTenant.getSecurityData())
             || password.length() >= settingTenant.getSecurityData().getPasswordPolicy()

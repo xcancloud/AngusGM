@@ -115,7 +115,7 @@ public class UserAssembler {
         .setMobile(dto.getMobile())
         .setItc(dto.getItc())
         .setCountry(dto.getCountry())
-        .setPassword(dto.getPassd())
+        .setPassword(dto.getPassword())
         .setTitle(dto.getTitle())
         .setSysAdmin(true)
         .setSignupType(isNotEmpty(dto.getMobile()) ? SignupType.MOBILE : SignupType.EMAIL)
@@ -130,7 +130,7 @@ public class UserAssembler {
         .setMobile(dto.getMobile())
         .setItc(dto.getItc())
         .setCountry(dto.getCountry())
-        .setPassword(dto.getPassd())
+        .setPassword(dto.getPassword())
         .setSysAdmin(true)
         .setSignupType(isNotEmpty(dto.getMobile()) ? SignupType.MOBILE : SignupType.EMAIL)
         .setSignupAccount(isNotEmpty(dto.getMobile()) ? dto.getMobile() : dto.getEmail());

@@ -155,8 +155,8 @@ public class UserConverter {
         .setFullName(convertIfAbsent(attrs, userMode.getDisplayNameAttribute()))
         .setFirstName(convertIfAbsent(attrs, userMode.getFirstNameAttribute()))
         .setLastName(convertIfAbsent(attrs, userMode.getLastNameAttribute()))
-        .setPassword(generatePassword(ldap.getUserSchemaData().getPassdEncoderType(),
-            convertIfAbsent(attrs, userMode.getPassdAttribute())))
+        .setPassword(generatePassword(ldap.getUserSchemaData().getPasswordEncoderType(),
+            convertIfAbsent(attrs, userMode.getPasswordAttribute())))
         .setSource(UserSource.LDAP_SYNCHRONIZE)
         .setMobile(nullSafe(convertIfAbsent(attrs, userMode.getMobileAttribute()), ""))
         .setEmail(nullSafe(convertIfAbsent(attrs, userMode.getEmailAttribute()), ""))

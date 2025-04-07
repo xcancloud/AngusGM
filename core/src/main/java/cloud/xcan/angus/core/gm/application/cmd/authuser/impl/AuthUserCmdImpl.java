@@ -82,7 +82,7 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
           : passwordEncoder.encode(user.getPassword()));
       if (!initTenant) {
         // Check password length
-        authUserSignQuery.checkMinPassdLengthByTenantSetting(tenantId, user.getPassword());
+        authUserSignQuery.checkMinPasswordLengthByTenantSetting(tenantId, user.getPassword());
       }
     }
 
@@ -136,7 +136,7 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
         // Check the user existed
         userDb = authUserQuery.checkAndFind(id);
         // Check the password length
-        authUserSignQuery.checkMinPassdLengthByTenantSetting(Long.parseLong(userDb.getTenantId()),
+        authUserSignQuery.checkMinPasswordLengthByTenantSetting(Long.parseLong(userDb.getTenantId()),
             newPassword);
         // Check the signup tenant system administrator password is not allowed to be modified
         assertForbidden(!userDb.isSysAdmin() || userDb.getId().equals(getUserId().toString()),

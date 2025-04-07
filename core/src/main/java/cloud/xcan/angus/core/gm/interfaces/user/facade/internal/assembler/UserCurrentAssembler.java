@@ -27,7 +27,7 @@ public class UserCurrentAssembler {
         .setUsername(user.getUsername())
         .setFullName(user.getFullName())
         .setFirstName(user.getFirstName())
-        .setPassdStrength(user.getPasswordStrength())
+        .setPasswordStrength(user.getPasswordStrength())
         .setLastName(user.getLastName())
         .setItc(user.getItc())
         .setCountry(user.getCountry())
@@ -57,7 +57,7 @@ public class UserCurrentAssembler {
         .setCreatedDate(user.getCreatedDate())
         .setLastModifiedBy(user.getLastModifiedBy())
         .setLastModifiedDate(user.getLastModifiedDate())
-        .setPassdStrength(user.getPasswordStrength())
+        .setPasswordStrength(user.getPasswordStrength())
         .setPasswordExpired(user.getPasswordExpired())
         .setPasswordExpiredDate(user.getPasswordExpiredDate());
   }

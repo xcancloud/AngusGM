@@ -76,7 +76,7 @@ public class SettingAssembler {
     return Objects.isNull(security) ? null : new SecurityTo()
         .setSigninLimit(security.getSigninLimit())
         .setSignupAllow(security.getSignupAllow())
-        .setPassdPolicy(security.getPasswordPolicy())
+        .setPasswordPolicy(security.getPasswordPolicy())
         .setAlarm(security.getAlarm());
   }
 

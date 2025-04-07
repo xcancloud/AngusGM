@@ -11,7 +11,7 @@ import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assemb
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantSettingAssembler.updateToFuncData;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantSettingAssembler.updateToLocale;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantSettingAssembler.updateToPerf;
-import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantSettingAssembler.updateToSecuritt;
+import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantSettingAssembler.updateToSecurity;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantSettingAssembler.updateToStability;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 
@@ -51,7 +51,7 @@ public class SettingTenantFacadeImpl implements SettingTenantFacade {
 
   @Override
   public void securityReplace(SecurityTo dto) {
-    settingTenantCmd.securityReplace(updateToSecuritt(dto));
+    settingTenantCmd.securityReplace(updateToSecurity(dto));
   }
 
   @Override
