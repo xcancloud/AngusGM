@@ -122,7 +122,7 @@ logging:
     org.springframework.web: WARN
     org.springframework.security: WARN
     org.springframework.cloud: WARN
-    cloud.xcan.sdf.api: debug # spring-logback.xml configuration is info level log by default, here it is forced to open feign log
+    cloud.xcan.angus.api: debug # spring-logback.xml configuration is info level log by default, here it is forced to open feign log
   file:
     path: ${log.dir:logs}
 

@@ -43,7 +43,7 @@ public class SettingTenantManagerImpl implements SettingTenantManager {
   }
 
   /***
-   * Fix: Type id handling not implemented for type cloud.xcan.sdf.spec.unit.TimeValue
+   * Fix: Type id handling not implemented for type cloud.xcan.angus.spec.unit.TimeValue
    */
   @Override
   @Cacheable(key = "'key_' + #tenantId", value = "settingTenant")

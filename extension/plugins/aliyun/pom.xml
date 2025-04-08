@@ -17,9 +17,9 @@
   <properties>
     <aliyun-java-sdk-dysmsapi20170525.version>2.0.4</aliyun-java-sdk-dysmsapi20170525.version>
 
-    <plugin.name>AliyunSms</plugin.name>
+    <plugin.name>AliYunSms</plugin.name>
     <plugin.id>${project.artifactId}</plugin.id>
-    <plugin.class>cloud.xcan.sdf.extension.sms.plugin.AliyunSmsPlugin</plugin.class>
+    <plugin.class>cloud.xcan.angus.extension.sms.plugin.AliYunSmsPlugin</plugin.class>
     <plugin.version>${project.version}</plugin.version>
     <plugin.provider>XiaoCan Technology (Beijing) Co.，Ltd</plugin.provider>
     <plugin.description>${project.name}</plugin.description>

@@ -6,22 +6,22 @@ import cloud.xcan.angus.plugin.core.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HuaweicloudSmsPlugin extends Plugin {
+public class HuaweiCloudSmsPlugin extends Plugin {
 
-  public final Logger log = LoggerFactory.getLogger(HuaweicloudSmsPlugin.class);
+  public final Logger log = LoggerFactory.getLogger(HuaweiCloudSmsPlugin.class);
 
-  public HuaweicloudSmsPlugin(PluginWrapper wrapper) {
+  public HuaweiCloudSmsPlugin(PluginWrapper wrapper) {
     super(wrapper);
   }
 
   @Override
   public void start() {
-    log.info("HuaweicloudSmsPlugin is started");
+    log.info("HuaweiCloudSmsPlugin is started");
   }
 
   @Override
   public void stop() {
-    log.info("HuaweicloudSmsPlugin is stopped");
+    log.info("HuaweiCloudSmsPlugin is stopped");
   }
 
 }
