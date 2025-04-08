@@ -49,6 +49,8 @@ public interface UserManager {
 
   List<User> checkValidAndFind(Collection<Long> userIds);
 
+  UserBase checkAndFindUserBase(Long userId);
+
   UserBase checkValidAndFindUserBase(Long userId);
 
   List<UserBase> checkValidAndFindUserBase(Collection<Long> userIds);

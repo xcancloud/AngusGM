@@ -32,7 +32,7 @@ public interface UserBaseRepo extends NameJoinRepository<UserBase, Long>,
       + "where u.id = ?1 AND u.deleted = false AND u.enabled = true AND u.expired = false AND u.locked = false")
   Optional<UserBase> findValidById(Long id);
 
-  List<UserBase> findByFullnameIn(Collection<String> names);
+  List<UserBase> findByFullNameIn(Collection<String> names);
 
 
 }

@@ -6,6 +6,8 @@ import static cloud.xcan.angus.api.manager.UCManagerMessage.USER_MOBILE_NOT_BIND
 import static cloud.xcan.angus.api.manager.UCManagerMessage.USER_MOBILE_NOT_BIND_CODE;
 import static cloud.xcan.angus.api.manager.UCManagerMessage.USER_NOT_EXISTED_T;
 import static cloud.xcan.angus.core.biz.BizAssert.assertNotEmpty;
+import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
+import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.utils.BeanFieldUtils.setPropertyValue;
 import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_DISABLED_KEY;
 import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_DISABLED_T;
@@ -22,7 +24,6 @@ import static java.util.Collections.singleton;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnlineRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserBase;
@@ -45,7 +46,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
@@ -74,9 +74,6 @@ public class UserManagerImpl implements UserManager {
 
   @Autowired(required = false)
   private DeptManager deptManager;
-
-  @Autowired(required = false)
-  private MessageCenterOnlineRepo commonMsgCenterOnlineRepo;
 
   @Override
   public User findUser(Long userId) {
@@ -163,9 +160,7 @@ public class UserManagerImpl implements UserManager {
 
   @Override
   public void checkExists(Long userId) {
-    if (!userRepo.existsById(userId)) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userId});
-    }
+    assertResourceNotFound(userRepo.existsById(userId), USER_NOT_EXISTED_T, new Object[]{userId});
   }
 
   @Override
@@ -174,13 +169,11 @@ public class UserManagerImpl implements UserManager {
       return emptyList();
     }
     List<User> userInfos = userRepo.findByIdIn(userIds);
-    if (isEmpty(userInfos)) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
-    }
+    assertResourceNotFound(userInfos, USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
     if (userIds.size() != userInfos.size()) {
-      Collection<Long> idsDb = userInfos.stream().map(User::getId).collect(Collectors.toSet());
-      userIds.removeAll(idsDb);
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
+      userIds.removeAll(userInfos.stream().map(User::getId).collect(Collectors.toSet()));
+      assertResourceNotFound(userIds.isEmpty(), USER_NOT_EXISTED_T,
+          new Object[]{userIds.iterator().next()});
     }
     return userInfos;
   }
@@ -191,12 +184,11 @@ public class UserManagerImpl implements UserManager {
       return;
     }
     List<Long> userIdsDb = userRepo.findIdsByIdIn(userIds);
-    if (isEmpty(userIdsDb)) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
-    }
+    assertResourceNotFound(userIdsDb, USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
     if (userIds.size() != userIdsDb.size()) {
       userIds.removeAll(userIdsDb);
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
+      assertResourceNotFound(userIds.isEmpty(), USER_NOT_EXISTED_T,
+          new Object[]{userIds.iterator().next()});
     }
   }
 
@@ -205,12 +197,9 @@ public class UserManagerImpl implements UserManager {
     if (isNull(userId)) {
       return null;
     }
-    Optional<User> user = userRepo.findById(userId);
-    if (user.isEmpty()) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userId});
-    }
-    checkUserValid(user.get());
-    return user.get();
+    User user = checkAndFind(userId);
+    checkUserValid(user);
+    return user;
   }
 
   @Override
@@ -219,13 +208,11 @@ public class UserManagerImpl implements UserManager {
       return emptyList();
     }
     List<User> userInfos = userRepo.findByIdIn(userIds);
-    if (isEmpty(userInfos)) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
-    }
+    assertResourceNotFound(userInfos, USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
     if (userIds.size() != userInfos.size()) {
-      Collection<Long> idsDb = userInfos.stream().map(User::getId).collect(Collectors.toSet());
-      userIds.removeAll(idsDb);
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
+      userIds.removeAll(userInfos.stream().map(User::getId).collect(Collectors.toSet()));
+      assertResourceNotFound(userIds.isEmpty(), USER_NOT_EXISTED_T,
+          new Object[]{userIds.iterator().next()});
     }
     for (User user : userInfos) {
       checkUserValid(user);
@@ -234,16 +221,18 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
+  public UserBase checkAndFindUserBase(Long userId) {
+    return userBaseRepo.findById(userId).orElseThrow(() -> ResourceNotFound.of(userId, "User"));
+  }
+
+  @Override
   public UserBase checkValidAndFindUserBase(Long userId) {
     if (isNull(userId)) {
       return null;
     }
-    Optional<UserBase> userBase = userBaseRepo.findById(userId);
-    if (userBase.isEmpty()) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userId});
-    }
-    checkUserValid(userBase.get());
-    return userBase.get();
+    UserBase user = checkAndFindUserBase(userId);
+    checkUserValid(user);
+    return user;
   }
 
   @Override
@@ -252,13 +241,11 @@ public class UserManagerImpl implements UserManager {
       return emptyList();
     }
     List<UserBase> userBases = userBaseRepo.findByIdIn(userIds);
-    if (isEmpty(userBases)) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
-    }
+    assertResourceNotFound(userBases, USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
     if (userIds.size() != userBases.size()) {
-      Collection<Long> idsDb = userBases.stream().map(UserBase::getId).collect(Collectors.toSet());
-      userIds.removeAll(idsDb);
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{userIds.iterator().next()});
+      userIds.removeAll(userBases.stream().map(UserBase::getId).collect(Collectors.toSet()));
+      assertResourceNotFound(userIds.isEmpty(), USER_NOT_EXISTED_T,
+          new Object[]{userIds.iterator().next()});
     }
     for (UserBase user : userBases) {
       checkUserValid(user);
@@ -271,52 +258,37 @@ public class UserManagerImpl implements UserManager {
     if (isEmpty(names)) {
       return emptyMap();
     }
-    List<UserBase> userBases = userBaseRepo.findByFullnameIn(names);
-    if (isEmpty(userBases)) {
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{names.iterator().next()});
+    List<UserBase> users = userBaseRepo.findByFullNameIn(names);
+    assertResourceNotFound(users, USER_NOT_EXISTED_T, new Object[]{names.iterator().next()});
+    if (names.size() != users.size()) {
+      names.removeAll(users.stream().map(UserBase::getFullName).collect(Collectors.toSet()));
+      assertResourceNotFound(names.isEmpty(), USER_NOT_EXISTED_T,
+          new Object[]{names.iterator().next()});
     }
-    if (names.size() != userBases.size()) {
-      Collection<String> namesDb = userBases.stream()
-          .map(UserBase::getFullName).collect(Collectors.toSet());
-      names.removeAll(namesDb);
-      throw ResourceNotFound.of(USER_NOT_EXISTED_T, new Object[]{names.iterator().next()});
-    }
-    for (UserBase user : userBases) {
+    for (UserBase user : users) {
       checkUserValid(user);
     }
-    return userBases.stream().collect(Collectors.groupingBy(UserBase::getFullName));
+    return users.stream().collect(Collectors.groupingBy(UserBase::getFullName));
   }
 
   @Override
   public void checkUserValid(User user) {
-    if (!user.getEnabled()) {
-      throw CommProtocolException
-          .of(USER_DISABLED_T, USER_DISABLED_KEY, new Object[]{user.getFullName()});
-    }
-    if (user.getLocked()) {
-      throw CommProtocolException
-          .of(USER_LOCKED_T, USER_LOCKED_KEY, new Object[]{user.getFullName()});
-    }
-    if (user.getExpired()) {
-      throw CommProtocolException
-          .of(USER_EXPIRED_T, USER_EXPIRED_KEY, new Object[]{user.getFullName()});
-    }
+    assertTrue(user.getEnabled(), USER_DISABLED_T, USER_DISABLED_KEY,
+        new Object[]{user.getFullName()});
+    assertTrue(!user.getLocked(), USER_LOCKED_T, USER_LOCKED_KEY,
+        new Object[]{user.getFullName()});
+    assertTrue(!user.getExpired(), USER_EXPIRED_T, USER_EXPIRED_KEY,
+        new Object[]{user.getFullName()});
   }
 
   @Override
-  public void checkUserValid(UserBase userBase) {
-    if (!userBase.getEnabled()) {
-      throw CommProtocolException
-          .of(USER_DISABLED_T, USER_DISABLED_KEY, new Object[]{userBase.getFullName()});
-    }
-    if (userBase.getLocked()) {
-      throw CommProtocolException
-          .of(USER_LOCKED_T, USER_LOCKED_KEY, new Object[]{userBase.getFullName()});
-    }
-    if (userBase.getExpired()) {
-      throw CommProtocolException
-          .of(USER_EXPIRED_T, USER_EXPIRED_KEY, new Object[]{userBase.getFullName()});
-    }
+  public void checkUserValid(UserBase user) {
+    assertTrue(user.getEnabled(), USER_DISABLED_T, USER_DISABLED_KEY,
+        new Object[]{user.getFullName()});
+    assertTrue(!user.getLocked(), USER_LOCKED_T, USER_LOCKED_KEY,
+        new Object[]{user.getFullName()});
+    assertTrue(!user.getExpired(), USER_EXPIRED_T, USER_EXPIRED_KEY,
+        new Object[]{user.getFullName()});
   }
 
   @Override
