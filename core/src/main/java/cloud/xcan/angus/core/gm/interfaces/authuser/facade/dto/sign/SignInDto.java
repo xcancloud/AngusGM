@@ -59,7 +59,7 @@ public class SignInDto {
   @Length(max = MAX_CODE_LENGTH_X5)
   @Schema(description = "The scope field specifies the permissions granted to the client, "
       + "limiting resource access. Note: Multiple values are separated by commas.",
-      example = "read,write", maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
+      example = "user_trust", maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
   private String scope;
 
   @Length(max = MAX_CODE_LENGTH)

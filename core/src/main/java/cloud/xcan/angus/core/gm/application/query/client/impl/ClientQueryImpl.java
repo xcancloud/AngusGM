@@ -15,6 +15,7 @@ import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 
 @Biz
@@ -22,6 +23,9 @@ public class ClientQueryImpl implements ClientQuery {
 
   @Resource
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
+
+  @Resource
+  private PasswordEncoder passwordEncoder;
 
   @Override
   public CustomOAuth2RegisteredClient detail(String id) {
@@ -64,7 +68,7 @@ public class ClientQueryImpl implements ClientQuery {
 
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId) {
-    RegisteredClient client = customOAuth2ClientRepository.findById(clientId);
+    RegisteredClient client = customOAuth2ClientRepository.findByClientId(clientId);
     assertResourceNotFound(client, clientId, "Client");
     return (CustomOAuth2RegisteredClient) client;
   }
@@ -72,7 +76,8 @@ public class ClientQueryImpl implements ClientQuery {
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret) {
     CustomOAuth2RegisteredClient client = checkAndFind(clientId);
-    assertTrue(clientSecret.equals(client.getClientSecret()), "Client secret inconsistency");
+    assertTrue(passwordEncoder.matches(clientSecret, client.getClientSecret()),
+        "Client secret inconsistency");
     return client;
   }
 
@@ -98,7 +103,7 @@ public class ClientQueryImpl implements ClientQuery {
 
   @Override
   public CustomOAuth2RegisteredClient findValidByClientId0(String clientId) {
-    RegisteredClient client = customOAuth2ClientRepository.findById(clientId);
+    RegisteredClient client = customOAuth2ClientRepository.findByClientId(clientId);
     return nonNull(client) && ((CustomOAuth2RegisteredClient) client).isEnabled()
         ? (CustomOAuth2RegisteredClient) client : null;
   }

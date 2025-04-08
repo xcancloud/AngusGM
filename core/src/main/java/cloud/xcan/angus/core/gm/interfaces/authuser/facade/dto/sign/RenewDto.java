@@ -36,7 +36,7 @@ public class RenewDto {
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
   @Schema(description = "The scope field specifies the permissions granted to the client, limiting resource access.",
-      example = "read,write", requiredMode = RequiredMode.REQUIRED)
+      example = "user_trust", requiredMode = RequiredMode.REQUIRED)
   private String scope;
 
 }
