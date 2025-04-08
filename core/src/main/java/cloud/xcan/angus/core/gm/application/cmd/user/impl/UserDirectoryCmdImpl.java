@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.user.impl;
 
+import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.spring.SpringContextHolder.getCachedUidGenerator;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isUserAction;
@@ -246,7 +247,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
       @Override
       protected void checkParams() {
         directoryDb = userDirectoryQuery.checkAndFind(id);
-        ProtocolAssert.assertTrue(directoryDb.getEnabled(), "Directory is disabled");
+        assertTrue(directoryDb.getEnabled(), "Directory is disabled");
         tenantDb = tenantManager.checkAndFindOwnerTenant();
       }
 

@@ -40,7 +40,7 @@ public class SettingTenantQuotaManagerImpl implements SettingTenantQuotaManager 
       return;
     }
     SettingTenantQuota quotas = findTenantQuota(
-        getOptTenantId()/*It may be called through doorapi and job*/, quotaResource);
+        getOptTenantId()/*It may be called through /doorapi and job*/, quotaResource);
     if (quotaResource == QuotaResource.User && quotas.getQuota() < num) {
       throw QuotaException.of(USER_OVER_LIMIT_CODE, USER_OVER_LIMIT_T,
           new Object[]{quotas.getQuota()});

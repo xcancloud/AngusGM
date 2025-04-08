@@ -42,7 +42,7 @@ public class TenantManagerImpl implements TenantManager {
     try {
       hid = VerxRegister.cacheManager().getCon().getHid();
     } catch (Exception exception) {
-      assertForbidden(false, "Exception loading tenant from cache");
+      assertForbidden("Exception loading tenant from cache");
     }
     return checkAndFindTenant(hid);
   }
@@ -56,9 +56,9 @@ public class TenantManagerImpl implements TenantManager {
     assertResourceNotFound(tenants, TENANT_NOT_EXISTED_T,
         new Object[]{tenantIds.iterator().next()});
     if (tenantIds.size() != tenants.size()) {
-      Collection<Long> idsDb = tenants.stream().map(Tenant::getId).collect(Collectors.toSet());
-      tenantIds.removeAll(idsDb);
-      throw ResourceNotFound.of(TENANT_NOT_EXISTED_T, new Object[]{tenantIds.iterator().next()});
+      tenantIds.removeAll(tenants.stream().map(Tenant::getId).collect(Collectors.toSet()));
+      assertResourceNotFound(tenantIds.isEmpty(), TENANT_NOT_EXISTED_T,
+          new Object[]{tenantIds.iterator().next()});
     }
     return tenants;
   }
