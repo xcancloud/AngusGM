@@ -15,7 +15,7 @@ public interface AuthUserRepo extends BaseRepository<AuthUser, Long> {
 
   List<AuthUser> findAllByTenantId(String tenantId);
 
-  @Query(value = "SELECT * FROM oauth2_user WHERE username = ?1 OR mobile = ?1 OR email = ?1 AND ", nativeQuery = true)
+  @Query(value = "SELECT * FROM oauth2_user WHERE username = ?1 OR mobile = ?1 OR email = ?1 AND deleted = false", nativeQuery = true)
   List<AuthUser> findByAccount(String account);
 
   List<AuthUser> findByEmail(String email);
