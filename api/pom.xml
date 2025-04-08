@@ -31,11 +31,6 @@
       <groupId>cloud.xcan.angus</groupId>
       <artifactId>xcan-infra.auth-resource-model</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>cloud.xcan.angus</groupId>
-      <artifactId>xcan-angus.model</artifactId>
-    </dependency>
   </dependencies>
 
 </project>

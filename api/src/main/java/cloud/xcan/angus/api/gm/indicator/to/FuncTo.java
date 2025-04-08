@@ -3,8 +3,6 @@ package cloud.xcan.angus.api.gm.indicator.to;
 
 import cloud.xcan.angus.api.gm.indicator.SecurityCheckSetting;
 import cloud.xcan.angus.api.gm.indicator.SmokeCheckSetting;
-import cloud.xcan.angus.model.element.assertion.Assertion;
-import cloud.xcan.angus.model.element.extraction.HttpExtraction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
@@ -33,7 +31,8 @@ public class FuncTo implements Serializable {
   private SmokeCheckSetting smokeCheckSetting;
 
   @Schema(description = "User-defined check smoke testing assertion.")
-  private Assertion<HttpExtraction> userDefinedSmokeAssertion;
+  //private Assertion<HttpExtraction> userDefinedSmokeAssertion;
+  private Object userDefinedSmokeAssertion;
 
   @Schema(description = "Enabled or disabled security testing.", defaultValue = "true", requiredMode = RequiredMode.REQUIRED)
   private boolean security = true;
@@ -43,6 +42,7 @@ public class FuncTo implements Serializable {
   private SecurityCheckSetting securityCheckSetting;
 
   @Schema(description = "User-defined check security testing assertion.")
-  private Assertion<HttpExtraction> userDefinedSecurityAssertion;
+  //private Assertion<HttpExtraction> userDefinedSecurityAssertion;
+  private Object userDefinedSecurityAssertion;
 
 }

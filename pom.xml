@@ -90,9 +90,6 @@
 
   <properties>
     <xcan-infra.bom.version>1.0.0</xcan-infra.bom.version>
-    <xcan-angus.bom.version>1.0.0</xcan-angus.bom.version>
-
-    <unboundid.version>6.0.0</unboundid.version>
   </properties>
 
   <dependencyManagement>
@@ -101,14 +98,6 @@
         <groupId>cloud.xcan.angus</groupId>
         <artifactId>xcan-infra.bom</artifactId>
         <version>${xcan-infra.bom.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>cloud.xcan.angus</groupId>
-        <artifactId>xcan-angus.bom</artifactId>
-        <version>${xcan-angus.bom.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
