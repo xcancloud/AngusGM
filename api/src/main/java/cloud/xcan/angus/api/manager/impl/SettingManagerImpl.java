@@ -21,7 +21,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.log.ApiLogProperties;
 import cloud.xcan.angus.core.log.OperationLogProperties;
 import cloud.xcan.angus.core.log.SystemLogProperties;
-import cloud.xcan.angus.remote.message.CommSysException;
+import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -76,7 +76,7 @@ public class SettingManagerImpl implements SettingManager {
       };
     } catch (JsonProcessingException e) {
       log.error("Parse setting json exception:", e);
-      throw CommSysException.of("Parse setting json exception:" + e.getMessage());
+      throw SysException.of("Parse setting json exception:" + e.getMessage());
     }
   }
 

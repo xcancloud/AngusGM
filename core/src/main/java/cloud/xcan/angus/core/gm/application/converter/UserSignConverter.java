@@ -11,28 +11,13 @@ import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.Gender;
-import cloud.xcan.angus.api.enums.SignInType;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.event.OperationEvent;
 import cloud.xcan.angus.core.event.source.UserOperation;
 import cloud.xcan.angus.core.gm.domain.SignOperationKey;
-import cloud.xcan.angus.remote.message.CommProtocolException;
-import cloud.xcan.angus.security.authentication.email.EmailCodeAuthenticationConverter;
-import cloud.xcan.angus.security.authentication.email.EmailCodeAuthenticationToken;
-import cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationConverter;
-import cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationToken;
-import cloud.xcan.angus.security.authentication.sms.SmsCodeAuthenticationConverter;
-import cloud.xcan.angus.security.authentication.sms.SmsCodeAuthenticationToken;
-import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.locale.MessageHolder;
 import cloud.xcan.angus.spec.principal.PrincipalContext;
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Set;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationToken;
 
 
 public class UserSignConverter {
@@ -61,41 +46,6 @@ public class UserSignConverter {
         .setCreatedDate(LocalDateTime.now())
         .setLastModifiedBy(-1L)
         .setLastModifiedDate(LocalDateTime.now());
-  }
-
-  public static OAuth2ClientAuthenticationToken convertClientSuccessAuthentication(
-      CustomOAuth2RegisteredClient client) {
-    OAuth2ClientAuthenticationToken clientAuthenticationToken
-        = new OAuth2ClientAuthenticationToken(client,
-        client.getClientAuthenticationMethods().iterator().next(), client.getClientSecret());
-    clientAuthenticationToken.setAuthenticated(true);
-    // clientAuthenticationToken.setDetails(client);
-    return clientAuthenticationToken;
-  }
-
-  /**
-   * @see OAuth2PasswordAuthenticationConverter#convert(HttpServletRequest)
-   * @see SmsCodeAuthenticationConverter#convert(HttpServletRequest)
-   * @see EmailCodeAuthenticationConverter#convert(HttpServletRequest)
-   */
-  public static Authentication convertUserSignInAuthentication(
-      SignInType signinType, Long userId, String account, String password,
-      Set<String> requestedScopes, OAuth2ClientAuthenticationToken clientAuthenticationToken) {
-    return switch (signinType) {
-      case ACCOUNT_PASSWORD -> new OAuth2PasswordAuthenticationToken(userId.toString(),
-          account, password, clientAuthenticationToken, requestedScopes, new HashMap<>());
-      case SMS_CODE -> new SmsCodeAuthenticationToken(userId.toString(),
-          account, password, clientAuthenticationToken, requestedScopes, new HashMap<>());
-      case EMAIL_CODE -> new EmailCodeAuthenticationToken(userId.toString(), account, password,
-          clientAuthenticationToken, requestedScopes, new HashMap<>());
-      default -> throw CommProtocolException.of("Unsupported sign-in type: " + signinType);
-    };
-  }
-
-  public static Authentication convertUserRenewAuthentication(String refreshToken,
-      Set<String> requestedScopes, OAuth2ClientAuthenticationToken clientAuthenticationToken) {
-    return new OAuth2RefreshTokenAuthenticationToken(refreshToken, clientAuthenticationToken,
-        requestedScopes, new HashMap<>());
   }
 
   public static OperationEvent getSignupOperationEvent(String clientId, AuthUser user) {

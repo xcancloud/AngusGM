@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.sign;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X2;
-import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X5;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_LINK_SECRET_LENGTH;
 
 import cloud.xcan.angus.api.enums.SignInType;
@@ -54,13 +53,6 @@ public class SignInDto {
   @Schema(description = "Login account. Can be username, mobile or email. "
       + "The account and userId must specify one.", maxLength = MAX_CODE_LENGTH)
   private String account;
-
-  @NotBlank
-  @Length(max = MAX_CODE_LENGTH_X5)
-  @Schema(description = "The scope field specifies the permissions granted to the client, "
-      + "limiting resource access. Note: Multiple values are separated by commas.",
-      example = "user_trust", maxLength = MAX_CODE_LENGTH_X5, requiredMode = RequiredMode.REQUIRED)
-  private String scope;
 
   @Length(max = MAX_CODE_LENGTH)
   @Schema(description = "Current user sign-in device id.",

@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.application.cmd.system.impl;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_SYS_TOKEN;
 import static cloud.xcan.angus.core.gm.application.converter.ClientConverter.toSystemTokenToDomain;
 import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.convertClientSignInAuthentication;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertClientSuccessAuthentication;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.checkTenantSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -108,12 +107,8 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
 
         // Generate system token
         // Submit OAuth2 login authentication
-        OAuth2ClientAuthenticationToken clientAuthenticationToken
-            = convertClientSuccessAuthentication(client);
-        Authentication userAuthenticationToken = convertClientSignInAuthentication(
-            client.getScopes(), clientAuthenticationToken);
-        OAuth2AccessTokenAuthenticationToken result = (OAuth2AccessTokenAuthenticationToken)
-            authenticationManager.authenticate(userAuthenticationToken);
+
+        OAuth2AccessTokenAuthenticationToken result = null;
 
         // Save system token
         systemToken.setDecryptedValue(result.getAccessToken().getTokenValue());

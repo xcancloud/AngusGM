@@ -16,13 +16,12 @@ import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.utils.BeanFieldUtils;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import cloud.xcan.angus.remote.search.SearchOperation;
+import cloud.xcan.angus.spec.utils.JsonUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 
 
 public class AuthUserSignAssembler {
@@ -44,15 +43,8 @@ public class AuthUserSignAssembler {
     return user;
   }
 
-  public static SignVo signInToVo(OAuth2AccessTokenAuthenticationToken token) {
-    return new SignVo()
-        .setAccessToken(token.getAccessToken().getTokenValue())
-        .setExpiresAt(token.getAccessToken().getExpiresAt())
-        .setExpiresAt(token.getAccessToken().getExpiresAt())
-        .setRefreshToken(Objects.isNull(token.getRefreshToken()) ? null
-            : token.getRefreshToken().getTokenValue())
-        .setTokenType(token.getAccessToken().getTokenType().getValue())
-        .setScopes(token.getAccessToken().getScopes());
+  public static SignVo signInToVo(Map<String, String> result) {
+    return JsonUtils.fromJsonObject(result, SignVo.class);
   }
 
   public static AccountVo userToAccountVo(AuthUser user) {

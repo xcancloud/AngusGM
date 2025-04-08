@@ -36,6 +36,6 @@ public class ClientSigninDto {
 
   @NotEmpty
   @Schema(description = "The scope(s) that the client may use.", requiredMode = RequiredMode.REQUIRED)
-  private Set<String> scopes;
+  private String scope;
 
 }

@@ -14,10 +14,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +34,7 @@ import org.springframework.util.Assert;
 
 @Slf4j
 @Entity
+@Getter
 @Table(name = "oauth2_user")
 public class AuthUser extends CustomOAuth2User {
   // Build Fields -> Do in parent class.
@@ -60,7 +64,7 @@ public class AuthUser extends CustomOAuth2User {
   protected boolean credentialsNonExpired;
 
   @Transient
-  protected Set<GrantedAuthority> authorities;
+  protected Set<GrantedAuthority> authorities = new HashSet<>();
 
   /**
    * AngusGM User Info.
@@ -169,14 +173,15 @@ public class AuthUser extends CustomOAuth2User {
 
   public AuthUser(String username, String password,
       Collection<? extends GrantedAuthority> authorities) {
-    super(username, password, authorities);
+    this(username, password, true, true, true, true, authorities);
   }
 
   public AuthUser(String username, String password, boolean enabled, boolean accountNonExpired,
       boolean credentialsNonExpired, boolean accountNonLocked,
       Collection<? extends GrantedAuthority> authorities) {
-    super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-        authorities);
+    this(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
+        authorities, "-1", null, null, null, null, false, false, null, null, null, null,
+        null, null, false, "-1", null, null, null, null, null);
   }
 
   public AuthUser(String username, String password, boolean enabled, boolean accountNonExpired,
@@ -191,6 +196,51 @@ public class AuthUser extends CustomOAuth2User {
         authorities, id, firstName, lastName, fullName, passwordStrength, sysAdmin, toUser, mobile,
         email, mainDeptId, passwordExpiredDate, lastModifiedPasswordDate, expiredDate, deleted,
         tenantId, tenantName, tenantRealNameStatus, directoryId, defaultLanguage, defaultTimeZone);
+    this.username = username;
+    this.password = password;
+    this.enabled = enabled;
+    this.accountNonExpired = accountNonExpired;
+    this.credentialsNonExpired = credentialsNonExpired;
+    this.accountNonLocked = accountNonLocked;
+    this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
+
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.fullName = fullName;
+    this.passwordStrength = passwordStrength;
+    this.sysAdmin = sysAdmin;
+    this.toUser = toUser;
+    this.mobile = mobile;
+    this.email = email;
+    this.mainDeptId = mainDeptId;
+    this.passwordExpiredDate = passwordExpiredDate;
+    this.lastModifiedPasswordDate = lastModifiedPasswordDate;
+    this.expiredDate = expiredDate;
+    this.deleted = deleted;
+    this.tenantId = tenantId;
+    this.tenantName = tenantName;
+    this.tenantRealNameStatus = tenantRealNameStatus;
+    this.directoryId = directoryId;
+    this.defaultLanguage = defaultLanguage;
+    this.defaultTimeZone = defaultTimeZone;
+  }
+
+  /**
+   * Copy a User with AuthUserBuilder
+   */
+  public static AuthUser with(AuthUser user) {
+    return newBuilder().username(user.username).password(user.password)
+        .disabled(!user.enabled).accountExpired(!user.accountNonExpired)
+        .accountLocked(!user.accountNonLocked).credentialsExpired(!user.credentialsNonExpired)
+        .authorities(user.authorities).id(user.id).firstName(user.firstName).lastName(user.lastName)
+        .fullName(user.fullName).passwordStrength(user.passwordStrength).sysAdmin(user.sysAdmin)
+        .toUser(user.toUser).mobile(user.mobile).email(user.email).mainDeptId(user.mainDeptId)
+        .passwordExpiredDate(user.passwordExpiredDate)
+        .lastModifiedPasswordDate(user.lastModifiedPasswordDate).expiredDate(user.expiredDate)
+        .deleted(user.deleted).tenantId(user.tenantId).tenantName(user.tenantName)
+        .tenantRealNameStatus(user.tenantRealNameStatus)
+        .build();
   }
 
   /**

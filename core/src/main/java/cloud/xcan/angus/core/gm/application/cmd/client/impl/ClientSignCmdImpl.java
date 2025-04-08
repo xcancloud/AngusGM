@@ -1,9 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.client.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.convertClientSignInAuthentication;
 import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.privateSignupToDomain;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertClientSuccessAuthentication;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 
 import cloud.xcan.angus.api.commonlink.AASConstant;
@@ -16,15 +14,11 @@ import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
 import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import jakarta.annotation.Resource;
-import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 
 @Slf4j
 @Biz
@@ -37,19 +31,16 @@ public class ClientSignCmdImpl implements ClientSignCmd {
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
 
   @Resource
-  private AuthenticationManager authenticationManager;
-
-  @Resource
   private PasswordEncoder passwordEncoder;
 
   @Override
-  public OAuth2AccessToken signin(String clientId, String clientSecret, Set<String> scopes) {
+  public OAuth2AccessToken signin(String clientId, String clientSecret, String scope) {
     return new BizTemplate<OAuth2AccessToken>(false) {
       CustomOAuth2RegisteredClient clientDb;
 
       @Override
       protected void checkParams() {
-        clientDb = clientQuery.checkAndFind(clientId, clientSecret, scopes);
+        clientDb = clientQuery.checkAndFind(clientId, clientSecret, scope);
         assertTrue(clientDb.getAuthorizationGrantTypes().contains(CLIENT_CREDENTIALS),
             "Unsupported client credentials grant type");
       }
@@ -57,12 +48,8 @@ public class ClientSignCmdImpl implements ClientSignCmd {
       @Override
       protected OAuth2AccessToken process() {
         // Submit OAuth2 login authentication
-        OAuth2ClientAuthenticationToken clientAuthenticationToken
-            = convertClientSuccessAuthentication(clientDb);
-        Authentication userAuthenticationToken = convertClientSignInAuthentication(
-            scopes, clientAuthenticationToken);
-        OAuth2AccessTokenAuthenticationToken result = (OAuth2AccessTokenAuthenticationToken)
-            authenticationManager.authenticate(userAuthenticationToken);
+
+        OAuth2AccessTokenAuthenticationToken result = null;
         return result.getAccessToken();
       }
     }.execute();

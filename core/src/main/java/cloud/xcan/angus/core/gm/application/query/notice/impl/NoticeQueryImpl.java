@@ -2,8 +2,8 @@ package cloud.xcan.angus.core.gm.application.query.notice.impl;
 
 import static cloud.xcan.angus.core.gm.domain.notice.NoticeScope.APP;
 import static cloud.xcan.angus.core.gm.domain.notice.NoticeScope.GLOBAL;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.PARAM_MISSING_KEY;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.PARAM_MISSING_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_MISSING_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_MISSING_T;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
@@ -18,7 +18,7 @@ import cloud.xcan.angus.core.gm.domain.app.AppRepo;
 import cloud.xcan.angus.core.gm.domain.notice.Notice;
 import cloud.xcan.angus.core.gm.domain.notice.NoticeRepo;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -115,7 +115,7 @@ public class NoticeQueryImpl implements NoticeQuery {
   @Override
   public void checkAppSendTimingParam(Notice notice) {
     if (notice.getSendType().equals(SentType.TIMING_SEND) && isNull(notice.getTimingDate())) {
-      throw CommProtocolException.of(PARAM_MISSING_T, PARAM_MISSING_KEY,
+      throw ProtocolException.of(PARAM_MISSING_T, PARAM_MISSING_KEY,
           new Object[]{"sendTimingDate"});
     }
   }

@@ -9,12 +9,14 @@ import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.LINK_SECRET_ILLEGAL_ERROR;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.LINK_SECRET_TIMEOUT_ERROR;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_DISABLED_KEY;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_DISABLED_T;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_EXPIRED_KEY;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_EXPIRED_T;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_LOCKED_KEY;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.USER_LOCKED_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.ACCOUNT_PASSWORD_ERROR;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.ACCOUNT_PASSWORD_ERROR_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_DISABLED_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_DISABLED_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_EXPIRED_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_EXPIRED_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_LOCKED_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_LOCKED_T;
 import static cloud.xcan.angus.spec.experimental.BizConstant.OWNER_TENANT_ID;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
@@ -28,9 +30,10 @@ import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.enums.SignInType;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
+import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserQuery;
 import cloud.xcan.angus.lettucex.util.RedisService;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import cloud.xcan.angus.security.model.AccountNotFoundException;
 import cloud.xcan.angus.security.model.CustomOAuth2User;
@@ -123,10 +126,7 @@ public class AuthUserQueryImpl implements AuthUserQuery {
         }
       }
     }
-
-    if (isNull(finalUser)) {
-      throw new AccountNotFoundException(String.format("Account %s not found", account));
-    }
+    assertTrue(nonNull(finalUser), ACCOUNT_PASSWORD_ERROR, ACCOUNT_PASSWORD_ERROR_KEY);
     return finalUser;
   }
 
@@ -142,7 +142,7 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     } else if (bizKey.sameValueAs(EmailBizKey.BIND_EMAIL)) {
       checkPassword(userId, linkSecret);
     } else {
-      throw CommProtocolException.of(String.format("bizKey %s error", bizKey.getValue()));
+      throw ProtocolException.of(String.format("bizKey %s error", bizKey.getValue()));
     }
   }
 
@@ -158,7 +158,7 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     } else if (bizKey.equals(SmsBizKey.BIND_MOBILE)) {
       checkPassword(userId, linkSecret);
     } else {
-      throw CommProtocolException.of(String.format("bizKey %s error", bizKey.getValue()));
+      throw ProtocolException.of(String.format("bizKey %s error", bizKey.getValue()));
     }
   }
 

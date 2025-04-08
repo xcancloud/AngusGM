@@ -40,7 +40,7 @@ import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.user.UserListRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -275,14 +275,14 @@ public class UserQueryImpl implements UserQuery {
     if (user.getSignupAccountType().isEmail()) {
       if (userRepo.countBySignupAccountAndSignupAccountType(user.getSignupAccount(),
           SignupType.EMAIL) > 0) {
-        throw CommProtocolException.of(USER_ACCOUNT_EXISTED_ERROR,
+        throw ProtocolException.of(USER_ACCOUNT_EXISTED_ERROR,
             new Object[]{user.getSignupAccount()});
       }
     }
     if (user.getSignupAccountType().isMobile()) {
       if (userRepo.countBySignupAccountAndSignupAccountType(user.getSignupAccount(),
           SignupType.MOBILE) > 0) {
-        throw CommProtocolException.of(USER_ACCOUNT_EXISTED_ERROR,
+        throw ProtocolException.of(USER_ACCOUNT_EXISTED_ERROR,
             new Object[]{user.getSignupAccount()});
       }
     }

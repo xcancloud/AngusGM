@@ -9,7 +9,7 @@ import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertRecognizeQuer
 import cloud.xcan.angus.core.gm.domain.tenant.cert.BusinessRecognize;
 import cloud.xcan.angus.core.gm.domain.tenant.cert.IdCardRecognize;
 import cloud.xcan.angus.core.gm.infra.config.AliYunRecognizeClient;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Biz
@@ -27,7 +27,7 @@ public class TenantCertRecognizeQueryImpl implements TenantCertRecognizeQuery {
         try {
           return aliyunRecognizeClient.recognizeBusinessLicense(businessLicensePicUrl);
         } catch (Exception e) {
-          throw CommProtocolException.of(CERT_RECOGNIZE_ERROR, new Object[]{e.getMessage()});
+          throw ProtocolException.of(CERT_RECOGNIZE_ERROR, new Object[]{e.getMessage()});
         }
       }
     }.execute();
@@ -42,7 +42,7 @@ public class TenantCertRecognizeQueryImpl implements TenantCertRecognizeQuery {
         try {
           return aliyunRecognizeClient.recognizeIDCard(facePicUrl, backPicUrl);
         } catch (Exception e) {
-          throw CommProtocolException.of(CERT_RECOGNIZE_ERROR, new Object[]{e.getMessage()});
+          throw ProtocolException.of(CERT_RECOGNIZE_ERROR, new Object[]{e.getMessage()});
         }
       }
     }.execute();

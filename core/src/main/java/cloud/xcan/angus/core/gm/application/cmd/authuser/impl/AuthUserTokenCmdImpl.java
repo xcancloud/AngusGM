@@ -2,8 +2,6 @@ package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 
 import static cloud.xcan.angus.api.commonlink.AASConstant.USER_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertClientSuccessAuthentication;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertUserSignInAuthentication;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.ACCESS_TOKEN_EXPIRED_DATE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.CUSTOM_ACCESS_TOKEN;
@@ -115,14 +113,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         }
 
         // Submit OAuth2 login authentication
-        OAuth2ClientAuthenticationToken clientAuthenticationToken
-            = convertClientSuccessAuthentication(clientDb);
-        Authentication userAuthenticationToken = convertUserSignInAuthentication(
-            SignInType.ACCOUNT_PASSWORD, currentUserId, userDb.getUsername(), userDb.getPassword(),
-            Set.of(USER_TOKEN_CLIENT_SCOPE), clientAuthenticationToken);
-        OAuth2AccessTokenAuthenticationToken result = (OAuth2AccessTokenAuthenticationToken)
-            authenticationManager.authenticate(userAuthenticationToken);
-        OAuth2AccessToken accessToken = result.getAccessToken();
+        OAuth2AccessToken accessToken = null;
 
         // Save user token
         userToken.setDecryptedValue(accessToken.getTokenValue());

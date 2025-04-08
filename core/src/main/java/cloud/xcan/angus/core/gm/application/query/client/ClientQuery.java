@@ -15,8 +15,7 @@ public interface ClientQuery {
 
   CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret);
 
-  CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret,
-      Set<String> scopes);
+  CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret, String scope);
 
   CustomOAuth2RegisteredClient checkAndFind(String clientId, boolean checkEnabled);
 

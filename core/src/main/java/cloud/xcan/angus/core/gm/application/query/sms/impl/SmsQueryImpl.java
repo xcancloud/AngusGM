@@ -33,7 +33,7 @@ import cloud.xcan.angus.core.spring.SpringContextHolder;
 import cloud.xcan.angus.core.utils.ValidatorUtils;
 import cloud.xcan.angus.extension.sms.api.SmsProvider;
 import cloud.xcan.angus.lettucex.util.RedisService;
-import cloud.xcan.angus.remote.message.CommSysException;
+import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -114,7 +114,7 @@ public class SmsQueryImpl implements SmsQuery {
   public SmsChannel checkChannelEnabledAndGet() {
     SmsChannel enabledSmsChannel = smsChannelQuery.findEnabled();
     if (isNull(enabledSmsChannel)) {
-      throw CommSysException.of(SMS_CHANNEL_NOT_AVAILABLE_CODE, SMS_CHANNEL_NOT_AVAILABLE);
+      throw SysException.of(SMS_CHANNEL_NOT_AVAILABLE_CODE, SMS_CHANNEL_NOT_AVAILABLE);
     }
     return enabledSmsChannel;
   }
@@ -130,7 +130,7 @@ public class SmsQueryImpl implements SmsQuery {
           sms.getLanguage(), enabledSmsChannel.getId());
     }
     if (isNull(smsTemplateBiz) || isNull(smsTemplate)) {
-      throw CommSysException.of(NO_TEMPLATE_BIZ_CONFIG_CODE, NO_TEMPLATE_BIZ_CONFIG_T,
+      throw SysException.of(NO_TEMPLATE_BIZ_CONFIG_CODE, NO_TEMPLATE_BIZ_CONFIG_T,
           new Object[]{sms.getInputParamData().getBizKey()});
     }
     return smsTemplate;
@@ -157,7 +157,7 @@ public class SmsQueryImpl implements SmsQuery {
     }
     if (isNull(enabledSmsProvider)) {
       // No SMS plugin available
-      throw CommSysException.of(SMS_NO_PLUGIN_ERROR_CODE, SMS_NO_PLUGIN_ERROR);
+      throw SysException.of(SMS_NO_PLUGIN_ERROR_CODE, SMS_NO_PLUGIN_ERROR);
     }
     return enabledSmsProvider;
   }

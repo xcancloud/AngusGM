@@ -28,15 +28,9 @@ public class RenewDto {
   private String clientSecret;
 
   @NotBlank
-  @Length(max = MAX_CODE_LENGTH)
+  @Length(max = MAX_CODE_LENGTH_X2)
   @Schema(description = "OAuh2 refresh token. The refresh token allows clients to obtain a new access token without re-authentication.",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String refreshToken;
-
-  @NotBlank
-  @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "The scope field specifies the permissions granted to the client, limiting resource access.",
-      example = "user_trust", requiredMode = RequiredMode.REQUIRED)
-  private String scope;
 
 }

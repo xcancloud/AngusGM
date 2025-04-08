@@ -14,7 +14,7 @@ import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.domain.tag.OrgTagTargetListRepo;
 import cloud.xcan.angus.core.jpa.repository.AbstractSearchRepository;
 import cloud.xcan.angus.core.jpa.repository.SearchMode;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import cloud.xcan.angus.spec.utils.StringUtils;
 import java.util.Set;
@@ -60,7 +60,7 @@ public class OrgTagTargetListRepoMysql extends AbstractSearchRepository<OrgTagTa
     } else if (OrgTargetType.DEPT.getValue().equals(targetType)) {
       return "a.id, a.tenant_id, a.created_by, a.created_date, t.id tagId, t.name tagName, org.created_by targetCreatedBy, org.created_date targetCreatedDate, org.id targetId, org.name targetName, 'DEPT' targetType";
     }
-    throw CommProtocolException
+    throw ProtocolException
         .of(String.format("targetType value [%s] is not supported", targetType));
   }
 
@@ -101,7 +101,7 @@ public class OrgTagTargetListRepoMysql extends AbstractSearchRepository<OrgTagTa
     } else if (OrgTargetType.DEPT.getValue().equals(targetType)) {
       sql.append(" INNER JOIN dept org ON a.target_id = org.id ");
     } else {
-      throw CommProtocolException
+      throw ProtocolException
           .of(String.format("targetType value [%s] is not supported", targetType));
     }
     sql.append(" AND org.tenant_id = ").append(tanantId);

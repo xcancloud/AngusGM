@@ -19,7 +19,7 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isMultiTenantCtr
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isOpSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setMultiTenantCtrl;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.PARAM_VALUE_DUPLICATE_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_VALUE_DUPLICATE_T;
 import static cloud.xcan.angus.remote.message.http.Forbidden.M.NO_POLICY_PERMISSION_KEY;
 import static cloud.xcan.angus.remote.message.http.Forbidden.M.NO_POLICY_PERMISSION_T;
 import static cloud.xcan.angus.remote.message.http.ResourceExisted.M.RESOURCE_ALREADY_EXISTS_T2;
@@ -48,7 +48,7 @@ import cloud.xcan.angus.core.gm.domain.policy.AuthPolicyRepo;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.Forbidden;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import cloud.xcan.angus.spec.principal.PrincipalContext;
@@ -465,7 +465,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
       for (String suffix : policyCodeSuffixMap.keySet()) {
         if (POLICY_PRE_DEFINED_SUFFIX.contains(suffix)) {
           if (policyCodeSuffixMap.get(suffix).size() > 1) {
-            throw CommProtocolException
+            throw ProtocolException
                 .of(String.format("Predefined application policy suffix %s is repeated", suffix));
           } else {
             // Check code suffix duplicate in db
@@ -473,7 +473,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
                 policyCodeSuffixMap.get(suffix).get(0).getAppId(), PolicyType.PRE_DEFINED,
                 suffix);
             if (existedSuffix) {
-              throw CommProtocolException
+              throw ProtocolException
                   .of(String.format("Predefined application policy suffix %s is repeated", suffix));
             }
           }

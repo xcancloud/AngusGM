@@ -7,9 +7,6 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP;
 import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP_TYPE;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertClientSuccessAuthentication;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertUserRenewAuthentication;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.convertUserSignInAuthentication;
 import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.getSignoutOperationEvent;
 import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.getSignupOperationEvent;
 import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.signupToAddUser;
@@ -25,12 +22,14 @@ import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NOT_SING_IN_L
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NOT_SING_IN_LOGOUT_CODE;
 import static cloud.xcan.angus.core.utils.CoreUtils.calcPasswordStrength;
 import static cloud.xcan.angus.core.utils.ValidatorUtils.checkMobile;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.CLIENT_NOT_FOUND;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.CLIENT_NOT_FOUND_KEY;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.PARAM_MISSING_KEY;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.QUERY_FIELD_EMPTY_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.CLIENT_NOT_FOUND;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.CLIENT_NOT_FOUND_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_MISSING_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.QUERY_FIELD_EMPTY_T;
 import static cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProviderUtils.DEFAULT_ENCODING_ID;
+import static cloud.xcan.angus.spec.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
@@ -64,29 +63,38 @@ import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectoryRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
 import cloud.xcan.angus.core.utils.ValidatorUtils;
 import cloud.xcan.angus.lettucex.util.RedisService;
+import cloud.xcan.angus.remote.message.ProtocolException;
+import cloud.xcan.angus.remote.message.SysException;
+import cloud.xcan.angus.remote.message.http.Unauthorized;
 import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
 import cloud.xcan.angus.spec.experimental.IdKey;
+import cloud.xcan.angus.spec.http.HttpMethod;
+import cloud.xcan.angus.spec.http.HttpSender;
+import cloud.xcan.angus.spec.http.HttpSender.Request;
+import cloud.xcan.angus.spec.http.HttpSender.Response;
+import cloud.xcan.angus.spec.http.HttpStatus;
+import cloud.xcan.angus.spec.http.HttpUrlConnectionSender;
 import cloud.xcan.angus.spec.principal.PrincipalContext;
+import cloud.xcan.angus.spec.utils.JsonUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.Resource;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -130,13 +138,13 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   private PasswordEncoder passwordEncoder;
 
   @Resource
-  private AuthenticationManager authenticationManager;
-
-  @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
 
   @Resource
   private DaoAuthenticationProvider daoAuthenticationProvider;
+
+  @Resource
+  private ApplicationInfo applicationInfo;
 
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -158,85 +166,81 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   @Override
-  public OAuth2AccessTokenAuthenticationToken signin(String clientId, String clientSecret,
-      Set<String> scopes, SignInType signinType, @Nullable Long userId, String account,
-      String password, String deviceId) {
-    return new BizTemplate<OAuth2AccessTokenAuthenticationToken>(false) {
+  public Map<String, String> signin(String clientId, String clientSecret, SignInType signinType,
+      @Nullable Long userId, String account, String password, String deviceId) {
+    return new BizTemplate<Map<String, String>>(false) {
       CustomOAuth2RegisteredClient clientDb;
-      AuthUser userDb;
-      String finalAccount;
+      AuthUser authUserDb;
+      AuthUser safeAuthUser;
 
       @Override
       protected void checkParams() {
         // Check the required account parameters
         checkRequiredParameters(userId, account, deviceId);
         // Check the clientId, clientSecret and scopes are correct
-        clientDb = clientQuery.checkAndFind(clientId, clientSecret, scopes);
+        clientDb = clientQuery.checkAndFind(clientId, clientSecret);
         // Check and find the existed account
-        userDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
-        finalAccount = isNull(userDb) ? account : userDb.getUsername();
+        authUserDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
+        safeAuthUser = AuthUser.with(authUserDb);
         // Check the number of password errors
-        checkSignInPasswordErrorNum(Long.valueOf(userDb.getTenantId()), finalAccount);
+        checkSignInPasswordErrorNum(safeAuthUser.getTenantId(), safeAuthUser.getUsername());
       }
 
       @Override
-      protected OAuth2AccessTokenAuthenticationToken process() {
+      protected Map<String, String> process() {
         try {
           // Cached to context for LdapPasswordConnection login
-          cacheUserDirectory(userDb);
+          cacheUserDirectory(safeAuthUser);
 
           // Cached to context for load UserDetail
-          daoAuthenticationProvider.getUserCache().putUserInCache(userDb.getId(),
-              finalAccount, userDb);
+          daoAuthenticationProvider.getUserCache().putUserInCache(safeAuthUser.getId(),
+              safeAuthUser.getUsername(), safeAuthUser);
 
           // Submit OAuth2 login authentication
-          OAuth2ClientAuthenticationToken clientAuthenticationToken
-              = convertClientSuccessAuthentication(clientDb);
-          Authentication userAuthenticationToken = convertUserSignInAuthentication(
-              signinType, userId, finalAccount, password, scopes, clientAuthenticationToken);
-          OAuth2AccessTokenAuthenticationToken result = (OAuth2AccessTokenAuthenticationToken)
-              authenticationManager.authenticate(userAuthenticationToken);
+          Map<String, String> result = submitOauth2SignInRequest(clientId, clientSecret,
+              signinType, safeAuthUser.getId(), account, password);
 
           // Save new bcrypt password after login directory success
-          updateNewDirectoryPassword(userDb, password);
-
-          // Record successful login logs
-          if (nonNull(operationEventQueue)) {
-            operationEventQueue.add(getSignupOperationEvent(clientId, userDb));
-          }
-
+          updateNewDirectoryPassword(authUserDb, password);
           return result;
-        } catch (Exception e) {
-          if (nonNull(userDb)) {
-            recordSignInPasswordErrorNum(Long.valueOf(userDb.getTenantId()), finalAccount);
+        } catch (Throwable e) {
+          if (nonNull(safeAuthUser)) {
+            recordSignInPasswordErrorNum(Long.valueOf(safeAuthUser.getTenantId()),
+                safeAuthUser.getUsername());
           }
-          throw e;
+          if (e instanceof Unauthorized) {
+            throw (Unauthorized) e;
+          }
+          throw new SysException(e.getMessage());
+        } finally {
+          // Record successful login logs
+          if (nonNull(operationEventQueue) && nonNull(authUserDb)) {
+            operationEventQueue.add(getSignupOperationEvent(clientId, safeAuthUser));
+          }
         }
       }
     }.execute();
   }
 
   @Override
-  public OAuth2AccessTokenAuthenticationToken renew(String clientId, String clientSecret,
-      String refreshToken, Set<String> scopes) {
-    return new BizTemplate<OAuth2AccessTokenAuthenticationToken>(false) {
+  public Map<String, String> renew(String clientId, String clientSecret, String refreshToken) {
+    return new BizTemplate<Map<String, String>>(false) {
       CustomOAuth2RegisteredClient clientDb;
 
       @Override
       protected void checkParams() {
         // Check the clientId, clientSecret and scopes are correct
-        clientDb = clientQuery.checkAndFind(clientId, clientSecret, scopes);
+        clientDb = clientQuery.checkAndFind(clientId, clientSecret);
       }
 
       @Override
-      protected OAuth2AccessTokenAuthenticationToken process() {
+      protected Map<String, String> process() {
         // Submit OAuth2 refresh token authentication
-        OAuth2ClientAuthenticationToken clientAuthenticationToken
-            = convertClientSuccessAuthentication(clientDb);
-        Authentication userAuthenticationToken = convertUserRenewAuthentication(
-            refreshToken, scopes, clientAuthenticationToken);
-        return (OAuth2AccessTokenAuthenticationToken)
-            authenticationManager.authenticate(userAuthenticationToken);
+        try {
+          return submitOauth2RenewRequest(clientId, clientSecret, refreshToken);
+        } catch (Throwable e) {
+          throw new SysException(e.getMessage());
+        }
       }
     }.execute();
   }
@@ -256,7 +260,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
         if (nonNull(authorizationDb)) {
           // Check the clientId is consistent
-          assertTrue(clientId.equals(authorizationDb.getRegisteredClientId()),
+          assertTrue(clientDb.getId().equals(authorizationDb.getRegisteredClientId()),
               CLIENT_NOT_FOUND, CLIENT_NOT_FOUND_KEY, null);
 
           // Check cannot log out the user created token, and can only delete it manually
@@ -334,8 +338,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
    */
   private void cacheUserDirectory(@Nullable AuthUser user) {
     if (nonNull(user) && user.supportDirectoryAuth()) {
-      UserDirectory userDirectory = userDirectoryRepo.findById(
-              Long.valueOf(user.getDirectoryId()))
+      UserDirectory userDirectory = userDirectoryRepo.findById(Long.valueOf(user.getDirectoryId()))
           .orElse(null);
       if (nonNull(userDirectory) && nonNull(userDirectory.getEnabled())
           && userDirectory.getEnabled()) {
@@ -354,6 +357,39 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
           user.getPassword().replaceFirst(PASSWORD_PROXY_ENCRYP_TYPE, DEFAULT_ENCODING_ID));
       authUserRepo.save(user);
     }
+  }
+
+  private Map<String, String> submitOauth2SignInRequest(String clientId, String clientSecret,
+      SignInType signinType, String userId, String account,
+      String password) throws Throwable {
+    String authContent = format(
+        "client_id=%s&client_secret=%s&grant_type=%s&user_id=%s&account=%s&password=%s",
+        clientId, clientSecret, signinType.toOAuth2GrantType(), userId, account, password);
+    return sendOauth2RenewRequest(authContent);
+  }
+
+  private Map<String, String> submitOauth2RenewRequest(String clientId, String clientSecret,
+      String refreshToken) throws Throwable {
+    String authContent = format("client_id=%s&client_secret=%s&grant_type=%s&refresh_token=%s",
+        clientId, clientSecret, AuthorizationGrantType.REFRESH_TOKEN.getValue(), refreshToken);
+    return sendOauth2RenewRequest(authContent);
+  }
+
+  private Map<String, String> sendOauth2RenewRequest(String authContent) throws Throwable {
+    HttpSender sender = new HttpUrlConnectionSender();
+    String tokenEndpoint = format("http://%s/oauth2/token", applicationInfo.getInstanceId());
+    Response response = Request.build(tokenEndpoint, sender).withMethod(HttpMethod.POST)
+        .withContent(APPLICATION_FORM_URLENCODED, authContent).send();
+    Map<String, String> result = JsonUtils.convert(response.body(), new TypeReference<>() {
+    });
+    if (!response.isSuccessful()) {
+      if (response.code() == HttpStatus.UNAUTHORIZED.value) {
+        throw Unauthorized.of(Objects.requireNonNull(result).get("error_description"));
+      } else {
+        throw ProtocolException.of(Objects.requireNonNull(result).get("error_description"));
+      }
+    }
+    return result;
   }
 
   private void checkRequiredParameters(Long userId, String account, String deviceId) {
@@ -380,9 +416,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   private void checkForgetPasswordLinkSecret(Long userId, String linkSecret) {
-    String emailCacheKey = String.format(AASConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX,
+    String emailCacheKey = format(AASConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX,
         EmailBizKey.PASSD_FORGET, userId);
-    String smsCacheKey = String.format(AASConstant.CACHE_SMS_CHECK_SECRET_PREFIX,
+    String smsCacheKey = format(AASConstant.CACHE_SMS_CHECK_SECRET_PREFIX,
         SmsBizKey.PASSD_FORGET, userId);
     String emailLinkSecret = stringRedisService.get(emailCacheKey);
     String smsLinkSecret = stringRedisService.get(smsCacheKey);
@@ -393,16 +429,17 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     stringRedisService.delete(smsCacheKey);
   }
 
-  private void checkSignInPasswordErrorNum(Long tenantId, String finalAccount) {
-    String passwordLockedCacheKey = String.format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, finalAccount);
+  private void checkSignInPasswordErrorNum(String tenantId, String finalAccount) {
+    String passwordLockedCacheKey = format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, finalAccount);
     String passwordLockedMinutes = stringRedisService.get(passwordLockedCacheKey);
     BizAssert.assertTrue(isNull(passwordLockedMinutes), SIGN_IN_PASSWORD_ERROR_LOCKED_RETRY_CODE,
         SIGN_IN_PASSWORD_ERROR_LOCKED_RETRY_T, new Object[]{passwordLockedMinutes});
 
-    String passwordErrorNumCacheKey = String.format(CACHE_PASSWORD_ERROR_NUM_PREFIX, finalAccount);
+    String passwordErrorNumCacheKey = format(CACHE_PASSWORD_ERROR_NUM_PREFIX, finalAccount);
     String passwordErrorNum = stringRedisService.get(passwordErrorNumCacheKey);
     if (nonNull(passwordErrorNum)) {
-      SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(tenantId);
+      SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(
+          Long.valueOf(tenantId));
       SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
       // When sign-in limit is enabled
       if (signinLimit.getEnabled()) {
@@ -420,13 +457,13 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   public void recordSignInPasswordErrorNum(Long tenantId, String innerAccount) {
-    String passwordLockedCacheKey = String.format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, innerAccount);
+    String passwordLockedCacheKey = format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, innerAccount);
     String passwordLockedMinutes = stringRedisService.get(passwordLockedCacheKey);
     if (Objects.nonNull(passwordLockedMinutes)) {
       // Do not record the number of errors after locking
       return;
     }
-    String passwordErrorNumCacheKey = String.format(CACHE_PASSWORD_ERROR_NUM_PREFIX, innerAccount);
+    String passwordErrorNumCacheKey = format(CACHE_PASSWORD_ERROR_NUM_PREFIX, innerAccount);
     String passwordErrorNum = stringRedisService.get(passwordErrorNumCacheKey);
     if (Objects.nonNull(passwordErrorNum)) {
       passwordErrorNum = String.valueOf(parseInt(passwordErrorNum) + 1);

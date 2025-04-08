@@ -28,9 +28,9 @@ public class SignoutDto {
   private String clientSecret;
 
   @NotBlank
-  @Length(max = MAX_CODE_LENGTH)
+  @Length(max = MAX_CODE_LENGTH_X2)
   @Schema(description = "The access token that needs to be invalidated out when logout.",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String accessToken;
 
 }

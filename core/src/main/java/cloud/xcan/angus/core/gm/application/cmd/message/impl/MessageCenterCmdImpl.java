@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.cmd.message.impl;
 
 import static cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeMessage.MESSAGE_CENTER_NOTICE;
 import static cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeMessage.MESSAGE_CENTER_SIGN_OUT;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.QUERY_FIELD_EMPTY_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.QUERY_FIELD_EMPTY_T;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
@@ -19,7 +19,7 @@ import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeMessage;
 import cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeService;
 import cloud.xcan.angus.core.utils.GsonUtils;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
@@ -134,7 +134,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   private void checkRequiredParam(ReceiveObjectType objectType, List<Long> objectIds) {
     if (!objectType.equals(ReceiveObjectType.ALL) && isEmpty(objectIds)) {
-      throw CommProtocolException.of(QUERY_FIELD_EMPTY_T, new Object[]{"objectIds"});
+      throw ProtocolException.of(QUERY_FIELD_EMPTY_T, new Object[]{"objectIds"});
     }
   }
 

@@ -44,7 +44,7 @@ import cloud.xcan.angus.core.gm.domain.tenant.audit.TenantCertAuditRepo;
 import cloud.xcan.angus.core.gm.domain.tenant.cert.BusinessRecognize;
 import cloud.xcan.angus.core.gm.domain.tenant.cert.IdCardRecognize;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
-import cloud.xcan.angus.remote.message.CommSysException;
+import cloud.xcan.angus.remote.message.SysException;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -262,7 +262,7 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
         } else if (tenantAuditDb.getType().isEnterprise()) {
           checkEnterpriseCert(tenantAuditDb);
         } else {
-          throw CommSysException.of("Government type license audit check is not supported");
+          throw SysException.of("Government type license audit check is not supported");
         }
         return null;
       }

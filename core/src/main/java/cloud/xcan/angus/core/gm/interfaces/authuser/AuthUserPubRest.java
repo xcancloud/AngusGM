@@ -66,7 +66,7 @@ public class AuthUserPubRest {
   @PostMapping("/signin")
   public ApiLocaleResult<SignVo> signin(
       @Parameter(description = "Current user sign-in device id.") @RequestHeader(value = Header.AUTH_DEVICE_ID, required = false) String deviceId,
-      @Valid SignInDto dto) {
+      @Valid @RequestBody SignInDto dto) {
     return ApiLocaleResult.success(userSignFacade.signin(deviceId, dto));
   }
 
@@ -92,7 +92,7 @@ public class AuthUserPubRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully")})
   @PostMapping(value = "/renew")
-  public ApiLocaleResult<?> renew(@Valid RenewDto dto) {
+  public ApiLocaleResult<?> renew(@Valid @RequestBody RenewDto dto) {
     return ApiLocaleResult.success(userSignFacade.renew(dto));
   }
 
@@ -116,7 +116,7 @@ public class AuthUserPubRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signout successfully")})
   @PostMapping(value = "/signout")
-  public ApiLocaleResult<?> signout(@Valid SignoutDto dto) {
+  public ApiLocaleResult<?> signout(@Valid @RequestBody SignoutDto dto) {
     userSignFacade.signout(dto);
     return ApiLocaleResult.success();
   }
@@ -164,7 +164,7 @@ public class AuthUserPubRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Send successfully")})
   @PostMapping(value = "/signsms/send")
-  public ApiLocaleResult<?> sendSignSms(@Valid SignSmsSendDto dto) {
+  public ApiLocaleResult<?> sendSignSms(@Valid @RequestBody SignSmsSendDto dto) {
     userSignFacade.sendSignSms(dto);
     return ApiLocaleResult.success();
   }

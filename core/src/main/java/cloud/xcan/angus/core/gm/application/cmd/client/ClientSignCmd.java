@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
 public interface ClientSignCmd {
 
-  OAuth2AccessToken signin(String clientId, String clientSecret, Set<String> scopes);
+  OAuth2AccessToken signin(String clientId, String clientSecret, String scope);
 
   ClientAuth signupByDoor(Client2pSignupBiz signupBiz, Long tenantId, String tenantName,
       Long resourceId);

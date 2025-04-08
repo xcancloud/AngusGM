@@ -32,6 +32,7 @@ import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -62,19 +63,17 @@ public class AuthUserSignFacadeImpl implements AuthUserSignFacade {
 
   @Override
   public SignVo signin(String deviceId, SignInDto dto) {
-    OAuth2AccessTokenAuthenticationToken accessToken = authUserSignCmd.signin(dto.getClientId(),
-        dto.getClientSecret(), new HashSet<>(List.of(dto.getScope().split(","))),
-        dto.getSigninType(), dto.getUserId(), dto.getAccount(), dto.getPassword(),
-        emptySafe(deviceId, dto.getDeviceId()));
-    return signInToVo(accessToken);
+    Map<String, String> result = authUserSignCmd.signin(dto.getClientId(),
+        dto.getClientSecret(), dto.getSigninType(), dto.getUserId(),
+        dto.getAccount(), dto.getPassword(), emptySafe(deviceId, dto.getDeviceId()));
+    return signInToVo(result);
   }
 
   @Override
   public SignVo renew(RenewDto dto) {
-    OAuth2AccessTokenAuthenticationToken refreshToken = authUserSignCmd.renew(dto.getClientId(),
-        dto.getClientSecret(), dto.getRefreshToken(),
-        new HashSet<>(List.of(dto.getScope().split(","))));
-    return signInToVo(refreshToken);
+    Map<String, String> result = authUserSignCmd.renew(dto.getClientId(), dto.getClientSecret(),
+        dto.getRefreshToken());
+    return signInToVo(result);
   }
 
   @Override

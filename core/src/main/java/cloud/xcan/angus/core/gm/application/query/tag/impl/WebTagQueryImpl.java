@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.application.query.tag.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_TAG_EXIST_ERROR_T;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_TAG_REPEAT_ERROR_T;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.PARAM_ERROR_KEY;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_ERROR_KEY;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.duplicateByKey;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
@@ -17,7 +17,7 @@ import cloud.xcan.angus.core.gm.application.query.tag.WebTagQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.tag.WebTagRepo;
 import cloud.xcan.angus.core.gm.domain.tag.WebTagTargetRepo;
-import cloud.xcan.angus.remote.message.CommProtocolException;
+import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -148,7 +148,7 @@ public class WebTagQueryImpl implements WebTagQuery {
     List<String> repeatedNames = names.stream().filter(duplicateByKey(x -> x))
         .collect(Collectors.toList());
     if (isNotEmpty(repeatedNames)) {
-      throw CommProtocolException.of(APP_TAG_REPEAT_ERROR_T, PARAM_ERROR_KEY,
+      throw ProtocolException.of(APP_TAG_REPEAT_ERROR_T, PARAM_ERROR_KEY,
           new Object[]{repeatedNames.get(0)});
     }
   }

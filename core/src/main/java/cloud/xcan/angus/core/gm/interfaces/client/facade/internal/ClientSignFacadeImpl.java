@@ -24,7 +24,7 @@ public class ClientSignFacadeImpl implements ClientSignFacade {
   @Override
   public ClientSignVo signin(ClientSigninDto dto) {
     OAuth2AccessToken accessToken = clientSignCmd.signin(dto.getClientId(),
-        dto.getClientSecret(), dto.getScopes());
+        dto.getClientSecret(), dto.getScope());
     return signInToVo(accessToken);
   }
 

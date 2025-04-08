@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.application.query.client.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.CLIENT_IS_DISABLED_T;
+import static cloud.xcan.angus.remote.message.http.Unauthorized.M.INVALID_CLIENT;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
@@ -13,8 +14,10 @@ import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 
@@ -76,18 +79,19 @@ public class ClientQueryImpl implements ClientQuery {
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret) {
     CustomOAuth2RegisteredClient client = checkAndFind(clientId);
-    assertTrue(passwordEncoder.matches(clientSecret, client.getClientSecret()),
-        "Client secret inconsistency");
+    assertTrue(passwordEncoder.matches(clientSecret, client.getClientSecret()), INVALID_CLIENT);
     return client;
   }
 
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret,
-      Set<String> scopes) {
+      @Nullable String scope) {
     CustomOAuth2RegisteredClient client = checkAndFind(clientId, clientSecret);
-    for (String scope : scopes) {
-      assertTrue(client.getScopes().contains(scope),
-          String.format("Client scope %s is invalid", scope));
+    if (scope != null) {
+      for (String scope0 : scope.split(",")) {
+        assertTrue(client.getScopes().contains(scope0),
+            String.format("Client scope %s is invalid", scope0));
+      }
     }
     return client;
   }

@@ -5,8 +5,8 @@ import static cloud.xcan.angus.api.commonlink.AASConstant.CACHE_EMAIL_CHECK_SECR
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.PASSWORD_IS_TOO_SHORT_T;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.EMAIL_NOT_EXIST_T;
-import static cloud.xcan.angus.remote.message.CommProtocolException.M.MOBILE_NOT_EXIST_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.EMAIL_NOT_EXIST_T;
+import static cloud.xcan.angus.remote.message.ProtocolException.M.MOBILE_NOT_EXIST_T;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_LINK_SECRET_LENGTH;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
@@ -23,7 +23,7 @@ import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserQuery;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserSignQuery;
 import cloud.xcan.angus.lettucex.util.RedisService;
-import cloud.xcan.angus.remote.message.CommSysException;
+import cloud.xcan.angus.remote.message.SysException;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
@@ -113,7 +113,7 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
   @Override
   public SettingTenant checkAndFindSettingTenant(Long tenantId) {
     return settingTenantRepo.findByTenantId(tenantId).orElseThrow(() ->
-        CommSysException.of(String.format("Tenant %s setting is not initialized", tenantId)));
+        SysException.of(String.format("Tenant %s setting is not initialized", tenantId)));
   }
 
   private List<AuthUser> checkEmailUserExist(String email) {
