@@ -32,17 +32,17 @@ public class AppFuncTagFacadeImpl implements AppFuncTagFacade {
 
   @Override
   public List<IdKey<Long, Object>> funcTagAdd(Long funcId, LinkedHashSet<Long> tagIds) {
-    return webTagTargetCmd.appTagAdd(funcId, tagIds);
+    return webTagTargetCmd.funcTagAdd(funcId, tagIds);
   }
 
   @Override
   public void funcTagReplace(Long id, LinkedHashSet<Long> ids) {
-    webTagTargetCmd.appTagReplace(id, ids);
+    webTagTargetCmd.funcTagReplace(id, ids);
   }
 
   @Override
   public void funcTagDelete(Long funcId, HashSet<Long> tagIds) {
-    webTagTargetCmd.appTagDelete(funcId, tagIds);
+    webTagTargetCmd.funcTagDelete(funcId, tagIds);
   }
 
   @NameJoin

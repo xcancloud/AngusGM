@@ -34,6 +34,7 @@ import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -187,16 +188,6 @@ public class AppFuncQueryImpl implements AppFuncQuery {
   }
 
   @Override
-  public void checkRepeatedCodeInParams(List<AppFunc> func) {
-    List<AppFunc> funcDuplicate = func.stream()
-        .filter(duplicateByKey(AppFunc::getCode)).collect(Collectors.toList());
-    if (isNotEmpty(funcDuplicate)) {
-      throw ResourceExisted.of(APP_FUNC_CODE_REPEATED_T,
-          new Object[]{funcDuplicate.get(0).getCode()});
-    }
-  }
-
-  @Override
   public AppFunc checkAndFind(Long id, boolean checkEnabled) {
     AppFunc appFuncDb = appFuncRepo.findById(id)
         .orElseThrow(() -> ResourceNotFound.of(id, "AppFunc"));
@@ -232,6 +223,11 @@ public class AppFuncQueryImpl implements AppFuncQuery {
   public List<AppFunc> findAllByAppId(Long appId, Boolean onlyEnabled) {
     return isNull(onlyEnabled) || !onlyEnabled ? appFuncRepo.findAllByAppId(appId)
         : appFuncRepo.findAllByAppIdAndEnabled(appId, true);
+  }
+
+  @Override
+  public List<AppFunc> findById(HashSet<Long> funcIds) {
+    return appFuncRepo.findAllByIdIn(funcIds);
   }
 
   @Override

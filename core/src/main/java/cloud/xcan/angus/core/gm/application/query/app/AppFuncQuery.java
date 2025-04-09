@@ -4,6 +4,7 @@ import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,13 +26,13 @@ public interface AppFuncQuery {
 
   void checkUpdateCodeExist(Long appId, List<AppFunc> funcs);
 
-  void checkRepeatedCodeInParams(List<AppFunc> funcs);
-
   AppFunc checkAndFind(Long id, boolean checkEnabled);
 
   List<AppFunc> checkAndFind(Collection<Long> ids, boolean checkEnabled);
 
   List<AppFunc> findAllByAppId(Long appId, Boolean onlyEnabled);
+
+  List<AppFunc> findById(HashSet<Long> funcIds);
 
   List<AppFunc> findFuncAndSub(Long appId, Collection<Long> funcIds);
 
@@ -52,4 +53,5 @@ public interface AppFuncQuery {
   void setTags(List<AppFunc> appFunctions);
 
   void setApis(App app);
+
 }

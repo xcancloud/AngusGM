@@ -484,7 +484,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
 
   @Override
   public void setAppInfo(List<AuthPolicy> policies) {
-    Map<Long, App> appMap = appQuery.findMapByAppId(
+    Map<Long, App> appMap = appQuery.findMapById(
         policies.stream().map(AuthPolicy::getAppId).collect(Collectors.toSet()));
     for (AuthPolicy policy : policies) {
       App app = appMap.get(policy.getAppId());

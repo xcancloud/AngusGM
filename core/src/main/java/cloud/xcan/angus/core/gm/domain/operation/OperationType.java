@@ -5,7 +5,8 @@ import cloud.xcan.angus.spec.ValueObject;
 
 public enum OperationType implements ValueObject<OperationType> {
   CREATED, UPDATED, ENABLED, DISABLED, DELETED, CUSTOM,
-  SIGN_UP, SIGN_IN_SUCCESS, SIGN_IN_FAIL, SIGN_OUT, UPDATE_PASSWORD;
+  SIGN_UP, SIGN_IN_SUCCESS, SIGN_IN_FAIL, SIGN_OUT, UPDATE_PASSWORD,
+  TARGET_TAG_UPDATED, TARGET_TAG_DELETED;
 
   public String getValue() {
     return this.name();

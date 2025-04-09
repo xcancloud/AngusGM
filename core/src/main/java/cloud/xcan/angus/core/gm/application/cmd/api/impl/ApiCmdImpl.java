@@ -68,7 +68,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
   private ServiceQuery serviceQuery;
 
   @Resource
-  private ApiAuthorityRepo authorityRepo;
+  private ApiAuthorityRepo apiAuthorityRepo;
 
   @Resource
   private SystemTokenCmd systemTokenCmd;
@@ -205,7 +205,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         deleteAppAndFuncApis(apiIds);
 
         // Delete api authority
-        authorityRepo.deleteByApiIdIn(apiIds);
+        apiAuthorityRepo.deleteByApiIdIn(apiIds);
 
         // Delete system token authorization
         systemTokenCmd.deleteByApiIdIn(apiIds);
@@ -242,13 +242,13 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         batchUpdate0(batchCopyPropertiesIgnoreNull(apis, apisDb));
 
         // Sync the api enabled or disabled status to authority
-        List<ApiAuthority> authorities = authorityRepo.findByApiIdIn(apiIds);
+        List<ApiAuthority> authorities = apiAuthorityRepo.findByApiIdIn(apiIds);
         if (isNotEmpty(authorities)) {
           Map<Long, Api> apiMap = apis.stream().collect(Collectors.toMap(Api::getId, x -> x));
           for (ApiAuthority authority : authorities) {
             authority.setApiEnabled(apiMap.get(authority.getApiId()).getEnabled());
           }
-          authorityRepo.saveAll(authorities);
+          apiAuthorityRepo.saveAll(authorities);
         }
 
         // NOOP:: Synchronously update the system token authorization resource status, alternative manual deletion of disabled apis.

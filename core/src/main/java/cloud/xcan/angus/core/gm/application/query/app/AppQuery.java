@@ -18,11 +18,13 @@ public interface AppQuery {
 
   Page<App> find(GenericSpecification<App> spec, Pageable pageable);
 
-  App findLatestAppByCode(String code);
+  App findLatestByCode(String code);
 
-  App findLatestAppByCode(String code, EditionType editionType);
+  App findLatestByCode(String code, EditionType editionType);
 
-  Map<Long, App> findMapByAppId(Collection<Long> ids);
+  List<App> findById(Collection<Long> ids);
+
+  Map<Long, App> findMapById(Collection<Long> ids);
 
   App checkAndFind(String idOrCode);
 

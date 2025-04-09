@@ -100,17 +100,22 @@ public class AppQueryImpl implements AppQuery {
   }
 
   @Override
-  public App findLatestAppByCode(String code) {
+  public App findLatestByCode(String code) {
     return appRepo.findLatestByCode(code);
   }
 
   @Override
-  public App findLatestAppByCode(String code, EditionType editionType) {
+  public App findLatestByCode(String code, EditionType editionType) {
     return appRepo.findLatestByCodeAndEditionType(code, editionType.getValue());
   }
 
   @Override
-  public Map<Long, App> findMapByAppId(Collection<Long> ids) {
+  public List<App> findById(Collection<Long> ids) {
+    return appRepo.findAllById(ids);
+  }
+
+  @Override
+  public Map<Long, App> findMapById(Collection<Long> ids) {
     return appRepo.findAllById(ids).stream().collect(Collectors.toMap(App::getId, x -> x));
   }
 
@@ -121,7 +126,7 @@ public class AppQueryImpl implements AppQuery {
       appDb = appRepo.findById(Long.parseLong(idOrCode)).orElse(null);
     }
     if (Objects.isNull(appDb)) {
-      appDb = findLatestAppByCode(idOrCode);
+      appDb = findLatestByCode(idOrCode);
       if (Objects.isNull(appDb)) {
         throw ResourceNotFound.of(idOrCode, "App");
       }
@@ -131,7 +136,7 @@ public class AppQueryImpl implements AppQuery {
 
   @Override
   public App checkAndFind(String code, EditionType editionType) {
-    App appDb = findLatestAppByCode(code, editionType);
+    App appDb = findLatestByCode(code, editionType);
     if (Objects.isNull(appDb)) {
       throw ResourceNotFound.of(editionType.getValue() + ":" + code, "App");
     }

@@ -1,5 +1,6 @@
 package cloud.xcan.angus.api.commonlink.app.tag;
 
+import cloud.xcan.angus.api.commonlink.operation.OperationResource;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,7 +16,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class WebTag extends TenantAuditingEntity<WebTag, Long> {
+public class WebTag extends TenantAuditingEntity<WebTag, Long> implements OperationResource<Long> {
 
   @Id
   private Long id;

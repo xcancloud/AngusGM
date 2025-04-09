@@ -34,8 +34,8 @@ public class WebTagTargetFacadeImpl implements WebTagTargetFacade {
   private WebTagTargetQuery webTagTargetQuery;
 
   @Override
-  public List<IdKey<Long, Object>> targetAdd(Long tagId, LinkedHashSet<WebTagTargetAddDto> dtos) {
-    List<WebTagTarget> tagTargets = dtos.stream()
+  public List<IdKey<Long, Object>> targetAdd(Long tagId, LinkedHashSet<WebTagTargetAddDto> dto) {
+    List<WebTagTarget> tagTargets = dto.stream()
         .map(target -> addDtoToTagTarget(tagId, target))
         .collect(Collectors.toList());
     return webTagTargetCmd.tagTargetAdd(tagId, tagTargets);

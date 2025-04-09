@@ -3,16 +3,23 @@ package cloud.xcan.angus.core.gm.application.query.tag.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findFirstValue;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
+import static java.util.Collections.emptyList;
 
+import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
+import cloud.xcan.angus.api.commonlink.app.tag.WebTagTargetType;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter;
+import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
+import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.WebTagTargetQuery;
+import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.tag.WebTagRepo;
 import cloud.xcan.angus.core.gm.domain.tag.WebTagTargetListRepo;
+import cloud.xcan.angus.core.gm.domain.tag.WebTagTargetRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import jakarta.annotation.Resource;
@@ -31,10 +38,16 @@ import org.springframework.data.jpa.domain.JpaSort;
 public class WebTagTargetQueryImpl implements WebTagTargetQuery {
 
   @Resource
-  private WebTagRepo webTagRepo;
+  private WebTagTargetRepo webTagTargetRepo;
 
   @Resource
   private WebTagTargetListRepo webTagTargetListRepo;
+
+  @Resource
+  private AppQuery appQuery;
+
+  @Resource
+  private AppFuncQuery appFuncQuery;
 
   @Override
   public Page<WebTagTarget> findTagTarget(GenericSpecification<WebTagTarget> spec,
@@ -77,16 +90,41 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
   }
 
   @Override
-  public List<WebTag> checkAndFind(Collection<Long> ids) {
-    List<WebTag> tags = webTagRepo.findAllById(ids);
-    assertResourceNotFound(isNotEmpty(tags), ids.iterator().next(), "WebTag");
-
-    if (ids.size() != tags.size()) {
-      for (WebTag tag : tags) {
-        assertResourceNotFound(ids.contains(tag.getId()), tag.getId(), "WebTag");
+  public List<App> checkAppAndDeduplication(Set<WebTagTarget> newTagTargets,
+      List<WebTagTarget> tagTargets, Long tagId) {
+    Set<WebTagTarget> userTags = tagTargets.stream()
+        .filter(x -> x.getTargetType().equals(WebTagTargetType.APP)).collect(Collectors.toSet());
+    List<App> appsDb = emptyList();
+    if (isNotEmpty(userTags)) {
+      List<Long> appIds = userTags.stream().map(WebTagTarget::getTargetId)
+          .collect(Collectors.toList());
+      appsDb = appQuery.checkAndFind(appIds, false);
+      Set<WebTagTarget> tagsDb = webTagTargetRepo.findByTagIdAndTargetTypeAndTargetIdIn(
+          tagId, WebTagTargetType.APP, appIds);
+      if (isNotEmpty(tagsDb)) {
+        newTagTargets.removeAll(tagsDb);
       }
     }
-    return tags;
+    return appsDb;
+  }
+
+  @Override
+  public List<AppFunc> checkAppFuncAndDeduplication(Set<WebTagTarget> newTagTargets,
+      List<WebTagTarget> tagTargets, Long tagId) {
+    Set<WebTagTarget> deptTags = tagTargets.stream()
+        .filter(x -> !x.getTargetType().equals(WebTagTargetType.APP)).collect(Collectors.toSet());
+    List<AppFunc> appFuncDb = emptyList();
+    if (isNotEmpty(deptTags)) {
+      Set<Long> funcIds = deptTags.stream().map(WebTagTarget::getTargetId)
+          .collect(Collectors.toSet());
+      appFuncDb = appFuncQuery.checkAndFind(funcIds, false);
+      Set<WebTagTarget> tagsDb = webTagTargetRepo.findByTagIdAndTargetTypeNotAndTargetIdIn(
+          tagId, WebTagTargetType.APP, funcIds);
+      if (isNotEmpty(tagsDb)) {
+        newTagTargets.removeAll(tagsDb);
+      }
+    }
+    return appFuncDb;
   }
 
   @Override

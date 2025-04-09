@@ -21,6 +21,8 @@ public interface AppFuncRepo extends BaseRepository<AppFunc, Long>,
 
   List<AppFunc> findAllByAppId(Long appId);
 
+  List<AppFunc> findAllByIdIn(Collection<Long> ids);
+
   List<AppFunc> findAllByAppIdAndEnabled(Long appId, Boolean enabled);
 
   List<AppFunc> findAllByAppIdAndType(Long appIdi, AppFuncType funcType);
