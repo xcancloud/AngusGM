@@ -38,7 +38,7 @@ public class AppOpenDoorRest {
   @Resource
   private AppOpenFacade appOpenFacade;
 
-  @Operation(description = "Open application.", operationId = "app:open:door")
+  @Operation(description = "Open application.", operationId = "app:open:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Open successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -47,7 +47,7 @@ public class AppOpenDoorRest {
     return ApiLocaleResult.success(appOpenFacade.open(dto));
   }
 
-  @Operation(description = "Renewal the opened application.", operationId = "app:open:renew:door")
+  @Operation(description = "Renewal the opened application.", operationId = "app:open:renew:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -59,7 +59,7 @@ public class AppOpenDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Cancel the opened application.", operationId = "app:open:cancel:door")
+  @Operation(description = "Cancel the opened application.", operationId = "app:open:cancel:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Cancel successfully")})
   @ResponseStatus(HttpStatus.CREATED)

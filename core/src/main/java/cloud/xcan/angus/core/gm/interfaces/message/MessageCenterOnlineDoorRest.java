@@ -25,7 +25,7 @@ public class MessageCenterOnlineDoorRest {
   @Resource
   private MessageCenterOnlineDoorFacade messageCenterOnlineDoorFacade;
 
-  @Operation(description = "Forced offline and logout users.", operationId = "mcenter:offline:door")
+  @Operation(description = "Forced offline and logout users.", operationId = "mcenter:offline:inner")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping

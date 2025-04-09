@@ -27,7 +27,7 @@ public class EmailDoorRest {
   @Resource
   private EmailDoorFacade emailDoorFacade;
 
-  @Operation(description = "Send email.", operationId = "email:send:door")
+  @Operation(description = "Send email.", operationId = "email:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sent successfully")})
   @PostMapping
@@ -36,7 +36,7 @@ public class EmailDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check the email verification code is valid.", operationId = "email:verificationCode:check:door")
+  @Operation(description = "Check the email verification code is valid.", operationId = "email:verificationCode:check:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")

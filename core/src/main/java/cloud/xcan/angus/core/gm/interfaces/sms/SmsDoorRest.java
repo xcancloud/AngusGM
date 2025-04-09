@@ -27,7 +27,7 @@ public class SmsDoorRest {
   @Resource
   private SmsDoorFacade smsDoorFacade;
 
-  @Operation(description = "Send sms.", operationId = "sms:send:door")
+  @Operation(description = "Send sms.", operationId = "sms:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sent successfully")})
   @PostMapping("/send")
@@ -36,7 +36,7 @@ public class SmsDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check sms verification code.", operationId = "sms:verificationCode:check:door")
+  @Operation(description = "Check sms verification code.", operationId = "sms:verificationCode:check:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")

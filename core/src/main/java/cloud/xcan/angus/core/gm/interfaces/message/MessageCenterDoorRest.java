@@ -25,7 +25,7 @@ public class MessageCenterDoorRest {
   @Resource
   private MessageCenterFacade messageCenterFacade;
 
-  @Operation(description = "Send messages.", operationId = "mcenter:send:door")
+  @Operation(description = "Send messages.", operationId = "mcenter:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)

@@ -24,7 +24,7 @@ public class SettingTenantQuotaDoorRest {
   @Resource
   private SettingTenantQuotaFacade settingTenantQuotaFacade;
 
-  @Operation(description = "Authorize or de-authorize tenant quotas by order", operationId = "setting:tenant:quota:byorder:replace:door")
+  @Operation(description = "Authorize or de-authorize tenant quotas by order", operationId = "setting:tenant:quota:byorder:replace:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})

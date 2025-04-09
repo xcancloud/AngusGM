@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "${xcan.service.gm:ANGUSGM}")
 public interface SmsDoorRemote {
 
-  @Operation(description = "Send sms.", operationId = "sms:send:door")
+  @Operation(description = "Send sms.", operationId = "sms:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully sent")})
   @PostMapping("/innerapi/v1/sms/send")
   ApiLocaleResult<?> send(@Valid @RequestBody SmsSendDto dto);
 
-  @Operation(description = "Check sms verification code.", operationId = "sms:verificationCode:check:door")
+  @Operation(description = "Check sms verification code.", operationId = "sms:verificationCode:check:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/innerapi/v1/sms/verificationCode/check")

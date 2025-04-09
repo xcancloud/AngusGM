@@ -31,7 +31,7 @@ public class ApiLogDoorRest {
   @Resource
   private ApiLogFacade apiLogFacade;
 
-  @Operation(description = "Receives and save api request logs.", operationId = "log:api:add:door")
+  @Operation(description = "Receives and save api request logs.", operationId = "log:api:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully created")})
   @ResponseStatus(HttpStatus.CREATED)

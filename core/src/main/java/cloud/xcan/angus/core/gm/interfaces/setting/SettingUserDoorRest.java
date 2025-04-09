@@ -27,7 +27,7 @@ public class SettingUserDoorRest {
   @Resource
   private SettingUserFacade settingUserFacade;
 
-  @Operation(description = "Bind the social of the current user.", operationId = "setting:user:social:bind:door")
+  @Operation(description = "Bind the social of the current user.", operationId = "setting:user:social:bind:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -37,7 +37,7 @@ public class SettingUserDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail:door")
+  @Operation(description = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

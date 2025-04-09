@@ -25,7 +25,7 @@ public class NoticeCombinedDoorRest {
   @Resource
   NoticeDoorFacade noticeDoorFacade;
 
-  @Operation(description = "Send notifications, support in-site message, SMS, and email.", operationId = "notice:send:door")
+  @Operation(description = "Send notifications, support in-site message, SMS, and email.", operationId = "notice:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/send")
