@@ -43,7 +43,7 @@ xcan:
       type: com.zaxxer.hikari.HikariDataSource
       url: jdbc:mysql://${GM_MYSQL_HOST}:${GM_MYSQL_PORT}/${GM_MYSQL_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
       username: ${GM_MYSQL_USER}
-      password: ${GM_MYSQL_PWD}
+      password: ${GM_MYSQL_PASSWORD}
       schema:
         - mysql/idgen-schema.sql
     postgresql:
@@ -51,7 +51,7 @@ xcan:
       type: com.zaxxer.hikari.HikariDataSource
       url: jdbc:postgresql://${GM_POSTGRES_HOST}:${GM_POSTGRES_PORT}/${GM_POSTGRES_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
       username: ${GM_POSTGRES_USER}
-      password: ${GM_POSTGRES_PWD}
+      password: ${GM_POSTGRES_PASSWORD}
       schema:
         - postgres/idgen-schema.sql
     commonlink:
@@ -60,13 +60,13 @@ xcan:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://${COMMON_MYSQL_HOST}:${COMMON_MYSQL_PORT}/${COMMON_MYSQL_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
         username: ${COMMON_MYSQL_USER}
-        password: ${COMMON_MYSQL_PWD}
+        password: ${COMMON_MYSQL_PASSWORD}
       postgresql:
         driverClassName: org.postgresql.Driver
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://${COMMON_POSTGRES_HOST}:${COMMON_POSTGRES_PORT}/${COMMON_POSTGRES_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
         username: ${COMMON_POSTGRES_USER}
-        password: ${COMMON_POSTGRES_PWD}
+        password: ${COMMON_POSTGRES_PASSWORD}
   redis:
     host: ${GM_REDIS_HOST}
     port: ${GM_REDIS_PORT}

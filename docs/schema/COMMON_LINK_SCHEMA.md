@@ -767,7 +767,7 @@ xcan:
       mysql:
         url: jdbc:mysql://${COMMON_MYSQL_HOST:your_host}:${COMMON_MYSQL_PORT:3306}/${COMMON_MYSQL_DB:xcan_common}?useUnicode=true&characterEncoding=UTF-8
         username: ${COMMON_MYSQL_USER:commonlink}
-        password: ${COMMON_MYSQL_PWD:your_password}
+        password: ${COMMON_MYSQL_PASSWORD:your_password}
 ```
 
 #### 3. Usage in SpringBoot Applications

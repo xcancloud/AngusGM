@@ -805,7 +805,7 @@ xcan:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://${COMMON_MYSQL_HOST:your_mysql_host}:${COMMON_MYSQL_PORT:3306}/${COMMON_MYSQL_DB:xcan_common}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
         username: ${COMMON_MYSQL_USER:commonlink}
-        password: ${COMMON_MYSQL_PWD:your_password}
+        password: ${COMMON_MYSQL_PASSWORD:your_password}
 ```
 
 #### 3. SpringBoot 项目下使用
