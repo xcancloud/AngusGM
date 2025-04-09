@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "ApiLogDoor", description = "Aggregates and stores API interaction data for analysis.")
-@Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogDoor"))
+@Tag(name = "ApiLogInner", description = "Aggregates and stores API interaction data for analysis.")
+@Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogInner"))
 @RestController
 @RequestMapping("/innerapi/v1/log/api")
 public class ApiLogDoorRest {

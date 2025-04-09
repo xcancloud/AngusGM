@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "MessageCenterOnlineDoor", description = "Supports inter-system calling method to forcibly logout users.")
+@Tag(name = "MessageCenterOnlineInner", description = "Supports inter-system calling method to forcibly logout users.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/mcenter/online")

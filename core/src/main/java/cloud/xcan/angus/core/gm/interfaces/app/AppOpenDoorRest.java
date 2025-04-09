@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppOpenDoor", description =
+@Tag(name = "AppOpenInner", description =
     "Used for opening applications through system calls in the background (/innerapi). "
         + "Enable automated onboarding and configuration of applications, granting authorized access to resources "
         + "based on organizational/user permissions while enforcing security policies.")

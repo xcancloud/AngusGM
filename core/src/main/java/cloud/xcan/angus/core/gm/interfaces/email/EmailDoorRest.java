@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "EmailDoor", description = "Provides programmatic email send and real-time validity verification for cross-system service call.")
+@Tag(name = "EmailInner", description = "Provides programmatic email send and real-time validity verification for cross-system service call.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/email")

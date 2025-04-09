@@ -19,7 +19,7 @@ public interface AASConstant {
       POLICY_PRE_DEFINED_EXT_SUFFIX
   );
 
-  List<String> TOKEN_AUTH_RESOURCE_IGNORE_SUFFIX = List.of("Door", "Pub");
+  List<String> TOKEN_AUTH_RESOURCE_IGNORE_SUFFIX = List.of("Inner", "Pub");
 
   //////////////////// Policy ////////////////////////////
 

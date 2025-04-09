@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "ClientDoor", description = "Provides client entry for internal system updates.")
+@Tag(name = "ClientInner", description = "Provides client entry for internal system updates.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/client")

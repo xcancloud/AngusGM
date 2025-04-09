@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "SmsDoor", description = "Provides programmatic sms send and validity verification for cross-system service call.")
+@Tag(name = "SmsInner", description = "Provides programmatic sms send and validity verification for cross-system service call.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/sms")

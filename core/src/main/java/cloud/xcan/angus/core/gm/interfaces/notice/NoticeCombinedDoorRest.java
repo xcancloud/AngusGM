@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "CombinedNoticeDoor", description = "Provides a unified entry for system to send messages, such as in-site messages, SMS, and emails.")
+@Tag(name = "CombinedNoticeInner", description = "Provides a unified entry for system to send messages, such as in-site messages, SMS, and emails.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/notice/combined")

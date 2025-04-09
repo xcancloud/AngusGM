@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "TenantDoor", description = "Internal system unified tenant management entry.")
+@Tag(name = "TenantInner", description = "Internal system unified tenant management entry.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/tenant")

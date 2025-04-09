@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "SettingTenantQuotaDoor", description = "Automatically grants or revokes resource quotas linked to payment verification and order status.")
+@Tag(name = "SettingTenantQuotaInner", description = "Automatically grants or revokes resource quotas linked to payment verification and order status.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/setting/tenant/quota")

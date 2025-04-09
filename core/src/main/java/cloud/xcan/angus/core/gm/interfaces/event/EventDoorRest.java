@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "EventDoor", description = "Used for external systems or services to submit event data programmatically.")
+@Tag(name = "EventInner", description = "Used for external systems or services to submit event data programmatically.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/event")

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "OperationLogDoor", description = "Provides a unified api for collecting and recording user operation logs.")
+@Tag(name = "OperationLogInner", description = "Provides a unified api for collecting and recording user operation logs.")
 @RestController
 @RequestMapping("/innerapi/v1/log/operation")
 public class OperationLogDoorRest {

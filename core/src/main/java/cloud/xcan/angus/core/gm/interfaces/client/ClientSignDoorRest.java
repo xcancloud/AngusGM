@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "ClientSignDoor", description = "Used for OAuth2 client registration.")
+@Tag(name = "ClientSignInner", description = "Used for OAuth2 client registration.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/client")

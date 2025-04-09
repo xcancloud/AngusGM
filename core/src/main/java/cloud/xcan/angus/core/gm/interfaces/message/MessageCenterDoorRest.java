@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "MessageCenterDoor", description = "Supports a unified inter-system calling method to send messages.")
+@Tag(name = "MessageCenterInner", description = "Supports a unified inter-system calling method to send messages.")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/mcenter")
