@@ -68,6 +68,8 @@ xcan:
         username: ${COMMON_POSTGRES_USER}
         password: ${COMMON_POSTGRES_PASSWORD}
   redis:
+    enabled: true
+    deployment: SINGLE
     host: ${GM_REDIS_HOST}
     port: ${GM_REDIS_PORT}
     password: ${GM_REDIS_PASSWORD}
@@ -76,7 +78,6 @@ xcan:
         max-active: 8
         max-idle: 8
         min-idle: 5
-    enabled: true
 
 spring:
   security:
@@ -86,7 +87,7 @@ spring:
           client-id: ${OAUTH2_INTROSPECT_CLIENT_ID}
           client-secret: ${OAUTH2_INTROSPECT_CLIENT_SECRET}
           introspection-uri: ${GM_APIS_URL_PREFIX}/oauth2/introspect
-          
+
   jpa:
     hibernate:
       ddl-auto: validate
