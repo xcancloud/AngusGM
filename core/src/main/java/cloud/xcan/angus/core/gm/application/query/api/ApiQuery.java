@@ -18,7 +18,7 @@ public interface ApiQuery {
 
   List<Api> findAllById(Collection<Long> apiIds);
 
-  void joinAddInfo(List<Api> apis);
+  void setServiceInfo(List<Api> apis);
 
   Api checkAndFind(Long id);
 

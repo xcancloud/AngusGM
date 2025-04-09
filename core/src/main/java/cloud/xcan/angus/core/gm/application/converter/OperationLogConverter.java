@@ -6,6 +6,7 @@ import static cloud.xcan.angus.spec.locale.MessageHolder.message;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getDefaultLanguage;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getRequestId;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.operation.OperationResource;
@@ -45,6 +46,9 @@ public class OperationLogConverter {
 
   public static List<OperationLog> toOperations(OperationResourceType type,
       List<? extends OperationResource<?>> resources, OperationType operation, Object... params) {
+    if (isEmpty(resources)){
+      return null;
+    }
     Principal principal = PrincipalContext.get();
     Long tenantId = nonNull(principal.getTenantId()) ? principal.getTenantId() : -1L;
     List<OperationLog> operations = new ArrayList<>(resources.size());
@@ -87,7 +91,7 @@ public class OperationLogConverter {
    */
   private static String assembleDescription(OperationResourceType type,
       OperationType operation, Object[] params) {
-    if (ObjectUtils.isEmpty(params)) {
+    if (isEmpty(params)) {
       return message(operation.getDescMessageKey(),
           new Object[]{type.getMessage()}, getDefaultLanguage().toLocale());
     }
@@ -112,7 +116,7 @@ public class OperationLogConverter {
    */
   private static String assembleDetail(OperationResourceType resourceType,
       OperationResource<?> resource, OperationType operation, Object[] params) {
-    if (ObjectUtils.isEmpty(params)) {
+    if (isEmpty(params)) {
       return message(operation.getDetailMessageKey(),
           new Object[]{resourceType.getMessage(), "[" + resource.getName() + "]"
               , getDefaultLanguage().toLocale()});

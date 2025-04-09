@@ -1,6 +1,8 @@
 package cloud.xcan.angus.core.gm.application.cmd.operation.impl;
 
+import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isUserAction;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.core.biz.Biz;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -29,15 +32,15 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void add(OperationLog operation) {
-    if (nonNull(operation)) {
+    if (nonNull(operation) && (isUserAction() || isNotEmpty(operation.getFullName()))) {
       insert0(operation);
     }
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void addAll(Collection<OperationLog> operations) {
-    if (isEmpty(operations)) {
+  public void addAll(List<OperationLog> operations) {
+    if (isEmpty(operations) && (isUserAction() || isNotEmpty(operations.get(0).getFullName()))) {
       batchInsert0(operations);
     }
   }

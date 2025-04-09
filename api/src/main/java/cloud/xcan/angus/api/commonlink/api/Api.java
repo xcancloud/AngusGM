@@ -2,6 +2,7 @@ package cloud.xcan.angus.api.commonlink.api;
 
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 
+import cloud.xcan.angus.api.commonlink.operation.OperationResource;
 import cloud.xcan.angus.api.enums.ApiType;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;
 import cloud.xcan.angus.spec.http.HttpMethod;
@@ -28,7 +29,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class Api extends AuditingEntity<Api, Long> {
+public class Api extends AuditingEntity<Api, Long> implements OperationResource<Long> {
 
   @Id
   private Long id;

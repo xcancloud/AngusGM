@@ -120,14 +120,14 @@ public class ApiQueryImpl implements ApiQuery {
   }
 
   @Override
-  public void joinAddInfo(List<Api> apis) {
+  public void setServiceInfo(List<Api> apis) {
     List<Service> servicesDb = serviceQuery.checkAndFind(apis.stream().map(Api::getServiceId)
         .collect(Collectors.toSet()), false);
     Map<Long, Service> serviceDbMap = servicesDb.stream()
         .collect(Collectors.toMap(Service::getId, s -> s));
     for (Api api : apis) {
-      api.setEnabled(true)
-          .setResourceDescription(nullSafe(api.getResourceDescription(), api.getResourceName()));
+      String resourceDescription = nullSafe(api.getResourceDescription(), api.getResourceName());
+      api.setEnabled(true).setResourceDescription(resourceDescription);
       // Update service status
       Service service = serviceDbMap.get(api.getServiceId());
       api.setServiceEnabled(service.getEnabled());

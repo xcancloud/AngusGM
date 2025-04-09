@@ -45,14 +45,14 @@ public class ApiFacadeImpl implements ApiFacade {
   public List<IdKey<Long, Object>> add(List<ApiAddDto> dto) {
     List<Api> apis = dto.stream().map(ApiAssembler::addDtoToDomain)
         .collect(Collectors.toList());
-    return apiCmd.add(apis);
+    return apiCmd.add(apis, true);
   }
 
   @Override
   public void update(List<ApiUpdateDto> dto) {
     List<Api> apis = dto.stream().map(ApiAssembler::updateDtoToDomain)
         .collect(Collectors.toList());
-    apiCmd.update(apis);
+    apiCmd.update(apis, true);
   }
 
   @Override

@@ -9,9 +9,9 @@ import org.springframework.cloud.client.ServiceInstance;
 
 public interface ApiCmd {
 
-  List<IdKey<Long, Object>> add(List<Api> apis);
+  List<IdKey<Long, Object>> add(List<Api> apis, boolean saveOperationLog);
 
-  void update(List<Api> apis);
+  void update(List<Api> apis, boolean saveOperationLog);
 
   List<IdKey<Long, Object>> replace(List<Api> apis);
 

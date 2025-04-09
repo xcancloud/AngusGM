@@ -1,8 +1,15 @@
 package cloud.xcan.angus.core.gm.application.cmd.api.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.ApiConverter.parseSwaggerDocs;
+import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_SWAGGER_PARSE_ERROR;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_SWAGGER_PARSE_ERROR_CODE;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.API;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.utils.CoreUtils.batchCopyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
@@ -21,6 +28,7 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.biz.exception.BizException;
 import cloud.xcan.angus.core.gm.application.cmd.api.ApiCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.system.SystemTokenCmd;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
@@ -71,21 +79,33 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
   @Resource
   private AppFuncRepo appFuncRepo;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public List<IdKey<Long, Object>> add(List<Api> apis) {
+  public List<IdKey<Long, Object>> add(List<Api> apis, boolean saveOperationLog) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       @Override
       protected List<IdKey<Long, Object>> process() {
-        apiQuery.joinAddInfo(apis);
-        return batchInsert(apis, "name");
+        // Set service information
+        apiQuery.setServiceInfo(apis);
+
+        // Save apis
+        List<IdKey<Long, Object>> idKeys = batchInsert(apis, "name");
+
+        // Save operation logs
+        if (saveOperationLog) {
+          operationLogCmd.addAll(toOperations(API, apis, CREATED));
+        }
+        return idKeys;
       }
     }.execute();
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void update(List<Api> apis) {
+  public void update(List<Api> apis, boolean saveOperationLog) {
     new BizTemplate<Void>() {
       List<Api> apisDb;
       List<Service> servicesDb;
@@ -105,11 +125,16 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
       @Override
       protected Void process() {
-        // Change services info
+        // Update services information
         updateServiceWhenChanged(apis, apisDb, servicesDb);
 
-        // Save apis
+        // Save updated apis
         batchUpdateOrNotFound(apis);
+
+        // Save operation logs
+        if (saveOperationLog) {
+          operationLogCmd.addAll(toOperations(API, apis, CREATED));
+        }
         return null;
       }
     }.execute();
@@ -135,10 +160,10 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
       protected List<IdKey<Long, Object>> process() {
         List<IdKey<Long, Object>> idKeys = new ArrayList<>();
 
-        List<Api> addApis = apis.stream().filter(api -> Objects.isNull(api.getId()))
+        List<Api> addApis = apis.stream().filter(api -> isNull(api.getId()))
             .collect(Collectors.toList());
         if (isNotEmpty(addApis)) {
-          idKeys.addAll(add(addApis));
+          idKeys.addAll(add(addApis, true));
         }
 
         if (isNotEmpty(replaceApis)) {
@@ -148,7 +173,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
               .map(x -> copyPropertiesIgnoreTenantAuditing(x, groupDbMap.get(x.getId()),
                   "serviceId", "serviceCode", "serviceName", "serviceEnabled",
                   "sync", "swaggerDeleted", "sync", "enabled"))
-              .collect(Collectors.toList()));
+              .collect(Collectors.toList()), true);
           idKeys.addAll(replaceApis.stream().map(x -> IdKey.of(x.getId(), x.getName())).toList());
         }
         return idKeys;
@@ -160,34 +185,33 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
   @Override
   public void delete(Collection<Long> apiIds) {
     new BizTemplate<Void>() {
+      List<Api> apisDb;
+
+      @Override
+      protected void checkParams() {
+        apisDb = apiQuery.findAllById(apiIds);
+      }
+
       @Override
       protected Void process() {
+        if (isEmpty(apisDb)) {
+          return null;
+        }
+
         // Delete apis
         apiRepo.deleteByIdIn(apiIds);
 
-        // Delete the api associated with the application
-        List<App> apps = appRepo.findAll();
-        if (isNotEmpty(apps)) {
-          List<App> updateApiApps = new ArrayList<>();
-          for (App app : apps) {
-            if (isNotEmpty(app.getApiIds())) {
-              if (app.getApiIds().removeAll(apiIds)) {
-                updateApiApps.add(app);
-              }
-            }
-            // Delete the api associated with the function
-            updateFuncApis(app, apiIds);
-          }
-          if (isNotEmpty(updateApiApps)) {
-            appRepo.saveAll(updateApiApps);
-          }
-        }
+        // Delete the associated apis with the applications and functions
+        deleteAppAndFuncApis(apiIds);
 
         // Delete api authority
         authorityRepo.deleteByApiIdIn(apiIds);
 
         // Delete system token authorization
         systemTokenCmd.deleteByApiIdIn(apiIds);
+
+        // Save operation logs
+        operationLogCmd.addAll(toOperations(API, apisDb, DELETED));
         return null;
       }
     }.execute();
@@ -203,17 +227,19 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
   public void enabled(List<Api> apis) {
     new BizTemplate<Void>() {
       Set<Long> apiIds;
+      List<Api> apisDb;
 
       @Override
       protected void checkParams() {
         // Check the apis existed
         apiIds = apis.stream().map(Api::getId).collect(Collectors.toSet());
-        apiQuery.checkAndFind(apiIds, false);
+        apisDb = apiQuery.checkAndFind(apiIds, false);
       }
 
       @Override
       protected Void process() {
-        batchUpdateOrNotFound(apis);
+        // Update enabled or disabled status
+        batchUpdate0(batchCopyPropertiesIgnoreNull(apis, apisDb));
 
         // Sync the api enabled or disabled status to authority
         List<ApiAuthority> authorities = authorityRepo.findByApiIdIn(apiIds);
@@ -226,6 +252,12 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         }
 
         // NOOP:: Synchronously update the system token authorization resource status, alternative manual deletion of disabled apis.
+
+        // Save operation logs
+        operationLogCmd.addAll(
+            toOperations(API, apisDb.stream().filter(Api::getEnabled).toList(), ENABLED));
+        operationLogCmd.addAll(
+            toOperations(API, apisDb.stream().filter(x -> !x.getEnabled()).toList(), DISABLED));
         return null;
       }
     }.execute();
@@ -288,7 +320,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
     // If the database is empty, add it directly
     if (isEmpty(apisDb)) {
-      add(apis);
+      add(apis, false);
       return;
     }
 
@@ -302,20 +334,37 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
           }
         }
       }
-      update(updateApisCopy);
+      update(updateApisCopy, false);
     }
 
     // Add new apis from swagger
     CoreUtils.removeAll(apis, updateApisCopy);
     if (isNotEmpty(apis)) {
-      add(apis);
+      add(apis, false);
     }
 
     // Update the apis has deleted from swagger
     CoreUtils.removeAll(deletedApisDbCopy, deletedApisCopy);
     if (isNotEmpty(deletedApisDbCopy)) {
       update(deletedApisDbCopy.stream().map(api -> api.setSwaggerDeleted(true))
-          .collect(Collectors.toList()));
+          .collect(Collectors.toList()), false);
+    }
+  }
+
+  private void deleteAppAndFuncApis(Collection<Long> apiIds) {
+    List<App> apps = appRepo.findAll();
+    if (isNotEmpty(apps)) {
+      List<App> updateApiApps = new ArrayList<>();
+      for (App app : apps) {
+        if (isNotEmpty(app.getApiIds()) && app.getApiIds().removeAll(apiIds)) {
+          updateApiApps.add(app);
+        }
+        // Delete the api associated with the function
+        updateFuncApis(app, apiIds);
+      }
+      if (isNotEmpty(updateApiApps)) {
+        appRepo.saveAll(updateApiApps);
+      }
     }
   }
 

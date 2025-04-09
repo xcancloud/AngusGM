@@ -4,7 +4,7 @@ package cloud.xcan.angus.core.gm.domain.operation;
 import cloud.xcan.angus.spec.ValueObject;
 
 public enum OperationType implements ValueObject<OperationType> {
-  CREATED, UPDATED, ENABLED, DISABLED, DELETE, CUSTOM,
+  CREATED, UPDATED, ENABLED, DISABLED, DELETED, CUSTOM,
   SIGN_UP, SIGN_IN_SUCCESS, SIGN_IN_FAIL, SIGN_OUT, UPDATE_PASSWORD;
 
   public String getValue() {

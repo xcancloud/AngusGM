@@ -10,7 +10,7 @@ public interface OperationLogCmd {
 
   void add(OperationLog operation);
 
-  void addAll(Collection<OperationLog> operations);
+  void addAll(List<OperationLog> operations);
 
   List<IdKey<Long, Object>> add(List<OperationLog> operations);
 
