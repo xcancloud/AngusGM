@@ -1,18 +1,16 @@
-package cloud.xcan.angus.core.gm.interfaces.operation.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.operation.facade.dto;
 
 import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.operation.OperationType;
-import java.io.Serializable;
+import cloud.xcan.angus.remote.PageQuery;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 
 @Getter
 @Setter
-@Accessors(chain = true)
-public class OperationLogVo implements Serializable {
+public class OperationLogFindDto extends PageQuery {
 
   private Long id;
 
@@ -22,15 +20,11 @@ public class OperationLogVo implements Serializable {
 
   private OperationResourceType resource;
 
-  private String resourceName;
-
   private String resourceId;
 
   private OperationType type;
 
   private Long userId;
-
-  private String fullName;
 
   private LocalDateTime optDate;
 
@@ -41,7 +35,5 @@ public class OperationLogVo implements Serializable {
   private Boolean private0;
 
   private Long tenantId;
-
-  private String tenantName;
 
 }

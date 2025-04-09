@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.infra.config;
 
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.List;

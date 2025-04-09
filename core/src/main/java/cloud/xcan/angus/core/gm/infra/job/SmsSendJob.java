@@ -5,7 +5,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.enums.ProcessStatus;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsQuery;
-import cloud.xcan.angus.core.gm.domain.channel.SmsChannel;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.Sms;
 import cloud.xcan.angus.core.job.JobTemplate;
 import cloud.xcan.angus.extension.sms.api.SmsProvider;

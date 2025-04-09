@@ -2,8 +2,8 @@ package cloud.xcan.angus.core.gm.domain;
 
 public interface ThirdCoreMessage {
 
-  String AI_AGENT_NOT_ENABLED = "xcm.third.ai.agent.not.enabled";
+  String AI_AGENT_NOT_ENABLED = "xcm.angusgm.ai.agent.not.enabled";
 
-  String CERT_RECOGNIZE_ERROR = "xcm.third.cert.recognize.error";
+  String CERT_RECOGNIZE_ERROR = "xcm.angusgm.cert.recognize.error";
 
 }

@@ -1,10 +1,9 @@
-package cloud.xcan.angus.core.gm.domain.notice;
+package cloud.xcan.angus.core.gm.domain.operation;
 
 import cloud.xcan.angus.core.jpa.repository.CustomBaseRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
-
 @NoRepositoryBean
-public interface NoticeSearchRepo extends CustomBaseRepository<Notice> {
+public interface OperationLogSearchRepo extends CustomBaseRepository<OperationLog> {
 
 }

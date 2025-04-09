@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler;
 
 
-import cloud.xcan.angus.core.gm.domain.channel.SmsChannel;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.channel.SmsChannelFindDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.channel.SmsChannelUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.channel.SmsChannelVo;

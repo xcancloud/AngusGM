@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.domain.email.template;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.enums.EventType;
-import cloud.xcan.angus.core.gm.domain.channel.EventChannelP;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelP;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.template.receiver.EventTemplateReceiver;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;

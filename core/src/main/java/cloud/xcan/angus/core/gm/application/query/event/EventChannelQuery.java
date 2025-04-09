@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.event;
 
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.template.receiver.EventTemplateReceiver;
 import java.util.Collection;

@@ -7,8 +7,7 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP;
 import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP_TYPE;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.getSignoutOperationEvent;
-import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.getSignupOperationEvent;
+import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
 import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.signupToAddUser;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_ILLEGAL;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_TIMEOUT;
@@ -20,6 +19,11 @@ import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ER
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_T;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NOT_SING_IN_LOGOUT;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NOT_SING_IN_LOGOUT_CODE;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_IN_FAIL;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_IN_SUCCESS;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_OUT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATE_PASSWORD;
 import static cloud.xcan.angus.core.utils.CoreUtils.calcPasswordStrength;
 import static cloud.xcan.angus.core.utils.ValidatorUtils.checkMobile;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.CLIENT_NOT_FOUND;
@@ -51,10 +55,9 @@ import cloud.xcan.angus.core.biz.BizAssert;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.biz.exception.BizException;
-import cloud.xcan.angus.core.disruptor.DisruptorQueueManager;
-import cloud.xcan.angus.core.event.OperationEvent;
 import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserSignCmd;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserQuery;
@@ -91,7 +94,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -128,10 +130,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   @Resource
   private UserCmd userCmd;
 
-  // TODO Use eventCmd.add()
   @Resource
-  @Qualifier("operationEventDisruptorQueue")
-  private DisruptorQueueManager<OperationEvent> operationEventQueue;
+  private OperationLogCmd operationLogCmd;
 
   @Resource
   private RedisService<String> stringRedisService;
@@ -169,7 +169,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
       @Nullable Long userId, String account, String password, String scope, String deviceId) {
     return new BizTemplate<Map<String, String>>(false) {
       CustomOAuth2RegisteredClient clientDb;
-      AuthUser authUserDb;
+      AuthUser userDb;
 
       @Override
       protected void checkParams() {
@@ -177,43 +177,47 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         checkRequiredParameters(userId, account, deviceId);
         // Check the clientId, clientSecret and scopes are correct
         clientDb = clientQuery.checkAndFind(clientId, clientSecret, scope);
-        // Check and find the existed account
-        authUserDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
-        // Check the number of password errors
-        checkSignInPasswordErrorNum(authUserDb.getTenantId(), authUserDb.getUsername());
+        // Check the existed account
+        userDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
       }
 
       @Override
       protected Map<String, String> process() {
+        PrincipalContext.get().setClientId(clientId)
+            .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
+            .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
+
         try {
+          // Check the number of password errors
+          checkSignInPasswordErrorNum(userDb.getTenantId(), userDb.getUsername());
+
           // Cached to context for LdapPasswordConnection login
-          cacheUserDirectory(authUserDb);
+          cacheUserDirectory(userDb);
 
           // Cached to context for load UserDetail
-          daoAuthenticationProvider.getUserCache().putUserInCache(authUserDb.getId(),
-              authUserDb.getUsername(), AuthUser.with(authUserDb));
+          daoAuthenticationProvider.getUserCache().putUserInCache(userDb.getId(),
+              userDb.getUsername(), AuthUser.with(userDb));
 
           // Submit OAuth2 login authentication
           Map<String, String> result = submitOauth2UserSignInRequest(clientId, clientSecret,
-              signinType, authUserDb.getId(), account, password, scope);
+              signinType, userDb.getId(), account, password, scope);
 
           // Save new bcrypt password after login directory success
-          updateNewDirectoryPassword(authUserDb, password);
+          updateNewDirectoryPassword(userDb, password);
+
+          // Save sign-in log
+          operationLogCmd.add(toOperation(USER, userDb, SIGN_IN_SUCCESS));
           return result;
         } catch (Throwable e) {
-          if (nonNull(authUserDb)) {
-            recordSignInPasswordErrorNum(Long.valueOf(authUserDb.getTenantId()),
-                authUserDb.getUsername());
-          }
+          // Record the number of account or password errors
+          recordSignInPasswordErrorNum(Long.valueOf(userDb.getTenantId()), userDb.getUsername());
+          // Save sign-in log
+          operationLogCmd.add(toOperation(USER, userDb, SIGN_IN_FAIL, e.getMessage()));
+
           if (e instanceof AbstractResultMessageException) {
             throw (AbstractResultMessageException) e;
           }
           throw new SysException(e.getMessage());
-        } finally {
-          // Record successful login logs
-          if (nonNull(operationEventQueue) && nonNull(authUserDb)) {
-            operationEventQueue.add(getSignupOperationEvent(clientId, authUserDb));
-          }
         }
       }
     }.execute();
@@ -271,11 +275,14 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         if (isNull(authorizationDb)) {
           return null;
         }
-
         oauth2AuthorizationService.remove(authorizationDb);
 
-        AuthUser user = authUserQuery.findByUsername(authorizationDb.getPrincipalName());
-        operationEventQueue.add(getSignoutOperationEvent(clientId, user));
+        // Save sign out log
+        AuthUser userDb = authUserQuery.findByUsername(authorizationDb.getPrincipalName());
+        PrincipalContext.get().setClientId(clientId)
+            .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
+            .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
+        operationLogCmd.add(toOperation(USER, userDb, SIGN_OUT));
         return null;
       }
     }.execute();
@@ -309,6 +316,12 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         userDb.setPassword(passwordEncoder.encode(newPassword));
         userDb.setLastModifiedPasswordDate(Instant.now());
         authUserRepo.save(userDb);
+
+        // Save sign out log
+        PrincipalContext.get().setUserId(Long.valueOf(userDb.getId()))
+            .setFullName(userDb.getFullName()).setTenantId(Long.valueOf(userDb.getTenantId()))
+            .setTenantName(userDb.getTenantName());
+        operationLogCmd.add(toOperation(USER, userDb, UPDATE_PASSWORD));
         return null;
       }
     }.execute();

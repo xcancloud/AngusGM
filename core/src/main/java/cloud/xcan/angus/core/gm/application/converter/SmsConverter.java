@@ -4,7 +4,7 @@ import static cloud.xcan.angus.api.commonlink.SmsConstants.VC_CACHE_PREFIX;
 import static cloud.xcan.angus.api.commonlink.SmsConstants.VC_CACHE_REPEAT_CHECK_PREFIX;
 
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
-import cloud.xcan.angus.core.gm.domain.channel.SmsChannel;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.template.SmsTemplate;
 
 public class SmsConverter {

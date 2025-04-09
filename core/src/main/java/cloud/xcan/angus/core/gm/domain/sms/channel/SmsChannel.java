@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.domain.channel;
+package cloud.xcan.angus.core.gm.domain.sms.channel;
 
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;

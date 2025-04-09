@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.converter;
 
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.event.template.channel.EventTemplateChannel;
 import java.util.Map;
 

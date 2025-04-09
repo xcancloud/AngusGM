@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 public class OrgTagSearchRepoMySql extends SimpleSearchRepository<OrgTag> implements
     OrgTagSearchRepo {
 
-
 }

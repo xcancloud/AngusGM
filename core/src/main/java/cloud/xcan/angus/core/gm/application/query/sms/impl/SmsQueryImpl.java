@@ -20,7 +20,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsQuery;
-import cloud.xcan.angus.core.gm.domain.channel.SmsChannel;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.InputParam;
 import cloud.xcan.angus.core.gm.domain.sms.Sms;
 import cloud.xcan.angus.core.gm.domain.sms.SmsRepo;

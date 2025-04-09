@@ -3,6 +3,8 @@ package cloud.xcan.angus.core.gm.domain.operation;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -27,8 +29,17 @@ public class OperationLog extends TenantEntity<OperationLog, Long> {
   @Column(name = "client_id")
   private String clientId;
 
+  @Enumerated(EnumType.STRING)
+  private OperationResourceType resource;
+
   @Column(name = "resource_name")
   private String resourceName;
+
+  @Column(name = "resource_id")
+  private String resourceId;
+
+  @Enumerated(EnumType.STRING)
+  private OperationType type;
 
   @Column(name = "tenant_name")
   private String tenantName;
@@ -39,17 +50,16 @@ public class OperationLog extends TenantEntity<OperationLog, Long> {
   @Column(name = "full_name")
   private String fullName;
 
+  @Column(name = "opt_date")
+  private LocalDateTime optDate;
+
   @Column
   private String description;
 
-  @Column(name = "success")
-  private Boolean success;
+  @Column
+  private String detail;
 
-  @Column(name = "failure_reason")
-  private String failureReason;
-
-  @Column(name = "opt_date")
-  private LocalDateTime optDate;
+  private Boolean private0;
 
   @Override
   public Long identity() {

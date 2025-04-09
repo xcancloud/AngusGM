@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.event;
 
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
 import cloud.xcan.angus.spec.experimental.IdKey;
 

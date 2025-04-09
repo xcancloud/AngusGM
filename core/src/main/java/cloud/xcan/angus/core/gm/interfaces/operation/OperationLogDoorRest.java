@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.operation;
 
 import cloud.xcan.angus.core.event.source.UserOperation;
-import cloud.xcan.angus.core.gm.interfaces.operation.facade.OperationFacade;
+import cloud.xcan.angus.core.gm.interfaces.operation.facade.OperationLogFacade;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,15 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class OperationLogDoorRest {
 
   @Resource
-  private OperationFacade optionFacade;
+  private OperationLogFacade optionFacade;
 
   @Operation(description = "Add user operation logs.", operationId = "log:operation:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully create")})
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
-      @RequestBody List<UserOperation> userOperations) {
-    return ApiLocaleResult.success(optionFacade.add(userOperations));
+      @RequestBody List<UserOperation> operations) {
+    return ApiLocaleResult.success(optionFacade.add(operations));
   }
 
 }

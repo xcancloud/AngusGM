@@ -20,8 +20,6 @@ xcan:
     systemRequest:
       enabled: true
       printLevel: FULL
-  opt-log:
-    enabled: false
   global:
     cors:
       startWithPaths: [ '/' ]

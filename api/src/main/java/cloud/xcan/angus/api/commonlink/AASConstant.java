@@ -57,8 +57,6 @@ public interface AASConstant {
   String SWAGGER_DOOR_API_URL = "/v3/api-docs?group=Door%20Api";
   String SWAGGER_OPEN_API_TO_PRIVATE_URL = "/v2/api-docs?group=Open%20Api%20to%20Private";
 
-  String SIGN_RESOURCE_NAME = "sign";
-
   // Used in infra-security
   int DEFAULT_TOKEN_SALT_LENGTH = 32;
 

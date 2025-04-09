@@ -9,7 +9,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsTemplateCmd;
-import cloud.xcan.angus.core.gm.domain.channel.SmsChannel;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.template.SmsTemplate;
 import cloud.xcan.angus.core.gm.domain.sms.template.SmsTemplateRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;

@@ -7,7 +7,7 @@ import static java.util.Collections.singletonList;
 
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsChannelCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
-import cloud.xcan.angus.core.gm.domain.channel.SmsChannel;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.SmsChannelFacade;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.channel.SmsChannelFindDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.channel.SmsChannelUpdateDto;

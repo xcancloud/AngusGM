@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.domain.event.template.channel;
 
-import cloud.xcan.angus.core.gm.domain.channel.EventChannelP;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelP;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import java.util.Collection;
 import java.util.List;

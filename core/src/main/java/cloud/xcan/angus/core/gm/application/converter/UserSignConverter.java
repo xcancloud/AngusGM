@@ -1,22 +1,14 @@
 package cloud.xcan.angus.core.gm.application.converter;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.SIGN_RESOURCE_NAME;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.genFullname;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.genUsername;
-import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.enums.UserSource;
-import cloud.xcan.angus.core.event.OperationEvent;
-import cloud.xcan.angus.core.event.source.UserOperation;
-import cloud.xcan.angus.core.gm.domain.SignOperationKey;
-import cloud.xcan.angus.spec.locale.MessageHolder;
-import cloud.xcan.angus.spec.principal.PrincipalContext;
 import java.time.LocalDateTime;
 
 
@@ -48,38 +40,4 @@ public class UserSignConverter {
         .setLastModifiedDate(LocalDateTime.now());
   }
 
-  public static OperationEvent getSignupOperationEvent(String clientId, AuthUser user) {
-    return new OperationEvent(
-        UserOperation.newBuilder().success(true)
-            .resourceName(SIGN_RESOURCE_NAME)
-            .clientId(clientId)
-            .requestId(PrincipalContext.getRequestId())
-            .userId(Long.valueOf(user.getId()))
-            .fullName(user.getFullName())
-            .tenantId(Long.valueOf(user.getTenantId()))
-            .tenantName(user.getTenantName())
-            .description(MessageHolder
-                .message(SignOperationKey.SIGN_IN, new Object[]{user.getFullName()}))
-            .operationDate(PrincipalContext.getRequestAcceptTime()).build());
-  }
-
-  public static OperationEvent getSignoutOperationEvent(String clientId, AuthUser user) {
-    if (isNull(user)) {
-      return null;
-    }
-    return new OperationEvent(
-        UserOperation.newBuilder()
-            .success(true)
-            .resourceName(AASConstant.SIGN_RESOURCE_NAME)
-            .clientId(clientId)
-            .requestId(PrincipalContext.getRequestId())
-            .userId(Long.valueOf(user.getId()))
-            .fullName(user.getFullName())
-            .tenantId(Long.valueOf(user.getTenantId()))
-            .tenantName(null)
-            .description(
-                MessageHolder.message(SignOperationKey.SIGN_OUT, new Object[]{user.getFullName()}))
-            .operationDate(PrincipalContext.getRequestAcceptTime()).build()
-    );
-  }
 }

@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.domain.channel;
+package cloud.xcan.angus.core.gm.domain.event.channel;
 
 public interface EventChannelP {
 

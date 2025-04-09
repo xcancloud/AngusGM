@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler;
 
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.channel.EventChannelAddDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.channel.EventChannelReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.channel.EventChannelVo;

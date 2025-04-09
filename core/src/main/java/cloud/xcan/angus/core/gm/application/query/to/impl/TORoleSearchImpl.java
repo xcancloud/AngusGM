@@ -4,7 +4,7 @@ import cloud.xcan.angus.api.commonlink.to.TORole;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.to.TORoleSearch;
-import cloud.xcan.angus.core.gm.domain.to.TOPolicySearchRepo;
+import cloud.xcan.angus.core.gm.domain.to.TORoleSearchRepo;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import jakarta.annotation.Resource;
 import java.util.Set;
@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 public class TORoleSearchImpl implements TORoleSearch {
 
   @Resource
-  private TOPolicySearchRepo toPolicySearchRepo;
+  private TORoleSearchRepo toPolicySearchRepo;
 
   @Override
   public Page<TORole> search(Set<SearchCriteria> criteria, Pageable pageable,

@@ -6,7 +6,7 @@ import static cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assemble
 
 import cloud.xcan.angus.core.gm.application.cmd.event.EventChannelCmd;
 import cloud.xcan.angus.core.gm.application.query.event.EventChannelQuery;
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.EventChannelFacade;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.channel.EventChannelAddDto;

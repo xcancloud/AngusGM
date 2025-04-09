@@ -17,7 +17,7 @@ import cloud.xcan.angus.api.gm.notice.dto.SendInsiteParam;
 import cloud.xcan.angus.api.gm.notice.dto.SendNoticeDto;
 import cloud.xcan.angus.api.gm.notice.dto.SendSmsParam;
 import cloud.xcan.angus.core.event.source.EventContent;
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.event.Event;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventAssembler;

@@ -22,7 +22,7 @@ import cloud.xcan.angus.core.gm.application.cmd.event.EventCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventPushCmd;
 import cloud.xcan.angus.core.gm.application.query.event.EventChannelQuery;
 import cloud.xcan.angus.core.gm.application.query.event.EventTemplateQuery;
-import cloud.xcan.angus.core.gm.domain.channel.EventChannel;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
 import cloud.xcan.angus.core.gm.domain.event.Event;
 import cloud.xcan.angus.core.gm.domain.event.EventRepo;

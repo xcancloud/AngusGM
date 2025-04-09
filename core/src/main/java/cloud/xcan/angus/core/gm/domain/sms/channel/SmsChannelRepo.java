@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.domain.channel;
+package cloud.xcan.angus.core.gm.domain.sms.channel;
 
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import java.util.Collection;

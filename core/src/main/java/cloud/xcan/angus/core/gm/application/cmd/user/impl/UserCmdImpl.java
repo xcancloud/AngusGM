@@ -5,15 +5,20 @@ import static cloud.xcan.angus.api.enums.UserSource.isNewSignup;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertNotEmpty;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
+import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.assembleUserInfo;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.replaceToAuthUser;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.setUserMainDeptAndHead;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_REFUSE_OPERATE_ADMIN;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_SYS_ADMIN_NUM_ERROR;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_UP;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isToUser;
+import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isUserAction;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setMultiTenantCtrl;
 import static cloud.xcan.angus.remote.message.http.Forbidden.M.FORBIDDEN_KEY;
 import static cloud.xcan.angus.spec.utils.DateUtils.DATE_TIME_FMT;
@@ -40,6 +45,7 @@ import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagTargetCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
@@ -97,6 +103,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Resource
   private SettingUserCmd settingUserCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> add(User user, List<DeptUser> deptUsers, List<GroupUser> groupUsers,
@@ -150,12 +159,23 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Save user
         IdKey<Long, Object> idKeys = insert(user);
 
-        // Initialize tenant or user setting in common
+        // Initialize tenant or user setting
         settingUserCmd.tenantAndUserInit(optTenant.getId(),
             UserSource.isNewSignup(user.getSource()), user.getId());
 
         // Initialize the oauth2 user
         authUserCmd.replace0(replaceToAuthUser(user, optTenant), isNewSignup(userSource));
+
+        // Save operation log
+        if (!isUserAction()){
+          PrincipalContext.get().setUserId(user.getId()).setFullName(user.getFullName())
+              .setTenantId(user.getTenantId()).setTenantName(user.getTenantName());
+        }
+        if (user.getSource().isPlatformSignup()) {
+          operationLogCmd.add(toOperation(USER, user, SIGN_UP));
+        } else {
+          operationLogCmd.add(toOperation(USER, user, CREATED));
+        }
         return idKeys;
       }
     }.execute();
