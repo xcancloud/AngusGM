@@ -5,6 +5,7 @@ import cloud.xcan.angus.api.commonlink.app.AppType;
 import cloud.xcan.angus.api.commonlink.app.OpenStage;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
+import cloud.xcan.angus.api.commonlink.operation.OperationResource;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
@@ -34,7 +35,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Entity
 @Accessors(chain = true)
-public class App extends TenantAuditingEntity<App, Long> {
+public class App extends TenantAuditingEntity<App, Long> implements OperationResource<Long> {
 
   @Id
   private Long id;
