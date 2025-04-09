@@ -20,9 +20,9 @@ xcan:
   trace:
     enabled: true
   cloud:
-    gmApiUrlPrefix: http://${APIS_HOST}/gm
+    gmApiUrlPrefix: ${GM_APIS_URL_PREFIX}
   event:
-    gmApiUrlPrefix: http://${APIS_HOST}/gm
+    gmApiUrlPrefix: ${GM_APIS_URL_PREFIX}
   datasource:
     extra:
       dbType: '@databaseType@'
@@ -86,7 +86,8 @@ spring:
         opaque-token:
           client-id: ${OAUTH2_INTROSPECT_CLIENT_ID}
           client-secret: ${OAUTH2_INTROSPECT_CLIENT_SECRET}
-          introspection-uri: http://${APIS_HOST}/gm/oauth2/introspect
+          introspection-uri: ${GM_APIS_URL_PREFIX}/oauth2/introspect
+          
   jpa:
     hibernate:
       ddl-auto: validate
