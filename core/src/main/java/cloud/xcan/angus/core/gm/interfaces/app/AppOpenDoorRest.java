@@ -15,6 +15,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Tag(name = "AppOpenInner", description =
     "Used for opening applications through system calls in the background (/innerapi). "
         + "Enable automated onboarding and configuration of applications, granting authorized access to resources "

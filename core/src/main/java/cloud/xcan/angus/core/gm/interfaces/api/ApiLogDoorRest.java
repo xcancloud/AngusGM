@@ -15,13 +15,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Tag(name = "ApiLogInner", description = "Aggregates and stores API interaction data for analysis.")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogInner"))
 @RestController

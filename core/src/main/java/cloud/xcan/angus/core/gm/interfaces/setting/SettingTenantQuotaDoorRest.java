@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Tag(name = "SettingTenantQuotaInner", description = "Automatically grants or revokes resource quotas linked to payment verification and order status.")
 @Validated
 @RestController

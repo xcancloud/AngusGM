@@ -61,7 +61,7 @@ public class SettingUserFacadeImpl implements SettingUserFacade {
   }
 
   @Override
-  public UserApiProxyVo proxyDetailDoor(Long tenantId) {
+  public UserApiProxyVo proxyDetailByInner(Long tenantId) {
     UserApiProxy proxy = settingUserQuery.findProxyByTenantId(tenantId);
     return toApiProxyVo(proxy);
   }

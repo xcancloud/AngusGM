@@ -46,10 +46,10 @@ public class SettingUserDoorRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
   @GetMapping(value = "/apis/proxy")
-  public ApiLocaleResult<UserApiProxyVo> proxyDetailDoor(
+  public ApiLocaleResult<UserApiProxyVo> proxyDetailByInner(
       @Parameter(name = "tenantId", description = "Query tenant id.", required = true)
       @RequestParam(value = "tenantId", required = true) Long tenantId) {
-    return ApiLocaleResult.success(settingUserFacade.proxyDetailDoor(tenantId));
+    return ApiLocaleResult.success(settingUserFacade.proxyDetailByInner(tenantId));
   }
 
 }
