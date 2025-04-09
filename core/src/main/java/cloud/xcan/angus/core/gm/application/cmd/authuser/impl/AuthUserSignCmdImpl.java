@@ -67,12 +67,12 @@ import cloud.xcan.angus.core.spring.SpringContextHolder;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
 import cloud.xcan.angus.core.utils.ValidatorUtils;
 import cloud.xcan.angus.lettucex.util.RedisService;
+import cloud.xcan.angus.remote.message.AbstractResultMessageException;
 import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.remote.message.http.Unauthorized;
 import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
-import cloud.xcan.angus.security.model.CustomOAuth2User;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import cloud.xcan.angus.spec.http.HttpMethod;
@@ -194,7 +194,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
               authUserDb.getUsername(), AuthUser.with(authUserDb));
 
           // Submit OAuth2 login authentication
-          Map<String, String> result = submitOauth2SignInRequest(clientId, clientSecret,
+          Map<String, String> result = submitOauth2UserSignInRequest(clientId, clientSecret,
               signinType, authUserDb.getId(), account, password, scope);
 
           // Save new bcrypt password after login directory success
@@ -205,8 +205,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
             recordSignInPasswordErrorNum(Long.valueOf(authUserDb.getTenantId()),
                 authUserDb.getUsername());
           }
-          if (e instanceof Unauthorized) {
-            throw (Unauthorized) e;
+          if (e instanceof AbstractResultMessageException) {
+            throw (AbstractResultMessageException) e;
           }
           throw new SysException(e.getMessage());
         } finally {
@@ -356,9 +356,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
   }
 
-  private Map<String, String> submitOauth2SignInRequest(String clientId, String clientSecret,
-      SignInType signinType, String userId, String account, String password, String scope)
-      throws Throwable {
+  public static Map<String, String> submitOauth2UserSignInRequest(String clientId,
+      String clientSecret, SignInType signinType, String userId, String account, String password,
+      String scope) throws Throwable {
     String authContent = format(
         "client_id=%s&client_secret=%s&grant_type=%s&user_id=%s&account=%s&password=%s",
         clientId, clientSecret, signinType.toOAuth2GrantType(), userId, account, password);

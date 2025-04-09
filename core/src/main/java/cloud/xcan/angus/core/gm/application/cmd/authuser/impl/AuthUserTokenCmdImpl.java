@@ -1,9 +1,12 @@
 package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 
+import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
+import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.submitOauth2UserSignInRequest;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.ACCESS_TOKEN_EXPIRED_DATE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.CUSTOM_ACCESS_TOKEN;
+import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.USER_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -22,23 +25,24 @@ import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserToken;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserTokenRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.remote.message.AbstractResultMessageException;
+import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator;
 import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
+import cloud.xcan.angus.spec.experimental.BizConstant.AuthKey;
 import cloud.xcan.angus.spec.principal.PrincipalContext;
 import jakarta.annotation.Resource;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,6 +95,8 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
             SIGN_IN_PASSWORD_ERROR);
         // Check the client existed
         clientDb = clientQuery.checkAndFind(getClientId());
+        assertTrue(isUserSignIn(clientDb.getSource()),
+            "Unsupported generate token from client: " + clientDb.getSource());
         // Check the token name existed
         authUserTokenQuery.checkNameNotExisted(userToken);
         // Check the user token quota
@@ -101,7 +107,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
       protected AuthUserToken process() {
         // Cached to context for load UserDetail
         daoAuthenticationProvider.getUserCache().putUserInCache(userDb.getId(),
-            userDb.getUsername(), userDb);
+            userDb.getUsername(), AuthUser.with(userDb));
 
         // Set expired date for cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator#generate(OAuth2TokenContext context)
         PrincipalContext.addExtension(CUSTOM_ACCESS_TOKEN, true);
@@ -112,11 +118,22 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         }
 
         // Submit OAuth2 login authentication
-        OAuth2AccessToken accessToken = null;
+        Map<String, String> result;
+        try {
+          result = submitOauth2UserSignInRequest(clientDb.getClientId(),
+              clientDb.getClientSecret(), SignInType.ACCOUNT_PASSWORD, userDb.getId(),
+              userDb.getUsername(), userDb.getPassword(), USER_TOKEN_CLIENT_SCOPE);
+        } catch (Throwable e) {
+          if (e instanceof AbstractResultMessageException) {
+            throw (AbstractResultMessageException) e;
+          }
+          throw new SysException(e.getMessage());
+        }
 
         // Save user token
-        userToken.setDecryptedValue(accessToken.getTokenValue());
-        userToken.setValue(authUserTokenQuery.encryptValue(accessToken.getTokenValue()));
+        String userAccessToken = result.get(AuthKey.ACCESS_TOKEN);
+        userToken.setDecryptedValue(userAccessToken);
+        userToken.setValue(authUserTokenQuery.encryptValue(userAccessToken));
         userToken.setId(uidGenerator.getUID());
         insert0(userToken);
         return userToken;

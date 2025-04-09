@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.application.cmd.system.impl;
 
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_SYS_TOKEN;
+import static cloud.xcan.angus.core.gm.application.cmd.client.impl.ClientSignCmdImpl.submitOauth2ClientSignInRequest;
 import static cloud.xcan.angus.core.gm.application.converter.ClientConverter.toSystemTokenToDomain;
-import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.convertClientSignInAuthentication;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.checkTenantSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -21,9 +21,12 @@ import cloud.xcan.angus.core.gm.domain.system.SystemTokenRepo;
 import cloud.xcan.angus.core.gm.domain.system.resource.SystemTokenResource;
 import cloud.xcan.angus.core.gm.domain.system.resource.SystemTokenResourceRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.remote.message.AbstractResultMessageException;
+import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator;
 import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
+import cloud.xcan.angus.spec.experimental.BizConstant.AuthKey;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,8 +37,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,15 +106,22 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
             systemToken.getExpiredDate());
         customOAuth2ClientRepository.save(client);
 
-        // Generate system token
         // Submit OAuth2 login authentication
-
-        OAuth2AccessTokenAuthenticationToken result = null;
+        Map<String, String> result;
+        try {
+          result = submitOauth2ClientSignInRequest(client.getClientId(), client.getClientSecret(),
+              String.join(" ", client.getScopes()));
+        } catch (Throwable e) {
+          if (e instanceof AbstractResultMessageException) {
+            throw (AbstractResultMessageException) e;
+          }
+          throw new SysException(e.getMessage());
+        }
 
         // Save system token
-        systemToken.setDecryptedValue(result.getAccessToken().getTokenValue());
-        systemToken.setValue(
-            systemTokenQuery.encryptValue(result.getAccessToken().getTokenValue()));
+        String systemAccessToken = result.get(AuthKey.ACCESS_TOKEN);
+        systemToken.setDecryptedValue(systemAccessToken);
+        systemToken.setValue(systemTokenQuery.encryptValue(systemAccessToken));
         systemToken.setId(uidGenerator.getUID());
         insert0(systemToken);
 

@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.authuser.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.authuser.facade.internal.assembler.AuthUserTokenAssembler.addDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.authuser.facade.internal.assembler.AuthUserTokenAssembler.toTokenValueVo;
+
 import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserTokenCmd;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserTokenQuery;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserToken;
@@ -26,8 +29,8 @@ public class AuthUserTokenFacadeImpl implements AuthUserTokenFacade {
 
   @Override
   public UserTokenValueVo add(UserTokenAddDto dto) {
-    AuthUserToken userToken = authUserTokenCmd.add(AuthUserTokenAssembler.addDtoToDomain(dto));
-    return AuthUserTokenAssembler.toTokenValueVo(userToken);
+    AuthUserToken userToken = authUserTokenCmd.add(addDtoToDomain(dto));
+    return toTokenValueVo(userToken);
   }
 
   @Override
@@ -38,7 +41,7 @@ public class AuthUserTokenFacadeImpl implements AuthUserTokenFacade {
   @Override
   public UserTokenValueVo value(Long id) {
     AuthUserToken userToken = authUserTokenQuery.value(id);
-    return AuthUserTokenAssembler.toTokenValueVo(userToken);
+    return toTokenValueVo(userToken);
   }
 
   @Override

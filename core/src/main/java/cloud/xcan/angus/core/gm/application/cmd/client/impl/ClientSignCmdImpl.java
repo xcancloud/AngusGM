@@ -52,7 +52,7 @@ public class ClientSignCmdImpl implements ClientSignCmd {
       protected Map<String, String> process() {
         // Submit OAuth2 login authentication
         try {
-          return submitOauth2SignInRequest(clientId, clientSecret, scope);
+          return submitOauth2ClientSignInRequest(clientId, clientSecret, scope);
         } catch (Throwable e) {
           throw new SysException(e.getMessage());
         }
@@ -87,8 +87,8 @@ public class ClientSignCmdImpl implements ClientSignCmd {
     }.execute();
   }
 
-  private Map<String, String> submitOauth2SignInRequest(String clientId, String clientSecret,
-      String scope) throws Throwable {
+  public static Map<String, String> submitOauth2ClientSignInRequest(String clientId,
+      String clientSecret, String scope) throws Throwable {
     String authContent = format("client_id=%s&client_secret=%s&grant_type=%s", clientId,
         clientSecret, CLIENT_CREDENTIALS.getValue());
     if (isNotEmpty(scope)) {
