@@ -70,7 +70,7 @@ xcan:
   redis:
     host: ${GM_REDIS_HOST}
     port: ${GM_REDIS_PORT}
-    password: ${GM_REDIS_PWD}
+    password: ${GM_REDIS_PASSWORD}
     lettuce:
       pool:
         max-active: 8
