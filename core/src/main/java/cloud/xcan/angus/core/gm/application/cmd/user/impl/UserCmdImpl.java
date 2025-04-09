@@ -519,7 +519,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
       optTenant = initPlatformSignupTenant(user);
     } else if (UserSource.INVITATION_CODE_SIGNUP.equals(userSource)) {
       optTenant = checkAndInitInvitationTenant(user);
-      // Important:: Enable multi tenant controller <- Invoke by /doorapi
+      // Important:: Enable multi tenant controller <- Invoke by /innerapi
       setMultiTenantCtrl(true);
     } else if (UserSource.BACKGROUND_SIGNUP.equals(userSource)) {
       // See TenantCmd#add()
@@ -550,19 +550,19 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     long optTenantId = getOptTenantId();
     if (isNotEmpty(deptUsers)) {
       userDeptCmd.add(deptUsers.stream().peek(x -> {
-        x.setTenantId(optTenantId); // Inject for job or doorapi
+        x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
 
     if (isNotEmpty(groupUsers)) {
       userGroupCmd.add(groupUsers.stream().peek(x -> {
-        x.setTenantId(optTenantId); // Inject for job or doorapi
+        x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
 
     if (isNotEmpty(userTags)) {
       orgTagTargetCmd.add(userTags.stream().peek(x -> {
-        x.setTenantId(optTenantId); // Inject for job or doorapi
+        x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
   }
@@ -573,21 +573,21 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     if (isNotEmpty(deptUsers)) {
       userDeptCmd.deleteByUserId(Collections.singleton(userId));
       userDeptCmd.add(deptUsers.stream().peek(x -> {
-        x.setTenantId(optTenantId); // Inject for job or doorapi
+        x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
 
     if (isNotEmpty(groupUsers)) {
       userGroupCmd.deleteByUserId(Collections.singleton(userId));
       userGroupCmd.add(groupUsers.stream().peek(x -> {
-        x.setTenantId(optTenantId); // Inject for job or doorapi
+        x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
 
     if (isNotEmpty(userTags)) {
       orgTagTargetCmd.deleteAllByTarget(OrgTargetType.USER, Collections.singleton(userId));
       orgTagTargetCmd.add(userTags.stream().peek(x -> {
-        x.setTenantId(optTenantId); // Inject for job or doorapi
+        x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
   }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "ClientDoor", description = "Provides client entry for internal system updates.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/client")
+@RequestMapping("/innerapi/v1/client")
 public class ClientDoorRest {
 
   @Resource

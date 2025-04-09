@@ -101,7 +101,7 @@ public class AppOpenQueryImpl implements AppOpenQuery {
   @Override
   public List<AppOpen> findOpenedAppByTenantId(Long realOptTenantId) {
     return appOpenRepo.findValidByTenantId(realOptTenantId,
-        // Fix::The clientId is empty when called by the doorapi
+        // Fix::The clientId is empty when called by the innerapi
         isEmpty(PrincipalContext.getClientId()) ? XCAN_TENANT_PLATFORM_CODE
             : PrincipalContext.getClientId());
   }

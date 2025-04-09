@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "CombinedNoticeDoor", description = "Provides a unified entry for system to send messages, such as in-site messages, SMS, and emails.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/notice/combined")
+@RequestMapping("/innerapi/v1/notice/combined")
 public class NoticeCombinedDoorRest {
 
   @Resource

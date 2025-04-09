@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "MessageCenterDoor", description = "Supports a unified inter-system calling method to send messages.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/mcenter")
+@RequestMapping("/innerapi/v1/mcenter")
 public class MessageCenterDoorRest {
 
   @Resource

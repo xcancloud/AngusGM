@@ -108,7 +108,7 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
 
       @Override
       protected Void process() {
-        // Fix:: May be called by the /doorapi
+        // Fix:: May be called by the /innerapi
         setOptTenantId(tenantId);
         if (/* Order status may not be submitted -> OrderCmd#payUpdate() */
             (isFinished() || isPending()) && expired) {

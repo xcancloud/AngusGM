@@ -18,6 +18,6 @@ public interface ClientDoorRemote {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
   })
-  @PatchMapping(value = "/doorapi/v1/client")
+  @PatchMapping(value = "/innerapi/v1/client")
   ApiLocaleResult<?> update(@RequestBody ClientUpdateDto dto);
 }

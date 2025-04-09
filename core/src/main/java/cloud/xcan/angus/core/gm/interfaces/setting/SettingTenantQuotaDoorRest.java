@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "SettingTenantQuotaDoor", description = "Automatically grants or revokes resource quotas linked to payment verification and order status.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/setting/tenant/quota")
+@RequestMapping("/innerapi/v1/setting/tenant/quota")
 public class SettingTenantQuotaDoorRest {
 
   @Resource

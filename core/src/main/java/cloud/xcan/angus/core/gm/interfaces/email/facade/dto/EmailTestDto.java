@@ -28,10 +28,10 @@ public class EmailTestDto implements Serializable {
       type = "array", example = "[\"james@xcan.cloud\"]", requiredMode = RequiredMode.REQUIRED)
   private Set<String> toAddress;
 
-  @Schema(description = "Send tenant id. Non user operation (job or doorapi) is required.")
+  @Schema(description = "Send tenant id. Non user operation (job or innerapi) is required.")
   private Long sendTenantId;
 
-  @Schema(description = "Send user id. Non user operation (job or doorapi) is required.")
+  @Schema(description = "Send user id. Non user operation (job or innerapi) is required.")
   private Long sendUserId;
 
 }

@@ -17,7 +17,7 @@ public interface SettingTenantQuotaDoorRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
-  @PatchMapping(value = "/doorapi/v1/setting/tenant/quota/byorder")
+  @PatchMapping(value = "/innerapi/v1/setting/tenant/quota/byorder")
   ApiLocaleResult<?> quotaReplaceByOrder(@Valid @RequestBody QuotaReplaceByOrderDto dto);
 
 }

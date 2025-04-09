@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "EventDoor", description = "Used for external systems or services to submit event data programmatically.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/event")
+@RequestMapping("/innerapi/v1/event")
 public class EventDoorRest {
 
   @Resource

@@ -24,7 +24,7 @@ public interface AppOpenDoorRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Open successfully")})
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping(value = "/doorapi/v1/app/open")
+  @PostMapping(value = "/innerapi/v1/app/open")
   ApiLocaleResult<IdKey<Long, Object>> open(@Valid @RequestBody AppOpenDto dto);
 
   @Operation(description = "Renewal the opened application.", operationId = "app:open:renew:door")
@@ -33,14 +33,14 @@ public interface AppOpenDoorRemote {
       @ApiResponse(responseCode = "404", description = "Resource not found")
   })
   @ResponseStatus(HttpStatus.CREATED)
-  @PatchMapping(value = "/doorapi/v1/app/open/renew")
+  @PatchMapping(value = "/innerapi/v1/app/open/renew")
   ApiLocaleResult<?> renew(@Valid @RequestBody AppOpenRenewDto dto);
 
   @Operation(description = "Cancel the opened application.", operationId = "app:open:cancel:door")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Cancel successfully")})
   @ResponseStatus(HttpStatus.CREATED)
-  @DeleteMapping(value = "/doorapi/v1/app/open/cancel")
+  @DeleteMapping(value = "/innerapi/v1/app/open/cancel")
   ApiLocaleResult<?> cancel(@Valid @RequestBody AppOpenCancelDto dto);
 
 }

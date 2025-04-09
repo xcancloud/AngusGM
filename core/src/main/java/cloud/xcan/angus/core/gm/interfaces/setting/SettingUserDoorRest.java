@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "SettingUserDoor", description = "Handles internal system access to user configurations for administrative or automated adjustments.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/setting/user")
+@RequestMapping("/innerapi/v1/setting/user")
 public class SettingUserDoorRest {
 
   @Resource

@@ -21,7 +21,7 @@ public interface ClientSignDoorRemote {
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signup successfully")})
-  @PostMapping(value = "/doorapi/v1/client/signup")
+  @PostMapping(value = "/innerapi/v1/client/signup")
   ApiLocaleResult<ClientSignupVo> signupByDoor(@Valid @RequestBody ClientSignupDto dto);
 
 }

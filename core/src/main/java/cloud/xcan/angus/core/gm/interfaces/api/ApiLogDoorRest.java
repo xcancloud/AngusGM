@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "ApiLogDoor", description = "Aggregates and stores API interaction data for analysis.")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogDoor"))
 @RestController
-@RequestMapping("/doorapi/v1/log/api")
+@RequestMapping("/innerapi/v1/log/api")
 public class ApiLogDoorRest {
 
   @Resource

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "UserDoor")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/user")
+@RequestMapping("/innerapi/v1/user")
 public class UserDoorRest {
 
   @Resource

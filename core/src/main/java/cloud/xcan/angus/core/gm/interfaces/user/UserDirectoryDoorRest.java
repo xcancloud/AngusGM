@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 //@Conditional(PrivateEditionCondition.class)
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/user/directory")
+@RequestMapping("/innerapi/v1/user/directory")
 public class UserDirectoryDoorRest {
 
   @Resource

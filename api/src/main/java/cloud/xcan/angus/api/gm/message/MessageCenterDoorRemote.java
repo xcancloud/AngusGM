@@ -18,7 +18,7 @@ public interface MessageCenterDoorRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping("/doorapi/v1/mcenter/push")
+  @PostMapping("/innerapi/v1/mcenter/push")
   ApiLocaleResult<?> send(@RequestBody MessageCenterPushDto message);
 
 }

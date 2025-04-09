@@ -20,14 +20,14 @@ public interface SettingUserDoorRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
-  @PatchMapping(value = "/doorapi/v1/setting/user/social/binding")
+  @PatchMapping(value = "/innerapi/v1/setting/user/social/binding")
   ApiLocaleResult<?> socialBindingUpdate(@Valid @RequestBody UserSocialUpdateDto dto);
 
   @Operation(description = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail:door")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
-  @GetMapping(value = "/doorapi/v1/setting/user/apis/proxy")
+  @GetMapping(value = "/innerapi/v1/setting/user/apis/proxy")
   ApiLocaleResult<UserApiProxyVo> proxyDetail();
 
 }

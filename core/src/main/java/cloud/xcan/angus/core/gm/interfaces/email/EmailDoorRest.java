@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "EmailDoor", description = "Provides programmatic email send and real-time validity verification for cross-system service call.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/email")
+@RequestMapping("/innerapi/v1/email")
 public class EmailDoorRest {
 
   @Resource

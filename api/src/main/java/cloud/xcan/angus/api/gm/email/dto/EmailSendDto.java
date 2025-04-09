@@ -83,10 +83,10 @@ public class EmailSendDto implements Serializable {
   @Schema(description = "Validity period of verification code, in seconds. It is required when verificationCode=true.", defaultValue = "300")
   private Integer verificationCodeValidSecond;
 
-  @Schema(description = "Send email tenant id. Non user operation (job or doorapi) is required.")
+  @Schema(description = "Send email tenant id. Non user operation (job or innerapi) is required.")
   private Long sendTenantId;
 
-  @Schema(description = "Send email user id. Non user operation (job or doorapi) is required.")
+  @Schema(description = "Send email user id. Non user operation (job or innerapi) is required.")
   private Long sendUserId;
 
   @NotNull

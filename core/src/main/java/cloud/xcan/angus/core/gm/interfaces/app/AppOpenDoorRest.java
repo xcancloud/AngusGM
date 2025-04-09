@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "AppOpenDoor", description =
-    "Used for opening applications through system calls in the background (/doorapi). "
+    "Used for opening applications through system calls in the background (/innerapi). "
         + "Enable automated onboarding and configuration of applications, granting authorized access to resources "
         + "based on organizational/user permissions while enforcing security policies.")
 @Conditional(CloudServiceEditionCondition.class)
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/appopen")
+@RequestMapping("/innerapi/v1/appopen")
 public class AppOpenDoorRest {
 
   @Resource

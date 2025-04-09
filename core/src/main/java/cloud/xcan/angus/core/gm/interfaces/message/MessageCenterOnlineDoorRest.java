@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "MessageCenterOnlineDoor", description = "Supports inter-system calling method to forcibly logout users.")
 @Validated
 @RestController
-@RequestMapping("/doorapi/v1/mcenter/online")
+@RequestMapping("/innerapi/v1/mcenter/online")
 public class MessageCenterOnlineDoorRest {
 
   @Resource

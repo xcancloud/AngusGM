@@ -17,7 +17,7 @@ public interface CombinedNoticeDoorRemote {
   @Operation(description = "Send notifications, support SMS, email, and in-site message", operationId = "notice:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @PostMapping("/doorapi/v1/notice/combined/send")
+  @PostMapping("/innerapi/v1/notice/combined/send")
   ApiLocaleResult<?> send(@Valid @RequestBody SendNoticeDto dto);
 
 }

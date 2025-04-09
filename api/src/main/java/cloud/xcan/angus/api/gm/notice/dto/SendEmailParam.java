@@ -76,10 +76,10 @@ public class SendEmailParam implements Serializable {
   @Schema(description = "Validity period of verification code, in seconds, it is required when verificationCode=true.", defaultValue = "300")
   private Integer verificationCodeValidSecond;
 
-  @Schema(description = "Non user operation (job or doorapi) is required.")
+  @Schema(description = "Non user operation (job or innerapi) is required.")
   private Long sendTenantId;
 
-  @Schema(description = "Non user operation (job or doorapi) is required.")
+  @Schema(description = "Non user operation (job or innerapi) is required.")
   private Long sendUserId;
 
   @NotNull
