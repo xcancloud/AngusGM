@@ -31,7 +31,7 @@ public class ServiceReplaceDto {
   private String name;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Service code. Note: Modification not allowed.", example = "XCAN-GM.BOOT",
+  @Schema(description = "Service code. Note: Modification not allowed.", example = "ANGUSGM",
       maxLength = MAX_CODE_LENGTH)
   private String code;
 

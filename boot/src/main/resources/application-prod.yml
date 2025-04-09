@@ -86,7 +86,7 @@ spring:
         opaque-token:
           client-id: ${OAUTH2_INTROSPECT_CLIENT_ID}
           client-secret: ${OAUTH2_INTROSPECT_CLIENT_SECRET}
-          introspection-uri: ${GM_APIS_URL_PREFIX}/oauth2/introspect
+          introspection-uri: ${OAUTH2_ENDPOINT_PREFIX}/oauth2/introspect
 
   jpa:
     hibernate:

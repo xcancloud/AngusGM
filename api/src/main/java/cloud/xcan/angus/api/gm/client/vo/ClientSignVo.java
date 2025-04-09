@@ -16,11 +16,11 @@ public class ClientSignVo {
   private String accessToken;
 
   @JsonProperty("expires_in")
-  private Instant expiresAt;
+  private Integer expiresIn;
 
   @JsonProperty("token_type")
   private String tokenType;
 
-  private Set<String> scopes;
+  private String scope;
 
 }

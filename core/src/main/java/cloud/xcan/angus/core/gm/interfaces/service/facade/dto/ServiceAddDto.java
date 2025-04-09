@@ -28,7 +28,7 @@ public class ServiceAddDto {
 
   @NotEmpty
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Service code.", example = "XCAN-GM.BOOT",
+  @Schema(description = "Service code.", example = "ANGUSGM",
       maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String code;
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
-@FeignClient(name = "XCAN-GM.BOOT", url = "${xcan.cloud.gmApiUrlPrefix}")
+@FeignClient(name = "ANGUSGM", url = "${xcan.cloud.gmApiUrlPrefix}")
 public interface ClientSignOpen2pRemote {
 
   @Operation(description = "Client sign-in for private and 3rd authorization.", operationId = "client:signin:pub")
