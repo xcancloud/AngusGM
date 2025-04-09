@@ -28,5 +28,5 @@
 
 ## Notes
 
-- **Dependencies**: Requires JDK 17+, MySQL 6.0+, or PostgreSQL 11+.
+- **Dependencies**: Requires JDK 17+, MySQL 7.0+, or PostgreSQL 11+.
 - **Compatibility**: AngusGM v1.0+ is compatible only with Angus suite applications v1.0+.
