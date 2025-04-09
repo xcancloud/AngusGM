@@ -80,17 +80,8 @@ public interface AASConstant {
   String CACHE_PASSWORD_ERROR_LOCKED_PREFIX = "aas:user:passwordErrorLocked:%s";
 
   /**
-   * For user token
-   */
-  String USER_TOKEN_CLIENT_SCOPE = "user_trust";
-  //String USER_TOKEN_CLIENT_ID_FMT = XCAN_TENANT_PLATFORM_CODE + "_t%s_u%s_s%s";
-  //String USER_TOKEN_CLIENT_NAME_FMT = "Tenant[%s]-User[%s]-Token[%s]";
-  //String USER_TOKEN_CLIENT_DESC_FMT = "Tenant[%s] user `%s` token `%s` access";
-
-  /**
    * For system token
    */
-  String SYS_TOKEN_CLIENT_SCOPE = "system_trust";
   String SYS_TOKEN_CLIENT_ID_FMT = XCAN_TENANT_PLATFORM_CODE + "_t%s_s%s";
   //String SYS_TOKEN_CLIENT_NAME_FMT = "Tenant[%s]-System-Token[%s]";
   String SYS_TOKEN_CLIENT_DESC_FMT = "Tenant[%s] system token `%s` access";
@@ -100,7 +91,6 @@ public interface AASConstant {
    *
    * @see `FeignOpen2pAuthInterceptor`
    */
-  String SIGN2P_TOKEN_CLIENT_SCOPE = "2private_trust";
   String SIGN2P_CLIENT_ID_FMT = XCAN_2P_PLATFORM_CODE + "_t%s_b%s_r%s";
   String SIGN2P_CLIENT_NAME_FMT = "Tenant[%s]-[%s][%s]";
   String SIGN2P_CLIENT_DESC_FMT = "Tenant[%s] access cloud service from privatization application";

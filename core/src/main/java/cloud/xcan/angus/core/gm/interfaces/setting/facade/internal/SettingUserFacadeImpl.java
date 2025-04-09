@@ -5,7 +5,6 @@ import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assemb
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.SettingUserAssembler.toSocialBindingVo;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.SettingUserAssembler.updateDtoToPreference;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.SettingUserAssembler.updateDtoToSocialBinding;
-import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 
 import cloud.xcan.angus.api.commonlink.setting.user.apiproxy.UserApiProxy;
@@ -62,8 +61,8 @@ public class SettingUserFacadeImpl implements SettingUserFacade {
   }
 
   @Override
-  public UserApiProxyVo proxyDetailDoor() {
-    UserApiProxy proxy = settingUserQuery.findProxyByTenantId(getOptTenantId());
+  public UserApiProxyVo proxyDetailDoor(Long tenantId) {
+    UserApiProxy proxy = settingUserQuery.findProxyByTenantId(tenantId);
     return toApiProxyVo(proxy);
   }
 

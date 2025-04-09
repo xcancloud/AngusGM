@@ -12,7 +12,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Slf4j
 @EnableScheduling
 @EnableAspectJAutoProxy(exposeProxy = true)
-@EnableFeignClients(basePackages = {"cloud.xcan.angus.api.gm"})
+@EnableFeignClients(basePackages = {
+    "cloud.xcan.angus.api.gm",
+    "cloud.xcan.angus.security"
+})
 @SpringBootApplication
 public class XCanAngusGMApplication {
 

@@ -62,7 +62,7 @@ public class AuthUserPubRest {
           + "verifying credentials to grant secure access and generate authorization tokens for protected resources.", operationId = "auth:user:signin")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Signin successfully")})
+      @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
   @PostMapping("/signin")
   public ApiLocaleResult<SignVo> signin(
       @Parameter(description = "Current user sign-in device id.") @RequestHeader(value = Header.AUTH_DEVICE_ID, required = false) String deviceId,
@@ -77,7 +77,7 @@ public class AuthUserPubRest {
           + "while the POST method is recommended in production environments.", operationId = "auth:user:signin:get")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Signin successfully")})
+      @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
   @GetMapping("/signin")
   public ApiLocaleResult<SignVo> signinGet(
       @Parameter(description = "Current user sign-in device id.") @RequestHeader(value = Header.AUTH_DEVICE_ID, required = false) String deviceId,

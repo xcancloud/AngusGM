@@ -124,7 +124,7 @@ public class SmsPluginStateListener implements PluginStateListener {
    */
   public void pushExceptionEvent(String pluginId) {
     CommonEvent event = new CommonEvent(
-        EventContent.newBuilder().type(EventType.SYSTEM)
+        EventContent.newBuilder().type(EventType.SYSTEM.getValue())
             .description(SMS_NO_PLUGIN_CHANNEL_ERROR)
             .cause(MessageHolder.message(SMS_NO_PLUGIN_CHANNEL_ERROR, new Object[]{pluginId}))
             .level(ExceptionLevel.ERROR)

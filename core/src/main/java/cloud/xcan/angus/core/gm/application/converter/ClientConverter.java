@@ -4,6 +4,7 @@ import static cloud.xcan.angus.api.commonlink.AASConstant.SYS_TOKEN_CLIENT_DESC_
 import static cloud.xcan.angus.api.commonlink.AASConstant.SYS_TOKEN_CLIENT_ID_FMT;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_USER_TOKEN;
 import static cloud.xcan.angus.api.enums.Platform.XCAN_TP;
+import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.SYS_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.ClientSource.XCAN_SYS_TOKEN;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
@@ -44,7 +45,7 @@ public class ClientConverter {
           methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
         })
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-        .scope(AASConstant.SYS_TOKEN_CLIENT_SCOPE)
+        .scope(SYS_TOKEN_CLIENT_SCOPE)
         .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
         .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE)
             .accessTokenTimeToLive(getExpireSecond(expireDate)).build())

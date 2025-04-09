@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.application.converter;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.MAX_TOKEN_VALIDITY_PERIOD;
+import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.SIGN2P_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 
 import cloud.xcan.angus.api.commonlink.AASConstant;
@@ -40,7 +41,7 @@ public class ClientSignConverter {
           methods.add(ClientAuthenticationMethod.CLIENT_SECRET_POST);
         })
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-        .scope(AASConstant.SIGN2P_TOKEN_CLIENT_SCOPE)
+        .scope(SIGN2P_TOKEN_CLIENT_SCOPE)
         .clientSettings(ClientSettings.builder().requireProofKey(false)
             .requireAuthorizationConsent(false).build())
         .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE)

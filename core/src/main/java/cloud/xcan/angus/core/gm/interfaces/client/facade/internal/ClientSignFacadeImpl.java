@@ -12,7 +12,7 @@ import cloud.xcan.angus.api.gm.client.vo.ClientSignupVo;
 import cloud.xcan.angus.core.gm.application.cmd.client.ClientSignCmd;
 import cloud.xcan.angus.core.gm.interfaces.client.facade.ClientSignFacade;
 import jakarta.annotation.Resource;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,9 +23,9 @@ public class ClientSignFacadeImpl implements ClientSignFacade {
 
   @Override
   public ClientSignVo signin(ClientSigninDto dto) {
-    OAuth2AccessToken accessToken = clientSignCmd.signin(dto.getClientId(),
+    Map<String, String> result = clientSignCmd.signin(dto.getClientId(),
         dto.getClientSecret(), dto.getScope());
-    return signInToVo(accessToken);
+    return signInToVo(result);
   }
 
   @Override

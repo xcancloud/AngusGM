@@ -30,7 +30,7 @@ public class ClientSignPubRest {
   @Operation(description = "Client sign-in for private, 3rd authorization or inner application.", operationId = "client:signin:pub")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Signin successfully")})
+      @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
   @PostMapping(value = "/signin")
   public ApiLocaleResult<ClientSignVo> signin(@Valid @RequestBody ClientSigninDto dto) {
     return ApiLocaleResult.success(clientSignFacade.signin(dto));

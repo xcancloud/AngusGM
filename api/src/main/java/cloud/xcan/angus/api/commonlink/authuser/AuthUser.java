@@ -229,8 +229,8 @@ public class AuthUser extends CustomOAuth2User {
   /**
    * Copy a User with AuthUserBuilder
    */
-  public static AuthUser with(AuthUser user) {
-    return newBuilder().username(user.username).password(user.password)
+  public static CustomOAuth2User with(AuthUser user) {
+    return builder().username(user.username).password(user.password)
         .disabled(!user.enabled).accountExpired(!user.accountNonExpired)
         .accountLocked(!user.accountNonLocked).credentialsExpired(!user.credentialsNonExpired)
         .authorities(user.authorities).id(user.id).firstName(user.firstName).lastName(user.lastName)

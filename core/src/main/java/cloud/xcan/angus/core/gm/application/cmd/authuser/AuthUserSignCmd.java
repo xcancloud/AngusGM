@@ -12,7 +12,7 @@ public interface AuthUserSignCmd {
   IdKey<Long, Object> signup(AuthUser user);
 
   Map<String, String> signin(String clientId, String clientSecret, SignInType signinType,
-      Long userId, String account, String password, String deviceId);
+      Long userId, String account, String password, String scope, String deviceId);
 
   Map<String, String> renew(String clientId, String clientSecret, String refreshToken);
 

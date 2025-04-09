@@ -14,12 +14,14 @@ import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.util.StringUtils;
 
 @Biz
 public class ClientQueryImpl implements ClientQuery {
@@ -88,7 +90,9 @@ public class ClientQueryImpl implements ClientQuery {
       @Nullable String scope) {
     CustomOAuth2RegisteredClient client = checkAndFind(clientId, clientSecret);
     if (scope != null) {
-      for (String scope0 : scope.split(",")) {
+      Set<String> requestedScopes = new HashSet<>(
+          Arrays.asList(StringUtils.delimitedListToStringArray(scope, " ")));
+      for (String scope0 : requestedScopes) {
         assertTrue(client.getScopes().contains(scope0),
             String.format("Client scope %s is invalid", scope0));
       }

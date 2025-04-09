@@ -20,7 +20,7 @@ public interface ClientSignPubRemote {
   @Operation(description = "Client sign-in for inner application.", operationId = "client:signin:pub")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Signin successfully")})
+      @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
   @PostMapping(value = "/pubapi/v1/client/signin")
   ApiLocaleResult<ClientSignVo> signin(@Valid @RequestBody ClientSigninDto dto);
 

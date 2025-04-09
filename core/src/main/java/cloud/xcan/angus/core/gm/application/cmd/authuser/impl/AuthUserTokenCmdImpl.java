@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.USER_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.ACCESS_TOKEN_EXPIRED_DATE;

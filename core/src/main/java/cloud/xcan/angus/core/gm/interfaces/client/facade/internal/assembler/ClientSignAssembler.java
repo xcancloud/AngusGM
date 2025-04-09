@@ -3,16 +3,13 @@ package cloud.xcan.angus.core.gm.interfaces.client.facade.internal.assembler;
 import cloud.xcan.angus.api.commonlink.client.ClientAuth;
 import cloud.xcan.angus.api.gm.client.vo.ClientSignVo;
 import cloud.xcan.angus.api.gm.client.vo.ClientSignupVo;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import cloud.xcan.angus.spec.utils.JsonUtils;
+import java.util.Map;
 
 public class ClientSignAssembler {
 
-  public static ClientSignVo signInToVo(OAuth2AccessToken accessToken) {
-    return new ClientSignVo()
-        .setAccessToken(accessToken.getTokenValue())
-        .setExpiresAt(accessToken.getExpiresAt())
-        .setTokenType(accessToken.getTokenType().getValue())
-        .setScopes(accessToken.getScopes());
+  public static ClientSignVo signInToVo(Map<String, String> result) {
+    return JsonUtils.fromJsonObject(result, ClientSignVo.class);
   }
 
   public static ClientSignupVo signup2Vo(ClientAuth signup2p) {

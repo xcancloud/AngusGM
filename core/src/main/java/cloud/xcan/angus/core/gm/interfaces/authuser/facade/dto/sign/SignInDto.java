@@ -2,12 +2,14 @@ package cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.sign;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X2;
+import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X5;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_LINK_SECRET_LENGTH;
 
 import cloud.xcan.angus.api.enums.SignInType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +55,13 @@ public class SignInDto {
   @Schema(description = "Login account. Can be username, mobile or email. "
       + "The account and userId must specify one.", maxLength = MAX_CODE_LENGTH)
   private String account;
+
+  @NotEmpty
+  @Length(max = MAX_CODE_LENGTH_X5)
+  @Schema(description = "The scope field specifies the permissions granted to the client, "
+      + "limiting resource access. Note: Multiple values are separated by commas.",
+      requiredMode = RequiredMode.REQUIRED, example = "user_trust", maxLength = MAX_CODE_LENGTH_X5)
+  private String scope;
 
   @Length(max = MAX_CODE_LENGTH)
   @Schema(description = "Current user sign-in device id.",

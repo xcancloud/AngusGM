@@ -1,7 +1,10 @@
 package cloud.xcan.angus.core.gm.application.cmd.client.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
+import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.sendOauth2RenewRequest;
 import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.privateSignupToDomain;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 
 import cloud.xcan.angus.api.commonlink.AASConstant;
@@ -11,14 +14,14 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.client.ClientSignCmd;
 import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
+import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import jakarta.annotation.Resource;
+import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 
 @Slf4j
 @Biz
@@ -34,8 +37,8 @@ public class ClientSignCmdImpl implements ClientSignCmd {
   private PasswordEncoder passwordEncoder;
 
   @Override
-  public OAuth2AccessToken signin(String clientId, String clientSecret, String scope) {
-    return new BizTemplate<OAuth2AccessToken>(false) {
+  public Map<String, String> signin(String clientId, String clientSecret, String scope) {
+    return new BizTemplate<Map<String, String>>(false) {
       CustomOAuth2RegisteredClient clientDb;
 
       @Override
@@ -46,11 +49,13 @@ public class ClientSignCmdImpl implements ClientSignCmd {
       }
 
       @Override
-      protected OAuth2AccessToken process() {
+      protected Map<String, String> process() {
         // Submit OAuth2 login authentication
-
-        OAuth2AccessTokenAuthenticationToken result = null;
-        return result.getAccessToken();
+        try {
+          return submitOauth2SignInRequest(clientId, clientSecret, scope);
+        } catch (Throwable e) {
+          throw new SysException(e.getMessage());
+        }
       }
     }.execute();
   }
@@ -82,4 +87,13 @@ public class ClientSignCmdImpl implements ClientSignCmd {
     }.execute();
   }
 
+  private Map<String, String> submitOauth2SignInRequest(String clientId, String clientSecret,
+      String scope) throws Throwable {
+    String authContent = format("client_id=%s&client_secret=%s&grant_type=%s", clientId,
+        clientSecret, CLIENT_CREDENTIALS.getValue());
+    if (isNotEmpty(scope)) {
+      authContent = authContent + "&scope=" + scope;
+    }
+    return sendOauth2RenewRequest(authContent);
+  }
 }

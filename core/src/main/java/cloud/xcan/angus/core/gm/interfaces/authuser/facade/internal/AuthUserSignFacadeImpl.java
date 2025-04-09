@@ -64,8 +64,8 @@ public class AuthUserSignFacadeImpl implements AuthUserSignFacade {
   @Override
   public SignVo signin(String deviceId, SignInDto dto) {
     Map<String, String> result = authUserSignCmd.signin(dto.getClientId(),
-        dto.getClientSecret(), dto.getSigninType(), dto.getUserId(),
-        dto.getAccount(), dto.getPassword(), emptySafe(deviceId, dto.getDeviceId()));
+        dto.getClientSecret(), dto.getSigninType(), dto.getUserId(), dto.getAccount(),
+        dto.getPassword(), dto.getScope(), emptySafe(deviceId, dto.getDeviceId()));
     return signInToVo(result);
   }
 

@@ -4,6 +4,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.OWNER_TENANT_ID;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
+import cloud.xcan.angus.api.enums.EventType;
 import cloud.xcan.angus.core.biz.exception.BizException;
 import cloud.xcan.angus.core.event.source.EventContent;
 import cloud.xcan.angus.core.gm.domain.EventCoreMessage;
@@ -46,7 +47,7 @@ public class EventAssembler {
       event.setTenantId(nullSafe(eventContent.getTenantId(), OWNER_TENANT_ID));
       event.setTenantName(eventContent.getTenantName());
       event.setDescription(eventContent.getDescription());
-      event.setType(eventContent.getType());
+      event.setType(EventType.valueOf(eventContent.getType()));
       event.setSourceData(eventContent);
       event.setCode(eventContent.getCode());
       event.setEKey(stringSafe(eventContent.getEKey()));
@@ -133,7 +134,7 @@ public class EventAssembler {
   public static String buildMarkDownContent(Event event, String url, String br) {
     EventContent source = event.getSourceData();
     StringBuilder sb = new StringBuilder();
-    sb.append("### ").append(source.getType().getValue()).append(br).append("=============")
+    sb.append("### ").append(source.getType()).append(br).append("=============")
         .append(br);
     if (Objects.nonNull(event.getName())) {
       sb.append("> Event Name: **").append(event.getName()).append("**").append(br);

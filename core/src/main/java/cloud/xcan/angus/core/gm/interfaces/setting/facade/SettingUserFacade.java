@@ -21,7 +21,7 @@ public interface SettingUserFacade {
 
   UserApiProxyVo proxyDetail();
 
-  UserApiProxyVo proxyDetailDoor();
+  UserApiProxyVo proxyDetailDoor(Long tenantId);
 
   void socialBindingUpdate(UserSocialUpdateDto dto);
 

@@ -9,11 +9,8 @@ import feign.Target;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.FeignClientsConfiguration;
-import org.springframework.context.annotation.Import;
 
 
-@Import(FeignClientsConfiguration.class)
 public abstract class EventChannelPushCmdAbstract implements EventChannelPushCmd {
 
   public ThirdPushClient thirdPushClient;

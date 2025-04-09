@@ -63,6 +63,7 @@ import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectoryRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.core.spring.SpringContextHolder;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
 import cloud.xcan.angus.core.utils.ValidatorUtils;
 import cloud.xcan.angus.lettucex.util.RedisService;
@@ -71,6 +72,7 @@ import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.remote.message.http.Unauthorized;
 import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
+import cloud.xcan.angus.security.model.CustomOAuth2User;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import cloud.xcan.angus.spec.http.HttpMethod;
@@ -143,9 +145,6 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   @Resource
   private DaoAuthenticationProvider daoAuthenticationProvider;
 
-  @Resource
-  private ApplicationInfo applicationInfo;
-
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> signup(AuthUser user) {
@@ -167,46 +166,44 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   @Override
   public Map<String, String> signin(String clientId, String clientSecret, SignInType signinType,
-      @Nullable Long userId, String account, String password, String deviceId) {
+      @Nullable Long userId, String account, String password, String scope, String deviceId) {
     return new BizTemplate<Map<String, String>>(false) {
       CustomOAuth2RegisteredClient clientDb;
       AuthUser authUserDb;
-      AuthUser safeAuthUser;
 
       @Override
       protected void checkParams() {
         // Check the required account parameters
         checkRequiredParameters(userId, account, deviceId);
         // Check the clientId, clientSecret and scopes are correct
-        clientDb = clientQuery.checkAndFind(clientId, clientSecret);
+        clientDb = clientQuery.checkAndFind(clientId, clientSecret, scope);
         // Check and find the existed account
         authUserDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
-        safeAuthUser = AuthUser.with(authUserDb);
         // Check the number of password errors
-        checkSignInPasswordErrorNum(safeAuthUser.getTenantId(), safeAuthUser.getUsername());
+        checkSignInPasswordErrorNum(authUserDb.getTenantId(), authUserDb.getUsername());
       }
 
       @Override
       protected Map<String, String> process() {
         try {
           // Cached to context for LdapPasswordConnection login
-          cacheUserDirectory(safeAuthUser);
+          cacheUserDirectory(authUserDb);
 
           // Cached to context for load UserDetail
-          daoAuthenticationProvider.getUserCache().putUserInCache(safeAuthUser.getId(),
-              safeAuthUser.getUsername(), safeAuthUser);
+          daoAuthenticationProvider.getUserCache().putUserInCache(authUserDb.getId(),
+              authUserDb.getUsername(), AuthUser.with(authUserDb));
 
           // Submit OAuth2 login authentication
           Map<String, String> result = submitOauth2SignInRequest(clientId, clientSecret,
-              signinType, safeAuthUser.getId(), account, password);
+              signinType, authUserDb.getId(), account, password, scope);
 
           // Save new bcrypt password after login directory success
           updateNewDirectoryPassword(authUserDb, password);
           return result;
         } catch (Throwable e) {
-          if (nonNull(safeAuthUser)) {
-            recordSignInPasswordErrorNum(Long.valueOf(safeAuthUser.getTenantId()),
-                safeAuthUser.getUsername());
+          if (nonNull(authUserDb)) {
+            recordSignInPasswordErrorNum(Long.valueOf(authUserDb.getTenantId()),
+                authUserDb.getUsername());
           }
           if (e instanceof Unauthorized) {
             throw (Unauthorized) e;
@@ -215,7 +212,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         } finally {
           // Record successful login logs
           if (nonNull(operationEventQueue) && nonNull(authUserDb)) {
-            operationEventQueue.add(getSignupOperationEvent(clientId, safeAuthUser));
+            operationEventQueue.add(getSignupOperationEvent(clientId, authUserDb));
           }
         }
       }
@@ -360,11 +357,14 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   private Map<String, String> submitOauth2SignInRequest(String clientId, String clientSecret,
-      SignInType signinType, String userId, String account,
-      String password) throws Throwable {
+      SignInType signinType, String userId, String account, String password, String scope)
+      throws Throwable {
     String authContent = format(
         "client_id=%s&client_secret=%s&grant_type=%s&user_id=%s&account=%s&password=%s",
         clientId, clientSecret, signinType.toOAuth2GrantType(), userId, account, password);
+    if (isNotEmpty(scope)) {
+      authContent = authContent + "&scope=" + scope;
+    }
     return sendOauth2RenewRequest(authContent);
   }
 
@@ -375,8 +375,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     return sendOauth2RenewRequest(authContent);
   }
 
-  private Map<String, String> sendOauth2RenewRequest(String authContent) throws Throwable {
+  public static Map<String, String> sendOauth2RenewRequest(String authContent) throws Throwable {
     HttpSender sender = new HttpUrlConnectionSender();
+    ApplicationInfo applicationInfo = SpringContextHolder.getBean(ApplicationInfo.class);
     String tokenEndpoint = format("http://%s/oauth2/token", applicationInfo.getInstanceId());
     Response response = Request.build(tokenEndpoint, sender).withMethod(HttpMethod.POST)
         .withContent(APPLICATION_FORM_URLENCODED, authContent).send();

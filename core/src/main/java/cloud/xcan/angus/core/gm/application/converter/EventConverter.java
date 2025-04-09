@@ -8,6 +8,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.email.EmailType;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
+import cloud.xcan.angus.api.enums.EventType;
 import cloud.xcan.angus.api.enums.NoticeType;
 import cloud.xcan.angus.api.enums.PushMediaType;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
@@ -33,8 +34,8 @@ public class EventConverter {
     SendNoticeDto dto = new SendNoticeDto();
     dto.setNoticeTypes(noticeTypes);
     String subject = isNotEmpty(source.getSubject()) ? source.getSubject()
-        : nullSafe(source.getAppCode(), source.getServiceCode()) + " " + source.getType()
-            .getMessage();
+        : nullSafe(source.getAppCode(), source.getServiceCode()) + " "
+            + EventType.valueOf(source.getType()).getMessage();
     for (NoticeType notice : noticeTypes) {
       switch (notice) {
         case EMAIL:
