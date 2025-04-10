@@ -1,6 +1,10 @@
 package cloud.xcan.angus.core.gm.application.cmd.event.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.EVENT_TEMPLATE;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
@@ -9,6 +13,7 @@ import static java.util.Objects.nonNull;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.query.event.EventTemplateQuery;
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
@@ -45,6 +50,9 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
   @Resource
   private EventTemplateCache eventTemplateCache;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> add(EventTemplate template) {
@@ -55,15 +63,17 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
             "Exception event eKey is required");
         assertTrue(template.getEventType().exceptional || isNotEmpty(template.getTargetType()),
             "Exception event targetType is required");
-        // Check the template event name exists
+        // Check the template event name existed
         eventTemplateQuery.checkEventNameExist(template);
-        // Check the template event code and eKey exists
+        // Check the template event code and eKey existed
         eventTemplateQuery.checkEventCodeExist(template);
       }
 
       @Override
       protected IdKey<Long, Object> process() {
-        return insert(template);
+        IdKey<Long, Object> idKey = insert(template);
+        operationLogCmd.add(EVENT_TEMPLATE, template, CREATED);
+        return idKey;
       }
     }.execute();
   }
@@ -79,9 +89,9 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
         if (nonNull(template.getId())) {
           // Check the template existed
           templateDb = eventTemplateQuery.checkAndFind(template.getId());
-          // Check the template event name exists
+          // Check the template event name existed
           eventTemplateQuery.checkEventNameExist(template);
-          // Check the template event code and eKey exists
+          // Check the template event code and eKey existed
           eventTemplateQuery.checkEventCodeExist(template);
         }
       }
@@ -95,6 +105,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
         deleteTemplateChannel(template, templateDb);
         eventTemplateCache.cacheEventTemplate(template);
         eventTemplateRepo.save(template);
+        operationLogCmd.add(EVENT_TEMPLATE, template, UPDATED);
         return IdKey.of(template.getId(), template.getEventName());
       }
     }.execute();
@@ -104,9 +115,11 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
   @Override
   public void delete(Long id) {
     new BizTemplate<Void>() {
+      EventTemplate templateDb;
+
       @Override
       protected void checkParams() {
-        //NOOP
+        templateDb = eventTemplateQuery.checkAndFind(id);
       }
 
       @Override
@@ -117,6 +130,8 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
 
         //eventTemplateCache.clearEventTemplates(template);
         // Delete event push ? -> NOOP: The event push will automatically fail after deleting the template
+
+        operationLogCmd.add(EVENT_TEMPLATE, templateDb, DELETED);
         return null;
       }
     }.execute();

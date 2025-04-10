@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.domain.event.channel;
 
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,7 +20,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @Getter
 @Accessors(chain = true)
 @DynamicUpdate
-public class EventChannel extends TenantAuditingEntity<EventChannel, Long> {
+public class EventChannel extends TenantAuditingEntity<EventChannel, Long>
+    implements Resources<Long> {
 
   @Id
   private Long id;

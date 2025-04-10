@@ -105,7 +105,7 @@ public class EventChannelQueryImpl implements EventChannelQuery {
   }
 
   @Override
-  public EventChannel find(Long id) {
+  public EventChannel checkAndFind(Long id) {
     return eventChannelRepo.findById(id)
         .orElseThrow(() -> ResourceNotFound.of(id, "EventChannel"));
   }
@@ -142,10 +142,9 @@ public class EventChannelQueryImpl implements EventChannelQuery {
 
   @Override
   public void checkNotInUse(Long id) {
-    List<EventTemplateChannel> eventTemplateChannels = eventTemplateChannelRepo
-        .findAllByChannelId(id);
-    if (isNotEmpty(eventTemplateChannels)) {
-      List<Long> templateIds = eventTemplateChannels.stream()
+    List<EventTemplateChannel> templateChannels = eventTemplateChannelRepo.findAllByChannelId(id);
+    if (isNotEmpty(templateChannels)) {
+      List<Long> templateIds = templateChannels.stream()
           .map(EventTemplateChannel::getTemplateId).collect(Collectors.toList());
       List<EventTemplate> eventTemplates = eventTemplateRepo.findAllById(templateIds);
       if (isNotEmpty(eventTemplates)) {

@@ -16,7 +16,7 @@ public interface EventChannelQuery {
 
   EventTemplateReceiver findExecByTemplateId(Long tenantId, Long templateId);
 
-  EventChannel find(Long id);
+  EventChannel checkAndFind(Long id);
 
   List<EventChannel> find(Collection<Long> channelIds);
 

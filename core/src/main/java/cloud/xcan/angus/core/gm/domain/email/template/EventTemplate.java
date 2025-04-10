@@ -7,6 +7,7 @@ import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelP;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.template.receiver.EventTemplateReceiver;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +30,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Accessors(chain = true)
 @DynamicUpdate
-public class EventTemplate extends AuditingEntity<EventTemplate, Long> {
+public class EventTemplate extends AuditingEntity<EventTemplate, Long> implements Resources<Long> {
 
   @Id
   private Long id;
@@ -74,5 +75,10 @@ public class EventTemplate extends AuditingEntity<EventTemplate, Long> {
   @Override
   public Long identity() {
     return this.id;
+  }
+
+  @Override
+  public String getName() {
+    return eventName;
   }
 }
