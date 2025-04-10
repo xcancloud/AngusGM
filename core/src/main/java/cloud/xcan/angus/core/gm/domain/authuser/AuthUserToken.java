@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.domain.authuser;
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -25,7 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "auth_user_token")
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)
-public class AuthUserToken extends TenantEntity<AuthUserToken, Long> {
+public class AuthUserToken extends TenantEntity<AuthUserToken, Long> implements Resources<Long> {
 
   @Id
   private Long id;

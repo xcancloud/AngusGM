@@ -4,6 +4,9 @@ import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.submitOauth2UserSignInRequest;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER_TOKEN;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.ACCESS_TOKEN_EXPIRED_DATE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.CUSTOM_ACCESS_TOKEN;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.USER_TOKEN_CLIENT_SCOPE;
@@ -19,11 +22,14 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserTokenCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserQuery;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserTokenQuery;
 import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserToken;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserTokenRepo;
+import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.remote.message.AbstractResultMessageException;
 import cloud.xcan.angus.remote.message.SysException;
@@ -38,7 +44,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
@@ -65,13 +70,13 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
   private PasswordEncoder passwordEncoder;
 
   @Resource
-  private AuthenticationManager authenticationManager;
-
-  @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
 
   @Resource
   private DaoAuthenticationProvider daoAuthenticationProvider;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   /**
    * @see OAuth2PasswordAuthenticationProvider#authenticate(Authentication)
@@ -136,6 +141,9 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         userToken.setValue(authUserTokenQuery.encryptValue(userAccessToken));
         userToken.setId(uidGenerator.getUID());
         insert0(userToken);
+
+        // Save operation log
+        operationLogCmd.add(USER_TOKEN, userToken, CREATED);
         return userToken;
       }
     }.execute();
@@ -166,6 +174,8 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         }
 
         authUserTokenRepo.deleteByIdIn(ids);
+
+        operationLogCmd.addAll(USER_TOKEN, userTokensDb, DELETED);
         return null;
       }
     }.execute();

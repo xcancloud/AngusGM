@@ -3,6 +3,9 @@ package cloud.xcan.angus.core.gm.application.cmd.system.impl;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_SYS_TOKEN;
 import static cloud.xcan.angus.core.gm.application.cmd.client.impl.ClientSignCmdImpl.submitOauth2ClientSignInRequest;
 import static cloud.xcan.angus.core.gm.application.converter.ClientConverter.toSystemTokenToDomain;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.SYSTEM_TOKEN;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.checkTenantSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -13,9 +16,12 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.client.ClientCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.system.SystemTokenCmd;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.system.SystemTokenQuery;
+import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.system.SystemToken;
 import cloud.xcan.angus.core.gm.domain.system.SystemTokenRepo;
 import cloud.xcan.angus.core.gm.domain.system.resource.SystemTokenResource;
@@ -33,7 +39,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
@@ -61,13 +66,13 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
   private ApiQuery apiQuery;
 
   @Resource
-  private AuthenticationManager authenticationManager;
-
-  @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
 
   @Resource
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   /**
    * @see OAuth2ClientCredentialsAuthenticationProvider#authenticate(Authentication)
@@ -130,6 +135,9 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
         List<SystemTokenResource> tokenResources = toSystemTokenResource(systemToken.getId(),
             resources, serviceResourceMap);
         systemTokenResourceRepo.saveAll(tokenResources);
+
+        // Save operation log
+        operationLogCmd.add(SYSTEM_TOKEN, systemToken, CREATED);
         return systemToken;
       }
     }.execute();
@@ -167,6 +175,9 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
         }
         systemTokenRepo.deleteByIdIn(ids);
         systemTokenResourceRepo.deleteBySystemTokenIdIn(ids);
+
+        // Save operation log
+        operationLogCmd.addAll(SYSTEM_TOKEN, systemTokensDb, DELETED);
         return null;
       }
     }.execute();

@@ -1,10 +1,12 @@
 package cloud.xcan.angus.core.gm.domain.system;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
+import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.enums.ResourceAuthType;
 import cloud.xcan.angus.core.gm.domain.system.resource.SystemTokenResource;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -13,7 +15,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,7 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "system_token")
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)
-public class SystemToken extends TenantEntity<SystemToken, Long> {
+public class SystemToken extends TenantEntity<SystemToken, Long> implements Resources<Long> {
 
   @Id
   private Long id;
@@ -59,11 +60,12 @@ public class SystemToken extends TenantEntity<SystemToken, Long> {
   private String decryptedValue;
 
   public boolean isApiAuth() {
-    return Objects.nonNull(authType) && ResourceAuthType.API.equals(authType);
+    return nonNull(authType) && ResourceAuthType.API.equals(authType);
   }
 
   @Override
   public Long identity() {
     return this.id;
   }
+
 }
