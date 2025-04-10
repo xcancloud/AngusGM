@@ -36,10 +36,6 @@ public class UserDirectoryAssembler {
         .setMembershipSchemaData(dto.getMembershipSchema());
   }
 
-  public static UserDirectory enabledDtoToDomain(EnabledOrDisabledDto dto) {
-    return new UserDirectory().setId(dto.getId()).setEnabled(dto.getEnabled());
-  }
-
   public static UserDirectory testDtoToDomain(UserDirectoryTestDto dto) {
     return new UserDirectory()
         .setName(dto.getServer().getName())

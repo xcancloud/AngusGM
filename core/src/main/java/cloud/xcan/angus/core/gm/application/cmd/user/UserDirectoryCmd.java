@@ -14,9 +14,9 @@ public interface UserDirectoryCmd {
 
   void replace(UserDirectory directory);
 
-  void reorder(Map<Long, Integer> directorySequences);
+  void enabled(Long id, boolean enabled);
 
-  void enabled(List<UserDirectory> directories);
+  void reorder(Long id, Integer sequence);
 
   DirectorySyncResult sync(Long id, boolean onlyTest);
 

@@ -1,7 +1,14 @@
 package cloud.xcan.angus.core.gm.application.cmd.user.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER_DIRECTORY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SYNC;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.spring.SpringContextHolder.getCachedUidGenerator;
+import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreAuditing;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isUserAction;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_DESC_LENGTH;
@@ -9,6 +16,7 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.lengthSafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.longSafe;
 import static java.lang.Integer.MAX_VALUE;
@@ -31,10 +39,10 @@ import cloud.xcan.angus.api.obf.Str0;
 import cloud.xcan.angus.api.pojo.Pair;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
-import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserDirectoryCmd;
 import cloud.xcan.angus.core.gm.application.converter.GroupConverter;
@@ -102,6 +110,9 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
   @Resource
   private GroupManager groupManager;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   // @Transactional(rollbackFor = Exception.class)
   // Synchronization can be unsuccessful when saving successfully
   @Override
@@ -111,10 +122,10 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
       protected void checkParams() {
         // Ignore check when test directory
         if (!onlyTest) {
-          // Check name exists
+          // Check the name existed
           userDirectoryQuery.checkNameExisted(directory);
 
-          // Check server quota
+          // Check the server quota
           userDirectoryQuery.checkQuota(1);
         }
       }
@@ -129,9 +140,9 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         }
 
         // LDAP server password encryption storage
-        if (!onlyTest) { // Fix:: Test server passd encrypt is repeated
-          directory.getServerData()
-              .setPassword(encryptServerPassword(directory.getServerData().getPassword()));
+        if (!onlyTest) { // Fix:: Test server password encrypt is repeated
+          directory.getServerData().setPassword(
+              encryptServerPassword(directory.getServerData().getPassword()));
         }
 
         // Save directory and use inner @Transactional
@@ -142,6 +153,9 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         if (directory.getEnabled()) {
           sync(directory.getId(), onlyTest);
         }
+
+        // Save operation log
+        operationLogCmd.add(USER_DIRECTORY, directory, CREATED);
         return idKey;
       }
     }.execute();
@@ -155,9 +169,9 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
       @Override
       protected void checkParams() {
-        // Check name exists
+        // Check the name existed
         userDirectoryQuery.checkNameExisted(directory);
-        // Check directory exists
+        // Check the directory existed
         if (nonNull(directory.getId())) {
           directoryDb = userDirectoryQuery.checkAndFind(directory.getId());
         }
@@ -165,7 +179,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
       @Override
       protected Void process() {
-        if (Objects.isNull(directoryDb)) {
+        if (isNull(directoryDb)) {
           add(directory, false);
           return null;
         }
@@ -179,13 +193,16 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         }
 
         // Save directory
-        batchUpdate0(Collections.singletonList(CoreUtils.copyPropertiesIgnoreAuditing(directory,
-            directoryDb, "enabled")));
+        userDirectoryRepo.save(copyPropertiesIgnoreAuditing(directory, directoryDb, "enabled"));
+
         // Synchronize users and groups from the directory
         // No rollback when an exception occurs
         if (directoryDb.getEnabled()) {
           sync(directory.getId(), false);
         }
+
+        // Save operation log
+        operationLogCmd.add(USER_DIRECTORY, directoryDb, UPDATED);
         return null;
       }
     }.execute();
@@ -193,22 +210,20 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void reorder(Map<Long, Integer> directorySequences) {
+  public void reorder(Long id, Integer sequence) {
     new BizTemplate<Void>() {
-      List<UserDirectory> userDirectoriesDb;
+      UserDirectory directoryDb;
 
       @Override
       protected void checkParams() {
-        // Check exists
-        userDirectoriesDb = userDirectoryQuery.checkAndFind(directorySequences.keySet());
+        // Check the user directory existed
+        directoryDb = userDirectoryQuery.checkAndFind(id);
       }
 
       @Override
       protected Void process() {
-        for (UserDirectory directory : userDirectoriesDb) {
-          directory.setSequence(directorySequences.get(directory.getId()));
-        }
-        batchUpdate0(userDirectoriesDb);
+        directoryDb.setSequence(sequence);
+        userDirectoryRepo.save(directoryDb);
         return null;
       }
     }.execute();
@@ -216,11 +231,23 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void enabled(List<UserDirectory> directories) {
+  public void enabled(Long id, boolean enabled) {
     new BizTemplate<Void>() {
+      UserDirectory directoryDb;
+
+      @Override
+      protected void checkParams() {
+        // Check the user directory existed
+        directoryDb = userDirectoryQuery.checkAndFind(id);
+      }
+
       @Override
       protected Void process() {
-        batchUpdateOrNotFound(directories);
+        directoryDb.setEnabled(enabled);
+        userDirectoryRepo.save(directoryDb);
+
+        // Save operation log
+        operationLogCmd.add(USER_DIRECTORY, directoryDb, enabled ? ENABLED : DISABLED);
         return null;
       }
     }.execute();
@@ -423,13 +450,16 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
           }
 
           result.setSuccess(true);
-          log.info("Synchronize user directory result: {}", result.toString());
+          log.info("Synchronize user directory result: {}", result);
           log.info("Synchronize user directory successfully");
+
+          // Save operation log
+          operationLogCmd.add(USER_DIRECTORY, directoryDb, SYNC);
           return result;
         } catch (Exception e) {
           result.setSuccess(false);
           result.setErrorMessage(e.getMessage());
-          log.error("Synchronize user directory result: {}", result.toString());
+          log.error("Synchronize user directory result: {}", result);
           log.error("Synchronize user directory exception:", e);
           return result;
         } finally {
@@ -608,7 +638,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         for (GroupUser groupUser : groupUsers) {
           User user = usernameUserMap.get(groupUser.getUsername());
           // Fix:: The group relationship in OpenLDAP is not automatically deleted after the user is deleted
-          // The relationship exists but the user or group has been deleted
+          // The relationship existed but the user or group has been deleted
           if (nonNull(user)) {
             groupUser.setTenantId(tenantDb.getId());
             groupUser.setCreatedBy(longSafe(getUserId(), -1L/*By Job*/))
@@ -663,7 +693,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         if (!groupLdap.getName().equals(groupDb.getName())
             || (syncDescription && !lengthSafe(groupLdap.getRemark(), MAX_DESC_LENGTH)
             .equals(groupDb.getRemark()))) {
-          // Ignore modification when name exists
+          // Ignore modification when name existed
           if (!directoryDb.getGroupSchemaData().getIgnoreSameNameGroup()
               || !nameGroupDbMap.containsKey(groupLdap.getName())) {
             groupDb.setName(groupLdap.getName());

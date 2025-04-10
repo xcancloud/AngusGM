@@ -77,7 +77,7 @@ public class UserDirectoryRest {
       @ApiResponse(responseCode = "404", description = "Resource not found")
   })
   @PatchMapping("/reorder")
-  public ApiLocaleResult<?> reorder(@Valid @RequestBody Set<UserDirectoryReorderDto> dto) {
+  public ApiLocaleResult<?> reorder(@Valid @RequestBody UserDirectoryReorderDto dto) {
     userDirectoryFacade.reorder(dto);
     return ApiLocaleResult.success();
   }
@@ -89,7 +89,7 @@ public class UserDirectoryRest {
       @ApiResponse(responseCode = "404", description = "Resource not found")
   })
   @PatchMapping("/enabled")
-  public ApiLocaleResult<?> enabled(@Valid @RequestBody Set<EnabledOrDisabledDto> dto) {
+  public ApiLocaleResult<?> enabled(@Valid @RequestBody EnabledOrDisabledDto dto) {
     userDirectoryFacade.enabled(dto);
     return ApiLocaleResult.success();
   }

@@ -18,9 +18,9 @@ public interface UserDirectoryFacade {
 
   void replace(UserDirectoryReplaceDto dto);
 
-  void reorder(Set<UserDirectoryReorderDto> dto);
+  void reorder(UserDirectoryReorderDto dto);
 
-  void enabled(Set<EnabledOrDisabledDto> dto);
+  void enabled(EnabledOrDisabledDto dto);
 
   UserDirectorySyncVo sync(Long id);
 

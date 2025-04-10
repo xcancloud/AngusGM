@@ -11,8 +11,16 @@ import static cloud.xcan.angus.core.gm.application.converter.UserConverter.setUs
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_REFUSE_OPERATE_ADMIN;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_SYS_ADMIN_NUM_ERROR;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CANCEL_SYS_ADMIN;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.LOCKED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SET_SYS_ADMIN;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_UP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UNLOCKED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantSysAdmin;
@@ -166,7 +174,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         authUserCmd.replace0(replaceToAuthUser(user, optTenant), isNewSignup(userSource));
 
         // Save operation log
-        if (!isUserAction()){
+        if (!isUserAction()) {
           PrincipalContext.get().setUserId(user.getId()).setFullName(user.getFullName())
               .setTenantId(user.getTenantId()).setTenantName(user.getTenantName());
         }
@@ -222,6 +230,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Update oauth2 user
         Tenant tenantDb = tenantQuery.checkAndFind(user.getTenantId());
         authUserCmd.replace0(replaceToAuthUser(userDb, tenantDb), false);
+
+        // Save operation log
+        operationLogCmd.add(USER, userDb, UPDATED);
         return null;
       }
     }.execute();
@@ -286,6 +297,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Update oauth2 user
         Tenant tenantDb = tenantQuery.checkAndFind(userDb.getTenantId());
         authUserCmd.replace0(replaceToAuthUser(userDb, tenantDb), false);
+
+        // Save operation log
+        operationLogCmd.add(USER, userDb, UPDATED);
         return IdKey.of(userDb.getId(), userDb.getFullName());
       }
     }.execute();
@@ -317,6 +331,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
         // Delete oauth2 user
         authUserCmd.delete(ids);
+
+        // Save operation log
+        operationLogCmd.addAll(USER, usersDb, DELETED);
         return null;
       }
     }.execute();
@@ -347,6 +364,11 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
         // Check there is at least one system administrator
         assertTrue(userQuery.countValidSysAdminUser() > 0, USER_SYS_ADMIN_NUM_ERROR);
+
+        // Save operation log
+        operationLogCmd.addAll(USER, usersDb.stream().filter(User::getEnabled).toList(), ENABLED);
+        operationLogCmd.addAll(USER, usersDb.stream().filter(x -> !x.getEnabled()).toList(),
+            DISABLED);
         return null;
       }
     }.execute();
@@ -393,6 +415,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
           userDb.setLocked(false).setLockStartDate(null).setLockEndDate(null);
         }
         userRepo.save(userDb);
+
+        // Save operation log
+        operationLogCmd.add(USER, userDb, locked ? LOCKED : UNLOCKED);
         return null;
       }
     }.execute();
@@ -419,6 +444,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
       protected Void process() {
         userDb.setSysAdmin(sysAdmin);
         userRepo.save(userDb);
+
+        // Save operation log
+        operationLogCmd.add(USER, userDb, sysAdmin ? SET_SYS_ADMIN : CANCEL_SYS_ADMIN);
         return null;
       }
     }.execute();

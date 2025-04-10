@@ -1,5 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.user.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserDirectoryAssembler.addDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserDirectoryAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserDirectoryAssembler.testDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserDirectoryAssembler.toSyncVo;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserDirectoryAssembler.toVo;
@@ -40,25 +42,22 @@ public class UserDirectoryFacadeImpl implements UserDirectoryFacade {
 
   @Override
   public IdKey<Long, Object> add(UserDirectoryAddDto dto) {
-    return userDirectoryCmd.add(UserDirectoryAssembler.addDtoToDomain(dto), false);
+    return userDirectoryCmd.add(addDtoToDomain(dto), false);
   }
 
   @Override
   public void replace(UserDirectoryReplaceDto dto) {
-    userDirectoryCmd.replace(UserDirectoryAssembler.replaceDtoToDomain(dto));
+    userDirectoryCmd.replace(replaceDtoToDomain(dto));
   }
 
   @Override
-  public void reorder(Set<UserDirectoryReorderDto> dto) {
-    userDirectoryCmd.reorder(dto.stream().collect(Collectors.toMap(UserDirectoryReorderDto::getId,
-        UserDirectoryReorderDto::getSequence)));
+  public void reorder(UserDirectoryReorderDto dto) {
+    userDirectoryCmd.reorder(dto.getId(), dto.getSequence());
   }
 
   @Override
-  public void enabled(Set<EnabledOrDisabledDto> dto) {
-    List<UserDirectory> directories = dto.stream().map(UserDirectoryAssembler::enabledDtoToDomain)
-        .collect(Collectors.toList());
-    userDirectoryCmd.enabled(directories);
+  public void enabled(EnabledOrDisabledDto dto) {
+    userDirectoryCmd.enabled(dto.getId(), dto.getEnabled());
   }
 
   @Override

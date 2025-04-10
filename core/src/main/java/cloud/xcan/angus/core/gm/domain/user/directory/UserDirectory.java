@@ -7,6 +7,7 @@ import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectorySchema;
 import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectoryServer;
 import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectoryUserSchema;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +26,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Accessors(chain = true)
 public class UserDirectory extends AuditingEntity<UserDirectory, Long>
-    implements Comparable<UserDirectory>, Serializable {
+    implements Resources<Long>, Comparable<UserDirectory>, Serializable {
 
   @Id
   private Long id;
