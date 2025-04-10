@@ -1,17 +1,25 @@
 package cloud.xcan.angus.core.gm.application.cmd.policy.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_POLICY_USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_USER_POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_POLICY_USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_USER_POLICY;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Collections.singleton;
 
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.api.manager.UserManager;
+import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyUserCmd;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
+import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
@@ -39,14 +47,18 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   private AuthPolicyQuery authPolicyQuery;
 
   @Resource
-  private UserManager userManager;
+  private UserQuery userQuery;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> policyUserAdd(Long policyId, List<AuthPolicyOrg> policyUsers) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
-      Set<Long> userIds;
       AuthPolicy policyDb;
+      Set<Long> userIds;
+      List<User> usersDb;
 
       @Override
       protected void checkParams() {
@@ -54,7 +66,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
         // Check the users existed
         userIds = policyUsers.stream().map(AuthPolicyOrg::getOrgId).collect(Collectors.toSet());
-        userManager.checkValidAndFind(userIds);
+        usersDb = userQuery.checkAndFind(userIds);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
@@ -74,7 +86,11 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           List<AuthPolicyOrg> addPolicyUsers = policyUsers.stream()
               .filter(x -> userIds.contains(x.getOrgId())).collect(Collectors.toList());
           if (isNotEmpty(addPolicyUsers)) {
-            return batchInsert(addPolicyUsers);
+            List<IdKey<Long, Object>> idKeys = batchInsert(addPolicyUsers);
+
+            operationLogCmd.add(POLICY, policyDb, ADD_POLICY_USER,
+                usersDb.stream().map(User::getName).toList().toArray());
+            return idKeys;
           }
         }
         return null;
@@ -86,18 +102,26 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   @Override
   public void policyUserDelete(Long policyId, Set<Long> userIds) {
     new BizTemplate<Void>() {
+      AuthPolicy policyDb;
+      List<User> usersDb;
+
       @Override
       protected void checkParams() {
         // Check the policy existed
-        AuthPolicy authPolicyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
+        policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
+        // Check the users existed
+        usersDb = userQuery.checkAndFind(userIds);
         // Check the policy permission
-        authPolicyQuery.checkAuthPolicyPermission(authPolicyDb.getAppId(), singleton(policyId));
+        authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
       @Override
       protected Void process() {
         authPolicyOrgRepo.deleteByPolicyIdAndOrgTypeAndOrgIdIn(policyId,
             AuthOrgType.USER.getValue(), userIds);
+
+        operationLogCmd.add(POLICY, policyDb, DELETE_POLICY_USER,
+            usersDb.stream().map(User::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -107,21 +131,20 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   @Override
   public List<IdKey<Long, Object>> userPolicyAdd(Long userId, List<AuthPolicyOrg> userPolicies) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      User userDb;
       Set<Long> policyIds;
-      List<AuthPolicy> authPoliciesDb;
+      List<AuthPolicy> policiesDb;
 
       @Override
       protected void checkParams() {
         // Check the user existed
-        userManager.checkValidAndFind(userId);
-
+        userDb = userQuery.checkAndFind(userId);
         // Check the policies existed
         policyIds = userPolicies.stream().map(AuthPolicyOrg::getPolicyId)
             .collect(Collectors.toSet());
-        authPoliciesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-
+        policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
         // Check the policy permission
-        authPolicyQuery.checkAuthPolicyPermission(authPoliciesDb);
+        authPolicyQuery.checkAuthPolicyPermission(policiesDb);
       }
 
       @Override
@@ -133,13 +156,17 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
         if (isNotEmpty(policyIds)) {
           // Complete authorization information
-          assemblePolicyAuthInfo(userPolicies, authPoliciesDb);
+          assemblePolicyAuthInfo(userPolicies, policiesDb);
 
           // Save nonexistent authorization
           List<AuthPolicyOrg> newUserPolicies = userPolicies.stream()
               .filter(x -> policyIds.contains(x.getPolicyId())).collect(Collectors.toList());
           if (isNotEmpty(newUserPolicies)) {
-            return batchInsert(newUserPolicies);
+            List<IdKey<Long, Object>> idKeys = batchInsert(newUserPolicies);
+
+            operationLogCmd.add(USER, userDb, ADD_USER_POLICY,
+                policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
+            return idKeys;
           }
         }
         return null;
@@ -151,8 +178,16 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   @Override
   public void userPolicyDelete(Long userId, Set<Long> policyIds) {
     new BizTemplate<Void>() {
+      User userDb;
+      Set<Long> policyIds;
+      List<AuthPolicy> policiesDb;
+
       @Override
       protected void checkParams() {
+        // Check the user existed
+        userDb = userQuery.checkAndFind(userId);
+        // Check the policies existed
+        policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyIds);
       }
@@ -161,6 +196,9 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
       protected Void process() {
         authPolicyOrgRepo.deleteByOrgIdAndOrgTypeAndPolicyIdIn(userId,
             AuthOrgType.USER.getValue(), policyIds);
+
+        operationLogCmd.add(USER, userDb, DELETE_USER_POLICY,
+            policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
         return null;
       }
     }.execute();

@@ -17,6 +17,7 @@ import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.core.gm.domain.policy.func.AuthPolicyFunc;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthOrgPolicyP;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,7 +36,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class AuthPolicy extends TenantAuditingEntity<AuthPolicy, Long> {
+public class AuthPolicy extends TenantAuditingEntity<AuthPolicy, Long> implements Resources<Long> {
 
   @Id
   private Long id;
@@ -121,8 +122,8 @@ public class AuthPolicy extends TenantAuditingEntity<AuthPolicy, Long> {
   }
 
   public boolean hasImmutableValue() {
-    return nonNull(code) && nonNull(type) || nonNull(grantStage) || nonNull(appId)
-        || nonNull(enabled);
+    return nonNull(code) && nonNull(type) || nonNull(grantStage)
+        || nonNull(appId) || nonNull(enabled);
   }
 
   public String getCodeSuffix() {

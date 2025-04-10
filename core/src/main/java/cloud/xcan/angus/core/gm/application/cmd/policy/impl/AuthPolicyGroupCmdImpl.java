@@ -2,18 +2,28 @@ package cloud.xcan.angus.core.gm.application.cmd.policy.impl;
 
 import static cloud.xcan.angus.core.gm.application.cmd.policy.impl.AuthPolicyUserCmdImpl.assembleOrgAuthInfo;
 import static cloud.xcan.angus.core.gm.application.cmd.policy.impl.AuthPolicyUserCmdImpl.assemblePolicyAuthInfo;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.GROUP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_GROUP_POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_POLICY_GROUP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_GROUP_POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_POLICY_GROUP;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Collections.singleton;
 
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
+import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.api.manager.GroupManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyGroupCmd;
+import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
+import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
@@ -41,13 +51,17 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
   private AuthPolicyQuery authPolicyQuery;
 
   @Resource
-  private GroupManager groupManager;
+  private GroupQuery groupQuery;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> policyGroupAdd(Long policyId, List<AuthPolicyOrg> policyGroups) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       Set<Long> groupIds;
+      List<Group> groupsDb;
       AuthPolicy policyDb;
 
       @Override
@@ -56,7 +70,7 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
         // Check the groups existed
         groupIds = policyGroups.stream().map(AuthPolicyOrg::getOrgId).collect(Collectors.toSet());
-        groupManager.checkValidAndFind(groupIds);
+        groupsDb = groupQuery.checkValidAndFind(groupIds);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
@@ -76,7 +90,11 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
           List<AuthPolicyOrg> newPolicyGroups = policyGroups.stream()
               .filter(x -> groupIds.contains(x.getOrgId())).collect(Collectors.toList());
           if (isNotEmpty(newPolicyGroups)) {
-            return batchInsert(newPolicyGroups);
+            List<IdKey<Long, Object>> idKeys = batchInsert(newPolicyGroups);
+
+            operationLogCmd.add(POLICY, policyDb, ADD_POLICY_GROUP,
+                groupsDb.stream().map(Group::getName).toList().toArray());
+            return idKeys;
           }
         }
         return null;
@@ -88,10 +106,15 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
   @Override
   public void policyGroupDelete(Long policyId, Set<Long> groupIds) {
     new BizTemplate<Void>() {
+      AuthPolicy policyDb;
+      List<Group> groupsDb;
+
       @Override
       protected void checkParams() {
         // Check the policy existed
-        AuthPolicy policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
+        policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
+        // Check the groups existed
+        groupsDb = groupQuery.checkAndFind(groupIds);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
@@ -100,6 +123,9 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
       protected Void process() {
         authPolicyOrgRepo.deleteByPolicyIdAndOrgTypeAndOrgIdIn(policyId,
             AuthOrgType.GROUP.getValue(), groupIds);
+
+        operationLogCmd.add(POLICY, policyDb, DELETE_POLICY_GROUP,
+            groupsDb.stream().map(Group::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -109,19 +135,18 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
   @Override
   public List<IdKey<Long, Object>> groupPolicyAdd(Long groupId, List<AuthPolicyOrg> groupPolices) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      Group groupDb;
       Set<Long> policyIds;
       List<AuthPolicy> policiesDb;
 
       @Override
       protected void checkParams() {
         // Check the group existed
-        groupManager.checkValidAndFind(groupId);
-
+        groupDb = groupQuery.checkValidAndFind(groupId);
         // Check the policies existed
         policyIds = groupPolices.stream().map(AuthPolicyOrg::getPolicyId)
             .collect(Collectors.toSet());
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policiesDb);
       }
@@ -142,7 +167,11 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
           List<AuthPolicyOrg> newGroupPolices = groupPolices.stream()
               .filter(x -> policyIds.contains(x.getPolicyId())).collect(Collectors.toList());
           if (isNotEmpty(newGroupPolices)) {
-            return batchInsert(newGroupPolices);
+            List<IdKey<Long, Object>> idKeys = batchInsert(newGroupPolices);
+
+            operationLogCmd.add(GROUP, groupDb, ADD_GROUP_POLICY,
+                policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
+            return idKeys;
           }
         }
         return null;
@@ -154,8 +183,16 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
   @Override
   public void groupPolicyDelete(Long groupId, Set<Long> policyIds) {
     new BizTemplate<Void>() {
+      Group groupDb;
+      Set<Long> policyIds;
+      List<AuthPolicy> policiesDb;
+
       @Override
       protected void checkParams() {
+        // Check the group existed
+        groupDb = groupQuery.checkValidAndFind(groupId);
+        // Check the policies existed
+        policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyIds);
       }
@@ -164,6 +201,9 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
       protected Void process() {
         authPolicyOrgRepo.deleteByOrgIdAndOrgTypeAndPolicyIdIn(groupId,
             AuthOrgType.GROUP.getValue(), policyIds);
+
+        operationLogCmd.add(GROUP, groupDb, DELETE_GROUP_POLICY,
+            policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
         return null;
       }
     }.execute();

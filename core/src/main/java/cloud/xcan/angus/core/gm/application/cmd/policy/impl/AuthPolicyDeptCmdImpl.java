@@ -2,18 +2,29 @@ package cloud.xcan.angus.core.gm.application.cmd.policy.impl;
 
 import static cloud.xcan.angus.core.gm.application.cmd.policy.impl.AuthPolicyUserCmdImpl.assembleOrgAuthInfo;
 import static cloud.xcan.angus.core.gm.application.cmd.policy.impl.AuthPolicyUserCmdImpl.assemblePolicyAuthInfo;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_DEPT_POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_POLICY_DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_DEPT_POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_POLICY_DEPT;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Collections.singleton;
 
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
+import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.api.manager.DeptManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyDeptCmd;
+import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
+import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
@@ -40,7 +51,10 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   private AuthPolicyQuery authPolicyQuery;
 
   @Resource
-  private DeptManager deptManager;
+  private DeptQuery deptQuery;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -48,6 +62,7 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       Set<Long> deptIds;
       AuthPolicy policyDb;
+      List<Dept> deptDb;
 
       @Override
       protected void checkParams() {
@@ -55,7 +70,7 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
         // Check the departments existed
         deptIds = policyDept.stream().map(AuthPolicyOrg::getOrgId).collect(Collectors.toSet());
-        deptManager.checkAndFind(deptIds);
+        deptDb = deptQuery.checkAndFind(deptIds);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
@@ -75,7 +90,11 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           List<AuthPolicyOrg> newPolicyDept = policyDept.stream()
               .filter(x -> deptIds.contains(x.getOrgId())).collect(Collectors.toList());
           if (isNotEmpty(newPolicyDept)) {
-            return batchInsert(newPolicyDept);
+            List<IdKey<Long, Object>> idKeys = batchInsert(newPolicyDept);
+
+            operationLogCmd.add(POLICY, policyDb, ADD_POLICY_DEPT,
+                deptDb.stream().map(Dept::getName).toList().toArray());
+            return idKeys;
           }
         }
         return null;
@@ -87,10 +106,15 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   @Override
   public void policyDeptDelete(Long policyId, Set<Long> deptIds) {
     new BizTemplate<Void>() {
+      AuthPolicy policyDb;
+      List<Dept> deptDb;
+
       @Override
       protected void checkParams() {
         // Check the policy existed
-        AuthPolicy policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
+        policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
+        // Check the departments existed
+        deptDb = deptQuery.checkAndFind(deptIds);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
@@ -99,6 +123,9 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
       protected Void process() {
         authPolicyOrgRepo.deleteByPolicyIdAndOrgTypeAndOrgIdIn(policyId,
             AuthOrgType.DEPT.getValue(), deptIds);
+
+        operationLogCmd.add(POLICY, policyDb, DELETE_POLICY_DEPT,
+            deptDb.stream().map(Dept::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -108,19 +135,18 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   @Override
   public List<IdKey<Long, Object>> deptPolicyAdd(Long deptId, List<AuthPolicyOrg> deptPolices) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      Dept deptDb;
       Set<Long> policyIds;
       List<AuthPolicy> policiesDb;
 
       @Override
       protected void checkParams() {
         // Check the department existed
-        deptManager.checkAndFind(deptId);
-
+        deptDb = deptQuery.checkAndFind(deptId);
         // Check the policy existed
         policyIds = deptPolices.stream().map(AuthPolicyOrg::getPolicyId)
             .collect(Collectors.toSet());
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policiesDb);
       }
@@ -141,7 +167,11 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           List<AuthPolicyOrg> addDeptPolices = deptPolices.stream()
               .filter(x -> policyIds.contains(x.getPolicyId())).collect(Collectors.toList());
           if (isNotEmpty(addDeptPolices)) {
-            return batchInsert(addDeptPolices);
+            List<IdKey<Long, Object>> idKeys = batchInsert(addDeptPolices);
+
+            operationLogCmd.add(DEPT, deptDb, ADD_DEPT_POLICY,
+                policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
+            return idKeys;
           }
         }
         return null;
@@ -153,8 +183,15 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   @Override
   public void deptPolicyDelete(Long deptId, Set<Long> policyIds) {
     new BizTemplate<Void>() {
+      Dept deptDb;
+      List<AuthPolicy> policiesDb;
+
       @Override
       protected void checkParams() {
+        // Check the department existed
+        deptDb = deptQuery.checkAndFind(deptId);
+        // Check the policy existed
+        policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
         // Check the policy permission
         authPolicyQuery.checkAuthPolicyPermission(policyIds);
       }
@@ -163,6 +200,9 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
       protected Void process() {
         authPolicyOrgRepo.deleteByOrgIdAndOrgTypeAndPolicyIdIn(deptId,
             AuthOrgType.DEPT.getValue(), policyIds);
+
+        operationLogCmd.add(DEPT, deptDb, DELETE_DEPT_POLICY,
+            policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -174,7 +214,7 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // NOOP:: Check the policy permission <- UC deletes policies when deleting depts, and does not check permissions.
+        // NOOP:: Check the policy permission <- UC deletes policies when deleting departments, and does not check permissions.
       }
 
       @Override

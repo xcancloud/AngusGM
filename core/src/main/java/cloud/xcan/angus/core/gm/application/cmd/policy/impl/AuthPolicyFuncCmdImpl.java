@@ -1,7 +1,12 @@
 package cloud.xcan.angus.core.gm.application.cmd.policy.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_POLICY_FUNC;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_POLICY_FUNC;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATE_POLICY_FUNC;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 
@@ -9,6 +14,7 @@ import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyFuncCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyFuncQuery;
@@ -45,6 +51,9 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
   @Resource
   private AuthPolicyQuery authPolicyQuery;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   /**
    * When a child function is authorized, the parent function is also authorized.
    */
@@ -52,7 +61,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
   @Override
   public void add(Long policyId, Set<Long> appFuncIds) {
     new BizTemplate<Void>() {
-      List<AppFunc> appFuncDb;
+      List<AppFunc> funcDb;
       AuthPolicy policyDb;
 
       @Override
@@ -65,7 +74,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
         // Check app functions existed
         if (isNotEmpty(appFuncIds)) {
-          appFuncDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
+          funcDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
         }
       }
 
@@ -75,16 +84,19 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
         if (isEmpty(existedFuncIds)) {
           policyDb.setPolicyFunc(existedFuncIds.stream()
               .map(x -> new AuthPolicyFunc().setFuncId(x)).collect(Collectors.toList()));
-          add0(singletonList(policyDb), appFuncDb);
+          add0(singletonList(policyDb), funcDb);
           return null;
         }
-        List<AppFunc> notExistedFuncDb = appFuncDb.stream()
+        List<AppFunc> notExistedFuncDb = funcDb.stream()
             .filter(x -> !existedFuncIds.contains(x.getId())).collect(Collectors.toList());
         if (isNotEmpty(notExistedFuncDb)) {
           policyDb.setPolicyFunc(notExistedFuncDb.stream()
               .map(x -> new AuthPolicyFunc().setFuncId(x.getId())).collect(Collectors.toList()));
           add0(singletonList(policyDb), notExistedFuncDb);
         }
+
+        operationLogCmd.add(POLICY, policyDb, ADD_POLICY_FUNC,
+            funcDb.stream().map(AppFunc::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -97,8 +109,8 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
   @Override
   public void replace(Long policyId, Set<Long> appFuncIds) {
     new BizTemplate<Void>() {
-      List<AppFunc> appFuncDb;
       AuthPolicy policyDb;
+      List<AppFunc> funcDb;
 
       @Override
       protected void checkParams() {
@@ -110,7 +122,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
         // Check the application functions existed
         if (isNotEmpty(appFuncIds)) {
-          appFuncDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
+          funcDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
         }
       }
 
@@ -123,9 +135,12 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
         }
 
         // Clear and re-add
-        policyDb.setPolicyFunc(appFuncDb.stream()
+        policyDb.setPolicyFunc(funcDb.stream()
             .map(x -> new AuthPolicyFunc().setFuncId(x.getId())).collect(Collectors.toList()));
-        replace0(singletonList(policyDb), appFuncDb);
+        replace0(singletonList(policyDb), funcDb);
+
+        operationLogCmd.add(POLICY, policyDb, UPDATE_POLICY_FUNC, isNull(funcDb)
+            ? new Object[]{""} : funcDb.stream().map(AppFunc::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -135,18 +150,25 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
   @Override
   public void delete(Long policyId, Set<Long> appFuncIds) {
     new BizTemplate<Void>() {
+      AuthPolicy policyDb;
+      List<AppFunc> funcDb;
 
       @Override
       protected void checkParams() {
-        AuthPolicy policiesDb = authPolicyQuery.checkAndFind(policyId, false, false);
-
+        // Check the policy existed
+        policyDb = authPolicyQuery.checkAndFind(policyId, false, false);
+        // Check the application functions existed
+        funcDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
         // Check that only permission operation are allowed to enable or disable PRE_DEFINED policies on OP client
-        authPolicyQuery.checkOpPolicyPermission(singletonList(policiesDb));
+        authPolicyQuery.checkOpPolicyPermission(singletonList(policyDb));
       }
 
       @Override
       protected Void process() {
         authPolicyFuncRepo.deleteByPolicyIdAndFuncIdIn(policyId, appFuncIds);
+
+        operationLogCmd.add(POLICY, policyDb, DELETE_POLICY_FUNC,
+            funcDb.stream().map(AppFunc::getName).toList().toArray());
         return null;
       }
     }.execute();

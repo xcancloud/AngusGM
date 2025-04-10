@@ -19,4 +19,5 @@ public interface AuthPolicyCmd {
   void enabled(List<AuthPolicy> policies);
 
   void initAndOpenAppByPolicy(Long policyId);
+
 }

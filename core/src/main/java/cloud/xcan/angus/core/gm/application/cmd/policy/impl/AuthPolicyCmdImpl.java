@@ -6,6 +6,12 @@ import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.AuthTenantConverter.defaultInitToPolicyTenant;
 import static cloud.xcan.angus.core.gm.application.converter.AuthTenantConverter.openGrantInitToPolicyTenant;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.POLICY_PRE_SUFFIX_ERROR_T;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
@@ -19,6 +25,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOpenCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyFuncCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyTenantCmd;
@@ -81,6 +88,9 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
   @Resource
   private AuthPolicyTenantCmd authPolicyTenantCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = {Exception.class})
   @Override
   public List<IdKey<Long, Object>> add(List<AuthPolicy> policies) {
@@ -110,9 +120,9 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
         if (isNotEmpty(platformTypePolicies)) {
           closeMultiTenantCtrl();
           authPolicyQuery.checkUniqueCodeAndNameSuffix(platformTypePolicies);
-          // Check app exists, appId is required in params
-          List<Long> appIds = platformTypePolicies.stream().map(AuthPolicy::getAppId).distinct()
-              .collect(Collectors.toList());
+          // Check the app existed, appId is required in params
+          List<Long> appIds = platformTypePolicies.stream().map(AuthPolicy::getAppId)
+              .distinct().collect(Collectors.toList());
           List<App> apps = appQuery.checkAndFindTenantApp(appIds, true);
           // Set app clientId to policy
           platformTypePolicies.forEach(x -> x.setClientId(apps.stream().filter(
@@ -125,19 +135,18 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
             .collect(Collectors.toList());
         if (isNotEmpty(tenantTypePolicies)) {
           authPolicyQuery.checkUniqueCodeAndNameSuffix(platformTypePolicies);
-          // Check app exists, appId is required in params
+          // Check the app existed, appId is required in params
           List<Long> appIds = tenantTypePolicies.stream().map(AuthPolicy::getAppId)
               .distinct().collect(Collectors.toList());
           List<App> apps = appQuery.checkAndFindTenantApp(appIds, true);
           // Set app clientId to policy
           for (AuthPolicy policy : tenantTypePolicies) {
-            policy.setClientId(
-                apps.stream().filter(a -> a.getId().equals(policy.getAppId())).findFirst()
-                    .orElseThrow().getClientId());
+            policy.setClientId(apps.stream().filter(a -> a.getId().equals(policy.getAppId()))
+                .findFirst().orElseThrow().getClientId());
           }
         }
 
-        // Check app functions exists
+        // Check the app functions existed
         for (AuthPolicy policy : policies) {
           if (policy.hasFunc()) {
             appFuncDb.addAll(appFuncQuery.checkAndFindTenantAppFunc(policy.getAppId(),
@@ -146,7 +155,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
           }
         }
 
-        // Check tenant quota when the type is equal to USER_DEFINED
+        // Check the tenant quota when the type is equal to USER_DEFINED
         if (isNotEmpty(tenantTypePolicies)) {
           authPolicyQuery.checkPolicyQuota(getTenantId(), tenantTypePolicies.size());
         }
@@ -163,6 +172,9 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
         if (isNotEmpty(appFuncDb)) {
           authPolicyFuncCmd.add0(policies, appFuncDb);
         }
+
+        // Save operation log
+        operationLogCmd.addAll(POLICY, policies, CREATED);
         return idKeys;
       }
     }.execute();
@@ -176,7 +188,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check policies exists
+        // Check the policies existed
         List<AuthPolicy> authPoliciesDb = authPolicyQuery.checkAndFind(policies.stream()
             .map(AuthPolicy::getId).collect(Collectors.toList()), false, true);
 
@@ -190,9 +202,9 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
             .collect(Collectors.toList());
         authPolicyQuery.checkOpPolicyPermission(platformTypePolicies);
 
-        // NOOP:: Check app exists, appId is not required and is immutable
+        // NOOP:: Check app existed, appId is not required and is immutable
 
-        // Check app functions exists, appId is not required and is immutable
+        // Check the app functions existed, appId is not required and is immutable
         Map<Long, Long> authPolicyAppMap = authPoliciesDb.stream()
             .collect(Collectors.toMap(AuthPolicy::getId, AuthPolicy::getAppId));
         for (AuthPolicy policy : policies) {
@@ -210,12 +222,15 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
         // NOOP:: Set default and safe params <- params is immutable
 
         // Save policies
-        batchUpdateOrNotFound0(policies);
+        List<AuthPolicy> policiesDb = batchUpdateOrNotFound0(policies);
 
         // Replace functions of policies when the functions is not empty
         if (isNotEmpty(appFuncDb)) {
           authPolicyFuncCmd.replace0(policies, appFuncDb);
         }
+
+        // Save operation log
+        operationLogCmd.addAll(POLICY, policiesDb, UPDATED);
         return null;
       }
     }.execute();
@@ -233,7 +248,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
         replacePolicies = policies.stream().filter(policy -> nonNull(policy.getId()))
             .collect(Collectors.toList());
         if (isNotEmpty(replacePolicies)) {
-          // Check the updated policies exists
+          // Check the updated policies existed
           replacePoliciesDb = authPolicyQuery.checkAndFind(replacePolicies.stream()
               .map(AuthPolicy::getId).collect(Collectors.toList()), false, true);
         }
@@ -261,6 +276,9 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
           idKeys.addAll(replacePoliciesDb.stream()
               .map(x -> IdKey.of(x.getId(), x.getName())).toList());
+
+          // Save operation log
+          operationLogCmd.addAll(POLICY, replacePoliciesDb, UPDATED);
         }
         return idKeys;
       }
@@ -271,22 +289,25 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
   @Override
   public void delete(Set<Long> ids) {
     new BizTemplate<Void>(true, true) {
-      List<AuthPolicy> authPoliciesDb;
+      List<AuthPolicy> policiesDb;
 
       @Override
       protected void checkParams() {
         // Check that only permission operation are allowed to add OPEN_GRANT and PRE_DEFINED policies on OP client
-        authPoliciesDb = authPolicyRepo.findAllById(ids);
-        authPolicyQuery.checkOpPolicyPermission(authPoliciesDb);
+        policiesDb = authPolicyRepo.findAllById(ids);
+        authPolicyQuery.checkOpPolicyPermission(policiesDb);
       }
 
       @Override
       protected Void process() {
         // Open multiTenantAutoCtrlWhenOpClient is required, Need to delete other tenant data
-        if (isNotEmpty(authPoliciesDb)) {
+        if (isNotEmpty(policiesDb)) {
           authPolicyFuncRepo.deleteByPolicyIdIn(ids);
           authPolicyOrgRepo.deleteByPolicyIdIn(ids);
           authPolicyRepo.deleteByIdIn(ids);
+
+          // Save operation log
+          operationLogCmd.addAll(POLICY, policiesDb, DELETED);
         }
         return null;
       }
@@ -313,6 +334,12 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
       @Override
       protected Void process() {
         batchUpdateOrNotFound(policies);
+
+        // Save operation log
+        operationLogCmd.addAll(POLICY, policiesDb.stream()
+            .filter(AuthPolicy::getEnabled).toList(), ENABLED);
+        operationLogCmd.addAll(POLICY, policiesDb.stream()
+            .filter(x -> !x.getEnabled()).toList(), DISABLED);
         return null;
       }
     }.execute();
@@ -341,15 +368,15 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check policy exists
+        // Check the policy existed
         authPolicyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
-        // Check policy type must be PRE_DEFINED
+        // Check the policy type must be PRE_DEFINED
         assertTrue(authPolicyDb.isPlatformType(),
             "Only PRE_DEFINED type authorization policy is supported");
-        // Check policy type must be PRE_DEFINED
+        // Check the policy type must be PRE_DEFINED
         assertTrue(!authPolicyDb.isExtPolicy(),
             "Only non _EXT type authorization policy is supported");
-        // Check policy type must be PRE_DEFINED
+        // Check the policy type must be PRE_DEFINED
         assertTrue(!authPolicyDb.getGrantStage().isManual(),
             String.format("Non automatic authorization policy grantStage[%s]",
                 authPolicyDb.getGrantStage().getValue()));

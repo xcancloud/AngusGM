@@ -4,6 +4,9 @@ import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.AuthTenantConverter.defaultInitToPolicyTenant;
 import static cloud.xcan.angus.core.gm.application.converter.AuthTenantConverter.openGrantInitToPolicyTenant;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_DEFAULT_APP_POLICY;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SET_DEFAULT_APP_POLICY;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isCloudServiceEdition;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
@@ -18,12 +21,14 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOpenCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyTenantCmd;
 import cloud.xcan.angus.core.gm.application.converter.AppOpenConverter;
 import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
@@ -69,15 +74,21 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
   @Resource
   private AppOpenCmd appOpenCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void defaultPolicySet(Long appId, Long policyId) {
     new BizTemplate<Void>(false) {
+      App appDb;
       AuthPolicy policyDb;
       final Long tenantId = getTenantId();
 
       @Override
       protected void checkParams() {
+        // Check the application existed
+        appDb = appQuery.checkAndFind(appId.toString());
         // Check the policy existed, preset policies need to be considered -> closeMultiTenantCtrl();
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
         // Check the app is consistent with the policy
@@ -108,6 +119,8 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
         if (!hasDefault) {
           add0(singletonList(defaultInitToPolicyTenant(tenantId, policyDb)));
         }
+
+        operationLogCmd.add(APP, appDb, SET_DEFAULT_APP_POLICY, policyDb.getName());
         return null;
       }
     }.execute();
@@ -120,15 +133,19 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
   @Override
   public void defaultPolicyDelete(Long appId) {
     new BizTemplate<Void>(false) {
+      App appDb;
+
       @Override
       protected void checkParams() {
         // Check the application existed -> closeMultiTenantCtrl();
-        appQuery.checkAndFind(appId, false);
+        appDb = appQuery.checkAndFind(appId, false);
       }
 
       @Override
       protected Void process() {
         defaultPolicyDelete0(getOptTenantId(), appId);
+
+        operationLogCmd.add(APP, appDb, DELETE_DEFAULT_APP_POLICY);
         return null;
       }
     }.execute();
