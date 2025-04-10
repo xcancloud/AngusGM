@@ -1,5 +1,11 @@
 package cloud.xcan.angus.core.gm.application.cmd.email.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.EMAIL_SERVER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
@@ -10,6 +16,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailServerCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.query.email.EmailServerQuery;
 import cloud.xcan.angus.core.gm.domain.email.server.EmailServer;
 import cloud.xcan.angus.core.gm.domain.email.server.EmailServerRepo;
@@ -34,54 +41,63 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
   @Resource
   private EmailSender emailSender;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public IdKey<Long, Object> add(EmailServer emailServer) {
+  public IdKey<Long, Object> add(EmailServer server) {
     return new BizTemplate<IdKey<Long, Object>>() {
 
       @Override
       protected void checkParams() {
-        emailServerQuery.checkAddName(emailServer);
+        emailServerQuery.checkAddName(server);
         emailServerQuery.checkQuota(1);
       }
 
       @Override
       protected IdKey<Long, Object> process() {
-        // If there is no enabled mail emailServer, set the current state to enabled.
+        // If there is no enabled mail server, set the current state to enable.
         List<EmailServer> enabledServers = emailServerRepo
-            .findAllByProtocolAndEnabled(emailServer.getProtocol(), true);
-        emailServer.setEnabled(isEmpty(enabledServers));
+            .findAllByProtocolAndEnabled(server.getProtocol(), true);
+        server.setEnabled(isEmpty(enabledServers));
 
         // Save email server
-        emailServer.setId(uidGenerator.getUID());
-        emailServerRepo.save(emailServer);
+        server.setId(uidGenerator.getUID());
+        emailServerRepo.save(server);
 
         // Update sender instance
-        if (emailServer.isValidSmtpServer()) {
-          emailSender.initOrRefreshEmailSender(emailServer);
+        if (server.isValidSmtpServer()) {
+          emailSender.initOrRefreshEmailSender(server);
         }
-        return IdKey.of(emailServer.getId(), emailServer.getHost() + ":" + emailServer.getPort());
+
+        // Save operation log
+        operationLogCmd.add(EMAIL_SERVER, server, CREATED);
+        return IdKey.of(server.getId(), server.getHost() + ":" + server.getPort());
       }
     }.execute();
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void update(EmailServer emailServer) {
+  public void update(EmailServer server) {
     new BizTemplate<Void>() {
-      EmailServer emailServerDb;
+      EmailServer serverDb;
 
       @Override
       protected void checkParams() {
-        emailServerDb = emailServerQuery.checkAndFind(emailServer.getId());
-        if (isNotEmpty(emailServer.getName())) {
-          emailServerQuery.checkUpdateName(emailServer);
+        serverDb = emailServerQuery.checkAndFind(server.getId());
+        if (isNotEmpty(server.getName())) {
+          emailServerQuery.checkUpdateName(server);
         }
       }
 
       @Override
       protected Void process() {
-        emailServerRepo.save(copyPropertiesIgnoreNull(emailServer, emailServerDb));
+        emailServerRepo.save(copyPropertiesIgnoreNull(server, serverDb));
+
+        // Save operation log
+        operationLogCmd.add(EMAIL_SERVER, serverDb, UPDATED);
         return null;
       }
     }.execute();
@@ -89,38 +105,41 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public IdKey<Long, Object> replace(EmailServer emailServer) {
+  public IdKey<Long, Object> replace(EmailServer server) {
     return new BizTemplate<IdKey<Long, Object>>() {
-      EmailServer emailServerDb;
+      EmailServer serverDb;
 
       @Override
       protected void checkParams() {
-        if (nonNull(emailServer.getId())) {
-          emailServerDb = emailServerQuery.checkAndFind(emailServer.getId());
+        if (nonNull(server.getId())) {
+          serverDb = emailServerQuery.checkAndFind(server.getId());
         }
 
         // Check the name of replaced emailServer
-        if (nonNull(emailServerDb)) {
-          emailServerQuery.checkUpdateName(emailServer);
+        if (nonNull(serverDb)) {
+          emailServerQuery.checkUpdateName(server);
         }
       }
 
       @Override
       protected IdKey<Long, Object> process() {
         // Add email server
-        if (isNull(emailServerDb)) {
-          return add(emailServer);
+        if (isNull(serverDb)) {
+          return add(server);
         }
 
         // Replace email server
-        emailServer.setEnabled(emailServerDb.getEnabled());
-        emailServerRepo.save(emailServer);
+        server.setEnabled(serverDb.getEnabled());
+        emailServerRepo.save(server);
 
         // Update sender instance
-        if (emailServer.isValidSmtpServer()) {
-          emailSender.setupMailSender(emailServer);
+        if (server.isValidSmtpServer()) {
+          emailSender.setupMailSender(server);
         }
-        return IdKey.of(emailServer.getId(), emailServer.getHost() + ":" + emailServer.getPort());
+
+        // Save operation log
+        operationLogCmd.add(EMAIL_SERVER, serverDb, UPDATED);
+        return IdKey.of(server.getId(), server.getHost() + ":" + server.getPort());
       }
     }.execute();
   }
@@ -131,7 +150,11 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        emailServerRepo.deleteByIdIn(ids);
+        List<EmailServer> servers = emailServerRepo.findAllById(ids);
+        if (!servers.isEmpty()) {
+          emailServerRepo.deleteByIdIn(ids);
+          operationLogCmd.addAll(EMAIL_SERVER, servers, DELETED);
+        }
         return null;
       }
     }.execute();
@@ -141,31 +164,32 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
   @Override
   public void enabled(Long id, Boolean enabled) {
     new BizTemplate<Void>() {
-      EmailServer emailServerDb;
+      EmailServer serverDb;
 
       @Override
       protected void checkParams() {
-        emailServerDb = emailServerQuery.checkAndFind(id);
+        serverDb = emailServerQuery.checkAndFind(id);
       }
 
       @Override
       protected Void process() {
-        if (emailServerDb.getEnabled().equals(enabled)) {
+        if (serverDb.getEnabled().equals(enabled)) {
           return null;
         }
 
         //  Disable current when enabled = false
         if (!enabled) {
-          emailServerDb.setEnabled(false);
-          emailServerRepo.save(emailServerDb);
+          serverDb.setEnabled(false);
+          emailServerRepo.save(serverDb);
+          operationLogCmd.add(EMAIL_SERVER, serverDb, DISABLED);
           return null;
         }
 
-        emailServerDb.setEnabled(true);
-        emailServerRepo.save(emailServerDb);
+        serverDb.setEnabled(true);
+        emailServerRepo.save(serverDb);
 
         List<EmailServer> otherEmailServers = emailServerRepo
-            .findAllByProtocolAndIdNot(emailServerDb.getProtocol(), id);
+            .findAllByProtocolAndIdNot(serverDb.getProtocol(), id);
         if (isNotEmpty(otherEmailServers)) {
           // Only one server is enabled
           for (EmailServer otherEmailServer : otherEmailServers) {
@@ -174,6 +198,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
           emailServerRepo.batchUpdate(otherEmailServers);
         }
 
+        operationLogCmd.add(EMAIL_SERVER, serverDb, ENABLED);
         return null;
       }
     }.execute();

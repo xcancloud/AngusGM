@@ -1,9 +1,13 @@
 package cloud.xcan.angus.core.gm.application.cmd.email.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.EMAIL_TEMPLATE;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
+
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailTemplateCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.domain.email.template.EmailTemplate;
 import cloud.xcan.angus.core.gm.domain.email.template.EmailTemplateRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
@@ -18,13 +22,17 @@ public class EmailTemplateCmdImpl extends CommCmd<EmailTemplate, Long> implement
   @Resource
   private EmailTemplateRepo emailTemplateRepo;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(EmailTemplate emailTemplate) {
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        updateOrNotFound(emailTemplate);
+        EmailTemplate templateDb = updateOrNotFound(emailTemplate);
+        operationLogCmd.add(EMAIL_TEMPLATE, templateDb, UPDATED);
         return null;
       }
     }.execute();

@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.domain.email.template;
 
 import cloud.xcan.angus.core.gm.domain.email.biz.EmailTemplateBiz;
 import cloud.xcan.angus.spec.experimental.EntitySupport;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.spec.locale.SupportedLanguage;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class EmailTemplate extends EntitySupport<EmailTemplate, Long> {
+public class EmailTemplate extends EntitySupport<EmailTemplate, Long> implements Resources<Long> {
 
   @Id
   private Long id;

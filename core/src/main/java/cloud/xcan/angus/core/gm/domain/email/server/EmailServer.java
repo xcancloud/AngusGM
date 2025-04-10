@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.domain.email.server;
 
 import cloud.xcan.angus.core.gm.domain.email.template.EmailTemplate;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class EmailServer extends AuditingEntity<EmailTemplate, Long> {
+public class EmailServer extends AuditingEntity<EmailTemplate, Long> implements Resources<Long> {
 
   @Id
   private Long id;
