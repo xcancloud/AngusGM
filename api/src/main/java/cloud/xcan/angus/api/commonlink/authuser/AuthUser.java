@@ -2,7 +2,7 @@ package cloud.xcan.angus.api.commonlink.authuser;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.api.commonlink.operation.OperationResource;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.security.model.CustomOAuth2User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -37,7 +37,7 @@ import org.springframework.util.Assert;
 @Entity
 @Getter
 @Table(name = "oauth2_user")
-public class AuthUser extends CustomOAuth2User implements OperationResource<String> {
+public class AuthUser extends CustomOAuth2User implements Resources<String> {
   // Build Fields -> Do in parent class.
 
   private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;

@@ -8,7 +8,7 @@ import static java.util.Objects.nonNull;
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
-import cloud.xcan.angus.api.commonlink.operation.OperationResource;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import cloud.xcan.angus.remote.NameJoinField;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
@@ -34,7 +34,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Accessors(chain = true)
 public class AppFunc extends TenantAuditingEntity<AppFunc, Long> implements
-    OperationResource<Long> {
+    Resources<Long> {
 
   @Id
   private Long id;

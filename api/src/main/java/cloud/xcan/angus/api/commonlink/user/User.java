@@ -2,7 +2,7 @@ package cloud.xcan.angus.api.commonlink.user;
 
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.operation.OperationResource;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
@@ -38,7 +38,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class User extends TenantAuditingEntity<User, Long> implements OperationResource<Long> {
+public class User extends TenantAuditingEntity<User, Long> implements Resources<Long> {
 
   @Id
   private Long id;

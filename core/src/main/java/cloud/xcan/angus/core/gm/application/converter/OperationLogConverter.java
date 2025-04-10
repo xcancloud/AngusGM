@@ -9,7 +9,7 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getRequestId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.operation.OperationResource;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.core.gm.domain.operation.OperationLog;
 import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.operation.OperationType;
@@ -23,13 +23,13 @@ import java.util.List;
 
 public class OperationLogConverter {
 
-  public static <T extends OperationResource<?>> OperationLog toOperation(
+  public static <T extends Resources<?>> OperationLog toOperation(
       OperationResourceType resourceType, T resource, OperationType operation, Object... params) {
     return assembleOperationLog(resourceType, resource, operation, PrincipalContext.get(), params);
   }
 
   public static List<OperationLog> toOperations(OperationResourceType resourceType,
-      List<? extends OperationResource<?>> resources, OperationType operation,
+      List<? extends Resources<?>> resources, OperationType operation,
       List<Object[]> params) {
     Principal principal = PrincipalContext.get();
     Long tenantId = nonNull(principal.getTenantId()) ? principal.getTenantId() : -1L;
@@ -44,14 +44,14 @@ public class OperationLogConverter {
   }
 
   public static List<OperationLog> toOperations(OperationResourceType resourceType,
-      List<? extends OperationResource<?>> resources, OperationType operation, Object... params) {
+      List<? extends Resources<?>> resources, OperationType operation, Object... params) {
     if (isEmpty(resources)){
       return null;
     }
     Principal principal = PrincipalContext.get();
     Long tenantId = nonNull(principal.getTenantId()) ? principal.getTenantId() : -1L;
     List<OperationLog> operations = new ArrayList<>(resources.size());
-    for (OperationResource<?> resource : resources) {
+    for (Resources<?> resource : resources) {
       OperationLog operation0 = assembleOperationLog(resourceType, resource, operation, principal, params);
       operation0.setTenantId(tenantId);
       operations.add(operation0);
@@ -65,7 +65,7 @@ public class OperationLogConverter {
    * @param params The last parameter is the resource name
    */
   private static OperationLog assembleOperationLog(OperationResourceType resourceType,
-      OperationResource<?> resource, OperationType operationType, Principal principal,
+      Resources<?> resource, OperationType operationType, Principal principal,
       Object[] params) {
     OperationLog operation0 = new OperationLog()
         .setRequestId(getRequestId())
@@ -114,7 +114,7 @@ public class OperationLogConverter {
    * Set the resource name to the second parameter position.
    */
   private static String assembleDetail(OperationResourceType resourceType,
-      OperationResource<?> resource, OperationType operation, Object[] params) {
+      Resources<?> resource, OperationType operation, Object[] params) {
     if (isEmpty(params)) {
       return message(operation.getDetailMessageKey(),
           new Object[]{resourceType.getMessage(), "[" + resource.getName() + "]"
@@ -141,9 +141,9 @@ public class OperationLogConverter {
   }
 
   public static List<String[]> activityParams(
-      Collection<? extends OperationResource<?>> resources) {
+      Collection<? extends Resources<?>> resources) {
     List<String[]> params = new ArrayList<>(resources.size());
-    for (OperationResource<?> resource : resources) {
+    for (Resources<?> resource : resources) {
       params.add(new String[]{"[" + resource.getName() + "]"});
     }
     return params;

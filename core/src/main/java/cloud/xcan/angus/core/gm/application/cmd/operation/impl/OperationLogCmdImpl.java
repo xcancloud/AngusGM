@@ -7,7 +7,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.operation.OperationResource;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
@@ -34,7 +34,7 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void add(OperationResourceType resourceType, OperationResource<?> resource,
+  public void add(OperationResourceType resourceType, Resources<?> resource,
       OperationType operation, Object... params) {
     add(toOperation(resourceType, resource, operation, params));
   }
@@ -50,7 +50,7 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void addAll(OperationResourceType resourceType,
-      List<? extends OperationResource<?>> resources, OperationType operation, Object... params) {
+      List<? extends Resources<?>> resources, OperationType operation, Object... params) {
     addAll(toOperations(resourceType, resources, operation, params));
   }
 
