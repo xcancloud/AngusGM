@@ -1,10 +1,18 @@
 package cloud.xcan.angus.core.gm.application.cmd.group.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.GroupConverter.toGroupUser;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.GROUP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_GROUP_USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_USER_GROUP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_GROUP_USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_USER_GROUP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATE_USER_GROUP;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
+import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
@@ -12,6 +20,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.group.GroupUserQuery;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
@@ -40,20 +49,25 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
   @Resource
   private GroupUserQuery userGroupQuery;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> groupAdd(Long userId, LinkedHashSet<Long> groupIds) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      User userDb;
+      List<Group> groupsDb;
 
       @Override
       protected void checkParams() {
-        // Check the users exists
-        userQuery.checkAndFind(userId);
+        // Check the users existed
+        userDb = userQuery.checkAndFind(userId);
         // Check the user group quota
         userGroupQuery.checkUserGroupAppendQuota(getOptTenantId(), groupIds.size(), userId);
 
-        // Check the group exists
-        groupQuery.checkValidAndFind(groupIds);
+        // Check the group existed
+        groupsDb = groupQuery.checkValidAndFind(groupIds);
         // Check the group user quota
         for (Long groupId : groupIds) {
           userGroupQuery.checkGroupUserAppendQuota(getOptTenantId(), 1, groupId);
@@ -68,7 +82,11 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         List<GroupUser> groupUsers = groupIds.stream()
             .map(x -> new GroupUser().setGroupId(x).setUserId(userId))
             .collect(Collectors.toList());
-        return batchInsert(groupUsers);
+        List<IdKey<Long, Object>> idKeys = batchInsert(groupUsers);
+
+        operationLogCmd.add(USER, userDb, ADD_USER_GROUP,
+            groupsDb.stream().map(Group::getName).toList().toArray());
+        return idKeys;
       }
     }.execute();
   }
@@ -78,10 +96,12 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
   public void groupReplace(Long userId, LinkedHashSet<Long> groupIds) {
     new BizTemplate<Void>() {
       User userDb;
+      List<Group> groupsDb;
 
       @Override
       protected void checkParams() {
         userDb = userQuery.checkAndFind(userId);
+        groupsDb = groupQuery.checkAndFind(groupIds);
 
         if (isNotEmpty(groupIds)) {
           // Check the user group quota
@@ -101,8 +121,11 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         if (isNotEmpty(groupIds)) {
           List<GroupUser> groupUsers = groupIds.stream()
               .map(groupId -> toGroupUser(groupId, userDb)).collect(Collectors.toList());
-          add(groupUsers);
+          add0(groupUsers);
         }
+
+        operationLogCmd.add(USER, userDb, UPDATE_USER_GROUP,
+            groupsDb.stream().map(Group::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -112,14 +135,21 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
   @Override
   public void groupDelete(Long userId, HashSet<Long> groupIds) {
     new BizTemplate<Void>() {
+      User userDb;
+      List<Group> groupsDb;
+
       @Override
       protected void checkParams() {
-        userQuery.checkAndFind(userId);
+        userDb = userQuery.checkAndFind(userId);
+        groupsDb = groupQuery.checkAndFind(groupIds);
       }
 
       @Override
       protected Void process() {
         groupUserRepo.deleteByGroupIdInAndUserId(groupIds, userId);
+
+        operationLogCmd.add(USER, userDb, DELETE_USER_GROUP,
+            groupsDb.stream().map(Group::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -129,19 +159,20 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
   @Override
   public List<IdKey<Long, Object>> userAdd(Long groupId, List<GroupUser> groupUsers) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      Group groupDb;
       Set<Long> userIds;
+      List<User> usersDb;
 
       @Override
       protected void checkParams() {
-        // Check the groups exists
-        // groupIds = groupUsers.stream().map(GroupUser::getGroupId).collect(Collectors.toSet());
-        groupQuery.checkValidAndFind(groupId);
+        // Check the groups existed
+        groupDb = groupQuery.checkValidAndFind(groupId);
         // Check the group user quota
         userGroupQuery.checkGroupUserAppendQuota(getOptTenantId(), groupUsers.size(), groupId);
 
-        // Check the users exists
+        // Check the users existed
         userIds = groupUsers.stream().map(GroupUser::getUserId).collect(Collectors.toSet());
-        userQuery.checkAndFind(userIds);
+        usersDb = userQuery.checkAndFind(userIds);
         // Check the user group quota
         for (Long userId : userIds) {
           userGroupQuery.checkUserGroupAppendQuota(getOptTenantId(), 1, userId);
@@ -153,7 +184,11 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         // Delete repeated in db
         groupUserRepo.deleteByGroupIdAndUserIdIn(groupId, userIds);
 
-        return batchInsert(new HashSet<>(groupUsers));
+        List<IdKey<Long, Object>> idKeys = batchInsert(new HashSet<>(groupUsers));
+
+        operationLogCmd.add(GROUP, groupDb, ADD_GROUP_USER,
+            usersDb.stream().map(User::getName).toList().toArray());
+        return idKeys;
       }
     }.execute();
   }
@@ -162,14 +197,21 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
   @Override
   public void userDelete(Long groupId, Set<Long> userIds) {
     new BizTemplate<Void>() {
+      Group groupDb;
+      List<User> usersDb;
+
       @Override
       protected void checkParams() {
-        groupQuery.checkValidAndFind(Collections.singleton(groupId));
+        groupDb = groupQuery.checkAndFind(groupId);
+        usersDb = userQuery.checkAndFind(userIds);
       }
 
       @Override
       protected Void process() {
         groupUserRepo.deleteByGroupIdAndUserId(groupId, userIds);
+
+        operationLogCmd.add(GROUP, groupDb, DELETE_GROUP_USER,
+            usersDb.stream().map(User::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -181,7 +223,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     if (isEmpty(groupUsers)) {
       return null;
     }
-    // Check the groups exists
+    // Check the groups existed
     groupQuery.checkValidAndFind(groupUsers.stream().map(GroupUser::getGroupId)
         .collect(Collectors.toList()));
     return batchInsert(groupUsers);

@@ -2,9 +2,19 @@ package cloud.xcan.angus.core.gm.application.cmd.dept.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_MAIN_DEPT_NUM_ERROR;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_DEPT_USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_USER_DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CANCEL_USER_MAIN_DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_DEPT_USER;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_USER_DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SET_USER_MAIN_DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATE_USER_DEPT;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
+import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
@@ -13,6 +23,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptUserQuery;
@@ -49,24 +60,28 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
   @Resource
   private DeptUserQuery userDeptQuery;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> deptAdd(Long userId, List<DeptUser> deptUsers) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      User userDb;
       Set<Long> deptIds;
+      List<Dept> deptDb;
 
       @Override
       protected void checkParams() {
-        // Check the user exists
-        // deptIds = deptUsers.stream().map(DeptUser::getDeptId).collect(Collectors.toSet());
+        // Check the user existed
         userQuery.checkAndFind(userId);
-        // Check the user dept quota
+        // Check the user department quota
         userDeptQuery.checkUserDeptAppendQuota(getOptTenantId(), deptUsers.size(), userId);
 
-        // Check the departments exists
+        // Check the departments existed
         deptIds = deptUsers.stream().map(DeptUser::getDeptId).collect(Collectors.toSet());
-        deptQuery.checkAndFind(deptIds);
-        // Check the dept user quota
+        deptDb = deptQuery.checkAndFind(deptIds);
+        // Check the department user quota
         for (Long deptId : deptIds) {
           userDeptQuery.checkDeptUserAppendQuota(getOptTenantId(), 1, deptId);
         }
@@ -76,9 +91,12 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
       protected List<IdKey<Long, Object>> process() {
         // @DoInFuture("Set user mainDeptId")
 
-        // Delete repeated in db
         deptUserRepo.deleteByUserIdAndDeptIdIn(userId, deptIds);
-        return batchInsert(deptUsers);
+        List<IdKey<Long, Object>> idKeys = batchInsert(deptUsers);
+
+        operationLogCmd.add(USER, userDb, ADD_USER_DEPT,
+            String.join(",", deptDb.stream().map(Dept::getName).toList()));
+        return idKeys;
       }
     }.execute();
   }
@@ -88,21 +106,27 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
   public void deptReplace(Long userId, List<DeptUser> deptUsers) {
     new BizTemplate<Void>() {
       User userDb;
+      List<Dept> deptDb;
 
       @Override
       protected void checkParams() {
+        // Check the user existed
         userDb = userQuery.checkAndFind(userId);
-        // Check the user dept quota
+        // Check the departments existed
+        Set<Long> deptIds = deptUsers.stream().map(DeptUser::getDeptId).collect(Collectors.toSet());
+        deptDb = deptQuery.checkAndFind(deptIds);
+
+        // Check the user department quota
         userDeptQuery.checkUserDeptReplaceQuota(getOptTenantId(), deptUsers.size(), userId);
         for (DeptUser userDept : deptUsers) {
-          // Check the dept user quota
+          // Check the department user quota
           userDeptQuery.checkDeptUserAppendQuota(getOptTenantId(), 1, userDept.getDeptId());
         }
       }
 
       @Override
       protected Void process() {
-        // Update user main dept
+        // Update user main department
         DeptUser mainDept = deptUsers.stream().filter(DeptUser::getMainDept).findFirst()
             .orElse(deptUsers.get(0));
         userDb.setMainDeptId(mainDept.getDeptId());
@@ -112,9 +136,12 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
         deleteByUserId(Collections.singleton(userId));
         // Save new association
         if (isNotEmpty(deptUsers)) {
-          add(deptUsers.stream().peek(deptUser -> deptUser.setTenantId(userDb.getTenantId()))
+          add0(deptUsers.stream().peek(deptUser -> deptUser.setTenantId(userDb.getTenantId()))
               .collect(Collectors.toList()));
         }
+
+        operationLogCmd.add(USER, userDb, UPDATE_USER_DEPT,
+            String.join(",", deptDb.stream().map(Dept::getName).toList()));
         return null;
       }
     }.execute();
@@ -124,15 +151,24 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
   @Override
   public void deptDelete(Long userId, HashSet<Long> deptIds) {
     new BizTemplate<Void>() {
+      User userDb;
+      List<Dept> deptDb;
+
       @Override
       protected void checkParams() {
-        userQuery.checkAndFind(userId);
+        // Check the user existed
+        userDb = userQuery.checkAndFind(userId);
+        // Check the departments existed
+        deptDb = deptQuery.checkAndFind(deptIds);
       }
 
       @Override
       protected Void process() {
         deptUserRepo.deleteByUserIdAndDeptIdIn(userId, deptIds);
         userCmd.clearMainDeptByUserIdAndDeptIdIn(userId, deptIds);
+
+        operationLogCmd.add(USER, userDb, DELETE_USER_DEPT,
+            String.join(",", deptDb.stream().map(Dept::getName).toList()));
         return null;
       }
     }.execute();
@@ -142,24 +178,21 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
   @Override
   public List<IdKey<Long, Object>> userAdd(Long deptId, List<DeptUser> deptUsers) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
+      Dept deptDb;
       Set<Long> userIds;
+      List<User> users;
 
       @Override
       protected void checkParams() {
-        // The user must and can only have one primary department
-        // Bug:: ProtocolAssert.assertTrue(deptUsers.stream()
-        //    .filter(DeptUser::getDeptHead).count() == 1, USER_MAIN_DEPT_NUM_ERROR);
-
-        // Check depts exists
-        // deptIds = deptUsers.stream().map(DeptUser::getDeptId).collect(Collectors.toSet());
-        deptQuery.checkAndFind(deptId);
-        // Check dept user quota
+        // Check the department existed
+        deptDb = deptQuery.checkAndFind(deptId);
+        // Check the department user quota
         userDeptQuery.checkDeptUserAppendQuota(getOptTenantId(), deptUsers.size(), deptId);
 
-        // Check users exists
+        // Check the users existed
         userIds = deptUsers.stream().map(DeptUser::getUserId).collect(Collectors.toSet());
-        userQuery.checkAndFind(userIds);
-        // Check user dept quota
+        users = userQuery.checkAndFind(userIds);
+        // Check the user department quota
         for (Long userId : userIds) {
           userDeptQuery.checkUserDeptAppendQuota(getOptTenantId(), 1, userId);
         }
@@ -169,9 +202,13 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
       protected List<IdKey<Long, Object>> process() {
         // @DoInFuture("Set user mainDeptId")
 
-        // Delete repeated in db
         deptUserRepo.deleteByDeptIdInAndUserIdIn(Collections.singleton(deptId), userIds);
-        return batchInsert(new HashSet<>(deptUsers));
+
+        List<IdKey<Long, Object>> idKeys = batchInsert(deptUsers);
+
+        operationLogCmd.add(DEPT, deptDb, ADD_DEPT_USER,
+            users.stream().map(User::getName).toList().toArray());
+        return idKeys;
       }
     }.execute();
   }
@@ -180,15 +217,22 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
   @Override
   public void userDelete(Long deptId, HashSet<Long> userIds) {
     new BizTemplate<Void>() {
+      Dept deptDb;
+      List<User> usersDb;
+
       @Override
       protected void checkParams() {
-        deptQuery.checkAndFind(deptId);
+        deptDb = deptQuery.checkAndFind(deptId);
+        usersDb = userQuery.checkAndFind(userIds);
       }
 
       @Override
       protected Void process() {
         deptUserRepo.deleteByDeptIdAndUserIdIn(deptId, userIds);
         userCmd.clearMainDeptByDeptIdAndUserIdIn(deptId, userIds);
+
+        operationLogCmd.add(DEPT, deptDb, DELETE_DEPT_USER,
+            usersDb.stream().map(User::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -198,11 +242,13 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
   @Override
   public void headReplace(Long deptId, Long userId, Boolean head) {
     new BizTemplate<Void>() {
+      Dept deptDb;
+      User userDb;
 
       @Override
       protected void checkParams() {
-        deptQuery.checkAndFind(deptId);
-        userQuery.checkAndFind(userId);
+        deptDb = deptQuery.checkAndFind(deptId);
+        userDb = userQuery.checkAndFind(userId);
       }
 
       @Override
@@ -211,20 +257,24 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
         if (head) {
           deptUserRepo.updateDeptHead(deptId, head);
         }
+
         // Update user department head status
         deptUserRepo.updateDeptHead(deptId, userId, head);
         userRepo.updateDeptHead(userId, head);
+
+        operationLogCmd.add(USER, userDb, head ? SET_USER_MAIN_DEPT
+            : CANCEL_USER_MAIN_DEPT, deptDb.getName());
         return null;
       }
     }.execute();
   }
 
   @Override
-  public List<IdKey<Long, Object>> add(List<DeptUser> deptUsers) {
+  public List<IdKey<Long, Object>> add0(List<DeptUser> deptUsers) {
     // The user must and can only have one primary department
     assertTrue(deptUsers.stream()
         .filter(DeptUser::getMainDept).count() == 1, USER_MAIN_DEPT_NUM_ERROR);
-    // Check depts exists
+    // Check departments existed
     deptQuery.checkAndFind(deptUsers.stream().map(DeptUser::getDeptId)
         .collect(Collectors.toList()));
     return batchInsert(new HashSet<>(deptUsers));

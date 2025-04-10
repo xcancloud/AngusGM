@@ -596,7 +596,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
       List<GroupUser> groupUsers, List<OrgTagTarget> userTags) {
     long optTenantId = getOptTenantId();
     if (isNotEmpty(deptUsers)) {
-      userDeptCmd.add(deptUsers.stream().peek(x -> {
+      userDeptCmd.add0(deptUsers.stream().peek(x -> {
         x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }
@@ -619,7 +619,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     long optTenantId = getOptTenantId();
     if (isNotEmpty(deptUsers)) {
       userDeptCmd.deleteByUserId(Collections.singleton(userId));
-      userDeptCmd.add(deptUsers.stream().peek(x -> {
+      userDeptCmd.add0(deptUsers.stream().peek(x -> {
         x.setTenantId(optTenantId); // Inject for job or innerapi
       }).collect(Collectors.toList()));
     }

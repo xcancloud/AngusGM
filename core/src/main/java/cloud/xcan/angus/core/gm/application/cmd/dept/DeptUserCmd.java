@@ -22,7 +22,7 @@ public interface DeptUserCmd {
 
   void headReplace(Long deptId, Long userId, Boolean head);
 
-  List<IdKey<Long, Object>> add(List<DeptUser> deptUsers);
+  List<IdKey<Long, Object>> add0(List<DeptUser> deptUsers);
 
   void deleteAllByDeptId(Collection<Long> deptIds);
 
