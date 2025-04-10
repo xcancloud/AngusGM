@@ -95,6 +95,6 @@ public class TOUserQueryImpl implements TOUserQuery {
         Collections.singletonList(toUser.getUserId()));
     List<TORole> topPolices = toRoleRepo
         .findAllById(tpu.stream().map(TORoleUser::getToRoleId).collect(Collectors.toSet()));
-    toUser.setToPolicies(topPolices);
+    toUser.setToRoles(topPolices);
   }
 }

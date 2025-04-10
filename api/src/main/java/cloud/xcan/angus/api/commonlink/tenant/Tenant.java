@@ -5,6 +5,7 @@ import static java.util.Objects.nonNull;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,7 +24,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class Tenant extends AuditingEntity<Tenant, Long> {
+public class Tenant extends AuditingEntity<Tenant, Long> implements Resources {
 
   @Id
   private Long id;

@@ -10,6 +10,10 @@ import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_LEGAL_PERSON_
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_NAME_BUSINESS_INCONSISTENT;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_NAME_ID_CARD_INCONSISTENT;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_REAL_NAME_PASSED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SUBMIT_TENANT_AUDIT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_AUDIT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_CANCEL;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.locale.MessageHolder.message;
@@ -34,6 +38,7 @@ import cloud.xcan.angus.core.biz.BizAssert;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCertAuditCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertAuditQuery;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertRecognizeQuery;
@@ -82,6 +87,9 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
   @Resource
   private AuthUserCmd authUserCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Value("${xcan.tenant.enableAutoAudit:false}")
   private boolean enableAutoAudit;
 
@@ -90,12 +98,14 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
   public Void submit(TenantCertAudit tenantAudit) {
     return new BizTemplate<Void>() {
       TenantCertAudit tenantAuditDb;
+      Tenant tenantDb;
       // final Long tenantId = getOptTenantId(); <- Fix:: Cannot get the modified value in tenantCmd#add()
       Long tenantId;
 
       @Override
       protected void checkParams() {
         tenantId = getOptTenantId();
+        tenantDb = tenantQuery.checkAndFind(tenantId);
         tenantAuditDb = checkAndGetTenantCertAudit(tenantId, tenantAudit);
       }
 
@@ -106,18 +116,10 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
 
         // The government does not support automatic audit
         if (isAutoAudit()) {
-          try {
-            checkCertValid();
-            updateStatusPassed();
-            updateUserTenantName();
-            sendRealNameAuthPassedNotice(tenantAuditDb.getTenantId());
-          } catch (Exception e) {
-            updateStatusFailed(e);
-            sendRealNameAuthFailureNotice(tenantAuditDb.getTenantId());
-          }
+          doAutoAudit();
         } else {
           // Waiting for manual audit
-          // TODO 发送审核提醒消息
+          // TODO Send audit reminder message
           updateStatusInAuditing();
         }
 
@@ -126,7 +128,22 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
 
         // Update tenant audit
         tenantCertAuditRepo.save(tenantAuditDb);
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenantDb, SUBMIT_TENANT_AUDIT);
         return null;
+      }
+
+      private void doAutoAudit() {
+        try {
+          checkCertValid();
+          updateStatusPassed();
+          updateUserTenantName();
+          sendRealNameAuthPassedNotice(tenantAuditDb.getTenantId());
+        } catch (Exception e) {
+          updateStatusFailed(e);
+          sendRealNameAuthFailureNotice(tenantAuditDb.getTenantId());
+        }
       }
 
       private boolean isAutoAudit() {
@@ -223,6 +240,9 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
         tenantAuditDb.setStatus(tenantAudit.getStatus()).setAutoAudit(false)
             .setAuditRecordData(tenantAudit.getAuditRecordData());
         tenantCertAuditRepo.save(tenantAuditDb);
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenantDb, TENANT_AUDIT, tenantDb.getStatus());
         return null;
       }
 

@@ -5,6 +5,10 @@ import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.TenantSignSmsConverter.toCancelConfirmSmsDto;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.MOBILE_IS_UNBIND;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.LOCKED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_CANCEL;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UNLOCKED;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.hasToRole;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantSysAdmin;
@@ -24,6 +28,7 @@ import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantSignCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
@@ -58,6 +63,9 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
   @Resource
   private TenantQuery tenantQuery;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -161,6 +169,9 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
         tenantDb.setStatus(TenantStatus.CANCELLING);
         tenantDb.setApplyCancelDate(LocalDateTime.now());
         tenantRepo.save(tenantDb);
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenantDb, TENANT_CANCEL);
         return null;
       }
     }.execute();

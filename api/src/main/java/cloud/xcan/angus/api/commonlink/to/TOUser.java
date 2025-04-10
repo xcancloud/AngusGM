@@ -3,6 +3,8 @@ package cloud.xcan.angus.api.commonlink.to;
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.spec.experimental.EntitySupport;
+import cloud.xcan.angus.spec.experimental.Resources;
+import jakarta.annotation.Resource;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -44,7 +46,7 @@ public class TOUser extends EntitySupport<TOUser, Long> {
   protected LocalDateTime createdDate;
 
   @Transient
-  private List<TORole> toPolicies;
+  private List<TORole> toRoles;
 
   @Override
   public Long identity() {

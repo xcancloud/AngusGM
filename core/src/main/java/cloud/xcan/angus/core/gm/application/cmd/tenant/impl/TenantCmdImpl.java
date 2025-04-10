@@ -3,6 +3,14 @@ package cloud.xcan.angus.core.gm.application.cmd.tenant.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.TenantConverter.assembleTenantInfo;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_CERT_MISSING_T;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.LOCKED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UNLOCKED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
+import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setOptTenantId;
 import static cloud.xcan.angus.spec.utils.DateUtils.DATE_TIME_FMT;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
@@ -19,6 +27,7 @@ import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCertAuditCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
@@ -28,7 +37,6 @@ import cloud.xcan.angus.core.gm.domain.tenant.audit.TenantCertAudit;
 import cloud.xcan.angus.core.gm.infra.job.TenantLockedJob;
 import cloud.xcan.angus.core.gm.infra.job.TenantUnlockedJob;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
-import cloud.xcan.angus.core.utils.CoreUtils;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
@@ -55,6 +63,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
   @Resource
   private UserCmd userCmd;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   /**
    * Allow tenants to submit their own cert after adding.
@@ -87,6 +98,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
         user.setTenantName(tenant.getName());
         setOptTenantId(tenantId);
         userCmd.add(user, emptyList(), emptyList(), emptyList(), userSource);
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenant, CREATED);
         return idKey;
       }
     }.execute();
@@ -112,7 +126,7 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
         if (tenantDb.isRealNamePassed()) {
           tenant.setName(null); // Cannot modify after real name
         }
-        tenantRepo.save(CoreUtils.copyPropertiesIgnoreNull(tenant, tenantDb));
+        tenantRepo.save(copyPropertiesIgnoreNull(tenant, tenantDb));
 
         // Ignore the cert information modification when the real name audit has passed
         if (nonNull(audit) && !tenantDb.isRealNamePassed() && tenantDb.isRealNameAuditing()) {
@@ -126,6 +140,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
           user.setId(updateUserDb.getId());
           userCmd.update(user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         }
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenant, UPDATED);
         return null;
       }
     }.execute();
@@ -167,6 +184,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
         User updateUserDb = userQuery.findSignupOrFirstSysAdminUser(tenant.getId());
         user.setId(updateUserDb.getId());
         userCmd.replace(user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenantDb, UPDATED);
         return null;
       }
     }.execute();
@@ -191,6 +211,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
       protected Void process() {
         tenantDb.setStatus(enabled ? TenantStatus.ENABLED : TenantStatus.DISABLED);
         tenantRepo.save(tenantDb);
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenantDb, enabled ? ENABLED : DISABLED);
         return null;
       }
     }.execute();
@@ -233,6 +256,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
           tenantDb.setLocked(false).setLockStartDate(null).setLockEndDate(null);
         }
         tenantRepo.save(tenantDb);
+
+        // Save operation activity
+        operationLogCmd.add(TENANT, tenantDb, locked ? LOCKED : UNLOCKED);
         return null;
       }
 

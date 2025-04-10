@@ -33,7 +33,7 @@ public class TOUserAssembler {
         .setUserId(user.getUserId())
         .setCreatedBy(user.getCreatedBy())
         .setCreatedDate(user.getCreatedDate())
-        .setToRoles(toPolicyVos(user.getToPolicies()));
+        .setToRoles(toPolicyVos(user.getToRoles()));
   }
 
   public static TOUserVo toVo(TOUser user) {
