@@ -1,6 +1,7 @@
 package cloud.xcan.angus.api.commonlink.tag;
 
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class OrgTag extends TenantAuditingEntity<OrgTag, Long> implements Serializable {
+public class OrgTag extends TenantAuditingEntity<OrgTag, Long> implements Resources<Long> {
 
   @Id
   @Column(name = "id")

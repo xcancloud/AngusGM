@@ -20,9 +20,9 @@ public interface OrgTagQuery {
 
   void checkNameInParam(List<OrgTag> tags);
 
-  void checkAddTagName(Long tenantId, List<OrgTag> depts);
+  void checkAddTagName(Long tenantId, List<OrgTag> tags);
 
-  void checkUpdateTagName(Long tenantId, List<OrgTag> orgTags);
+  void checkUpdateTagName(Long tenantId, List<OrgTag> tags);
 
   void checkQuota(Long tenantId, long incr);
 }

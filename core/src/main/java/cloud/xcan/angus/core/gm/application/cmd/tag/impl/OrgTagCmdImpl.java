@@ -1,5 +1,9 @@
 package cloud.xcan.angus.core.gm.application.cmd.tag.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.ORG_TAG;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
@@ -8,6 +12,7 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTagTargetRepo;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagCmd;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagQuery;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
@@ -30,6 +35,9 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
   @Resource
   private OrgTagQuery orgTagQuery;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add(List<OrgTag> tags) {
@@ -45,7 +53,9 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        return batchInsert(tags, "name");
+        List<IdKey<Long, Object>> idKeys = batchInsert(tags, "name");
+        operationLogCmd.addAll(ORG_TAG, tags, CREATED);
+        return idKeys;
       }
     }.execute();
   }
@@ -62,7 +72,8 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
 
       @Override
       protected Void process() {
-        batchUpdateOrNotFound(tags);
+        List<OrgTag> tagsDb =  batchUpdateOrNotFound(tags);
+        operationLogCmd.addAll(ORG_TAG, tagsDb, UPDATED);
         return null;
       }
     }.execute();
@@ -74,8 +85,13 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        orgTagRepo.deleteByIdIn(ids);
-        orgTagTargetRepo.deleteByTagIdIn(ids);
+        List<OrgTag> tagsDb = orgTagQuery.checkAndFind(ids);
+        if (!tagsDb.isEmpty()) {
+          orgTagRepo.deleteByIdIn(ids);
+          orgTagTargetRepo.deleteByTagIdIn(ids);
+
+          operationLogCmd.addAll(ORG_TAG, tagsDb, DELETED);
+        }
         return null;
       }
     }.execute();
