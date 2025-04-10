@@ -1,8 +1,14 @@
 package cloud.xcan.angus.core.gm.application.cmd.notice.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.NOTICE;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.notice.NoticeCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.query.notice.NoticeQuery;
 import cloud.xcan.angus.core.gm.domain.notice.Notice;
 import cloud.xcan.angus.core.gm.domain.notice.NoticeRepo;
@@ -25,6 +31,9 @@ public class NoticeCmdImpl extends CommCmd<Notice, Long> implements NoticeCmd {
   @Resource
   private NoticeQuery noticeQuery;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> add(Notice notice) {
@@ -36,7 +45,9 @@ public class NoticeCmdImpl extends CommCmd<Notice, Long> implements NoticeCmd {
 
       @Override
       protected IdKey<Long, Object> process() {
-        return insert(notice);
+        IdKey<Long, Object> idKey = insert(notice);
+        operationLogCmd.add(NOTICE, notice, CREATED);
+        return idKey;
       }
     }.execute();
   }
@@ -47,7 +58,11 @@ public class NoticeCmdImpl extends CommCmd<Notice, Long> implements NoticeCmd {
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        noticeRepo.deleteByIdIn(ids);
+        List<Notice> notices = noticeRepo.findAllById(ids);
+        if (isNotEmpty(notices)){
+          noticeRepo.deleteByIdIn(ids);
+          operationLogCmd.addAll(NOTICE, notices, DELETED);
+        }
         return null;
       }
     }.execute();

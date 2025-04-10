@@ -1,11 +1,13 @@
 package cloud.xcan.angus.core.gm.domain.notice;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.lengthSafe;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.core.gm.domain.SentType;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -30,7 +32,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class Notice extends TenantEntity<Notice, Long> {
+public class Notice extends TenantEntity<Notice, Long> implements Resources<Long> {
 
   @Id
   private Long id;
@@ -80,4 +82,8 @@ public class Notice extends TenantEntity<Notice, Long> {
     return this.id;
   }
 
+  @Override
+  public String getName() {
+    return lengthSafe(content, 100);
+  }
 }
