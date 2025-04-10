@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.setting.impl;
 
 import static cloud.xcan.angus.api.commonlink.CommonConstant.BID_INVITATION_CODE_KEY;
+import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toModifiedOperation;
 import static cloud.xcan.angus.core.gm.application.converter.SettingTenantConverter.initTenantSetting;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getApplicationInfo;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
@@ -18,9 +19,11 @@ import cloud.xcan.angus.api.commonlink.setting.tenant.event.TesterEvent;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingTenantCmd;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingQuery;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuery;
+import cloud.xcan.angus.core.gm.domain.operation.ModifiedResourceType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.idgen.BidGenerator;
 import jakarta.annotation.Resource;
@@ -47,6 +50,9 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
   @Resource
   private BidGenerator bidGenerator;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void localeReplace(Locale locale) {
@@ -57,6 +63,9 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
         SettingTenant settingDb = settingTenantQuery.find(getOptTenantId());
         settingDb.setLocaleData(locale);
         updateTenantSetting(getOptTenantId(), settingDb);
+
+        operationLogCmd.add(toModifiedOperation("LOCALE",
+            "SettingTenant", true, ModifiedResourceType.TENANT_LOCALE));
         return null;
       }
     }.execute();
@@ -74,6 +83,9 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
             ? null : security.getSignupAllow().getInvitationCode());
         setting.setSecurityData(security);
         updateTenantSetting(getOptTenantId(), setting);
+
+        operationLogCmd.add(toModifiedOperation("LOCALE",
+            "SettingTenant", true, ModifiedResourceType.TENANT_SECURITY));
         return null;
       }
     }.execute();
@@ -85,7 +97,11 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
 
       @Override
       protected String process() {
-        return bidGenerator.getId(BID_INVITATION_CODE_KEY) + "." + randomAlphanumeric(6);
+        String code = bidGenerator.getId(BID_INVITATION_CODE_KEY) + "." + randomAlphanumeric(6);
+
+        operationLogCmd.add(toModifiedOperation("LOCALE",
+            "SettingTenant", true, ModifiedResourceType.TENANT_INVITATION_CODE));
+        return code;
       }
     }.execute();
   }

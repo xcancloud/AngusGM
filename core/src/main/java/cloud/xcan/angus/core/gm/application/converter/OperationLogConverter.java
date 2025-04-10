@@ -6,9 +6,14 @@ import static cloud.xcan.angus.spec.locale.MessageHolder.message;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getDefaultLanguage;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getRequestId;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullname;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
 
+import cloud.xcan.angus.core.gm.domain.operation.ModifiedResourceType;
 import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.core.gm.domain.operation.OperationLog;
 import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
@@ -59,14 +64,34 @@ public class OperationLogConverter {
     return operations;
   }
 
+  public static OperationLog toModifiedOperation(String resourceId, String resourceName,
+      boolean private0, ModifiedResourceType resourceType){
+    String message = message("xcm.angusgm.activity.MODIFIED", new Object[]{resourceType});
+    OperationLog operation0 = new OperationLog()
+        .setRequestId(getRequestId())
+        .setClientId(getClientId())
+        .setResource(OperationResourceType.OTHER)
+        .setResourceName(resourceName)
+        .setResourceId(resourceId)
+        .setType(OperationType.UPDATED)
+        .setUserId(getUserId())
+        .setFullName(getUserFullname())
+        .setOptDate(LocalDateTime.now())
+        .setDescription(message)
+        .setDetail(message)
+        .setPrivate0(private0);
+    operation0.setTenantId(getTenantId());
+    operation0.setTenantName(getTenantName());
+    return operation0;
+  }
+
   /**
    * Support max three parameters, need to keep order
    *
    * @param params The last parameter is the resource name
    */
   private static OperationLog assembleOperationLog(OperationResourceType resourceType,
-      Resources<?> resource, OperationType operationType, Principal principal,
-      Object[] params) {
+      Resources<?> resource, OperationType operationType, Principal principal, Object[] params) {
     OperationLog operation0 = new OperationLog()
         .setRequestId(getRequestId())
         .setClientId(getClientId())
