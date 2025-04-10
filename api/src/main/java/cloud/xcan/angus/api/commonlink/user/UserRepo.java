@@ -173,7 +173,7 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
   int countValidSysAdminUser(Long tenantId);
 
   @Query(value = "SELECT * FROM user0 u WHERE u.id = ?1", nativeQuery = true)
-  User findUserByUserId(Long id);
+  User findByUserId(Long id);
 
   @Query(value = "SELECT u FROM User u WHERE u.fullName like %?1% and  u.enabled = true")
   List<User> findByFullNameLike(String fullName);

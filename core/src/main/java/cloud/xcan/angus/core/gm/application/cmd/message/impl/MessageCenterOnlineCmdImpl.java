@@ -87,7 +87,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
       @Override
       protected Void process() {
-        User user = userRepo.findUserByUserId(userId);
+        User user = userRepo.findByUserId(userId);
         if (isNull(user)) {
           return null;
         }

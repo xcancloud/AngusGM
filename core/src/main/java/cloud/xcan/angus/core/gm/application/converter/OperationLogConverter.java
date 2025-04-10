@@ -16,7 +16,6 @@ import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.spec.locale.EnumValueMessage;
 import cloud.xcan.angus.spec.principal.Principal;
 import cloud.xcan.angus.spec.principal.PrincipalContext;
-import cloud.xcan.angus.spec.utils.ObjectUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,18 +24,18 @@ import java.util.List;
 public class OperationLogConverter {
 
   public static <T extends OperationResource<?>> OperationLog toOperation(
-      OperationResourceType type, T resource, OperationType operation, Object... params) {
-    return assembleOperationLog(type, resource, operation, PrincipalContext.get(), params);
+      OperationResourceType resourceType, T resource, OperationType operation, Object... params) {
+    return assembleOperationLog(resourceType, resource, operation, PrincipalContext.get(), params);
   }
 
-  public static List<OperationLog> toOperations(OperationResourceType type,
+  public static List<OperationLog> toOperations(OperationResourceType resourceType,
       List<? extends OperationResource<?>> resources, OperationType operation,
       List<Object[]> params) {
     Principal principal = PrincipalContext.get();
     Long tenantId = nonNull(principal.getTenantId()) ? principal.getTenantId() : -1L;
     List<OperationLog> operations = new ArrayList<>(resources.size());
     for (int i = 0; i < resources.size(); i++) {
-      OperationLog operation0 = assembleOperationLog(type, resources.get(i), operation,
+      OperationLog operation0 = assembleOperationLog(resourceType, resources.get(i), operation,
           principal, params.get(i));
       operation0.setTenantId(tenantId);
       operations.add(operation0);
@@ -44,7 +43,7 @@ public class OperationLogConverter {
     return operations;
   }
 
-  public static List<OperationLog> toOperations(OperationResourceType type,
+  public static List<OperationLog> toOperations(OperationResourceType resourceType,
       List<? extends OperationResource<?>> resources, OperationType operation, Object... params) {
     if (isEmpty(resources)){
       return null;
@@ -53,7 +52,7 @@ public class OperationLogConverter {
     Long tenantId = nonNull(principal.getTenantId()) ? principal.getTenantId() : -1L;
     List<OperationLog> operations = new ArrayList<>(resources.size());
     for (OperationResource<?> resource : resources) {
-      OperationLog operation0 = assembleOperationLog(type, resource, operation, principal, params);
+      OperationLog operation0 = assembleOperationLog(resourceType, resource, operation, principal, params);
       operation0.setTenantId(tenantId);
       operations.add(operation0);
     }

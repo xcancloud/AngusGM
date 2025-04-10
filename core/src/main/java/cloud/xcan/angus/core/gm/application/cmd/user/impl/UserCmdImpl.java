@@ -5,7 +5,6 @@ import static cloud.xcan.angus.api.enums.UserSource.isNewSignup;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertNotEmpty;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.assembleUserInfo;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.replaceToAuthUser;
 import static cloud.xcan.angus.core.gm.application.converter.UserConverter.setUserMainDeptAndHead;
@@ -172,9 +171,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
               .setTenantId(user.getTenantId()).setTenantName(user.getTenantName());
         }
         if (user.getSource().isPlatformSignup()) {
-          operationLogCmd.add(toOperation(USER, user, SIGN_UP));
+          operationLogCmd.add(USER, user, SIGN_UP);
         } else {
-          operationLogCmd.add(toOperation(USER, user, CREATED));
+          operationLogCmd.add(USER, user, CREATED);
         }
         return idKeys;
       }

@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.application.cmd.tag.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter.toAppTagTarget;
 import static cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter.toFuncTagTarget;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
 import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
 import static cloud.xcan.angus.core.gm.application.converter.WebTagConverter.assembleAppOrFuncTags;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
@@ -87,10 +86,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
       protected List<IdKey<Long, Object>> process() {
         List<IdKey<Long, Object>> idKeys = batchInsert(newTagTargets);
 
-        operationLogCmd.addAll(
-            toOperations(APP, appsDb, TARGET_TAG_UPDATED, tagDb.getName()));
-        operationLogCmd.addAll(
-            toOperations(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED, tagDb.getName()));
+        operationLogCmd.addAll(APP, appsDb, TARGET_TAG_UPDATED, tagDb.getName());
+        operationLogCmd.addAll(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED, tagDb.getName());
         return idKeys;
       }
     }.execute();
@@ -113,10 +110,9 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
         webTagTargetRepo.deleteByTagIdAndTargetIdIn(tagId, targetIds);
 
         List<App> appsDb = appQuery.findById(targetIds);
-        operationLogCmd.addAll(toOperations(APP, appsDb, TARGET_TAG_DELETED, tagDb.getName()));
+        operationLogCmd.addAll(APP, appsDb, TARGET_TAG_DELETED, tagDb.getName());
         List<AppFunc> appFuncDb = appFuncQuery.findById(targetIds);
-        operationLogCmd.addAll(
-            toOperations(APP_FUNC, appFuncDb, TARGET_TAG_DELETED, tagDb.getName()));
+        operationLogCmd.addAll(APP_FUNC, appFuncDb, TARGET_TAG_DELETED, tagDb.getName());
         return null;
       }
     }.execute();
@@ -149,8 +145,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
                   .setTargetType(WebTagTargetType.APP).setTargetId(appId))
               .collect(Collectors.toList()));
 
-          operationLogCmd.add(toOperation(APP, appDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(WebTag::getName).toList().toArray()));
+          operationLogCmd.add(APP, appDb, TARGET_TAG_UPDATED,
+              tagsDb.stream().map(WebTag::getName).toList().toArray());
         }
         return null;
       }
@@ -199,8 +195,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
       protected Void process() {
         webTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, appId);
 
-        operationLogCmd.add(toOperation(APP, appDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(WebTag::getName).toList().toArray()));
+        operationLogCmd.add(APP, appDb, TARGET_TAG_DELETED,
+            tagsDb.stream().map(WebTag::getName).toList().toArray());
         return null;
       }
     }.execute();
@@ -233,8 +229,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
                   .setTargetType(appFuncDb.getType().toTagTargetType()).setTargetId(funcId))
               .collect(Collectors.toList()));
 
-          operationLogCmd.add(toOperation(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(WebTag::getName).toList().toArray()));
+          operationLogCmd.add(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED,
+              tagsDb.stream().map(WebTag::getName).toList().toArray());
         }
         return null;
       }
@@ -283,8 +279,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
       protected Void process() {
         webTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, funcId);
 
-        operationLogCmd.add(toOperation(APP_FUNC, appFuncDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(WebTag::getName).toList().toArray()));
+        operationLogCmd.add(APP_FUNC, appFuncDb, TARGET_TAG_DELETED,
+            tagsDb.stream().map(WebTag::getName).toList().toArray());
         return null;
       }
     }.execute();

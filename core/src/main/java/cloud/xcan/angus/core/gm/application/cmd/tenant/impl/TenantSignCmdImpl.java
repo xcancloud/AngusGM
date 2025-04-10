@@ -120,7 +120,7 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
         // Check the mobile is required
         setMultiTenantCtrl(false);
-        userDb = userRepo.findUserByUserId(getUserId());
+        userDb = userRepo.findByUserId(getUserId());
         assertForbidden(nonNull(userDb) && isNotEmpty(userDb.getMobile()), MOBILE_IS_UNBIND);
       }
 
@@ -146,7 +146,7 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
         // Check the mobile is required
         setMultiTenantCtrl(false);
-        userDb = userRepo.findUserByUserId(getUserId());
+        userDb = userRepo.findByUserId(getUserId());
         assertForbidden(isNotEmpty(userDb.getMobile()), MOBILE_IS_UNBIND);
 
         // Check the cancel sms is valid

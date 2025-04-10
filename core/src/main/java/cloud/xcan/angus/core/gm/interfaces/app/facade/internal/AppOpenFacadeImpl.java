@@ -33,7 +33,7 @@ public class AppOpenFacadeImpl implements AppOpenFacade {
 
   @Override
   public IdKey<Long, Object> open(AppOpenDto dto) {
-    return appOpenCmd.open(openDtoToDomain(dto));
+    return appOpenCmd.open(openDtoToDomain(dto), true);
   }
 
   @Override

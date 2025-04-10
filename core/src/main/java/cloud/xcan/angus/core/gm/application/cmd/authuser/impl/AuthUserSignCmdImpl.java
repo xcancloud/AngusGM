@@ -7,7 +7,6 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP;
 import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP_TYPE;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
 import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.signupToAddUser;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_ILLEGAL;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_TIMEOUT;
@@ -206,13 +205,13 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
           updateNewDirectoryPassword(userDb, password);
 
           // Save sign-in log
-          operationLogCmd.add(toOperation(USER, userDb, SIGN_IN_SUCCESS));
+          operationLogCmd.add(USER, userDb, SIGN_IN_SUCCESS);
           return result;
         } catch (Throwable e) {
           // Record the number of account or password errors
           recordSignInPasswordErrorNum(Long.valueOf(userDb.getTenantId()), userDb.getUsername());
           // Save sign-in log
-          operationLogCmd.add(toOperation(USER, userDb, SIGN_IN_FAIL, e.getMessage()));
+          operationLogCmd.add(USER, userDb, SIGN_IN_FAIL, e.getMessage());
 
           if (e instanceof AbstractResultMessageException) {
             throw (AbstractResultMessageException) e;
@@ -282,7 +281,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         PrincipalContext.get().setClientId(clientId)
             .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
             .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
-        operationLogCmd.add(toOperation(USER, userDb, SIGN_OUT));
+        operationLogCmd.add(USER, userDb, SIGN_OUT);
         return null;
       }
     }.execute();
@@ -321,7 +320,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         PrincipalContext.get().setUserId(Long.valueOf(userDb.getId()))
             .setFullName(userDb.getFullName()).setTenantId(Long.valueOf(userDb.getTenantId()))
             .setTenantName(userDb.getTenantName());
-        operationLogCmd.add(toOperation(USER, userDb, UPDATE_PASSWORD));
+        operationLogCmd.add(USER, userDb, UPDATE_PASSWORD);
         return null;
       }
     }.execute();

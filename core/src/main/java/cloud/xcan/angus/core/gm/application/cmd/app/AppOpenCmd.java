@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AppOpenCmd {
 
-  IdKey<Long, Object> open(AppOpen appOpen);
+  IdKey<Long, Object> open(AppOpen appOpen, boolean saveOperationLog);
 
   void renew(AppOpen appOpen);
 

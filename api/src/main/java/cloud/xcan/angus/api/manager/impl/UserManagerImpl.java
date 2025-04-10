@@ -76,7 +76,7 @@ public class UserManagerImpl implements UserManager {
 
   @Override
   public User findUser(Long userId) {
-    return userRepo.findUserByUserId(userId);
+    return userRepo.findByUserId(userId);
   }
 
   @Override

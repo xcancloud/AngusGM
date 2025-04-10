@@ -1,8 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.app.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.ApiAuthorityConverter.toFuncAuthority;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
-import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP_FUNC;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
@@ -101,7 +99,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
         saveFuncApiAuthority(appDb, appFunc);
 
         // Save operation log
-        operationLogCmd.addAll(toOperations(APP_FUNC, appFunc, CREATED));
+        operationLogCmd.addAll(APP_FUNC, appFunc, CREATED);
         return idKeys;
       }
     }.execute();
@@ -146,7 +144,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
         replaceFuncApiAuthority(appDb, appFunc);
 
         // Save operation log
-        operationLogCmd.addAll(toOperations(APP_FUNC, appFuncDb, UPDATED));
+        operationLogCmd.addAll(APP_FUNC, appFuncDb, UPDATED);
         return null;
       }
     }.execute();
@@ -213,7 +211,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
         }
 
         // Save operation log
-        operationLogCmd.addAll(toOperations(APP_FUNC, appFuncDb, DELETED));
+        operationLogCmd.addAll(APP_FUNC, appFuncDb, DELETED);
         return null;
       }
     }.execute();
@@ -266,10 +264,10 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
         batchUpdateOrNotFound(appFunc);
 
         // Save operation log
-        operationLogCmd.addAll(toOperations(APP_FUNC,
-            appFuncDb.stream().filter(AppFunc::getEnabled).toList(), ENABLED));
-        operationLogCmd.addAll(toOperations(APP_FUNC,
-            appFuncDb.stream().filter(x -> !x.getEnabled()).toList(), DISABLED));
+        operationLogCmd.addAll(APP_FUNC,
+            appFuncDb.stream().filter(AppFunc::getEnabled).toList(), ENABLED);
+        operationLogCmd.addAll(APP_FUNC,
+            appFuncDb.stream().filter(x -> !x.getEnabled()).toList(), DISABLED);
         return null;
       }
     }.execute();

@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.api.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.ApiConverter.parseSwaggerDocs;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_SWAGGER_PARSE_ERROR;
 import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_SWAGGER_PARSE_ERROR_CODE;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.API;
@@ -96,7 +95,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
         // Save operation logs
         if (saveOperationLog) {
-          operationLogCmd.addAll(toOperations(API, apis, CREATED));
+          operationLogCmd.addAll(API, apis, CREATED);
         }
         return idKeys;
       }
@@ -133,7 +132,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
         // Save operation logs
         if (saveOperationLog) {
-          operationLogCmd.addAll(toOperations(API, apis, CREATED));
+          operationLogCmd.addAll(API, apis, CREATED);
         }
         return null;
       }
@@ -211,7 +210,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         systemTokenCmd.deleteByApiIdIn(apiIds);
 
         // Save operation logs
-        operationLogCmd.addAll(toOperations(API, apisDb, DELETED));
+        operationLogCmd.addAll(API, apisDb, DELETED);
         return null;
       }
     }.execute();
@@ -255,9 +254,9 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
         // Save operation logs
         operationLogCmd.addAll(
-            toOperations(API, apisDb.stream().filter(Api::getEnabled).toList(), ENABLED));
+            API, apisDb.stream().filter(Api::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(
-            toOperations(API, apisDb.stream().filter(x -> !x.getEnabled()).toList(), DISABLED));
+            API, apisDb.stream().filter(x -> !x.getEnabled()).toList(), DISABLED);
         return null;
       }
     }.execute();

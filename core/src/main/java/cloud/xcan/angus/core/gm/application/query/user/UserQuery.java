@@ -25,6 +25,8 @@ public interface UserQuery {
 
   List<User> getSysAdmins();
 
+  User findById(Long id);
+
   Set<Long> findLockExpire(Long count);
 
   Set<Long> findUnlockExpire(Long count);

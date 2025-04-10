@@ -1,8 +1,5 @@
 package cloud.xcan.angus.core.gm.application.cmd.app.impl;
 
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
-import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.API;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
@@ -17,7 +14,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpenRepo;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTargetType;
 import cloud.xcan.angus.core.biz.Biz;
@@ -36,11 +32,8 @@ import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.app.AppRepo;
 import cloud.xcan.angus.core.gm.domain.app.func.AppFuncRepo;
 import cloud.xcan.angus.core.gm.domain.authority.ApiAuthoritySource;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
-import cloud.xcan.angus.core.utils.CoreUtils;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;
 import java.util.HashSet;
@@ -113,7 +106,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         apiAuthorityCmd.saveAppApiAuthority(app);
 
         // Save operation log
-        operationLogCmd.add(toOperation(APP, app, CREATED));
+        operationLogCmd.add(APP, app, CREATED);
         return idKeys;
       }
     }.execute();
@@ -145,7 +138,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         apiAuthorityCmd.replaceAppApiAuthority(appDb);
 
         // Save operation log
-        operationLogCmd.add(toOperation(APP, app, UPDATED));
+        operationLogCmd.add(APP, app, UPDATED);
         return null;
       }
     }.execute();
@@ -175,7 +168,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         update(copyPropertiesIgnoreTenantAuditing(app, replaceAppDb, "enabled"));
 
         // Save operation log
-        operationLogCmd.add(toOperation(APP, app, UPDATED));
+        operationLogCmd.add(APP, app, UPDATED);
 
         return IdKey.of(replaceAppDb.getId(), replaceAppDb.getName());
       }
@@ -204,7 +197,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         appRepo.save(copyPropertiesIgnoreNull(app, appDb));
 
         // Save operation log
-        operationLogCmd.add(toOperation(APP, app, UPDATED));
+        operationLogCmd.add(APP, app, UPDATED);
         return null;
       }
     }.execute();
@@ -235,7 +228,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         apiAuthorityCmd.deleteBySource(ids, ApiAuthoritySource.APP);
 
         // Save operation log
-        operationLogCmd.addAll(toOperations(APP, appsDb, DELETED));
+        operationLogCmd.addAll(APP, appsDb, DELETED);
         return null;
       }
     }.execute();
@@ -268,10 +261,9 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         apiAuthorityCmd.updateAppAuthorityStatus(apps, ids);
 
         // Save operation log
-        operationLogCmd.addAll(
-            toOperations(APP, appsDb.stream().filter(App::getEnabled).toList(), ENABLED));
-        operationLogCmd.addAll(
-            toOperations(APP, appsDb.stream().filter(x -> !x.getEnabled()).toList(), DISABLED));
+        operationLogCmd.addAll(APP, appsDb.stream().filter(App::getEnabled).toList(), ENABLED);
+        operationLogCmd.addAll(APP, appsDb.stream().filter(x -> !x.getEnabled()).toList(),
+            DISABLED);
         return null;
       }
     }.execute();
