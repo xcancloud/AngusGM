@@ -1,6 +1,13 @@
 package cloud.xcan.angus.core.gm.application.cmd.group.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.GroupTagConverter.dtoToGroupTagsDomain;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.GROUP;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -18,9 +25,12 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyGroupCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagTargetCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
+import cloud.xcan.angus.core.gm.domain.app.App;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;
@@ -51,6 +61,9 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
   @Resource
   private OrgTagTargetCmd orgTagTargetCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add(List<Group> groups) {
@@ -75,6 +88,9 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
         if (isNotEmpty(allTags)) {
           orgTagTargetCmd.add(allTags);
         }
+
+        // Save operation log
+        operationLogCmd.addAll(GROUP, groups, CREATED);
         return idKeys;
       }
     }.execute();
@@ -90,15 +106,15 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
       protected void checkParams() {
         // Check the code is not repeated
         groupQuery.checkUpdateDeptCode(getOptTenantId(), groups);
-        // Check the groups exists
+        // Check the groups existed
         updateDeptIds = groups.stream().map(Group::getId).collect(Collectors.toSet());
         groupQuery.checkValidAndFind(updateDeptIds);
       }
 
       @Override
       protected Void process() {
-        // Update dept
-        batchUpdateOrNotFound(groups);
+        // Update groups
+        List<Group> groupsDb = batchUpdateOrNotFound(groups);
 
         // Replace tags
         List<OrgTagTarget> allTags = buildOrgTagTargets(groups);
@@ -106,6 +122,9 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
           orgTagTargetCmd.deleteAllByTarget(OrgTargetType.GROUP, updateDeptIds);
           orgTagTargetCmd.add(allTags);
         }
+
+        // Save operation log
+        operationLogCmd.addAll(GROUP, groupsDb, UPDATED);
         return null;
       }
     }.execute();
@@ -125,7 +144,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
         replaceGroups = groups.stream().filter(group -> nonNull(group.getId()))
             .collect(Collectors.toList());
         if (isNotEmpty(replaceGroups)) {
-          // Check the updated groups exists
+          // Check the updated groups existed
           replaceGroupIds = replaceGroups.stream().map(Group::getId).collect(Collectors.toSet());
           replaceGroupsDb = groupQuery.checkValidAndFind(replaceGroupIds);
           // Check the code is not repeated
@@ -153,6 +172,8 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
                   "source", "enabled"))
               .collect(Collectors.toList());
           groupRepo.saveAll(replaceGroupsDb);
+          idKeys.addAll(replaceGroupsDb.stream()
+              .map(x -> IdKey.of(x.getId(), x.getName())).toList());
 
           // Replace tags
           List<OrgTagTarget> allTags = buildOrgTagTargets(replaceGroups);
@@ -161,8 +182,8 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
             orgTagTargetCmd.add(allTags);
           }
 
-          idKeys.addAll(replaceGroupsDb.stream()
-              .map(x -> IdKey.of(x.getId(), x.getName())).toList());
+          // Save operation log
+          operationLogCmd.addAll(GROUP, replaceGroupsDb, UPDATED);
         }
         return idKeys;
       }
@@ -173,9 +194,15 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
   @Override
   public void delete(Set<Long> ids) {
     new BizTemplate<Void>() {
+
       @Override
       protected Void process() {
-        delete0(ids);
+        List<Group> groups = groupQuery.findByIdIn(ids);
+        if (isNotEmpty(groups)) {
+          delete0(ids);
+
+          operationLogCmd.addAll(GROUP, groups, DELETED);
+        }
         return null;
       }
     }.execute();
@@ -204,7 +231,13 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
       @Override
       protected Void process() {
-        batchUpdateOrNotFound(groups);
+        List<Group> groupsDb = batchUpdateOrNotFound(groups);
+
+        // Save operation log
+        operationLogCmd.addAll(GROUP, groupsDb.stream()
+            .filter(Group::getEnabled).toList(), ENABLED);
+        operationLogCmd.addAll(GROUP, groupsDb.stream()
+             .filter(x -> !x.getEnabled()).toList(), DISABLED);
         return null;
       }
     }.execute();

@@ -87,7 +87,7 @@ public class GroupQueryImpl implements GroupQuery {
   }
 
   @Override
-  public List<Group> findByIdIn(HashSet<Long> ids) {
+  public List<Group> findByIdIn(Collection<Long> ids) {
     return groupRepo.findByIdIn(ids);
   }
 

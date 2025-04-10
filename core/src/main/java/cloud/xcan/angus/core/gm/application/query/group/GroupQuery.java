@@ -14,7 +14,7 @@ public interface GroupQuery {
 
   Page<Group> find(GenericSpecification<Group> spec, Pageable pageable);
 
-  List<Group> findByIdIn(HashSet<Long> ids);
+  List<Group> findByIdIn(Collection<Long> ids);
 
   Group checkAndFind(Long id);
 
