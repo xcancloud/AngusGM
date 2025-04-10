@@ -8,6 +8,7 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,8 @@ public interface UserQuery {
   List<User> getSysAdmins();
 
   User findById(Long id);
+
+  List<User> findByIdIn(Collection<Long> userIds);
 
   Set<Long> findLockExpire(Long count);
 

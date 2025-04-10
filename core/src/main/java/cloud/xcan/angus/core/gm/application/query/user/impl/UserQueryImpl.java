@@ -159,6 +159,11 @@ public class UserQueryImpl implements UserQuery {
   }
 
   @Override
+  public List<User> findByIdIn(Collection<Long> ids) {
+    return userRepo.findByIdIn(ids);
+  }
+
+  @Override
   public Set<Long> findLockExpire(Long count) {
     return userRepo.findLockExpire(LocalDateTime.now(), count);
   }

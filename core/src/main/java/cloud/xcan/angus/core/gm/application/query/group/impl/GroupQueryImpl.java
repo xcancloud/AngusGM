@@ -26,6 +26,7 @@ import cloud.xcan.angus.spec.utils.ObjectUtils;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -86,18 +87,8 @@ public class GroupQueryImpl implements GroupQuery {
   }
 
   @Override
-  public void setUserNum(List<Group> groups) {
-    List<GroupUserNum> userNums = userGroupQuery
-        .userCount(groups.stream().map(Group::getId).collect(Collectors.toSet()));
-    if (isNotEmpty(userNums)) {
-      Map<Long, GroupUserNum> userNumsMap = userNums.stream().collect(Collectors.toMap(
-          GroupUserNum::getGroupId, x -> x));
-      for (Group group : groups) {
-        if (nonNull(userNumsMap.get(group.getId()))) {
-          group.setUserNum(userNumsMap.get(group.getId()).getUserNum());
-        }
-      }
-    }
+  public List<Group> findByIdIn(HashSet<Long> ids) {
+    return groupRepo.findByIdIn(ids);
   }
 
   @Override
@@ -157,4 +148,18 @@ public class GroupQueryImpl implements GroupQuery {
     }
   }
 
+  @Override
+  public void setUserNum(List<Group> groups) {
+    List<GroupUserNum> userNums = userGroupQuery
+        .userCount(groups.stream().map(Group::getId).collect(Collectors.toSet()));
+    if (isNotEmpty(userNums)) {
+      Map<Long, GroupUserNum> userNumsMap = userNums.stream().collect(Collectors.toMap(
+          GroupUserNum::getGroupId, x -> x));
+      for (Group group : groups) {
+        if (nonNull(userNumsMap.get(group.getId()))) {
+          group.setUserNum(userNumsMap.get(group.getId()).getUserNum());
+        }
+      }
+    }
+  }
 }

@@ -5,18 +5,24 @@ import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findFirstValue;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
+import cloud.xcan.angus.api.commonlink.dept.Dept;
+import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTargetRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
+import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.OrgTagTargetConverter;
+import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
+import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagTargetQuery;
+import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.tag.OrgTagTargetListRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
@@ -24,6 +30,7 @@ import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +51,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
 
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
+
+  @Resource
+  private UserQuery userQuery;
+
+  @Resource
+  private DeptQuery deptQuery;
+
+  @Resource
+  private GroupQuery groupQuery;
 
   @Override
   public Page<OrgTagTarget> findTagTarget(GenericSpecification<OrgTagTarget> spec,
@@ -143,6 +159,63 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
       }
     }
     return tagTargets;
+  }
+
+  @Override
+  public List<User> checkUserAndDeduplication(Set<OrgTagTarget> newTagTargets,
+      List<OrgTagTarget> tagTargets, Long tagId) {
+    Set<OrgTagTarget> userTags = tagTargets.stream()
+        .filter(x -> x.getTargetType().equals(OrgTargetType.USER)).collect(Collectors.toSet());
+    List<User> users = null;
+    if (isNotEmpty(userTags)) {
+      Set<Long> userIds = userTags.stream().map(OrgTagTarget::getTargetId)
+          .collect(Collectors.toSet());
+      users = userQuery.checkAndFind(userIds);
+      Set<OrgTagTarget> tagsDb = orgTagTargetRepo.findByTagIdAndTargetTypeAndTargetIdIn(
+          tagId, OrgTargetType.USER, userIds);
+      if (isNotEmpty(tagsDb)) {
+        newTagTargets.removeAll(tagsDb);
+      }
+    }
+    return users;
+  }
+
+  @Override
+  public List<Dept> checkDeptAndDeduplication(Set<OrgTagTarget> newTagTargets,
+      List<OrgTagTarget> tagTargets, Long tagId) {
+    Set<OrgTagTarget> deptTags = tagTargets.stream()
+        .filter(x -> x.getTargetType().equals(OrgTargetType.DEPT)).collect(Collectors.toSet());
+    List<Dept> dept = null;
+    if (isNotEmpty(deptTags)) {
+      Set<Long> deptIds = deptTags.stream().map(OrgTagTarget::getTargetId)
+          .collect(Collectors.toSet());
+      dept = deptQuery.checkAndFind(deptIds);
+      Set<OrgTagTarget> tagsDb = orgTagTargetRepo.findByTagIdAndTargetTypeAndTargetIdIn(
+          tagId, OrgTargetType.DEPT, deptIds);
+      if (isNotEmpty(tagsDb)) {
+        newTagTargets.removeAll(tagsDb);
+      }
+    }
+    return dept;
+  }
+
+  @Override
+  public List<Group> checkGroupAndDeduplication(Set<OrgTagTarget> newTagTargets,
+      List<OrgTagTarget> tagTargets, Long tagId) {
+    Set<OrgTagTarget> groupTags = tagTargets.stream()
+        .filter(x -> x.getTargetType().equals(OrgTargetType.GROUP)).collect(Collectors.toSet());
+    List<Group> groups = null;
+    if (isNotEmpty(groupTags)) {
+      Set<Long> groupIds = groupTags.stream().map(OrgTagTarget::getTargetId)
+          .collect(Collectors.toSet());
+      groups = groupQuery.checkValidAndFind(groupIds);
+      Set<OrgTagTarget> tagsDb = orgTagTargetRepo.findByTagIdAndTargetTypeAndTargetIdIn(
+          tagId, OrgTargetType.GROUP, groupIds);
+      if (isNotEmpty(tagsDb)) {
+        newTagTargets.removeAll(tagsDb);
+      }
+    }
+    return groups;
   }
 
 }

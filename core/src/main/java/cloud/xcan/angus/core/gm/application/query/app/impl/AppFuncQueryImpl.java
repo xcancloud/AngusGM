@@ -226,7 +226,7 @@ public class AppFuncQueryImpl implements AppFuncQuery {
   }
 
   @Override
-  public List<AppFunc> findById(HashSet<Long> funcIds) {
+  public List<AppFunc> findByIdIn(HashSet<Long> funcIds) {
     return appFuncRepo.findAllByIdIn(funcIds);
   }
 

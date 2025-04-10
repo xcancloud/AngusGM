@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.application.cmd.tag.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter.toAppTagTarget;
 import static cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter.toFuncTagTarget;
-import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
 import static cloud.xcan.angus.core.gm.application.converter.WebTagConverter.assembleAppOrFuncTags;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP_FUNC;
@@ -84,11 +83,14 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        List<IdKey<Long, Object>> idKeys = batchInsert(newTagTargets);
+        if (isNotEmpty(newTagTargets)) {
+          List<IdKey<Long, Object>> idKeys = batchInsert(newTagTargets);
 
-        operationLogCmd.addAll(APP, appsDb, TARGET_TAG_UPDATED, tagDb.getName());
-        operationLogCmd.addAll(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED, tagDb.getName());
-        return idKeys;
+          operationLogCmd.addAll(APP, appsDb, TARGET_TAG_UPDATED, tagDb.getName());
+          operationLogCmd.addAll(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED, tagDb.getName());
+          return idKeys;
+        }
+        return null;
       }
     }.execute();
   }
@@ -109,9 +111,9 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
       protected Void process() {
         webTagTargetRepo.deleteByTagIdAndTargetIdIn(tagId, targetIds);
 
-        List<App> appsDb = appQuery.findById(targetIds);
+        List<App> appsDb = appQuery.findByIdIn(targetIds);
         operationLogCmd.addAll(APP, appsDb, TARGET_TAG_DELETED, tagDb.getName());
-        List<AppFunc> appFuncDb = appFuncQuery.findById(targetIds);
+        List<AppFunc> appFuncDb = appFuncQuery.findByIdIn(targetIds);
         operationLogCmd.addAll(APP_FUNC, appFuncDb, TARGET_TAG_DELETED, tagDb.getName());
         return null;
       }
@@ -140,7 +142,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
         }
 
         if (isNotEmpty(tagIds)) {
-          webTagTargetRepo.batchInsert(tagIds.stream()
+          batchInsert(tagIds.stream()
               .map(x -> new WebTagTarget().setTagId(x)
                   .setTargetType(WebTagTargetType.APP).setTargetId(appId))
               .collect(Collectors.toList()));

@@ -22,7 +22,7 @@ public interface AppQuery {
 
   App findLatestByCode(String code, EditionType editionType);
 
-  List<App> findById(Collection<Long> ids);
+  List<App> findByIdIn(Collection<Long> ids);
 
   Map<Long, App> findMapById(Collection<Long> ids);
 

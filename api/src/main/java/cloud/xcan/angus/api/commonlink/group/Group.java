@@ -2,6 +2,7 @@ package cloud.xcan.angus.api.commonlink.group;
 
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,7 +24,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class Group extends TenantAuditingEntity<Group, Long> {
+public class Group extends TenantAuditingEntity<Group, Long> implements Resources<Long> {
 
   @Id
   private Long id;

@@ -110,7 +110,7 @@ public class AppQueryImpl implements AppQuery {
   }
 
   @Override
-  public List<App> findById(Collection<Long> ids) {
+  public List<App> findByIdIn(Collection<Long> ids) {
     return appRepo.findAllById(ids);
   }
 

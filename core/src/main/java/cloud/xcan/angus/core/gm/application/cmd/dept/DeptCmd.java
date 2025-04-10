@@ -7,11 +7,11 @@ import java.util.Set;
 
 public interface DeptCmd {
 
-  List<IdKey<Long, Object>> add(List<Dept> departments);
+  List<IdKey<Long, Object>> add(List<Dept> dept);
 
-  void update(List<Dept> departments);
+  void update(List<Dept> dept);
 
-  List<IdKey<Long, Object>> replace(List<Dept> departments);
+  List<IdKey<Long, Object>> replace(List<Dept> dept);
 
   void delete(Set<Long> ids);
 

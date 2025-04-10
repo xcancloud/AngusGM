@@ -32,7 +32,7 @@ public interface AppFuncQuery {
 
   List<AppFunc> findAllByAppId(Long appId, Boolean onlyEnabled);
 
-  List<AppFunc> findById(HashSet<Long> funcIds);
+  List<AppFunc> findByIdIn(HashSet<Long> funcIds);
 
   List<AppFunc> findFuncAndSub(Long appId, Collection<Long> funcIds);
 

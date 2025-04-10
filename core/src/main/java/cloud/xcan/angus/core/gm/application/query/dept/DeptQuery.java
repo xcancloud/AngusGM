@@ -4,6 +4,7 @@ import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.core.gm.domain.dept.DeptSubCount;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
@@ -25,18 +26,21 @@ public interface DeptQuery {
 
   List<Dept> checkAndFind(Collection<Long> deptIds);
 
-  List<Dept> checkAndGetParent(Long tenantId, List<Dept> depts);
+  List<Dept> checkAndGetParent(Long tenantId, List<Dept> dept);
 
-  void checkNestedDuplicates(List<Dept> deptsDb);
+  void checkNestedDuplicates(List<Dept> deptDb);
 
-  void checkAddDeptCode(Long tenantId, List<Dept> depts);
+  void checkAddDeptCode(Long tenantId, List<Dept> dept);
 
-  void checkUpdateDeptCode(Long tenantId, List<Dept> depts);
+  void checkUpdateDeptCode(Long tenantId, List<Dept> dept);
 
   void checkDeptQuota(Long tenantId, long incr);
 
-  void checkDeptLevelQuota(Long tenantId, List<Dept> depts, Map<Long, Dept> deptsDbMap,
-      Map<Long, Dept> parentDeptsDbMap, boolean add);
+  void checkDeptLevelQuota(Long tenantId, List<Dept> dept, Map<Long, Dept> deptDbMap,
+      Map<Long, Dept> parentDeptDbMap, boolean add);
 
-  void checkTagQuota(Long optTenantId, List<Dept> depts);
+  void checkTagQuota(Long optTenantId, List<Dept> dept);
+
+  List<Dept> findByIdIn(Collection<Long> ids);
+
 }

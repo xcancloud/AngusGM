@@ -43,23 +43,23 @@ public class DeptFacadeImpl implements DeptFacade {
 
   @Override
   public List<IdKey<Long, Object>> add(List<DeptAddDto> dto) {
-    List<Dept> departments = dto.stream().map(DeptAssembler::addDtoToDomain)
+    List<Dept> dept = dto.stream().map(DeptAssembler::addDtoToDomain)
         .collect(Collectors.toList());
-    return deptCmd.add(departments);
+    return deptCmd.add(dept);
   }
 
   @Override
   public void update(List<DeptUpdateDto> dto) {
-    List<Dept> departments = dto.stream().map(DeptAssembler::updateDtoToDomain)
+    List<Dept> dept = dto.stream().map(DeptAssembler::updateDtoToDomain)
         .collect(Collectors.toList());
-    deptCmd.update(departments);
+    deptCmd.update(dept);
   }
 
   @Override
   public List<IdKey<Long, Object>> replace(List<DeptReplaceDto> dto) {
-    List<Dept> departments = dto.stream().map(DeptAssembler::replaceDtoToDomain)
+    List<Dept> dept = dto.stream().map(DeptAssembler::replaceDtoToDomain)
         .collect(Collectors.toList());
-    return deptCmd.replace(departments);
+    return deptCmd.replace(dept);
   }
 
   @Override

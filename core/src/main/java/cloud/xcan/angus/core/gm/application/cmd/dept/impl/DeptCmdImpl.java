@@ -1,5 +1,9 @@
 package cloud.xcan.angus.core.gm.application.cmd.dept.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.DEPT;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
@@ -18,11 +22,14 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyDeptCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagTargetCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.converter.DeptTagConverter;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
+import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;
@@ -59,37 +66,39 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
   @Resource
   private AuthPolicyDeptCmd authPolicyDeptCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public List<IdKey<Long, Object>> add(List<Dept> departments) {
+  public List<IdKey<Long, Object>> add(List<Dept> dept) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       final Long optTenantId = getOptTenantId();
-      List<Dept> parentDepartmentsDb;
-      Map<Long, Dept> parentDepartmentsDbMap;
+      List<Dept> parentDeptDb;
+      Map<Long, Dept> parentDeptDbMap;
 
       @Override
       protected void checkParams() {
         // Check the code is not repeated
-        deptQuery.checkAddDeptCode(optTenantId, departments);
-        // Check the pid exists
-        parentDepartmentsDb = deptQuery.checkAndGetParent(optTenantId, departments);
+        deptQuery.checkAddDeptCode(optTenantId, dept);
+        // Check the pid existed
+        parentDeptDb = deptQuery.checkAndGetParent(optTenantId, dept);
         // Check the department and level quota
-        deptQuery.checkDeptQuota(optTenantId, departments.size());
-        if (isNotEmpty(parentDepartmentsDb)) {
-          parentDepartmentsDbMap = parentDepartmentsDb.stream()
-              .collect(Collectors.toMap(Dept::getId, x -> x));
+        deptQuery.checkDeptQuota(optTenantId, dept.size());
+        if (isNotEmpty(parentDeptDb)) {
+          parentDeptDbMap = parentDeptDb.stream().collect(Collectors.toMap(Dept::getId, x -> x));
         }
-        deptQuery.checkDeptLevelQuota(optTenantId, departments, null, parentDepartmentsDbMap, true);
+        deptQuery.checkDeptLevelQuota(optTenantId, dept, null, parentDeptDbMap, true);
         // Check tag quotas
-        deptQuery.checkTagQuota(optTenantId, departments);
+        deptQuery.checkTagQuota(optTenantId, dept);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
         // Save departments
-        List<Dept> departmentsDb = departments.stream().peek(
-                dept -> dept.setLevel(calcLevel(dept, parentDepartmentsDbMap))
-                    .setParentLikeId(assembleParentLikeId(dept.getPid(), parentDepartmentsDbMap)))
+        List<Dept> departmentsDb = dept.stream().peek(
+                dept -> dept.setLevel(calcLevel(dept, parentDeptDbMap))
+                    .setParentLikeId(assembleParentLikeId(dept.getPid(), parentDeptDbMap)))
             .collect(Collectors.toList());
         List<IdKey<Long, Object>> idKeys = batchInsert(departmentsDb);
 
@@ -98,6 +107,9 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
         if (isNotEmpty(allTags)) {
           orgTagTargetCmd.add(allTags);
         }
+
+        // Save operation log
+        operationLogCmd.addAll(DEPT, dept, CREATED);
         return idKeys;
       }
     }.execute();
@@ -105,57 +117,58 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void update(List<Dept> departments) {
+  public void update(List<Dept> dept) {
     new BizTemplate<Void>() {
       final Long optTenantId = getOptTenantId();
-      List<Dept> departmentsDb;
-      Map<Long, Dept> departmentsDbMap;
-      List<Dept> parentDepartmentsDb;
-      Map<Long, Dept> parentDepartmentsDbMap;
+      List<Dept> deptDb;
+      Map<Long, Dept> deptDbMap;
+      List<Dept> parentDeptDb;
+      Map<Long, Dept> parentDeptDbMap;
       Set<Long> updateDeptIds;
 
       @Override
       protected void checkParams() {
         // Check the code not repeated
-        deptQuery.checkUpdateDeptCode(optTenantId, departments);
-        // Check the departments exists
-        updateDeptIds = departments.stream().map(Dept::getId).collect(Collectors.toSet());
-        departmentsDb = deptQuery.checkAndFind(updateDeptIds);
+        deptQuery.checkUpdateDeptCode(optTenantId, dept);
+        // Check the departments existed
+        updateDeptIds = dept.stream().map(Dept::getId).collect(Collectors.toSet());
+        deptDb = deptQuery.checkAndFind(updateDeptIds);
         // Check the nested duplicates
-        deptQuery.checkNestedDuplicates(departmentsDb);
-        // Check the pid exists
-        parentDepartmentsDb = deptQuery.checkAndGetParent(optTenantId, departments);
+        deptQuery.checkNestedDuplicates(deptDb);
+        // Check the pid existed
+        parentDeptDb = deptQuery.checkAndGetParent(optTenantId, dept);
         // Check the department and level quota
         // deptQuery.checkDeptQuota(tenantId, departments.size());
-        if (isNotEmpty(parentDepartmentsDb)) {
-          parentDepartmentsDbMap = parentDepartmentsDb.stream()
-              .collect(Collectors.toMap(Dept::getId, x -> x));
+        if (isNotEmpty(parentDeptDb)) {
+          parentDeptDbMap = parentDeptDb.stream().collect(Collectors.toMap(Dept::getId, x -> x));
         }
-        departmentsDbMap = departmentsDb.stream().collect(Collectors.toMap(Dept::getId, x -> x));
-        deptQuery.checkDeptLevelQuota(optTenantId, departments, departmentsDbMap,
-            parentDepartmentsDbMap, false);
+        deptDbMap = deptDb.stream().collect(Collectors.toMap(Dept::getId, x -> x));
+        deptQuery.checkDeptLevelQuota(optTenantId, dept, deptDbMap, parentDeptDbMap, false);
         // Check the tag quotas
-        deptQuery.checkTagQuota(optTenantId, departments);
+        deptQuery.checkTagQuota(optTenantId, dept);
       }
 
       @Override
       protected Void process() {
         // Calculate and update level, parentLikeId.
-        setAndUpdateLevelAndParentLikeId(departments, departmentsDbMap, parentDepartmentsDbMap);
+        setAndUpdateLevelAndParentLikeId(dept, deptDbMap, parentDeptDbMap);
 
         // Update departments.
-        departmentsDb = departments.stream().map(department ->
-                copyPropertiesIgnoreNull(department, departmentsDbMap.get(department.getId()))
-                    .setParentLikeId(department.getParentLikeId())/* Set null when moved to root */)
+        deptDb = dept.stream().map(dept0 ->
+                copyPropertiesIgnoreNull(dept0, deptDbMap.get(dept0.getId()))
+                    .setParentLikeId(dept0.getParentLikeId())/* Set null when moved to root */)
             .collect(Collectors.toList());
-        deptRepo.saveAll(departmentsDb);
+        deptRepo.saveAll(deptDb);
 
-        // Replace tags.
-        List<OrgTagTarget> allTags = buildOrgTagTargets(departments);
+        // Replace tags
+        List<OrgTagTarget> allTags = buildOrgTagTargets(dept);
         if (isNotEmpty(allTags)) {
           orgTagTargetCmd.deleteAllByTarget(OrgTargetType.DEPT, updateDeptIds);
           orgTagTargetCmd.add(allTags);
         }
+
+        // Save operation log
+        operationLogCmd.addAll(DEPT, dept, UPDATED);
         return null;
       }
     }.execute();
@@ -163,45 +176,43 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public List<IdKey<Long, Object>> replace(List<Dept> departments) {
+  public List<IdKey<Long, Object>> replace(List<Dept> dept) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       final Long optTenantId = getOptTenantId();
-      List<Dept> replaceDepartments;
-      List<Dept> replaceDepartmentsDb;
-      Map<Long, Dept> replaceDepartmentsDbMap;
-      List<Long> replaceDepartmentIds;
-      List<Dept> parentDepartmentsDb = null;
-      Map<Long, Dept> parentDeptsDbMap = null;
+      List<Dept> replaceDept;
+      List<Dept> replaceDeptDb;
+      Map<Long, Dept> replaceDeptDbMap;
+      List<Long> replaceDepIds;
+      List<Dept> parentDeptDb = null;
+      Map<Long, Dept> parentDeptDbMap = null;
 
       @Override
       protected void checkParams() {
-        replaceDepartments = departments.stream().filter(dept -> nonNull(dept.getId()))
+        replaceDept = dept.stream().filter(dept -> nonNull(dept.getId()))
             .collect(Collectors.toList());
-        if (isNotEmpty(replaceDepartments)) {
-          // Check the departments exists
-          replaceDepartmentsDb = deptQuery.checkAndFind(replaceDepartmentIds);
-          replaceDepartmentIds = replaceDepartments.stream().map(Dept::getId)
-              .collect(Collectors.toList());
+        if (isNotEmpty(replaceDept)) {
+          // Check the departments existed
+          replaceDeptDb = deptQuery.checkAndFind(replaceDepIds);
+          replaceDepIds = replaceDept.stream().map(Dept::getId).collect(Collectors.toList());
           // Check the code is not repeated
-          deptQuery.checkUpdateDeptCode(optTenantId, replaceDepartments);
+          deptQuery.checkUpdateDeptCode(optTenantId, replaceDept);
           // Check nested duplicates
-          deptQuery.checkNestedDuplicates(replaceDepartmentsDb);
-          // Check pid exists
-          parentDepartmentsDb = deptQuery.checkAndGetParent(optTenantId, departments);
+          deptQuery.checkNestedDuplicates(replaceDeptDb);
+          // Check pid existed
+          parentDeptDb = deptQuery.checkAndGetParent(optTenantId, dept);
           // Check dept and level quota
           // deptQuery.checkDeptQuota(tenantId, departments.size());
-          if (isNotEmpty(parentDepartmentsDb)) {
-            parentDeptsDbMap = parentDepartmentsDb.stream()
+          if (isNotEmpty(parentDeptDb)) {
+            parentDeptDbMap = parentDeptDb.stream().collect(Collectors.toMap(Dept::getId, x -> x));
+          }
+          if (isNotEmpty(replaceDept)) {
+            replaceDeptDbMap = replaceDeptDb.stream()
                 .collect(Collectors.toMap(Dept::getId, x -> x));
           }
-          if (isNotEmpty(replaceDepartments)) {
-            replaceDepartmentsDbMap = replaceDepartmentsDb.stream()
-                .collect(Collectors.toMap(Dept::getId, x -> x));
-          }
-          deptQuery.checkDeptLevelQuota(optTenantId, replaceDepartments, replaceDepartmentsDbMap,
-              parentDeptsDbMap, false);
+          deptQuery.checkDeptLevelQuota(optTenantId, replaceDept, replaceDeptDbMap,
+              parentDeptDbMap, false);
           // Check tag quotas
-          deptQuery.checkTagQuota(optTenantId, replaceDepartments);
+          deptQuery.checkTagQuota(optTenantId, replaceDept);
         }
       }
 
@@ -209,33 +220,33 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
       protected List<IdKey<Long, Object>> process() {
         List<IdKey<Long, Object>> idKeys = new ArrayList<>();
 
-        List<Dept> addDepartments = departments.stream().filter(dept -> isNull(dept.getId()))
+        List<Dept> addDept = dept.stream().filter(dept -> isNull(dept.getId()))
             .collect(Collectors.toList());
-        if (isNotEmpty(addDepartments)) {
-          idKeys.addAll(add(addDepartments));
+        if (isNotEmpty(addDept)) {
+          idKeys.addAll(add(addDept));
         }
 
-        if (isNotEmpty(replaceDepartments)) {
+        if (isNotEmpty(replaceDept)) {
           // Calc and update level, parentLikeId
-          setAndUpdateLevelAndParentLikeId(replaceDepartments, replaceDepartmentsDbMap,
-              parentDeptsDbMap);
+          setAndUpdateLevelAndParentLikeId(replaceDept, replaceDeptDbMap, parentDeptDbMap);
 
           // Do not replace tenant auditing.
-          replaceDepartmentsDb = replaceDepartments.stream()
+          replaceDeptDb = replaceDept.stream()
               .map(dept -> copyPropertiesIgnoreTenantAuditing(dept,
-                  replaceDepartmentsDbMap.get(dept.getId())))
-              .collect(Collectors.toList());
-          deptRepo.saveAll(replaceDepartmentsDb);
+                  replaceDeptDbMap.get(dept.getId()))).collect(Collectors.toList());
+          deptRepo.saveAll(replaceDeptDb);
 
           // Replace department tags.
-          List<OrgTagTarget> allTags = buildOrgTagTargets(replaceDepartments);
+          List<OrgTagTarget> allTags = buildOrgTagTargets(replaceDept);
           if (isNotEmpty(allTags)) {
-            orgTagTargetCmd.deleteAllByTarget(OrgTargetType.DEPT, replaceDepartmentIds);
+            orgTagTargetCmd.deleteAllByTarget(OrgTargetType.DEPT, replaceDepIds);
             orgTagTargetCmd.add(allTags);
           }
 
-          idKeys.addAll(replaceDepartmentsDb.stream()
-              .map(x -> IdKey.of(x.getId(), x.getName())).toList());
+          idKeys.addAll(replaceDeptDb.stream().map(x -> IdKey.of(x.getId(), x.getName())).toList());
+
+          // Save operation log
+          operationLogCmd.addAll(DEPT, replaceDeptDb, UPDATED);
         }
         return idKeys;
       }
@@ -248,14 +259,14 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        List<Dept> departmentsDb = deptRepo.findAllById(ids);
-        if (isEmpty(departmentsDb)) {
+        List<Dept> deptDb = deptRepo.findAllById(ids);
+        if (isEmpty(deptDb)) {
           return null;
         }
 
         // Delete current and sub departments
         List<Long> allDeletedDeptIds = new ArrayList<>(ids);
-        for (Dept dept : departmentsDb) {
+        for (Dept dept : deptDb) {
           List<Long> subIds = deptRepo.findIdByParentLikeId(
               dept.hasParent() ? dept.getParentLikeId() + "-" + dept.getId()
                   : String.valueOf(dept.getId()));
@@ -274,38 +285,41 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
         // Delete dept auth in AAS service
         authPolicyDeptCmd.deptPolicyDeleteBatch(new HashSet<>(ids), null);
+
+        // Save operation log
+        operationLogCmd.addAll(DEPT, deptDb, DELETED);
         return null;
       }
     }.execute();
   }
 
-  private void setAndUpdateLevelAndParentLikeId(List<Dept> departments, Map<Long, Dept> deptsDbMap,
-      Map<Long, Dept> parentDeptsDbMap) {
-    for (Dept dept : departments) {
+  private void setAndUpdateLevelAndParentLikeId(List<Dept> dept, Map<Long, Dept> deptDbMap,
+      Map<Long, Dept> parentDeptDbMap) {
+    for (Dept dept0 : dept) {
       // Fix:: A null pid means that the parent is not modified
-      if (Objects.isNull(dept.getPid())) {
+      if (Objects.isNull(dept0.getPid())) {
         continue;
       }
 
-      dept.setParentLikeId(assembleParentLikeId(dept.getPid(), parentDeptsDbMap));
+      dept0.setParentLikeId(assembleParentLikeId(dept0.getPid(), parentDeptDbMap));
 
-      Dept deptDb = deptsDbMap.get(dept.getId());
+      Dept deptDb = deptDbMap.get(dept0.getId());
       // Parent department has not changed
-      if (dept.getPid().equals(deptDb.getPid())) {
+      if (dept0.getPid().equals(deptDb.getPid())) {
         // Fix:: replace level is null
-        dept.setLevel(deptDb.getLevel()).setParentLikeId(deptDb.getParentLikeId());
+        dept0.setLevel(deptDb.getLevel()).setParentLikeId(deptDb.getParentLikeId());
         continue;
       }
 
       // Modify the moved department level, parentLikeId
       Dept parentDeptDb = null;
-      if (dept.hasParent()) {
-        parentDeptDb = parentDeptsDbMap.get(dept.getPid());
-        dept.setLevel(parentDeptDb.getSubLevel());
-        dept.setParentLikeId(assembleParentLikeId(dept.getPid(), parentDeptDb));
+      if (dept0.hasParent()) {
+        parentDeptDb = parentDeptDbMap.get(dept0.getPid());
+        dept0.setLevel(parentDeptDb.getSubLevel());
+        dept0.setParentLikeId(assembleParentLikeId(dept0.getPid(), parentDeptDb));
       } else {
         // No parent department
-        dept.setLevel(1).setParentLikeId(null);
+        dept0.setLevel(1).setParentLikeId(null);
       }
 
       // No sub department
@@ -316,7 +330,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
       // Modify(replace) sub department of new level and parentLikeId
       String oldSubParentLikeId = deptDb.getSubParentLikeId();
-      String newSubParentLikeId = isNull(parentDeptDb) ? "" : dept.getSubParentLikeId();
+      String newSubParentLikeId = isNull(parentDeptDb) ? "" : dept0.getSubParentLikeId();
       int newDiffLevel = newSubParentLikeId.split("-").length
           - oldSubParentLikeId.split("-").length;
       deptRepo.updateSubParentByOldParentLikeId(newDiffLevel, oldSubParentLikeId,
@@ -324,17 +338,17 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
     }
   }
 
-  public int calcLevel(Dept dept, Map<Long, Dept> parentDeptsDbMap) {
-    return isEmpty(parentDeptsDbMap) || isNull(parentDeptsDbMap.get(dept.getPid())) ? 1 :
-        parentDeptsDbMap.get(dept.getPid()).getLevel() + 1;
+  public int calcLevel(Dept dept, Map<Long, Dept> parentDeptDbMap) {
+    return isEmpty(parentDeptDbMap) || isNull(parentDeptDbMap.get(dept.getPid())) ? 1 :
+        parentDeptDbMap.get(dept.getPid()).getLevel() + 1;
   }
 
-  public String assembleParentLikeId(Long pid, Map<Long, Dept> parentDeptsDbMap) {
-    if (isEmpty(parentDeptsDbMap) || pid.equals(DEFAULT_ROOT_PID)
-        || isNull(parentDeptsDbMap.get(pid))) {
+  public String assembleParentLikeId(Long pid, Map<Long, Dept> parentDeptDbMap) {
+    if (isEmpty(parentDeptDbMap) || pid.equals(DEFAULT_ROOT_PID)
+        || isNull(parentDeptDbMap.get(pid))) {
       return null;
     }
-    String parentLikeId = parentDeptsDbMap.get(pid).getParentLikeId();
+    String parentLikeId = parentDeptDbMap.get(pid).getParentLikeId();
     return isEmpty(parentLikeId) ? String.valueOf(pid) : parentLikeId + "-" + pid;
   }
 
