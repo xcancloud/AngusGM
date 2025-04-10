@@ -15,9 +15,9 @@ public interface EmailServerFacade {
 
   IdKey<Long, Object> add(ServerAddDto dto);
 
-  IdKey<Long, Object> replace(ServerReplaceDto dto);
-
   void update(ServerUpdateDto dto);
+
+  IdKey<Long, Object> replace(ServerReplaceDto dto);
 
   void delete(HashSet<Long> ids);
 

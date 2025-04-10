@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.addDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.replaceDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.updateDtoToDomain;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailServerCmd;
@@ -32,17 +35,17 @@ public class EmailServerFacadeImpl implements EmailServerFacade {
 
   @Override
   public IdKey<Long, Object> add(ServerAddDto dto) {
-    return emailServerCmd.add(ServerAssembler.addDtoToDomain(dto));
-  }
-
-  @Override
-  public IdKey<Long, Object> replace(ServerReplaceDto dto) {
-    return emailServerCmd.replace(ServerAssembler.replaceDtoToDomain(dto));
+    return emailServerCmd.add(addDtoToDomain(dto));
   }
 
   @Override
   public void update(ServerUpdateDto dto) {
-    emailServerCmd.update(ServerAssembler.updateDtoToDomain(dto));
+    emailServerCmd.update(updateDtoToDomain(dto));
+  }
+
+  @Override
+  public IdKey<Long, Object> replace(ServerReplaceDto dto) {
+    return emailServerCmd.replace(replaceDtoToDomain(dto));
   }
 
   @Override
