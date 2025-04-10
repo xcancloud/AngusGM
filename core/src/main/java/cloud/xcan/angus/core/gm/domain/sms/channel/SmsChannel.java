@@ -5,6 +5,7 @@ import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.spec.experimental.EntitySupport;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -26,7 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @EntityListeners({AuditingEntityListener.class})
 @Entity
 @Table(name = "sms_channel")
-public class SmsChannel extends EntitySupport<SmsChannel, Long> implements Serializable {
+public class SmsChannel extends EntitySupport<SmsChannel, Long> implements Resources<Long> {
 
   @Id
   private Long id;

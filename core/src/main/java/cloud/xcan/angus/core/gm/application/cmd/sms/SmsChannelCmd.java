@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SmsChannelCmd {
 
-  Void update(List<SmsChannel> channels);
+  Void update(SmsChannel channel);
 
   void replace(List<SmsChannel> channels);
 

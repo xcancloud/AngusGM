@@ -1,13 +1,21 @@
 package cloud.xcan.angus.core.gm.application.cmd.sms.impl;
 
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.SMS_CHANNEL;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsChannelCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsTemplateCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
+import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
+import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannelRepo;
 import cloud.xcan.angus.core.gm.infra.plugin.SmsPluginStateListener;
@@ -31,13 +39,17 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
   @Resource
   private SmsTemplateCmd smsTemplateCmd;
 
+  @Resource
+  private OperationLogCmd operationLogCmd;
+
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Void update(List<SmsChannel> channels) {
+  public Void update(SmsChannel channel) {
     return new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        batchUpdateOrNotFound(channels);
+        SmsChannel channelDb = updateOrNotFound(channel);
+        operationLogCmd.add(SMS_CHANNEL, channelDb, UPDATED);
         return null;
       }
     }.execute();
@@ -66,7 +78,11 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
     return new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        smsChannelRepo.deleteByIdIn(ids);
+        List<SmsChannel> channels = smsChannelRepo.findAllById(ids);
+        if (!channels.isEmpty()){
+          smsChannelRepo.deleteByIdIn(ids);
+          operationLogCmd.addAll(SMS_CHANNEL, channels, DELETED);
+        }
         return null;
       }
     }.execute();
@@ -76,31 +92,34 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
   @Transactional(rollbackFor = Exception.class)
   public Void enabled(Long id, Boolean enabled) {
     return new BizTemplate<Void>() {
-      SmsChannel smsChannelDb;
+      SmsChannel channelDb;
 
       @Override
       protected void checkParams() {
-        smsChannelDb = smsChannelQuery.detail(id);
+        channelDb = smsChannelQuery.detail(id);
       }
 
       @Override
       protected Void process() {
-        if (smsChannelDb.getEnabled().equals(enabled)) {
+        if (channelDb.getEnabled().equals(enabled)) {
           return null;
         }
         if (enabled) {
           List<SmsChannel> enabledSmsChannelDb = smsChannelRepo.findByEnabled(true);
           if (isNotEmpty(enabledSmsChannelDb)) {
-            smsChannelRepo.saveAll(enabledSmsChannelDb.stream().peek(x -> x.setEnabled(false))
-                .collect(Collectors.toList()));
+            smsChannelRepo.saveAll(enabledSmsChannelDb.stream()
+                .peek(x -> x.setEnabled(false)).collect(Collectors.toList()));
           }
-          smsChannelDb.setEnabled(true);
-          smsChannelRepo.save(smsChannelDb);
+          channelDb.setEnabled(true);
+          smsChannelRepo.save(channelDb);
+
+          operationLogCmd.add(SMS_CHANNEL, channelDb, ENABLED);
           return null;
         }
 
-        smsChannelDb.setEnabled(false);
-        smsChannelRepo.save(smsChannelDb);
+        channelDb.setEnabled(false);
+        smsChannelRepo.save(channelDb);
+        operationLogCmd.add(SMS_CHANNEL, channelDb, DISABLED);
         return null;
       }
     }.execute();

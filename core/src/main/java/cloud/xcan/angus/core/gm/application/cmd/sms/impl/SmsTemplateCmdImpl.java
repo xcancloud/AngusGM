@@ -2,12 +2,14 @@ package cloud.xcan.angus.core.gm.application.cmd.sms.impl;
 
 
 import static cloud.xcan.angus.core.gm.application.converter.SmsConverter.toSmsTemplate;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.SMS_TEMPLATE;
+import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
-import static java.util.Collections.singletonList;
 
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
+import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsTemplateCmd;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.template.SmsTemplate;
@@ -23,6 +25,9 @@ public class SmsTemplateCmdImpl extends CommCmd<SmsTemplate, Long> implements Sm
 
   @Resource
   private SmsTemplateRepo smsTemplateRepo;
+
+  @Resource
+  private OperationLogCmd operationLogCmd;
 
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -50,11 +55,12 @@ public class SmsTemplateCmdImpl extends CommCmd<SmsTemplate, Long> implements Sm
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void update(SmsTemplate smsTemplate) {
+  public void update(SmsTemplate template) {
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
-        batchUpdateOrNotFound(singletonList(smsTemplate));
+        SmsTemplate templateDb = updateOrNotFound(template);
+        operationLogCmd.add(SMS_TEMPLATE, templateDb, UPDATED);
         return null;
       }
     }.execute();

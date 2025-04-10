@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.infra.plugin;
 
 import static cloud.xcan.angus.core.gm.domain.SmsMessage.SMS_NO_PLUGIN_CHANNEL_ERROR;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
+import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.EventType;
@@ -15,6 +16,7 @@ import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannelRepo;
 import cloud.xcan.angus.core.spring.SpringContextHolder;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
 import cloud.xcan.angus.core.utils.BeanFieldUtils;
+import cloud.xcan.angus.core.utils.CoreUtils;
 import cloud.xcan.angus.extension.sms.api.MessageChannel;
 import cloud.xcan.angus.extension.sms.api.SmsProvider;
 import cloud.xcan.angus.idgen.uid.impl.CachedUidGenerator;
@@ -76,7 +78,7 @@ public class SmsPluginStateListener implements PluginStateListener {
             pushExceptionEvent(pluginId);
           }
           smsProviders.forEach(provider -> {
-            if (Objects.nonNull(provider)) {
+            if (nonNull(provider)) {
               if (!channels.stream().map(MessageChannel::getName).collect(Collectors.toSet())
                   .contains(provider.getInstallationChannel().getName())) {
                 channels.add(provider.getInstallationChannel());
@@ -93,8 +95,7 @@ public class SmsPluginStateListener implements PluginStateListener {
               .collect(Collectors.toList());
           List<SmsChannel> smsChannelDbs = smsChannelRepo.findAll();
 
-          List<String> channelDbNames = smsChannelDbs.stream().map(SmsChannel::getName)
-              .collect(Collectors.toList());
+          List<String> channelDbNames = smsChannelDbs.stream().map(SmsChannel::getName).toList();
           Map<String, SmsChannel> smsChannelNamesAndIdMap = smsChannelDbs.stream()
               .collect(Collectors.toMap(SmsChannel::getName, o -> o));
 
@@ -106,8 +107,7 @@ public class SmsPluginStateListener implements PluginStateListener {
             } else {
               // Importantly, after installation, you must use the database configuration status: enabled status, authentication key, etc.
               SmsChannel channelDb = smsChannelNamesAndIdMap.get(channel.getName());
-              BeanUtils.copyProperties(channelDb, channel,
-                  BeanFieldUtils.getNullPropertyNames(channelDb));
+              CoreUtils.copyPropertiesIgnoreNull(channelDb, channel);
             }
           });
           smsChannelCmd.replace(smsChannels);

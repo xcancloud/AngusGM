@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.domain.sms.template;
 
 
 import cloud.xcan.angus.spec.experimental.EntitySupport;
+import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.spec.locale.SupportedLanguage;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,13 +20,13 @@ import lombok.experimental.Accessors;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class SmsTemplate extends EntitySupport<SmsTemplate, Long> {
+public class SmsTemplate extends EntitySupport<SmsTemplate, Long> implements Resources<Long> {
 
   @Id
   private Long id;
 
   /**
-   * Only allow modify third code, Modifying the code will cause system errors
+   * Only allow to modify third code, Modifying the code will cause system errors
    */
   private String code;
 

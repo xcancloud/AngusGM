@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Biz
-public class EmailTemplateCmdImpl extends CommCmd<EmailTemplate, Long> implements
-    EmailTemplateCmd {
+public class EmailTemplateCmdImpl extends CommCmd<EmailTemplate, Long> implements EmailTemplateCmd {
 
   @Resource
   private EmailTemplateRepo emailTemplateRepo;

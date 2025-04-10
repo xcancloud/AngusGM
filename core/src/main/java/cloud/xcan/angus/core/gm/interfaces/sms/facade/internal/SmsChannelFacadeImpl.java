@@ -33,7 +33,7 @@ public class SmsChannelFacadeImpl implements SmsChannelFacade {
 
   @Override
   public void update(SmsChannelUpdateDto dto) {
-    smsChannelCmd.update(singletonList(updateDtoToDomain(dto)));
+    smsChannelCmd.update(updateDtoToDomain(dto));
   }
 
   @Override
