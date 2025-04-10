@@ -22,6 +22,8 @@ public interface DeptQuery {
 
   void setHasSubDept(List<Dept> deptsDb);
 
+  List<Dept> findByIdIn(Collection<Long> ids);
+
   Dept checkAndFind(Long id);
 
   List<Dept> checkAndFind(Collection<Long> deptIds);
@@ -41,6 +43,5 @@ public interface DeptQuery {
 
   void checkTagQuota(Long optTenantId, List<Dept> dept);
 
-  List<Dept> findByIdIn(Collection<Long> ids);
 
 }

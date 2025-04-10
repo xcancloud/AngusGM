@@ -184,7 +184,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        return apiCmd.add(apis);
+        return apiCmd.add(apis, false);
       }
     }.execute();
   }

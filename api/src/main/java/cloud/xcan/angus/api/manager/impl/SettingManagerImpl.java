@@ -61,7 +61,6 @@ public class SettingManagerImpl implements SettingManager {
         case PREF_INDICATOR -> setting.setPerf(convert(setting.getValue(), Perf.class));
         case STABILITY_INDICATOR ->
             setting.setStability(convert(setting.getValue(), Stability.class));
-        case HEALTH_CHECK -> setting.setHealthCheck(convert(setting.getValue(), HealthCheck.class));
         case OPERATION_LOG_CONFIG ->
             setting.setOperationLog(convert(setting.getValue(), OperationLogProperties.class));
         case API_LOG_CONFIG ->

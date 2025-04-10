@@ -166,6 +166,11 @@ public class DeptQueryImpl implements DeptQuery {
   }
 
   @Override
+  public List<Dept> findByIdIn(Collection<Long> ids) {
+    return deptRepo.findByIdIn(ids);
+  }
+
+  @Override
   public Dept checkAndFind(Long id) {
     return deptManager.checkAndFind(id);
   }
