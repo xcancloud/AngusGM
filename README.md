@@ -1,32 +1,33 @@
 # AngusGM
 
-[English](README.md) | [中文](README_zh.md)
+[English](README_en.md) | [中文](README.md)
 
-**Angus Global Management** (**AngusGM**) is a unified system resource management platform designed for administrators, serving as the foundational module for the Angus application suite to enable cross-system collaboration and resource integration.
+**Angus全局管理** (Angus Global Management，简称 **AngusGM**) 是为系统管理人员设计的统一系统资源管理平台，旨在为Angus系列应用提供基础能力支持，实现跨业务系统的高效协同与资源整合。
 
-## Key Features
+## 主要功能
 
-- **Organization Management**  
-  Manage enterprise hierarchy, resource allocation, and multi-level department/team collaboration for operational efficiency.
+- **组织管理**  
+  管理企业组织架构、资源分配与规划，支持多层级部门与团队协作，确保组织内部高效运作。
 
-- **Global Permissions**  
-  Centralized RBAC-based permission management for applications and users, ensuring security and consistency.
+- **全局权限**  
+  统一管理应用权限策略与用户权限分配，支持基于角色的访问控制（RBAC），保障系统安全性与一致性。
 
-- **Announcements & Messaging**  
-  Publish system-wide announcements and personalized notifications with real-time delivery and historical tracking.
+- **公告与消息**  
+  提供全系统公告发布、个性化消息推送功能，支持实时通知与历史消息追溯，确保信息触达精准及时。
 
-- **System Administration**  
-  Configure parameters, audit logs, security policies, and backup/recovery to ensure system stability and data integrity.
+- **系统管理**  
+  配置系统参数、审计日志、安全策略及备份恢复，保障系统稳定性与数据安全性。
 
-## Deployment & Integration
+## 部署与集成
 
-- **Private Deployment**  
-  Supports on-premises or private cloud deployment via Docker images and Kubernetes Helm Charts for one-click setup.
+- **私有化部署**  
+  支持本地化或私有云环境部署，提供Docker镜像与Kubernetes Helm Chart，一键完成安装与初始化。
 
-- **Modular Extensions**  
-  As a core module, other Angus applications (e.g., AngusTester, AngusSeek) can reuse AngusGM's permissions and organizational capabilities.
+- **模块化扩展**  
+  作为基础核心模块，其他业务应用（如AngusTester、AngusSeek等）可复用AngusGM的权限、组织等能力，减少重复配置。
 
-## Notes
+## 注意事项
 
-- **Dependencies**: Requires JDK 17+, MySQL 7.0+, or PostgreSQL 11+.
-- **Compatibility**: AngusGM v1.0+ is compatible only with Angus suite applications v1.0+.
+- **依赖环境**：需预装JDK 17+、MySQL 7.0+ 或 PostgreSQL 11+。
+- **兼容性**：AngusGM v1.0+ 仅支持与Angus系列应用v1.0+集成。
+
