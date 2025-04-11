@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>cloud.xcan.angus</groupId>
+    <artifactId>AngusInfra</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>xcan-angusgm.parent</artifactId>
+  <name>AngusGM :: Parent</name>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  <description>The RestFul service of AngusGM application.</description>
+
+  <modules>
+    <module>api</module>
+    <module>core</module>
+    <module>boot</module>
+    <module>extension</module>
+  </modules>
+
+  <organization>
+    <name>XCan Company</name>
+    <url>http://www.xcan.cloud</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>GPLv3</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>scm:git:https://github.com/xcancloud/AngusGM</url>
+    <connection>scm:git:git@github.com/xcancloud/AngusGM.git</connection>
+    <developerConnection>scm:git:https://github.com/xcancloud/AngusGM.git</developerConnection>
+    <tag>${project.version}</tag>
+  </scm>
+
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/xcancloud/AngusGM/-/issues</url>
+  </issueManagement>
+
+  <distributionManagement>
+    <!-- Release -->
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+
+    <!-- Snapshot -->
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <developers>
+    <developer>
+      <id>xiaolong.liu</id>
+      <name>XiaoLong Liu</name>
+      <email>xiaolong.liu@xcan.cloud</email>
+      <organization>XCan Company</organization>
+      <organizationUrl>http://www.xcan.cloud</organizationUrl>
+      <roles>
+        <role>Developer</role>
+        <role>Project Manager</role>
+        <role>Architect</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <mailingLists>
+    <mailingList>
+      <name>Dev Mailing List</name>
+      <post>dev@xcan.cloud</post>
+      <subscribe>dev-subscribe@xcan.cloud</subscribe>
+      <unsubscribe>dev-unsubscribe@xcan.cloud</unsubscribe>
+    </mailingList>
+  </mailingLists>
+
+  <contributors/>
+
+  <properties>
+    <xcan-infra.bom.version>1.0.0</xcan-infra.bom.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>cloud.xcan.angus</groupId>
+        <artifactId>xcan-infra.bom</artifactId>
+        <version>${xcan-infra.bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>cloud.xcan.angus</groupId>
+        <artifactId>xcan-angusgm.api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>cloud.xcan.angus</groupId>
+        <artifactId>xcan-angusgm.core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>

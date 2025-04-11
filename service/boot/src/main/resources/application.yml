@@ -1,0 +1,151 @@
+server:
+  port: ${GM_PORT:1806}
+  servlet:
+    context-path: /
+
+xcan:
+  core:
+    enabled: true
+  tenant:
+    enableAutoAudit: true
+  cert-recognize:
+    endpoint: ${CERT_RECOGNIZE_ENDPOINT}
+    ak: ${CERT_RECOGNIZE_AK}
+    sk: ${CERT_RECOGNIZE_SK}
+  api-log:
+    enabled: true
+    userRequest:
+      enabled: false
+      printLevel: FULL
+    systemRequest:
+      enabled: true
+      printLevel: FULL
+  global:
+    cors:
+      startWithPaths: [ '/' ]
+      credentials: true
+      origin: '*'
+      headers: '*'
+      methods: 'POST, GET, PUT, DELETE, PATCH, HEAD'
+  id-gen:
+    enabled: true
+  datasource:
+    enabled: true
+    commonlink:
+      enabled: true
+  redis:
+    enabled: true
+  l2cache:
+    enabled: true
+    allowNullValues: true
+    composite:
+      l1AllOpen: true
+      l1Manual: false
+    # L1 cache
+    caffeine:
+      expireAfterWrite: 1800
+      expireAfterAccess: 600
+      initialCapacity: 50000
+      maximumSize: 500000
+    # L2 cache
+    redis:
+      defaultExpiration: 1800000
+      defaultPenetrationExpiration: 300000
+      expires: { setting: 7200000, settingTenant: 7200000 }
+      topic: j2cache:angus
+  jackson:
+    defaultPropertyInclusion: always
+    dateFormat: yyyy-MM-dd HH:mm:ss
+    timeZone: ${info.app.timezone}
+    generator:
+      write_numbers_as_strings: true
+  validator:
+    enabled: true
+    extraMessages:
+      - classpath:/i18n/messages-gm-api
+      - classpath:/i18n/messages-gm-core
+info:
+  app:
+    name: '@project.name@'
+    version: '@project.version@'
+    editionType: '@editionType@'
+    artifactId: '@artifactId@'
+    instanceId: ${spring.cloud.client.ip-address}:${server.port}
+    description: '@project.description@'
+    timezone: ${TIMEZONE:Asia/Shanghai}
+    profile: '@profile.active@'
+    runtime: ${RUNTIME:HOST}
+    license: XCan Business License, Version 1.0
+    licenseUrl: http://www.xcan.cloud/licenses/XCBL-1.0
+    organization: '@organization.name@'
+    organizationUrl: '@organization.url@'
+
+spring:
+  application:
+    name: '@artifactId@'
+  profiles:
+    active: '@profile.active@'
+  jmx:
+    enabled: true
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+    banner-mode: OFF
+  data:
+    ldap:
+      repositories:
+        enabled: false
+  web:
+    resources:
+      add-mappings: false
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+  open-api:
+    info:
+      title: AngusGM RESTful OpenAPI Documentation
+      description: >
+        AngusGM OpenAPI Documentation is a comprehensive, standards-compliant technical reference 
+        that provides detailed specifications for all API endpoints, including authentication methods, 
+        request/response schemas (with JSON/XML examples), HTTP status codes, error handling patterns,
+        and interactive testing capabilities through Swagger UI integration, designed to empower developers 
+        with version-controlled documentation for seamless third-party system integration.
+
+logging:
+  config: classpath:spring-logback.xml
+  level:
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.springframework.cloud: WARN
+    cloud.xcan.angus.api: debug # spring-logback.xml configuration is info level log by default, here it is forced to open feign log
+  file:
+    path: ${log.dir:logs}
+
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - enums
+          - systemlog
+          - appworkspace
+          - health
+          - info
+          - metrics
+          - serviceregistry
+  endpoint:
+    health:
+      show-details: always
+      access: read_only
+  health:
+    ldap:
+      enabled: false

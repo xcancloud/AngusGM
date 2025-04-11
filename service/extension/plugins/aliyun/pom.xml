@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>cloud.xcan.angus</groupId>
+    <artifactId>angus-gm.extension-plugin</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>aliyun-sms-plugin</artifactId>
+  <name>AngusGM :: Extension :: SMS Plugin for aliyun</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <aliyun-java-sdk-dysmsapi20170525.version>2.0.4</aliyun-java-sdk-dysmsapi20170525.version>
+
+    <plugin.name>AliYunSms</plugin.name>
+    <plugin.id>${project.artifactId}</plugin.id>
+    <plugin.class>cloud.xcan.angus.extension.sms.plugin.AliYunSmsPlugin</plugin.class>
+    <plugin.version>${project.version}</plugin.version>
+    <plugin.provider>XiaoCan Technology (Beijing) Co.，Ltd</plugin.provider>
+    <plugin.description>${project.name}</plugin.description>
+    <plugin.dependencies/>
+    <plugin.license>http://www.xcan.cloud/licenses/XCBL-1.0.txt</plugin.license>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.aliyun</groupId>
+      <artifactId>dysmsapi20170525</artifactId>
+      <version>${aliyun-java-sdk-dysmsapi20170525.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>unzip jar file</id>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <unzip src="target/${project.artifactId}-${project.version}.${project.packaging}"
+                  dest="target/plugin-classes"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <excludeScope>provided</excludeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+          <outputDirectory>${project.parent.parent.basedir}/dist</outputDirectory>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Plugin-Name>${plugin.name}</Plugin-Name>
+              <Plugin-Id>${plugin.id}</Plugin-Id>
+              <Plugin-Class>${plugin.class}</Plugin-Class>
+              <Plugin-Version>${plugin.version}</Plugin-Version>
+              <Plugin-Provider>${plugin.provider}</Plugin-Provider>
+              <Plugin-Description>${plugin.description}</Plugin-Description>
+              <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+              <Plugin-License>${plugin.license}</Plugin-License>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
