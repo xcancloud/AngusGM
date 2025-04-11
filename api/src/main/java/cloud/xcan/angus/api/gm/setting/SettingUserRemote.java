@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "${xcan.service.gm:ANGUSGM}")
+@FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface SettingUserRemote {
 
   @Operation(description = "Query the preference setting of the current user.", operationId = "setting:user:preference:detail")

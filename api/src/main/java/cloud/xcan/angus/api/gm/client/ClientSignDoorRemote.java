@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
-@FeignClient(name = "${xcan.service.gm:ANGUSGM}")
+@FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface ClientSignDoorRemote {
 
   @Operation(description = "Signup oauth2 client for private application edition or agent.", operationId = "client:signup:inner")

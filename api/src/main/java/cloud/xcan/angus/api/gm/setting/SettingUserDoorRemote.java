@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "${xcan.service.gm:ANGUSGM}")
+@FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface SettingUserDoorRemote {
 
   @Operation(description = "Bind the social of the current user.", operationId = "setting:user:social:bind:inner")

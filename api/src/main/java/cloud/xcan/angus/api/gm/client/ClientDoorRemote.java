@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@FeignClient(name = "${xcan.service.gm:ANGUSGM}")
+@FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface ClientDoorRemote {
 
   @Operation(description = "Update oauth2 registered client.", operationId = "client:update:inner")

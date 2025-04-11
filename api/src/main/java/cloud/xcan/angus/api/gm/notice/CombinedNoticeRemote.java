@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@FeignClient(name = "${xcan.service.gm:ANGUSGM}")
+@FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface CombinedNoticeRemote {
 
   @Operation(description = "Send notifications, support SMS, email, and in-site message", operationId = "notice:send")

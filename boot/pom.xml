@@ -11,9 +11,15 @@
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>AngusGM</artifactId>
+  <artifactId>xcan-angusgm.boot</artifactId>
   <name>AngusGM :: Boot</name>
   <packaging>jar</packaging>
+
+  <properties>
+    <angusgm.archive.name>gm</angusgm.archive.name>
+    <angusgm.hump.name>AngusGM</angusgm.hump.name>
+    <angusgm.version>${project.version}</angusgm.version>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -65,11 +71,60 @@
   </dependencies>
 
   <build>
-    <finalName>${project.artifactId}-${project.version}</finalName>
+    <finalName>${angusgm.hump.name}-${editionName}-${angusgm.version}</finalName>
     <filters>
       <filter>src/main/resources/application.yml</filter>
       <filter>src/main/resources/application-${profile.active}.yml</filter>
     </filters>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <excludes>
+          <exclude>static/**</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>static/**</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>spring-logback.xml</include>
+        </includes>
+      </resource>
+
+      <resource>
+        <directory>src/main/scripts</directory>
+        <includes>
+          <include>Dockerfile</include>
+          <include>startenv.sh</include>
+          <include>*.sh</include>
+          <include>*.bat</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}/target</targetPath>
+      </resource>
+
+      <resource>
+        <directory>conf</directory>
+        <includes>
+          <include>*.properties</include>
+          <include>*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}/target</targetPath>
+      </resource>
+    </resources>
 
     <plugins>
       <plugin>

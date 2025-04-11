@@ -41,10 +41,10 @@ public class SettingPropertiesRegisterImpl implements SettingPropertiesRegister 
     boolean support = COMMON_SERVICE.equalsIgnoreCase(applicationInfo.getInstanceId())
         || "true".equalsIgnoreCase(commonLinkEnabled);
     if (!support) {
-      log.warn("Detected that commonlink datasource is not enabled, "
+      log.warn("Detected that common-link datasource is not enabled, "
           + "and the setting properties registration is ignored");
     } else {
-      log.info("Detected that commonlink datasource is enabled, "
+      log.info("Detected that common-link datasource is enabled, "
           + "and the setting properties will be registered");
     }
     return support;
