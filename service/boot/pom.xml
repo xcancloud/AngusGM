@@ -18,7 +18,7 @@
   <properties>
     <angusgm.archive.name>gm</angusgm.archive.name>
     <angusgm.hump.name>AngusGM</angusgm.hump.name>
-    <angusgm.version>${project.version}</angusgm.version>
+    <docker.image.name>angusgm</docker.image.name>
   </properties>
 
   <dependencies>
@@ -71,7 +71,7 @@
   </dependencies>
 
   <build>
-    <finalName>${angusgm.hump.name}-${editionName}-${angusgm.version}</finalName>
+    <finalName>${angusgm.hump.name}-${editionName}-${project.version}</finalName>
     <filters>
       <filter>src/main/resources/application.yml</filter>
       <filter>src/main/resources/application-${profile.active}.yml</filter>
@@ -106,10 +106,18 @@
       <resource>
         <directory>src/main/scripts</directory>
         <includes>
-          <include>Dockerfile</include>
           <include>startenv.sh</include>
           <include>*.sh</include>
           <include>*.bat</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}/target</targetPath>
+      </resource>
+
+      <resource>
+        <directory>src/main/docker</directory>
+        <includes>
+          <include>Dockerfile</include>
         </includes>
         <filtering>true</filtering>
         <targetPath>${project.basedir}/target</targetPath>
@@ -152,4 +160,43 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Build the Docker image and push it to the registry. -->
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>dockerfile-maven-plugin</artifactId>
+            <configuration>
+              <repository>${docker.image.name}</repository>
+              <tag>${project.version}</tag>
+              <dockerfile>${project.build.directory}/Dockerfile</dockerfile>
+              <buildArgs>
+                <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+              </buildArgs>
+            </configuration>
+            <executions>
+              <execution>
+                <id>docker-build</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>docker-push</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>push</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
