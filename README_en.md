@@ -2,6 +2,11 @@
 
 [English](README_en.md) | [中文](README.md)
 
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen)](https://spring.io/projects/spring-boot)
+[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-4.2.0-brightgreen)](https://spring.io/projects/spring-cloud)
+[![Eureka Client](https://img.shields.io/badge/Eureka%20Client-2.0.4-lightgrey)](https://spring.io/projects/spring-cloud-netflix)
+[![Angus Infra](https://img.shields.io/badge/Angus%20Infra-1.0.0-red)](https://github.com/xcancloud/AngusInfra)
+
 **Angus Global Management** (**AngusGM**) is a unified system resource management platform designed for administrators, serving as the foundational module for the Angus application suite to enable cross-system collaboration and resource integration.
 
 ## Key Features
@@ -30,3 +35,7 @@
 
 - **Dependencies**: Requires JDK 17+, MySQL 7.0+, or PostgreSQL 11+.
 - **Compatibility**: AngusGM v1.0+ is compatible only with Angus suite applications v1.0+.
+
+## License
+
+📜 Licensed under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html).

@@ -2,6 +2,11 @@
 
 [English](README_en.md) | [中文](README.md)
 
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen)](https://spring.io/projects/spring-boot)
+[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-4.2.0-brightgreen)](https://spring.io/projects/spring-cloud)
+[![Eureka Client](https://img.shields.io/badge/Eureka%20Client-2.0.4-lightgrey)](https://spring.io/projects/spring-cloud-netflix)
+[![Angus Infra](https://img.shields.io/badge/Angus%20Infra-1.0.0-red)](https://github.com/xcancloud/AngusInfra)
+
 **Angus全局管理** (Angus Global Management，简称 **AngusGM**) 是为系统管理人员设计的统一系统资源管理平台，旨在为Angus系列应用提供基础能力支持，实现跨业务系统的高效协同与资源整合。
 
 ## 主要功能
@@ -31,3 +36,6 @@
 - **依赖环境**：需预装JDK 17+、MySQL 7.0+ 或 PostgreSQL 11+。
 - **兼容性**：AngusGM v1.0+ 仅支持与Angus系列应用v1.0+集成。
 
+## 开源协议
+
+📜 本项目采用 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) 开源协议。
