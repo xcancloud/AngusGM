@@ -1,14 +1,3 @@
---
--- Copyright (c) 2025   XCan Company
---
---        http://www.xcan.cloud
---
--- Licensed under the XCBL(XCan Business License) Version 1.0.
--- Detail XCBL license at:
---
--- http://www.xcan.cloud/licenses/XCBL-1.0
---
-
 -- 1. Create User（Execute via SUPERUSER account）
 -- CREATE USER uc WITH password '3Jsi1ss7Hvu';
 

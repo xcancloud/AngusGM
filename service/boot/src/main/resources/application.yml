@@ -6,12 +6,13 @@ server:
 xcan:
   core:
     enabled: true
-  tenant:
-    enableAutoAudit: true
-  cert-recognize:
-    endpoint: ${CERT_RECOGNIZE_ENDPOINT}
-    ak: ${CERT_RECOGNIZE_AK}
-    sk: ${CERT_RECOGNIZE_SK}
+  global:
+    cors:
+      startWithPaths: [ '/' ]
+      credentials: true
+      origin: '*'
+      headers: '*'
+      methods: 'POST, GET, PUT, DELETE, PATCH, HEAD'
   api-log:
     enabled: true
     userRequest:
@@ -20,13 +21,6 @@ xcan:
     systemRequest:
       enabled: true
       printLevel: FULL
-  global:
-    cors:
-      startWithPaths: [ '/' ]
-      credentials: true
-      origin: '*'
-      headers: '*'
-      methods: 'POST, GET, PUT, DELETE, PATCH, HEAD'
   id-gen:
     enabled: true
   datasource:
@@ -64,6 +58,13 @@ xcan:
     extraMessages:
       - classpath:/i18n/messages-gm-api
       - classpath:/i18n/messages-gm-core
+  tenant:
+    enableAutoAudit: true
+  cert-recognize:
+    endpoint: ${CERT_RECOGNIZE_ENDPOINT}
+    ak: ${CERT_RECOGNIZE_AK}
+    sk: ${CERT_RECOGNIZE_SK}
+
 info:
   app:
     name: '@project.name@'
@@ -106,7 +107,7 @@ springdoc:
     enabled: true
   open-api:
     info:
-      title: AngusGM RESTful OpenAPI Documentation
+      title: AngusGM RESTFul OpenAPI Documentation
       description: >
         AngusGM OpenAPI Documentation is a comprehensive, standards-compliant technical reference 
         that provides detailed specifications for all API endpoints, including authentication methods, 

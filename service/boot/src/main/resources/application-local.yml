@@ -87,7 +87,6 @@ spring:
           client-id: ${OAUTH2_INTROSPECT_CLIENT_ID}
           client-secret: ${OAUTH2_INTROSPECT_CLIENT_SECRET}
           introspection-uri: ${OAUTH2_ENDPOINT_PREFIX}/oauth2/introspect
-
   jpa:
     hibernate:
       ddl-auto: validate
