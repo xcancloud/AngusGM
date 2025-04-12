@@ -28,7 +28,7 @@ public class OperationLogClearJob {
     jobTemplate.execute(LOCK_KEY, 60, TimeUnit.MINUTES, () -> {
       OperationLogProperties logProperties = settingPropertiesRegister
           .getRefreshedOperationLogProperties();
-      if (logProperties.getEnabled()) {
+      if (settingPropertiesRegister.enabledOperationLog()) {
         operationLogCmd.clearOperationLog(logProperties.getClearBeforeDay());
       }
     });

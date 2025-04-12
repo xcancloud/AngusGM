@@ -26,9 +26,9 @@ public class ApiLogClearJob {
   @Scheduled(fixedDelay = 13 * 60 * 1000, initialDelay = 5300)
   public void execute() {
     jobTemplate.execute(LOCK_KEY, 10, TimeUnit.MINUTES, () -> {
-      ApiLogProperties properties = settingPropertiesRegister.getRefreshedApiLogProperties();
-      if (properties.getEnabled()) {
-        apiLogCmd.clearOperationLog(properties.getClearBeforeDay());
+      ApiLogProperties logProperties = settingPropertiesRegister.getRefreshedApiLogProperties();
+      if (settingPropertiesRegister.enabledApiLog()) {
+        apiLogCmd.clearOperationLog(logProperties.getClearBeforeDay());
       }
     });
   }

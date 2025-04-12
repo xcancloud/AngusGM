@@ -2,6 +2,7 @@ package cloud.xcan.angus.api.register.impl;
 
 
 import static cloud.xcan.angus.remote.ApiConstant.Service.COMMON_SERVICE;
+import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.manager.SettingManager;
@@ -13,6 +14,7 @@ import cloud.xcan.angus.core.spring.SpringContextHolder;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,13 +24,13 @@ public class SettingPropertiesRegisterImpl implements SettingPropertiesRegister 
   @Resource
   private SettingManager settingManager;
 
-  @Resource
+  @Autowired(required = false)
   private OperationLogProperties operationLogProperties;
 
-  @Resource
+  @Autowired(required = false)
   private ApiLogProperties apiLogProperties;
 
-  @Resource
+  @Autowired(required = false)
   private SystemLogProperties systemLogProperties;
 
   @Resource
@@ -59,22 +61,28 @@ public class SettingPropertiesRegisterImpl implements SettingPropertiesRegister 
 
   @Override
   public OperationLogProperties getRefreshedOperationLogProperties() {
-    // Refresh system properties
-    settingManager.setting(SettingKey.OPERATION_LOG_CONFIG).getOperationLog().register();
+    if (nonNull(operationLogProperties)) {
+      // Refresh system properties
+      settingManager.setting(SettingKey.OPERATION_LOG_CONFIG).getOperationLog().register();
+    }
     return operationLogProperties;
   }
 
   @Override
   public ApiLogProperties getRefreshedApiLogProperties() {
-    // Refresh system properties
-    settingManager.setting(SettingKey.API_LOG_CONFIG).getApiLog().register();
+    if (nonNull(operationLogProperties)) {
+      // Refresh system properties
+      settingManager.setting(SettingKey.API_LOG_CONFIG).getApiLog().register();
+    }
     return apiLogProperties;
   }
 
   @Override
   public SystemLogProperties getRefreshedSystemLogProperties() {
-    // Refresh system properties
-    settingManager.setting(SettingKey.SYSTEM_LOG_CONFIG).getSystemLog().register();
+    if (nonNull(operationLogProperties)) {
+      // Refresh system properties
+      settingManager.setting(SettingKey.SYSTEM_LOG_CONFIG).getSystemLog().register();
+    }
     return systemLogProperties;
   }
 }

@@ -7,7 +7,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.spec.experimental.Resources;
+import cloud.xcan.angus.api.register.SettingPropertiesRegister;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
@@ -18,6 +18,7 @@ import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,9 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
   @Resource
   private OperationLogRepo operationLogRepo;
 
+  @Resource
+  private SettingPropertiesRegister settingPropertiesRegister;
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void add(OperationResourceType resourceType, Resources<?> resource,
@@ -42,7 +46,8 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void add(OperationLog operation) {
-    if (nonNull(operation) && (isUserAction() || isNotEmpty(operation.getFullName()))) {
+    if (nonNull(operation) && (isUserAction() || isNotEmpty(operation.getFullName()))
+        && settingPropertiesRegister.enabledOperationLog()) {
       insert0(operation);
     }
   }
@@ -57,7 +62,8 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void addAll(List<OperationLog> operations) {
-    if (isEmpty(operations) && (isUserAction() || isNotEmpty(operations.get(0).getFullName()))) {
+    if (isEmpty(operations) && (isUserAction() || isNotEmpty(operations.get(0).getFullName()))
+        && settingPropertiesRegister.enabledOperationLog()) {
       batchInsert0(operations);
     }
   }

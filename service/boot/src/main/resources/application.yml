@@ -13,6 +13,9 @@ xcan:
       origin: '*'
       headers: '*'
       methods: 'POST, GET, PUT, DELETE, PATCH, HEAD'
+  opt-log:
+    enabled: true
+    clearBeforeDay: 360
   api-log:
     enabled: true
     userRequest:

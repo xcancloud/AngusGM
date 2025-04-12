@@ -13,4 +13,18 @@ public interface SettingPropertiesRegister extends AppPropertiesRegister {
 
   SystemLogProperties getRefreshedSystemLogProperties();
 
+  default boolean enabledOperationLog() {
+    return null != getRefreshedOperationLogProperties()
+        && getRefreshedOperationLogProperties().getEnabled();
+  }
+
+  default boolean enabledApiLog() {
+    return null != getRefreshedApiLogProperties()
+        && getRefreshedApiLogProperties().getEnabled();
+  }
+
+  default boolean enabledSystemLog() {
+    return null != getRefreshedSystemLogProperties();
+  }
+
 }
