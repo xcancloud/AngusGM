@@ -66,7 +66,7 @@ public class OperationLogConverter {
 
   public static OperationLog toModifiedOperation(String resourceId, String resourceName,
       boolean private0, ModifiedResourceType resourceType){
-    String message = message("xcm.angusgm.activity.MODIFIED", new Object[]{resourceType});
+    String message = message("xcm.gm.activity.MODIFIED", new Object[]{resourceType});
     OperationLog operation0 = new OperationLog()
         .setRequestId(getRequestId())
         .setClientId(getClientId())

@@ -26,11 +26,11 @@ public enum OperationType implements ValueObject<OperationType> {
   }
 
   public String getDescMessageKey() {
-    return "xcm.angusgm.activity." + this.name();
+    return "xcm.gm.activity." + this.name();
   }
 
   public String getDetailMessageKey() {
-    return "xcm.angusgm.activity.detail." + this.name();
+    return "xcm.gm.activity.detail." + this.name();
   }
 
 }
