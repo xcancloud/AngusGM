@@ -26,13 +26,12 @@ public class MessageCenterConnectionListener implements
 
   @Override
   public void onApplicationEvent(AbstractSubProtocolEvent event) {
-    // Connection established event
-    if (event instanceof SessionConnectEvent) {
-      handleConnection((SessionConnectEvent) event);
-    }
-    // Connection disconnected event
-    else if (event instanceof SessionDisconnectEvent) {
-      handleDisconnection((SessionDisconnectEvent) event);
+    if (event instanceof SessionConnectEvent event0) {
+      // Connection established event
+      handleConnection(event0);
+    } else if (event instanceof SessionDisconnectEvent event0) {
+      // Connection disconnected event
+      handleDisconnection(event0);
     }
   }
 
