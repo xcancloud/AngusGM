@@ -52,7 +52,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void send(MessageCenterNoticeMessage message) {
+  public void push(MessageCenterNoticeMessage message) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {

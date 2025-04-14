@@ -36,7 +36,7 @@ public class MessageCenterOnlineFacadeImpl implements MessageCenterOnlineFacade 
 
   @Override
   public void offline(MessageCenterOfflineDto dto) {
-    mCenterCmd.send(dtoToOfflineDomain(dto));
+    mCenterCmd.push(dtoToOfflineDomain(dto));
   }
 
   @Override

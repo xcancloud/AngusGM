@@ -33,7 +33,7 @@ public class MessageCenterDoorRest {
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/push")
   public ApiLocaleResult<?> send(@RequestBody MessageCenterPushDto dto) {
-    messageCenterFacade.send(dto);
+    messageCenterFacade.push(dto);
     return ApiLocaleResult.success();
   }
 

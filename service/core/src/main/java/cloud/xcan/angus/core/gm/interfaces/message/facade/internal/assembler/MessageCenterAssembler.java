@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class MessageCenterAssembler {
 
-  public static MessageCenterNoticeMessage dtoToNoticeDomain(MessageCenterPushDto dto) {
+  public static MessageCenterNoticeMessage pushToNoticeDomain(MessageCenterPushDto dto) {
     return MessageCenterNoticeMessage.newBuilder()
         .id(isBlank(dto.getMessageId()) ? UUID.randomUUID().toString() : dto.getMessageId())
         .bizKey(MESSAGE_CENTER_NOTICE)

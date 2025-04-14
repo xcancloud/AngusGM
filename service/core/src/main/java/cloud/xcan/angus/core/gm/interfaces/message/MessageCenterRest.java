@@ -32,8 +32,8 @@ public class MessageCenterRest {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/push")
-  public ApiLocaleResult<?> send(@Valid @RequestBody MessageCenterPushDto dto) {
-    messageCenterFacade.send(dto);
+  public ApiLocaleResult<?> push(@Valid @RequestBody MessageCenterPushDto dto) {
+    messageCenterFacade.push(dto);
     return ApiLocaleResult.success();
   }
 

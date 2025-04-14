@@ -16,7 +16,7 @@ public class MessageCenterOnlineDoorFacadeImpl implements MessageCenterOnlineDoo
 
   @Override
   public void offline(MessageCenterOfflineDto dto) {
-    messageCenterCmd.send(dtoToOfflineDomain(dto));
+    messageCenterCmd.push(dtoToOfflineDomain(dto));
   }
 
 }

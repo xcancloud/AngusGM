@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.message.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler.MessageCenterAssembler.dtoToNoticeDomain;
+import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler.MessageCenterAssembler.pushToNoticeDomain;
 
 import cloud.xcan.angus.api.gm.message.dto.MessageCenterPushDto;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterCmd;
@@ -16,7 +16,7 @@ public class MessageCenterDoorFacadeImpl implements MessageCenterDoorFacade {
 
   @Override
   public void sendMessage(MessageCenterPushDto dto) {
-    messageCenterCmd.send(dtoToNoticeDomain(dto));
+    messageCenterCmd.push(pushToNoticeDomain(dto));
   }
 
 }

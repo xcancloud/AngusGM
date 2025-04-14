@@ -5,5 +5,5 @@ import cloud.xcan.angus.api.gm.message.dto.MessageCenterPushDto;
 
 public interface MessageCenterFacade {
 
-  void send(MessageCenterPushDto dto);
+  void push(MessageCenterPushDto dto);
 }

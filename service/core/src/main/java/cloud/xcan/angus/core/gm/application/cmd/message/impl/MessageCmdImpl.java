@@ -113,7 +113,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
         String failureReason = null;
         try {
           // Sent message by WebSocket
-          messageCenterCmd.send(toSendInSiteMessage(message));
+          messageCenterCmd.push(toSendInSiteMessage(message));
 
           // Save user message
           Set<Long> allReceiveUserIds = getSentUserIds(message);
