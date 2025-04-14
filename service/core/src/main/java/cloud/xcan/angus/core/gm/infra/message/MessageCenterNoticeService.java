@@ -3,8 +3,10 @@ package cloud.xcan.angus.core.gm.infra.message;
 import static cloud.xcan.angus.core.gm.infra.message.MessageCenterConnectionListener.LOCAL_ONLINE_USERS;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+@Slf4j
 public class MessageCenterNoticeService {
 
   @Resource
@@ -24,6 +26,7 @@ public class MessageCenterNoticeService {
   public void sendUserMessage(String username, String message) {
     if (LOCAL_ONLINE_USERS.containsValue(username)) {
       messagingTemplate.convertAndSendToUser(username, "/queue/message", message);
+      log.info("[WorkOrder] Message sent to user {}} : {}", username, message);
     } else {
       // TODO Use Redis broadcasting for sending messages during multi-instance deployment.
     }
