@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler;
 
 
-import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullname;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullName;
 
 import cloud.xcan.angus.core.gm.domain.message.Message;
 import cloud.xcan.angus.core.gm.domain.message.MessageInfo;
@@ -33,7 +33,7 @@ public class MessageAssembler {
         .setStatus(MessageStatus.PENDING)
         .setReceiveTenantId(dto.getReceiveTenantId())
         .setDeleted(false)
-        .setCreatedByName(getUserFullname());
+        .setCreatedByName(getUserFullName());
   }
 
   public static MessageDetailVo toDetailVo(Message message) {

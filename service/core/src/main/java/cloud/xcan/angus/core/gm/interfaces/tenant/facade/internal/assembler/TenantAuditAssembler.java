@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler;
 
-import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullname;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
@@ -83,7 +83,7 @@ public class TenantAuditAssembler {
     return new AuditRecordData().setReason(reason)
         .setAuditDate(LocalDateTime.now())
         .setAuditUserId(getUserId())
-        .setAuditUserName(getUserFullname());
+        .setAuditUserName(getUserFullName());
   }
 
 }

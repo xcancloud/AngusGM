@@ -5,6 +5,7 @@ import static cloud.xcan.angus.api.commonlink.MessageCenterConstant.MAX_PUSH_OBJ
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.validator.EnumPart;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,6 +16,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MessageCenterOfflineDto implements Serializable {
+
+  @Schema(description = "Send messages to other instances of the service.", requiredMode = RequiredMode.REQUIRED)
+  private boolean broadcast = true;
 
   @NotNull
   @EnumPart(enumClass = ReceiveObjectType.class, allowableValues = {"TENANT", "USER"})

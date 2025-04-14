@@ -27,6 +27,9 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class MessageCenterPushDto implements Serializable {
 
+  @Schema(description = "Send messages to other instances of the service.", requiredMode = RequiredMode.REQUIRED)
+  private boolean broadcast = true;
+
   @Length(max = MAX_OUT_ID_LENGTH)
   @Schema(description = "Out message id, used to establish associations with external businesses.",
       maxLength = MAX_OUT_ID_LENGTH)

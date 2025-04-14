@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.message.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler.MessageCenterOnlineAssembler.dtoToOfflineDomain;
 import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler.MessageCenterOnlineAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler.MessageCenterOnlineAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler.MessageCenterOnlineAssembler.toVo;
@@ -26,34 +25,34 @@ import org.springframework.stereotype.Component;
 public class MessageCenterOnlineFacadeImpl implements MessageCenterOnlineFacade {
 
   @Resource
-  private MessageCenterOnlineQuery mCenterOnlineQuery;
+  private MessageCenterOnlineQuery messageCenterOnlineQuery;
 
   @Resource
-  private MessageCenterOnlineSearch mCenterOnlineSearch;
+  private MessageCenterOnlineSearch messageCenterOnlineSearch;
 
   @Resource
-  private MessageCenterCmd mCenterCmd;
+  private MessageCenterCmd messageCenterCmd;
 
   @Override
   public void offline(MessageCenterOfflineDto dto) {
-    mCenterCmd.push(dtoToOfflineDomain(dto));
+    messageCenterCmd.offline(dto);
   }
 
   @Override
   public MessageCenterOnlineVo detail(Long userId) {
-    return toVo(mCenterOnlineQuery.find(userId));
+    return toVo(messageCenterOnlineQuery.find(userId));
   }
 
   @Override
   public PageResult<MessageCenterOnlineVo> list(MessageCenterOnlineFindDto dto) {
-    Page<MessageCenterOnline> bookPage = mCenterOnlineQuery.find(
+    Page<MessageCenterOnline> bookPage = messageCenterOnlineQuery.find(
         getSpecification(dto), dto.tranPage());
     return buildVoPageResult(bookPage, MessageCenterOnlineAssembler::toVo);
   }
 
   @Override
   public PageResult<MessageCenterOnlineVo> search(MessageCenterOnlineSearchDto dto) {
-    Page<MessageCenterOnline> bookPage = mCenterOnlineSearch
+    Page<MessageCenterOnline> bookPage = messageCenterOnlineSearch
         .search(getSearchCriteria(dto), dto.tranPage(),
             MessageCenterOnline.class, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(bookPage, MessageCenterOnlineAssembler::toVo);

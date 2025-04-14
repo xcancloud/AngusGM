@@ -16,9 +16,9 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,9 +36,10 @@ public class MessageCenterOnlineRest {
   @Operation(description = "Forced offline and logout users.", operationId = "message:center:offline")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @DeleteMapping
-  public void offline(@Valid @RequestBody MessageCenterOfflineDto dto) {
+  @PostMapping("/off")
+  public ApiLocaleResult<?> offline(@Valid @RequestBody MessageCenterOfflineDto dto) {
     messageCenterOnlineFacade.offline(dto);
+    return ApiLocaleResult.success();
   }
 
   @Operation(description = "Query the online user information of the message center.", operationId = "message:center:online:detail")

@@ -2,9 +2,9 @@ package cloud.xcan.angus.core.gm.application.cmd.message.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
+import static cloud.xcan.angus.core.gm.application.converter.MessageConverter.messageToPushDto;
 import static cloud.xcan.angus.core.gm.application.converter.MessageConverter.toMessageSent;
 import static cloud.xcan.angus.core.gm.application.converter.MessageConverter.toSendEmailMessage;
-import static cloud.xcan.angus.core.gm.application.converter.MessageConverter.toSendInSiteMessage;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isOpClient;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantClient;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setOptTenantId;
@@ -113,7 +113,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
         String failureReason = null;
         try {
           // Sent message by WebSocket
-          messageCenterCmd.push(toSendInSiteMessage(message));
+          messageCenterCmd.push(messageToPushDto(message));
 
           // Save user message
           Set<Long> allReceiveUserIds = getSentUserIds(message);
@@ -151,7 +151,6 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
   @Override
   public void sentEmailMessage(Message message) {
     new BizTemplate<Void>() {
-
       @Override
       protected Void process() {
         String failureReason = null;

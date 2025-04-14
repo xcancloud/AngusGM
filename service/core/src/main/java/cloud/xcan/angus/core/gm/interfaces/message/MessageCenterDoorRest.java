@@ -27,12 +27,12 @@ public class MessageCenterDoorRest {
   @Resource
   private MessageCenterFacade messageCenterFacade;
 
-  @Operation(description = "Send messages.", operationId = "message:center:send:inner")
+  @Operation(description = "Send messages.", operationId = "message:center:push:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/push")
-  public ApiLocaleResult<?> send(@RequestBody MessageCenterPushDto dto) {
+  public ApiLocaleResult<?> push(@RequestBody MessageCenterPushDto dto) {
     messageCenterFacade.push(dto);
     return ApiLocaleResult.success();
   }

@@ -1,7 +1,7 @@
 package cloud.xcan.angus.api.manager.converter;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.OWNER_TENANT_ID;
-import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullname;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.emptySafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
@@ -130,7 +130,7 @@ public class NoticeConverter {
     return new MessageCenterPushDto()
         .setPushMediaType(param.getPushMediaType())
         .setSendUserId(nullSafe(param.getSendUserId(), getUserId()))
-        .setSendUserName(nullSafe(param.getSendUserName(), emptySafe(getUserFullname(), "System")))
+        .setSendUserName(nullSafe(param.getSendUserName(), emptySafe(getUserFullName(), "System")))
         .setMessageId(param.getMessageId())
         .setTitle(param.getTitle())
         .setContent(param.getContent())

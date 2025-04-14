@@ -8,7 +8,7 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getDefaultLanguag
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getRequestId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
-import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullname;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
@@ -75,7 +75,7 @@ public class OperationLogConverter {
         .setResourceId(resourceId)
         .setType(OperationType.UPDATED)
         .setUserId(getUserId())
-        .setFullName(getUserFullname())
+        .setFullName(getUserFullName())
         .setOptDate(LocalDateTime.now())
         .setDescription(message)
         .setDetail(message)
