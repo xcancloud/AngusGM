@@ -19,6 +19,8 @@ public interface UserManager {
 
   List<UserBase> findUserBases(Collection<Long> userIds);
 
+  List<UserBase> findUserBasesByTenantId(Long tenantId);
+
   List<User> findByTenantId(Long tenantId);
 
   List<User> findValidByTenantId(Long tenantId);

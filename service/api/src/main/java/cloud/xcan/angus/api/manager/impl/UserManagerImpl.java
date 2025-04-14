@@ -95,6 +95,11 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
+  public List<UserBase> findUserBasesByTenantId(Long tenantId) {
+    return userBaseRepo.findAllByTenantId(tenantId);
+  }
+
+  @Override
   public List<User> findByTenantId(Long tenantId) {
     return userRepo.findAllByTenantId(tenantId);
   }
