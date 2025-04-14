@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "MessageCenterOnlineInner", description = "Supports inter-system calling method to forcibly logout users.")
 @Validated
 @RestController
-@RequestMapping("/innerapi/v1/mcenter/online")
+@RequestMapping("/innerapi/v1/message/center/online")
 public class MessageCenterOnlineDoorRest {
 
   @Resource
   private MessageCenterOnlineDoorFacade messageCenterOnlineDoorFacade;
 
-  @Operation(description = "Forced offline and logout users.", operationId = "mcenter:offline:inner")
+  @Operation(description = "Forced offline and logout users.", operationId = "message:center:offline:inner")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping

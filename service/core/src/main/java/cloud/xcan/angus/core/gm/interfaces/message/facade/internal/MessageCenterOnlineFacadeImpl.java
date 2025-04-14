@@ -41,8 +41,7 @@ public class MessageCenterOnlineFacadeImpl implements MessageCenterOnlineFacade 
 
   @Override
   public MessageCenterOnlineVo detail(Long userId) {
-    MessageCenterOnline csol = mCenterOnlineQuery.find(userId);
-    return toVo(csol);
+    return toVo(mCenterOnlineQuery.find(userId));
   }
 
   @Override

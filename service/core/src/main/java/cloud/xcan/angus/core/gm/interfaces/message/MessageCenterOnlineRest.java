@@ -27,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "MessageCenterOnline", description = "Monitors real-time user online statuses, such as querying online users or forced logouts.")
 @Validated
 @RestController
-@RequestMapping("/api/v1/mcenter/online")
+@RequestMapping("/api/v1/message/center/online")
 public class MessageCenterOnlineRest {
 
   @Resource
   private MessageCenterOnlineFacade messageCenterOnlineFacade;
 
-  @Operation(description = "Forced offline and logout users.", operationId = "mcenter:offline")
+  @Operation(description = "Forced offline and logout users.", operationId = "message:center:offline")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
@@ -41,7 +41,7 @@ public class MessageCenterOnlineRest {
     messageCenterOnlineFacade.offline(dto);
   }
 
-  @Operation(description = "Query the online user information of the message center.", operationId = "mcenter:online:detail")
+  @Operation(description = "Query the online user information of the message center.", operationId = "message:center:online:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -51,7 +51,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.detail(userId));
   }
 
-  @Operation(description = "Query the online user information of the message center.", operationId = "mcenter:online:list")
+  @Operation(description = "Query the online user information of the message center.", operationId = "message:center:online:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -60,7 +60,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.list(dto));
   }
 
-  @Operation(description = "Search the online user information of the message center.", operationId = "mcenter:online:search")
+  @Operation(description = "Search the online user information of the message center.", operationId = "message:center:online:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

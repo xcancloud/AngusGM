@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "MessageCenterInner", description = "Supports a unified inter-system calling method to send messages.")
 @Validated
 @RestController
-@RequestMapping("/innerapi/v1/mcenter")
+@RequestMapping("/innerapi/v1/message/center")
 public class MessageCenterDoorRest {
 
   @Resource
   private MessageCenterFacade messageCenterFacade;
 
-  @Operation(description = "Send messages.", operationId = "mcenter:send:inner")
+  @Operation(description = "Send messages.", operationId = "message:center:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)

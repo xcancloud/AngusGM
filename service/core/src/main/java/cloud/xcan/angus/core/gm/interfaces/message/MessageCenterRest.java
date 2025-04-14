@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
     + "Enables centralized message distribution across multiple users from a single api.")
 @Validated
 @RestController
-@RequestMapping("/api/v1/mcenter")
+@RequestMapping("/api/v1/message/center")
 public class MessageCenterRest {
 
   @Resource
   private MessageCenterFacade messageCenterFacade;
 
-  @Operation(description = "Send the messages of message center.", operationId = "mcenter:push")
+  @Operation(description = "Send the messages of message center.", operationId = "message:center:push")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)
