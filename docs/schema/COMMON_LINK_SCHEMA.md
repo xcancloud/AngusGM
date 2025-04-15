@@ -62,10 +62,6 @@ GRANT SELECT ON `xcan_gm`.`c_setting_tenant` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`c_setting_tenant_quota` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`c_setting_user` TO `commonlink`@`%`;
 FLUSH PRIVILEGES;
--- STORE ----------------------------------- TODO Change to API calls
-GRANT SELECT ON `xcan_store`.`goods` TO `commonlink`@`%`;
-GRANT SELECT ON `xcan_store`.`store_goods` TO `commonlink`@`%`;
-FLUSH PRIVILEGES;
 ```
 
 ##### Create Federated Tables
@@ -625,86 +621,6 @@ CREATE TABLE `c_setting_user`
     PRIMARY KEY (`id`) USING BTREE,
     KEY           `idx_tenant_id` (`tenant_id`) USING BTREE
 ) ENGINE=FEDERATED COMMENT='User settings' CONNECTION='xcan_gm_link/c_setting_user';
-
-CREATE TABLE `goods`
-(
-    `id`                 bigint(20) NOT NULL COMMENT 'Primary key ID',
-    `no`                 varchar(20)  NOT NULL COMMENT 'Product number',
-    `edition_type`       varchar(16)  NOT NULL COMMENT 'Edition type',
-    `type`               varchar(16)  NOT NULL COMMENT 'Product type',
-    `name`               varchar(100) NOT NULL COMMENT 'Product name',
-    `code`               varchar(80)  NOT NULL COMMENT 'Product code',
-    `version`            varchar(16)  NOT NULL COMMENT 'Product version',
-    `signature`          varchar(800)          DEFAULT '' COMMENT 'Artifact SHA512 signature',
-    `signature_artifact` varchar(200)          DEFAULT '' COMMENT 'Artifact package',
-    `package_id`         bigint(20) DEFAULT NULL COMMENT 'Installation package ID',
-    `allow_release`      int(11) NOT NULL COMMENT 'Release allowed flag',
-    `online`             int(11) NOT NULL COMMENT 'Listing status',
-    `charge`             int(11) NOT NULL COMMENT 'Chargeable flag',
-    `lcs_protection`     int(11) NOT NULL COMMENT 'License protection',
-    `apply_edition_type` varchar(80)           DEFAULT NULL COMMENT 'Applicable edition types: CLOUD_SERVICE, DATACENTER, ENTERPRISE, COMMUNITY',
-    `apply_app_code`     varchar(160)          DEFAULT NULL COMMENT 'Applicable application codes',
-    `apply_version`      varchar(160)          DEFAULT NULL COMMENT 'Applicable version range',
-    `downward_version`   varchar(160)          DEFAULT NULL COMMENT 'Downward compatibility versions',
-    `deleted`            int(11) NOT NULL COMMENT 'Deleted flag',
-    `created_by`         bigint(20) NOT NULL DEFAULT '-1' COMMENT 'Created by',
-    `created_date`       datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT 'Creation time',
-    `last_modified_by`   bigint(20) NOT NULL DEFAULT '-1' COMMENT 'Last modified by',
-    `last_modified_date` datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT 'Last modification time',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uidx_code_version_type_version` (`code`,`edition_type`,`version`) USING BTREE,
-    KEY                  `idx_created_date` (`created_date`) USING BTREE,
-    KEY                  `idx_release` (`allow_release`) USING BTREE,
-    KEY                  `idx_online` (`online`) USING BTREE,
-    KEY                  `idx_charge` (`charge`) USING BTREE,
-    KEY                  `idx_package_id` (`package_id`) USING BTREE,
-    KEY                  `idx_created_by` (`created_by`) USING BTREE,
-    KEY                  `idx_deleted` (`deleted`) USING BTREE,
-    KEY                  `idx_code` (`code`) USING BTREE,
-    KEY                  `idx_apply_service_code` (`apply_app_code`) USING BTREE
-) ENGINE=FEDERATED COMMENT='Product table' CONNECTION='xcan_store_link/goods';
-
-CREATE TABLE `store_goods`
-(
-    `id`                  bigint(20) NOT NULL COMMENT 'Primary key ID',
-    `goods_id`            bigint(20) NOT NULL COMMENT 'Goods ID',
-    `edition_type`        varchar(16)  NOT NULL COMMENT 'Edition type',
-    `type`                varchar(16)  NOT NULL COMMENT 'Goods type',
-    `name`                varchar(100) NOT NULL COMMENT 'Product name',
-    `code`                varchar(80)  NOT NULL COMMENT 'Product code',
-    `version`             varchar(16)  NOT NULL COMMENT 'Product version',
-    `apply_edition_type`  varchar(80)           DEFAULT NULL COMMENT 'Applicable edition types: CLOUD_SERVICE, DATACENTER, ENTERPRISE, COMMUNITY',
-    `charge`              int(11) NOT NULL COMMENT 'Chargeable flag',
-    `icon_url`            varchar(400) NOT NULL COMMENT 'Product icon URL',
-    `pricing_url`         varchar(400)          DEFAULT NULL COMMENT 'Pricing URL',
-    `pricing_template_id` bigint(20) DEFAULT NULL COMMENT 'Pricing template ID',
-    `introduction`        varchar(400) NOT NULL COMMENT 'Product introduction',
-    `lcs_protection`      int(11) NOT NULL COMMENT 'License protection',
-    `allow_comment`       int(11) NOT NULL COMMENT 'Allow comments',
-    `comment_num`         int(11) NOT NULL COMMENT 'Comment count',
-    `hot`                 int(11) NOT NULL COMMENT 'Hot item flag',
-    `star_num`            int(11) NOT NULL DEFAULT '0' COMMENT 'Star rating count',
-    `online_status`       varchar(16)  NOT NULL COMMENT 'Listing status',
-    `online_by`           bigint(20) NOT NULL DEFAULT '-1' COMMENT 'Listed by',
-    `online_date`         datetime              DEFAULT NULL COMMENT 'Listing time',
-    `offline_by`          bigint(20) NOT NULL DEFAULT '-1' COMMENT 'Delisted by',
-    `offline_date`        datetime              DEFAULT NULL COMMENT 'Delisting time',
-    `created_by`          bigint(20) NOT NULL DEFAULT '-1' COMMENT 'Created by',
-    `created_date`        datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT 'Creation time',
-    `last_modified_by`    bigint(20) NOT NULL DEFAULT '-1' COMMENT 'Last modified by',
-    `last_modified_date`  datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT 'Last modification time',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uidx_code_version_edition` (`code`,`version`,`edition_type`) USING BTREE,
-    UNIQUE KEY `uidx_goods_id` (`goods_id`) USING BTREE,
-    KEY                   `idx_charge` (`charge`) USING BTREE,
-    KEY                   `idx_edition_type` (`edition_type`) USING BTREE,
-    KEY                   `idx_product_type` (`type`) USING BTREE,
-    KEY                   `idx_hot` (`hot`) USING BTREE,
-    KEY                   `idx_online_status` (`online_status`) USING BTREE,
-    KEY                   `idx_comment_num` (`comment_num`) USING BTREE,
-    KEY                   `idx_star_num` (`star_num`) USING BTREE,
-    KEY                   `idx_created_date` (`created_date`) USING BTREE
-) ENGINE=FEDERATED COMMENT='Store goods table' CONNECTION='xcan_store_link/store_goods';
 ```
 
 #### Creating Public Tables - PostgreSQL

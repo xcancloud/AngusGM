@@ -63,10 +63,6 @@ GRANT select ON `xcan_gm`.`c_setting_tenant` TO `commonlink`@`%`;
 GRANT select ON `xcan_gm`.`c_setting_tenant_quota` TO `commonlink`@`%`;
 GRANT select ON `xcan_gm`.`c_setting_user` TO `commonlink`@`%`;
 FLUSH PRIVILEGES;
--- STORE ----------------------------------- 
-GRANT select ON `xcan_store`.`goods` TO `commonlink`@`%`;
-GRANT select ON `xcan_store`.`store_goods` TO `commonlink`@`%`;
-FLUSH PRIVILEGES;
 ```
 
 ##### 创建联邦表
@@ -79,11 +75,6 @@ CREATE
 SERVER xcan_gm_link
 FOREIGN DATA WRAPPER mysql
 OPTIONS (USER 'commonlink', PASSWORD 'your_password', HOST 'your_mysql_host', PORT 3306, DATABASE 'xcan_gm');
--- STORE 库
-CREATE
-SERVER xcan_store_link
-FOREIGN DATA WRAPPER mysql
-OPTIONS (USER 'commonlink', PASSWORD 'your_password', HOST 'your_mysql_host', PORT 3306, DATABASE 'xcan_store');
 ```
 
 ##### 2. 创建联邦表
@@ -634,93 +625,6 @@ CREATE TABLE `c_setting_user`
     PRIMARY KEY (`id`) USING BTREE,
     KEY           `idx_tenant_id` (`tenant_id`) USING BTREE
 ) ENGINE=FEDERATED COMMENT='用户' CONNECTION='xcan_gm_link/c_setting_user';
-
--- STORE
-CREATE TABLE `goods`
-(
-    `id`                 bigint(20) NOT NULL COMMENT '主键ID',
-    `no`                 varchar(20)  NOT NULL COMMENT '商品编号',
-    `edition_type`       varchar(16)  NOT NULL COMMENT '版本类型',
-    `type`               varchar(16)  NOT NULL COMMENT '产品类型',
-    `name`               varchar(100) NOT NULL COMMENT '产品名称',
-    `code`               varchar(80)  NOT NULL COMMENT '产品编码',
-    `version`            varchar(16)  NOT NULL COMMENT '产品版本',
-    `signature`          varchar(800)          DEFAULT '' COMMENT '商品核心制品包SHA512签名',
-    `signature_artifact` varchar(200)          DEFAULT '' COMMENT '商品核心制品包',
-    `package_id`         bigint(20) DEFAULT NULL COMMENT '安装包ID',
-    `allow_release`      int(11) NOT NULL COMMENT '允许发布标志',
-    `online`             int(11) NOT NULL COMMENT '上架标志',
-    `charge`             int(11) NOT NULL COMMENT '收费标记',
-    `lcs_protection`     int(11) NOT NULL COMMENT '是否许可保护',
-    `apply_edition_type` varchar(80)           DEFAULT NULL COMMENT '适用应用版本类型：云服务版(CLOUD_SERVICE)/数据中心版(DATACENTER)/企业版(ENTERPRISE)/社区版(COMMUNITY)',
-    `apply_app_code`     varchar(160)          DEFAULT NULL COMMENT '适用应用编码',
-    `apply_version`      varchar(160)          DEFAULT NULL COMMENT '适用应用版本范围：最小版本号、最大值版本号',
-    `downward_version`   varchar(160)          DEFAULT NULL COMMENT '向下兼容版本范围：最小版本号、最大值版本号',
-    `deleted`            int(11) NOT NULL COMMENT '删除标志',
-    `created_by`         bigint(20) NOT NULL DEFAULT '-1' COMMENT '创建人',
-    `created_date`       datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
-    `last_modified_by`   bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
-    `last_modified_date` datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uidx_code_version_type_version` (`code`,`edition_type`,`version`) USING BTREE,
-    KEY                  `idx_created_date` (`created_date`) USING BTREE,
-    KEY                  `idx_release` (`allow_release`) USING BTREE,
-    KEY                  `idx_online` (`online`) USING BTREE,
-    KEY                  `idx_charge` (`charge`) USING BTREE,
-    KEY                  `idx_package_id` (`package_id`) USING BTREE,
-    KEY                  `idx_created_by` (`created_by`) USING BTREE,
-    KEY                  `idx_deleted` (`deleted`) USING BTREE,
-    KEY                  `idx_code` (`code`) USING BTREE,
-    KEY                  `idx_apply_service_code` (`apply_app_code`) USING BTREE
-    -- FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */ 
-) ENGINE=FEDERATED COMMENT='商品表' CONNECTION='xcan_store_link/goods';
-
-CREATE TABLE `store_goods`
-(
-    `id`                  bigint(20) NOT NULL COMMENT '主键ID',
-    `goods_id`            bigint(20) NOT NULL COMMENT '商品ID',
-    `edition_type`        varchar(16)  NOT NULL COMMENT '版本类型',
-    `type`                varchar(16)  NOT NULL COMMENT '商品类型',
-    `name`                varchar(100) NOT NULL COMMENT '商品名称',
-    `code`                varchar(80)  NOT NULL COMMENT '商品编号',
-    `version`             varchar(16)  NOT NULL COMMENT '商品版本',
-    `apply_edition_type`  varchar(80)           DEFAULT NULL COMMENT '适用应用版本类型：云服务版(CLOUD_SERVICE)/数据中心版(DATACENTER)/企业版(ENTERPRISE)/社区版(COMMUNITY)',
-    `charge`              int(11) NOT NULL COMMENT '收费标记',
-    `icon_url`            varchar(400) NOT NULL COMMENT '商品ICON',
-    `pricing_url`         varchar(400)          DEFAULT NULL COMMENT '定价地址',
-    `pricing_template_id` bigint(20) DEFAULT NULL COMMENT '定价模版ID',
-    `introduction`        varchar(400) NOT NULL COMMENT '商品介绍',
-    -- `banner_url` varchar(1600)  DEFAULT NULL COMMENT '商品介绍Banner地址',
-    -- `information` varchar(6000)  DEFAULT NULL COMMENT '描述',
-    `lcs_protection`      int(11) NOT NULL COMMENT '是否许可保护',
-    -- `features` varchar(3200)  DEFAULT NULL COMMENT '升级功能介绍',
-    -- `videos` varchar(1800)  NOT NULL COMMENT '介绍视频',
-    `allow_comment`       int(11) NOT NULL COMMENT '是否支持评论',
-    `comment_num`         int(11) NOT NULL COMMENT '评论数',
-    `hot`                 int(11) NOT NULL COMMENT '是否热门',
-    `star_num`            int(11) NOT NULL DEFAULT '0' COMMENT '点赞数',
-    `online_status`       varchar(16)  NOT NULL COMMENT '上架状态',
-    `online_by`           bigint(20) NOT NULL DEFAULT '-1' COMMENT '上架人ID',
-    `online_date`         datetime              DEFAULT NULL COMMENT '上架时间',
-    `offline_by`          bigint(20) NOT NULL DEFAULT '-1' COMMENT '下架人',
-    `offline_date`        datetime              DEFAULT NULL COMMENT '下架时间',
-    `created_by`          bigint(20) NOT NULL DEFAULT '-1' COMMENT '创建人',
-    `created_date`        datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
-    `last_modified_by`    bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
-    `last_modified_date`  datetime     NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uidx_code_version_edition` (`code`,`version`,`edition_type`) USING BTREE,
-    UNIQUE KEY `uidx_goods_id` (`goods_id`) USING BTREE,
-    KEY                   `idx_charge` (`charge`) USING BTREE,
-    KEY                   `idx_edition_type` (`edition_type`) USING BTREE,
-    KEY                   `idx_product_type` (`type`) USING BTREE,
-    KEY                   `idx_hot` (`hot`) USING BTREE,
-    KEY                   `idx_online_status` (`online_status`) USING BTREE,
-    KEY                   `idx_comment_num` (`comment_num`) USING BTREE,
-    KEY                   `idx_star_num` (`star_num`) USING BTREE,
-    KEY                   `idx_created_date` (`created_date`) USING BTREE
-    -- FULLTEXT KEY `fx_name_code_intro_info` (`name`,`code`,`introduction`,`information`,`apply_edition_type`) /*!50100 WITH PARSER `ngram` */ 
-) ENGINE=FEDERATED COMMENT='商店商品表' CONNECTION='xcan_store_link/store_goods';
 ```
 
 #### 创建公共数据表 - Postgres SQL
