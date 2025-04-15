@@ -28,7 +28,6 @@ import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;

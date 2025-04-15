@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.application.query.client;
 
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import java.util.List;
-import java.util.Set;
 
 
 public interface ClientQuery {

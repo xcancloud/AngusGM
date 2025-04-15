@@ -15,7 +15,6 @@ import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.social.Social;
 import cloud.xcan.angus.api.commonlink.setting.tenant.event.TesterEvent;
-import cloud.xcan.angus.api.commonlink.setting.tenant.healthcheck.HealthCheck;
 import cloud.xcan.angus.api.manager.SettingManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.log.ApiLogProperties;

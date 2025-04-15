@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.application.query.group;
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

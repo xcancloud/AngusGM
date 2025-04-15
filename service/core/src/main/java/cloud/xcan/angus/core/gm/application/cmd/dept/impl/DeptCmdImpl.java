@@ -28,8 +28,6 @@ import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagTargetCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.converter.DeptTagConverter;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;

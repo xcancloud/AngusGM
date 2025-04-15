@@ -20,8 +20,6 @@ import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.system.SystemTokenCmd;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.system.SystemTokenQuery;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.system.SystemToken;
 import cloud.xcan.angus.core.gm.domain.system.SystemTokenRepo;
 import cloud.xcan.angus.core.gm.domain.system.resource.SystemTokenResource;

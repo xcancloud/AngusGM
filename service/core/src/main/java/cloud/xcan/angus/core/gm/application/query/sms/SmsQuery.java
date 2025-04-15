@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.sms;
 
-import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.Sms;
+import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.template.SmsTemplate;
 import cloud.xcan.angus.extension.sms.api.SmsProvider;
 import java.util.List;

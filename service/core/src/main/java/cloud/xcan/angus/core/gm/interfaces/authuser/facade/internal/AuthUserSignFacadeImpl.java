@@ -30,11 +30,9 @@ import cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.Email
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsAssembler;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 

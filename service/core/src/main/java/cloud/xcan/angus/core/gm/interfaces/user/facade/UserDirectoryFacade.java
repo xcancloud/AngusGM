@@ -10,7 +10,6 @@ import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface UserDirectoryFacade {
 

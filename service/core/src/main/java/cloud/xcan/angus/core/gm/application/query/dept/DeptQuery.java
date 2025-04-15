@@ -4,7 +4,6 @@ import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.core.gm.domain.dept.DeptSubCount;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;

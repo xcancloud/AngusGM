@@ -8,8 +8,8 @@ import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.event.EventTemplateQuery;
-import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelP;
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
+import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelP;
 import cloud.xcan.angus.core.gm.domain.event.template.EventTemplateRepo;
 import cloud.xcan.angus.core.gm.domain.event.template.channel.EventTemplateChannelRepo;
 import cloud.xcan.angus.core.gm.domain.event.template.receiver.EventTemplateReceiver;

@@ -8,7 +8,6 @@ import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.directory.UserDirecto
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.directory.UserDirectoryDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.directory.UserDirectorySyncVo;
 import cloud.xcan.angus.core.utils.CoreUtils;
-import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;
 
 
 public class UserDirectoryAssembler {

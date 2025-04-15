@@ -4,7 +4,6 @@ package cloud.xcan.angus.core.gm.application.cmd.user;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
 import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectorySyncResult;
 import cloud.xcan.angus.spec.experimental.IdKey;
-import java.util.List;
 import java.util.Map;
 
 

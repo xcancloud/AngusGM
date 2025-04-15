@@ -14,8 +14,6 @@ import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsChannelCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsTemplateCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannelRepo;
 import cloud.xcan.angus.core.gm.infra.plugin.SmsPluginStateListener;

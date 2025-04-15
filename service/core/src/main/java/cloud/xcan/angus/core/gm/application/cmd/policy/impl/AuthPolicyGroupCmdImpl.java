@@ -6,7 +6,6 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.GR
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_GROUP_POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_POLICY_GROUP;
-import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_GROUP_POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_POLICY_GROUP;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -23,7 +22,6 @@ import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyGroupCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;

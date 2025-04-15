@@ -8,7 +8,6 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;

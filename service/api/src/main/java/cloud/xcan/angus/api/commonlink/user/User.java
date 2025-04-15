@@ -2,7 +2,6 @@ package cloud.xcan.angus.api.commonlink.user;
 
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
@@ -14,6 +13,7 @@ import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

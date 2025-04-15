@@ -13,7 +13,6 @@ import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_REAL_NAME_PAS
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SUBMIT_TENANT_AUDIT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_AUDIT;
-import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_CANCEL;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.locale.MessageHolder.message;

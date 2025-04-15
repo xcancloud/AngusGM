@@ -3,8 +3,6 @@ package cloud.xcan.angus.core.gm.application.cmd.client;
 import cloud.xcan.angus.api.commonlink.client.Client2pSignupBiz;
 import cloud.xcan.angus.api.commonlink.client.ClientAuth;
 import java.util.Map;
-import java.util.Set;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
 public interface ClientSignCmd {
 

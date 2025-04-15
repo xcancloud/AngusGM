@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.sms.facade.internal;
 import static cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsChannelAssembler.getSmsChannelVo;
 import static cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsChannelAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsChannelAssembler.updateDtoToDomain;
-import static java.util.Collections.singletonList;
 
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsChannelCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;

@@ -6,7 +6,6 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
-import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;

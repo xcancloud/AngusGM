@@ -6,7 +6,6 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.DE
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_DEPT_POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_POLICY_DEPT;
-import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_DEPT_POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETE_POLICY_DEPT;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -23,8 +22,6 @@ import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyDeptCmd;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;

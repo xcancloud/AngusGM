@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.group.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.GroupTagConverter.dtoToGroupTagsDomain;
-import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.APP;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.GROUP;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
@@ -29,8 +28,6 @@ import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyGroupCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagTargetCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
-import cloud.xcan.angus.core.gm.domain.app.App;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;

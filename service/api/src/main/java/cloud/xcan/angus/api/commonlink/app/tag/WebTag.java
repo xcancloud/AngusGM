@@ -1,7 +1,7 @@
 package cloud.xcan.angus.api.commonlink.app.tag;
 
-import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

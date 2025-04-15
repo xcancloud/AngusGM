@@ -28,8 +28,6 @@ import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserTokenQuery;
 import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserToken;
 import cloud.xcan.angus.core.gm.domain.authuser.AuthUserTokenRepo;
-import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
-import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.remote.message.AbstractResultMessageException;
 import cloud.xcan.angus.remote.message.SysException;

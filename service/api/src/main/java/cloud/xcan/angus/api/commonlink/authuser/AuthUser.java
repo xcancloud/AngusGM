@@ -2,8 +2,8 @@ package cloud.xcan.angus.api.commonlink.authuser;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.spec.experimental.Resources;
 import cloud.xcan.angus.security.model.CustomOAuth2User;
+import cloud.xcan.angus.spec.experimental.Resources;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

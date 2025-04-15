@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
@@ -21,7 +20,6 @@ public class AppTagFindDto extends PageQuery {
   @Schema(description = "Application tag id.")
   private Long id;
 
-  @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "Application tag name.", maxLength = MAX_NAME_LENGTH)
   private String name;
 

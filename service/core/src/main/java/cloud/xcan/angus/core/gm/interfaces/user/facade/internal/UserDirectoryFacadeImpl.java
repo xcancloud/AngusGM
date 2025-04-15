@@ -10,7 +10,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserDirectoryCmd;
 import cloud.xcan.angus.core.gm.application.query.user.UserDirectoryQuery;
-import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
 import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectorySyncResult;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.UserDirectoryFacade;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.directory.UserDirectoryAddDto;
@@ -27,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
