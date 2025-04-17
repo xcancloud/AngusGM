@@ -16,8 +16,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <angusgm.archive.name>gm</angusgm.archive.name>
-    <angusgm.hump.name>AngusGM</angusgm.hump.name>
+    <archive.name>gm</archive.name>
+    <hump.name>AngusGM</hump.name>
     <docker.image.name>angusgm</docker.image.name>
   </properties>
 
@@ -71,7 +71,7 @@
   </dependencies>
 
   <build>
-    <finalName>${angusgm.hump.name}-${editionName}-${project.version}</finalName>
+    <finalName>${hump.name}-${editionName}-${project.version}</finalName>
     <filters>
       <filter>src/main/resources/application.yml</filter>
       <filter>src/main/resources/application-${profile.active}.yml</filter>
