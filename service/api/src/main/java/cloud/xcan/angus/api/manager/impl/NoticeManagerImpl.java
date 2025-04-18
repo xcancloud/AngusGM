@@ -6,10 +6,10 @@ import static cloud.xcan.angus.api.manager.converter.NoticeConverter.toSmsSendDt
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.enums.NoticeType;
-import cloud.xcan.angus.api.gm.email.EmailDoorRemote;
-import cloud.xcan.angus.api.gm.message.MessageCenterDoorRemote;
+import cloud.xcan.angus.api.gm.email.EmailInnerRemote;
+import cloud.xcan.angus.api.gm.message.MessageCenterInnerRemote;
 import cloud.xcan.angus.api.gm.notice.dto.SendNoticeDto;
-import cloud.xcan.angus.api.gm.sms.SmsDoorRemote;
+import cloud.xcan.angus.api.gm.sms.SmsInnerRemote;
 import cloud.xcan.angus.api.manager.NoticeManager;
 import cloud.xcan.angus.core.biz.Biz;
 import jakarta.annotation.Resource;
@@ -20,33 +20,33 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeManagerImpl implements NoticeManager {
 
   @Resource
-  private SmsDoorRemote smsRemote;
+  private SmsInnerRemote smsInnerRemote;
 
   @Resource
-  private EmailDoorRemote emailRemote;
+  private EmailInnerRemote emailInnerRemote;
 
   @Resource
-  private MessageCenterDoorRemote messageCenterDoorRemote;
+  private MessageCenterInnerRemote messageCenterInnerRemote;
 
   @Override
   public void send(SendNoticeDto dto) {
-    if (dto.getNoticeTypes().contains(NoticeType.SMS) && nonNull(smsRemote)) {
+    if (dto.getNoticeTypes().contains(NoticeType.SMS) && nonNull(smsInnerRemote)) {
       try {
-        smsRemote.send(toSmsSendDto(dto.getSendSmsParam())).orElseThrow();
+        smsInnerRemote.send(toSmsSendDto(dto.getSendSmsParam())).orElseThrow();
       } catch (Exception e) {
         log.error("Sms notice exception: ", e);
       }
     }
-    if (dto.getNoticeTypes().contains(NoticeType.EMAIL) && nonNull(emailRemote)) {
+    if (dto.getNoticeTypes().contains(NoticeType.EMAIL) && nonNull(emailInnerRemote)) {
       try {
-        emailRemote.send(toEmailSendDto(dto.getSendEmailParam())).orElseThrow();
+        emailInnerRemote.send(toEmailSendDto(dto.getSendEmailParam())).orElseThrow();
       } catch (Exception e) {
         log.error("Email notice exception: ", e);
       }
     }
-    if (dto.getNoticeTypes().contains(NoticeType.IN_SITE) && nonNull(messageCenterDoorRemote)) {
+    if (dto.getNoticeTypes().contains(NoticeType.IN_SITE) && nonNull(messageCenterInnerRemote)) {
       try {
-        messageCenterDoorRemote.send(toMsgCenterPushDto(dto.getSendInsiteParam())).orElseThrow();
+        messageCenterInnerRemote.send(toMsgCenterPushDto(dto.getSendInsiteParam())).orElseThrow();
       } catch (Exception e) {
         log.error("In-site notice exception: ", e);
       }

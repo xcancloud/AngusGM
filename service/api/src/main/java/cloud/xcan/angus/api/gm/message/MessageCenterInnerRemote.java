@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
-public interface MessageCenterDoorRemote {
+public interface MessageCenterInnerRemote {
 
   @Operation(description = "Send messages", operationId = "message:center:push")
   @ApiResponses(value = {

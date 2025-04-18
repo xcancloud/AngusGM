@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
-public interface ClientDoorRemote {
+public interface ClientInnerRemote {
 
   @Operation(description = "Update oauth2 registered client.", operationId = "client:update:inner")
   @ApiResponses(value = {

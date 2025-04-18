@@ -6,7 +6,7 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.email.EmailType;
-import cloud.xcan.angus.api.gm.email.EmailDoorRemote;
+import cloud.xcan.angus.api.gm.email.EmailInnerRemote;
 import cloud.xcan.angus.api.gm.email.dto.EmailSendDto;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventChannelPushCmd;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class EmailChannelPushCmdImpl implements EventChannelPushCmd {
 
   @Resource
-  private EmailDoorRemote emailDoorRemote;
+  private EmailInnerRemote emailInnerRemote;
 
   @Override
   public ChannelSendResponse push(EventPush eventPush) {
@@ -40,7 +40,7 @@ public class EmailChannelPushCmdImpl implements EventChannelPushCmd {
       emailSendDto.setType(EmailType.CUSTOM);
       emailSendDto.setSendTenantId(getOptTenantId());
       emailSendDto.setSendUserId(getUserId());
-      emailDoorRemote.send(emailSendDto).orElseThrow();
+      emailInnerRemote.send(emailSendDto).orElseThrow();
       return new ChannelSendResponse(true, null);
     } catch (Exception e) {
       return new ChannelSendResponse(false, e.getMessage());

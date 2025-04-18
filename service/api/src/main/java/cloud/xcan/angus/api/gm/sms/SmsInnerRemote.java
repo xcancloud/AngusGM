@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
-public interface SmsDoorRemote {
+public interface SmsInnerRemote {
 
   @Operation(description = "Send sms.", operationId = "sms:send:inner")
   @ApiResponses(value = {

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
-public interface AppOpenDoorRemote {
+public interface AppOpenInnerRemote {
 
   @Operation(description = "Open application.", operationId = "app:open:inner")
   @ApiResponses(value = {
