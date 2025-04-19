@@ -20,7 +20,7 @@ xcan:
   trace:
     enabled: false
   cloud:
-    gmApiUrlPrefix: ${GM_APIS_URL_PREFIX}
+    gmApiUrlPrefix: ${GM_CLOUD_APIS_URL_PREFIX}
   event:
     gmApiUrlPrefix: ${GM_APIS_URL_PREFIX}
   datasource:

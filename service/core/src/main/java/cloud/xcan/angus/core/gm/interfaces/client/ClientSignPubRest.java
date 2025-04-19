@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.client;
 
-import cloud.xcan.angus.api.gm.client.dto.ClientSigninDto;
+import cloud.xcan.angus.api.gm.client.dto.ClientSignInDto;
 import cloud.xcan.angus.api.gm.client.vo.ClientSignVo;
 import cloud.xcan.angus.core.gm.interfaces.client.facade.ClientSignFacade;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -32,7 +32,7 @@ public class ClientSignPubRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
   @PostMapping(value = "/signin")
-  public ApiLocaleResult<ClientSignVo> signin(@Valid @RequestBody ClientSigninDto dto) {
+  public ApiLocaleResult<ClientSignVo> signin(@Valid @RequestBody ClientSignInDto dto) {
     return ApiLocaleResult.success(clientSignFacade.signin(dto));
   }
 

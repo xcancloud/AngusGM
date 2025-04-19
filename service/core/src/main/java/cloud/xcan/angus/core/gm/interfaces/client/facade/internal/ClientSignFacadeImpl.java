@@ -5,7 +5,7 @@ import static cloud.xcan.angus.core.gm.interfaces.client.facade.internal.assembl
 import static cloud.xcan.angus.core.gm.interfaces.client.facade.internal.assembler.ClientSignAssembler.signup2Vo;
 
 import cloud.xcan.angus.api.commonlink.client.ClientAuth;
-import cloud.xcan.angus.api.gm.client.dto.ClientSigninDto;
+import cloud.xcan.angus.api.gm.client.dto.ClientSignInDto;
 import cloud.xcan.angus.api.gm.client.dto.ClientSignupDto;
 import cloud.xcan.angus.api.gm.client.vo.ClientSignVo;
 import cloud.xcan.angus.api.gm.client.vo.ClientSignupVo;
@@ -22,7 +22,7 @@ public class ClientSignFacadeImpl implements ClientSignFacade {
   private ClientSignCmd clientSignCmd;
 
   @Override
-  public ClientSignVo signin(ClientSigninDto dto) {
+  public ClientSignVo signin(ClientSignInDto dto) {
     Map<String, String> result = clientSignCmd.signin(dto.getClientId(),
         dto.getClientSecret(), dto.getScope());
     return signInToVo(result);

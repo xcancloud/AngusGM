@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class ClientSigninDto {
+public class ClientSignInDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
