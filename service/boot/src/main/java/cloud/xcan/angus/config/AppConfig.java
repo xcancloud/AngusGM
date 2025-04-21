@@ -17,7 +17,7 @@ public class AppConfig {
 
   @Bean
   @ConditionalOnMissingBean
-  Logger.Level feignLoggerLevel() {
+  public Logger.Level feignLoggerLevel() {
     return Logger.Level.FULL;
   }
 
