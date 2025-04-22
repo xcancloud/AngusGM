@@ -64,10 +64,10 @@ public class EventChannelRest {
     eventChannelFacade.delete(id);
   }
 
-  @Operation(description = "Query the list of receive event channel.", operationId = "event:channel:list")
+  @Operation(description = "Query the list of receive event channel type.", operationId = "event:channel:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/channel/{channelType}")
+  @GetMapping("/type/{channelType}")
   public ApiLocaleResult<List<EventChannelVo>> channelList(
       @Parameter(name = "channelType", description = "Receive channel type", required = true) @PathVariable("channelType") ReceiveChannelType channelType) {
     return ApiLocaleResult.success(eventChannelFacade.channelList(channelType));
