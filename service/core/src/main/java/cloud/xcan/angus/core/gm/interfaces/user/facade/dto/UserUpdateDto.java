@@ -14,7 +14,7 @@ import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
 import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.validator.Mobile;
-import cloud.xcan.angus.validator.Passd;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
@@ -80,7 +80,7 @@ public class UserUpdateDto implements Serializable {
   @Schema(description = "User landline.", example = "010-88287890", maxLength = MAX_LANDLINE_LENGTH)
   private String landline;
 
-  @Passd(allowNull = true)
+  @Password(allowNull = true)
   @Schema(description = "User signup password, used to log in to the system through the password.", example = "xcan@123")
   private String password;
 

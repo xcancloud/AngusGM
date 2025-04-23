@@ -36,9 +36,9 @@ public class Quota extends ValueObjectSupport<Quota> {
   private Boolean allowChange;
 
   /**
-   * TODO Lcs initialization quota after purchase
+   * TODO License initialization quota after purchase
    */
-  private Boolean lcsCtrl;
+  private Boolean licenseCtrl;
 
   /**
    * Calculate remaining quota flag
@@ -57,8 +57,8 @@ public class Quota extends ValueObjectSupport<Quota> {
     SettingTenantQuota tenantQuota = new SettingTenantQuota().setId(tenantId)
         .setAppCode(this.appCode).setServiceCode(this.serviceCode)
         .setName(this.name).setAllowChange(this.allowChange)
-        .setLcsCtrl(this.lcsCtrl).setCalcRemaining(this.calcRemaining)
-        .setMin(this.min).setMax(this.max).setCapacity(this.capacity).setDefaults(this.quota)
+        .setLicenseCtrl(this.licenseCtrl).setCalcRemaining(this.calcRemaining)
+        .setMin(this.min).setMax(this.max).setCapacity(this.capacity).setDefault0(this.quota)
         .setQuota(this.quota);
     tenantQuota.setTenantId(tenantId);
     return tenantQuota;
@@ -69,7 +69,7 @@ public class Quota extends ValueObjectSupport<Quota> {
     setAppCode(builder.appCode);
     setServiceCode(builder.serviceCode);
     setAllowChange(builder.allowChange);
-    setLcsCtrl(builder.lcsCtrl);
+    setLicenseCtrl(builder.licenseCtrl);
     setCalcRemaining(builder.calcRemaining);
     setQuota(builder.quota);
     setMin(builder.min);
@@ -87,7 +87,7 @@ public class Quota extends ValueObjectSupport<Quota> {
     builder.appCode = copy.getAppCode();
     builder.serviceCode = copy.getServiceCode();
     builder.allowChange = copy.getAllowChange();
-    builder.lcsCtrl = copy.getLcsCtrl();
+    builder.licenseCtrl = copy.getLicenseCtrl();
     builder.calcRemaining = copy.getCalcRemaining();
     builder.quota = copy.getQuota();
     builder.min = copy.getMin();
@@ -110,7 +110,7 @@ public class Quota extends ValueObjectSupport<Quota> {
     private String appCode;
     private String serviceCode;
     private Boolean allowChange;
-    private Boolean lcsCtrl;
+    private Boolean licenseCtrl;
     private Boolean calcRemaining;
     private Long quota;
     private Long min;
@@ -140,8 +140,8 @@ public class Quota extends ValueObjectSupport<Quota> {
       return this;
     }
 
-    public Builder lcsCtrl(Boolean lcsCtrl) {
-      this.lcsCtrl = lcsCtrl;
+    public Builder licenseCtrl(Boolean licenseCtrl) {
+      this.licenseCtrl = licenseCtrl;
       return this;
     }
 

@@ -9,7 +9,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_MOBILE_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
 import cloud.xcan.angus.validator.Mobile;
-import cloud.xcan.angus.validator.Passd;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.Email;
@@ -68,8 +68,8 @@ public class TenantAddByMobileDto implements Serializable {
       example = "james@xcan.cloud", maxLength = MAX_EMAIL_LENGTH)
   private String email;
 
-  @Passd(allowNull = true)
-  @Schema(description = "System administer password.", example = "Passd@123",
+  @Password(allowNull = true)
+  @Schema(description = "System administer password.", example = "Password@123",
       minLength = MIN_PASSWORD_LENGTH, maxLength = MAX_PASSWORD_LENGTH)
   private String password;
 

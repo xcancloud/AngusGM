@@ -37,7 +37,7 @@ public class TenantQuotaDetailVo implements Serializable {
   /**
    * @see Setting#getQuota() defalut value
    */
-  private long defaults;
+  private long default0;
 
   private long min;
 

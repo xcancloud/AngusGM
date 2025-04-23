@@ -106,7 +106,7 @@ public class SettingAssembler {
                 .setServiceCode(quota.getServiceCode())
                 .setName(quota.getName())
                 .setAllowChange(quota.getAllowChange())
-                .setLcsCtrl(quota.getLcsCtrl())
+                .setLicenseCtrl(quota.getLicenseCtrl())
                 .setQuota(quota.getQuota())
                 .setMin(quota.getMin())
                 .setMax(quota.getMax()))

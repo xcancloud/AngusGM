@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.sign;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_LINK_SECRET_LENGTH;
 
-import cloud.xcan.angus.validator.Passd;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotEmpty;
@@ -27,7 +27,7 @@ public class ForgetPasswordDto {
   @Schema(description = "Forget password user sms or email linkSecret.", requiredMode = RequiredMode.REQUIRED)
   private String linkSecret;
 
-  @Passd
+  @Password
   @Schema(description = "User new password.", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String newPassword;
 

@@ -32,9 +32,9 @@ public class QuotaTo implements Serializable {
   private Boolean allowChange;
 
   /**
-   * TODO Lcs initialization quota after purchase
+   * TODO License initialization quota after purchase
    */
-  private Boolean lcsCtrl;
+  private Boolean licenseCtrl;
 
   /**
    * @see SettingTenant#getQuotaData()

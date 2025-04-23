@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto;
 
-import cloud.xcan.angus.validator.Passd;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +18,7 @@ public class AuthUserPasswordUpdateDto {
   @Schema(description = "Update password user id.", example = "100", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
-  @Passd
+  @Password
   @NotNull
   @Schema(description = "User new password.", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String newPassword;

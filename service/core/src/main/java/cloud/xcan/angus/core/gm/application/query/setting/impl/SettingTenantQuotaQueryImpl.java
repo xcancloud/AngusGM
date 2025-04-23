@@ -139,7 +139,7 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     Setting defaultSetting = settingQuery.find0(SettingKey.QUOTA);
     Map<String, Quota> defaultQuotaMap = defaultSetting.toQuotaMap();
     for (SettingTenantQuota tenantQuota : tenantQuotas) {
-      tenantQuota.setDefaults(defaultQuotaMap.get(tenantQuota.getName().getValue())
+      tenantQuota.setDefault0(defaultQuotaMap.get(tenantQuota.getName().getValue())
           .getQuota());
     }
   }
@@ -147,6 +147,6 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
   public void setDefaultQuota(SettingTenantQuota tenantQuota, String name) {
     Setting defaultSetting = settingQuery.find0(SettingKey.QUOTA);
     Quota defaultQuota = defaultSetting.findQuotaByName(name);
-    tenantQuota.setDefaults(defaultQuota.getQuota());
+    tenantQuota.setDefault0(defaultQuota.getQuota());
   }
 }

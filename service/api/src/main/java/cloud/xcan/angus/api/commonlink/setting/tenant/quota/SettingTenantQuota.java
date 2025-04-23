@@ -49,10 +49,10 @@ public class SettingTenantQuota extends TenantEntity<SettingTenantQuota, Long> {
   private Boolean allowChange;
 
   /**
-   * TODO Lcs initialization quota after purchase
+   * TODO License initialization quota after purchase
    */
-  @Column(name = "lcs_ctrl")
-  private Boolean lcsCtrl;
+  @Column(name = "license_ctrl")
+  private Boolean licenseCtrl;
 
   /**
    * Calculate remaining quota flag
@@ -76,7 +76,7 @@ public class SettingTenantQuota extends TenantEntity<SettingTenantQuota, Long> {
    */
   @Transient
   @Schema(description = "Default quota value")
-  private long defaults;
+  private long default0;
 
   @Transient
   @Schema(description = "Used quota value")

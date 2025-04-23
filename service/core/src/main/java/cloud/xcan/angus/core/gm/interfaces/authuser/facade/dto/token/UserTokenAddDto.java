@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.token;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
 import cloud.xcan.angus.api.commonlink.AASConstant;
-import cloud.xcan.angus.validator.Passd;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.Future;
@@ -35,7 +35,7 @@ public class UserTokenAddDto {
       example = "2025-06-28 19:00:00")
   private LocalDateTime expiredDate;
 
-  @Passd
+  @Password
   @NotNull
   @Schema(example = "Current user password.", requiredMode = RequiredMode.REQUIRED)
   private String password;

@@ -16,7 +16,7 @@ import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseLegalPersonCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.GovernmentCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.PersonalCert;
 import cloud.xcan.angus.validator.Mobile;
-import cloud.xcan.angus.validator.Passd;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
@@ -103,8 +103,8 @@ public class TenantAddDto implements Serializable {
       example = "james@xcan.cloud", requiredMode = RequiredMode.REQUIRED)
   private String email;
 
-  @Passd(allowNull = true)
-  @Schema(description = "System administer password.", example = "Passd@123",
+  @Password(allowNull = true)
+  @Schema(description = "System administer password.", example = "Password@123",
       minLength = MIN_PASSWORD_LENGTH, maxLength = MAX_COUNTRY_LENGTH)
   private String password;
 
