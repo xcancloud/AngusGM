@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["ES2020","DOM"],
+    "baseUrl": ".",
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "types": ["vite/client","node"],
+    "paths":{"@/*":["src/*"]},
+    "removeComments":true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "typeRoots": ["node_modules/@types/", "src/types/"],
+    "noImplicitAny": false,
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}

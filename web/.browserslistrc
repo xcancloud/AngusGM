@@ -1,0 +1,10 @@
+# .browserslistrc -> Declare supported browsers/Node.js version ranges for the project
+> 0.5% and not dead               # Cover browsers with >0.5% global usage
+last 2 versions                   # Last two versions of all browsers
+not ie 11                         # Explicitly exclude IE11
+not op_mini all                   # Exclude Opera Mini
+not dead                          # Exclude officially discontinued browsers
+Firefox ESR                       # Include Firefox Extended Support Release
+safari >= 12                      # Modern Safari versions
+ios >= 12                         # iOS 12+
+android >= 6                      # Android 6+

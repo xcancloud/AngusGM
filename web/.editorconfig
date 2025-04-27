@@ -1,0 +1,30 @@
+# .editorconfig -> Enforce consistent code formatting for the project.
+
+# ----------------------------------
+# Root Configuration (Global Settings)
+# ----------------------------------
+root = true
+
+[*] # Apply to all files
+charset = utf-8          # Enforce UTF-8 encoding
+end_of_line = lf         # Unix-style line endings
+trim_trailing_whitespace = true  # Remove trailing spaces
+insert_final_newline = true       # Ensure final newline
+indent_style = space     # Default to spaces for indentation
+indent_size = 2          # Default 2-space indentation
+max_line_length = 120    # Recommended line length limit
+
+# ----------------------------------
+# Frontend Files (JS/TS/Vue/JSX/TSX)
+# ----------------------------------
+[*.{js,jsx,ts,tsx,vue}]
+# Inherits root settings
+# Explicit 2-space indentation (common frontend practice)
+indent_size = 2
+
+# ----------------------------------
+# Markdown (Allow Formatting Exceptions)
+# ----------------------------------
+[*.md]
+trim_trailing_whitespace = false # Preserve trailing spaces (for hard breaks)
+max_line_length = 100     # Improve readability

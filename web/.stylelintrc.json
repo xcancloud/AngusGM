@@ -1,0 +1,42 @@
+{
+	"extends": [
+		"stylelint-config-html",
+		"stylelint-config-standard",
+		"stylelint-config-property-sort-order-smacss"
+	],
+	"plugins": [
+		"stylelint-less",
+		"stylelint-order"
+	],
+	"rules": {
+		"selector-pseudo-class-no-unknown": null,
+		"selector-class-pattern": null,
+		"order/order": [
+			[
+				"custom-properties",
+				"declarations"
+			]
+		],
+		"function-no-unknown": [
+			true,
+			{
+				"ignoreFunctions": [
+					"theme"
+				]
+			}
+		],
+		"color-function-notation": "legacy",
+		"at-rule-no-unknown": [
+			true,
+			{
+				"ignoreAtRules": [
+					"tailwind",
+					"apply",
+					"variants",
+					"responsive",
+					"screen"
+				]
+			}
+		]
+	}
+}
