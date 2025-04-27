@@ -2,10 +2,10 @@
 import { reactive, computed, defineAsyncComponent, ref, watch, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Tabs, TabPane } from 'ant-design-vue';
-import { modal, notification, PureCard, Table, Select, IconRefresh, ButtonAuth } from '@xcan/design';
+import { modal, notification, PureCard, Table, Select, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
-import { GM } from '@xcan/sdk';
+import { GM } from '@xcan-angus/tools';
 
 const TargetPanel = defineAsyncComponent(() => import('./components/targetPanel.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));

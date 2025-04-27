@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { PureCard, Icon } from '@xcan/design';
-import { security } from '@xcan/security';
+import { PureCard, Icon } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/tools';
 import { Button } from 'ant-design-vue';
 
 type status = 'AUDITING' | 'FAILED_AUDIT';
@@ -61,9 +61,9 @@ const reAudit = function () {
         size="small"
         class="mr-5"
         type="primary"
-        :disabled="!security.has('ReCertification')"
+        :disabled="!app.has('ReCertification')"
         @click="reAudit">
-        {{ security.getName('ReCertification') }}
+        {{ app.getName('ReCertification') }}
       </Button>
     </div>
   </PureCard>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan/sdk';
-import { Modal, Tree, Icon, Select } from '@xcan/design';
+import { GM } from '@xcan-angus/tools';
+import { Modal, Tree, Icon, Select } from '@xcan-angus/vue-ui';
 
 import { DataType } from '@/views/organization/dept/PropsType';
 import { dept, orgTag, user } from '@/api';

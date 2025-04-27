@@ -1,14 +1,12 @@
 <script setup lang='ts'>
 import { ref, computed, watch, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { SelectEnum, Card, Table, AsyncComponent, Input, Icon, IconCount, IconRefresh, ButtonAuth } from '@xcan/design';
-import { security } from '@xcan/security';
+import { SelectEnum, Card, Table, AsyncComponent, Input, Icon, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { app, utils, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
 
 import { Target, TargetType } from '../../PropsType';
-import { utils } from '@xcan-angus/tools';
-import {orgTag} from '@/api';
+import { orgTag } from '@/api';
 
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 const DeptModal = defineAsyncComponent(() => import('@/components/DeptModal/index.vue'));
@@ -285,15 +283,15 @@ const placeholder = computed(() => {
 });
 
 const cancelBtnDisabled = {
-  USER: !security.has('TagUserUnassociate'),
-  DEPT: !security.has('TagDeptUnassociate'),
-  GROUP: !security.has('TagGroupUnassociate')
+  USER: !app.has('TagUserUnassociate'),
+  DEPT: !app.has('TagDeptUnassociate'),
+  GROUP: !app.has('TagGroupUnassociate')
 };
 
 const cancelText = {
-  USER: security.getName('TagUserUnassociate'),
-  DEPT: security.getName('TagDeptUnassociate'),
-  GROUP: security.getName('TagGroupUnassociate')
+  USER: app.getName('TagUserUnassociate'),
+  DEPT: app.getName('TagDeptUnassociate'),
+  GROUP: app.getName('TagGroupUnassociate')
 };
 </script>
 <template>

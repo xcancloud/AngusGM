@@ -13,13 +13,11 @@ import {
   notification,
   IconCount,
   IconRefresh
-} from '@xcan/design';
-import { security } from '@xcan/security';
-import { GM } from '@xcan/sdk';
+} from '@xcan-angus/vue-ui';
+import { app, utils, GM } from '@xcan-angus/tools';
 
-import { utils } from '@xcan-angus/tools';
 import { _columns, ListGroup, SearchParams, FilterOp } from './PropsType';
-import {group} from '@/api';
+import { group } from '@/api';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
@@ -253,7 +251,7 @@ onMounted(() => {
       <template #bodyCell="{ column,text, record }">
         <template v-if="column.dataIndex === 'name'">
           <RouterLink
-            v-if="security.has('GroupDetail')"
+            v-if="app.has('GroupDetail')"
             :to="`/organization/group/${record.id}`"
             class="text-theme-special text-theme-text-hover"
             :title="record.name">
@@ -294,22 +292,22 @@ onMounted(() => {
               <template #overlay>
                 <Menu class="text-3.5 leading-3.5 font-normal">
                   <MenuItem
-                    v-if="security.show('GroupDelete')"
-                    :disabled="!security.has('GroupDelete')"
+                    v-if="app.show('GroupDelete')"
+                    :disabled="!app.has('GroupDelete')"
                     @click="delGroupConfirm(record.id,record.name)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
                     </template>
-                    {{ security.getName('GroupDelete') }}
+                    {{ app.getName('GroupDelete') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('GroupUserAssociate')"
-                    :disabled="!record.enabled || !security.has('GroupUserAssociate')"
+                    v-if="app.show('GroupUserAssociate')"
+                    :disabled="!record.enabled || !app.has('GroupUserAssociate')"
                     @click="openConcatUser(record)">
                     <template #icon>
                       <Icon icon="icon-zhucezhongxin" />
                     </template>
-                    {{ security.getName('GroupUserAssociate') }}
+                    {{ app.getName('GroupUserAssociate') }}
                   </MenuItem>
                 </Menu>
               </template>

@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Hints } from '@xcan/design';
+import { Hints } from '@xcan-angus/vue-ui';
 
 import AddPolicyForm from '@/views/permission/policy/components/addForm/index.vue';
 import AddedPolicyList from '@/views/permission/policy/components/addList/index.vue';

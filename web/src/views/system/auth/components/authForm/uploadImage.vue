@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import Viewer from 'viewerjs';
 import 'viewerjs/dist/viewer.css';
-import { upload } from '@xcan/file';
-import { Icon } from '@xcan/design';
-import { cookie } from '@xcan/utils';
+import { upload, cookie } from '@xcan-angus/tools';
+import { Icon } from '@xcan-angus/vue-ui';
 
 import { defineEmits, defineProps, ref, watch, withDefaults } from 'vue';
 

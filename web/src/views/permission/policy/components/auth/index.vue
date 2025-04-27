@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, RadioGroup, Radio } from 'ant-design-vue';
-import { notification, SelectUser, SelectDept, SelectGroup, PureCard, Input } from '@xcan/design';
+import { notification, SelectUser, SelectDept, SelectGroup, PureCard, Input } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Input, Card } from '@xcan/design';
+import { Input, Card } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { Switch } from 'ant-design-vue';
-import { duration } from '@xcan/configs';
+import { duration } from '@xcan-angus/tools';
 
 import { SigninLimit, Operation } from '../PropsType';
 

@@ -2,10 +2,10 @@
 import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { modal, notification } from '@xcan/design';
+import { modal, notification } from '@xcan-angus/vue-ui';
 
 import { Detail } from '../../PropsType';
-import {group} from '@/api';
+import { group } from '@/api';
 
 const DetailCard = defineAsyncComponent(() => import('./card.vue'));
 const Associations = defineAsyncComponent(() => import('@/views/organization/group/components/association/index.vue'));

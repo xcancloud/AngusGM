@@ -1,4 +1,4 @@
-import { http } from '@xcan/utils';
+import { http } from '@xcan-angus/tools';
 
 let baseUrl: string;
 export default class SystemToken {

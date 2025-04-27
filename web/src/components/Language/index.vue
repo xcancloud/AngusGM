@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { cookie } from '@xcan/utils';
+import { cookie } from '@xcan-angus/tools';
 
 const options = [
   { label: '简体中文', value: 'zh_CN' },

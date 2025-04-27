@@ -1,4 +1,4 @@
-import { sessionStore } from '@xcan/utils';
+import { sessionStore } from '@xcan-angus/tools';
 import { createStore } from 'vuex';
 
 export default createStore({

@@ -2,12 +2,11 @@
 import { onMounted, reactive, ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Form, FormItem, RadioGroup, Radio, Textarea } from 'ant-design-vue';
-import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan/design';
-import { lazyEnum } from '@xcan/enum';
+import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan-angus/vue-ui';
+import { enumLoader, GM } from '@xcan-angus/tools';
 import { useRouter } from 'vue-router';
 
 import type { FormDataType } from '../../interface';
-import { GM } from '@xcan/sdk';
 import { notice } from '@/api';
 
 const { t } = useI18n();
@@ -155,7 +154,7 @@ const enumsList: {
 
 // 获取字典
 const getDictory = async () => {
-  const [error, data] = await lazyEnum.load('SentType');
+  const [error, data] = await enumLoader.load('SentType');
   if (error) {
     return;
   }

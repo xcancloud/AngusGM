@@ -2,10 +2,9 @@
 import { reactive, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Tooltip, Menu, MenuItem, Dropdown } from 'ant-design-vue';
-import { modal, notification, Card, Input, Table, Icon, IconRefresh, ButtonAuth } from '@xcan/design';
-import { security } from '@xcan/security';
+import { modal, notification, Card, Input, Table, Icon, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { app, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
 
 import { auth } from '@/api';
 
@@ -257,7 +256,7 @@ const showTip = (id: string) => {
       <template #bodyCell="{ column,text, record }">
         <template v-if="column.dataIndex === 'name'">
           <RouterLink
-            v-if="security.has('PolicyDetail')"
+            v-if="app.has('PolicyDetail')"
             :to="`/permissions/policy/${record.id}?showTip=${showTip(record.id)}`"
             class="text-theme-special text-theme-text-hover">
             <Tooltip :title="record.name">{{ record.name }}</Tooltip>
@@ -299,22 +298,22 @@ const showTip = (id: string) => {
               <template #overlay>
                 <Menu class="text-3.5 leading-3.5 font-normal">
                   <MenuItem
-                    v-if="security.show('PolicyModify')"
-                    :disabled="record.type.value !== 'USER_DEFINED'||!security.has('PolicyModify')"
+                    v-if="app.show('PolicyModify')"
+                    :disabled="record.type.value !== 'USER_DEFINED'||!app.has('PolicyModify')"
                     @click="edit(record)">
                     <template #icon>
                       <Icon icon="icon-shuxie" />
                     </template>
-                    {{ security.getName('PolicyModify') }}
+                    {{ app.getName('PolicyModify') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('Authorize')"
-                    :disabled="!security.has('Authorize')"
+                    v-if="app.show('Authorize')"
+                    :disabled="!app.has('Authorize')"
                     @click="grantAuth(record.id)">
                     <template #icon>
                       <Icon icon="icon-quanxiancelve" />
                     </template>
-                    {{ security.getName('Authorize') }}
+                    {{ app.getName('Authorize') }}
                   </MenuItem>
                 </Menu>
               </template>

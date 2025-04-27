@@ -2,9 +2,9 @@
 import { ref, reactive, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Form, FormItem, InputPassword } from 'ant-design-vue';
-import { Modal, notification } from '@xcan/design';
+import { Modal, notification } from '@xcan-angus/vue-ui';
 
-import { password } from '@xcan/utils';
+import { password } from '@xcan-angus/tools';
 import { auth } from '@/api';
 
 const PasswdTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));

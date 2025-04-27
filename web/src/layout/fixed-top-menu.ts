@@ -1,4 +1,4 @@
-import { site } from '@xcan/utils';
+import { site } from '@xcan-angus/tools';
 
 const personalCenterMenus = [
   {

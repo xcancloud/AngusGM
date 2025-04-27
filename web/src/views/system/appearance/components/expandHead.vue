@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Arrow } from '@xcan/design';
+import { Arrow } from '@xcan-angus/vue-ui';
 
 interface Props {
   icon: string,

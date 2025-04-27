@@ -3,14 +3,14 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Form, FormItem } from 'ant-design-vue';
-import { Card, Hints, Input, notification } from '@xcan/design';
-import { regexp } from '@xcan/utils';
+import { Card, Hints, Input, notification } from '@xcan-angus/vue-ui';
+import { regexp } from '@xcan-angus/tools';
 
 import UploadImage from './uploadImage.vue';
 import AuditStatus from '@/components/AuditStatus/index.vue';
 import ButtonGroup from './buttonGroup.vue';
 
-import {tenant} from '@/api';
+import { tenant } from '@/api';
 
 interface EnterpriseCertDataInfo {
   businessLicensePicUrl: string,

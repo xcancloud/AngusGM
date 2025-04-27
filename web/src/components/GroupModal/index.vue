@@ -2,11 +2,10 @@
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CheckboxGroup, Checkbox, Divider } from 'ant-design-vue';
-import { Modal, Input, Icon, Scroll, Select } from '@xcan/design';
+import { Modal, Input, Icon, Scroll, Select } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
+import { duration, GM } from '@xcan-angus/tools';
 
-import { GM } from '@xcan/sdk';
 import { orgTag, user } from '@/api';
 
 interface Props {

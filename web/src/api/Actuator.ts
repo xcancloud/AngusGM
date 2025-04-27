@@ -1,5 +1,4 @@
-import { http } from '@xcan/utils';
-import { PUB_DISCOVERY } from '@xcan/sdk';
+import { http, PUB_DISCOVERY } from '@xcan-angus/tools';
 
 let metricsBaseUrl: string;
 export default class Actuator {

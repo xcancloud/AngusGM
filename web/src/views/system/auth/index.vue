@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from 'vue';
 
-import {tenant} from '@/api';
+import { tenant } from '@/api';
 
 // 未认证
 const Unauthorized = defineAsyncComponent(() => import('@/views/system/auth/components/unauthorized/index.vue'));

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, PureCard, Scroll, SearchPanel, Spin } from '@xcan/design';
+import { ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, PureCard, Scroll, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 // import { Button } from 'ant-design-vue';
-import { STORE } from '@xcan/sdk';
-import { security } from '@xcan/security';
+import { STORE } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/tools';
 
 import UploadPlugin from './components/UploadPlugin/index.vue';
 import ShowButton from './components/ShowButton.vue';
@@ -126,7 +126,7 @@ const options = [
                 :text="item.goodsName">
               </ButtonAuth>
               <span
-                v-if="!security.show('MyGoodsDetail')"
+                v-if="!app.show('MyGoodsDetail')"
                 class="text-theme-special text-theme-text-hover font-medium text-3.5">{{ item.goodsName }}</span>
               <!-- <RouterLink
                 class="text-theme-special text-theme-text-hover font-medium text-3.5"

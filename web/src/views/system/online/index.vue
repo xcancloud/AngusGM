@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref, h, computed } from 'vue';
 import { Badge, Spin } from 'ant-design-vue';
-import { PureCard, Icon, SearchPanel, Table, IconRefresh } from '@xcan/design';
-import { security } from '@xcan/security';
+import { PureCard, Icon, SearchPanel, Table, IconRefresh } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/tools';
 import { LoadingOutlined } from '@ant-design/icons-vue';
 
 import { useI18n } from 'vue-i18n';
-import {online} from '@/api';
+import { online } from '@/api';
 
 type User = {
   userId: string;
@@ -192,13 +192,13 @@ const indicator = h(LoadingOutlined, {
         <template v-if="column.dataIndex === 'online'">
           <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online1'): t('offline1')" />
         </template>
-        <template v-if="column.dataIndex === 'option' && security.show('SignOut')">
+        <template v-if="column.dataIndex === 'option' && app.show('SignOut')">
           <template v-if="record.loading">
             <Spin :indicator="indicator" />
           </template>
           <template v-else>
             <Icon
-              v-if="record.online && security.has('SignOut')"
+              v-if="record.online && app.has('SignOut')"
               icon="icon-xuanzezhanghao1"
               class="cursor-pointer text-theme-special text-theme-text-hover"
               @click="handleLogOut(record)" />

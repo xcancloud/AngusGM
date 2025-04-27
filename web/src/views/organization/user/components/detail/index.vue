@@ -3,11 +3,11 @@ import { computed, reactive, inject, onMounted, ref, defineAsyncComponent, Ref }
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Badge, Skeleton, Tabs } from 'ant-design-vue';
-import { ButtonAuth, modal, Grid, PureCard, Image, notification, AsyncComponent } from '@xcan/design';
+import { ButtonAuth, modal, Grid, PureCard, Image, notification, AsyncComponent } from '@xcan-angus/vue-ui';
 import { Detail } from './PropsType';
 import router from '@/router';
-import { GM } from '@xcan/sdk';
-import {user} from '@/api';
+import { GM } from '@xcan-angus/tools';
+import { user } from '@/api';
 
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 const UserDetail = defineAsyncComponent(() => import('./userDetail.vue'));

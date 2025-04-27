@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { site } from '@xcan/utils';
+import { site } from '@xcan-angus/tools';
 import { onMounted, ref } from 'vue';
 
 const officialUrl = ref<string>();

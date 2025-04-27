@@ -1,19 +1,18 @@
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
-import { security, preference } from '@xcan/security';
-import { cookie, http } from '@xcan/utils';
+import { app, preference, cookie, http } from '@xcan-angus/tools';
 
 import router, { startupGuard } from '@/router';
 import store from '@/store';
 
-import '@xcan/design/style.css';
+import '@xcan-angus/vue-ui/style.css';
 import 'tailwindcss/tailwind.css';
 import '../public/iconfont/iconfont.js';
 
 const bootstrap = async () => {
-  await security.check();
+  await app.check();
   await http.create();
-  security.initialize({ code: 'gm' }).then((res) => {
+  app.initialize({ code: 'gm' }).then((res) => {
     preference.initialize(res.preference).then(async () => {
       startupGuard();
 
@@ -38,7 +37,7 @@ const bootstrap = async () => {
 };
 
 const bootstrapSign = async () => {
-  await security.check();
+  await app.check();
   await http.create();
   cookie.remove('access_token');
   cookie.remove('refresh_token');
@@ -63,7 +62,7 @@ const bootstrapSign = async () => {
 };
 
 const bootstrapPrivStore = async () => {
-  await security.check();
+  await app.check();
   const url = new URL(location.href);
   const origin = url.searchParams.get('or') || '';
   await http.create({ baseURL: origin });

@@ -1,12 +1,10 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue';
-import { Colon } from '@xcan/design';
+import { Colon, FormatHighlight } from '@xcan-angus/vue-ui';
 import { Col, Collapse, CollapsePanel, RadioButton, RadioGroup, Row } from 'ant-design-vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
 
 import { DataInfoType } from '../PropsType';
-import { FormatHighlight } from '@xcan/highlight';
-import '@xcan/highlight/style.css';
 
 interface Props {
   data: DataInfoType

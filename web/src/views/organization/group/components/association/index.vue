@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Tabs, TabPane } from 'ant-design-vue';
-import { PureCard } from '@xcan/design';
+import { PureCard } from '@xcan-angus/vue-ui';
 
 const PolicyTable = defineAsyncComponent(() => import('./policy.vue'));
 const UserTable = defineAsyncComponent(() => import('./user.vue'));

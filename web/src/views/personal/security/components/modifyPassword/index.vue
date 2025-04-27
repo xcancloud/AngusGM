@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, Ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { password, site } from '@xcan/utils';
+import { password, site } from '@xcan-angus/tools';
 import { Popover } from 'ant-design-vue';
-import { Hints, Modal, Icon, Input } from '@xcan/design';
+import { Hints, Modal, Icon, Input } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
 

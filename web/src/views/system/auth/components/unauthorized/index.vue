@@ -2,10 +2,10 @@
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { security } from '@xcan/security';
+import { app } from '@xcan-angus/tools';
 
 import AuthList from '@/views/system/auth/components/authList/index.vue';
-import {tenant} from '@/api';
+import { tenant } from '@/api';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -54,7 +54,7 @@ const handleClick = (type: 'PERSONAL' | 'ENTERPRISE' | 'GOVERNMENT') => {
     :id="form.id"
     :pageTitle="t('个人认证')"
     :contents="contentsPerson"
-    :disbaled="!security.has('PersonalCertification')"
+    :disbaled="!app.has('PersonalCertification')"
     icon="icon-gerenrenzheng"
     @clickAuth="handleClick('PERSONAL')">
   </AuthList>
@@ -62,7 +62,7 @@ const handleClick = (type: 'PERSONAL' | 'ENTERPRISE' | 'GOVERNMENT') => {
     :id="form.id"
     :pageTitle="t('企业认证')"
     :contents="contentsEnterprise"
-    :disbaled="!security.has('EnterpriseCertification')"
+    :disbaled="!app.has('EnterpriseCertification')"
     icon="icon-qiyerenzheng"
     class="mt-2"
     @clickAuth="handleClick('ENTERPRISE')">
@@ -71,7 +71,7 @@ const handleClick = (type: 'PERSONAL' | 'ENTERPRISE' | 'GOVERNMENT') => {
     :id="form.id"
     :pageTitle="t('政府及事业单位认证')"
     :contents="contentsGoverment"
-    :disbaled="!security.has('InstitutionsCertification')"
+    :disbaled="!app.has('InstitutionsCertification')"
     icon="icon-shiyedanweirenzheng"
     class="mt-2"
     @clickAuth="handleClick('GOVERNMENT')">

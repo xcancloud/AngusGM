@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { defineAsyncComponent, ref, inject, Ref } from 'vue';
-import { PureCard, notification } from '@xcan/design';
+import { PureCard, notification } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';

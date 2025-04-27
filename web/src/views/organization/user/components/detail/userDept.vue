@@ -1,13 +1,12 @@
 <script setup lang='ts'>
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Hints, Table, Icon, Input, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan/design';
-import { utils } from '@xcan-angus/tools';
+import { Hints, Table, Icon, Input, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { utils, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
 
 import { UserDept, SearchParams } from './PropsType';
-import {user} from '@/api';
+import { user } from '@/api';
 
 const DeptModal = defineAsyncComponent(() => import('@/components/DeptModal/index.vue'));
 

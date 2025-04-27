@@ -3,8 +3,8 @@ import { ref, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
 import { Form, FormItem, RadioGroup, Radio } from 'ant-design-vue';
-import { http, utils } from '@xcan/utils';
-import { notification, DatePicker, Modal, Icon, Colon } from '@xcan/design';
+import { http, utils } from '@xcan-angus/tools';
+import { notification, DatePicker, Modal, Icon, Colon } from '@xcan-angus/vue-ui';
 
 interface FormType {
   type: 1 | 2, // 1: Time-based Lock, 2: Irreversible Lock

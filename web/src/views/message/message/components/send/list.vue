@@ -13,13 +13,11 @@ import {
   Grid,
   Spin,
   NoData
-} from '@xcan/design';
+} from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
+import { duration, http, GM } from '@xcan-angus/tools';
 import { Divider, CheckboxGroup, Checkbox, Tooltip, Popover, Pagination, Tree } from 'ant-design-vue';
-import { http } from '@xcan/utils';
 
-import { GM } from '@xcan/sdk';
 import { ReceiveObjectType } from './PropsType';
 
 interface Props {

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue';
-import { PureCard, SearchPanel, DropdownSort, Icon, Image, NoData, Colon, Spin, IconRefresh } from '@xcan/design';
+import { PureCard, SearchPanel, DropdownSort, Icon, Image, NoData, Colon, Spin, IconRefresh } from '@xcan-angus/vue-ui';
 import { Carousel, TypographyParagraph, Tag, Divider, Pagination, Button } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { site, http } from '@xcan/utils';
-import { API, VERSION } from '@xcan/sdk';
+import { site, http, API, VERSION } from '@xcan-angus/tools';
 
 import type { Goods } from './PropsType';
 import { goodsTypeColor, getEnumMessages } from './PropsType';

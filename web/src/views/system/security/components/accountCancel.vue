@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, defineAsyncComponent, Ref, inject, onMounted } from 'vue';
-import { Card, AsyncComponent, notification } from '@xcan/design';
+import { Card, AsyncComponent, notification } from '@xcan-angus/vue-ui';
 import { Switch } from 'ant-design-vue';
 
-
-import {tenant} from '@/api';
+import { tenant } from '@/api';
 
 const CancellationModal = defineAsyncComponent(() => import('./cancelConform.vue'));
 const tenantInfo: Ref = inject('tenantInfo', ref());

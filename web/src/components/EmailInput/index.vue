@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { regexp } from '@xcan/utils';
-import { Input } from '@xcan/design';
+import { regexp } from '@xcan-angus/tools';
+import { Input } from '@xcan-angus/vue-ui';
 
 const error = ref(false);
 const inputValue = ref<string>();

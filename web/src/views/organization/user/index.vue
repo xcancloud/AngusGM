@@ -15,13 +15,11 @@ import {
   Image,
   IconRefresh,
   IconCount
-} from '@xcan/design';
-import { security } from '@xcan/security';
-import { GM } from '@xcan/sdk';
+} from '@xcan-angus/vue-ui';
+import { app, utils, GM } from '@xcan-angus/tools';
 
 import { User, SearchParams, FilterOp } from './PropsType';
-import { utils } from '@xcan-angus/tools';
-import {user} from '@/api';
+import { user } from '@/api';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/components/password/index.vue'));
@@ -488,7 +486,7 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
               type="avatar"
               class="w-5 h-5 rounded-full inline-block mr-1"
               style="min-width: 20px;" />
-            <template v-if="security.has('UserDetail')">
+            <template v-if="app.has('UserDetail')">
               <RouterLink
                 :to="`/organization/user/${record.id}`"
                 class="text-theme-special text-theme-text-hover cursor-pointer">
@@ -561,44 +559,44 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
               <template #overlay>
                 <Menu class="text-3.5 leading-3.5 font-normal">
                   <MenuItem
-                    v-if="security.show('UserEnable')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!security.has('UserEnable')"
+                    v-if="app.show('UserEnable')"
+                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('UserEnable')"
                     @click="updateStatusConfirm(record.id,record.fullName,record.enabled)">
                     <template #icon>
                       <Icon :icon="record.enabled?'icon-jinyong1':'icon-qiyong'" />
                     </template>
-                    {{ record.enabled?security.getName('UserEnable', 1):security.getName('UserEnable',0) }}
+                    {{ record.enabled?app.getName('UserEnable', 1):app.getName('UserEnable',0) }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('UserDelete')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!security.has('UserDelete')"
+                    v-if="app.show('UserDelete')"
+                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('UserDelete')"
                     @click="delUserConfirm(record.id,record.fullName)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
                     </template>
-                    {{ security.getName('UserDelete') }}
+                    {{ app.getName('UserDelete') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="!record.locked && security.show('LockingUser')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!security.has('LockingUser')"
+                    v-if="!record.locked && app.show('LockingUser')"
+                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('LockingUser')"
                     @click="openLockedModal(record.id)">
                     <template #icon>
                       <Icon icon="icon-lock" />
                     </template>
-                    {{ security.getName('LockingUser', 0) }}
+                    {{ app.getName('LockingUser', 0) }}
                   </MenuItem>
                   <MenuItem
-                    v-if="record.locked && security.show('LockingUser')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!security.has('LockingUser')"
+                    v-if="record.locked && app.show('LockingUser')"
+                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('LockingUser')"
                     @click="unlock(record.id,record.fullName)">
                     <template #icon>
                       <Icon icon="icon-kaibiaojiemi" />
                     </template>
-                    {{ security.getName('LockingUser', 1) }}
+                    {{ app.getName('LockingUser', 1) }}
                   </MenuItem>
                   <MenuItem
-                    v-if="_tenantInfo.sysAdmin && security.show('SetIdentity')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!security.has('SetIdentity')"
+                    v-if="_tenantInfo.sysAdmin && app.show('SetIdentity')"
+                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('SetIdentity')"
                     @click="setAdminConfirm(record.id,record.fullName,record.sysAdmin)">
                     <template #icon>
                       <Icon :icon="record.sysAdmin?'icon-yonghu':'icon-guanliyuan'" />

@@ -2,7 +2,7 @@
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Skeleton } from 'ant-design-vue';
-import { Card, Table } from '@xcan/design';
+import { Card, Table } from '@xcan-angus/vue-ui';
 
 interface Props {
   serviceData: any

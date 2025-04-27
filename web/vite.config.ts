@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue';
-import {defineConfig} from 'vite';
-import {resolve} from 'path';
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
 import viteCompression from 'vite-plugin-compression';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
@@ -24,7 +24,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-  envDir: "conf",
+  envDir: 'conf',
   clearScreen: false,
   json: {
     namedExports: true,

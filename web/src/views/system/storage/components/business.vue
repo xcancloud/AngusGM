@@ -2,18 +2,14 @@
 import { ref, onMounted } from 'vue';
 import { Button, RadioGroup, Radio } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
-import { Hints, modal, Card, Icon, Input, Grid } from '@xcan/design';
-import { security } from '@xcan/security';
-import { STORAGE } from '@xcan/sdk';
-
-import { lazyEnum } from '@xcan/enum';
-import { http } from '@xcan/utils';
+import { Hints, modal, Card, Icon, Input, Grid } from '@xcan-angus/vue-ui';
+import { app, http, STORAGE, enumLoader } from '@xcan-angus/tools';
 
 const { t } = useI18n();
 const enumData = ref<{ value: string, message: string }[]>([]);
 
 const loadEnums = async () => {
-  const [error, data] = await lazyEnum.load('PlatformStoreType');
+  const [error, data] = await enumLoader.load('PlatformStoreType');
   if (error) {
     return;
   }
@@ -297,7 +293,7 @@ onMounted(() => {
         <span class="mr-3">{{ t('storage11') }}</span>
         <RadioGroup
           :value="storeType"
-          :disabled="!security.has('ApplicationStorageModify')"
+          :disabled="!app.has('ApplicationStorageModify')"
           size="small"
           @change="handleChange">
           <Radio
@@ -326,7 +322,7 @@ onMounted(() => {
                   {{ t('storage18')
                   }}
                 </div>
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -343,7 +339,7 @@ onMounted(() => {
                   size="small"
                   @change="localDirChange" />
                 <div v-show="pathRule" class="absolute top-9 text-3 leading-3 text-rule">{{ t('storage13') }}</div>
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -370,7 +366,7 @@ onMounted(() => {
                   {{ t('storage18')
                   }}
                 </div>
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -386,7 +382,7 @@ onMounted(() => {
                   :maxlength="160"
                   size="small"
                   @change="regionChange" />
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -403,7 +399,7 @@ onMounted(() => {
                   size="small"
                   @change="endpointChange" />
                 <div v-show="endpointRule" class="absolute top-8 text-3 leading-3 text-rule">{{ t('storage14') }}</div>
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -420,7 +416,7 @@ onMounted(() => {
                   size="small"
                   @change="accessKeyChange" />
                 <div v-show="accessKeyRule" class="absolute top-8 text-3 leading-3 text-rule">{{ t('storage15') }}</div>
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -437,7 +433,7 @@ onMounted(() => {
                   size="small"
                   @change="secretKeyChange" />
                 <div v-show="secretKeyRule" class="absolute top-8 text-3 leading-3 text-rule">{{ t('storage16') }}</div>
-                <template v-if="!isEdit && security.has('ApplicationStorageModify')">
+                <template v-if="!isEdit && app.has('ApplicationStorageModify')">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"

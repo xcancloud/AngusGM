@@ -2,12 +2,11 @@
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover } from 'ant-design-vue';
-import { Input, Hints, Icon, Table, IconRefresh, ButtonAuth } from '@xcan/design';
+import { Input, Hints, Icon, Table, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
+import { duration, utils } from '@xcan-angus/tools';
 
 import { auth } from '@/api';
-import { utils } from '@xcan-angus/tools';
 import { SearchParams } from './PropsType';
 
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));

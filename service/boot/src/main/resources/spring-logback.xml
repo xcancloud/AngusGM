@@ -73,7 +73,6 @@
 
   <springProfile name="pre,prod">
     <root level="INFO">
-      <!--<appender-ref ref="STDOUT"/>-->
       <appender-ref ref="FILE_ASYNC"/>
       <appender-ref ref="ERROR_FILE_ASYNC"/>
     </root>

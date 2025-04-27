@@ -12,10 +12,9 @@ import {
   IconCount,
   IconRefresh,
   ButtonAuth
-} from '@xcan/design';
-import { security } from '@xcan/security';
+} from '@xcan-angus/vue-ui';
+import { app, GM } from '@xcan-angus/tools';
 import { Tooltip } from 'ant-design-vue';
-import { GM } from '@xcan/sdk';
 
 import { notice } from '@/api';
 import type { FormDataType } from './interface';
@@ -254,7 +253,7 @@ onMounted(() => {
           </template>
           <template v-if="column.key === 'id'">
             <RouterLink
-              v-if="security.has('NoticeDetail')"
+              v-if="app.has('NoticeDetail')"
               :to="`/messages/notice/${record.id}`"
               class="text-theme-special text-theme-text-hover whitespace-nowrap">
               {{ record.id }}

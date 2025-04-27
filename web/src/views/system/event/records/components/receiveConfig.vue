@@ -2,7 +2,7 @@
 import { watch, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover, Tag } from 'ant-design-vue';
-import { Modal, Grid, NoData } from '@xcan/design';
+import { Modal, Grid, NoData } from '@xcan-angus/vue-ui';
 
 import { event } from '@/api';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Card } from '@xcan/design';
+import { Card } from '@xcan-angus/vue-ui';
 
 const Cpu = defineAsyncComponent(() => import('@/views/system/discovery/components/metrics/cpu/index.vue'));
 const Ram = defineAsyncComponent(() => import('@/views/system/discovery/components/metrics/memory/index.vue'));

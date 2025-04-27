@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed, inject, ref, nextTick, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Grid, PureCard, Icon, Image, Input } from '@xcan/design';
-import { site } from '@xcan/utils';
-import Cropper from '@xcan/cropper';
-import '@xcan/cropper/style.css';
+import { Grid, PureCard, Icon, Image, Input, Cropper } from '@xcan-angus/vue-ui';
+import { site } from '@xcan-angus/tools';
 
 import defaultAvatar from '../assets/default.jpg';
 

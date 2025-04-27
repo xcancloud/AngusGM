@@ -2,8 +2,8 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Divider } from 'ant-design-vue';
-import { ButtonAuth, IconRefresh, Input, notification, PureCard, Select, SelectEnum, Table } from '@xcan/design';
-import { GM } from '@xcan/sdk';
+import { ButtonAuth, IconRefresh, Input, notification, PureCard, Select, SelectEnum, Table } from '@xcan-angus/vue-ui';
+import { GM } from '@xcan-angus/tools';
 
 import { sms } from '@/api';
 import { _columns, Options, Template } from './PropsType';

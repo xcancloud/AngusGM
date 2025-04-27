@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { Colon, Icon, PureCard, Select } from '@xcan/design';
+import { Colon, Icon, PureCard, Select } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { Button, Radio, RadioGroup, Switch } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import {service, systemLog} from '@/api';
+import { service, systemLog } from '@/api';
 
 const { t } = useI18n();
 const serviceOptions = ref<{ label: string, value: string }[]>([]);

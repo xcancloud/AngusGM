@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PureCard } from '@xcan/design';
+import { PureCard } from '@xcan-angus/vue-ui';
 import { Skeleton, Divider } from 'ant-design-vue';
 import RichBrowser from '@xcan/browser';
 import { Goods } from '../../PropsType';

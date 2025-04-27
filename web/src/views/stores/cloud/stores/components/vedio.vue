@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { cookie } from '@xcan/utils';
-import { Icon, Modal } from '@xcan/design';
+import { cookie } from '@xcan-angus/tools';
+import { Icon, Modal } from '@xcan-angus/vue-ui';
 import 'vue3-video-play/dist/style.css';
 import { videoPlay } from 'vue3-video-play';
 

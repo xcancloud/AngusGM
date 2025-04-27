@@ -13,8 +13,8 @@ import {
   Icon,
   Image,
   ButtonAuth
-} from '@xcan/design';
-import { cookie } from '@xcan/utils';
+} from '@xcan-angus/vue-ui';
+import { cookie } from '@xcan-angus/tools';
 
 import { auth } from '@/api';
 

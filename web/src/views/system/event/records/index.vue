@@ -2,10 +2,9 @@
 import { onMounted, reactive, ref, computed, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Popover, Button } from 'ant-design-vue';
-import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconCount, IconRefresh } from '@xcan/design';
-import { security } from '@xcan/security';
+import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconCount, IconRefresh } from '@xcan-angus/vue-ui';
+import { app, GM } from '@xcan-angus/tools';
 import DOMPurify from 'dompurify';
-import { GM } from '@xcan/sdk';
 
 import { event } from '@/api';
 import { EventRecord } from './PropsType';
@@ -315,44 +314,44 @@ onMounted(() => {
           </template>
           <template v-if="column.dataIndex ==='action'">
             <Button
-              v-if="security.show('ReceivingChannelView')"
+              v-if="app.show('ReceivingChannelView')"
               type="text"
               size="small"
-              :disabled="!security.has('ReceivingChannelView')"
+              :disabled="!app.has('ReceivingChannelView')"
               @click="openReceiveConfig(record)">
               <Icon icon="icon-jiekoudaili" class="mr-1" />
-              {{ security.getName('ReceivingChannelView') }}
+              {{ app.getName('ReceivingChannelView') }}
             </Button>
             <Button
-              v-if="security.show('EventContentView')"
+              v-if="app.show('EventContentView')"
               type="text"
               size="small"
-              :disabled="!security.has('EventContentView')"
+              :disabled="!app.has('EventContentView')"
               @click="openCheckContentDialog(record.eventViewUrl)">
               <Icon icon="icon-shijianjilu" class="mr-1" />
-              {{ security.getName('EventContentView') }}
+              {{ app.getName('EventContentView') }}
             </Button>
             <!-- <Dropdown overlayClassName="table-oper-menu ant-dropdown-sm">
               <Icon icon="icon-gengduo" class="cursor-pointer outline-none" />
               <template #overlay>
                 <Menu>
                   <MenuItem
-                    v-if="security.show('ReceivingChannelView')"
-                    :disabled="!security.has('ReceivingChannelView')"
+                    v-if="app.show('ReceivingChannelView')"
+                    :disabled="!app.has('ReceivingChannelView')"
                     @click="openReceiveConfig(record)">
                     <template #icon>
                       <Icon icon="icon-jiekoudaili" />
                     </template>
-                    <a href="javascript:;" class="text-theme-text-hover">{{ security.getName('ReceivingChannelView') }}</a>
+                    <a href="javascript:;" class="text-theme-text-hover">{{ app.getName('ReceivingChannelView') }}</a>
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('EventContentView')"
-                    :disabled="!security.has('EventContentView')"
+                    v-if="app.show('EventContentView')"
+                    :disabled="!app.has('EventContentView')"
                     @click="openCheckContentDialog(record.eventViewUrl)">
                     <template #icon>
                       <Icon icon="icon-shijianjilu" />
                     </template>
-                    <a href="javascript:;" class="text-theme-text-hover">{{ security.getName('EventContentView') }}</a>
+                    <a href="javascript:;" class="text-theme-text-hover">{{ app.getName('EventContentView') }}</a>
                   </MenuItem>
                 </Menu>
               </template>

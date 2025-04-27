@@ -2,14 +2,13 @@
 import { ref, onMounted, defineAsyncComponent, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Tooltip, Tag, Pagination } from 'ant-design-vue';
-import { modal, PureCard, Spin, Input, AsyncComponent, IconRefresh, notification, ButtonAuth } from '@xcan/design';
-import { security } from '@xcan/security';
+import { modal, PureCard, Spin, Input, AsyncComponent, IconRefresh, notification, ButtonAuth } from '@xcan-angus/vue-ui';
+import { app, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
 
 import { OrgTag, SearchParams } from '../../PropsType';
 
-import {orgTag} from '@/api';
+import { orgTag } from '@/api';
 
 const AddModal = defineAsyncComponent(() => import('@/views/organization/tag/components/add/index.vue'));
 
@@ -228,13 +227,13 @@ defineExpose({ openEditName });
         </template>
         <template v-else>
           <Tag
-            :closable="security.has('TagDelete')"
+            :closable="app.has('TagDelete')"
             class="mb-0.75 truncate cursor-pointer"
             :class="{'border-theme-divider-selected':item.id === checkedTag?.id}"
             style="max-width: 372px;"
             @close.prevent="deleteConfirm(item.id,item.name)"
             @click="selectTag(item)"
-            @dblclick="security.has('TagModify') && openEditName(item)">
+            @dblclick="app.has('TagModify') && openEditName(item)">
             <template v-if="item.name.length<=15">
               {{ item.name }}
             </template>

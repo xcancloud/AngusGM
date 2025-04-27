@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ConfigProvider, Header, Denied, NetworkError, NotFound } from '@xcan/design';
-import { security } from '@xcan/security';
-import { useState, useMutations } from '@xcan/vuex';
-import { sessionStore, site } from '@xcan/utils';
+import { ConfigProvider, Header, Denied, NetworkError, NotFound, VuexHelper } from '@xcan-angus/vue-ui';
+import { app, sessionStore, site } from '@xcan-angus/tools';
 
 import { personalCenterMenus, getTopRightMenu } from '@/layout/fixed-top-menu';
 
 const { t } = useI18n();
+
+const { useState, useMutations } = VuexHelper;
 const { statusCode, layoutCode } = useState(['statusCode', 'layoutCode']);
 
 const envConfigs = ref<{ [key: string]: string }>({});
@@ -64,7 +64,7 @@ provide('envConfigs', envConfigs);
     </template>
     <template v-else>
       <template v-if="layoutCode === 'gm'">
-        <Header :codeMap="security.codeMap" :menus="security.menuList" />
+        <Header :codeMap="app.codeMap" :menus="app.menuList" />
       </template>
       <template v-else-if="layoutCode === 'pl'">
         <Header :menus="menuList" :codeMap="codeMap" />

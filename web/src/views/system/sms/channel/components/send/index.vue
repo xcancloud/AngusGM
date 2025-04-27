@@ -2,7 +2,7 @@
 import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
-import { Colon, Icon, Input } from '@xcan/design';
+import { Colon, Icon, Input } from '@xcan-angus/vue-ui';
 
 import { sms } from '@/api';
 import { Aisle, SendState } from './PropsType';

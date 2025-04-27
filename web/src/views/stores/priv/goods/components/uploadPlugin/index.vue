@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { cookie } from '@xcan/utils';
+import { cookie, utils } from '@xcan-angus/tools';
 import { Upload, Modal, RadioGroup } from 'ant-design-vue';
-import { Hints, Icon, notification } from '@xcan/design';
+import { Hints, Icon, notification } from '@xcan-angus/vue-ui';
 
 import { store } from '@/api';
-import { utils } from '@xcan-angus/tools';
 
 interface FileObj {
   id: string,

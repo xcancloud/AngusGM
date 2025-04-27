@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { http } from '@xcan/utils';
-import { PUB_CM, PUB_GM } from '@xcan/sdk';
+import { http, PUB_CM, PUB_GM } from '@xcan-angus/tools';
 import { useRouter } from 'vue-router';
-import { Modal, notification } from '@xcan/design';
+import { Modal, notification } from '@xcan-angus/vue-ui';
 import { Button, Checkbox } from 'ant-design-vue';
 import DOMPurify from 'dompurify';
 
@@ -59,7 +58,7 @@ const modelTitle = ref('');
 
 const mobileRef = ref();
 const emailRef = ref();
-const mobileVeriRef = ref();  // TODO 命名语法错误问题
+const mobileVeriRef = ref(); // TODO 命名语法错误问题
 const mobilePassRef = ref();
 const mobileConfirmpassRef = ref();
 const emailConfirmpassRef = ref();
@@ -76,7 +75,7 @@ watch(() => props.type, () => {
 });
 
 const loadTerms = () => {
-  http.get(`${PUB_CM}/content/setting/termsAndConditions`)  // TODO 删除PUB_CM引用，服务条款和隐私条款报错前端
+  http.get(`${PUB_CM}/content/setting/termsAndConditions`) // TODO 删除PUB_CM引用，服务条款和隐私条款报错前端
     .then(([error, resp]) => {
       if (error) {
         return;

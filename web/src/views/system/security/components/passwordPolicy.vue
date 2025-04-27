@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Input, Card } from '@xcan/design';
+import { Input, Card } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
+import { duration } from '@xcan-angus/tools';
 
 import { PasswordPolicy } from '../PropsType';
 

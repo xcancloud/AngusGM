@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Card } from '@xcan/design';
+import { Card } from '@xcan-angus/vue-ui';
 import certFrontPicUrl from '../../images/idCardFront.png';
 import certBackPicUrl from '../../images/idCardBack.png';
 

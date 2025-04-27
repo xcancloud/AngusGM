@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { DateType } from './PropsType';
 import { RadioGroup, RadioButton } from 'ant-design-vue';
-import { DatePicker } from '@xcan/design';
+import { DatePicker } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 
 interface Props {

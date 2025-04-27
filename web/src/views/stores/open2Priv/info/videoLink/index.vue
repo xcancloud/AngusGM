@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PureCard, Icon, Grid } from '@xcan/design';
+import { PureCard, Icon, Grid } from '@xcan-angus/vue-ui';
 import { Skeleton, Image } from 'ant-design-vue';
 
 import noPublic from './images/officialAccount.jpg';

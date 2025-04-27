@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { Button } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';
-import {tenant} from '@/api';
+import { tenant } from '@/api';
 
 const { t } = useI18n();
 const id = ref('');

@@ -1,4 +1,4 @@
-import { binary, site } from '@xcan/utils';
+import { binary, site } from '@xcan-angus/tools';
 
 // Redirect URL after successful login
 const redirectTo = async (data?: { accessToken: string; refreshToken: string; clientId: string; }): Promise<void> => {

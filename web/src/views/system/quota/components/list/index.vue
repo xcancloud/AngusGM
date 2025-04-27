@@ -1,9 +1,8 @@
 <script setup lang='ts'>
 import { computed, ref, onMounted, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Table, PureCard, Select, AsyncComponent, IconRefresh } from '@xcan/design';
-import { security } from '@xcan/security';
-import { site } from '@xcan/utils';
+import { Table, PureCard, Select, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
+import { app, site } from '@xcan-angus/tools';
 
 import { Quota } from '../../PropsType';
 import { setting } from '@/api';
@@ -213,12 +212,12 @@ const columns = computed(() => {
           {{ text?'是':'否' }}
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <template v-if="record.allowChange && security.has('ResourceQuotaModify')">
+          <template v-if="record.allowChange && app.has('ResourceQuotaModify')">
             <a class="text-theme-text-hover cursor-pointer" @click="openEditModal(record)">{{
-              security.getName('ResourceQuotaModify') }}</a>
+              app.getName('ResourceQuotaModify') }}</a>
           </template>
           <template v-else>
-            <a class="text-theme-sub-content">{{ security.getName('ResourceQuotaModify') }}</a>
+            <a class="text-theme-sub-content">{{ app.getName('ResourceQuotaModify') }}</a>
           </template>
         </template>
       </template>

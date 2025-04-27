@@ -3,12 +3,11 @@ import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, Textarea } from 'ant-design-vue';
-import { Hints, PureCard, Input, IconRequired, Select, notification, Colon } from '@xcan/design';
-import { utils } from '@xcan/utils';
+import { Hints, PureCard, Input, IconRequired, Select, notification, Colon } from '@xcan-angus/vue-ui';
+import { utils, GM } from '@xcan-angus/tools';
 
 import { FormState, Detail } from '../../PropsType';
-import { GM } from '@xcan/sdk';
-import {group} from '@/api';
+import { group } from '@/api';
 
 const { t } = useI18n();
 const route = useRoute();

@@ -2,10 +2,9 @@
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover } from 'ant-design-vue';
-import { Hints, Table, AsyncComponent, Input, IconRefresh, Icon, ButtonAuth } from '@xcan/design';
-import { utils } from '@xcan-angus/tools';
+import { Hints, Table, AsyncComponent, Input, IconRefresh, Icon, ButtonAuth } from '@xcan-angus/vue-ui';
+import { utils, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
 
 import { auth } from '@/api';
 import { SearchParams } from './PropsType';

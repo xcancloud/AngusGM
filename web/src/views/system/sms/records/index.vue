@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan/design';
-import { security } from '@xcan/security';
+import { IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
+import { app, GM } from '@xcan-angus/tools';
 import { Badge } from 'ant-design-vue';
-import { GM } from '@xcan/sdk';
 
 import { sms } from '@/api';
 import { FilterOp, SearchParams, SmsRecord } from './PropsType';
@@ -232,7 +231,7 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
       <template #bodyCell="{column,text}">
         <template v-if="column.dataIndex === 'id'">
           <RouterLink
-            v-if="security.has('SMSSendRecordsDetail')"
+            v-if="app.has('SMSSendRecordsDetail')"
             :to="`/system/sms/records/${text}`"
             class="text-theme-special text-theme-text-hover">
             {{ text }}

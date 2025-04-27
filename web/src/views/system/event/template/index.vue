@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref, computed, defineAsyncComponent } from 'vue';
 import { Popover, Button } from 'ant-design-vue';
-import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconRefresh } from '@xcan/design';
-import { security } from '@xcan/security';
+import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
+import { app, http, enumLoader, GM } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
-import { lazyEnum } from '@xcan/enum';
-import { GM } from '@xcan/sdk';
 
 import { EventConfigList } from './PropsType';
 import { event } from '@/api';
-import { http } from '@xcan/utils';
 
 const ReceiveConfig = defineAsyncComponent(() => import('./components/receiveConfig.vue'));
 
@@ -118,7 +115,7 @@ const appList = ref<{ appCode: string; appName: string; appShowName: string }[]>
 const appLoaded = ref(false);
 
 const loadEnums = async () => {
-  const [, data1] = await lazyEnum.load('CombinedTargetType');
+  const [, data1] = await enumLoader.load('CombinedTargetType');
   targetTypeEnums.value = data1 || [];
 };
 
@@ -254,8 +251,8 @@ onMounted(async () => {
           </template>
           <template v-if="column.key ==='operate'">
             <Button
-              v-if="security.show('ReceiveChannelConfigure')"
-              :disabled="!security.has('ReceiveChannelConfigure')"
+              v-if="app.show('ReceiveChannelConfigure')"
+              :disabled="!app.has('ReceiveChannelConfigure')"
               size="small"
               type="text"
               class="px-0"
@@ -263,7 +260,7 @@ onMounted(async () => {
               <template #icon>
                 <Icon icon="icon-shezhi" class="mr-1" />
               </template>
-              <a class="text-theme-text-hover">{{ security.getName('ReceiveChannelConfigure') }}</a>
+              <a class="text-theme-text-hover">{{ app.getName('ReceiveChannelConfigure') }}</a>
             </Button>
           </template>
         </template>

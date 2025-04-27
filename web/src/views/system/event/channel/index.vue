@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref, defineAsyncComponent } from 'vue';
-import { lazyEnum } from '@xcan/enum';
-import { Card, AsyncComponent } from '@xcan/design';
+import { enumLoader } from '@xcan-angus/tools';
+import { Card, AsyncComponent } from '@xcan-angus/vue-ui';
 
 const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./components/http.vue'));
 const ReceivingConfigurationEmail = defineAsyncComponent(() => import('./components/email.vue'));
@@ -16,7 +16,7 @@ const enumsList: {
 });
 
 const getDictory = async () => {
-  const [error, data] = await lazyEnum.load('ReceiveChannelType');
+  const [error, data] = await enumLoader.load('ReceiveChannelType');
   if (error) {
     return;
   }

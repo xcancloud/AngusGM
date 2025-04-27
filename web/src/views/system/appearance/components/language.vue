@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { Skeleton } from 'ant-design-vue';
-import { SelectEnum, SelectIntl, Card, notification } from '@xcan/design';
+import { SelectEnum, SelectIntl, Card, notification } from '@xcan-angus/vue-ui';
 
 import { setting } from '@/api';
 import { useI18n } from 'vue-i18n';

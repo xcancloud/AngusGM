@@ -2,7 +2,7 @@
 import { ref, defineAsyncComponent, onMounted, watch, computed } from 'vue';
 import { PieSetting, PieData, BarData, DateType } from './PropsType';
 import dayjs from 'dayjs';
-import { http } from '@xcan/utils';
+import { http } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
 
 const BarChartParam = defineAsyncComponent(() => import('./BarChartParam.vue'));

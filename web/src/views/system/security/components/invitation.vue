@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Card, Colon } from '@xcan/design';
+import { Card, Colon } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
+import { duration } from '@xcan-angus/tools';
 import { Button, Switch } from 'ant-design-vue';
 
 import { SignupAllow, Operation } from '../PropsType';

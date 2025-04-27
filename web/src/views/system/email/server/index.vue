@@ -2,8 +2,8 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
-import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, modal, PureCard, Table } from '@xcan/design';
-import { security } from '@xcan/security';
+import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, modal, PureCard, Table } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/tools';
 
 import { email } from '@/api';
 import { MailboxService } from './PropsType';
@@ -169,7 +169,7 @@ onMounted(() => {
         <template #bodyCell="{column, record}">
           <template v-if="column.dataIndex === 'name'">
             <RouterLink
-              v-if="security.has('MailServerDetail')"
+              v-if="app.has('MailServerDetail')"
               :to="`/system/email/service/${record.id}?type=detail`"
               class="text-theme-special text-theme-text-hover">
               {{ record.name }}<span v-if="record.enabled" class="text-theme-special ml-1">({{
@@ -196,41 +196,41 @@ onMounted(() => {
               <template #overlay>
                 <Menu>
                   <MenuItem
-                    v-if="security.show('MailServerSetDefault')"
-                    :disabled="!security.has('MailServerSetDefault')"
+                    v-if="app.show('MailServerSetDefault')"
+                    :disabled="!app.has('MailServerSetDefault')"
                     @click="defaultEmail(record.id,record.enabled)">
                     <template #icon>
                       <Icon :icon="record.enabled?'icon-quxiao':'icon-sheweimoren'" />
                     </template>
                     {{
-                      record.enabled ? security.getName('MailServerSetDefault', 1) : security.getName('MailServerSetDefault', 0)
+                      record.enabled ? app.getName('MailServerSetDefault', 1) : app.getName('MailServerSetDefault', 0)
                     }}
                   </MenuItem>
-                  <MenuItem v-if="security.show('MailServerModify')" :disabled="!security.has('MailServerModify')">
+                  <MenuItem v-if="app.show('MailServerModify')" :disabled="!app.has('MailServerModify')">
                     <template #icon>
                       <Icon icon="icon-shuxie" />
                     </template>
                     <RouterLink :to="`/system/email/service/edit/${record.id}?type=edit`">
-                      {{ security.getName('MailServerModify') }}
+                      {{ app.getName('MailServerModify') }}
                     </RouterLink>
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('MailServerDelete')"
-                    :disabled="!security.has('MailServerDelete')"
+                    v-if="app.show('MailServerDelete')"
+                    :disabled="!app.has('MailServerDelete')"
                     @click="deleteConfig(record.id,record.name)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
                     </template>
-                    {{ security.getName('MailServerDelete') }}
+                    {{ app.getName('MailServerDelete') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('MailServerTest')"
-                    :disabled="!security.has('MailServerTest')"
+                    v-if="app.show('MailServerTest')"
+                    :disabled="!app.has('MailServerTest')"
                     @click="testEmail(record.id,record.host)">
                     <template #icon>
                       <Icon icon="icon-zhihangceshi" />
                     </template>
-                    {{ security.getName('MailServerTest') }}
+                    {{ app.getName('MailServerTest') }}
                   </MenuItem>
                 </Menu>
               </template>

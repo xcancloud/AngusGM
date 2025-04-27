@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { inject, ref, watch, onMounted } from 'vue';
-import { http, cookie } from '@xcan/utils';
-import { Modal, Hints, Input } from '@xcan/design';
-import { PUB_GM } from '@xcan/sdk';
+import { http, cookie, PUB_GM } from '@xcan-angus/tools';
+import { Modal, Hints, Input } from '@xcan-angus/vue-ui';
 
 interface Props {
   value: string,

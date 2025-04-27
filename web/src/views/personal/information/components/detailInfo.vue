@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PureCard, Grid, Icon, Input } from '@xcan/design';
-import { regexp } from '@xcan/utils';
-import {user} from '@/api';
+import { PureCard, Grid, Icon, Input } from '@xcan-angus/vue-ui';
+import { regexp } from '@xcan-angus/tools';
+import { user } from '@/api';
 
 const tenantInfo = inject('tenantInfo', ref());
 
@@ -405,9 +405,6 @@ watch(() => tenantInfo.value, (newValue: any) => {
               :class="{ 'active-github': tenantInfo.githubUserId }"
               icon="icon-Github" />
           </div>
-          <!-- <RouterLink class="mr-20 text-theme-special" to="/information/other">
-            <Icon icon="icon-shezhi" class="text-3.5" />
-          </RouterLink> -->
         </div>
       </template>
       <template #tenantName="{text}">

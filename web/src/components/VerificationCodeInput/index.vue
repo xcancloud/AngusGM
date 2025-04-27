@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { http } from '@xcan/utils';
-import { Input } from '@xcan/design';
-import { PUB_GM } from '@xcan/sdk';
+import { http, PUB_GM } from '@xcan-angus/tools';
+import { Input } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

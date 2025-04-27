@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Card, Grid, NoData, Colon } from '@xcan/design';
-import { site } from '@xcan/utils';
+import { Card, Grid, NoData, Colon } from '@xcan-angus/vue-ui';
+import { site } from '@xcan-angus/tools';
 import { Skeleton } from 'ant-design-vue';
 
 import { UpgradeableVersion } from '../PropsType';

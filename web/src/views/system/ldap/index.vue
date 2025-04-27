@@ -2,12 +2,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Alert, Badge, Button, Dropdown, Form, FormItem, Menu, MenuItem, Skeleton } from 'ant-design-vue';
-import { ButtonAuth, Hints, Icon, IconRefresh, Input, modal, notification, PureCard, Table } from '@xcan/design';
-import { security } from '@xcan/security';
+import { ButtonAuth, Hints, Icon, IconRefresh, Input, modal, notification, PureCard, Table } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
 
-
-import {userDirectory} from '@/api';
+import { userDirectory } from '@/api';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -445,11 +444,11 @@ const handleTestResult = (data) => {
               <template #overlay>
                 <Menu>
                   <MenuItem
-                    v-if="security.show('LdapTest')"
-                    :disabled="!security.has('LdapTest')"
+                    v-if="app.show('LdapTest')"
+                    :disabled="!app.has('LdapTest')"
                     @click="test(record)">
                     <Icon icon="icon-zhihangceshi" class="text-3 mr-0.5" />
-                    {{ security.getName('LdapTest') }}
+                    {{ app.getName('LdapTest') }}
                   </MenuItem>
                   <MenuItem
                     :disabled="index === 0"
@@ -464,22 +463,22 @@ const handleTestResult = (data) => {
                     下移
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('LdapDelete')"
-                    :disabled="!security.has('LdapDelete')"
+                    v-if="app.show('LdapDelete')"
+                    :disabled="!app.has('LdapDelete')"
                     @click="deleteConfirm(record, false)">
                     <Icon icon="icon-lajitong" />
                     删除目录
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('LdapDelete')"
-                    :disabled="!security.has('LdapDelete')"
+                    v-if="app.show('LdapDelete')"
+                    :disabled="!app.has('LdapDelete')"
                     @click="deleteConfirm(record, true)">
                     <Icon icon="icon-lajitong" />
                     删除目录和数据
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('LdapSetDefault')"
-                    :disabled="!security.has('LdapSetDefault')"
+                    v-if="app.show('LdapSetDefault')"
+                    :disabled="!app.has('LdapSetDefault')"
                     @click="enabledLdap(record)">
                     <Icon :icon="record.enabled ? 'icon-jinyong1' : 'icon-qiyong'" />
                     {{ record.enabled ? '禁用' : '启用' }}

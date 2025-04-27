@@ -2,8 +2,8 @@
 import { ref, reactive, onMounted, watch, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Checkbox, Form, FormItem, Textarea, Tree } from 'ant-design-vue';
-import { notification, Select, Input, Card, Icon, NoData, ButtonAuth } from '@xcan/design';
-import { GM } from '@xcan/sdk';
+import { notification, Select, Input, Card, Icon, NoData, ButtonAuth } from '@xcan-angus/vue-ui';
+import { GM } from '@xcan-angus/tools';
 
 import { auth } from '@/api';
 

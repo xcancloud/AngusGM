@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Icon, IconRequired, Input, PureCard, Select } from '@xcan/design';
-import { security } from '@xcan/security';
-import { utils } from '@xcan/utils';
+import { Icon, IconRequired, Input, PureCard, Select } from '@xcan-angus/vue-ui';
+import { app, utils } from '@xcan-angus/tools';
 import { Button, Checkbox, Form, FormItem, Switch, Textarea } from 'ant-design-vue';
 
 import { email } from '@/api';
@@ -134,12 +133,12 @@ const selectOption = [
     <div class="text-right h-6">
       <Button
         v-if="source==='detail'"
-        :disbaled="!security.has('MailServerModify')"
+        :disbaled="!app.has('MailServerModify')"
         type="primary"
         size="small"
         class="px-4"
         @click="openEdit">
-        {{ security.getName('MailServerModify') }}
+        {{ app.getName('MailServerModify') }}
       </Button>
     </div>
     <Form

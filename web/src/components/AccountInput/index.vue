@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { Input } from '@xcan/design';
+import { Input } from '@xcan-angus/vue-ui';
 
 const { t } = useI18n();
 

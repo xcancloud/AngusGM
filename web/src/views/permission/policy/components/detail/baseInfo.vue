@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { useI18n } from 'vue-i18n';
-import { Grid } from '@xcan/design';
+import { Grid } from '@xcan-angus/vue-ui';
 
 import type { DetailType } from './PropTypes';
 

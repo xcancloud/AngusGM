@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { site } from '@xcan/utils';
+import { site } from '@xcan-angus/tools';
 import { Button } from 'ant-design-vue';
 import { store } from '@/api';
 

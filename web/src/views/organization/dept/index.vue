@@ -17,16 +17,12 @@ import {
   Card,
   IconRefresh,
   IconCount
-} from '@xcan/design';
-import { security } from '@xcan/security';
+} from '@xcan-angus/vue-ui';
+import { app, utils, duration, GM } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
-import { GM } from '@xcan/sdk';
-
-import { utils } from '@xcan-angus/tools';
 
 import { DataType, TreeRecordType, UserRecordType } from './PropsType';
-import {auth, dept} from '@/api';
+import { auth, dept } from '@/api';
 
 type FilterOp =
   'EQUAL'
@@ -676,49 +672,49 @@ const rightOpenMove = (selected) => {
               <template #overlay>
                 <Menu>
                   <MenuItem
-                    v-if="security.show('DeptModify')"
-                    :disabled="!security.has('DeptModify')"
+                    v-if="app.show('DeptModify')"
+                    :disabled="!app.has('DeptModify')"
                     @click="rightEditDeptName(item)">
                     <template #icon>
                       <Icon icon="icon-shuxie" />
                     </template>
-                    {{ security.getName('DeptModify') }}
+                    {{ app.getName('DeptModify') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('DeptAdd')"
-                    :disabled="!security.has('DeptAdd')"
+                    v-if="app.show('DeptAdd')"
+                    :disabled="!app.has('DeptAdd')"
                     @click="rightAddDept(item)">
                     <template #icon>
                       <Icon icon="icon-tianjia" />
                     </template>
-                    {{ security.getName('DeptAdd') }}
+                    {{ app.getName('DeptAdd') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('DeptDelete')"
-                    :disabled="!security.has('DeptDelete')"
+                    v-if="app.show('DeptDelete')"
+                    :disabled="!app.has('DeptDelete')"
                     @click="rightDel(item)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
                     </template>
-                    {{ security.getName('DeptDelete') }}
+                    {{ app.getName('DeptDelete') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('DeptTagsAdd')"
-                    :disabled="!security.has('DeptTagsAdd')"
+                    v-if="app.show('DeptTagsAdd')"
+                    :disabled="!app.has('DeptTagsAdd')"
                     @click="rightEditTag(item)">
                     <template #icon>
                       <Icon icon="icon-biaoqian2" />
                     </template>
-                    {{ security.getName('DeptTagsAdd') }}
+                    {{ app.getName('DeptTagsAdd') }}
                   </MenuItem>
                   <MenuItem
-                    v-if="security.show('Move')"
-                    :disabled="!security.has('Move')"
+                    v-if="app.show('Move')"
+                    :disabled="!app.has('Move')"
                     @click="rightOpenMove(item)">
                     <template #icon>
                       <Icon icon="icon-riqiyou" />
                     </template>
-                    {{ security.getName('Move') }}
+                    {{ app.getName('Move') }}
                   </MenuItem>
                 </Menu>
               </template>

@@ -2,10 +2,8 @@
 import { ref } from 'vue';
 import { downloadEditionTypes, isCloudGoods, isPriGoods, multipleEditionTypes } from '../PropsType';
 import { Button, Popconfirm, RadioButton, RadioGroup } from 'ant-design-vue';
-import { http, site } from '@xcan/utils';
-import { download } from '@xcan/file';
-import { STORE } from '@xcan/sdk';
-import { notification } from '@xcan/design';
+import { http, site, download, STORE } from '@xcan-angus/tools';
+import { notification } from '@xcan-angus/vue-ui';
 
 interface Props {
   goods: any,

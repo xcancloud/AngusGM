@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, inject, Ref } from 'vue';
 import { Button } from 'ant-design-vue';
-import { Modal, Input, Hints, notification, Colon } from '@xcan/design';
+import { Modal, Input, Hints, notification, Colon } from '@xcan-angus/vue-ui';
 
-
-import {tenant} from '@/api';
+import { tenant } from '@/api';
 
 interface Props {
   visible: boolean

@@ -1,9 +1,9 @@
 <script setup lang='ts'>
 import { reactive, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { modal, notification, Card, Table, Select } from '@xcan/design';
+import { modal, notification, Card, Table, Select } from '@xcan-angus/vue-ui';
 import { RadioGroup, Radio } from 'ant-design-vue';
-import { security } from '@xcan/security';
+import { app } from '@xcan-angus/tools';
 
 import { auth } from '@/api';
 
@@ -138,7 +138,7 @@ defineExpose({
         <template v-if="column.dataIndex === 'polices'">
           <RadioGroup
             :value="record.policyId"
-            :disabled="!security.has('DefaultAppPolicySetting')"
+            :disabled="!app.has('DefaultAppPolicySetting')"
             size="small"
             @change="radioChange($event, record.appId, record.defaultPolicies)">
             <Radio
@@ -156,7 +156,7 @@ defineExpose({
           </RadioGroup>
           <Radio
             class="ml-8"
-            :disabled="!security.has('DefaultAppPolicySetting')"
+            :disabled="!app.has('DefaultAppPolicySetting')"
             :checked="!!getUserDefinePolicyId(record)">
             其他
           </Radio>
@@ -164,7 +164,7 @@ defineExpose({
             :options="getPolices(record)"
             :value="getUserDefinePolicyId(record)"
             :fieldNames="{label:'name',value:'id'}"
-            :disabled="!security.has('DefaultAppPolicySetting')"
+            :disabled="!app.has('DefaultAppPolicySetting')"
             :placeholder="t('permissionsStrategy.default.placeholder')"
             class="w-70"
             size="small"

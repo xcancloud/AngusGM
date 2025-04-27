@@ -3,8 +3,8 @@ import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Badge, Skeleton } from 'ant-design-vue';
-import { Card, Grid } from '@xcan/design';
-import { cookie } from '@xcan/utils';
+import { Card, Grid } from '@xcan-angus/vue-ui';
+import { cookie } from '@xcan-angus/tools';
 
 import { email } from '@/api';
 import { EmailRecord } from '../../PropsType';

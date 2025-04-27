@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Card, notification } from '@xcan/design';
+import { Card, notification } from '@xcan-angus/vue-ui';
 import { TabPane, Tabs } from 'ant-design-vue';
 
 // 基本信息组件
@@ -18,7 +18,7 @@ import MemberConfig from '@/views/system/ldap/components/memberConfig/index.vue'
 import SubmitButton from '@/views/system/ldap/components/submitButton/index.vue';
 
 import { useI18n } from 'vue-i18n';
-import {userDirectory} from '@/api';
+import { userDirectory } from '@/api';
 
 const { t } = useI18n();
 

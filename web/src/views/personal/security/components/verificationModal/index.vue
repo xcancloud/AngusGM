@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { http } from '@xcan/utils';
-import { Modal, Hints } from '@xcan/design';
-import { GM } from '@xcan/sdk';
+import { http, GM } from '@xcan-angus/tools';
+import { Modal, Hints } from '@xcan-angus/vue-ui';
 
 import { UserInfoParams } from '@/views/personal/security/components/modifyMobileEmail/index.vue';
 import VerificationCode from '@/views/personal/security/components/verificationCode/index.vue';

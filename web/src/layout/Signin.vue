@@ -13,7 +13,6 @@ const preventDefaultListener = (e) => {
       <Logo />
       <div class="layout-header-right">
         <OfficialLink />
-        <!-- <Language /> -->
       </div>
     </div>
     <div class="layout-inner-container">

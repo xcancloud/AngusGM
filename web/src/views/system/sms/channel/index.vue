@@ -15,7 +15,7 @@ import {
   NoData,
   notification,
   PureCard
-} from '@xcan/design';
+} from '@xcan-angus/vue-ui';
 
 import { sms } from '@/api';
 import { Aisle } from './PropsType';

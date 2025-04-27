@@ -2,9 +2,8 @@
 import { computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
-import { DatePicker, Card, Input, Icon, Hints } from '@xcan/design';
-import { http } from '@xcan/utils';
-import { GM } from '@xcan/sdk';
+import { DatePicker, Card, Input, Icon, Hints } from '@xcan-angus/vue-ui';
+import { http, GM } from '@xcan-angus/tools';
 
 import { userToken } from '@/api';
 import TokenTable from './Table.vue';

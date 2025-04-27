@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { cookie } from '@xcan/utils';
+import { cookie } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
 import { InputPassword } from 'ant-design-vue';
 

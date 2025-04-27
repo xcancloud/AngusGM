@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
-import { Modal, Input, notification, Colon } from '@xcan/design';
+import { Modal, Input, notification, Colon } from '@xcan-angus/vue-ui';
 import { email } from '@/api';
 
 interface Props {

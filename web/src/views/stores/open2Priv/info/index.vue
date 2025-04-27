@@ -2,10 +2,9 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { store } from '@/api';
-import { cookie, http } from '@xcan/utils';
-import { Carousel, StoreComment, Image, PureCard, Icon, Colon } from '@xcan/design';
+import { cookie, http, API, VERSION } from '@xcan-angus/tools';
+import { Carousel, StoreComment, Image, PureCard, Icon, Colon } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
-import { API, VERSION } from '@xcan/sdk';
 
 import VideoLink from '@/views/stores/open2Priv/info/videoLink/index.vue';
 import ContentInfo from '@/views/stores/open2Priv/info/contentInfo/index.vue';

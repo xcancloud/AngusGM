@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { lazyEnum } from '@xcan/enum';
+import { enumLoader, GM } from '@xcan-angus/tools';
 import { ref, computed, onMounted } from 'vue';
 import { Button } from 'ant-design-vue';
-import { notification, Select, Icon } from '@xcan/design';
+import { notification, Select, Icon } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan/sdk';
 import SelectAcls from './selectAcl.vue';
 
 const { t } = useI18n();
@@ -71,7 +70,7 @@ const add = () => {
 
 const ResourceAclTypeOpt = ref([]);
 const getResourceAclType = async () => {
-  const [error, data] = await lazyEnum.load('ResourceAclType');
+  const [error, data] = await enumLoader.load('ResourceAclType');
   if (error) {
     return;
   }

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { http } from '@xcan/utils';
-import { Card, Grid, Hints, Select } from '@xcan/design';
-import { PUB_GM } from '@xcan/sdk';
+import { http, PUB_GM } from '@xcan-angus/tools';
+import { Card, Grid, Hints, Select } from '@xcan-angus/vue-ui';
 
 import { service as serviceApi } from '@/api';
 import { useI18n } from 'vue-i18n';
@@ -57,7 +56,7 @@ const loadInstancesList = async () => {
 };
 
 const getUrl = (value) => {
-  const PATH = 'actuator/appworkspace';                // TODO 移动到 api
+  const PATH = 'actuator/appworkspace'; // TODO 移动到 api
   return `${PUB_GM}/proxy/${PATH}?targetAddr=http://${value}`;
 };
 

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, watch, onBeforeUnmount, provide, defineAsyncComponent } from 'vue';
 
-
-import {actuator} from '@/api';
+import { actuator } from '@/api';
 
 const Information = defineAsyncComponent(() => import('@/views/system/discovery/components/information/index.vue'));
 const Summary = defineAsyncComponent(() => import('@/views/system/discovery/components/summary/index.vue'));

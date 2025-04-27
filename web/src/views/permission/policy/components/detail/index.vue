@@ -9,7 +9,7 @@ import type { DetailType } from './PropTypes';
 import BaseInfo from './baseInfo.vue';
 import TargetPanel from './targetPanel.vue';
 import MenuAuth from './menuAuth.vue';
-import { Card, Hints } from '@xcan/design';
+import { Card, Hints } from '@xcan-angus/vue-ui';
 
 const { t } = useI18n();
 const route = useRoute();

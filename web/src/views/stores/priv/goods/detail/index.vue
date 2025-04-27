@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { Card, Grid, NoData } from '@xcan/design';
+import { Card, Grid, NoData } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
 import { store } from '@/api';
 

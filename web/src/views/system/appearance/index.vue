@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import {defineAsyncComponent, inject, onMounted, ref, Ref, watch} from 'vue';
-import {Button, Divider, Skeleton} from 'ant-design-vue';
-import {AsyncComponent, Card, Grid, Icon, Image, Input, notification} from '@xcan/design';
-import {site} from '@xcan/utils';
-import {useI18n} from 'vue-i18n';
-import Cropper from '@xcan/cropper';
-import '@xcan/cropper/style.css';
+import { defineAsyncComponent, inject, onMounted, ref, Ref, watch } from 'vue';
+import { Button, Divider, Skeleton } from 'ant-design-vue';
+import { AsyncComponent, Card, Grid, Icon, Image, Input, notification, Cropper } from '@xcan-angus/vue-ui';
+import { site } from '@xcan-angus/tools';
+import { useI18n } from 'vue-i18n';
 
-import {app} from '@/api';
-import {AppInfo} from './PropsType';
+import { app } from '@/api';
+import { AppInfo } from './PropsType';
 
 const ExpandHead = defineAsyncComponent(() => import('./components/expandHead.vue'));
 

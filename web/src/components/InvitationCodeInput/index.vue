@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import { Input } from '@xcan/design';
+import { Input } from '@xcan-angus/vue-ui';
 
 interface Props {
   value: boolean;

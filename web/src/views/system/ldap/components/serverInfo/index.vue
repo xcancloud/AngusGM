@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
-import { Hints, Input, SelectEnum } from '@xcan/design';
+import { Hints, Input, SelectEnum } from '@xcan-angus/vue-ui';
 import { Checkbox, Form, FormItem } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { Icon, PureCard } from '@xcan/design';
+import { Icon, PureCard } from '@xcan-angus/vue-ui';
 
 interface Props {
   pageTitle: string, // 标题

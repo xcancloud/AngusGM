@@ -1,9 +1,8 @@
 <script setup lang='ts'>
 import { defineAsyncComponent, ref } from 'vue';
-import { Hints, PureCard, Card, Icon } from '@xcan/design';
+import { Hints, PureCard, Card, Icon } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { security } from '@xcan/security';
-import { GM } from '@xcan/sdk';
+import { app, GM } from '@xcan-angus/tools';
 
 import { OrgTag } from './PropsType';
 
@@ -48,7 +47,7 @@ const editTagName = () => {
               <div class="flex items-center space-x-2">
                 <div class="truncate">{{ t('name') + `: ${tag?.name || ''}` }}</div>
                 <Icon
-                  v-if="security.has('TagModify')"
+                  v-if="app.has('TagModify')"
                   icon="icon-shuxie"
                   class="flex-none text-text-link cursor-pointer hover:text-text-link-hover"
                   @click="editTagName" />

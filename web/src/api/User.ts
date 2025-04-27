@@ -1,4 +1,4 @@
-import { http } from '@xcan/utils';
+import { http } from '@xcan-angus/tools';
 
 let baseUrl: string;
 export default class User {
@@ -90,11 +90,11 @@ export default class User {
     return http.patch(`${baseUrl}/current/email`, params);
   }
 
-  senEmailCode<T> ( params: T): Promise<[Error | null, any]> {
+  senEmailCode<T> (params: T): Promise<[Error | null, any]> {
     return http.post(`${baseUrl}/current/email/send`, params);
   }
 
-  sendSmsCode<T> ( params: T): Promise<[Error | null, any]> {
+  sendSmsCode<T> (params: T): Promise<[Error | null, any]> {
     return http.post(`${baseUrl}/current/sms/send`, params);
   }
 

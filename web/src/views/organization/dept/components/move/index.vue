@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue';
-import { Modal } from '@xcan/design';
+import { Modal } from '@xcan-angus/vue-ui';
 import { Tree } from 'ant-design-vue';
 import type { TreeProps } from 'ant-design-vue';
 
-import {dept} from '@/api';
+import { dept } from '@/api';
 
 interface Props {
   visible: boolean;

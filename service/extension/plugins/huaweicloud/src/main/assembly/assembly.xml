@@ -14,14 +14,6 @@
       </includes>
     </dependencySet>
   </dependencySets>
-  <!--
-  <fileSets>
-      <fileSet>
-          <directory>target/classes</directory>
-          <outputDirectory>classes</outputDirectory>
-      </fileSet>
-  </fileSets>
-  -->
   <fileSets>
     <fileSet>
       <directory>target/plugin-classes</directory>

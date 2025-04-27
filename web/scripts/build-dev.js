@@ -1,7 +1,7 @@
 /* eslint-disable no-template-curly-in-string */
 const fs = require('fs');
 const path = require('path');
-const {execSync} = require('child_process');
+const { execSync } = require('child_process');
 const compressing = require('compressing');
 
 const packageInfo = require('../package.json');
@@ -13,13 +13,13 @@ const allEnvFileName = ['env', 'env.dev', 'env.prod', 'env.priv'];
 
 const editionType = process.env.edition_type || 'COMMUNITY';
 
-function resolve(p) {
+function resolve (p) {
   return path.join(__dirname, p);
 }
 
-function replace(str, data) {
+function replace (str, data) {
   for (let i = 0, len = data.length; i < len; i++) {
-    const {key, value} = data[i];
+    const { key, value } = data[i];
     const rex = new RegExp(`(${key}=)\\S+`, 'gmi');
     str = str.replace(rex, '$1' + value);
   }
@@ -34,9 +34,9 @@ const uuid = (() => {
   };
 })();
 
-function start() {
+function start () {
   // 1. Generate version information to public/meta/
-  const versionContent = JSON.stringify({version: packageInfo.version, uuid: uuid()}, null, 2);
+  const versionContent = JSON.stringify({ version: packageInfo.version, uuid: uuid() }, null, 2);
   fs.writeFileSync(resolve('../public/meta/version.json'), versionContent, 'utf8');
 
   // 2. Delete the old environment variable configuration file under public/meta
@@ -49,8 +49,8 @@ function start() {
 
   // 3. Update common env configuration file
   const envReplaceList = [
-    {key: 'VITE_EDITION_TYPE', value: editionType},
-    {key: 'VITE_PROFILE', value: deployEnv}
+    { key: 'VITE_EDITION_TYPE', value: editionType },
+    { key: 'VITE_PROFILE', value: deployEnv }
   ];
   let envContent = fs.readFileSync(resolve('../.env'), 'utf8');
   envContent = replace(envContent, envReplaceList);
@@ -58,8 +58,8 @@ function start() {
 
   // 4. Update deploy env configuration file
   const deployEnvUrlPrefix = [
-    {key: 'VITE_GM_URL_PREFIX', value: 'http://192.168.0.102:8802'},
-    {key: 'VITE_DISCOVERY_URL_PREFIX', value: 'http://192.168.0.102:8801'}
+    { key: 'VITE_GM_URL_PREFIX', value: 'http://192.168.0.102:8802' },
+    { key: 'VITE_DISCOVERY_URL_PREFIX', value: 'http://192.168.0.102:8801' }
   ];
   let deployEnvContent = fs.readFileSync(resolve(`../.env.${deployEnv}`), 'utf8');
   deployEnvContent = replace(deployEnvContent, deployEnvUrlPrefix);
@@ -79,7 +79,7 @@ function start() {
   }
 
   // 6. Execute a dynamically generated npm script command to trigger the Vite build tool for deploy privatization environment build workflows
-  execSync(`npm run vite:build:${deployEnv}`, {stdio: 'inherit'});
+  execSync(`npm run vite:build:${deployEnv}`, { stdio: 'inherit' });
 
   // 7. Package compiled static resources and modified configurations
   if (zipDist) {
@@ -87,7 +87,6 @@ function start() {
     const dest = 'dist.zip';
     compressing.zip.compressDir(source, dest);
   }
-
 }
 
 start();

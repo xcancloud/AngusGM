@@ -2,11 +2,9 @@
 import { ref } from 'vue';
 import { downloadEditionTypes, isCloudGoods, isPriGoods, multipleEditionTypes } from '../PropsType';
 import { Button, Popconfirm, RadioButton, RadioGroup } from 'ant-design-vue';
-import { site } from '@xcan/utils';
-import { download } from '@xcan/file';
+import { site, download, STORE } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
-import { STORE } from '@xcan/sdk';
-import { notification } from '@xcan/design';
+import { notification } from '@xcan-angus/vue-ui';
 
 const { t } = useI18n();
 
@@ -111,12 +109,5 @@ const toDeployUrl = async () => {
         {{ t('下载') }}
       </Button>
     </template>
-    <!-- <Button
-      v-if="isPriGoods(props.goods.applyEditionTypes)"
-      size="small"
-      class="ml-3"
-      @click="uninstall(props.goods.goodsId)">
-      {{ t('stores.uninstall') }}
-    </Button> -->
   </template>
 </template>

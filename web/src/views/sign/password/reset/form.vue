@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { http } from '@xcan/utils';
-import { PUB_GM } from '@xcan/sdk';
-import { notification } from '@xcan/design';
+import { http, PUB_GM } from '@xcan-angus/tools';
+import { notification } from '@xcan-angus/vue-ui';
 import { Button } from 'ant-design-vue';
 
 import PasswordInput from '@/components/PasswordInput/index.vue';

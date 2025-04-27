@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ButtonAuth, IconRefresh, Input, PureCard, Table } from '@xcan/design';
-import { cookie } from '@xcan/utils';
-import { STORE } from '@xcan/sdk';
+import { ButtonAuth, IconRefresh, Input, PureCard, Table } from '@xcan-angus/vue-ui';
+import { cookie, STORE, duration, download } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
-import { download } from '@xcan/file';
 
 import { license } from '@/api';
 import { Licensed, SearchParams } from './PropsType';

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { Card, Input, Colon, Spin, notification } from '@xcan/design';
+import { Card, Input, Colon, Spin, notification } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
+import { duration } from '@xcan-angus/tools';
 
 import { setting } from '@/api';
 
@@ -22,8 +22,11 @@ const getControlSetting = async () => {
 
 const handleSetControl = debounce(duration.search, async (value) => {
   loading.value = true;
-  const [error] = await setting.setSetting({ ...controlSetting.value,
-    maxMetricsDays: value, key: 'MAX_METRICS_DAYS' });
+  const [error] = await setting.setSetting({
+    ...controlSetting.value,
+    maxMetricsDays: value,
+    key: 'MAX_METRICS_DAYS'
+  });
   loading.value = false;
   if (error) {
     return;
@@ -46,8 +49,11 @@ const getActivitySetting = async () => {
 
 const handleSetActivity = debounce(duration.search, async (value) => {
   loading.value = true;
-  const [error] = await setting.setSetting({...activitySetting.value,
-    maxResourceActivities: value, key: 'MAX_RESOURCE_ACTIVITIES'});
+  const [error] = await setting.setSetting({
+    ...activitySetting.value,
+    maxResourceActivities: value,
+    key: 'MAX_RESOURCE_ACTIVITIES'
+  });
   loading.value = false;
   if (error) {
     return;

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { Select } from '@xcan/design';
+import { Select } from '@xcan-angus/vue-ui';
 
 interface Props {
   dataSource: Array<any>;

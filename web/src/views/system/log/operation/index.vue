@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { Hints, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan/design';
+import { Hints, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan/sdk';
+import { GM } from '@xcan-angus/tools';
 
-import { setting } from '@/api';
-import {userLog} from '@/api';
+import { setting, userLog } from '@/api';
 
 type FilterOp =
   'EQUAL'

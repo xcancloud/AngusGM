@@ -2,9 +2,9 @@
 import { computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Spin } from 'ant-design-vue';
-import { modal, notification, Icon, PureCard, Colon } from '@xcan/design';
+import { modal, notification, Icon, PureCard, Colon } from '@xcan-angus/vue-ui';
 
-import {social, user} from '@/api';
+import { social, user } from '@/api';
 
 const wechatStyle = new URL('../assets/reset-wechat.css', import.meta.url).href;
 

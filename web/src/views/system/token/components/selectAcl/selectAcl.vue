@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
-import { Arrow, Icon } from '@xcan/design';
+import { Arrow, Icon } from '@xcan-angus/vue-ui';
 import { Checkbox, CheckboxGroup } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { service } from '@/api';

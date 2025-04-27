@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { http } from '@xcan/utils';
-import { GM } from '@xcan/sdk';
+import { http, GM } from '@xcan-angus/tools';
 import { Button } from 'ant-design-vue';
-import { notification } from '@xcan/design';
+import { notification } from '@xcan-angus/vue-ui';
 
 import { redirectTo } from '@/utils/url';
 import PasswordInput from '@/components/PasswordInput/index.vue';

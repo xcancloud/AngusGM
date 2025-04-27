@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { AsyncComponent } from '@xcan/design';
-import { site } from '@xcan/utils';
+import { AsyncComponent } from '@xcan-angus/vue-ui';
+import { site } from '@xcan-angus/tools';
 
 const CloudTips = defineAsyncComponent(() => import('@/views/system/quota/components/cloudTips/index.vue'));
 const Table = defineAsyncComponent(() => import('@/views/system/quota/components/list/index.vue'));

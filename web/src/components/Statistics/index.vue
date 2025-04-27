@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
-import { lazyEnum } from '@xcan/enum';
+import { enumLoader } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
 import { PieSetting, DateType } from './PropsType';
 
@@ -352,7 +352,7 @@ const loadEnums = async () => {
 
 // 用户来源
 const loadUserSource = async () => {
-  const [error, data] = await lazyEnum.load('UserSource');
+  const [error, data] = await enumLoader.load('UserSource');
   if (error) {
     return;
   }
@@ -379,7 +379,7 @@ const loadUserSource = async () => {
 // };
 // 用户性别
 const loadUserGender = async () => {
-  const [error, data] = await lazyEnum.load('Gender');
+  const [error, data] = await enumLoader.load('Gender');
   if (error) {
     return;
   }
@@ -401,7 +401,7 @@ const getUserGenderColor = (value: string) => {
 
 // 组来源
 const loadGroupSource = async () => {
-  const [error, data] = await lazyEnum.load('GroupSource');
+  const [error, data] = await enumLoader.load('GroupSource');
   if (error) {
     return;
   }
@@ -410,7 +410,7 @@ const loadGroupSource = async () => {
 
 // 租户下标签类型
 const loadOrgTargetType = async () => {
-  const [error, data] = await lazyEnum.load('OrgTargetType');
+  const [error, data] = await enumLoader.load('OrgTargetType');
   if (error) {
     return;
   }
@@ -419,7 +419,7 @@ const loadOrgTargetType = async () => {
 
 // 公告发送范围
 const loadNoticeScope = async () => {
-  const [error, data] = await lazyEnum.load('NoticeScope');
+  const [error, data] = await enumLoader.load('NoticeScope');
   if (error) {
     return;
   }
@@ -436,7 +436,7 @@ const getNoticeScopeColor = (value: string) => {
 };
 //  公告发送类型
 const getNoticeSentType = async () => {
-  const [error, data] = await lazyEnum.load('SentType');
+  const [error, data] = await enumLoader.load('SentType');
   if (error) {
     return;
   }
@@ -455,7 +455,7 @@ const getNoticeSentTypeColor = (value: string) => {
 
 // 消息类型
 const loadMessageReceiveType = async () => {
-  const [error, data] = await lazyEnum.load('MessageReceiveType');
+  const [error, data] = await enumLoader.load('MessageReceiveType');
   if (error) {
     return;
   }
@@ -474,7 +474,7 @@ const getMessageReceiveTypeColor = (value: string) => {
 
 // 消息状态
 const loadMessageStatus = async () => {
-  const [error, data] = await lazyEnum.load('MessageStatus');
+  const [error, data] = await enumLoader.load('MessageStatus');
   if (error) {
     return;
   }
@@ -495,7 +495,7 @@ const getMessageStatusColor = (value: string) => {
 
 // 服务来源
 const loadServiceSource = async () => {
-  const [error, data] = await lazyEnum.load('ServiceSource');
+  const [error, data] = await enumLoader.load('ServiceSource');
   if (error) {
     return;
   }
@@ -518,7 +518,7 @@ const getServiceSourceColor = (value: string) => {
 
 // 接口方法
 const loadApiHttpMethod = async () => {
-  const [error, data] = await lazyEnum.load('HttpMethod');
+  const [error, data] = await enumLoader.load('HttpMethod');
   if (error) {
     return;
   }
@@ -555,7 +555,7 @@ const getApiHttpMethodColor = (value: string) => {
 };
 // 接口类型
 const loadApiType = async () => {
-  const [error, data] = await lazyEnum.load('ApiType');
+  const [error, data] = await enumLoader.load('ApiType');
   if (error) {
     return;
   }
@@ -591,7 +591,7 @@ const getApiTypeColor = (value: string) => {
 
 // 事件类型
 const loadEventType = async () => {
-  const [error, data] = await lazyEnum.load('EventType');
+  const [error, data] = await enumLoader.load('EventType');
   if (error) {
     return;
   }
@@ -624,7 +624,7 @@ const getEventTypeColor = (value: string) => {
 
 // 事件推送状态
 const loadEventPushStatus = async () => {
-  const [error, data] = await lazyEnum.load('EventPushStatus');
+  const [error, data] = await enumLoader.load('EventPushStatus');
   if (error) {
     return;
   }
@@ -649,7 +649,7 @@ const getEventPushStatusColor = (value: string) => {
 
 // 邮件和短信发送状态
 const loadSendStatusType = async () => {
-  const [error, data] = await lazyEnum.load('ProcessStatus');
+  const [error, data] = await enumLoader.load('ProcessStatus');
   if (error) {
     return;
   }

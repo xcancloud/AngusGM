@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Card } from '@xcan/design';
+import { Card } from '@xcan-angus/vue-ui';
 import { Skeleton } from 'ant-design-vue';
 
 interface Props {

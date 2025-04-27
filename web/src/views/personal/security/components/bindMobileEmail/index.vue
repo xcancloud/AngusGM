@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { regexp } from '@xcan/utils';
-import { Modal, Icon, Input } from '@xcan/design';
+import { regexp } from '@xcan-angus/tools';
+import { Modal, Icon, Input } from '@xcan-angus/vue-ui';
 
 import VerificationCode from '@/views/personal/security/components/verificationCode/index.vue';
-import {user} from '@/api';
+import { user } from '@/api';
 
 interface Props {
   valueKey: 'email' | 'mobile',

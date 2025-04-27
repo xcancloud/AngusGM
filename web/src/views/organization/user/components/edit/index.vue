@@ -3,17 +3,13 @@ import { ref, reactive, onMounted, inject, defineAsyncComponent, Ref, watch } fr
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, InputPassword, Form, FormItem, Popover, RadioGroup, Radio } from 'ant-design-vue';
-import { Image, Input, PureCard, Icon, SelectItc, notification } from '@xcan/design';
-import { itc, password, regexp, utils } from '@xcan/utils';
-import { lazyEnum } from '@xcan/enum';
+import { Image, Input, PureCard, Icon, SelectItc, notification, Cropper } from '@xcan-angus/vue-ui';
+import { itc, password, regexp, utils, enumLoader, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
-import Cropper from '@xcan/cropper';
-import '@xcan/cropper/style.css';
 
 import { FormState, Gender } from '../../PropsType';
 
-import {user} from '@/api';
+import { user } from '@/api';
 
 const PasswdTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
 
@@ -306,7 +302,7 @@ const changeItc = (value: string) => {
 
 const userGender = ref<{ value: Gender, message: string }[]>([]);
 const loadUserGender = async () => {
-  const [error, data] = await lazyEnum.load('Gender');
+  const [error, data] = await enumLoader.load('Gender');
   if (error) {
     return;
   }

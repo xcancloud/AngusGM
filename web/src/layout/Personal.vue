@@ -2,13 +2,14 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useMutations } from '@xcan/vuex';
-import { Breadcrumb, Header } from '@xcan/design';
+import { VuexHelper, Breadcrumb, Header } from '@xcan-angus/vue-ui';
 
 import { personalCenterMenus, getTopRightMenu } from './fixed-top-menu';
 
 const route = useRoute();
 const { t } = useI18n();
+
+const { useMutations } = VuexHelper;
 const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 
 const codeList = ref<{

@@ -3,8 +3,8 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import clipboard from 'vue-clipboard3';
 import { Tooltip, Skeleton } from 'ant-design-vue';
-import { Card, Grid, Icon } from '@xcan/design';
-import { site } from '@xcan/utils';
+import { Card, Grid, Icon } from '@xcan-angus/vue-ui';
+import { site } from '@xcan-angus/tools';
 import dayjs from 'dayjs';
 
 import { edition } from '@/api';

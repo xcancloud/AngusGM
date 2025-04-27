@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { reactive, onMounted, computed, ref, defineAsyncComponent } from 'vue';
-import { SearchPanel, Table, PureCard, IconCount, IconRefresh, ButtonAuth } from '@xcan/design';
-import { security } from '@xcan/security';
+import { SearchPanel, Table, PureCard, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { app, GM } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
-import { GM } from '@xcan/sdk';
 
 import { message } from '@/api';
 import type { TableColumnType } from './PropsType';
@@ -233,7 +232,7 @@ onMounted(() => {
       @change="listChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'title'">
-          <RouterLink v-if="security.has('MessageDetail')" :to="`/messages/message/${record.id}`">
+          <RouterLink v-if="app.has('MessageDetail')" :to="`/messages/message/${record.id}`">
             <a
               :title="record.title"
               href="javascript:;"

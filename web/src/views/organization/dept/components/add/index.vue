@@ -2,10 +2,10 @@
 import { ref, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Form, FormItem } from 'ant-design-vue';
-import { notification, Modal, Input, Select } from '@xcan/design';
+import { notification, Modal, Input, Select } from '@xcan-angus/vue-ui';
 
-import { GM } from '@xcan/sdk';
-import {dept} from '@/api';
+import { GM } from '@xcan-angus/tools';
+import { dept } from '@/api';
 
 interface FormType {
   pid: string | undefined,

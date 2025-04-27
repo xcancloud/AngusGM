@@ -1,4 +1,4 @@
-import { GM, STORE } from '@xcan/sdk';
+import { GM, STORE } from '@xcan-angus/tools';
 
 import Tenant from '@/api/Tenant';
 import User from '@/api/User';

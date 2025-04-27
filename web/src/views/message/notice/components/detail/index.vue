@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { modal, Card, Grid, notification } from '@xcan/design';
-import { security } from '@xcan/security';
+import { modal, Card, Grid, notification } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/tools';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Skeleton } from 'ant-design-vue';
 
@@ -90,10 +90,10 @@ onMounted(() => {
       <template v-if="!firstLoad" #rightExtra>
         <div>
           <Button
-            :disabled="!security.has('NoticeDelete')"
+            :disabled="!app.has('NoticeDelete')"
             size="small"
             @click="del">
-            {{ security.getName('NoticeDelete') }}
+            {{ app.getName('NoticeDelete') }}
           </Button>
         </div>
       </template>

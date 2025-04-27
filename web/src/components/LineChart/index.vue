@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref, onMounted, watch, onBeforeMount, Ref, inject} from 'vue';
+import { ref, onMounted, watch, onBeforeMount, Ref, inject } from 'vue';
 import * as echarts from 'echarts/core';
-import {NoData} from '@xcan/design';
+import { NoData } from '@xcan-angus/vue-ui';
 
 import {
   TitleComponent,
@@ -9,9 +9,9 @@ import {
   GridComponent
 } from 'echarts/components';
 
-import {BarChart, LineChart} from 'echarts/charts';
-import {CanvasRenderer} from 'echarts/renderers';
-import {computed} from '@vue/reactivity';
+import { BarChart, LineChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
+import { computed } from '@vue/reactivity';
 import DarkTheme from '../Statistics/echartsDark.json';
 import GrayTheme from '../Statistics/echartsGray.json';
 
@@ -47,7 +47,7 @@ const initCharts = () => {
     return;
   }
   echarts.registerTheme(tenantInfo.value.preference.themeCode, tenantInfo.value.preference.themeCode === 'dark' ? DarkTheme : GrayTheme);
-  myChart = echarts.init(chartsRef.value, tenantInfo.value.preference.themeCode, {renderer: 'canvas'});
+  myChart = echarts.init(chartsRef.value, tenantInfo.value.preference.themeCode, { renderer: 'canvas' });
   myChart.setOption(chartsOption);
   window.addEventListener('resize', () => {
     myChart.resize();
@@ -134,8 +134,8 @@ const chartsOption = {
       barWidth: 15,
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {offset: 1, color: 'rgba(45, 142, 255, 0.2)'},
-          {offset: 0, color: 'rgba(45, 142, 255, 1)'}
+          { offset: 1, color: 'rgba(45, 142, 255, 0.2)' },
+          { offset: 0, color: 'rgba(45, 142, 255, 1)' }
         ]),
         borderRadius: [3, 3, 0, 0]
       },
@@ -154,7 +154,7 @@ watch(() => props.xData, () => {
   chartsOption.series[0].data = props.yData;
   chartsOption.series[0].label.show = props.yData.length === 1 && props.yData[0] === 0 ? false : props.yData.length;
   myChart?.setOption(chartsOption, true);
-}, {deep: true});
+}, { deep: true });
 
 onBeforeMount(() => {
   window.removeEventListener('resize', () => {
@@ -172,7 +172,7 @@ onMounted(() => {
     <div ref="chartsRef" class="w-full h-full flex-shrink-0">
     </div>
     <template v-if="noData">
-      <NoData class="!h-30 absolute w-30  my-no-data"/>
+      <NoData class="!h-30 absolute w-30  my-no-data" />
     </template>
   </div>
 </template>

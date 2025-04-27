@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from 'vue';
-import { cookie, http, site } from '@xcan/utils';
+import { cookie, http, site, PUB_GM } from '@xcan-angus/tools';
 import { redirectTo } from '@/utils/url';
-import { PUB_GM } from '@xcan/sdk';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
 

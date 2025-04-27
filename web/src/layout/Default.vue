@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useMutations } from '@xcan/vuex';
-import { Breadcrumb, Header, Sidebar } from '@xcan/design';
-import { security } from '@xcan/security';
+import { VuexHelper, Breadcrumb, Header, Sidebar } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/tools';
 
 const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 
 const route = useRoute();
 const logoDefaultImg = new URL('./assets/angus-gm.png', import.meta.url).href;
 const sidebarMenus = ref<Array<unknown>>([]);
+
+const { useMutations } = VuexHelper;
 
 onMounted(() => {
   setLayoutCodeCode('gm');
@@ -23,8 +24,8 @@ const hasBreadcrumb = computed(() => {
 <template>
   <Header
     v-model:subMenus="sidebarMenus"
-    :menus="security.menuList"
-    :codeMap="security.codeMap"
+    :menus="app.menuList"
+    :codeMap="app.codeMap"
     :logoDefaultImg="logoDefaultImg" />
   <div class="main-container">
     <Sidebar

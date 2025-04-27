@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { Pagination, TabPane, Tabs, Tooltip } from 'ant-design-vue';
-import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan/design';
+import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan/sdk';
+import { GM } from '@xcan-angus/tools';
 import elementResizeDetector from 'element-resize-detector';
 
-import { setting } from '@/api';
-import {userLog} from '@/api';
+import { setting, userLog } from '@/api';
 
 type FilterOp =
   'EQUAL'

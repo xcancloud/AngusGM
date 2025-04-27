@@ -1,15 +1,15 @@
 <script setup lang='ts'>
 import { computed, ref, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PureCard, Grid, Icon, Input, notification, ButtonAuth } from '@xcan/design';
+import { PureCard, Grid, Icon, Input, notification, ButtonAuth } from '@xcan-angus/vue-ui';
 import { useRouter } from 'vue-router';
 import { Badge, Spin, Tooltip, Tag } from 'ant-design-vue';
-import { security } from '@xcan/security';
+import { app } from '@xcan-angus/tools';
 
 import { _gidColumns } from './PropsType';
 import { Detail } from '../../PropsType';
 
-import {group} from '@/api';
+import { group } from '@/api';
 
 interface Props {
   dataSource: Detail
@@ -77,7 +77,7 @@ const hanleEdit = () => {
 <template>
   <PureCard class="w-100 px-5 py-5">
     <div class="flex items-center justify-between">
-      <template v-if="isEditName && security.has('GroupModify')">
+      <template v-if="isEditName && app.has('GroupModify')">
         <Input
           ref="inputRef"
           :value="props.dataSource?.name "

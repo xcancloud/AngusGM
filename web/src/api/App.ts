@@ -1,5 +1,4 @@
-import { http } from '@xcan/utils';
-import { GM } from '@xcan/sdk';
+import { http, GM } from '@xcan-angus/tools';
 
 let baseUrl: string;
 export default class App {

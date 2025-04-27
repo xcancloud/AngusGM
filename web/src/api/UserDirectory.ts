@@ -1,12 +1,12 @@
-import {http} from '@xcan/utils';
+import { http } from '@xcan-angus/tools';
 
 let baseUrl: string;
 export default class Tenant {
-  constructor(prefix: string) {
+  constructor (prefix: string) {
     baseUrl = prefix + '/user/directory';
   }
 
-  addDirectory(params: {
+  addDirectory (params: {
     groupSchema: any,
     membershipSchema: any,
     schema: any,
@@ -17,7 +17,7 @@ export default class Tenant {
     return http.post(`${baseUrl}`, params);
   }
 
-  updateDirectory(params: {
+  updateDirectory (params: {
     id: string,
     groupSchema: any,
     membershipSchema: any,
@@ -29,7 +29,7 @@ export default class Tenant {
     return http.put(`${baseUrl}`, params);
   }
 
-  testDirectory(params: {
+  testDirectory (params: {
     groupSchema: any,
     membershipSchema: any,
     schema: any,
@@ -39,27 +39,27 @@ export default class Tenant {
     return http.post(`${baseUrl}/test`, params);
   }
 
-  updateDirectorySequence(params: { id: string, sequence: string | number }[]): Promise<[Error | null, any]> {
+  updateDirectorySequence (params: { id: string, sequence: string | number }[]): Promise<[Error | null, any]> {
     return http.patch(`${baseUrl}/reorder`, params);
   }
 
-  toggleDirectoryEnabled(params: { enabled: boolean, id: string }[]): Promise<[Error | null, any]> {
+  toggleDirectoryEnabled (params: { enabled: boolean, id: string }[]): Promise<[Error | null, any]> {
     return http.patch(`${baseUrl}/enabled`, params);
   }
 
-  syncDirectory(id: string): Promise<[Error | null, any]> {
+  syncDirectory (id: string): Promise<[Error | null, any]> {
     return http.put(`${baseUrl}/${id}/sync`);
   }
 
-  deleteDirectory(id: string, deleteSync: boolean): Promise<[Error | null, any]> {
-    return http.del(`${baseUrl}/${id}`, {deleteSync: deleteSync});
+  deleteDirectory (id: string, deleteSync: boolean): Promise<[Error | null, any]> {
+    return http.del(`${baseUrl}/${id}`, { deleteSync: deleteSync });
   }
 
-  getDirectories(): Promise<[Error | null, any]> {
+  getDirectories (): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}`);
   }
 
-  getDirectoryDetail(id: string): Promise<[Error | null, any]> {
+  getDirectoryDetail (id: string): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/${id}`);
   }
 }

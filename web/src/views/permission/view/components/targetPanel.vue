@@ -1,11 +1,9 @@
 <script setup lang='ts'>
 import { reactive, watch, computed, ref, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Image, Input, Icon, Scroll, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan/design';
+import { Image, Input, Icon, Scroll, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan/configs';
-
-import { GM } from '@xcan/sdk';
+import { duration, GM } from '@xcan-angus/tools';
 
 const AddMembers = defineAsyncComponent(() => import('./addMembers.vue'));
 

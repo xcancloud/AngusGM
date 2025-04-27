@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { watch, ref, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { lazyEnum } from '@xcan/enum';
+import { enumLoader } from '@xcan-angus/tools';
 import { CheckboxGroup, Form, FormItem, Popover, Tag, Select } from 'ant-design-vue';
-import { Modal } from '@xcan/design';
+import { Modal } from '@xcan-angus/vue-ui';
 
 import { event } from '@/api';
 
@@ -37,7 +37,7 @@ const init = async () => {
 };
 
 const loadEventTypes = async () => {
-  const [error, data] = await lazyEnum.load('ReceiveChannelType');
+  const [error, data] = await enumLoader.load('ReceiveChannelType');
   if (error) {
     return;
   }

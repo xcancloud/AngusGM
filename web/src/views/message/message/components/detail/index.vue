@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Tag, Skeleton, Badge } from 'ant-design-vue';
-import { Image, Card, Grid } from '@xcan/design';
+import { Image, Card, Grid } from '@xcan-angus/vue-ui';
 
 import { message } from '@/api';
 import { ContentType, ReceiveObjectDataType } from './PropsType';

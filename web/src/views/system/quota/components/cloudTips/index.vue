@@ -1,8 +1,8 @@
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Icon } from '@xcan/design';
-import { site } from '@xcan/utils';
+import { Icon } from '@xcan-angus/vue-ui';
+import { site } from '@xcan-angus/tools';
 
 const { t } = useI18n();
 

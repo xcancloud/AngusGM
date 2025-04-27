@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Modal } from '@xcan/design';
+import { Modal } from '@xcan-angus/vue-ui';
 
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';

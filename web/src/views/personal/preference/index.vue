@@ -2,8 +2,8 @@
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RadioGroup, Radio } from 'ant-design-vue';
-import { SelectEnum, PureCard } from '@xcan/design';
-import { lazyEnum } from '@xcan/enum';
+import { SelectEnum, PureCard } from '@xcan-angus/vue-ui';
+import { enumLoader } from '@xcan-angus/tools';
 
 import { setting } from '@/api';
 
@@ -20,7 +20,7 @@ const initLanguage = ref();
 const themes = ref<Theme[]>([]);
 
 const loadThemes = async () => {
-  const [error, data] = await lazyEnum.load('ThemeCode');
+  const [error, data] = await enumLoader.load('ThemeCode');
   if (error) {
     return;
   }

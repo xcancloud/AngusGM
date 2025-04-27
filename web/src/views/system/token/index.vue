@@ -16,16 +16,13 @@ import {
   Arrow,
   ButtonAuth,
   modal
-} from '@xcan/design';
-import { security } from '@xcan/security';
-import { http } from '@xcan/utils';
-import { GM } from '@xcan/sdk';
+} from '@xcan-angus/vue-ui';
+import { app, http, GM, enumLoader } from '@xcan-angus/tools';
 
 import SelectApis from '@/views/system/token/components/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';
 import { systemToken } from '@/api';
 import { GrantData, Service, _columns } from './PropsType';
-import { lazyEnum } from '@xcan/enum';
 
 const { t } = useI18n();
 const { toClipboard } = useClipboard();
@@ -55,7 +52,7 @@ const editable = computed(() => {
 
 const authTypeOpt = ref<{ value: string, message: string }[]>([]);
 const fetchAuthType = async () => {
-  const [error, data] = await lazyEnum.load('ResourceAuthType');
+  const [error, data] = await enumLoader.load('ResourceAuthType');
   if (error) {
     return;
   }
@@ -172,7 +169,7 @@ const closeToken = (id: string) => {
 
 const ResourceAclTypeOpt = ref<{ value: string, message: string }[]>([]);
 const getResourceAclType = async () => {
-  const [error, data] = await lazyEnum.load('ResourceAclType');
+  const [error, data] = await enumLoader.load('ResourceAclType');
   if (error) {
     return;
   }
@@ -351,7 +348,7 @@ onMounted(async () => {
             </template>
             <template v-else>
               <Icon
-                v-if="security.has('SystemTokenView')"
+                v-if="app.has('SystemTokenView')"
                 icon="icon-biyan"
                 class="cursor-pointer"
                 @click="showToken(record)" />

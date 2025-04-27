@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { notification, PureCard, Scroll, Icon, SearchPanel, NoData, Colon, IconRefresh } from '@xcan/design';
+import { notification, PureCard, Scroll, Icon, SearchPanel, NoData, Colon, IconRefresh } from '@xcan-angus/vue-ui';
 import { Button, Dropdown, Menu, MenuItem } from 'ant-design-vue';
-import { STORE } from '@xcan/sdk';
+import { STORE } from '@xcan-angus/tools';
 
 import { store } from '@/api';
 import UploadPlugin from '@/views/stores/priv/goods/components/uploadPlugin/index.vue';

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { Alert, Skeleton } from 'ant-design-vue';
-import { Icon, Modal } from '@xcan/design';
+import { Icon, Modal } from '@xcan-angus/vue-ui';
 
-
-import {userDirectory} from '@/api';
+import { userDirectory } from '@/api';
 
 interface Props {
   visible: boolean;

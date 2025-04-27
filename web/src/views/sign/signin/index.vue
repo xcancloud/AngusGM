@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { site } from '@xcan/utils';
+import { site } from '@xcan-angus/tools';
 
 import Tab from '@/components/SignTab/index.vue';
 import Form from './form.vue';

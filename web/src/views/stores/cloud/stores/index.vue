@@ -11,15 +11,14 @@ import {
   PureCard,
   SearchPanel,
   Spin
-} from '@xcan/design';
+} from '@xcan-angus/vue-ui';
 import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { store } from '@/api';
 import { useRouter } from 'vue-router';
-import { site } from '@xcan/utils';
+import { site, app } from '@xcan-angus/tools';
 import type { Goods } from './PropsType';
 import { goodsTypeColor } from './PropsType';
 import ShowButton from './components/showButton.vue';
-import { security } from '@xcan/security';
 
 const router = useRouter();
 const searchOpt = [
@@ -245,7 +244,7 @@ onMounted(async () => {
                   @click="gotoDetail(goods.goodsId)">
                 </ButtonAuth>
                 <span
-                  v-if="!security.show('GoodsDetail')"
+                  v-if="!app.show('GoodsDetail')"
                   class="font-medium text-4 mr-4 text-blue-1 cursor-pointer">{{ goods.name }}</span>
                 {{ 'V' + goods.version }}
                 <span class="inline-flex items-center ml-4 text-3.5 cursor-pointer" @click="starGoods(goods)">

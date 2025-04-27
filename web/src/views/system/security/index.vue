@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, defineAsyncComponent } from 'vue';
-import { site } from '@xcan/utils';
+import { site } from '@xcan-angus/tools';
 
 import { setting } from '@/api';
 import { SafetyConfig, Operation } from './PropsType';

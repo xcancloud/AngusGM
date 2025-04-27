@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {ref, onMounted, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {lazyEnum} from '@xcan/enum';
-import {Grid, DatePicker, Input, Hints} from '@xcan/design';
+import { ref, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { enumLoader } from '@xcan-angus/tools';
+import { Grid, DatePicker, Input, Hints } from '@xcan-angus/vue-ui';
 import dayjs from 'dayjs';
 import RichEditor from '@/components/RichEditor/index.vue';
-import {RadioGroup, Radio} from 'ant-design-vue';
+import { RadioGroup, Radio } from 'ant-design-vue';
 
-import {email} from '@/api';
+import { email } from '@/api';
 
 interface Props {
   propsTitle: string;
@@ -43,7 +43,7 @@ const emit = defineEmits<{
   (e: 'update:propsTimingDate', value: string): void,
 }>();
 
-const {t} = useI18n();
+const { t } = useI18n();
 
 const title = ref('');
 const content = ref('');
@@ -58,12 +58,12 @@ const init = () => {
 
 const messageReceiveType = ref<{ message: string, value: string }[]>([]);
 const loadMessageReceiveType = async () => {
-  messageReceiveType.value = (await lazyEnum.load('MessageReceiveType'))[1];
+  messageReceiveType.value = (await enumLoader.load('MessageReceiveType'))[1];
 };
 
 const sentTypeList = ref<{ message: string, value: string }[]>([]);
 const loadSentType = async () => {
-  const [_error, data] = await lazyEnum.load('SentType');
+  const [_error, data] = await enumLoader.load('SentType');
   sentTypeList.value = data;
 };
 
@@ -225,7 +225,7 @@ const richEditorOption = ref({
   height: 'calc(100vh - 360px)'
 });
 
-const uploadOptions = {bizKey: 'messageFiles', mediaBizKey: 'messageFiles'};
+const uploadOptions = { bizKey: 'messageFiles', mediaBizKey: 'messageFiles' };
 
 watch(() => props.notify, () => {
   title.value = '';
@@ -246,14 +246,14 @@ watch(() => props.notify, () => {
         class="-mt-1"
         :error="titleRule"
         :placeholder="t('pubPlaceholder',{name:t('title'),num:100})"
-        @change="titleChange"/>
+        @change="titleChange" />
     </template>
     <template #content>
       <RichEditor
         v-model:value="content"
         :options="richEditorOption"
         :uploadOptions="uploadOptions"
-        :class="{'rich-editor-rule':contentRule}"/>
+        :class="{'rich-editor-rule':contentRule}" />
       <div class="text-rule h-3.5">
         <template v-if="contentRule">
           {{ contentRuleMsg }}
@@ -273,7 +273,7 @@ watch(() => props.notify, () => {
           :disabled="disabledEmail && item.value ==='EMAIL'">
           {{ item.message }}
         </Radio>
-        <Hints :text="t('sendTips1')"/>
+        <Hints :text="t('sendTips1')" />
       </RadioGroup>
       <div v-if="hasEmail" class="text-rule h-3.5">
         {{ t('sendTips2') }}
@@ -303,7 +303,7 @@ watch(() => props.notify, () => {
         :showTime="{hideDisabledOptions: true, defaultValue: dayjs('00:00:00', 'HH:mm:ss') }"
         :disabledTime="disabledDateTime"
         type="date"
-        @change="dateChange"/>
+        @change="dateChange" />
     </template>
   </Grid>
 </template>

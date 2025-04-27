@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Hints } from '@xcan/design';
+import { Hints } from '@xcan-angus/vue-ui';
 import ChannelAddress from './channelAddress.vue';
 import { useI18n } from 'vue-i18n';
 
