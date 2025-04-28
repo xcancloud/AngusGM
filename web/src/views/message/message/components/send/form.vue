@@ -220,10 +220,6 @@ const disabledDateTime = () => {
   };
 };
 
-const richEditorOption = ref({
-  menubar: false,
-  height: 'calc(100vh - 360px)'
-});
 
 const uploadOptions = { bizKey: 'messageFiles', mediaBizKey: 'messageFiles' };
 
@@ -251,7 +247,6 @@ watch(() => props.notify, () => {
     <template #content>
       <RichEditor
         v-model:value="content"
-        :options="richEditorOption"
         :uploadOptions="uploadOptions"
         :class="{'rich-editor-rule':contentRule}" />
       <div class="text-rule h-3.5">

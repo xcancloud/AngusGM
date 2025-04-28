@@ -4,11 +4,12 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Tag, Skeleton, Badge } from 'ant-design-vue';
 import { Image, Card, Grid } from '@xcan-angus/vue-ui';
+import RichEditor from '@/components/richEditor/index.vue';
 
 import { message } from '@/api';
 import { ContentType, ReceiveObjectDataType } from './PropsType';
 
-import RichBrowser from '@xcan/browser';
+// import RichBrowser from '@xcan/browser';
 
 const { t } = useI18n();
 
@@ -134,7 +135,7 @@ onMounted(() => {
         :loading="firstLoad"
         :title="false"
         :paragraph="{ rows: 12 }">
-        <RichBrowser :value="content.content" />
+        <RichEditor :value="content?.content" mode="view" />
       </Skeleton>
     </Card>
     <Card class="flex-1 text-3" bodyClass="p-3 overflow-auto body-h">

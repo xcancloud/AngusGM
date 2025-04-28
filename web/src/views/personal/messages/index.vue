@@ -4,7 +4,9 @@ import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { Button, RadioChangeEvent, Checkbox, Pagination } from 'ant-design-vue';
 import { Card, PureCard, NoData } from '@xcan-angus/vue-ui';
-import RichBrowser from '@xcan/browser';
+import RichEditor from '@/components/RichEditor/index.vue';
+// import RichBrowser from '@xcan/browser';
+
 
 import { message } from '@/api';
 
@@ -606,7 +608,8 @@ onMounted(() => {
         </div>
       </div>
       <div class="w-full mt-3 border-t border-solid border-theme-divider"></div>
-      <RichBrowser class="rich-editor" :value="selectMessage?.content" />
+      <!-- <RichBrowser class="rich-editor" :value="selectMessage?.content" /> -->
+      <RichEditor :value="selectMessage?.content" mode="view" />
     </PureCard>
   </div>
 </template>

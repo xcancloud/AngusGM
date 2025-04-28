@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { PureCard } from '@xcan-angus/vue-ui';
 import { Skeleton, Divider } from 'ant-design-vue';
-import RichBrowser from '@xcan/browser';
+// import RichBrowser from '@xcan/browser';
+import RichEditor from '@/components/RichEditor/index.vue';
 import { Goods } from '../../PropsType';
 
 interface Props {
@@ -39,10 +40,11 @@ const props = withDefaults(defineProps<Props>(), {
       </template>
       <div>
         <h4 class="text-theme-special text-3.5">产品信息</h4>
-        <RichBrowser
+        <RichEditor :value="props.goods?.information || ''" mode="view" />
+        <!-- <RichBrowser
           :value="props.goods?.information || ''"
           contentStyle="pre{white-space: wrap}"
-          style="scrollbar-gutter: stable;" />
+          style="scrollbar-gutter: stable;" /> -->
       </div>
     </Skeleton>
   </PureCard>
