@@ -15,8 +15,9 @@ import {
   NoData
 } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, http, GM } from '@xcan-angus/tools';
+import { duration, } from '@xcan-angus/tools';
 import { Divider, CheckboxGroup, Checkbox, Tooltip, Popover, Pagination, Tree } from 'ant-design-vue';
+import { dept, user, group } from '@/api';
 
 import { ReceiveObjectType } from './PropsType';
 
@@ -58,7 +59,7 @@ const userDataList = ref<{ id: string, fullName: string, avatar?: '', isEdit?: b
 const params = ref<{ pageNo: number, pageSize: number, filters: any[] }>({ pageNo: 1, pageSize: 30, filters: [] });
 const loadUserList = async () => {
   loading.value = true;
-  const [error, { data }] = await http.get(`${GM}/user/search`, params.value);
+  const [error, { data }] = await user.getUsers(params.value);
   loading.value = false;
   isFirstLoad.value = false;
 
@@ -123,7 +124,7 @@ const expandedKeys = ref<string[]>([]);
 const groupDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
 const loadGroupList = async () => {
   loading.value = true;
-  const [error, { data }] = await http.get(`${GM}/group/search`, params.value);
+  const [error, { data }] = await group.searchGroups(params.value);
   loading.value = false;
   if (error) {
     return;
@@ -136,7 +137,7 @@ const deptTreeData = ref<any[]>([]);
 const deptDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
 const loadDeptList = async () => {
   loading.value = true;
-  const [error, { data }] = await http.get(`${GM}/dept/search`, params.value);
+  const [error, { data }] = await dept.searchDepts(params.value);
   loading.value = false;
   if (error) {
     return;

@@ -1,4 +1,4 @@
-import { GM, ESS } from '@xcan-angus/tools';
+import { GM, ESS, PUB_GM } from '@xcan-angus/tools';
 
 import Tenant from '@/api/Tenant';
 import User from '@/api/User';
@@ -27,6 +27,8 @@ import CloudStore from '@/api/CloudStore';
 import License from '@/api/License';
 import PrivStore from '@/api/PrivStore';
 import PrivLicense from '@/api/PrivLicense';
+import Signin from '@/api/Signin';
+import PubProxy from '@/api/PubProxy';
 
 export const tenant = new Tenant(GM);
 export const user = new User(GM);
@@ -55,3 +57,5 @@ export const store = new CloudStore(ESS);
 export const privStore = new PrivStore(GM);
 export const license = new License(ESS);
 export const privLicense = new PrivLicense(GM);
+export const login = new Signin(PUB_GM);
+export const pubProxy = new PubProxy(PUB_GM);

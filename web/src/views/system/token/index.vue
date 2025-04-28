@@ -17,11 +17,11 @@ import {
   ButtonAuth,
   modal
 } from '@xcan-angus/vue-ui';
-import { app, http, GM, enumLoader } from '@xcan-angus/tools';
+import { app, enumLoader } from '@xcan-angus/tools';
 
 import SelectApis from '@/views/system/token/components/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';
-import { systemToken } from '@/api';
+import { systemToken, setting } from '@/api';
 import { GrantData, Service, _columns } from './PropsType';
 
 const { t } = useI18n();
@@ -188,7 +188,7 @@ watch(() => formValue.authType, () => {
 // 获取令牌配额
 const tokenQuota = ref(0);
 const getTokenQuota = async () => {
-  const [error, { data }] = await http.get(`${GM}/setting/tenant/quota/SystemToken`);
+  const [error, { data }] = await setting.getTokenQuota();
   if (error) {
     return;
   }

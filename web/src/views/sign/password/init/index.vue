@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { http, GM } from '@xcan-angus/tools';
 import { Button } from 'ant-design-vue';
 import { notification } from '@xcan-angus/vue-ui';
 
 import { redirectTo } from '@/utils/url';
+import { auth } from '@/api';
 import PasswordInput from '@/components/PasswordInput/index.vue';
 import PasswordConfirmInput from '@/components/PasswordConfirmInput/index.vue';
 
@@ -45,7 +45,7 @@ const confirm = async () => {
 
   error.value = false;
   loading.value = true;
-  const [err] = await http.patch(`${GM}/auth/user/password/init/current`, { newPassword: password.value }); // TODO 移到API
+  const [err] = await auth.updateUserInitPassword({ newPassword: password.value });
   loading.value = false;
   if (err) {
     error.value = true;

@@ -23,7 +23,7 @@ export default class Auth {
   }
 
   patchAppDefaultPolicy (appId: string, policyId: string): Promise<[Error | null, any]> {
-    return http.put(`${baseUrl}/tenant/app/${appId}/default/${policyId}`);
+    return http.put(`${baseUrl}/tenant/app/${appId}/policy/default/${policyId}`);
   }
 
   addPolicy<T> (params: T): Promise<[Error | null, any]> {
@@ -145,4 +145,9 @@ export default class Auth {
   deletePolicyDept (policyId: string, deptIds: string[]): Promise<[Error | null, any]> {
     return http.del(`${baseUrl}/policy/${policyId}/dept`, { deptIds });
   }
+
+  updateUserInitPassword (params: { newPassword: string|undefined }) : Promise<[Error | null, any]> {
+    return http.patch(`${baseUrl}/user/password/init/current`, params);
+  }
+
 }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { http, PUB_ESS, PUB_GM } from '@xcan-angus/tools';
+import { http, PUB_ESS } from '@xcan-angus/tools';
 import { useRouter } from 'vue-router';
 import { Modal, notification } from '@xcan-angus/vue-ui';
 import { Button, Checkbox } from 'ant-design-vue';
+import { login } from '@/api';
 import DOMPurify from 'dompurify';
 
 import PasswordInput from '@/components/PasswordInput/index.vue';
@@ -175,7 +176,7 @@ const signup = async () => {
   loading.value = true;
   error.value = false;
   const params = isMobile.value ? mobileForm : emailForm;
-  const [err] = await http.post(`${PUB_GM}/auth/user/signup`, params);
+  const [err] = await login.signup(params);
   loading.value = false;
   validateData.value = false;
   if (err) {

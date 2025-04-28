@@ -66,4 +66,8 @@ export default class CloudStore {
   onlineUninstall (goodsId: string): Promise<[Error | null, any]> {
     return http.del(`${baseUrl}/installation/plugin/onlineUninstall`, { goodsId });
   }
+
+  openApp (goodsId: string): Promise<[Error | null, any]> {
+    return http.post(`${baseUrl}/purchase/free/open`, {goodsId}, );
+  }
 }

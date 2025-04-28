@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { http, PUB_GM } from '@xcan-angus/tools';
 import { notification } from '@xcan-angus/vue-ui';
 import { Button } from 'ant-design-vue';
+import { login } from '@/api';
 
 import PasswordInput from '@/components/PasswordInput/index.vue';
 import PasswordConfirmInput from '@/components/PasswordConfirmInput/index.vue';
@@ -179,7 +179,7 @@ const getAccount = () => {
       mobile: mobileForm.value.account,
       verificationCode: mobileForm.value.verificationCode
     };
-    return http.get(`${PUB_GM}/auth/user/signsms/check`, params); // TODO 移动api
+    return login.getUserAcount(params);
   }
 
   const params = {
@@ -187,12 +187,12 @@ const getAccount = () => {
     email: emailForm.value.account,
     verificationCode: emailForm.value.verificationCode
   };
-  return http.get(`${PUB_GM}/auth/user/signemail/check`, params);
+  return login.checkUserEmaillCode(params);
 };
 
 const toUpdate = async () => {
   const { userId, newPassword, linkSecret } = isMobile.value ? mobileForm.value : emailForm.value;
-  const [err] = await http.patch(`${PUB_GM}/auth/user/password/forget`, { id: userId, newPassword, linkSecret }); // TODO 移动api
+  const [err] = await login.resetPassword({ id: userId, newPassword, linkSecret });
   loading.value = false;
   if (err) {
     error.value = true;

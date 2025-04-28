@@ -2,8 +2,9 @@
 import { ref } from 'vue';
 import { downloadEditionTypes, isCloudGoods, isPriGoods, multipleEditionTypes } from '../PropsType';
 import { Button, Popconfirm, RadioButton, RadioGroup } from 'ant-design-vue';
-import { http, site, download, ESS } from '@xcan-angus/tools';
+import { site, download, ESS } from '@xcan-angus/tools';
 import { notification } from '@xcan-angus/vue-ui';
+import { store } from '@/api';
 
 interface Props {
   goods: any,
@@ -61,9 +62,7 @@ const downloadInstallEdition = async (installType: string = downloadEdition.valu
 };
 
 const open = async () => {
-  await http.post(`${ESS}/store/purchase/free/open`, {
-    goodsId: props.goods.goodsId
-  });
+  await store.openApp(props.goods.goodsId);
   emit('reload');
 };
 

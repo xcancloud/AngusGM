@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { http, PUB_GM } from '@xcan-angus/tools';
 import { Card, Grid, Hints, Select } from '@xcan-angus/vue-ui';
 
-import { service as serviceApi } from '@/api';
+import { service as serviceApi, pubProxy } from '@/api';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -48,20 +47,15 @@ const loadInstancesList = async () => {
   }
   instances.value = data[0];
 
-  loadApp(getUrl(data[0]));
+  loadApp(data[0]);
   instancesOptions.value = data.map((item: string) => ({
     label: item,
     value: item
   }));
 };
 
-const getUrl = (value) => {
-  const PATH = 'actuator/appworkspace'; // TODO 移动到 api
-  return `${PUB_GM}/proxy/${PATH}?targetAddr=http://${value}`;
-};
-
 const instancesChange = (value: string) => {
-  loadApp(getUrl(value));
+  loadApp(value);
 };
 
 const columns = [
@@ -78,7 +72,7 @@ const columns = [
 const dataSource = ref();
 
 const loadApp = async (address: string) => {
-  const [error, res] = await http.get(address);
+  const [error, res] = await pubProxy.getApp(address);
   if (error) {
     return;
   }

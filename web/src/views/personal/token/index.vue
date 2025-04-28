@@ -3,9 +3,8 @@ import { computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
 import { DatePicker, Card, Input, Icon, Hints } from '@xcan-angus/vue-ui';
-import { http, GM } from '@xcan-angus/tools';
 
-import { userToken } from '@/api';
+import { userToken, setting } from '@/api';
 import TokenTable from './Table.vue';
 
 const { t } = useI18n();
@@ -54,8 +53,7 @@ const disabled = computed(() => {
 
 const tokenQuota = ref(0);
 const getTokenQuota = async () => {
-  // TODO 路径迁移到apis
-  const [error, { data }] = await http.get(`${GM}/setting/tenant/quota/UserToken`);
+  const [error, { data }] = await setting.getTokenQuota();
   if (error) {
     return;
   }

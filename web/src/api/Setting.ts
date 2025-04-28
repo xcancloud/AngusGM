@@ -53,4 +53,8 @@ export default class Setting {
   getSignupInvitationCode (): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/tenant/signup/invitationCode`);
   }
+
+  getTokenQuota (): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/tenant/quota/UserToken`);
+  }
 }

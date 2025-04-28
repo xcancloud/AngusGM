@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from 'vue';
-import { cookie, http, site, PUB_GM } from '@xcan-angus/tools';
+import { cookie, site } from '@xcan-angus/tools';
 import { redirectTo } from '@/utils/url';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
+import { login } from '@/api';
 
 import AccountInput from '@/components/AccountInput/index.vue';
 import MobileInput from '@/components/MobileInput/index.vue';
@@ -45,7 +46,7 @@ const mobileForm = reactive({
   password: undefined,
   verificationCode: undefined,
   scope: 'sign',
-  signinType: 'MOBILE_SMS',
+  signinType: 'SMS_CODE',
   userId: undefined, // 要登录的用户
   hasPassword: false// 是否已经设置密码
 });
@@ -65,7 +66,7 @@ watch(() => props.type, newValue => {
   mobileForm.account = undefined;
   mobileForm.password = undefined;
   mobileForm.scope = 'sign';
-  mobileForm.signinType = 'MOBILE_SMS';
+  mobileForm.signinType = 'SMS_CODE';
   mobileForm.userId = undefined; // 要登录的用户
   mobileForm.hasPassword = false; // 是否已经设置密码
   accountList.value = [];
@@ -93,7 +94,7 @@ const toSignin = async () => {
   const params = { account, password, scope, signinType, userId };
   const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET;
-  const [err, res] = await http.get(`${PUB_GM}/auth/user/signin`, { ...params, clientSecret, clientId });
+  const [err, res] = await login.signin({ ...params, clientSecret, clientId });
   if (err) {
     loading.value = false;
     error.value = true;
@@ -159,11 +160,10 @@ const validateMobileForm = () => {
 const getAccount = () => {
   if (isMobile.value) {
     const params = { bizKey: 'SIGNIN', mobile: mobileForm.account, verificationCode: mobileForm.verificationCode };
-    return http.get(`${PUB_GM}/auth/user/signsms/check`, params);
+    return login.checkUserMobileCode(params);
   }
-
   const params = { account: accountForm.account, password: accountForm.password };
-  return http.get(`${PUB_GM}/auth/user/signin/account`, params);
+  return login.getUserAcount(params);
 };
 
 const signin = async () => {
@@ -207,6 +207,7 @@ const signin = async () => {
 
   const data = res.data || [];
   accountList.value = data;
+
   if (!data.length) {
     if (mobile.value) {
       mobileForm.userId = undefined;

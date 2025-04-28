@@ -13,7 +13,7 @@
         "vite:build:dev": "vite build --mode dev",
         "vite:build:prod": "vite build --mode prod",
         "vite:build:priv": "vite build --mode priv",
-        "dev": "cross-env mode_env=dev edition_type=CLOUD_SERVICE zip_dist=false node scripts/build-dev.js",
+        "dev": "vite --mode dev",
         "dev:priv0": "husky install && cross-env mode_env=priv edition_type=$npm_config_edition_type zip_dist=$npm_config_zip_dist node scripts/build-dev.js",
         "dev:priv": "husky install && cross-env mode_env=priv edition_type=COMMUNITY zip_dist=false node scripts/build-dev.js",
         "dev:priv:enterprise": "husky install && cross-env mode_env=priv edition_type=ENTERPRISE zip_dist=false node scripts/build-dev.js",
