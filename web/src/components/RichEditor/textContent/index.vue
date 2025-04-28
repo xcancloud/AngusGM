@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from 'vue';
-import { Quill } from '@xcan/design';
-import 'quill/dist/quill.snow.css';
-import 'quill/dist/quill.core.css';
+import { Quill } from '@xcan-angus/vue-ui';
+import '@xcan-angus/quill/dist/quill.snow.css';
+import '@xcan-angus/quill/dist/quill.core.css';
 
 interface Props {
   value: string;

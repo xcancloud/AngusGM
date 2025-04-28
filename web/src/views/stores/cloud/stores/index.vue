@@ -204,7 +204,7 @@ onMounted(async () => {
               </Button> -->
             </div>
           </div>
-          <img class="my-image" src="images/img1.png" />
+          <img class="my-image" src="./images/img1.png" />
         </div>
       </div>
     </Carousel>

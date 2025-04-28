@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { http, PUB_CM, PUB_GM } from '@xcan-angus/tools';
+import { http, PUB_ESS, PUB_GM } from '@xcan-angus/tools';
 import { useRouter } from 'vue-router';
 import { Modal, notification } from '@xcan-angus/vue-ui';
 import { Button, Checkbox } from 'ant-design-vue';
@@ -75,14 +75,14 @@ watch(() => props.type, () => {
 });
 
 const loadTerms = () => {
-  http.get(`${PUB_CM}/content/setting/termsAndConditions`) // TODO 删除PUB_CM引用，服务条款和隐私条款报错前端
+  http.get(`${PUB_ESS}/content/setting/termsAndConditions`) // TODO 删除PUB_CM引用，服务条款和隐私条款报错前端
     .then(([error, resp]) => {
       if (error) {
         return;
       }
       terms.value = resp.data;
     });
-  http.get(`${PUB_CM}/content/setting/privacyPolicy`)
+  http.get(`${PUB_ESS}/content/setting/privacyPolicy`)
     .then(([error, resp]) => {
       if (error) {
         return;

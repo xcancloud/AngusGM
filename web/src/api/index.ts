@@ -1,4 +1,4 @@
-import { GM, STORE } from '@xcan-angus/tools';
+import { GM, ESS } from '@xcan-angus/tools';
 
 import Tenant from '@/api/Tenant';
 import User from '@/api/User';
@@ -23,8 +23,10 @@ import Notice from '@/api/Notice';
 import Setting from '@/api/Setting';
 import Sms from '@/api/Sms';
 import Edition from '@/api/Edition';
-import Store from '@/api/Store';
+import CloudStore from '@/api/CloudStore';
 import License from '@/api/License';
+import PrivStore from '@/api/PrivStore';
+import PrivLicense from '@/api/PrivLicense';
 
 export const tenant = new Tenant(GM);
 export const user = new User(GM);
@@ -48,6 +50,8 @@ export const message = new Message(GM);
 export const notice = new Notice(GM);
 export const setting = new Setting(GM);
 export const sms = new Sms(GM);
-export const edition = new Edition(STORE);
-export const store = new Store(STORE);
-export const license = new License(STORE);
+export const edition = new Edition(ESS);
+export const store = new CloudStore(ESS);
+export const privStore = new PrivStore(GM);
+export const license = new License(ESS);
+export const privLicense = new PrivLicense(GM);

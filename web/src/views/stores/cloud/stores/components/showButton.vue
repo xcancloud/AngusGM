@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { downloadEditionTypes, isCloudGoods, isPriGoods, multipleEditionTypes } from '../PropsType';
 import { Button, Popconfirm, RadioButton, RadioGroup } from 'ant-design-vue';
-import { http, site, download, STORE } from '@xcan-angus/tools';
+import { http, site, download, ESS } from '@xcan-angus/tools';
 import { notification } from '@xcan-angus/vue-ui';
 
 interface Props {
@@ -52,7 +52,7 @@ const downloadInstallEdition = async (installType: string = downloadEdition.valu
   downLoading.value = true;
   emit('update:downLoading', true);
   const host = await site.getUrl('apis');
-  const [error] = await download(`${host}${STORE}/package/plugin/${props.goods.goodsId}/${installType}/download`);
+  const [error] = await download(`${host}${ESS}/package/plugin/${props.goods.goodsId}/${installType}/download`);
   if (error) {
     notification.error(error.message);
   }
@@ -61,7 +61,7 @@ const downloadInstallEdition = async (installType: string = downloadEdition.valu
 };
 
 const open = async () => {
-  await http.post(`${STORE}/store/purchase/free/open`, {
+  await http.post(`${ESS}/store/purchase/free/open`, {
     goodsId: props.goods.goodsId
   });
   emit('reload');

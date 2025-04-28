@@ -5,7 +5,7 @@ import { cookie, utils } from '@xcan-angus/tools';
 import { Upload, Modal, RadioGroup } from 'ant-design-vue';
 import { Hints, Icon, notification } from '@xcan-angus/vue-ui';
 
-import { store } from '@/api';
+import { privStore } from '@/api';
 
 interface FileObj {
   id: string,
@@ -71,7 +71,7 @@ const uploadFile = async () => {
   };
 
   uploading.value = true;
-  const [error] = await (isUpgrade.value ? store.offlineUpgrade(formData, config) : store.offlineInstall(formData, config));
+  const [error] = await (isUpgrade.value ? privStore.offlineUpgrade(formData, config) : privStore.offlineInstall(formData, config));
   uploading.value = false;
   if (error) {
     fileList.value[fileList.value.length - 1].state = true;

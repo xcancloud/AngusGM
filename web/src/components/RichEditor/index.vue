@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { defineAsyncComponent, ref, watch, onMounted } from 'vue';
 import { Quill } from '@xcan-angus/vue-ui';
-import 'quill/dist/quill.snow.css';
-import 'quill/dist/quill.core.css';
+import '@xcan-angus/quill/dist/quill.snow.css';
+import '@xcan-angus/quill/dist/quill.core.css';
 
 const Browser = defineAsyncComponent(() => import('./browser/index.vue'));
 

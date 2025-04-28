@@ -3,10 +3,10 @@ import { onMounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PureCard, Table, Input, IconRefresh, Icon } from '@xcan-angus/vue-ui';
 import { Button } from 'ant-design-vue';
-import { download, site, cookie, STORE, duration } from '@xcan-angus/tools';
+import { download, site, cookie, GM, duration } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
 
-import { license } from '@/api';
+import { privLicense } from '@/api';
 import { SearchParams, Licensed } from './PropsType';
 
 const { t } = useI18n();
@@ -31,7 +31,7 @@ const init = () => {
 const licensedList = ref<Licensed[]>([]);
 const loadLicensedList = async (): Promise<void> => {
   loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await license.getLicenseInPriv(params.value);
+  const [error, { data = { list: [], total: 0 } }] = await privLicense.getLicenseInPriv(params.value);
   loading.value = false;
   if (error) {
     return;
@@ -73,7 +73,7 @@ const handleRefresh = () => {
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const host = await site.getUrl('apis');
   const token = cookie.get('access_token');
-  download(`${host}${STORE}/store/license/${licenseNo}/download?access_token=${token}`);
+  download(`${host}${GM}/store/license/${licenseNo}/download?access_token=${token}`);
 };
 
 const columns = [

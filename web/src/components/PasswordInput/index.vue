@@ -63,7 +63,7 @@ if (['en', 'zh_CN'].includes(localeCookie)) {
   strengthMap = tipMap[localeCookie];
 }
 const errorMessage = ref(t('invalid-pass'));
-const focus = ref(false);
+const focused = ref(false);
 
 const validLength = ref(false);
 const blank = ref(false); // 密码是否包含空格
@@ -128,12 +128,12 @@ watch(() => inputValue.value, newValue => {
 });
 
 const blur = () => {
-  focus.value = false;
+  focused.value = false;
   validateData();
 };
 
 const focus = () => {
-  focus.value = true;
+  focused.value = true;
 };
 const compositionend = (e) => {
   input.value = false;
@@ -146,7 +146,7 @@ defineExpose({ validateData });
 </script>
 
 <template>
-  <div class="relative" :class="{'error':error,'focus':focus}">
+  <div class="relative" :class="{'error':error,'focused':focused}">
     <InputPassword
       v-model:value="inputValue"
       :visibilityToggle="true"

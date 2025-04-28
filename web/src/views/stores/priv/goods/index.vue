@@ -3,9 +3,9 @@ import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { notification, PureCard, Scroll, Icon, SearchPanel, NoData, Colon, IconRefresh } from '@xcan-angus/vue-ui';
 import { Button, Dropdown, Menu, MenuItem } from 'ant-design-vue';
-import { STORE } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/tools';
 
-import { store } from '@/api';
+import { privStore } from '@/api';
 import UploadPlugin from '@/views/stores/priv/goods/components/uploadPlugin/index.vue';
 import { PrivateGoods } from './PropsType';
 
@@ -35,7 +35,7 @@ const handleParamChange = (filters) => {
 
 const uninstall = async (id) => {
   loading.value = true;
-  const [error] = await store.uninstallPlugin({ goodsId: id });
+  const [error] = await privStore.uninstallPlugin({ goodsId: id });
   loading.value = false;
   if (error) {
     return;
@@ -104,7 +104,7 @@ const getProductTypeColor = (value) => {
     v-model:spinning="spinng"
     style="height: calc(100% - 76px);"
     class="-mr-2"
-    :action="`${STORE}/store/installation/search`"
+    :action="`${GM}/store/installation/search`"
     :params="params"
     :notify="notify"
     @change="handleChange">

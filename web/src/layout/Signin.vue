@@ -22,7 +22,7 @@ const preventDefaultListener = (e) => {
           帮助软件研发团队高效且可持续地开展软件研发和测试活动，同时满足客户敏捷研发和测试的要求。
         </div>
         <img
-          src="assets/sign-in.svg"
+          src="./assets/sign-in.svg"
           @contextmenu="preventDefaultListener"
           @dragstart="preventDefaultListener"
           @touchstart="preventDefaultListener">
@@ -32,7 +32,7 @@ const preventDefaultListener = (e) => {
       </div>
       <img
         class="img-end"
-        src="assets/sign-background.png"
+        src="./assets/sign-background.png"
         @contextmenu="preventDefaultListener"
         @dragstart="preventDefaultListener"
         @touchstart="preventDefaultListener">
@@ -48,7 +48,7 @@ const preventDefaultListener = (e) => {
   min-height: 100%;
   padding-top: 28px;
   padding-bottom: 12px;
-  background-image: url("assets/background.svg");
+  background-image: url("./assets/background.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }

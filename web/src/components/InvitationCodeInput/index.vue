@@ -17,23 +17,23 @@ const emit = defineEmits<{
 }>();
 
 const inputValue = ref<string>();
-const focus = ref(false);
+const focused = ref(false);
 
 watch(() => inputValue.value, (newValue) => {
   emit('update:value', newValue);
 });
 
 const focus = () => {
-  focus.value = true;
+  focused.value = true;
 };
 
 const blur = () => {
-  focus.value = false;
+  focused.value = false;
 };
 </script>
 
 <template>
-  <div class="relative" :class="{'focus':focus}">
+  <div class="relative" :class="{'focused':focused}">
     <Input
       v-model:value="inputValue"
       :maxlength="50"

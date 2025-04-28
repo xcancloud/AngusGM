@@ -3,7 +3,7 @@ import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, PureCard, Scroll, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 // import { Button } from 'ant-design-vue';
-import { STORE } from '@xcan-angus/tools';
+import { ESS } from '@xcan-angus/tools';
 import { app } from '@xcan-angus/tools';
 
 import UploadPlugin from './components/UploadPlugin/index.vue';
@@ -103,7 +103,7 @@ const options = [
       v-model:spinning="loading"
       style="height: calc(100% - 76px);"
       class="-mr-2"
-      :action="`${STORE}/store/purchase/search`"
+      :action="`${ESS}/store/purchase/search`"
       :params="params"
       :notify="notify"
       :lineHeight="162"

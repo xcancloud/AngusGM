@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, IconRefresh, Input, PureCard, Table } from '@xcan-angus/vue-ui';
-import { cookie, STORE, duration, download } from '@xcan-angus/tools';
+import { cookie, ESS, duration, download } from '@xcan-angus/tools';
 import { debounce } from 'throttle-debounce';
 
 import { license } from '@/api';
@@ -71,7 +71,7 @@ const handleRefresh = () => {
 
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const token = cookie.get('access_token');
-  download(`${STORE}/store/license/${licenseNo}/download?access_token=${token}`); // TODO 移到api
+  download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`); // TODO 移到api
 };
 
 const columns = [

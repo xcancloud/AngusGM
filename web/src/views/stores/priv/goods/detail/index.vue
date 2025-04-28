@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { Card, Grid, NoData } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
-import { store } from '@/api';
+import { privStore } from '@/api';
 
 const route = useRoute();
 const id = route.params.id;
@@ -106,7 +106,7 @@ const loadGoodsInfo = async () => {
   if (!id) {
     return;
   }
-  const [error, { data = {} }] = await store.getInstallationDetail(id as string);
+  const [error, { data = {} }] = await privStore.getInstallationDetail(id as string);
   if (error) {
     return;
   }
