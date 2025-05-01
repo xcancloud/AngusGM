@@ -74,10 +74,10 @@ public class SettingAssembler {
 
   public static SecurityTo toSecurityTo(Security security) {
     return Objects.isNull(security) ? null : new SecurityTo()
-        .setSigninLimit(app.getSigninLimit())
-        .setSignupAllow(app.getSignupAllow())
-        .setPasswordPolicy(app.getPasswordPolicy())
-        .setAlarm(app.getAlarm());
+        .setSigninLimit(security.getSigninLimit())
+        .setSignupAllow(security.getSignupAllow())
+        .setPasswordPolicy(security.getPasswordPolicy())
+        .setAlarm(security.getAlarm());
   }
 
   public static SocialTo toSocialTo(Social social) {

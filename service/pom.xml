@@ -48,20 +48,6 @@
     <url>https://github.com/xcancloud/AngusGM/-/issues</url>
   </issueManagement>
 
-  <distributionManagement>
-    <!-- Release -->
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-
-    <!-- Snapshot -->
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <developers>
     <developer>
       <id>xiaolong.liu</id>

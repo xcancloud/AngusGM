@@ -79,8 +79,8 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
       @Override
       protected Void process() {
         SettingTenant setting = settingTenantQuery.find(getOptTenantId());
-        setting.setInvitationCode(Objects.isNull(app.getSignupAllow())
-            ? null : app.getSignupAllow().getInvitationCode());
+        setting.setInvitationCode(Objects.isNull(security.getSignupAllow())
+            ? null : security.getSignupAllow().getInvitationCode());
         setting.setSecurityData(security);
         updateTenantSetting(getOptTenantId(), setting);
 
