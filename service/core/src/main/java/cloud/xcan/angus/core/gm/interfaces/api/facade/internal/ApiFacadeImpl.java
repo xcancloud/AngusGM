@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.api.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.api.facade.internal.assembler.ApiAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.api.facade.internal.assembler.ApiAssembler.getSpecification;
+import static cloud.xcan.angus.core.gm.interfaces.api.facade.internal.assembler.ApiAssembler.toApiDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
@@ -77,8 +78,7 @@ public class ApiFacadeImpl implements ApiFacade {
   @NameJoin
   @Override
   public ApiDetailVo detail(Long id) {
-    Api api = apiQuery.detail(id);
-    return ApiAssembler.toApiDetailVo(api);
+    return toApiDetailVo(apiQuery.detail(id));
   }
 
   @NameJoin

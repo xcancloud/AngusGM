@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailTemplateAssembler.getSpecification;
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailTemplateAssembler.toDetail;
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailTemplateAssembler.updateDtoToDomain;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailTemplateCmd;
@@ -26,19 +29,17 @@ public class EmailTemplateFacadeImpl implements EmailTemplateFacade {
 
   @Override
   public void update(Long id, EmailTemplateUpdateDto dto) {
-    emailTemplateCmd.update(EmailTemplateAssembler.updateDtoToDomain(id, dto));
+    emailTemplateCmd.update(updateDtoToDomain(id, dto));
   }
 
   @Override
   public EmailTemplateDetailVo detail(Long id) {
-    EmailTemplate template = emailTemplateQuery.detail(id);
-    return EmailTemplateAssembler.toDetail(template);
+    return toDetail(emailTemplateQuery.detail(id));
   }
 
   @Override
   public PageResult<EmailTemplateDetailVo> list(EmailTemplateFindDto dto) {
-    Page<EmailTemplate> page = emailTemplateQuery.find(
-        EmailTemplateAssembler.getSpecification(dto), dto.tranPage());
+    Page<EmailTemplate> page = emailTemplateQuery.find(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, EmailTemplateAssembler::toDetail);
   }
 

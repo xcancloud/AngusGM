@@ -5,6 +5,7 @@ import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.toAppFuncDetailVo;
+import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.toTree;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.updateDtoToDomain;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 
@@ -106,7 +107,7 @@ public class AppFuncFacadeImpl implements AppFuncFacade {
   public List<AppFuncTreeVo> tree(Long appId, AppFuncFindDto dto) {
     List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto));
     joinSupplier.execute(() -> appFunctions);
-    return AppFuncAssembler.toTree(appFunctions);
+    return toTree(appFunctions);
   }
 
   @Override
@@ -114,7 +115,7 @@ public class AppFuncFacadeImpl implements AppFuncFacade {
     List<AppFunc> appFunctions = appFuncSearch.search(getSearchCriteria(appId, dto)
         , AppFunc.class, getMatchSearchFields(dto.getClass()));
     joinSupplier.execute(() -> appFunctions);
-    return AppFuncAssembler.toTree(appFunctions);
+    return toTree(appFunctions);
   }
 
 }

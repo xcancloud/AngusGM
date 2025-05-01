@@ -48,8 +48,7 @@ public class TOUserFacadeImpl implements TOUserFacade {
   @NameJoin
   @Override
   public TOUserDetailVo detail(Long userId) {
-    TOUser toUser = toUserQuery.detail(userId);
-    return toDetailVo(toUser);
+    return toDetailVo(toUserQuery.detail(userId));
   }
 
   @NameJoin

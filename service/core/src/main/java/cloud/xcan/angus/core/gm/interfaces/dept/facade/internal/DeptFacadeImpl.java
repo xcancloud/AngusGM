@@ -1,5 +1,9 @@
 package cloud.xcan.angus.core.gm.interfaces.dept.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.getSearchCriteria;
+import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.getSpecification;
+import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.toDetailVo;
+import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.toNavigationVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
@@ -69,26 +73,26 @@ public class DeptFacadeImpl implements DeptFacade {
 
   @Override
   public DeptNavigationTreeVo navigation(Long id) {
-    return DeptAssembler.toNavigationVo(deptQuery.navigation(id));
+    return toNavigationVo(deptQuery.navigation(id));
   }
 
   @NameJoin
   @Override
   public DeptDetailVo detail(Long id) {
-    return DeptAssembler.toDetailVo(deptQuery.detail(id));
+    return toDetailVo(deptQuery.detail(id));
   }
 
   @NameJoin
   @Override
   public PageResult<DeptListVo> list(DeptFindDto dto) {
-    Page<Dept> page = deptQuery.list(DeptAssembler.getSpecification(dto), dto.tranPage());
+    Page<Dept> page = deptQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, DeptAssembler::toListVo);
   }
 
   @NameJoin
   @Override
   public PageResult<DeptListVo> search(DeptSearchDto dto) {
-    Page<Dept> page = deptSearch.search(DeptAssembler.getSearchCriteria(dto), dto.tranPage(),
+    Page<Dept> page = deptSearch.search(getSearchCriteria(dto), dto.tranPage(),
         Dept.class, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, DeptAssembler::toListVo);
   }

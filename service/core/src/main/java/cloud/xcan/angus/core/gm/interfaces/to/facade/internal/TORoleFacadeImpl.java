@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.to.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler.getSearchCriteria;
+import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler.getSpecification;
+import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler.toTORoleDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
@@ -72,23 +75,21 @@ public class TORoleFacadeImpl implements TORoleFacade {
   @NameJoin
   @Override
   public TORoleDetailVo detail(String idOrCode) {
-    return TORoleAssembler.toTORoleDetailVo(toRoleQuery.detail(idOrCode));
+    return toTORoleDetailVo(toRoleQuery.detail(idOrCode));
   }
 
   @NameJoin
   @Override
   public PageResult<TORoleVo> list(TORoleFindDto dto) {
-    Page<TORole> topPolicyPage = toRoleQuery
-        .list(TORoleAssembler.getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(topPolicyPage, TORoleAssembler::toRoleVo);
+    Page<TORole> page = toRoleQuery.list(getSpecification(dto), dto.tranPage());
+    return buildVoPageResult(page, TORoleAssembler::toRoleVo);
   }
 
   @NameJoin
   @Override
   public PageResult<TORoleVo> search(TORoleSearchDto dto) {
-    Page<TORole> topPolicyPage = toRoleSearch
-        .search(TORoleAssembler.getSearchCriteria(dto), dto.tranPage(),
-            TORole.class, getMatchSearchFields(dto.getClass()));
-    return buildVoPageResult(topPolicyPage, TORoleAssembler::toRoleVo);
+    Page<TORole> page = toRoleSearch.search(getSearchCriteria(dto), dto.tranPage(),
+        TORole.class, getMatchSearchFields(dto.getClass()));
+    return buildVoPageResult(page, TORoleAssembler::toRoleVo);
   }
 }

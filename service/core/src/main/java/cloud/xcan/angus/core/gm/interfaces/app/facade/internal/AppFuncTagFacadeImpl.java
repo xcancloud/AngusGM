@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppTagTargetAssembler.getTargetTagSpecification;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
@@ -50,7 +51,7 @@ public class AppFuncTagFacadeImpl implements AppFuncTagFacade {
   public PageResult<AppTagTargetVo> funcTagList(Long funcId, AppTargetTagFindDto dto) {
     dto.setTargetId(funcId).setTargetType(WebTagTargetType.MENU);
     Page<WebTagTarget> tagTargetsPage = webTagTargetQuery.findTargetTag(
-        AppTagTargetAssembler.getTargetTagSpecification(dto), dto.tranPage());
+        getTargetTagSpecification(dto), dto.tranPage());
     return buildVoPageResult(tagTargetsPage, AppTagTargetAssembler::toTagTargetVo);
   }
 }

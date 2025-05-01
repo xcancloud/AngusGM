@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler;
 
 
+import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.toTagVos;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isDoorApi;
 
@@ -75,7 +76,7 @@ public class AppOpenAssembler {
         .setAppIcon(app.getIcon()).setAppType(app.getType()).setEditionType(app.getEditionType())
         .setAppUrl(app.getUrl()).setAppSequence(app.getSequence())
         .setAppVersion(app.getVersion())
-        .setAppTags(AppFuncAssembler.toTagVos(app.getTags()));
+        .setAppTags(toTagVos(app.getTags()));
   }
 
   public static GenericSpecification<AppOpen> getSpecification(AppOpenFindDto dto) {

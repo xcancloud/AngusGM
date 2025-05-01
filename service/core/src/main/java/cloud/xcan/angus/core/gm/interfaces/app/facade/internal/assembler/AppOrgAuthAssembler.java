@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler;
 
 
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getExtension;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.objectToList;
 
 import cloud.xcan.angus.api.commonlink.dept.Dept;
@@ -80,7 +81,7 @@ public class AppOrgAuthAssembler {
       return null;
     }
     List<AuthPolicy> authPolicies = objectToList(extension, AuthPolicy.class);
-    return ObjectUtils.isEmpty(authPolicies) ? null : authPolicies.stream()
+    return isEmpty(authPolicies) ? null : authPolicies.stream()
         .map(x -> new AuthPolicyOrgVo().setId(x.getId())
             .setCode(x.getCode()).setName(x.getName())
             .setDescription(x.getDescription()).setAuthOrgs(x.getOrgPolicies())
