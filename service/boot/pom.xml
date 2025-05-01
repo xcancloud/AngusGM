@@ -32,6 +32,11 @@
       <artifactId>xcan-infra.web-starter</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+    </dependency>
+
     <!-- Note: The auth-server-starter must come before auth-resource-starter to ensure it is initialized first. -->
     <dependency>
       <groupId>cloud.xcan.angus</groupId>

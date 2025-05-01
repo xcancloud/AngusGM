@@ -3,6 +3,10 @@ server:
   servlet:
     context-path: /
 
+eureka:
+  dashboard:
+    path: /eureka-dashboard
+
 xcan:
   core:
     enabled: true

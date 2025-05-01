@@ -264,7 +264,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   @Override
   public void syncServiceApi(ServiceInstance instance, Service serviceDb) {
-    // Parse the apis of services in the db from discovery
+    // Parse the apis of services in the db from eureka
     List<Api> apis = parseApisFromSwagger(instance, serviceDb);
 
     // Save apis to database

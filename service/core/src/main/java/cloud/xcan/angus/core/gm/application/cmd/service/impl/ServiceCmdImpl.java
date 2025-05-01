@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.service.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SERVICE_DISCOVERY_NOT_EXISTED_T;
+import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SERVICE_EUREKA_NOT_EXISTED_T;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
@@ -221,7 +221,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
         // Get registry service
         serviceInstances = discoveryClient.getInstances(serviceCode.toLowerCase());
-        assertResourceNotFound(serviceInstances, SERVICE_DISCOVERY_NOT_EXISTED_T,
+        assertResourceNotFound(serviceInstances, SERVICE_EUREKA_NOT_EXISTED_T,
             new Object[]{serviceCode});
       }
 

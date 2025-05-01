@@ -8,7 +8,7 @@ public interface AASCoreMessage {
   String API_SWAGGER_PARSE_ERROR = "xcm.gm.api.swagger.parse.error.t";
 
   String SERVICE_IS_DISABLED_T = "xcm.gm.service.is.disabled.t";
-  String SERVICE_DISCOVERY_NOT_EXISTED_T = "xcm.gm.service.discovery.not.existed.t";
+  String SERVICE_EUREKA_NOT_EXISTED_T = "xcm.gm.service.eureka.not.existed.t";
 
   String APP_IS_DISABLED_T = "xcm.gm.application.is.disabled.t";
 

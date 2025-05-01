@@ -3,10 +3,10 @@ import { onMounted, ref, reactive, watch, onBeforeUnmount, provide, defineAsyncC
 
 import { actuator } from '@/api';
 
-const Information = defineAsyncComponent(() => import('@/views/system/discovery/components/information/index.vue'));
-const Summary = defineAsyncComponent(() => import('@/views/system/discovery/components/summary/index.vue'));
-const Metrics = defineAsyncComponent(() => import('@/views/system/discovery/components/metrics/index.vue'));
-const Service = defineAsyncComponent(() => import('@/views/system/discovery/components/service/index.vue'));
+const Information = defineAsyncComponent(() => import('@/views/system/eureka/components/information/index.vue'));
+const Summary = defineAsyncComponent(() => import('@/views/system/eureka/components/summary/index.vue'));
+const Metrics = defineAsyncComponent(() => import('@/views/system/eureka/components/metrics/index.vue'));
+const Service = defineAsyncComponent(() => import('@/views/system/eureka/components/service/index.vue'));
 
 const registryStatus = ref('');
 const registeredRuntime = ref('');

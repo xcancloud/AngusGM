@@ -1,21 +1,3 @@
-eureka:
-  client:
-    healthcheck:
-      enabled: true
-    eureka-connection-idle-timeout-seconds: 10
-    initial-instance-info-replication-interval-seconds: 10
-    registry-fetch-interval-seconds: 10
-    serviceUrl:
-      defaultZone: http://${DISCOVERY_SECURITY_USER_NAME}:${DISCOVERY_SECURITY_USER_PASSWORD}@${DISCOVERY_HOST_01}:${DISCOVERY_PORT}/eureka/,http://${DISCOVERY_SECURITY_USER_NAME}:${DISCOVERY_SECURITY_USER_PASSWORD}@${DISCOVERY_HOST_02}:${DISCOVERY_PORT}/eureka/
-  instance:
-    app-name: '@artifactId@'
-    instance-id: ${spring.cloud.client.ip-address}:${server.port}
-    lease-expiration-duration-in-seconds: 30
-    lease-renewal-interval-in-seconds: 10
-    prefer-ip-address: true
-    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
-    health-check-url-path: /actuator/health
-
 xcan:
   trace:
     enabled: false
@@ -78,6 +60,36 @@ xcan:
         max-active: 8
         max-idle: 8
         min-idle: 5
+
+eureka:
+  datacenter: self-host-1
+  environment: prod
+  client:
+    healthcheck:
+      enabled: true
+    register-with-eureka: true
+    eureka-connection-idle-timeout-seconds: 10
+    initial-instance-info-replication-interval-seconds: 10
+    registry-fetch-interval-seconds: 10
+    serviceUrl:
+      # defaultZone: http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST_01}:${GM_PORT}/eureka/,http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST_02}:${GM_PORT}/eureka/
+      defaultZone: http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
+  instance:
+    app-name: '@artifactId@'
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
+    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
+    health-check-url-path: /actuator/health
+  server:
+    enable-self-preservation: true
+    renewal-percent-threshold: 0.85
+    a-sgcache-expiry-timeout-ms: 300000
+    registry-sync-retry-wait-ms: 3000
+    eviction-interval-timer-in-ms: 5000
+    peer-eureka-nodes-update-interval-ms: 5000
+    renewal-threshold-update-interval-ms: 30000
 
 spring:
   security:

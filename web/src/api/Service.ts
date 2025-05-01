@@ -7,11 +7,11 @@ export default class Service {
   }
 
   getDiscoveryServices (): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/discovery`);
+    return http.get(`${baseUrl}/eureka`);
   }
 
   getServiceInstances (code: string): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/${code}/discovery/instances`);
+    return http.get(`${baseUrl}/${code}/eureka/instances`);
   }
 
   getApisByServiceOrResource (params) {

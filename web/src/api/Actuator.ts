@@ -1,17 +1,17 @@
-import { http, PUB_DISCOVERY } from '@xcan-angus/tools';
+import { http, PUB_GM } from '@xcan-angus/tools';
 
 let metricsBaseUrl: string;
 export default class Actuator {
   constructor () {
-    metricsBaseUrl = '/discovery/actuator/metrics';
+    metricsBaseUrl = '/eureka/actuator/metrics';
   }
 
   getDiscoveryStatus (): Promise<[Error | null, any]> {
-    return http.get(`${PUB_DISCOVERY}/status`);
+    return http.get(`${PUB_GM}/status`);
   }
 
   getDiscoveryLastn (): Promise<[Error | null, any]> {
-    return http.get(`${PUB_DISCOVERY}/lastn`);
+    return http.get(`${PUB_GM}/lastn`);
   }
 
   getCpuMax (): Promise<[Error | null, any]> {

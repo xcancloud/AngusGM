@@ -447,7 +447,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/system/register',
-        component: () => import('@/views/system/discovery/index.vue')
+        component: () => import('@/views/system/eureka/index.vue')
       },
       {
         path: '/system/other',
