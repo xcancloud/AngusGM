@@ -446,10 +446,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/token/index.vue')
       },
       {
-        path: '/system/register',
-        component: () => import('@/views/system/eureka/index.vue')
-      },
-      {
         path: '/system/other',
         component: (): Component => import('@/views/system/other/index.vue'),
         meta: {
