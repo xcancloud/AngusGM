@@ -7,7 +7,7 @@ public interface EventConstant {
   /**
    * Event duplicate.
    */
-  String EVENT_DUPLICATE_REDIS_KEY = "event:duplicate:";
+  String EVENT_DUPLICATE_REDIS_KEY = "gm:event:duplicate:";
   int EVENT_DUPLICATE_MAX_KEY_LENGTH = 200;
   Long EVENT_DUPLICATE_KEY_EXPIRE = 5L;
 

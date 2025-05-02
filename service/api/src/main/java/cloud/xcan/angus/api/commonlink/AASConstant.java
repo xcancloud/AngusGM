@@ -70,12 +70,12 @@ public interface AASConstant {
   //int LINK_SECRET_LENGTH = 40;
   int LINK_SECRET_VALID_SECOND = 5 * 60;
 
-  String CACHE_EMAIL_CHECK_SECRET_PREFIX = "aas:checkEmail:%s:%s";
-  String CACHE_SMS_CHECK_SECRET_PREFIX = "aas:checkSms:%s:%s";
-  String CACHE_USER_SOCIAL_CHECK_SECRET_PREFIX = "aas:user:checkSocial:%d";
-  String CACHE_SOCIAL_CHECK_SECRET_PREFIX = "aas:checkSocial:%s";
-  String CACHE_PASSWORD_ERROR_NUM_PREFIX = "aas:user:passwordErrorNum:%s";
-  String CACHE_PASSWORD_ERROR_LOCKED_PREFIX = "aas:user:passwordErrorLocked:%s";
+  String CACHE_EMAIL_CHECK_SECRET_PREFIX = "gm:aas:checkEmail:%s:%s";
+  String CACHE_SMS_CHECK_SECRET_PREFIX = "gm:aas:checkSms:%s:%s";
+  String CACHE_USER_SOCIAL_CHECK_SECRET_PREFIX = "gm:aas:user:checkSocial:%d";
+  String CACHE_SOCIAL_CHECK_SECRET_PREFIX = "gm:aas:checkSocial:%s";
+  String CACHE_PASSWORD_ERROR_NUM_PREFIX = "gm:aas:user:passwordErrorNum:%s";
+  String CACHE_PASSWORD_ERROR_LOCKED_PREFIX = "gm:aas:user:passwordErrorLocked:%s";
 
   /**
    * For system token

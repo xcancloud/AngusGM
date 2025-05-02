@@ -23,8 +23,8 @@ public interface EmailConstant {
 
   String VC_PARAM_NAME = "verificationCode";
   String VC_VARIABLE = "verificationCode";
-  String VC_CACHE_PREFIX = "email:verificationCode";
-  String VC_CACHE_REPEAT_CHECK_PREFIX = "email:verificationCode:repeat:check";
+  String VC_CACHE_PREFIX = "gm:email:verificationCode";
+  String VC_CACHE_REPEAT_CHECK_PREFIX = "gm:email:verificationCode:repeat:check";
 
   String MAIL_CHANNEL_VARIABLE_PREFIX = "channelType";
 

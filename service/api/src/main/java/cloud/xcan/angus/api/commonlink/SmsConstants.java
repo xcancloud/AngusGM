@@ -15,7 +15,7 @@ public interface SmsConstants {
 
   String VC_PARAM_NAME = "verificationCode";
   String VC_TEMPLATE_VALID_MINUTE = "validMinute";
-  String VC_CACHE_PREFIX = "sms:verificationCode";
-  String VC_CACHE_REPEAT_CHECK_PREFIX = "sms:verificationCode:repeat:check";
+  String VC_CACHE_PREFIX = "gm:sms:verificationCode";
+  String VC_CACHE_REPEAT_CHECK_PREFIX = "gm:sms:verificationCode:repeat:check";
 
 }

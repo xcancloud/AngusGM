@@ -36,8 +36,8 @@ public interface UCConstant {
   int MAX_USER_DIRECTORY_NUM = 10;
 
   int DEFAULT_SECRET_VALID_SECOND = 5 * 60;
-  String CACHE_EMAIL_CHECK_SECRET_PREFIX = "uc:checkEmail:%s:%d";
-  String CACHE_SMS_CHECK_SECRET_PREFIX = "uc:checkSms:%s:%d";
+  String CACHE_EMAIL_CHECK_SECRET_PREFIX = "gm:checkEmail:%s:%d";
+  String CACHE_SMS_CHECK_SECRET_PREFIX = "gm:checkSms:%s:%d";
 
   String LDAP_GROUP_CODE_PREFIX = "LDAP_";
 
