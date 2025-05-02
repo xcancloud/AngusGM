@@ -41,8 +41,16 @@ public class SmsSendJob {
     jobTemplate.execute(LOCK_KEY, 20, TimeUnit.MINUTES, () -> {
       List<Sms> smsInPending = null;
       try {
-        SmsChannel enabledChannel = smsQuery.checkChannelEnabledAndGet();
-        SmsProvider smsProvider = smsQuery.checkAndGetSmsProvider(enabledChannel);
+        SmsChannel enabledChannel;
+        SmsProvider smsProvider;
+
+        try {
+          enabledChannel = smsQuery.checkChannelEnabledAndGet();
+          smsProvider = smsQuery.checkAndGetSmsProvider(enabledChannel);
+        } catch (Exception e) {
+          log.warn(e.getMessage());
+          return;
+        }
 
         smsInPending = smsQuery.findSmsInPending(COUNT);
         while (isNotEmpty(smsInPending)) {
