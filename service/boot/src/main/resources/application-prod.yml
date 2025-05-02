@@ -62,7 +62,7 @@ xcan:
         min-idle: 5
 
 eureka:
-  datacenter: self-host-1
+  datacenter: self-host-dc1
   environment: prod
   client:
     healthcheck:
@@ -70,7 +70,7 @@ eureka:
     register-with-eureka: true
     eureka-connection-idle-timeout-seconds: 10
     initial-instance-info-replication-interval-seconds: 10
-    registry-fetch-interval-seconds: 10
+    registry-fetch-interval-seconds: 15
     serviceUrl:
       # defaultZone: http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST_01}:${GM_PORT}/eureka/,http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST_02}:${GM_PORT}/eureka/
       defaultZone: http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
@@ -78,7 +78,7 @@ eureka:
     app-name: '@artifactId@'
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
     lease-expiration-duration-in-seconds: 30
-    lease-renewal-interval-in-seconds: 10
+    lease-renewal-interval-in-seconds: 15
     prefer-ip-address: true
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
     health-check-url-path: /actuator/health
@@ -88,7 +88,7 @@ eureka:
     a-sgcache-expiry-timeout-ms: 300000
     registry-sync-retry-wait-ms: 3000
     eviction-interval-timer-in-ms: 5000
-    peer-eureka-nodes-update-interval-ms: 5000
+    peer-eureka-nodes-update-interval-ms: 10000
     renewal-threshold-update-interval-ms: 30000
 
 spring:
@@ -98,7 +98,7 @@ spring:
         opaque-token:
           client-id: ${OAUTH2_INTROSPECT_CLIENT_ID}
           client-secret: ${OAUTH2_INTROSPECT_CLIENT_SECRET}
-          introspection-uri: ${OAUTH2_ENDPOINT_PREFIX}/oauth2/introspect
+          introspection-uri: ${GM_APIS_URL_PREFIX}/oauth2/introspect
 
   jpa:
     hibernate:
