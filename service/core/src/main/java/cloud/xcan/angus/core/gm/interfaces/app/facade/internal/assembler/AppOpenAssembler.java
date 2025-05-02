@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler;
 
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.toTagVos;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
-import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isDoorApi;
+import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isInnerApi;
 
 import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
 import cloud.xcan.angus.api.gm.app.dto.AppOpenDto;
@@ -24,7 +24,7 @@ public class AppOpenAssembler {
 
   public static AppOpen openDtoToDomain(AppOpenDto dto) {
     Principal principal = PrincipalContext.get();
-    if (isDoorApi(principal)) {
+    if (isInnerApi(principal)) {
       principal.setUserId(dto.getUserId())
           .setTenantId(dto.getTenantId())
           .setOptTenantId(dto.getTenantId());
@@ -41,7 +41,7 @@ public class AppOpenAssembler {
 
   public static AppOpen renewDtoToDomain(AppOpenRenewDto dto) {
     Principal principal = PrincipalContext.get();
-    if (isDoorApi(principal)) {
+    if (isInnerApi(principal)) {
       principal.setTenantId(dto.getTenantId())
           .setOptTenantId(dto.getTenantId());
     }

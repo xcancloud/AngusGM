@@ -4,7 +4,7 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.TOP_TENANT_ADMIN;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_ACCOUNT_EXISTED_ERROR;
 import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_REFUSE_OPERATE_ADMIN;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
-import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isDoorApi;
+import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isInnerApi;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isMultiTenantCtrl;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isToUser;
@@ -40,6 +40,7 @@ import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.user.UserListRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
+import cloud.xcan.angus.core.utils.PrincipalContextUtils;
 import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -267,7 +268,7 @@ public class UserQueryImpl implements UserQuery {
    */
   @Override
   public void checkRefuseOperateAdmin(List<User> users) {
-    if (isEmpty(users) || isDoorApi() || isToUser() || isTenantSysAdmin()) {
+    if (isEmpty(users) || PrincipalContextUtils.isInnerApi() || isToUser() || isTenantSysAdmin()) {
       return;
     }
     for (User u : users) {
