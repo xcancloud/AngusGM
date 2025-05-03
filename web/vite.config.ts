@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import viteCompression from 'vite-plugin-compression';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
-import server from './configs/dev-server';
+import server from './server/dev-server';
 
 export default defineConfig({
   server,

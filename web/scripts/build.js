@@ -29,7 +29,7 @@ function start () {
     { key: 'VITE_EDITION_TYPE', value: editionType },
     { key: 'VITE_PROFILE', value: deployEnv }
   ];
-  let envContent = fs.readFileSync(resolve('../.env'), 'utf8');
+  let envContent = fs.readFileSync(resolve('../conf/.env'), 'utf8');
   envContent = replace(envContent, envReplaceList);
   fs.writeFileSync(resolve('../public/meta/env'), envContent, 'utf8');
 
