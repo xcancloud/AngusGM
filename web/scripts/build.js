@@ -39,8 +39,8 @@ function start () {
 
   // 4. Copy the nginx configuration file to the public/
   if (deployEnv !== 'priv') { // Not configuring Nginx in a private environment
-    const nginxContent = fs.readFileSync(resolve(`../nginx/nginx_${deployEnv}_${packageInfo.name}.conf`), 'utf8');
-    fs.writeFileSync(resolve(`../public/nginx_${deployEnv}_${packageInfo.name}.conf`), nginxContent, 'utf8');
+    const nginxContent = fs.readFileSync(resolve(`../nginx/nginx_${deployEnv}_gm.conf`), 'utf8');
+    fs.writeFileSync(resolve(`../public/nginx_${deployEnv}_gm.conf`), nginxContent, 'utf8');
   }
 
   // 5. Execute a dynamically generated npm script command to trigger the Vite build tool for deploy environment build workflows
