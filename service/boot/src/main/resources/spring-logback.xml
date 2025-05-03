@@ -5,12 +5,12 @@
   <property name="LOG_NAME" value="@archive.name@"/>
   <property name="ARTIFACT_ID" value="@hump@"/>
 
-  <springProfile name="local,dev,beta">
+  <springProfile name="local,dev">
     <property name="LOG_PATTERN"
       value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } :: [%15.15t] %-40.40logger{39} -> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
   </springProfile>
 
-  <springProfile name="prod">
+  <springProfile name="prod,priv">
     <property name="LOG_PATTERN"
       value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
   </springProfile>
@@ -63,7 +63,7 @@
     <appender-ref ref="ERROR_FILE"/>
   </appender>
 
-  <springProfile name="local,dev,beta">
+  <springProfile name="local,dev">
     <root level="INFO">
       <appender-ref ref="STDOUT"/>
       <appender-ref ref="FILE_ASYNC"/>
@@ -71,7 +71,7 @@
     </root>
   </springProfile>
 
-  <springProfile name="prod">
+  <springProfile name="prod,priv">
     <root level="INFO">
       <appender-ref ref="FILE_ASYNC"/>
       <appender-ref ref="ERROR_FILE_ASYNC"/>

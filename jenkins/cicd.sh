@@ -9,11 +9,12 @@
 SERVICE_DIR="AngusGM/service"
 WEB_DIR="AngusGM/web"
 
-REMOTE_SERVICE_DIR="/data/app/AngusGM"
-REMOTE_SERVICE_PLUGINS_DIR_NAME="plugins"
-REMOTE_SERVICE_PLUGINS_DIR="${REMOTE_SERVICE_DIR}/${REMOTE_SERVICE_PLUGINS_DIR_NAME}"
-REMOTE_STATIC_DIR_NAME="statics"
-REMOTE_STATIC_DIR="${REMOTE_SERVICE_DIR}/${REMOTE_STATIC_DIR_NAME}"
+REMOTE_APP_DIR="/data/app/AngusGM"
+REMOTE_APP_PLUGINS_DIR_NAME="plugins"
+REMOTE_APP_PLUGINS_DIR="${REMOTE_APP_DIR}/${REMOTE_APP_PLUGINS_DIR_NAME}"
+
+REMOTE_APP_STATIC_DIR_NAME="statics"
+REMOTE_APP_STATIC_DIR="${REMOTE_APP_DIR}/${REMOTE_APP_STATIC_DIR_NAME}"
 
 NGINX_CONFIG_DIR="/opt/required/nginx/conf_ext/"
 
@@ -111,25 +112,28 @@ maven_build () {
 # Deploy service module
 deploy_service() {
   echo "INFO: Deploying service module to ${host}"
-  ssh "$host" "cd ${REMOTE_SERVICE_DIR} && sh shutdown-gm.sh" || {
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh shutdown-gm.sh" || {
     echo "WARN: Failed to stop service, proceeding anyway"
   }
-  ssh "$host" "cd ${REMOTE_SERVICE_DIR} && find . -mindepth 1 -maxdepth 1 -not \( -name ${REMOTE_STATIC_DIR_NAME} -o -name ".*" \) -exec rm -rf {} +" || {
+  ssh "$host" "cd ${REMOTE_APP_DIR} && find . -mindepth 1 -maxdepth 1 -not \( -name ${REMOTE_APP_STATIC_DIR_NAME} -o -name ".*" \) -exec rm -rf {} +" || {
     echo "ERROR: Failed to clean service directory"; exit 1
   }
-  scp -r "${SERVICE_DIR}/boot/target"/* "${host}:${REMOTE_SERVICE_DIR}/" || {
+  scp -r "${SERVICE_DIR}/boot/target"/* "${host}:${REMOTE_APP_DIR}/" || {
     echo "ERROR: Failed to copy service files"; exit 1
   }
-  scp -r "${SERVICE_DIR}/boot/extension/dist"/* "${host}:${REMOTE_SERVICE_PLUGINS_DIR}/" || {
+  scp -r "${SERVICE_DIR}/boot/extension/dist"/* "${host}:${REMOTE_APP_PLUGINS_DIR}/" || {
     echo "ERROR: Failed to copy plugin files"; exit 1
   }
-  ssh "$host" "cd ${REMOTE_SERVICE_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
+  ssh "$host" "cd ${REMOTE_APP_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
     echo "ERROR: Failed to rename logback file"; exit 1
   }
-  ssh "$host" "cd ${REMOTE_SERVICE_DIR} && sh set-opts.sh ${host} && sh startup-gm.sh" || {
+  scp "jenkins/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
+    echo "ERROR: Failed to copy service files"; exit 1
+  }
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh set-opts.sh ${host} && sh startup-gm.sh" || {
     echo "ERROR: Failed to start service"; exit 1
   }
-  ssh "$host" "cd ${REMOTE_SERVICE_DIR} && sh check-health.sh" || {
+  ssh "sh check-health.sh ${host}" || {
     echo "ERROR: Service health check failed"; exit 1
   }
 }
@@ -158,10 +162,10 @@ npm_build () {
 # Deploy web module
 deploy_web() {
   echo "INFO: Deploying web module to ${host}"
-  ssh "$host" "rm -rf ${REMOTE_STATIC_DIR}/*" || {
+  ssh "$host" "rm -rf ${REMOTE_APP_STATIC_DIR}/*" || {
     echo "ERROR: Failed to clean static directory"; exit 1
   }
-  scp -r "${WEB_DIR}/dist"/* "${host}:${REMOTE_STATIC_DIR}/" || {
+  scp -r "${WEB_DIR}/dist"/* "${host}:${REMOTE_APP_STATIC_DIR}/" || {
     echo "ERROR: Failed to copy web assets"; exit 1
   }
   nginxFileName="dist/nginx_${env##*.}_gm.conf"

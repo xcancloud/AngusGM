@@ -96,9 +96,9 @@
       <resource>
         <directory>src/main/scripts</directory>
         <includes>
-          <include>startenv.sh</include>
-          <include>*.sh</include>
-          <include>*.bat</include>
+          <include>init-jdk.sh</include>
+          <include>startup-gm.sh</include>
+          <include>shutdown-gm.sh</include>
         </includes>
         <filtering>true</filtering>
         <targetPath>${project.basedir}/target</targetPath>
