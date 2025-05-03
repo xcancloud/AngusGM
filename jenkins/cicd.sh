@@ -185,8 +185,8 @@ while [ $# -gt 0 ]; do
     --editionType) editionType="$2"; shift ;;
     --hosts) hosts="$2"; shift ;;
     --dbType) dbType="${2:-db.mysql}"; shift ;;
-    --gitBranch) gitBranch="$2"; shift ;;
-    --gitCredential) gitCredential="$2"; shift ;;
+    #--gitBranch) gitBranch="$2"; shift ;;
+    #--gitCredential) gitCredential="$2"; shift ;;
     *) echo "WARN: Unknown parameter $1"; shift ;;
   esac
   shift
@@ -199,7 +199,7 @@ validate_parameters
 prepare_environment
 
 # Step 3: CI Phase
-clone_repository
+# clone_repository
 
 if echo "$module" | grep -q "service"; then
   echo "INFO: Building service module"
