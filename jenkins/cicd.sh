@@ -46,40 +46,6 @@ validate_parameters() {
   esac
 }
 
-# Function to check JDK version >= 17
-check_jdk_version() {
-    # Get raw version string (handle stderr output)
-    java_version_output=$(java -version 2>&1)
-
-    # Extract major version using POSIX-compliant method
-    major_version=$(echo "$java_version_output" | awk -F '"' '/version/ {print $2}' |
-        awk -F '.' '{
-            if ($1 == "1") {  # Handle old version format 1.8.0
-                print $2
-            } else {          # Handle new version format 17.0.0
-                print $1
-            }
-        }')
-
-    # Debug output (comment out for production)
-    echo "INFO: Detected Java major version: $major_version"
-
-    # Validate version number
-    if ! echo "$major_version" | grep -qE '^[0-9]+$'; then
-        echo "ERROR: Failed to detect Java version" >&2
-        return 2
-    fi
-
-    # Version comparison
-    if [ "$major_version" -ge 17 ]; then
-        echo "INFO: Java version check passed (JDK $major_version)"
-        return 0
-    else
-        echo "ERROR: Java version must be >= 17 (found JDK $major_version)" >&2
-        return 3
-    fi
-}
-
 # Check and clean environment
 prepare_environment() {
   echo "INFO: Preparing build environment..."
