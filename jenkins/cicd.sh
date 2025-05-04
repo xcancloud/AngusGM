@@ -42,7 +42,7 @@ validate_parameters() {
 
   # Validate module values
   case "$module" in
-    service|web,web,service) ;;
+    service|web|web,service|service,web) ;;
     *) echo "ERROR: Invalid module value"; exit 1 ;;
   esac
 }
