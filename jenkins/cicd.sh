@@ -6,8 +6,8 @@
 # ---------------------------------------------------------------------------
 
 # Global Variables
-SERVICE_DIR="AngusGM/service"
-WEB_DIR="AngusGM/web"
+SERVICE_DIR="service"
+WEB_DIR="web"
 
 REMOTE_APP_DIR="/data/app/AngusGM"
 REMOTE_APP_PLUGINS_DIR_NAME="plugins"
@@ -207,7 +207,7 @@ if echo "$module" | grep -q "service"; then
   maven_build || {
     echo "ERROR: Service build failed"; exit 1
   }
-  cd ../..
+  cd ..
 fi
 
 if echo "$module" | grep -q "web"; then
@@ -216,7 +216,7 @@ if echo "$module" | grep -q "web"; then
   npm_build || {
     echo "ERROR: Web build failed"; exit 1
   }
-  cd ../..
+  cd ..
 fi
 
 # Step 4: CD Phase
