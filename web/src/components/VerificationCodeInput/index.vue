@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { http, PUB_ESS } from '@xcan-angus/tools';
+import { http, PUB_GM } from '@xcan-angus/tools';
 import { Input } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 
@@ -69,13 +69,13 @@ const getCode = () => {
       country: 'CN',
       mobile: props.account
     };
-    action = `${PUB_ESS}/auth/user/signsms/send`;
+    action = `${PUB_GM}/auth/user/signsms/send`;
   } else {
     params = {
       bizKey: props.bizKey,
       toAddress: [props.account]
     };
-    action = `${PUB_ESS}/auth/user/signemail/send`;
+    action = `${PUB_GM}/auth/user/signemail/send`;
   }
 
   error.value = false;
