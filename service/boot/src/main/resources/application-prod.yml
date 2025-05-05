@@ -123,4 +123,5 @@ logging:
   level:
     org: WARN
     com: WARN
-
+    com.netflix: ERROR
+    org.springframework.cloud.netflix.eureka.server: ERROR

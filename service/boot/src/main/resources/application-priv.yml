@@ -120,9 +120,7 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.engine.QueryParameters: debug
-    org.hibernate.engine.query.HQLQueryPlan: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org.springframework.security: debug
-    org.springframework.messaging: debug
+    org: WARN
+    com: WARN
+    com.netflix: ERROR
+    org.springframework.cloud.netflix.eureka.server: ERROR
