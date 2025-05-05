@@ -6,7 +6,7 @@ const compressing = require('compressing');
 
 const packageInfo = require('../package.json');
 
-const deployEnv = process.env.mode_env;
+const deployEnv = process.env.env;
 const zipDist = process.env.zip_dist || false;
 const allEnv = ['dev', 'prod', 'priv'];
 const allEnvFileName = ['env', 'env.dev', 'env.prod', 'env.priv'];
@@ -52,17 +52,19 @@ function start () {
     { key: 'VITE_EDITION_TYPE', value: editionType },
     { key: 'VITE_PROFILE', value: deployEnv }
   ];
-  let envContent = fs.readFileSync(resolve('../conf/.env.dev'), 'utf8');
+  let envContent = fs.readFileSync(resolve('../conf/.env'), 'utf8');
   envContent = replace(envContent, envReplaceList);
   fs.writeFileSync(resolve('../public/meta/env'), envContent, 'utf8');
 
   // 4. Update deploy env configuration file
-  const deployEnvUrlPrefix = [
-    { key: 'VITE_GM_URL_PREFIX', value: 'http://192.168.0.102:8802' }
-  ];
-  let deployEnvContent = fs.readFileSync(resolve(`../conf/.env.${deployEnv}`), 'utf8');
-  deployEnvContent = replace(deployEnvContent, deployEnvUrlPrefix);
-  fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
+  if (deployEnv === 'priv') { // Not configuring Nginx in a private environment
+    const deployEnvUrlPrefix = [
+      { key: 'VITE_GM_URL_PREFIX', value: 'http://192.168.0.102:8802' }
+    ];
+    let deployEnvContent = fs.readFileSync(resolve(`../conf/.env.${deployEnv}`), 'utf8');
+    deployEnvContent = replace(deployEnvContent, deployEnvUrlPrefix);
+    fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
+  }
 
   // 5. Delete all nginx configuration files under public/
   if (deployEnv === 'priv') { // Not configuring Nginx in a private environment

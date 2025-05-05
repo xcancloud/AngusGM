@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const packageInfo = require('../package.json');
-const deployEnv = process.env.mode_env;
+const deployEnv = process.env.env;
 const editionType = process.env.edition_type || 'COMMUNITY';
 
 function resolve (p) {
@@ -43,8 +43,10 @@ function start () {
   fs.writeFileSync(resolve('../public/meta/env'), envContent, 'utf8');
 
   // 3. Copy the environment configuration file to the public/meta/directory based on the environment variables
-  const deployEnvContent = fs.readFileSync(resolve(`../conf/.env.${deployEnv}`), 'utf8');
-  fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
+  if (deployEnv !== 'priv') { // Not configuring Nginx in a private environment
+    const deployEnvContent = fs.readFileSync(resolve(`../conf/.env.${deployEnv}`), 'utf8');
+    fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
+  }
 
   // 4. Copy the nginx configuration file to the public/
   if (deployEnv !== 'priv') { // Not configuring Nginx in a private environment
