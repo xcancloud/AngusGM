@@ -103,7 +103,7 @@ maven_build () {
   echo "INFO: mvn build start"
   mvn -B -e -U clean package -Dmaven.test.skip=true -s ${MAVEN_HOME}/conf/xcan_repo_settings.xml -f pom.xml -P${env},${editionType},${dbType}
   if [ $? -ne 0 ]; then
-    error "ERROR: mvn build failed"
+    echo "ERROR: mvn build failed"
     exit 1
   fi
   echo "INFO: mvn build end"
