@@ -11,6 +11,15 @@ function resolve (p) {
   return path.join(__dirname, p);
 }
 
+function replace (str, data) {
+  for (let i = 0, len = data.length; i < len; i++) {
+    const { key, value } = data[i];
+    const rex = new RegExp(`(${key}=)\\S+`, 'gmi');
+    str = str.replace(rex, '$1' + value);
+  }
+  return str;
+}
+
 const uuid = (() => {
   let index = 0;
   return (str = '') => {
