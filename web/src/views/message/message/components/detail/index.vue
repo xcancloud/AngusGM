@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Tag, Skeleton, Badge } from 'ant-design-vue';
 import { Image, Card, Grid } from '@xcan-angus/vue-ui';
-import RichEditor from '@/components/richEditor/index.vue';
+import RichEditor from '@/components/RichEditor/index.vue';
 
 import { message } from '@/api';
 import { ContentType, ReceiveObjectDataType } from './PropsType';
