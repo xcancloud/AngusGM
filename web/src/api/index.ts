@@ -1,4 +1,4 @@
-import { GM, PUB_GM , ESS} from '@xcan-angus/tools';
+import { GM, PUB_GM, ESS } from '@xcan-angus/tools';
 
 import Tenant from '@/api/Tenant';
 import User from '@/api/User';
@@ -13,7 +13,6 @@ import SystemToken from '@/api/SystemToken';
 import Service from '@/api/Service';
 import Social from '@/api/Social';
 import Online from '@/api/Online';
-import Actuator from '@/api/Actuator';
 import Email from '@/api/Email';
 import Event from '@/api/Event';
 import SystemLog from '@/api/SystemLog';
@@ -43,7 +42,7 @@ export const systemToken = new SystemToken(GM);
 export const service = new Service(GM);
 export const social = new Social(GM);
 export const online = new Online(GM);
-export const actuator = new Actuator();
+// export const actuator = new Actuator();
 export const email = new Email(GM);
 export const event = new Event(GM);
 export const systemLog = new SystemLog(GM);
