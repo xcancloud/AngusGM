@@ -3,9 +3,18 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+const args = process.argv.slice(2); // Remove nodes and script paths
+const params = {};
+for (const arg of args) {
+  if (arg.startsWith('--')) {
+    const [key, value] = arg.slice(2).split('=');
+    params[key] = value || true;
+  }
+}
+const deployEnv = params.env;
+const editionType = params.edition_type || 'COMMUNITY';
+
 const packageInfo = require('../package.json');
-const deployEnv = process.env.mode_env;
-const editionType = process.env.edition_type || 'COMMUNITY';
 
 function resolve (p) {
   return path.join(__dirname, p);
