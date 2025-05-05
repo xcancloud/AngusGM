@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const packageInfo = require('../package.json');
-const deployEnv = process.env.env;
+const deployEnv = process.env.mode_env;
 const editionType = process.env.edition_type || 'COMMUNITY';
 
 function resolve (p) {

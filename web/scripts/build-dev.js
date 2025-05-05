@@ -6,7 +6,7 @@ const compressing = require('compressing');
 
 const packageInfo = require('../package.json');
 
-const deployEnv = process.env.env;
+const deployEnv = process.env.mode_env;
 const zipDist = process.env.zip_dist || false;
 const allEnv = ['dev', 'prod', 'priv'];
 const allEnvFileName = ['env', 'env.dev', 'env.prod', 'env.priv'];

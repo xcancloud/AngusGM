@@ -150,8 +150,10 @@ npm_build () {
   echo "INFO: npm install end"
 
   echo "INFO: npm run build:env start"
+  env0=${env##*.};
   editionType0="${editionType##*.}"; editionType0="${editionType0^^}"
-  npm run build:env -- --env=${env##*.} --edition_type=${editionType0}
+  echo "INFO: npm build deployEnv=${env0} , editionType=${editionType0}"
+  npm run build:env -- --env=${env0} --edition_type=${editionType0}
   if [ $? -ne 0 ]; then
     echo "ERROR: 'npm run build:env' failed, exiting script"
     exit 1
