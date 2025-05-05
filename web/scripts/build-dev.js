@@ -6,12 +6,21 @@ const compressing = require('compressing');
 
 const packageInfo = require('../package.json');
 
-const deployEnv = process.env.mode_env;
-const zipDist = process.env.zip_dist || false;
+const args = process.argv.slice(2); // Remove nodes and script paths
+const params = {};
+for (const arg of args) {
+  if (arg.startsWith('--')) {
+    const [key, value] = arg.slice(2).split('=');
+    params[key] = value || true;
+  }
+}
+
+const deployEnv = params.env;
+const zipDist = params.zip_dist || false;
+const editionType = params.edition_type || 'COMMUNITY';
+
 const allEnv = ['dev', 'prod', 'priv'];
 const allEnvFileName = ['env', 'env.dev', 'env.prod', 'env.priv'];
-
-const editionType = process.env.edition_type || 'COMMUNITY';
 
 function resolve (p) {
   return path.join(__dirname, p);
