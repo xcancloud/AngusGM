@@ -2,7 +2,7 @@
 
 # ---------------------------------------------------------------------------
 # AngusGM Service Health Check Script (Not applicable to privatized edition).
-# Usage: ./check-health.sh <host>
+# Usage: sh check-health.sh <host>
 # Author: XiaoLong Liu
 # ---------------------------------------------------------------------------
 

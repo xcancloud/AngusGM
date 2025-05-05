@@ -2,6 +2,7 @@
 
 # ---------------------------------------------------------------------------
 # Jenkins CI/CD Pipeline Script for AngusGM Project.
+# Usage: sh cicd.sh --module service --env env.dev --editionType edition.cloudService --hosts 127.0.0.1 --dbType db.mysql
 # Author: XiaoLong Liu
 # ---------------------------------------------------------------------------
 
