@@ -76,7 +76,7 @@ watch(() => props.type, () => {
 });
 
 const loadTerms = () => {
-  http.get(`${PUB_ESS}/content/setting/termsAndConditions`) // TODO 删除PUB_CM引用，服务条款和隐私条款报错前端
+  http.get(`${PUB_ESS}/content/setting/termsAndConditions`) // TODO 删除PUB_ESS引用，服务条款和隐私条款报错前端
     .then(([error, resp]) => {
       if (error) {
         return;
