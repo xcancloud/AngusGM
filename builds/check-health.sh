@@ -43,5 +43,6 @@ while [[ $(date +%s) -lt $timeout_end ]]; do
 done
 
 # Timeout handling
-echo "Timeout: Service not ready within ${TIMEOUT}s"
+echo "❌ Timeout: Service not ready within ${TIMEOUT}s"
+echo "HTTP status: ${http_code}, body ${body}"
 exit 1

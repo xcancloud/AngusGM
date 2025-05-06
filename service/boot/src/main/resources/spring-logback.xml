@@ -3,7 +3,7 @@
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
   <property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}"/>
   <property name="LOG_NAME" value="@archive.name@"/>
-  <property name="ARTIFACT_ID" value="@hump@"/>
+  <property name="ARTIFACT_ID" value="@hump.name@"/>
 
   <springProfile name="local,dev">
     <property name="LOG_PATTERN"
