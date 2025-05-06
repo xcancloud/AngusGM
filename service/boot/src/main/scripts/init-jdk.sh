@@ -16,6 +16,8 @@ JDK_URL_MAC="https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50
 
 # Function from previous implementation
 check_jdk_version() {
+    . /etc/profile
+
     if ! command -v java >/dev/null 2>&1; then
         return 1  # Java not found
     fi
