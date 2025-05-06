@@ -113,7 +113,10 @@ maven_build () {
 # Deploy service module
 deploy_service() {
   echo "INFO: Deploying service module to ${host}"
-  ssh "$host" "mkdir -p ${REMOTE_APP_DIR} && cd ${REMOTE_APP_DIR} && sh shutdown-gm.sh" || {
+  ssh "$host" "mkdir -p ${REMOTE_APP_DIR} && mkdir -p ${REMOTE_APP_PLUGINS_DIR}" || {
+    echo "ERROR: Failed to creat app and plugins directory"; exit 1
+  }
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh shutdown-tester.sh" || {
     echo "WARN: Failed to stop service, proceeding anyway"
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && find . -mindepth 1 -path './${REMOTE_APP_STATIC_DIR_NAME}' -prune -o -exec rm -rf {} +" || {
