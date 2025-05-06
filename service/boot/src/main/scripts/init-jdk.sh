@@ -88,5 +88,4 @@ fi
 
 # Verification
 echo "Java Home: ${JAVA_HOME}"
-echo "Java Version:"
-"${JAVA_HOME}/bin/java" -version
+echo "Java Version:" && "${JAVA_HOME}/bin/java" -version
