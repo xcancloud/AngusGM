@@ -114,7 +114,7 @@ maven_build () {
 deploy_service() {
   echo "INFO: Deploying service module to ${host}"
   ssh "$host" "mkdir -p ${REMOTE_APP_DIR}" || {
-    echo "ERROR: Failed to creat app directory"; exit 1
+    echo "ERROR: Failed to init app directory"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh shutdown-gm.sh" || {
     echo "WARN: Failed to stop service, proceeding anyway"
@@ -126,7 +126,7 @@ deploy_service() {
     echo "ERROR: Failed to copy service files"; exit 1
   }
   ssh "$host" "mkdir -p ${REMOTE_APP_PLUGINS_DIR}" || {
-    echo "ERROR: Failed to creat plugins directory"; exit 1
+    echo "ERROR: Failed to init plugins directory"; exit 1
   }
   scp -r "${SERVICE_DIR}/extension/dist"/* "${host}:${REMOTE_APP_PLUGINS_DIR}/" || {
     echo "ERROR: Failed to copy plugin files"; exit 1
