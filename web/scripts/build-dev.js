@@ -6,7 +6,7 @@ const compressing = require('compressing');
 
 const packageInfo = require('../package.json');
 
-const args = process.argv.slice(2); // Remove nodes and script paths
+const args = process.argv.slice(2); // Remove node and script path
 const params = {};
 for (const arg of args) {
   if (arg.startsWith('--')) {

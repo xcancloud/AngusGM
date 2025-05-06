@@ -165,7 +165,7 @@ npm_build () {
 # Deploy web module
 deploy_web() {
   echo "INFO: Deploying web module to ${host}"
-  ssh "$host" "rm -rf ${REMOTE_APP_STATIC_DIR}/*" || {
+  ssh "$host" "mkdir -p ${REMOTE_APP_STATIC_DIR} && rm -rf ${REMOTE_APP_STATIC_DIR}/*" || {
     echo "ERROR: Failed to clean static directory"; exit 1
   }
   scp -r "${WEB_DIR}/dist"/* "${host}:${REMOTE_APP_STATIC_DIR}/" || {
@@ -227,11 +227,11 @@ if [ -n "$hosts" ]; then
   echo "INFO: Starting deployment to hosts: ${hosts}"
   IFS=',' read -ra HOST_LIST <<< "$hosts"
   for host in "${HOST_LIST[@]}"; do
-    if echo "$module" | grep -q "web"; then
-      deploy_web
-    fi
     if echo "$module" | grep -q "service"; then
       deploy_service
+    fi
+    if echo "$module" | grep -q "web"; then
+      deploy_web
     fi
   done
 else

@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const args = process.argv.slice(2); // Remove nodes and script paths
+const args = process.argv.slice(2); // Remove node and script path
 const params = {};
 for (const arg of args) {
   if (arg.startsWith('--')) {
