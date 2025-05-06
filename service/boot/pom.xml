@@ -7,7 +7,7 @@
 
   <parent>
     <groupId>cloud.xcan.angus</groupId>
-    <artifactId>AngusInfra</artifactId>
+    <artifactId>xcan-angusgm.parent</artifactId>
     <version>1.0.0</version>
   </parent>
 
@@ -151,7 +151,139 @@
     </plugins>
   </build>
 
+  <!-- Default multi-environment configuration -->
   <profiles>
+    <profile>
+      <id>env.local</id>
+      <properties>
+        <profile.active>local</profile.active>
+      </properties>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+              <include>cert/XCanTest.publicCert.keystore</include>
+              <include>cert/license.lic</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>env.dev</id>
+      <properties>
+        <profile.active>dev</profile.active>
+      </properties>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+              <include>cert/XCanTest.publicCert.keystore</include>
+              <include>cert/license.lic</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>env.prod</id>
+      <properties>
+        <profile.active>prod</profile.active>
+      </properties>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+              <include>cert/XCanCloud.publicCert.keystore</include>
+              <include>cert/XCanCloud.lic</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>env.priv</id>
+      <properties>
+        <profile.active>priv</profile.active>
+      </properties>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+              <include>cert/XCanTest.publicCert.keystore</include>
+              <include>cert/license.lic</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>db.mysql</id>
+      <properties>
+        <!-- Supporting databases: MYSQL、POSTGRES -->
+        <databaseType>MYSQL</databaseType>
+        <!-- Unused in project -->
+        <!--<databaseMode>MYSQL</databaseMode>-->
+        <databaseDialect>org.hibernate.dialect.MySQLDialect</databaseDialect>
+      </properties>
+    </profile>
+    <profile>
+      <id>db.postgres</id>
+      <properties>
+        <!-- Supporting databases: MYSQL、POSTGRES -->
+        <databaseType>POSTGRES</databaseType>
+        <databaseDialect>org.hibernate.dialect.PostgreSQL10Dialect</databaseDialect>
+      </properties>
+    </profile>
+
+    <!-- Deploy only community edition -->
+    <profile>
+      <id>edition.community</id>
+      <properties>
+        <profile.active>priv</profile.active>
+        <editionType>COMMUNITY</editionType>
+        <editionName>Community</editionName>
+      </properties>
+      <modules/>
+      <dependencies/>
+    </profile>
+    <!-- Deploy only enterprise edition -->
+    <profile>
+      <id>edition.enterprise</id>
+      <properties>
+        <profile.active>priv</profile.active>
+        <editionType>ENTERPRISE</editionType>
+        <editionName>Enterprise</editionName>
+      </properties>
+      <modules/>
+      <dependencies/>
+    </profile>
+    <!-- Deploy only datacenter edition -->
+    <profile>
+      <id>edition.datacenter</id>
+      <properties>
+        <profile.active>priv</profile.active>
+        <editionType>DATACENTER</editionType>
+        <editionName>Datacenter</editionName>
+      </properties>
+      <modules/>
+      <dependencies/>
+    </profile>
+    <!-- Deploy only cloud service edition -->
+    <profile>
+      <id>edition.cloudService</id>
+      <properties>
+        <editionType>CLOUD_SERVICE</editionType>
+        <editionName>CloudService</editionName>
+      </properties>
+      <modules/>
+      <dependencies/>
+    </profile>
+
     <!-- Build the Docker image and push it to the registry. -->
     <profile>
       <id>docker</id>
