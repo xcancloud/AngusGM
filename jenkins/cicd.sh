@@ -102,7 +102,7 @@ clone_repository() {
 # Build service module
 maven_build () {
   echo "INFO: mvn build start"
-  mvn -B -e -U clean package -Dmaven.test.skip=true -s ${MAVEN_HOME}/conf/xcan_repo_settings.xml -f pom.xml -P${env},${editionType},${dbType}
+  mvn -B -e -U clean package -Dmaven.test.skip=true -s ${MAVEN_HOME}/conf/xcan_repo_settings.xml -f pom.xml -P${editionType},${env},${dbType}
   if [ $? -ne 0 ]; then
     echo "ERROR: mvn build failed"
     exit 1
