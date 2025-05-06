@@ -12,7 +12,11 @@ CURRENT_HOME=`dirname "$0"`
 echo "App Home: $GM_HOME"
 
 # Init java environment
-sh init-jdk.sh
+. ./init-jdk.sh
+if [ -z "${JAVA_HOME}" ]; then
+  echo "JAVA_HOME is not set"
+  exit 2
+fi
 
 # Check that target jar exists
 EXECUTABLE=@project.build.finalName@.jar
