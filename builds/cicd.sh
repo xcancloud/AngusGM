@@ -20,6 +20,8 @@ REMOTE_APP_STATIC_DIR="${REMOTE_APP_DIR}/${REMOTE_APP_STATIC_DIR_NAME}"
 
 NGINX_CONFIG_DIR="/opt/required/nginx/conf_ext/"
 
+CLEAR_MAVEN_REPO="/data/repository"
+
 # Validate input parameters
 validate_parameters() {
   # Validate mandatory parameters
@@ -74,15 +76,8 @@ prepare_environment() {
       echo "ERROR: Java/Maven not found"; exit 1
     fi
 
-    echo "INFO: Cleaning Maven repository"
-    if [ -n "$MAVEN_HOME" ]; then
-      CLEAR_MAVEN_REPO="${MAVEN_HOME}/repository/cloud/xcan"
-    else
-      CLEAR_MAVEN_REPO="${HOME}/.m2/repository/cloud/xcan"
-    fi
-
-    echo "INFO: Cleaning Maven repository at ${CLEAR_MAVEN_REPO}"
-    rm -rf "${CLEAR_MAVEN_REPO}"/*
+    echo "INFO: Cleaning Maven repository at ${CLEAR_MAVEN_REPO}/cloud/xcan/"
+    rm -rf "${CLEAR_MAVEN_REPO}"/cloud/xcan/*
   fi
 }
 
