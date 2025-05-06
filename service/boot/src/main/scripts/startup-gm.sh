@@ -12,15 +12,17 @@ CURRENT_HOME=`dirname "$0"`
 echo "App Home: $GM_HOME"
 
 # Init java environment
-chmod +x init-jdk.sh && eval "$(./init-jdk.sh)"
+eval "$(./init-jdk.sh)"
 echo "Java Home: ${JAVA_HOME}"
 
 # Check that target jar exists
 EXECUTABLE=@project.build.finalName@.jar
-if [ ! -x "$GM_HOME"/"$EXECUTABLE" ]; then
+if [ ! -f "$GM_HOME"/"$EXECUTABLE" ]; then
     echo "Cannot find $GM_HOME/$EXECUTABLE"
-    echo "The jar file is absent or does not have execute permission"
+    echo "The jar file is absent"
     exit 1
+else
+    chmod +x "$GM_HOME"/"$EXECUTABLE"
 fi
 
 # Define config path
