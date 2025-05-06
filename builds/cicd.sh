@@ -135,7 +135,7 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
     echo "ERROR: Failed to rename logback file"; exit 1
   }
-  ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/{*,.[!.]*,..?*} conf/" || {
+  ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/.*.env conf/" || {
     echo "ERROR: Failed to copy env files"; exit 1
   }
   scp -rp "builds/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
