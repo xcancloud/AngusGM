@@ -33,7 +33,7 @@ while [[ $(date +%s) -lt $timeout_end ]]; do
 
     # Dual validation logic
     if [ "$http_code" -eq 200 ]; then
-        if echo "$body" | grep -q '"status":"up"'; then
+        if echo "$body" | grep -q '"status":"UP"'; then
             echo "✅ Service is UP!"
             exit 0
         fi
