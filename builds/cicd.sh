@@ -122,19 +122,19 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && find . -mindepth 1 -path './${REMOTE_APP_STATIC_DIR_NAME}' -prune -o -exec rm -rf {} +" || {
     echo "ERROR: Failed to clean service directory"; exit 1
   }
-  scp -r "${SERVICE_DIR}/boot/target"/* "${host}:${REMOTE_APP_DIR}/" || {
+  scp -rp "${SERVICE_DIR}/boot/target"/* "${host}:${REMOTE_APP_DIR}/" || {
     echo "ERROR: Failed to copy service files"; exit 1
   }
   ssh "$host" "mkdir -p ${REMOTE_APP_PLUGINS_DIR}" || {
     echo "ERROR: Failed to init plugins directory"; exit 1
   }
-  scp -r "${SERVICE_DIR}/extension/dist"/* "${host}:${REMOTE_APP_PLUGINS_DIR}/" || {
+  scp -rp "${SERVICE_DIR}/extension/dist"/* "${host}:${REMOTE_APP_PLUGINS_DIR}/" || {
     echo "ERROR: Failed to copy plugin files"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
     echo "ERROR: Failed to rename logback file"; exit 1
   }
-  scp "builds/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
+  scp -rp "builds/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
     echo "ERROR: Failed to copy service files"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh set-opts.sh ${host} && sh startup-gm.sh" || {
@@ -174,7 +174,7 @@ deploy_web() {
   ssh "$host" "mkdir -p ${REMOTE_APP_STATIC_DIR} && rm -rf ${REMOTE_APP_STATIC_DIR}/*" || {
     echo "ERROR: Failed to clean static directory"; exit 1
   }
-  scp -r "${WEB_DIR}/dist"/* "${host}:${REMOTE_APP_STATIC_DIR}/" || {
+  scp -rp "${WEB_DIR}/dist"/* "${host}:${REMOTE_APP_STATIC_DIR}/" || {
     echo "ERROR: Failed to copy web assets"; exit 1
   }
   nginxFileName="dist/nginx_${env##*.}_gm.conf"

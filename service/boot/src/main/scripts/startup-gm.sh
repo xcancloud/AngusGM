@@ -12,6 +12,7 @@ CURRENT_HOME=`dirname "$0"`
 echo "App Home: $GM_HOME"
 
 # Init java environment
+chmod +x init-jdk.sh
 eval "$(./init-jdk.sh)"
 echo "Java Home: ${JAVA_HOME}"
 
