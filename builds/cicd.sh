@@ -122,7 +122,7 @@ deploy_service() {
   scp -r "${SERVICE_DIR}/boot/target"/* "${host}:${REMOTE_APP_DIR}/" || {
     echo "ERROR: Failed to copy service files"; exit 1
   }
-  scp -r "${SERVICE_DIR}/boot/extension/dist"/* "${host}:${REMOTE_APP_PLUGINS_DIR}/" || {
+  scp -r "${SERVICE_DIR}/extension/dist"/* "${host}:${REMOTE_APP_PLUGINS_DIR}/" || {
     echo "ERROR: Failed to copy plugin files"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
