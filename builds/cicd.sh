@@ -13,6 +13,7 @@ WEB_DIR="web"
 REMOTE_APP_DIR="/data/apps/AngusGM"
 REMOTE_APP_PLUGINS_DIR_NAME="plugins"
 REMOTE_APP_PLUGINS_DIR="${REMOTE_APP_DIR}/${REMOTE_APP_PLUGINS_DIR_NAME}"
+REMOTE_APP_CONF_DIR="/data/apps/conf/gm"
 
 REMOTE_APP_STATIC_DIR_NAME="statics"
 REMOTE_APP_STATIC_DIR="${REMOTE_APP_DIR}/${REMOTE_APP_STATIC_DIR_NAME}"
@@ -133,6 +134,9 @@ deploy_service() {
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
     echo "ERROR: Failed to rename logback file"; exit 1
+  }
+  ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/* conf/" || {
+    echo "ERROR: Failed to copy env files"; exit 1
   }
   scp -rp "builds/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
     echo "ERROR: Failed to copy service files"; exit 1
