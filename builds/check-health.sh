@@ -42,7 +42,7 @@ check_prerequisites() {
 # Perform single health check
 perform_health_check() {
   # Temporary files for processing
-  tmpfile=$(mktemp /tmp/hcheck.XXX)
+  tmpfile=$(mktemp /tmp/hcheck.XXXXXX.txt)
   trap 'rm -f "$tmpfile"' EXIT
 
   # Get full response with status code
