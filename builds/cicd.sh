@@ -128,7 +128,7 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && mkdir -p conf && mv classes/spring-logback.xml conf/gm-logback.xml" || {
     echo "ERROR: Failed to rename logback file"; exit 1
   }
-  scp "jenkins/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
+  scp "builds/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
     echo "ERROR: Failed to copy service files"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh set-opts.sh ${host} && sh startup-gm.sh" || {
