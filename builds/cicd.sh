@@ -144,7 +144,7 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh set-opts.sh ${host} && sh startup-gm.sh" || {
     echo "ERROR: Failed to start service"; exit 1
   }
-  sh check-health.sh ${host} || {
+  sh builds/check-health.sh ${host} || {
     echo "ERROR: Service health check failed"; exit 1
   }
 }
