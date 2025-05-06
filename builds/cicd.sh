@@ -116,7 +116,7 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh shutdown-gm.sh" || {
     echo "WARN: Failed to stop service, proceeding anyway"
   }
-  ssh "$host" "cd ${REMOTE_APP_DIR} && find . -mindepth 1 -maxdepth 1 -not \( -name ${REMOTE_APP_STATIC_DIR_NAME} -o -name ".*" \) -exec rm -rf {} +" || {
+  ssh "$host" "mkdir -p ${REMOTE_APP_DIR} && cd ${REMOTE_APP_DIR} && find . -mindepth 1 -maxdepth 1 -not \( -name ${REMOTE_APP_STATIC_DIR_NAME} -o -name ".*" \) -exec rm -rf {} +" || {
     echo "ERROR: Failed to clean service directory"; exit 1
   }
   scp -r "${SERVICE_DIR}/boot/target"/* "${host}:${REMOTE_APP_DIR}/" || {
