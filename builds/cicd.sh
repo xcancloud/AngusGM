@@ -19,7 +19,7 @@ REMOTE_APP_STATIC_DIR_NAME="statics"
 REMOTE_APP_STATIC_DIR="${REMOTE_APP_DIR}/${REMOTE_APP_STATIC_DIR_NAME}"
 REMOTE_APP_LOGS_DIR_NAME="logs"
 
-NGINX_CONFIG_DIR="/opt/required/nginx/conf_ext/"
+NGINX_CONFIG_DIR="/etc/nginx/conf.d"
 
 CLEAR_MAVEN_REPO="/data/repository"
 
