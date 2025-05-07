@@ -42,7 +42,7 @@ const ok = async () => {
   const params = {
     account: tenantInfo.value.mobile,
     password: inputValue.value,
-    scope: 'sign',
+    scope: 'user_trust',
     signinType: 'ACCOUNT_PASSWORD',
     userId: tenantInfo.value.id,
     clientId,

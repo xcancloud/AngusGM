@@ -22,6 +22,8 @@ public interface TenantRepo extends NameJoinRepository<Tenant, Long>, BaseReposi
   @Query(value = "SELECT * FROM tenant WHERE id IN ?1", nativeQuery = true)
   List<Tenant> findAllByIdIn(Collection<Long> tenantIds);
 
+  Optional<Tenant> findFirst();
+
   Optional<Tenant> findFirstByStatusAndLocked(TenantStatus status, Boolean locked);
 
   @Query(value = "SELECT DISTINCT t.* FROM tenant t, user0 u WHERE t.id = u.tenant_id AND u.id IN (?1)", nativeQuery = true)

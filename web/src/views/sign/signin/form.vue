@@ -35,7 +35,7 @@ const loading = ref(false); // 正在登录
 const accountForm = reactive({
   account: undefined,
   password: undefined,
-  scope: 'sign',
+  scope: 'user_trust',
   signinType: 'ACCOUNT_PASSWORD',
   userId: undefined, // 要登录的用户
   hasPassword: false// 是否已经设置密码
@@ -45,7 +45,7 @@ const mobileForm = reactive({
   account: undefined,
   password: undefined,
   verificationCode: undefined,
-  scope: 'sign',
+  scope: 'user_trust',
   signinType: 'SMS_CODE',
   userId: undefined, // 要登录的用户
   hasPassword: false// 是否已经设置密码
@@ -58,14 +58,13 @@ watch(() => props.type, newValue => {
   isMobile.value = newValue === 'mobile';
   accountForm.account = undefined;
   accountForm.password = undefined;
-  accountForm.scope = 'sign';
+  accountForm.scope = 'user_trust';
   accountForm.signinType = 'ACCOUNT_PASSWORD';
   accountForm.userId = undefined; // 要登录的用户
   accountForm.hasPassword = false; // 是否已经设置密码
-
   mobileForm.account = undefined;
   mobileForm.password = undefined;
-  mobileForm.scope = 'sign';
+  mobileForm.scope = 'user_trust';
   mobileForm.signinType = 'SMS_CODE';
   mobileForm.userId = undefined; // 要登录的用户
   mobileForm.hasPassword = false; // 是否已经设置密码
