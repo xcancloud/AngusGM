@@ -54,7 +54,6 @@ public class AppDetailVo {
 
   private String clientId;
 
-  @NameJoinField(id = "clientId", repository = "clientRepo")
   private String clientName;
 
   private Long createdBy;
