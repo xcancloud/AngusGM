@@ -48,7 +48,7 @@ public interface AASConstant {
 
   int MAX_POLICY_FUNC_NUM = 2000;
 
-  String USER_INFO_ENDPOINT = "/api/auth/user";
+  String USER_INFO_ENDPOINT = "/api/v1/auth/user";
   String TOKEN_CHECK_ENDPOINT = "/pubapi/auth/token/check";
   String TOKEN_REVOKE_ENDPOINT = "/api/auth/token";
 
