@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
   <property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}"/>
   <property name="LOG_NAME" value="@archive.name@"/>
   <property name="ARTIFACT_ID" value="@hump.name@"/>
 
   <springProfile name="local,dev">
     <property name="LOG_PATTERN"
-      value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } :: [%15.15t] %-40.40logger{39} -> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+      value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } :: [%15.15t] %-40.40logger{39} -> %m%n"/>
   </springProfile>
 
   <springProfile name="prod,priv">
     <property name="LOG_PATTERN"
-      value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -> %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+      value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -> %m%n"/>
   </springProfile>
 
   <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">

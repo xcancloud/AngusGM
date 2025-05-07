@@ -126,3 +126,5 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
     org.springframework.security: debug
     org.springframework.messaging: debug
+    com.netflix: ERROR
+    org.springframework.cloud.netflix.eureka.server: ERROR

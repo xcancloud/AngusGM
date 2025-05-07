@@ -3,7 +3,7 @@
 - Set through WM Options parameter
 
 ```properties
--Dplugin.dir=/Volumes/workspace/workspace_angus/gm/AngusGM/extension/dist
+-Dplugin.dir=/Volumes/workspace/workspace_angus/seek/AngusGM/service/extension/dist
 ```
 
 - Default plugin path reading
