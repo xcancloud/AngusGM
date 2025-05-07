@@ -12,11 +12,7 @@ xcan:
     enabled: true
   global:
     cors:
-      startWithPaths: [ '/' ]
-      credentials: true
-      origin: '*'
-      headers: '*'
-      methods: 'POST, GET, PUT, DELETE, PATCH, HEAD'
+      enabled: true
   opt-log:
     enabled: true
     clearBeforeDay: 360
