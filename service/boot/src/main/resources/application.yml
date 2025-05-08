@@ -33,7 +33,7 @@ xcan:
   redis:
     enabled: true
   l2cache:
-    enabled: true
+    enabled: false
     allowNullValues: true
     composite:
       l1AllOpen: true
@@ -50,12 +50,6 @@ xcan:
       defaultPenetrationExpiration: 300000
       expires: { setting: 7200000, settingTenant: 7200000 }
       topic: j2cache:angus
-  jackson:
-    defaultPropertyInclusion: always
-    dateFormat: yyyy-MM-dd HH:mm:ss
-    timeZone: ${info.app.timezone}
-    generator:
-      write_numbers_as_strings: true
   validator:
     enabled: true
     extraMessages:
@@ -91,6 +85,15 @@ spring:
     active: '@profile.active@'
   jmx:
     enabled: true
+  jackson:
+    defaultPropertyInclusion: always
+    dateFormat: ${JACKSON_DATE_FORMAT:yyyy-MM-dd HH:mm:ss}
+    localeDateFormat: ${JACKSON_LOCALE_DATE_FORMAT:yyyy-MM-dd}
+    localeTimeFormat: ${JACKSON_LOCALE_TIME_FORMAT:HH:mm:ss}
+    timeZone: ${TIMEZONE:Asia/Shanghai}
+    generator:
+      write_numbers_as_strings: true
+
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
