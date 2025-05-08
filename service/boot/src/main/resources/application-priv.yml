@@ -83,7 +83,7 @@ eureka:
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
     health-check-url-path: /actuator/health
   server:
-    enable-self-preservation: true
+    enable-self-preservation: false
     renewal-percent-threshold: 0.85
     a-sgcache-expiry-timeout-ms: 300000
     registry-sync-retry-wait-ms: 3000
