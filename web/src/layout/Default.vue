@@ -4,13 +4,14 @@ import { useRoute } from 'vue-router';
 import { VuexHelper, Breadcrumb, Header, Sidebar } from '@xcan-angus/vue-ui';
 import { app } from '@xcan-angus/tools';
 
+const { useMutations } = VuexHelper;
+
 const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 
 const route = useRoute();
 const logoDefaultImg = new URL('./assets/angus-gm.png', import.meta.url).href;
 const sidebarMenus = ref<Array<unknown>>([]);
 
-const { useMutations } = VuexHelper;
 
 onMounted(() => {
   setLayoutCodeCode('gm');
