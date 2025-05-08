@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -82,7 +83,7 @@ public class AppOpenRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/list")
-  public ApiLocaleResult<PageResult<AppOpenVo>> list(@Valid AppOpenFindDto dto) {
+  public ApiLocaleResult<PageResult<AppOpenVo>> list(@Valid @ParameterObject AppOpenFindDto dto) {
     return ApiLocaleResult.success(appOpenFacade.list(dto));
   }
 }

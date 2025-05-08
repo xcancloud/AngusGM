@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,7 @@ public class CountryRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<CountryDetailVo>> list(@Valid CountryFindDto dto) {
+  public ApiLocaleResult<PageResult<CountryDetailVo>> list(@Valid @ParameterObject CountryFindDto dto) {
     return ApiLocaleResult.success(countryFacade.list(dto));
   }
 
@@ -50,7 +51,7 @@ public class CountryRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Search successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<CountryDetailVo>> search(@Valid CountrySearchDto dto) {
+  public ApiLocaleResult<PageResult<CountryDetailVo>> search(@Valid @ParameterObject CountrySearchDto dto) {
     return ApiLocaleResult.success(countryFacade.search(dto));
   }
 }

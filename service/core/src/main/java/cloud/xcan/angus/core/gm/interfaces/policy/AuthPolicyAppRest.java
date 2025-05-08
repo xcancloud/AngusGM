@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class AuthPolicyAppRest {
   @GetMapping("/app/{appId}/policy")
   public ApiLocaleResult<PageResult<AppPolicyVo>> appPolicyList(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AppPolicyFindDto dto) {
+      @Valid @ParameterObject AppPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyAppFacade.appPolicyList(appId, dto));
   }
 

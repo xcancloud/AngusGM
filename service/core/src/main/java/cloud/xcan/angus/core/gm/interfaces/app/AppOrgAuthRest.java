@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -66,7 +67,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/auth/tenant")
   public ApiLocaleResult<PageResult<AppAuthTenantVo>> appAuthTenant(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AuthAppOrgFindDto dto) {
+      @Valid @ParameterObject AuthAppOrgFindDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthTenant(appId, dto));
   }
 
@@ -78,7 +79,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/auth/user")
   public ApiLocaleResult<PageResult<AppAuthUserVo>> appAuthUser(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AuthAppOrgUserSearchDto dto) {
+      @Valid @ParameterObject AuthAppOrgUserSearchDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthUser(appId, dto));
   }
 
@@ -90,7 +91,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/auth/dept")
   public ApiLocaleResult<PageResult<AppAuthDeptVo>> appAuthDept(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AuthAppOrgSearchDto dto) {
+      @Valid @ParameterObject AuthAppOrgSearchDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthDept(appId, dto));
   }
 
@@ -102,7 +103,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/auth/group")
   public ApiLocaleResult<PageResult<AppAuthGroupVo>> appAuthGroup(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AuthAppOrgSearchDto dto) {
+      @Valid @ParameterObject AuthAppOrgSearchDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthGroup(appId, dto));
   }
 
@@ -113,7 +114,7 @@ public class AppOrgAuthRest {
   })
   @GetMapping("/app/{appId}/auth/global")
   public ApiLocaleResult<List<AppAuthPolicyVo>> appAuthGlobal(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId) {
+      @ParameterObject @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId) {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthGlobal(appId));
   }
 
@@ -180,7 +181,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/unauth/tenant")
   public ApiLocaleResult<PageResult<AppUnauthTenantVo>> appUnauthTenant(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid UnAuthFindDto dto) {
+      @Valid @ParameterObject UnAuthFindDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthTenant(appId, dto));
   }
 
@@ -192,7 +193,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/unauth/user")
   public ApiLocaleResult<PageResult<AppUnauthUserVo>> appUnauthUser(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid UnAuthUserFindDto dto) {
+      @Valid @ParameterObject UnAuthUserFindDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthUser(appId, dto));
   }
 
@@ -204,7 +205,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/unauth/dept")
   public ApiLocaleResult<PageResult<AppUnauthDeptVo>> appUnauthDept(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid UnAuthDeptFindDto dto) {
+      @Valid @ParameterObject UnAuthDeptFindDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthDept(appId, dto));
   }
 
@@ -216,7 +217,7 @@ public class AppOrgAuthRest {
   @GetMapping("/app/{appId}/unauth/group")
   public ApiLocaleResult<PageResult<AppUnauthGroupVo>> appUnauthGroup(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid UnAuthGroupFindDto dto) {
+      @Valid @ParameterObject UnAuthGroupFindDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthGroup(appId, dto));
   }
 
@@ -230,7 +231,7 @@ public class AppOrgAuthRest {
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
       @Parameter(name = "orgType", description = "Organization type", required = true) @PathVariable("orgType") AuthOrgType orgType,
       @Parameter(name = "orgId", description = "Organization id", required = true) @PathVariable("orgId") Long orgId,
-      @Valid UnAuthFindDto dto) {
+      @Valid @ParameterObject UnAuthFindDto dto) {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthPolicy(appId, orgType, orgId, dto));
   }
 

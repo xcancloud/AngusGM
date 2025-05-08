@@ -24,6 +24,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,7 +77,7 @@ public class AuthPolicyGroupRest {
   @GetMapping("/policy/{policyId}/group")
   public ApiLocaleResult<PageResult<GroupListVo>> policyGroupList(
       @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid AuthPolicyGroupFindDto dto) {
+      @Valid @ParameterObject AuthPolicyGroupFindDto dto) {
     return ApiLocaleResult.success(authPolicyGroupFacade.policyGroupList(policyId, dto));
   }
 

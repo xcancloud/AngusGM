@@ -27,6 +27,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -135,7 +136,7 @@ public class AuthPolicyRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<AuthPolicyVo>> list(@Valid AuthPolicyFindDto dto) {
+  public ApiLocaleResult<PageResult<AuthPolicyVo>> list(@Valid @ParameterObject AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyFacade.list(dto));
   }
 
@@ -143,7 +144,7 @@ public class AuthPolicyRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<AuthPolicyVo>> search(@Valid AuthPolicySearchDto dto) {
+  public ApiLocaleResult<PageResult<AuthPolicyVo>> search(@Valid @ParameterObject AuthPolicySearchDto dto) {
     return ApiLocaleResult.success(authPolicyFacade.search(dto));
   }
 

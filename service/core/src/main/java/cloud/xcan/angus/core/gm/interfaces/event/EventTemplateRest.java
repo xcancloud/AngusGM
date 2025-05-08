@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -110,7 +111,7 @@ public class EventTemplateRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<EventTemplateVo>> list(@Valid EventTemplateFindDto dto) {
+  public ApiLocaleResult<PageResult<EventTemplateVo>> list(@Valid @ParameterObject EventTemplateFindDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.list(dto));
   }
 
@@ -119,7 +120,7 @@ public class EventTemplateRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/current")
   public ApiLocaleResult<PageResult<EventTemplateCurrentDetailVo>> currentList(
-      @Valid EventTemplateFindDto dto) {
+      @Valid @ParameterObject EventTemplateFindDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.currentList(dto));
   }
 
@@ -127,7 +128,7 @@ public class EventTemplateRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<EventTemplateVo>> search(@Valid EventTemplateSearchDto dto) {
+  public ApiLocaleResult<PageResult<EventTemplateVo>> search(@Valid @ParameterObject EventTemplateSearchDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.search(dto));
   }
 
@@ -136,7 +137,7 @@ public class EventTemplateRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search/current")
   public ApiLocaleResult<PageResult<EventTemplateCurrentDetailVo>> currentSearch(
-      @Valid EventTemplateSearchDto dto) {
+      @Valid @ParameterObject EventTemplateSearchDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.currentSearch(dto));
   }
 

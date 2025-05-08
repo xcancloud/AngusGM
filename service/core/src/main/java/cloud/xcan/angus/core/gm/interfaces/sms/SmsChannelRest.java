@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -58,7 +59,7 @@ public class SmsChannelRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<SmsChannelVo>> list(@Valid SmsChannelFindDto dto) {
+  public ApiLocaleResult<PageResult<SmsChannelVo>> list(@Valid @ParameterObject SmsChannelFindDto dto) {
     return ApiLocaleResult.success(smsChannelFacade.list(dto));
   }
 

@@ -26,6 +26,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -115,7 +116,7 @@ public class GroupRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<GroupListVo>> list(@Valid GroupFindDto dto) {
+  public ApiLocaleResult<PageResult<GroupListVo>> list(@Valid @ParameterObject GroupFindDto dto) {
     return ApiLocaleResult.success(groupFacade.list(dto));
   }
 
@@ -123,7 +124,7 @@ public class GroupRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<GroupListVo>> search(@Valid GroupSearchDto dto) {
+  public ApiLocaleResult<PageResult<GroupListVo>> search(@Valid @ParameterObject GroupSearchDto dto) {
     return ApiLocaleResult.success(groupFacade.search(dto));
   }
 

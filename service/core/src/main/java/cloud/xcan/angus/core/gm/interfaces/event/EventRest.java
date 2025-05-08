@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +58,7 @@ public class EventRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<EventVo>> list(@Valid EventFindDto dto) {
+  public ApiLocaleResult<PageResult<EventVo>> list(@Valid @ParameterObject EventFindDto dto) {
     return ApiLocaleResult.success(eventFacade.list(dto));
   }
 
@@ -65,7 +66,7 @@ public class EventRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<EventVo>> search(@Valid EventSearchDto dto) {
+  public ApiLocaleResult<PageResult<EventVo>> search(@Valid @ParameterObject EventSearchDto dto) {
     return ApiLocaleResult.success(eventFacade.search(dto));
   }
 

@@ -27,6 +27,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -125,7 +126,7 @@ public class TORoleRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<TORoleVo>> list(@Valid TORoleFindDto dto) {
+  public ApiLocaleResult<PageResult<TORoleVo>> list(@Valid @ParameterObject TORoleFindDto dto) {
     return ApiLocaleResult.success(toRoleFacade.list(dto));
   }
 
@@ -133,7 +134,7 @@ public class TORoleRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<TORoleVo>> search(@Valid TORoleSearchDto dto) {
+  public ApiLocaleResult<PageResult<TORoleVo>> search(@Valid @ParameterObject TORoleSearchDto dto) {
     return ApiLocaleResult.success(toRoleFacade.search(dto));
   }
 

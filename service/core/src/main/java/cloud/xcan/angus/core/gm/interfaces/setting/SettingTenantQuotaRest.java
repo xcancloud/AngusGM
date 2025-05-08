@@ -18,6 +18,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -121,7 +122,7 @@ public class SettingTenantQuotaRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> list(@Valid TenantQuotaFindDto dto) {
+  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> list(@Valid @ParameterObject TenantQuotaFindDto dto) {
     return ApiLocaleResult.success(settingTenantQuotaFacade.list(dto));
   }
 
@@ -129,7 +130,7 @@ public class SettingTenantQuotaRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> search(@Valid TenantQuotaSearchDto dto) {
+  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> search(@Valid @ParameterObject TenantQuotaSearchDto dto) {
     return ApiLocaleResult.success(settingTenantQuotaFacade.search(dto));
   }
 

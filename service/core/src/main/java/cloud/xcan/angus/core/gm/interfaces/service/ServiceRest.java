@@ -30,6 +30,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
 import org.hibernate.validator.constraints.Length;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -127,7 +128,7 @@ public class ServiceRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<ServiceVo>> list(@Valid ServiceFindDto dto) {
+  public ApiLocaleResult<PageResult<ServiceVo>> list(@Valid @ParameterObject ServiceFindDto dto) {
     return ApiLocaleResult.success(serviceFacade.list(dto));
   }
 
@@ -135,7 +136,7 @@ public class ServiceRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<ServiceVo>> search(@Valid ServiceSearchDto dto) {
+  public ApiLocaleResult<PageResult<ServiceVo>> search(@Valid @ParameterObject ServiceSearchDto dto) {
     return ApiLocaleResult.success(serviceFacade.search(dto));
   }
 

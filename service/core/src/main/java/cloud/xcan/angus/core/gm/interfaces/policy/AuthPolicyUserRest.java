@@ -26,6 +26,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,7 +79,7 @@ public class AuthPolicyUserRest {
   @GetMapping("/policy/{policyId}/user")
   public ApiLocaleResult<PageResult<UserListVo>> policyUserList(
       @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid AuthPolicyUserFindDto dto) {
+      @Valid @ParameterObject AuthPolicyUserFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUserList(policyId, dto));
   }
 

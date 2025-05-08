@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,7 +83,7 @@ public class UserCurrentRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping(value = "/sms/check")
-  public ApiLocaleResult<CheckSecretVo> checkSms(@Valid CurrentMobileCheckDto dto) {
+  public ApiLocaleResult<CheckSecretVo> checkSms(@Valid @ParameterObject CurrentMobileCheckDto dto) {
     return ApiLocaleResult.success(userCurrentFacade.checkSms(dto));
   }
 
@@ -111,7 +112,7 @@ public class UserCurrentRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping(value = "/email/check")
-  public ApiLocaleResult<CheckSecretVo> checkEmail(@Valid CurrentEmailCheckDto dto) {
+  public ApiLocaleResult<CheckSecretVo> checkEmail(@Valid @ParameterObject CurrentEmailCheckDto dto) {
     return ApiLocaleResult.success(userCurrentFacade.checkEmail(dto));
   }
 

@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,7 +72,7 @@ public class OrgTagTargetRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/target")
   public ApiLocaleResult<PageResult<OrgTagTargetDetailVo>> targetList(
-      @Valid OrgTagTargetFindDto dto) {
+      @Valid @ParameterObject OrgTagTargetFindDto dto) {
     return ApiLocaleResult.success(orgTagTargetFacade.targetList(dto));
   }
 }

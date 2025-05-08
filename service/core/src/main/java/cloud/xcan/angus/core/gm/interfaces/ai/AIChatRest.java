@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import java.util.Map;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class AIChatRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Return successfully")})
   @GetMapping("/result")
-  public ApiLocaleResult<Map<String, Object>> chatResult(@Valid AIChatResultDto dto) {
+  public ApiLocaleResult<Map<String, Object>> chatResult(@Valid @ParameterObject AIChatResultDto dto) {
     return ApiLocaleResult.success(aiChatFacade.chatResult(dto));
   }
 

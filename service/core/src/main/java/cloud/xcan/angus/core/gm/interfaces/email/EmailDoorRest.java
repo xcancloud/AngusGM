@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class EmailDoorRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")
-  public ApiLocaleResult<?> checkVerificationCode(@Valid EmailVerificationCodeCheckDto dto) {
+  public ApiLocaleResult<?> checkVerificationCode(@Valid @ParameterObject EmailVerificationCodeCheckDto dto) {
     emailDoorFacade.checkVerificationCode(dto);
     return ApiLocaleResult.success();
   }

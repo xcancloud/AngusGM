@@ -23,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -79,7 +80,7 @@ public class WebTagTargetRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/target")
   public ApiLocaleResult<PageResult<WebTagTargetDetailVo>> targetList(
-      @Valid WebTagTargetFindDto dto) {
+      @Valid @ParameterObject WebTagTargetFindDto dto) {
     return ApiLocaleResult.success(webTagTargetFacade.targetList(dto));
   }
 

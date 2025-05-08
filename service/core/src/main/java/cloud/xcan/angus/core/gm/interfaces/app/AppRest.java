@@ -31,6 +31,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -146,7 +147,7 @@ public class AppRest {
       @ApiResponse(responseCode = "200", description = "Export successfully")
   })
   @GetMapping(value = "/export")
-  public void export(@Valid AppExportDto dto, HttpServletResponse response) {
+  public void export(@Valid @ParameterObject AppExportDto dto, HttpServletResponse response) {
     appFacade.export(dto, response);
   }
 
@@ -175,7 +176,7 @@ public class AppRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<AppVo>> list(@Valid AppFindDto dto) {
+  public ApiLocaleResult<PageResult<AppVo>> list(@Valid @ParameterObject AppFindDto dto) {
     return ApiLocaleResult.success(appFacade.list(dto));
   }
 
@@ -183,7 +184,7 @@ public class AppRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<AppVo>> search(@Valid AppSearchDto dto) {
+  public ApiLocaleResult<PageResult<AppVo>> search(@Valid @ParameterObject AppSearchDto dto) {
     return ApiLocaleResult.success(appFacade.search(dto));
   }
 

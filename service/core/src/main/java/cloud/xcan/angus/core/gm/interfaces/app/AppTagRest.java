@@ -22,6 +22,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -94,7 +95,7 @@ public class AppTagRest {
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<AppTagTargetVo>> appTagList(
       @Parameter(name = "id", description = "Application id", required = true) @PathVariable("id") Long appId,
-      @Valid AppTargetTagFindDto dto) {
+      @Valid @ParameterObject AppTargetTagFindDto dto) {
     return ApiLocaleResult.success(appTagFacade.appTagList(appId, dto));
   }
 

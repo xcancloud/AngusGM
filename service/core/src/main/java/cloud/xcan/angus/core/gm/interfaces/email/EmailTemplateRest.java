@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -57,7 +58,7 @@ public class EmailTemplateRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<EmailTemplateDetailVo>> list(@Valid EmailTemplateFindDto dto) {
+  public ApiLocaleResult<PageResult<EmailTemplateDetailVo>> list(@Valid @ParameterObject EmailTemplateFindDto dto) {
     return ApiLocaleResult.success(templateFacade.list(dto));
   }
 

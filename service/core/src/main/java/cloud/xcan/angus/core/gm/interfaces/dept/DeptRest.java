@@ -26,6 +26,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -114,7 +115,7 @@ public class DeptRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<DeptListVo>> list(@Valid DeptFindDto dto) {
+  public ApiLocaleResult<PageResult<DeptListVo>> list(@Valid @ParameterObject DeptFindDto dto) {
     return ApiLocaleResult.success(deptFacade.list(dto));
   }
 
@@ -122,7 +123,7 @@ public class DeptRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<DeptListVo>> search(@Valid DeptSearchDto dto) {
+  public ApiLocaleResult<PageResult<DeptListVo>> search(@Valid @ParameterObject DeptSearchDto dto) {
     return ApiLocaleResult.success(deptFacade.search(dto));
   }
 

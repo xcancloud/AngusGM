@@ -22,6 +22,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -90,7 +91,7 @@ public class OrgTagRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<OrgTagDetailVo>> list(@Valid OrgTagFindDto dto) {
+  public ApiLocaleResult<PageResult<OrgTagDetailVo>> list(@Valid @ParameterObject OrgTagFindDto dto) {
     return ApiLocaleResult.success(orgTagFacade.list(dto));
   }
 
@@ -98,7 +99,7 @@ public class OrgTagRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<OrgTagDetailVo>> search(@Valid OrgTagSearchDto dto) {
+  public ApiLocaleResult<PageResult<OrgTagDetailVo>> search(@Valid @ParameterObject OrgTagSearchDto dto) {
     return ApiLocaleResult.success(orgTagFacade.search(dto));
   }
 

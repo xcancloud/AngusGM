@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -135,7 +136,7 @@ public class TenantRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<TenantVo>> list(@Valid TenantFindDto dto) {
+  public ApiLocaleResult<PageResult<TenantVo>> list(@Valid @ParameterObject TenantFindDto dto) {
     return ApiLocaleResult.success(tenantFacade.list(dto));
   }
 
@@ -144,7 +145,7 @@ public class TenantRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<TenantVo>> search(@Valid TenantSearchDto searchDto) {
-    return ApiLocaleResult.success(tenantFacade.search(searchDto));
+  public ApiLocaleResult<PageResult<TenantVo>> search(@Valid @ParameterObject TenantSearchDto dto) {
+    return ApiLocaleResult.success(tenantFacade.search(dto));
   }
 }

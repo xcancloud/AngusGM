@@ -19,6 +19,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -72,7 +73,7 @@ public class EmailRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")
-  public ApiLocaleResult<?> verificationCodeCheck(@Valid EmailVerificationCodeCheckDto dto) {
+  public ApiLocaleResult<?> verificationCodeCheck(@Valid @ParameterObject EmailVerificationCodeCheckDto dto) {
     emailFacade.verificationCodeCheck(dto);
     return ApiLocaleResult.success();
   }
@@ -91,7 +92,7 @@ public class EmailRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<EmailDetailVo>> list(@Valid EmailFindDto dto) {
+  public ApiLocaleResult<PageResult<EmailDetailVo>> list(@Valid @ParameterObject EmailFindDto dto) {
     return ApiLocaleResult.success(emailFacade.list(dto));
   }
 

@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,7 +76,7 @@ public class NoticeRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<NoticeVo>> list(@Valid NoticeFindDto dto) {
+  public ApiLocaleResult<PageResult<NoticeVo>> list(@Valid @ParameterObject NoticeFindDto dto) {
     return ApiLocaleResult.success(noticeFacade.list(dto));
   }
 
@@ -83,7 +84,7 @@ public class NoticeRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<NoticeVo>> search(@Valid NoticeFindDto dto) {
+  public ApiLocaleResult<PageResult<NoticeVo>> search(@Valid @ParameterObject NoticeFindDto dto) {
     return ApiLocaleResult.success(noticeFacade.search(dto));
   }
 

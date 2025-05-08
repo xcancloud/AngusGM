@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -90,7 +91,7 @@ public class UserGroupRest {
   @GetMapping(value = "/{id}/group")
   public ApiLocaleResult<PageResult<UserGroupVo>> groupList(
       @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
-      @Valid UserGroupFindDto dto) {
+      @Valid @ParameterObject UserGroupFindDto dto) {
     return ApiLocaleResult.success(userGroupFacade.groupList(userId, dto));
   }
 

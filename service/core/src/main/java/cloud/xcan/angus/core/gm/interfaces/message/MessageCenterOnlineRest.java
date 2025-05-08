@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +58,7 @@ public class MessageCenterOnlineRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<MessageCenterOnlineVo>> list(
-      @Valid MessageCenterOnlineFindDto dto) {
+      @Valid @ParameterObject MessageCenterOnlineFindDto dto) {
     return ApiLocaleResult.success(messageCenterOnlineFacade.list(dto));
   }
 
@@ -66,7 +67,7 @@ public class MessageCenterOnlineRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
   public ApiLocaleResult<PageResult<MessageCenterOnlineVo>> search(
-      @Valid MessageCenterOnlineSearchDto dto) {
+      @Valid @ParameterObject MessageCenterOnlineSearchDto dto) {
     return ApiLocaleResult.success(messageCenterOnlineFacade.search(dto));
   }
 

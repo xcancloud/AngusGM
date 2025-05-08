@@ -29,6 +29,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -133,7 +134,7 @@ public class ApiRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<ApiDetailVo>> list(@Valid ApiFindDto dto) {
+  public ApiLocaleResult<PageResult<ApiDetailVo>> list(@Valid @ParameterObject ApiFindDto dto) {
     return ApiLocaleResult.success(apiFacade.list(dto));
   }
 
@@ -141,7 +142,7 @@ public class ApiRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<ApiDetailVo>> search(@Valid ApiSearchDto dto) {
+  public ApiLocaleResult<PageResult<ApiDetailVo>> search(@Valid @ParameterObject ApiSearchDto dto) {
     return ApiLocaleResult.success(apiFacade.search(dto));
   }
 

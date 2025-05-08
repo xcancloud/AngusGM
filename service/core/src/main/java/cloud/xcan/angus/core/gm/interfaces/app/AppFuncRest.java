@@ -24,6 +24,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -128,7 +129,7 @@ public class AppFuncRest {
   @GetMapping("/{appId}/func")
   public ApiLocaleResult<List<AppFuncVo>> list(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AppFuncFindDto dto) {
+      @Valid @ParameterObject AppFuncFindDto dto) {
     return ApiLocaleResult.success(appFuncFacade.list(appId, dto));
   }
 
@@ -138,7 +139,7 @@ public class AppFuncRest {
   @GetMapping("/{appId}/func/search")
   public ApiLocaleResult<List<AppFuncVo>> search(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AppFuncFindDto dto) {
+      @Valid @ParameterObject AppFuncFindDto dto) {
     return ApiLocaleResult.success(appFuncFacade.search(appId, dto));
   }
 
@@ -148,7 +149,7 @@ public class AppFuncRest {
   @GetMapping("/{appId}/func/tree")
   public ApiLocaleResult<List<AppFuncTreeVo>> tree(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AppFuncFindDto dto) {
+      @Valid @ParameterObject AppFuncFindDto dto) {
     return ApiLocaleResult.success(appFuncFacade.tree(appId, dto));
   }
 
@@ -158,7 +159,7 @@ public class AppFuncRest {
   @GetMapping("/{appId}/func/tree/search")
   public ApiLocaleResult<List<AppFuncTreeVo>> treeSearch(
       @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid AppFuncFindDto dto) {
+      @Valid @ParameterObject AppFuncFindDto dto) {
     return ApiLocaleResult.success(appFuncFacade.treeSearch(appId, dto));
   }
 }

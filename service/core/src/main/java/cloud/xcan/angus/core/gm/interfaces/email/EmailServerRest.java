@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -96,7 +97,7 @@ public class EmailServerRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/check")
-  public ApiLocaleResult<?> checkEnable(ServerEnabledCheckDto dto) {
+  public ApiLocaleResult<?> checkEnable(@ParameterObject ServerEnabledCheckDto dto) {
     emailServerFacade.checkEnable(dto);
     return ApiLocaleResult.success();
   }
@@ -115,7 +116,7 @@ public class EmailServerRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<ServerDetailVo>> list(@Valid ServerFindDto dto) {
+  public ApiLocaleResult<PageResult<ServerDetailVo>> list(@Valid @ParameterObject ServerFindDto dto) {
     return ApiLocaleResult.success(emailServerFacade.list(dto));
   }
 

@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.hibernate.validator.constraints.Length;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -159,7 +160,7 @@ public class UserRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<UserListVo>> list(@Valid UserFindDto dto) {
+  public ApiLocaleResult<PageResult<UserListVo>> list(@Valid @ParameterObject UserFindDto dto) {
     return ApiLocaleResult.success(userFacade.list(dto));
   }
 
@@ -167,7 +168,7 @@ public class UserRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
-  public ApiLocaleResult<PageResult<UserListVo>> search(@Valid UserSearchDto dto) {
+  public ApiLocaleResult<PageResult<UserListVo>> search(@Valid @ParameterObject UserSearchDto dto) {
     return ApiLocaleResult.success(userFacade.search(dto));
   }
 }

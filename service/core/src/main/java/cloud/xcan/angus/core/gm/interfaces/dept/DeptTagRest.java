@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -86,7 +87,7 @@ public class DeptTagRest {
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<OrgTagTargetVo>> tagList(
       @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
-      @Valid OrgTargetTagFindDto dto) {
+      @Valid @ParameterObject OrgTargetTagFindDto dto) {
     return ApiLocaleResult.success(deptTagFacade.tagList(deptId, dto));
   }
 
