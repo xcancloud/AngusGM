@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-@Repository("commonOrgTagTRepo")
+@Repository("commonOrgTagRepo")
 public interface OrgTagRepo extends BaseRepository<OrgTag, Long> {
 
   List<OrgTag> findByNameIn(Collection<String> names);

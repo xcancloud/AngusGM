@@ -66,7 +66,8 @@ eureka:
   environment: prod
   client:
     healthcheck:
-      enabled: true
+      # Disable health check-triggered auto-deregistration
+      enabled: false
     register-with-eureka: true
     eureka-connection-idle-timeout-seconds: 10
     initial-instance-info-replication-interval-seconds: 10

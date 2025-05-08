@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.notice.facade.internal.assembler;
 
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 
 import cloud.xcan.angus.core.gm.domain.notice.Notice;
@@ -28,7 +29,7 @@ public class NoticeAssembler {
   }
 
   public static NoticeVo toVo(Notice notice) {
-    return new NoticeVo()
+    return isNull(notice) ? null : new NoticeVo()
         .setId(notice.getId())
         .setContent(notice.getContent())
         .setScope(notice.getScope())
@@ -45,7 +46,7 @@ public class NoticeAssembler {
   }
 
   public static NoticeLatestVo toLatestVo(Notice notice) {
-    return new NoticeLatestVo()
+    return isNull(notice) ? null : new NoticeLatestVo()
         .setId(notice.getId())
         .setContent(notice.getContent())
         .setScope(notice.getScope())
