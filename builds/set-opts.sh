@@ -2,7 +2,7 @@
 
 # ---------------------------------------------------------------------------
 # Set the Java option parameters for starting AngusGM service (Not applicable to privatized edition).
-# Usage: sh set-opts.sh <host>
+# Usage: . ./set-opts.sh <host>
 # Author: XiaoLong Liu
 # ---------------------------------------------------------------------------
 
