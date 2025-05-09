@@ -171,7 +171,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
             UserSource.isNewSignup(user.getSource()), user.getId());
 
         // Initialize the oauth2 user
-        authUserCmd.replace0(replaceToAuthUser(user, optTenant), isNewSignup(userSource));
+        authUserCmd.replace0(replaceToAuthUser(user, user.getPassword(), optTenant),
+            isNewSignup(userSource));
 
         // Save operation log
         if (!isUserAction()) {
@@ -229,7 +230,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
         // Update oauth2 user
         Tenant tenantDb = tenantQuery.checkAndFind(user.getTenantId());
-        authUserCmd.replace0(replaceToAuthUser(userDb, tenantDb), false);
+        authUserCmd.replace0(replaceToAuthUser(userDb, user.getPassword(), tenantDb), false);
 
         // Save operation log
         operationLogCmd.add(USER, userDb, UPDATED);
@@ -296,7 +297,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
         // Update oauth2 user
         Tenant tenantDb = tenantQuery.checkAndFind(userDb.getTenantId());
-        authUserCmd.replace0(replaceToAuthUser(userDb, tenantDb), false);
+        authUserCmd.replace0(replaceToAuthUser(userDb, user.getPassword(), tenantDb), false);
 
         // Save operation log
         operationLogCmd.add(USER, userDb, UPDATED);

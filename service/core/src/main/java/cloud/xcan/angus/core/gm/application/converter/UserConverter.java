@@ -43,9 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserConverter {
 
-  public static AuthUser replaceToAuthUser(User user, Tenant tenantDb) {
+  public static AuthUser replaceToAuthUser(User user, String password, Tenant tenantDb) {
     return AuthUser.username(user.getUsername())
-        .password(user.getPassword())
+        .password(password)
         .disabled(user.getEnabled() || user.getDeleted())
         .accountExpired(user.getExpired())
         .accountLocked(nullSafe(user.getLocked(), false))
@@ -54,7 +54,7 @@ public class UserConverter {
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
         .fullName(user.getFullName())
-        .passwordStrength(calcPasswordStrength(stringSafe(user.getPassword())).getValue())
+        .passwordStrength(calcPasswordStrength(stringSafe(password)).getValue())
         .sysAdmin(user.getSysAdmin())
         .toUser(false)
         .mobile(user.getMobile())
