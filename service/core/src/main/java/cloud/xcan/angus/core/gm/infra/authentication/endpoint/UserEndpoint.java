@@ -1,26 +1,36 @@
 package cloud.xcan.angus.core.gm.infra.authentication.endpoint;
 
-
 import static cloud.xcan.angus.api.commonlink.AASConstant.TOKEN_REVOKE_ENDPOINT;
+import static cloud.xcan.angus.api.commonlink.AASConstant.USER_INFO_ENDPOINT;
 import static java.util.Objects.nonNull;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "User", description = "Unified user management entry for the system.")
 @RestController
-public class TokenRevokeEndpoint {
+public class UserEndpoint {
 
   @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
+
+  @ResponseBody
+  @GetMapping(USER_INFO_ENDPOINT)
+  public Principal user(Principal principal) {
+    return principal;
+  }
 
   @ResponseBody
   @RequestMapping(method = RequestMethod.DELETE, value = TOKEN_REVOKE_ENDPOINT)

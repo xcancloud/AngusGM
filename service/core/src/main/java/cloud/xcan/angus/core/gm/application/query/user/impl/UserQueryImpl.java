@@ -85,6 +85,7 @@ public class UserQueryImpl implements UserQuery {
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 
+  @SneakyThrow0
   @Override
   public User detail(Long id, boolean joinAssoc) {
     return new BizTemplate<User>(true, true) {

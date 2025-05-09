@@ -49,8 +49,7 @@ public interface AASConstant {
   int MAX_POLICY_FUNC_NUM = 2000;
 
   String USER_INFO_ENDPOINT = "/api/v1/auth/user";
-  String TOKEN_CHECK_ENDPOINT = "/pubapi/auth/token/check";
-  String TOKEN_REVOKE_ENDPOINT = "/api/auth/token";
+  String TOKEN_REVOKE_ENDPOINT = "/api/v1/auth/token";
 
   String SWAGGER_API_URL = "/v3/api-docs?group=Api";
   String SWAGGER_PUB_API_URL = "/v3/api-docs?group=Public%20Api";
