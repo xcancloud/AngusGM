@@ -134,10 +134,7 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/.*.env conf/" || {
     echo "ERROR: Failed to copy env files"; exit 1
   }
-  scp -rp "builds/set-opts.sh" "${host}:${REMOTE_APP_DIR}/" || {
-    echo "ERROR: Failed to copy service files"; exit 1
-  }
-  ssh "$host" "cd ${REMOTE_APP_DIR} && . ./set-opts.sh ${host} && sh startup-gm.sh" || {
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh" || {
     echo "ERROR: Failed to start service"; exit 1
   }
   sh builds/check-health.sh ${host} || {
