@@ -74,7 +74,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
       @Override
       protected void checkParams() {
         // Check the user existed
-        userQuery.checkAndFind(userId);
+        userDb = userQuery.checkAndFind(userId);
         // Check the user department quota
         userDeptQuery.checkUserDeptAppendQuota(getOptTenantId(), deptUsers.size(), userId);
 

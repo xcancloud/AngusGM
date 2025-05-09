@@ -300,8 +300,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
           // 2. Sync groups
           // 2.1. Find the latest groups in the directory
-          List<Group> groupsLdap = searchGroup(directoryDb, ldapTemplate);
-          result.setTotalGroupNum(groupsLdap.size());
+          List<Group> ldapGroups = searchGroup(directoryDb, ldapTemplate);
+          result.setTotalGroupNum(ldapGroups.size());
           // Find the latest groups in the DB
           List<Group> groupsDb = groupManager.findByTenantId(tenantDb.getId());
           Map<String, List<Group>> nameGroupDbMap = groupsDb.stream()
@@ -311,7 +311,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
           // 2.2. Calculate group sync results
           // 1).New groups in the directory
-          List<Group> addGroups = findNewGroupsInDirectory(groupsLdap, nameGroupDbMap,
+          List<Group> addGroups = findNewGroupsInDirectory(ldapGroups, nameGroupDbMap,
               codeGroupDbMap, directoryDb);
           if (isNotEmpty(addGroups)) {
             if (!onlyTest) {
@@ -320,7 +320,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             result.setAddGroupNum(addGroups.size());
           }
           // 2).Update groups in the directory
-          List<Group> updateGroups = findUpdateGroupsInDirectory(groupsLdap, nameGroupDbMap,
+          List<Group> updateGroups = findUpdateGroupsInDirectory(ldapGroups, nameGroupDbMap,
               codeGroupDbMap, directoryDb);
           if (isNotEmpty(updateGroups)) {
             if (!onlyTest) {
@@ -329,7 +329,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             result.setUpdateGroupNum(updateGroups.size());
           }
           // 3).Delete groups in the directory
-          List<Group> deleteGroups = findDeleteGroupsInDirectory(groupsLdap,
+          List<Group> deleteGroups = findDeleteGroupsInDirectory(ldapGroups,
               codeGroupDbMap, directoryDb);
           Set<Long> deleteGroupIds = deleteGroups.stream().map(Group::getId)
               .collect(Collectors.toSet());
@@ -342,13 +342,13 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             result.setDeleteGroupNum(deleteGroups.size());
           }
           // 4).Ignore groups number in the directory
-          result.setIgnoreGroupNum(groupsLdap.size() - addGroups.size() - updateGroups.size());
+          result.setIgnoreGroupNum(ldapGroups.size() - addGroups.size() - updateGroups.size());
           result.setGroupSuccess(true);
 
           // 3. Sync users
           // 3.1. Find the latest users in the directory
-          List<User> usersLdap = searchUser(directoryDb, ldapTemplate);
-          result.setTotalUserNum(usersLdap.size());
+          List<User> ldapUsers = searchUser(directoryDb, ldapTemplate);
+          result.setTotalUserNum(ldapUsers.size());
           // Find the latest users in the DB
           List<User> usersDb = userManager.findByTenantId(tenantDb.getId());
           if (isNotEmpty(usersDb)) {
@@ -376,7 +376,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
           // 3.2. Calculate user sync results
           // 1).New users in the directory
-          List<User> addUsers = findNewUsersInDirectory(usersLdap, usernameUserDbMap,
+          List<User> addUsers = findNewUsersInDirectory(ldapUsers, usernameUserDbMap,
               emailUserDbMap, mobileUserDbMap);
           if (isNotEmpty(addUsers)) {
             for (User user : addUsers) {
@@ -387,7 +387,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             }
           }
           // 2).Update users in the directory
-          List<User> updateUsers = findUpdateUsersInDirectory(usersLdap, usernameUserDbMap,
+          List<User> updateUsers = findUpdateUsersInDirectory(ldapUsers, usernameUserDbMap,
               directoryDb, tenantDb);
           if (isNotEmpty(updateUsers)) {
             for (User updateUser : updateUsers) {
@@ -398,7 +398,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             }
           }
           // 3).Delete users in the directory
-          List<User> deleteUsers = findDeleteUsersInDirectory(usersLdap, usernameUserDbMap,
+          List<User> deleteUsers = findDeleteUsersInDirectory(ldapUsers, usernameUserDbMap,
               directoryDb);
           Set<Long> deleteUserIds = deleteUsers.stream().map(User::getId)
               .collect(Collectors.toSet());
@@ -411,7 +411,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             result.setDeleteUserNum(deleteUsers.size());
           }
           // 4).Ignore users number in the directory
-          result.setIgnoreUserNum(usersLdap.size() - addUsers.size() - updateUsers.size());
+          result.setIgnoreUserNum(ldapUsers.size() - addUsers.size() - updateUsers.size());
           result.setUserSuccess(true);
 
           // 4. Sync membership when the user and group are sync successfully
@@ -421,7 +421,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
                 directoryDb.getId());
             if (isNotEmpty(directoryGroupsDb)) {
               List<GroupUser> membershipInLdap = assembleGroupUserAssociation(ldapTemplate,
-                  tenantDb, directoryDb, directoryGroupsDb, groupsLdap);
+                  tenantDb, directoryDb, directoryGroupsDb, ldapGroups);
               // Fix: There are non current directory member relationships present
               // Means that reinserting duplicate member relationships is ignored
               // List<GroupUser> membershipInDb = groupManager.findGroupUser(tenantDb.getId(),directoryDb.getId());

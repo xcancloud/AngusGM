@@ -7,6 +7,7 @@ import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembl
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.toDetailVo;
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.updateDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.addTenantUserDto;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
@@ -54,15 +55,14 @@ public class TenantFacadeImpl implements TenantFacade {
 
   @Override
   public IdKey<Long, Object> add(TenantAddDto dto) {
-    UserAddDto userAddDto = UserAssembler.addTenantToUserAddDto(dto);
     return tenantCmd.add(addDtoToDomain(dto), addDtoToTenantAudit(dto),
-        UserAssembler.addDtoToDomain(userAddDto, UserSource.BACKGROUND_SIGNUP),
+        UserAssembler.addDtoToDomain(UserAssembler.addTenantUserDto(dto), UserSource.BACKGROUND_SIGNUP),
         UserSource.BACKGROUND_SIGNUP);
   }
 
   @Override
   public IdKey<Long, Object> signupByMobile(TenantAddByMobileDto dto) {
-    UserAddDto userAddDto = UserAssembler.addTenantToUserAddDto(dto);
+    UserAddDto userAddDto = addTenantUserDto(dto);
     return tenantCmd.add(addDtoToDomain(), addDtoToTenantAudit(dto),
         UserAssembler.addDtoToDomain(userAddDto, UserSource.BACKGROUND_SIGNUP),
         UserSource.BACKGROUND_SIGNUP);

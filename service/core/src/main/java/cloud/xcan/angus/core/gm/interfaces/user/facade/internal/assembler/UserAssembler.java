@@ -77,7 +77,8 @@ public class UserAssembler {
         .setPasswordExpired(false)
         .setExpired(false)
         .setDeleted(false)
-        .setMainDeptId(judgeMainDeptId(dto.getDepts()));
+        .setMainDeptId(judgeMainDeptId(dto.getDepts()))
+        .setOnline(false);
     if (UserSource.BACKGROUND_ADDED.equals(source)) {
       user.setSignupAccount(null);
       user.setSignupAccountType(SignupType.NOOP);
@@ -107,7 +108,7 @@ public class UserAssembler {
     return user;
   }
 
-  public static UserAddDto addTenantToUserAddDto(TenantAddDto dto) {
+  public static UserAddDto addTenantUserDto(TenantAddDto dto) {
     return new UserAddDto().setFullName(stringSafe(dto.getFullName()))
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
@@ -122,7 +123,7 @@ public class UserAssembler {
         .setSignupAccount(isNotEmpty(dto.getMobile()) ? dto.getMobile() : dto.getEmail());
   }
 
-  public static UserAddDto addTenantToUserAddDto(TenantAddByMobileDto dto) {
+  public static UserAddDto addTenantUserDto(TenantAddByMobileDto dto) {
     return new UserAddDto().setFullName(stringSafe(dto.getFullName()))
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
@@ -185,6 +186,7 @@ public class UserAssembler {
         .setExpired(isNull(dto.getId()) ? false : null)
         .setDeleted(isNull(dto.getId()) ? false : null)
         .setMainDeptId(judgeMainDeptId(dto.getDepts()))
+        .setOnline(false)
         // BACKGROUND_ADDED
         .setSignupAccount(null)
         .setSignupAccountType(isNull(dto.getId()) ? SignupType.NOOP : null)

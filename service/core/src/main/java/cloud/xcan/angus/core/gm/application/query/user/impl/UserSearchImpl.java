@@ -19,9 +19,6 @@ public class UserSearchImpl implements UserSearch {
   @Resource
   private UserSearchRepo userSearchRepo;
 
-  @Resource
-  private UserManager userManager;
-
   @Override
   public Page<User> search(Set<SearchCriteria> criteria, Pageable pageable, Class<User> clz,
       String... matches) {
