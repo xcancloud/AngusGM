@@ -179,7 +179,6 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
   public void userPolicyDelete(Long userId, Set<Long> policyIds) {
     new BizTemplate<Void>() {
       User userDb;
-      Set<Long> policyIds;
       List<AuthPolicy> policiesDb;
 
       @Override
