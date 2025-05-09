@@ -24,8 +24,8 @@ public class AuthPolicySearchRepoMySql extends SimpleSearchRepository<AuthPolicy
   @Override
   public StringBuilder getSqlTemplate(Set<SearchCriteria> criteria, Class<AuthPolicy> mainClz,
       Object[] params, String... matches) {
-    return authPolicyListRepo.getSqlTemplate0(getSearchMode(), criteria, mainClz, "auth_policy",
-        matches);
+    return authPolicyListRepo.getSqlTemplate0(getSearchMode(), criteria, mainClz,
+        "auth_policy", matches);
   }
 
   @Override

@@ -322,15 +322,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   @Override
   public void checkAuthPolicyPermission(Collection<Long> policyIds) {
     List<AuthPolicy> policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, false, false);
-    if (isEmpty(policyDb)) {
-      Map<Long, List<AuthPolicy>> policyMap = policyDb.stream()
-          .collect(Collectors.groupingBy(AuthPolicy::getAppId));
-      for (Long appId : policyMap.keySet()) {
-        // Check the policy permission
-        checkAuthPolicyPermission(appId, getUserId(), policyMap.get(appId).stream()
-            .map(AuthPolicy::getId).collect(Collectors.toSet()));
-      }
-    }
+    checkAuthPolicyPermission(policyDb);
   }
 
   /**
@@ -340,7 +332,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    */
   @Override
   public void checkAuthPolicyPermission(List<AuthPolicy> policies) {
-    if (isEmpty(policies)) {
+    if (isNotEmpty(policies)) {
       Map<Long, List<AuthPolicy>> policyMap = policies.stream()
           .collect(Collectors.groupingBy(AuthPolicy::getAppId));
       for (Long appId : policyMap.keySet()) {

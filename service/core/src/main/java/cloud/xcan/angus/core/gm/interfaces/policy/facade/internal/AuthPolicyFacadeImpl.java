@@ -1,5 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler.getCriteria;
+import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler.toDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
@@ -85,17 +87,15 @@ public class AuthPolicyFacadeImpl implements AuthPolicyFacade {
   @NameJoin
   @Override
   public PageResult<AuthPolicyVo> list(AuthPolicyFindDto dto) {
-    Page<AuthPolicy> page = authPolicyQuery.list(AuthPolicyAssembler.getSpecification(dto),
-        dto.tranPage());
+    Page<AuthPolicy> page = authPolicyQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, AuthPolicyAssembler::toAuthPolicyVo);
   }
 
   @NameJoin
   @Override
   public PageResult<AuthPolicyVo> search(AuthPolicySearchDto dto) {
-    Page<AuthPolicy> page = authPolicySearch.search(AuthPolicyAssembler.getCriteria(dto),
-        dto.tranPage(),
-        getMatchSearchFields(dto.getClass()));
+    Page<AuthPolicy> page = authPolicySearch.search(getCriteria(dto),
+        dto.tranPage(), getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, AuthPolicyAssembler::toAuthPolicyVo);
   }
 

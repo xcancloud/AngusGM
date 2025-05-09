@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.infra.persistence.mysql.policy;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getApplicationInfo;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isOpClient;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
 
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicyListRepo;
@@ -41,14 +42,12 @@ public class AuthPolicyListRepoMySql extends AbstractSearchRepository<AuthPolicy
             + mainAlis);
     if (!isOpClient()) {
       // Assemble non mainClz tagIds in Conditions
-      sql.append(" WHERE 1=1 ");
-      // Assemble mainClz Conditions
-      //.append(getCriteriaAliasCondition(step, criteria, mainAlis, mode, false, matches));
+      sql.append(" WHERE ")
+          .append(mainAlis).append(".client_id = '").append(getClientId()).append("'");
       // Only allowed to query opened application policies
       // Important:: Operating tenants need to open all applications first
       sql.append(" AND ").append(mainAlis)
-          .append(".app_id IN (SELECT app_id FROM app_open WHERE tenant_id = ")
-          .append(optTenantId)
+          .append(".app_id IN (SELECT app_id FROM app_open WHERE tenant_id = ").append(optTenantId)
           // Fix:: Excluding private editions applications and authorizations for cloud service edition
           .append(" AND edition_type = '").append(getApplicationInfo().getEditionType())
           .append("')");
