@@ -148,7 +148,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
               .collect(Collectors.toList()));
 
           operationLogCmd.add(APP, appDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(WebTag::getName).toList().toArray());
+              tagsDb.stream().map(WebTag::getName).collect(Collectors.joining(",")));
         }
         return null;
       }
@@ -198,7 +198,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
         webTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, appId);
 
         operationLogCmd.add(APP, appDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(WebTag::getName).toList().toArray());
+            tagsDb.stream().map(WebTag::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -232,7 +232,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
               .collect(Collectors.toList()));
 
           operationLogCmd.add(APP_FUNC, appFuncDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(WebTag::getName).toList().toArray());
+              tagsDb.stream().map(WebTag::getName).collect(Collectors.joining(",")));
         }
         return null;
       }
@@ -282,7 +282,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
         webTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, funcId);
 
         operationLogCmd.add(APP_FUNC, appFuncDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(WebTag::getName).toList().toArray());
+            tagsDb.stream().map(WebTag::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();

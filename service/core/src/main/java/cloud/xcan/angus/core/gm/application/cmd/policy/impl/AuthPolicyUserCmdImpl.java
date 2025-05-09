@@ -89,7 +89,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
             List<IdKey<Long, Object>> idKeys = batchInsert(addPolicyUsers);
 
             operationLogCmd.add(POLICY, policyDb, ADD_POLICY_USER,
-                usersDb.stream().map(User::getName).toList().toArray());
+                usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
             return idKeys;
           }
         }
@@ -121,7 +121,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
             AuthOrgType.USER.getValue(), userIds);
 
         operationLogCmd.add(POLICY, policyDb, DELETE_POLICY_USER,
-            usersDb.stream().map(User::getName).toList().toArray());
+            usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -165,7 +165,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
             List<IdKey<Long, Object>> idKeys = batchInsert(newUserPolicies);
 
             operationLogCmd.add(USER, userDb, ADD_USER_POLICY,
-                policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
+                policiesDb.stream().map(AuthPolicy::getName).collect(Collectors.joining(",")));
             return idKeys;
           }
         }
@@ -197,7 +197,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
             AuthOrgType.USER.getValue(), policyIds);
 
         operationLogCmd.add(USER, userDb, DELETE_USER_POLICY,
-            policiesDb.stream().map(AuthPolicy::getName).toList().toArray());
+            policiesDb.stream().map(AuthPolicy::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();

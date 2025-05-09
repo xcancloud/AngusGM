@@ -96,7 +96,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
         }
 
         operationLogCmd.add(POLICY, policyDb, ADD_POLICY_FUNC,
-            funcDb.stream().map(AppFunc::getName).toList().toArray());
+            funcDb.stream().map(AppFunc::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -140,7 +140,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
         replace0(singletonList(policyDb), funcDb);
 
         operationLogCmd.add(POLICY, policyDb, UPDATE_POLICY_FUNC, isNull(funcDb)
-            ? new Object[]{""} : funcDb.stream().map(AppFunc::getName).toList().toArray());
+            ? new Object[]{""} : funcDb.stream().map(AppFunc::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -168,7 +168,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
         authPolicyFuncRepo.deleteByPolicyIdAndFuncIdIn(policyId, appFuncIds);
 
         operationLogCmd.add(POLICY, policyDb, DELETE_POLICY_FUNC,
-            funcDb.stream().map(AppFunc::getName).toList().toArray());
+            funcDb.stream().map(AppFunc::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();

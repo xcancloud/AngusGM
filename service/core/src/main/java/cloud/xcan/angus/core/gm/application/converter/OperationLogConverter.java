@@ -120,7 +120,7 @@ public class OperationLogConverter {
           new Object[]{type.getMessage()}, getDefaultLanguage().toLocale());
     }
 
-    assertTrue(params.length <= 2, "Support max two parameters");
+    assertTrue(params.length <= 2, "Support max two parameters in operation");
     if (params.length == 1) {
       // Move the resource name to the front
       return message(operation.getDescMessageKey(),
@@ -145,7 +145,7 @@ public class OperationLogConverter {
           new Object[]{resourceType.getMessage(), "[" + resource.getName() + "]"
               , getDefaultLanguage().toLocale()});
     }
-    assertTrue(params.length <= 2, "Support max two parameters");
+    assertTrue(params.length <= 2, "Support max two parameters in operation");
     if (params.length == 1) {
       // Move the resource name to the front
       return message(operation.getDetailMessageKey(),

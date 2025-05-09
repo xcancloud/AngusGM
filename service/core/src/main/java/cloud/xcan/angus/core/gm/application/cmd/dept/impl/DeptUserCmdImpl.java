@@ -207,7 +207,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
         List<IdKey<Long, Object>> idKeys = batchInsert(deptUsers);
 
         operationLogCmd.add(DEPT, deptDb, ADD_DEPT_USER,
-            users.stream().map(User::getName).toList().toArray());
+            users.stream().map(User::getName).collect(Collectors.joining(",")));
         return idKeys;
       }
     }.execute();
@@ -232,7 +232,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
         userCmd.clearMainDeptByDeptIdAndUserIdIn(deptId, userIds);
 
         operationLogCmd.add(DEPT, deptDb, DELETE_DEPT_USER,
-            usersDb.stream().map(User::getName).toList().toArray());
+            usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();

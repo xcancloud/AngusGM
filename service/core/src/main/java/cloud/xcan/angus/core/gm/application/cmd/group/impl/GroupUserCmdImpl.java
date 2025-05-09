@@ -85,7 +85,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         List<IdKey<Long, Object>> idKeys = batchInsert(groupUsers);
 
         operationLogCmd.add(USER, userDb, ADD_USER_GROUP,
-            groupsDb.stream().map(Group::getName).toList().toArray());
+            groupsDb.stream().map(Group::getName).collect(Collectors.joining(",")));
         return idKeys;
       }
     }.execute();
@@ -125,7 +125,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         }
 
         operationLogCmd.add(USER, userDb, UPDATE_USER_GROUP,
-            groupsDb.stream().map(Group::getName).toList().toArray());
+            groupsDb.stream().map(Group::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -149,7 +149,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         groupUserRepo.deleteByGroupIdInAndUserId(groupIds, userId);
 
         operationLogCmd.add(USER, userDb, DELETE_USER_GROUP,
-            groupsDb.stream().map(Group::getName).toList().toArray());
+            groupsDb.stream().map(Group::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -187,7 +187,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         List<IdKey<Long, Object>> idKeys = batchInsert(new HashSet<>(groupUsers));
 
         operationLogCmd.add(GROUP, groupDb, ADD_GROUP_USER,
-            usersDb.stream().map(User::getName).toList().toArray());
+            usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return idKeys;
       }
     }.execute();
@@ -211,7 +211,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         groupUserRepo.deleteByGroupIdAndUserId(groupId, userIds);
 
         operationLogCmd.add(GROUP, groupDb, DELETE_GROUP_USER,
-            usersDb.stream().map(User::getName).toList().toArray());
+            usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();

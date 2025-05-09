@@ -167,7 +167,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
               .collect(Collectors.toList()));
 
           operationLogCmd.add(USER, userDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(OrgTag::getName).toList().toArray());
+              tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         }
         return null;
       }
@@ -221,7 +221,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         orgTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, userId);
 
         operationLogCmd.add(APP, userDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(OrgTag::getName).toList().toArray());
+            tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -257,7 +257,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
               .collect(Collectors.toList()));
 
           operationLogCmd.add(DEPT, deptDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(OrgTag::getName).toList().toArray());
+              tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         }
         return null;
       }
@@ -309,7 +309,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         orgTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, deptId);
 
         operationLogCmd.add(DEPT, deptDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(OrgTag::getName).toList().toArray());
+            tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -345,7 +345,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
               .collect(Collectors.toList()));
 
           operationLogCmd.add(GROUP, groupDb, TARGET_TAG_UPDATED,
-              tagsDb.stream().map(OrgTag::getName).toList().toArray());
+              tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         }
         return null;
       }
@@ -397,7 +397,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         orgTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, groupId);
 
         operationLogCmd.add(GROUP, groupDb, TARGET_TAG_DELETED,
-            tagsDb.stream().map(OrgTag::getName).toList().toArray());
+            tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
