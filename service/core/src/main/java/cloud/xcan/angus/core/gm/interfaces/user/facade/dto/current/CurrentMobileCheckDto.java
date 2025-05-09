@@ -24,11 +24,11 @@ public class CurrentMobileCheckDto implements Serializable {
 
   @NotNull
   @EnumPart(enumClass = SmsBizKey.class, allowableValues = {
-      "PASSD_FORGET", "PAASD_UPDATE", "SIGN_CANCEL", "MODIFY_MOBILE", "BIND_MOBILE"
+      "PASSWORD_FORGET", "PASSWORD_UPDATE", "SIGN_CANCEL", "MODIFY_MOBILE", "BIND_MOBILE"
   })
   @Schema(description = "Sms business type key.", example = "MODIFY_MOBILE",
       allowableValues = {
-          "PASSD_FORGET", "PAASD_UPDATE", "SIGN_CANCEL", "MODIFY_MOBILE", "BIND_MOBILE"
+          "PASSWORD_FORGET", "PASSWORD_UPDATE", "SIGN_CANCEL", "MODIFY_MOBILE", "BIND_MOBILE"
       }, requiredMode = RequiredMode.REQUIRED)
   private SmsBizKey bizKey;
 

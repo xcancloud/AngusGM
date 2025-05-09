@@ -430,9 +430,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   private void checkForgetPasswordLinkSecret(Long userId, String linkSecret) {
     String emailCacheKey = format(AASConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX,
-        EmailBizKey.PASSD_FORGET, userId);
+        EmailBizKey.PASSWORD_FORGET, userId);
     String smsCacheKey = format(AASConstant.CACHE_SMS_CHECK_SECRET_PREFIX,
-        SmsBizKey.PASSD_FORGET, userId);
+        SmsBizKey.PASSWORD_FORGET, userId);
     String emailLinkSecret = stringRedisService.get(emailCacheKey);
     String smsLinkSecret = stringRedisService.get(smsCacheKey);
     assertTrue(isNotBlank(emailLinkSecret) || isNotBlank(smsLinkSecret), LINK_SECRET_TIMEOUT);

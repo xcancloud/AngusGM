@@ -26,7 +26,7 @@ import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.Gender;
-import cloud.xcan.angus.api.enums.PassdEncoderType;
+import cloud.xcan.angus.api.enums.PasswordEncoderType;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
@@ -212,13 +212,13 @@ public class UserConverter {
     return "";
   }
 
-  public static String generatePassword(PassdEncoderType encoderType, String password) {
+  public static String generatePassword(PasswordEncoderType encoderType, String password) {
     // Warn:: The format of Spring security MD5 and LDAP MD5 is inconsistent.
     //    if (password.startsWith(PREFIX)) {
     //      return password;
     //    }
     //    if (Objects.isNull(encoderType)) {
-    //      return PREFIX + PassdEncoderType.PLAINTEXT.getValue() + SUFFIX + password;
+    //      return PREFIX + PasswordEncoderType.PLAINTEXT.getValue() + SUFFIX + password;
     //    }
     //    return PREFIX + encoderType.getValue() + SUFFIX + password;
     if (password.contains(UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX)

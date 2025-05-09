@@ -24,11 +24,11 @@ public class CurrentEmailCheckDto implements Serializable {
 
   @NotNull
   @EnumPart(enumClass = EmailBizKey.class, allowableValues = {
-      "PASSD_FORGET", "PAASD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
+      "PASSWORD_FORGET", "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
   })
   @Schema(description = "Email business type key.", example = "BIND_EMAIL",
       allowableValues = {
-          "PASSD_FORGET", "PAASD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
+          "PASSWORD_FORGET", "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
       }, requiredMode = RequiredMode.REQUIRED)
   private EmailBizKey bizKey;
 

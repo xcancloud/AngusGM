@@ -23,10 +23,10 @@ public class CurrentSmsSendDto implements Serializable {
 
   @NotNull
   @EnumPart(enumClass = SmsBizKey.class, allowableValues = {
-      "MODIFY_MOBILE", "BIND_MOBILE", "PAASD_UPDATE"})
+      "MODIFY_MOBILE", "BIND_MOBILE", "PASSWORD_UPDATE"})
   @Schema(description = "Sms business type key.", example = "MODIFY_MOBILE",
       allowableValues = {"MODIFY_MOBILE", "BIND_MOBILE",
-          "PAASD_UPDATE"}, requiredMode = RequiredMode.REQUIRED)
+          "PASSWORD_UPDATE"}, requiredMode = RequiredMode.REQUIRED)
   private SmsBizKey bizKey;
 
   @NotBlank

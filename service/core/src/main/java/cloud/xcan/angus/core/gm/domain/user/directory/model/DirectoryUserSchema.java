@@ -4,7 +4,7 @@ package cloud.xcan.angus.core.gm.domain.user.directory.model;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X2;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH_X5;
 
-import cloud.xcan.angus.api.enums.PassdEncoderType;
+import cloud.xcan.angus.api.enums.PasswordEncoderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotBlank;
@@ -84,7 +84,7 @@ public class DirectoryUserSchema implements Serializable {
    * The OPENLDAP password format of x is the same as that of AAS PasswordEncoder
    */
   @Schema(description = "Choose the encryption algorithm used for passwords on your directory")
-  private PassdEncoderType passwordEncoderType;
+  private PasswordEncoderType passwordEncoderType;
 
   @NotNull
   @Schema(description = "Force ignore the same identity(unique name, email, mobile) user", requiredMode = RequiredMode.REQUIRED)

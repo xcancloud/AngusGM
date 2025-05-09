@@ -8,7 +8,7 @@ import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.Gender;
-import cloud.xcan.angus.api.enums.PassdEncoderType;
+import cloud.xcan.angus.api.enums.PasswordEncoderType;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.biz.ResourceName;
@@ -159,7 +159,7 @@ public class User extends TenantAuditingEntity<User, Long> implements Resources<
   @Transient
   private TenantRealNameStatus tenantRealNameStatus;
   @Transient
-  private PassdEncoderType passwordEncoderType;
+  private PasswordEncoderType passwordEncoderType;
   /////////////OAuthUser///////////
 
   @Transient

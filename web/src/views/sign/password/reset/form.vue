@@ -175,7 +175,7 @@ const validateEmailForm = () => {
 const getAccount = () => {
   if (isMobile.value) {
     const params = {
-      bizKey: 'PASSD_FORGET',
+      bizKey: 'PASSWORD_FORGET',
       mobile: mobileForm.value.account,
       verificationCode: mobileForm.value.verificationCode
     };
@@ -183,7 +183,7 @@ const getAccount = () => {
   }
 
   const params = {
-    bizKey: 'PASSD_FORGET',
+    bizKey: 'PASSWORD_FORGET',
     email: emailForm.value.account,
     verificationCode: emailForm.value.verificationCode
   };
@@ -277,7 +277,7 @@ const confirm = async () => {
         ref="mobileVeriRef"
         key="mobileVeriRef"
         v-model:value="mobileForm.verificationCode"
-        bizKey="PASSD_FORGET"
+        bizKey="PASSWORD_FORGET"
         :disabled="!!mobileForm.userId"
         :validateAccount="validateAccount"
         :account="mobileForm.account"
@@ -318,7 +318,7 @@ const confirm = async () => {
         key="emailVeriRef"
         v-model:value="emailForm.verificationCode"
         sendType="email"
-        bizKey="PASSD_FORGET"
+        bizKey="PASSWORD_FORGET"
         :disabled="!!emailForm.userId"
         :validateAccount="validateEmail"
         :account="emailForm.account"

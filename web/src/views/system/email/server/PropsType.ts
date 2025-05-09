@@ -13,7 +13,7 @@ export type MailboxService = {
   authEnabled: boolean;
   authAccount: {
     account: string;
-    paasd: string;
+    password: string;
   },
   subjectPrefix: string;
 }
@@ -31,7 +31,7 @@ export type FormState = {
   authEnabled: boolean;
   authAccount: {
     account: string;
-    paasd: string;
+    password: string;
   },
   subjectPrefix: string;
 }

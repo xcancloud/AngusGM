@@ -28,7 +28,7 @@ const formState = ref<FormState>({
   authEnabled: false,
   authAccount: {
     account: '',
-    paasd: ''
+    password: ''
   },
   subjectPrefix: ''
 });
@@ -106,7 +106,7 @@ const loadMailboxDetail = async () => {
     ...data,
     authAccount: data.authAccount || {
       account: '',
-      paasd: ''
+      password: ''
     }
   };
 
@@ -237,10 +237,10 @@ const selectOption = [
             :placeholder="t('emailPlaceholder4')" />
         </FormItem>
         <FormItem
-          :name="['authAccount', 'paasd']"
+          :name="['authAccount', 'password']"
           :rules="{ required: formState.authEnabled, message: t('userRule0') }">
           <Input
-            v-model:value="formState.authAccount.paasd"
+            v-model:value="formState.authAccount.password"
             size="small"
             :maxlength="500"
             :disabled="source === 'detail' || !formState.authEnabled"
