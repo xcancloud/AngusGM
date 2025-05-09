@@ -4,6 +4,7 @@ module.exports = {
   plugins: [],
   variants: {
     extend: {
+      width: ['hover'],
       height: ['hover'],
       padding: ['hover'],
       fontWeight: ['hover'],
@@ -14,11 +15,15 @@ module.exports = {
   },
   theme: {
     extend: {
+      width: {
+        8: '32px'
+      },
       screens: {
         '2xl': { max: '1440px' },
         xl: { max: '1280px' },
         lg: { max: '1024px' }
       },
+
       spacing: {
         '1/3': '33.33%',
         '11/12': '92%',
@@ -102,6 +107,7 @@ module.exports = {
         49: '196px',
         49.5: '198px',
         50: '200px',
+        52.5: '210px',
         54: '216px',
         54.25: '217px',
         55: '220px',
@@ -269,7 +275,8 @@ module.exports = {
         3.5: '14px',
         3.75: '15px',
         5.5: '22px',
-        20: '80px'
+        20: '80px',
+        9.5: '38px',
       },
       maxWidth: {
         30: '120px',
