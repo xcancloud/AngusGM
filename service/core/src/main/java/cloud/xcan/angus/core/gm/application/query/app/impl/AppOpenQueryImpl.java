@@ -55,11 +55,9 @@ public class AppOpenQueryImpl implements AppOpenQuery {
           spec.getCriteria().add(SearchCriteria.equal("tenantId", getTenantId()));
         }
 
-        // spec.getCriteria().add(SearchCriteria.equal("clientId", getClientId()));
-
         if (isPrivateEdition() || (isTenantClient() && isCloudServiceEdition())) {
-          spec.getCriteria()
-              .add(SearchCriteria.equal("editionType", getApplicationInfo().getEditionType()));
+          spec.getCriteria().add(SearchCriteria.equal("editionType",
+              getApplicationInfo().getEditionType()));
         }
 
         Page<AppOpen> page = appOpenRepo.findAll(spec, pageable);
