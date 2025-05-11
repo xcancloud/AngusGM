@@ -1202,7 +1202,7 @@ export default {
   addCourse: '添加课程',
   fineBtn: '设为精选',
   notFineBtn: '取消精选',
-  password: '通过',
+  passed: '通过',
   notPassword: '不通过',
   viewNum: '查看数',
   videosNum: '课程集数',

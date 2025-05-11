@@ -16,7 +16,7 @@ module.exports = {
   theme: {
     extend: {
       width: {
-        8: '32px'
+        8: '32px',
       },
       screens: {
         '2xl': { max: '1440px' },
@@ -115,6 +115,7 @@ module.exports = {
         56.75: '227px',
         58: '232px',
         59: '236px',
+        60: '240px',
         61: '244px',
         62.5: '250px',
         63: '252px',
