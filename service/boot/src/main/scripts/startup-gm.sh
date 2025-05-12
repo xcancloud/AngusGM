@@ -59,7 +59,7 @@ checkRunning(){
     PID=`ps -ef |grep $EXECUTABLE |grep -v grep |awk '{print $2}'`
     if [ ! -z "${PID}" ]; then
         echo $PID > "$APP_PID"
-        echo "Application appears to still be running with PID $PID. Startup aborted."
+        echo "@hump.name@ appears to still be running with PID $PID. Startup aborted."
         echo "If the following process is not a application process, remove the PID file and try again:"
         ps -f -p $PID
         return 0
@@ -78,12 +78,12 @@ checkProcess(){
               PID=`cat "$APP_PID"`
               ps -p $PID >/dev/null 2>&1
               if [ $? -eq 0 ] ; then
-                  echo "Application appears to still be running with PID $PID. Startup aborted."
+                  echo "@hump.name@ appears to still be running with PID $PID. Startup aborted."
                   echo "If the following process is not a application process, remove the PID file and try again:"
                   ps -f -p $PID
                   exit 1
               else
-                  echo "Application process does not exist and removing stale PID file."
+                  echo "@hump.name@ process does not exist and removing stale PID file."
                   checkRunning
                   if [ $? -eq "0" ]; then
                       echo $PID > "$APP_PID"
@@ -120,7 +120,7 @@ checkProcess(){
   else
       checkRunning
       if [ $? -eq "0" ]; then
-          echo "Application PID file($APP_PID) is missing. Update PID"
+          echo "@hump.name@ PID file($APP_PID) is missing. Update PID"
           echo $PID > "$APP_PID" # touch $APP_PID
           exit 1
       fi
@@ -177,7 +177,7 @@ runApp(){
    $APP_HOME/$EXECUTABLE >> "$APP_CONSOLE_LOG" 2>&1 &
   echo $! > "$APP_PID"
 
-  echo "Application started, PID=$!"
+  echo "@hump.name@ started, PID=$!"
 }
 
 ### Main Flow ###
