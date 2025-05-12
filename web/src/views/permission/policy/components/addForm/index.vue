@@ -239,7 +239,7 @@ const save = () => {
       description: state.form.description,
       funcIds: state.form.funcIds,
       code: state.form.code,
-      default: state.form.default0,
+      default0: state.form.default0,
       grantStage: 'MANUAL',
       type: 'USER_DEFINED',
       id: state.form.id || undefined
