@@ -7,10 +7,14 @@ import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
+import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyIdP;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 
 public interface AppOrgAuthQuery {
 
@@ -46,10 +50,20 @@ public interface AppOrgAuthQuery {
   Page<Group> appUnauthGroup(Long appId, GenericSpecification<Group> spec,
       PageRequest pageable);
 
-  Page<AuthPolicy> appAuthPolicy(Long appId, AuthOrgType orgType, Long orgId,
+  Page<AuthPolicy> orgAuthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       GenericSpecification<AuthPolicy> spec, PageRequest pageable);
 
-  Page<AuthPolicy> appUnauthPolicy(Long appId, AuthOrgType orgType, Long orgId,
+  Page<AuthPolicy> orgUnauthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       GenericSpecification<AuthPolicy> spec, PageRequest pageable);
+
+  List<Long> getAuthOrgIds(Long tenantId, Long appId, @Nullable AuthOrgType orgType,
+      @Nullable Set<String> idsFilter);
+
+  List<Long> getAuthPolicyIds(Long tenantId, Long appId, @Nullable AuthOrgType orgType,
+      @Nullable Set<String> orgIdsFilter, @Nullable Set<String> policyIdsFilter);
+
+  Page<AuthPolicyIdP> getAuthPolicyIds(Long tenantId, Long appId,
+      @Nullable AuthOrgType orgType, @Nullable Set<String> orgIdsFilter,
+      @Nullable Set<String> policyIdsFilter, Pageable pageable);
 
 }

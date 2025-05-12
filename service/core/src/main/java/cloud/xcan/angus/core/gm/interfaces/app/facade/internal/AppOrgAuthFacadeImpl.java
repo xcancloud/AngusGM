@@ -101,7 +101,7 @@ public class AppOrgAuthFacadeImpl implements AppOrgAuthFacade {
   @Override
   public PageResult<AppAuthPolicyVo> appAuthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       AuthAppOrgSearchDto dto) {
-    Page<AuthPolicy> page = appOrgAuthQuery.appAuthPolicy(appId, orgType, orgId,
+    Page<AuthPolicy> page = appOrgAuthQuery.orgAuthPolicy(appId, orgType, orgId,
         getAuthPolicySpecification(dto), dto.tranPage());
     return buildVoPageResult(page, AppOrgAuthAssembler::toAuthPolicyVo);
   }
@@ -125,7 +125,6 @@ public class AppOrgAuthFacadeImpl implements AppOrgAuthFacade {
   @NameJoin
   @Override
   public PageResult<AppUnauthTenantVo> appUnauthTenant(Long appId, UnAuthFindDto dto) {
-    dto.setOrderBy("tenant_id");
     Page<Tenant> page = appOrgAuthQuery.appUnauthTenant(appId,
         getUnAuthTenantSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, AppOrgAuthAssembler::toUnAuthTenantVo);
@@ -155,7 +154,7 @@ public class AppOrgAuthFacadeImpl implements AppOrgAuthFacade {
   @Override
   public PageResult<AppAuthPolicyVo> appUnauthPolicy(Long appId, AuthOrgType orgType,
       Long orgId, UnAuthFindDto dto) {
-    Page<AuthPolicy> page = appOrgAuthQuery.appUnauthPolicy(appId, orgType, orgId,
+    Page<AuthPolicy> page = appOrgAuthQuery.orgUnauthPolicy(appId, orgType, orgId,
         getUnAuthPolicySpecification(dto), dto.tranPage());
     return buildVoPageResult(page, AppOrgAuthAssembler::toAuthPolicyVo);
   }

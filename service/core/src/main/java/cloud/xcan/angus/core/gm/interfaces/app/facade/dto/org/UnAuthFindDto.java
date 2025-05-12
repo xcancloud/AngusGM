@@ -15,4 +15,7 @@ public class UnAuthFindDto extends PageQuery {
   @Schema(description = "Organization id.")
   private Long id;
 
+  @Schema(description = "Organization name.")
+  private String name;
+
 }

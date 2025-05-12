@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.antlr.v4.runtime.atn.SemanticContext.AND;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,6 +44,10 @@ public interface AuthPolicyRepo extends BaseRepository<AuthPolicy, Long>,
 
   long countByTenantId(Long tenantId);
 
+  @Query(value = "SELECT * FROM auth_policy WHERE app_id = ?1 AND id IN "
+      + "(SELECT DISTINCT a.policy_id FROM auth_policy_org a WHERE a.app_id = ?1 AND a.tenant_id = ?2 AND (a.grant_scope = 'TENANT_ALL_USER' OR a.default0 = 1))", nativeQuery = true)
+  List<AuthPolicy> findPoliciesOfAuthAllUser(Long appId, Long tenantId);
+
   /**
    * App pre_defined auth_policy + tenant customization policy.
    */
@@ -70,15 +75,8 @@ public interface AuthPolicyRepo extends BaseRepository<AuthPolicy, Long>,
 
   Page<AuthPolicy> findAllByIdIn(Collection<Long> ids, Pageable pageable);
 
-  @Query(value = "select * from auth_policy p WHERE (p.tenant_id = ?1 AND p.name like ?2 AND p.global = 0) or (p.global = 1 AND p.name like ?2) order by p.created_date DESC",
-      countQuery = "select count(*) from auth_policy p WHERE (p.tenant_id = ?1 AND p.name like ?2 AND p.global = 0) or (p.global = 1 AND p.name like ?2)",
-      nativeQuery = true)
-  Page<AuthPolicy> findAllPolicyByName(Long tenantId, String name, Pageable pageable);
-
-  @Query(value = "select * from auth_policy p WHERE (p.tenant_id = ?1  and p.global = 0) or (p.global = 1 ) order by p.created_date DESC",
-      countQuery = "select count(*) from auth_policy p WHERE (p.tenant_id = ?1 AND p.global = 0) or (p.global = 1)",
-      nativeQuery = true)
-  Page<AuthPolicy> findAllPolicy(Long tenantId, Pageable pageable);
+  @Query(value = "SELECT * FROM auth_policy WHERE tenant_id = ?1 AND type <> 'PRE_DEFINED' AND enabled=1 UNION SELECT * FROM auth_policy WHERE type = 'PRE_DEFINED' AND enabled=1", nativeQuery = true)
+  List<AuthPolicy> findAllPolicyByTenantId(Long tenantId);
 
   List<AuthPolicy> findAllByIdInAndDefault0(Collection<Long> ids, Boolean default0);
 

@@ -25,6 +25,9 @@ public interface AuthPolicyOrgRepo extends BaseRepository<AuthPolicyOrg, Long> {
 
   List<AuthPolicyOrg> findByTenantIdAndDefault0(Long tenantId, boolean default0);
 
+  @Query(value = "SELECT DISTINCT tenant_id FROM auth_policy_org WHERE app_id =?1 AND open_auth = 1", nativeQuery = true)
+  List<Long> findOpenAuthTenantIdByAppId(Long appId);
+
   /**
    * Each application can only have one opened authorization
    */
@@ -166,100 +169,10 @@ public interface AuthPolicyOrgRepo extends BaseRepository<AuthPolicyOrg, Long> {
       "SELECT DISTINCT po.app_id FROM auth_policy_org po WHERE po.org_id IN ?1 AND (po.org_type <> 'TENANT' OR (po.org_type = 'TENANT' AND (po.default0 = 1 OR po.grant_scope = 'TENANT_ALL_USER')))"/* Must be an authorized policy (including default)*/, nativeQuery = true)
   List<Long> findAuthAppIdsOfNonSysAdminUser(Collection<Long> orgIds);
 
-  @Query(value = "SELECT * FROM auth_policy WHERE app_id = ?1 AND id IN "
-      + "(SELECT DISTINCT a.policy_id FROM auth_policy_org a WHERE a.app_id = ?1 AND a.tenant_id = ?2 AND (a.grant_scope = 'TENANT_ALL_USER' OR a.default0 = 1))", nativeQuery = true)
-  List<AuthPolicy> findPoliciesOfAuthAllUser(Long appId, Long tenantId);
-
-  /**
-   * auth_user contains all tenant ids
-   * <p>
-   * Fix:: Parameter value element [129959128339578938] did not match expected type [java.lang.Long
-   * (n/a)] Use Page<Long> -> Page<BigInteger>
-   */
-  @Query(value =
-      "SELECT DISTINCT po.tenant_id tenantId FROM auth_policy_org po WHERE po.app_id =?1 AND po.open_auth = 1 "
-          + "AND case when CONCAT(?2,'') IS NOT NULL then po.tenant_id IN ?2 else 1=1 end",
-      countQuery =
-          "SELECT COUNT(DISTINCT po.tenant_id) FROM auth_policy_org po WHERE po.app_id =?1 "
-              + "AND po.open_auth = 1 AND case when CONCAT(?2,'')  IS NOT NULL then po.tenant_id IN ?2 else 1=1 end", nativeQuery = true)
-  Page<BigInteger> findAuthTenantIdsByAuthPolices(Long appId, Collection<?> tenantIds,
-      Pageable pageable);
-
-  @Query(value =
-      "SELECT DISTINCT po.org_id FROM auth_policy_org po WHERE po.tenant_id = ?2 AND po.app_id =?1 "
-          + "AND case when ?3 IS NOT NULL then po.org_id IN (?3) else 1=1 end", nativeQuery = true)
-  List<Long> findAllAuthOrgIdsByAuthPolices(Long appId, Long tenantId,
-      Collection<Long> containOrgIds);
-
-  @Query(value =
-      "SELECT DISTINCT po.org_id FROM auth_policy_org po WHERE po.tenant_id = ?2 AND po.app_id = ?1 "
-          + "AND po.org_type = 'DEPT' AND case when ?3 IS NOT NULL then po.org_id IN (?3) else 1=1 end", nativeQuery = true)
-  List<Long> findAllAuthDeptIdsByAuthPolices(Long appId, Long tenantId,
-      Collection<?> containDeptIds);
-
-  @Query(value =
-      "SELECT DISTINCT po.org_id FROM auth_policy_org po WHERE po.tenant_id = ?2 AND po.app_id = ?1 "
-          + "AND po.org_type = 'GROUP' AND case when ?3 IS NOT NULL then po.org_id IN (?3) else 1=1 end", nativeQuery = true)
-  List<Long> findAllAuthGroupIdsByAuthPolices(Long appId, Long tenantId,
-      Collection<?> containGroupIds);
-
-  /**
-   * auth_user contains all tenant ids
-   */
-  @Query(value =
-      "SELECT DISTINCT au.tenant_id FROM auth_user au WHERE case when CONCAT(?2,'')  IS NOT NULL then au.tenant_id IN ?2 else 1=1 end "
-          + "AND au.tenant_id NOT IN (SELECT DISTINCT po.tenant_id FROM auth_policy_org po WHERE po.app_id =?1 AND po.open_auth = 1)",
-      countQuery =
-          "SELECT count(DISTINCT au.tenant_id) FROM auth_user au WHERE case when CONCAT(?2,'')  IS NOT NULL then au.tenant_id IN ?2 else 1=1 end "
-              + "AND au.tenant_id NOT IN (SELECT DISTINCT po.tenant_id FROM auth_policy_org po WHERE po.app_id =?1 AND po.open_auth = 1)", nativeQuery = true)
-  Page<BigInteger> findUnAuthTenantIdsBysByAuthPolices(Long appId, Collection<?> tenantIds,
-      Pageable pageable);
-
   List<AuthPolicyOrg> findByAppIdAndOrgIdAndOrgType(Long appId, Long orgId, AuthOrgType orgType);
 
   List<AuthPolicyOrg> findByAppIdAndOrgIdInAndOrgTypeAndPolicyIdIn(Long appId,
       Collection<Long> orgIds, AuthOrgType orgType, Collection<Long> policyIds);
-
-  /**
-   * Fix:: Parameter value element [129959128339578938] did not match expected type [java.lang.Long
-   * (n/a)] Use Page<Long> -> Page<BigInteger>
-   */
-  @Query(value =
-      "SELECT DISTINCT policy_id FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_type = ?3 AND org_id = ?4 "
-          + " AND case when CONCAT(?5,'')  IS NOT NULL then au.org_id IN (?5) else 1=1 end",
-      countQuery =
-          "SELECT COUNT(DISTINCT policy_id) FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_type = ?3 AND org_id = ?4 "
-              + " AND case when CONCAT(?5,'') IS NOT NULL then au.org_id IN (?5) else 1=1 end", nativeQuery = true)
-  Page<BigInteger> findAuthPolicyIdsByAppIdAndTenantIdAndOrgTypeAndOrgId(Long appId, Long tenantId,
-      String orgType, Long orgId, Collection<?> containPolicyIds, PageRequest pageable);
-
-  @Query(value =
-      "SELECT DISTINCT policy_id FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_type = ?3 AND org_id <> ?4 "
-          + " AND case when CONCAT(?5,'') IS NOT NULL then au.org_id IN (?5) else 1=1 end",
-      countQuery =
-          "SELECT COUNT(DISTINCT policy_id) FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_type = ?3 AND org_id <> ?4 "
-              + " AND case when CONCAT(?5,'') IS NOT NULL then au.org_id IN (?5) else 1=1 end", nativeQuery = true)
-  Page<BigInteger> findAuthPolicyIdsByAppIdAndTenantIdAndOrgTypeAndOrgIdNot(Long appId,
-      Long tenantId, String orgType, Long orgId, Collection<?> containPolicyIds,
-      PageRequest pageable);
-
-  @Query(value =
-      "SELECT DISTINCT policy_id FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_id IN ?3 "
-          + " AND case when CONCAT(?4,'') IS NOT NULL then au.org_id IN (?4) else 1=1 end",
-      countQuery =
-          "SELECT COUNT(DISTINCT policy_id) FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_id IN ?3 "
-              + " AND case when CONCAT(?4,'') IS NOT NULL then au.org_id IN (?4) else 1=1 end", nativeQuery = true)
-  Page<BigInteger> findAuthPolicyIdsByAppIdAndTenantIdAndOrgIdIn(Long appId, Long tenantId,
-      Collection<?> orgIds, Collection<?> containPolicyIds, PageRequest pageable);
-
-  @Query(value =
-      "SELECT DISTINCT policy_id FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_id IN ?3 "
-          + " AND case when CONCAT(?4,'') IS NOT NULL then au.org_id IN (?4) else 1=1 end",
-      countQuery =
-          "SELECT COUNT(DISTINCT policy_id) FROM auth_policy_org WHERE app_id = ?1 AND tenant_id = ?2 AND org_id NOT IN ?3 "
-              + " AND case when CONCAT(?4,'') IS NOT NULL then au.org_id IN (?4) else 1=1 end", nativeQuery = true)
-  Page<BigInteger> findAuthPolicyIdsByAppIdAndTenantIdAndOrgIdInNot(Long appId, Long tenantId,
-      Collection<?> orgIds, Collection<?> containPolicyIds, PageRequest pageable);
 
   @Query(value = "SELECT DISTINCT app_id FROM auth_policy_org WHERE tenant_id = ?1", nativeQuery = true)
   List<Long> findAuthAppIdsByTenantId(Long tenantId);

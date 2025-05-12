@@ -46,16 +46,6 @@ public interface GroupRepo extends NameJoinRepository<Group, Long>, BaseReposito
   Page<Long> findAllIds(Pageable pageable);
 
   @Query(value =
-      "SELECT * FROM group0 WHERE tenant_id = ?1 AND enabled = 1 AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end"
-          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      countQuery =
-          "SELECT COUNT(*) FROM group0 WHERE tenant_id = ?1 AND enabled = 1 AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end"
-              + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      nativeQuery = true)
-  Page<Group> findValidByOrgIdAndIdAndName(Long tenantId, Collection<?> orgIds,
-      Collection<?> idsFilter, String nameFilter, Pageable page);
-
-  @Query(value =
       "SELECT * FROM group0 WHERE tenant_id = ?1 AND enabled = 1"
           + " AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then name like CONCAT('%',?3,'%') else 1=1 end",
       countQuery =
@@ -64,16 +54,6 @@ public interface GroupRepo extends NameJoinRepository<Group, Long>, BaseReposito
       nativeQuery = true)
   Page<Group> findAllValidByIdAndName(Long tenantId, Collection<?> idsFilter, String nameFilter,
       Pageable page);
-
-  @Query(value =
-      "SELECT * FROM group0 WHERE tenant_id = ?1 AND enabled = 1 AND case when CONCAT(?2,'') IS NOT NULL then id NOT IN (?2) else 1=1 end"
-          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      countQuery =
-          "SELECT COUNT(*) FROM group0 WHERE tenant_id = ?1 AND enabled = 1 AND case when CONCAT(?2,'') IS NOT NULL then id NOT IN (?2) else 1=1 end"
-              + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      nativeQuery = true)
-  Page<Group> findValidByOrgIdNotAndIdAndName(Long tenantId, Collection<?> orgIds,
-      Collection<?> idsFilter, String nameFilter, Pageable page);
 
   Integer countByTenantId(Long tenantId);
 

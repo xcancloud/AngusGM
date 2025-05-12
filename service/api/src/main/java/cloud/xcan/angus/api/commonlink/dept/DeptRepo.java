@@ -45,65 +45,6 @@ public interface DeptRepo extends NameJoinRepository<Dept, Long>, BaseRepository
   @Query(value = "SELECT DISTINCT pid FROM dept WHERE pid IN (?1)", nativeQuery = true)
   Set<Long> findPidBySubPid(Set<Long> pids);
 
-  /**
-   * <pre>
-   * * SQL Exception:: 1241 - Operand should contain 1 column(s), Time: 0.023000s
-   * ----------------------------------------------------
-   * SELECT	* FROM	dept WHERE tenant_id = 1 AND
-   *  CASE
-   * 	 WHEN ( 129959128339579154, 133378265904578570, 132224012771131413, 125935710350868495 ) IS NOT NULL
-   * 	  THEN id IN ( 129959128339579154, 133378265904578570, 132224012771131413, 125935710350868495 ) ELSE 1 = 1
-   *  END
-   *
-   * *** Fix:: use case when ?2 -> case when CONCAT(?2,'') ***
-   * SELECT	* FROM	dept WHERE tenant_id = 1 AND
-   *  CASE
-   * 	 WHEN '129959128339579154, 133378265904578570, 132224012771131413, 125935710350868495' IS NOT NULL
-   * 	 THEN id IN ( 129959128339579154, 133378265904578570, 132224012771131413, 125935710350868495 ) ELSE 1 = 1
-   *  END
-   *
-   * SQL Exception:: 1064 - You have an error in your SQL syntax when `Collection is null`
-   * ----------------------------------------------------
-   * SELECT	* FROM	dept WHERE tenant_id = 1 AND
-   *  CASE WHEN CONCAT(null,'') IS NOT NULL then id IN null else 1=1
-   *  END
-   *
-   * *** Fix:: case when CONCAT(?2,'') IS NOT NULL then id IN ?2 -> case when CONCAT(?2,'') IS NOT NULL then id IN (?2) ***
-   * SELECT	* FROM	dept WHERE tenant_id = 1 AND
-   *  CASE WHEN CONCAT(null,'') IS NOT NULL then id IN (null) else 1=1
-   *  END
-   * <pre/>
-   */
-  @Query(value =
-      "SELECT * FROM dept WHERE tenant_id = ?1 AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end"
-          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      countQuery =
-          "SELECT COUNT(*) FROM dept WHERE tenant_id = ?1 AND case when CONCAT(?2,'') IS NOT NULL then id IN (?2) else 1=1 end"
-              + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      nativeQuery = true)
-  Page<Dept> findByOrgIdAndIdAndName(Long tenantId, Collection<?> orgIds, Collection<?> idsFilter,
-      String nameFilter, Pageable page);
-
-  @Query(value =
-      "SELECT * FROM dept WHERE tenant_id = ?1 "
-          + " AND case when CONCAT(?2,'') IS NOT NULL then id IN CONCAT(?2,'') else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then name like CONCAT('%',?3,'%') else 1=1 end",
-      countQuery =
-          "SELECT COUNT(*) FROM dept WHERE tenant_id = ?1"
-              + " AND case when CONCAT(?2,'') IS NOT NULL then id IN CONCAT(?2,'') else 1=1 end AND case when CONCAT(?3,'') IS NOT NULL then name like CONCAT('%',?3,'%') else 1=1 end",
-      nativeQuery = true)
-  Page<Dept> findAllByIdAndName(Long tenantId, Collection<?> idsFilter, String nameFilter,
-      Pageable page);
-
-  @Query(value =
-      "SELECT * FROM dept WHERE tenant_id = ?1 AND case when CONCAT(?2,'') IS NOT NULL then id NOT IN (?2) else 1=1 end"
-          + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      countQuery =
-          "SELECT COUNT(*) FROM dept WHERE tenant_id = ?1 AND case when CONCAT(?2,'') IS NOT NULL then id NOT IN (?2) else 1=1 end"
-              + " AND case when CONCAT(?3,'') IS NOT NULL then id IN (?3) else 1=1 end AND case when CONCAT(?4,'') IS NOT NULL then name like CONCAT('%',?4,'%') else 1=1 end",
-      nativeQuery = true)
-  Page<Dept> findByOrgIdNotAndIdAndName(Long tenantId, Collection<?> orgIds,
-      Collection<?> idsFilter, String nameFilter, Pageable page);
-
   @Query(value = "SELECT * FROM dept WHERE tenant_id = ?1 AND parent_like_id LIKE CONCAT(?2,'%')", nativeQuery = true)
   List<Dept> findSubDeptsByParentLikeId(Long optTenantId, String subParentLikeId);
 
@@ -117,6 +58,5 @@ public interface DeptRepo extends NameJoinRepository<Dept, Long>, BaseRepository
           + " WHERE parent_like_id LIKE CONCAT(?2,'%')", nativeQuery = true)
   void updateSubParentByOldParentLikeId(int newDiffLevel, String oldSubParentLikeId,
       String newSubParentLikeId);
-
 
 }

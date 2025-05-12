@@ -2,13 +2,15 @@ package cloud.xcan.angus.core.gm.application.query.app.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findAllIdInAndEqualValues;
-import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findMatchAndEqualValue;
+import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.getNameFilterValue;
+import static cloud.xcan.angus.core.utils.PaginationUtils.paginate;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
-import static cloud.xcan.angus.spec.utils.ObjectUtils.emptySafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.dept.Dept;
@@ -30,19 +32,26 @@ import cloud.xcan.angus.core.gm.domain.app.AppRepo;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicyRepo;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthOrgPolicyP;
+import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyIdP;
+import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
+import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgP;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
+import cloud.xcan.angus.core.jpa.entity.projection.TenantId;
+import cloud.xcan.angus.core.utils.PaginationUtils;
+import cloud.xcan.angus.remote.search.SearchCriteria;
 import cloud.xcan.angus.spec.principal.PrincipalContext;
 import jakarta.annotation.Resource;
-import java.math.BigInteger;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 
 @Biz
 public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
@@ -89,23 +98,28 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected Page<Tenant> process() {
-        Set<String> allIds = findAllIdInAndEqualValues(spec.getCriteria(),
-            "id", true);
-        Page<BigInteger> tenantIdsPage = authPolicyOrgRepo
-            .findAuthTenantIdsByAuthPolices(appId, allIds, pageable);
+        Set<String> allIds = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+
+        Set<SearchCriteria> criteria = SearchCriteria.criteria(
+            SearchCriteria.equal("appId", appId), SearchCriteria.equal("openAuth", true),
+            SearchCriteria.in("tenantId", allIds));
+        Page<TenantId> tenantIdsPage = authPolicyOrgRepo.findProjectionByFilters(
+            AuthPolicyOrg.class, TenantId.class, new GenericSpecification<>(criteria, true),
+            pageable);
+
         if (!tenantIdsPage.hasContent()) {
           return Page.empty();
         }
-        return new PageImpl<>(tenantRepo.findAllById(tenantIdsPage.getContent().stream().map(
-            BigInteger::longValue).collect(Collectors.toList())), pageable,
-            tenantIdsPage.getTotalElements());
+
+        List<Tenant> pageTenants = tenantRepo.findAllById(tenantIdsPage.getContent()
+            .stream().map(TenantId::getTenantId).collect(Collectors.toList()));
+        return new PageImpl<>(pageTenants, pageable, tenantIdsPage.getTotalElements());
       }
     }.execute();
   }
 
   @Override
-  public Page<User> appAuthUser(Long appId, GenericSpecification<User> spec,
-      PageRequest pageable) {
+  public Page<User> appAuthUser(Long appId, GenericSpecification<User> spec, PageRequest pageable) {
     return new BizTemplate<Page<User>>(false) {
       final Long tenantId = getOptTenantId();
 
@@ -118,33 +132,30 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       @Override
       protected Page<User> process() {
         // Whether all tenant users are authorized
-        boolean tenantAllUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
-        PrincipalContext.addExtension("globalAuth", tenantAllUserAuth);
+        boolean allTenantUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
+        PrincipalContext.addExtension("globalAuth", allTenantUserAuth);
 
-        // Query full tenant users when tenantAllUserAuth = false
-        List<Long> allAuthOrgIds = null;
-        if (!tenantAllUserAuth) {
+        // Query full tenant users when allTenantUserAuth = false
+        List<Long> authOrgIds = null;
+        if (!allTenantUserAuth) {
           // Query tenant user authorized organizations
-          allAuthOrgIds = authPolicyOrgRepo.findAllAuthOrgIdsByAuthPolices(appId, tenantId, null);
-          if (isEmpty(allAuthOrgIds)) {
+          Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+
+          authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.USER, idsFilter);
+
+          if (isEmpty(authOrgIds)) {
             return Page.empty();
           }
         }
 
-        // Query user pageable information
-        Set<String> userIdsFilter = findAllIdInAndEqualValues(
-            spec.getCriteria(), "id", true);
-        String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "fullName", true);
-
-        Page<User> userPage = tenantAllUserAuth || isEmpty(allAuthOrgIds) ?
-            userRepo.findAllValidByIdAndName(tenantId,
-                emptySafe(userIdsFilter, null), nameMatch, pageable) :
-            userRepo.findValidByOrgIdAndIdAndName(tenantId, allAuthOrgIds,
-                emptySafe(userIdsFilter, null), nameMatch, pageable);
-        if (userPage.isEmpty()) {
-          return Page.empty();
+        // Query user page
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("enabled", true),
+            SearchCriteria.equal("deleted", false)));
+        if (!allTenantUserAuth) {
+          spec.getCriteria().add(SearchCriteria.in("id", authOrgIds));
         }
+        Page<User> userPage = userRepo.findAll(spec, pageable);
 
         // Query user authorized polices
         setUserAuthPolicy(appId, tenantId, userPage.getContent());
@@ -154,8 +165,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
   }
 
   @Override
-  public Page<Dept> appAuthDept(Long appId, GenericSpecification<Dept> spec,
-      PageRequest pageable) {
+  public Page<Dept> appAuthDept(Long appId, GenericSpecification<Dept> spec, PageRequest pageable) {
     return new BizTemplate<Page<Dept>>(false) {
       final Long tenantId = getOptTenantId();
 
@@ -167,24 +177,16 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected Page<Dept> process() {
-        Set<String> deptIdsFilter = findAllIdInAndEqualValues(
-            spec.getCriteria(), "id", true);
-
-        // Query authorized department
-        List<Long> authDeptIds = authPolicyOrgRepo.findAllAuthDeptIdsByAuthPolices(
-            appId, tenantId, emptySafe(deptIdsFilter, null));
-        if (isEmpty(authDeptIds)) {
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.DEPT, idsFilter);
+        if (isEmpty(authOrgIds)) {
           return Page.empty();
         }
 
-        // Query department information
-        String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "name", true);
-        Page<Dept> deptPage = deptRepo.findByOrgIdAndIdAndName(tenantId,
-            emptySafe(authDeptIds, null), emptySafe(deptIdsFilter, null), nameMatch, pageable);
-        if (deptPage.isEmpty()) {
-          return Page.empty();
-        }
+        // Query department page
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.equal("tenantId", tenantId), SearchCriteria.in("id", authOrgIds)));
+        Page<Dept> deptPage = deptRepo.findAll(spec, pageable);
 
         // Query dept authorized polices
         setDeptAuthPolicy(appId, tenantId, deptPage.getContent());
@@ -207,22 +209,17 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected Page<Group> process() {
-        Set<String> groupIdsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
-
-        // Query authorized department
-        List<Long> authGroupIds = authPolicyOrgRepo.findAllAuthGroupIdsByAuthPolices(
-            appId, tenantId, emptySafe(groupIdsFilter, null));
-        if (isEmpty(authGroupIds)) {
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.GROUP, idsFilter);
+        if (isEmpty(authOrgIds)) {
           return Page.empty();
         }
 
-        // Query department information
-        String nameMatch = findMatchAndEqualValue(spec.getCriteria(), "name", true);
-        Page<Group> groupPage = groupRepo.findValidByOrgIdAndIdAndName(tenantId,
-            emptySafe(authGroupIds, null), emptySafe(groupIdsFilter, null), nameMatch, pageable);
-        if (groupPage.isEmpty()) {
-          return Page.empty();
-        }
+        // Query  information
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.equal("tenantId", tenantId), SearchCriteria.in("id", authOrgIds),
+            SearchCriteria.equal("enabled", true)));
+        Page<Group> groupPage = groupRepo.findAll(spec, pageable);
 
         // Query group authorized polices
         setGroupAuthPolicy(appId, tenantId, groupPage.getContent());
@@ -244,7 +241,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected List<AuthPolicy> process() {
-        return authPolicyOrgRepo.findPoliciesOfAuthAllUser(appId, tenantId);
+        return authPolicyRepo.findPoliciesOfAuthAllUser(appId, tenantId);
       }
     }.execute();
   }
@@ -278,8 +275,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
               return true;
             }
             // Whether all tenant users are authorized
-            boolean tenantAllUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
-            if (tenantAllUserAuth) {
+            boolean allTenantUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
+            if (allTenantUserAuth) {
               return true;
             }
             // Whether all tenant users are authorized
@@ -294,10 +291,6 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
             // Downward execute
           default:
             // Whether all tenant users are authorized
-            // tenantAllUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
-            // if (tenantAllUserAuth) {
-            //  return true;
-            // }
             return !authPolicyOrgRepo.findByAppIdAndOrgIdAndOrgType(appId, orgId, orgType)
                 .isEmpty();
         }
@@ -314,8 +307,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       @Override
       protected void checkParams() {
         // Check the org existed
-        assertTrue(!orgType.equals(AuthOrgType.TENANT)
-            || orgId.equals(tenantId), "The optTenantId is missing or incorrect");
+        assertTrue(!orgType.equals(AuthOrgType.TENANT) || orgId.equals(tenantId),
+            "The optTenantId is missing or incorrect");
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
       }
 
@@ -345,12 +338,12 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
             // Downward execute
           default:
             // Whether all tenant org are authorized
-            authAppIds = authPolicyOrgRepo.findAuthAppIdsByTenantIdAndOrgIdAndOrgType(tenantId,
-                orgId, orgType.getValue());
+            authAppIds = authPolicyOrgRepo.findAuthAppIdsByTenantIdAndOrgIdAndOrgType(
+                tenantId, orgId, orgType.getValue());
         }
 
         if (isEmpty(authAppIds)) {
-          return Collections.emptyList();
+          return emptyList();
         }
 
         List<App> apps = appRepo.findAllById(authAppIds).stream().filter(
@@ -365,7 +358,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
   }
 
   @Override
-  public Page<AuthPolicy> appAuthPolicy(Long appId, AuthOrgType orgType, Long orgId,
+  public Page<AuthPolicy> orgAuthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       GenericSpecification<AuthPolicy> spec, PageRequest pageable) {
     return new BizTemplate<Page<AuthPolicy>>() {
       final Long tenantId = getOptTenantId();
@@ -374,8 +367,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       @Override
       protected void checkParams() {
         // Check the org existed
-        assertTrue(!orgType.equals(AuthOrgType.TENANT)
-            || orgId.equals(tenantId), "The optTenantId is missing or incorrect");
+        assertTrue(!orgType.equals(AuthOrgType.TENANT) || orgId.equals(tenantId),
+            "The optTenantId is missing or incorrect");
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
         // Check the application is opened
         appOpenQuery.checkAndFind(appId, tenantId, false);
@@ -385,42 +378,19 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       protected Page<AuthPolicy> process() {
         closeMultiTenantCtrl();
 
-        Set<String> policyIdsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
-
         // Query authorized policy
-        Page<BigInteger> authPolicyIdsPage;
-        switch (orgType) {
-          case USER:
-            // Query tenant user authorized organizations
-            List<Long> allAuthOrgIds = authPolicyOrgRepo
-                .findAllAuthOrgIdsByAuthPolices(appId, tenantId, null);
-            if (isEmpty(allAuthOrgIds)) {
-              return Page.empty();
-            }
-            authPolicyIdsPage = authPolicyOrgRepo
-                .findAuthPolicyIdsByAppIdAndTenantIdAndOrgIdIn(appId, tenantId,
-                    allAuthOrgIds, policyIdsFilter, pageable);
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        Page<AuthPolicyIdP> policyIdPage = getAuthPolicyIds(tenantId, appId, orgType,
+            Set.of(orgId.toString()), idsFilter, pageable);
 
-            break;
-          case TENANT:
-            // Downward execute
-          case GROUP:
-            // Downward execute
-          case DEPT:
-            // Downward execute
-          default: {
-            authPolicyIdsPage = authPolicyOrgRepo
-                .findAuthPolicyIdsByAppIdAndTenantIdAndOrgTypeAndOrgId(appId, tenantId,
-                    orgType.getValue(), orgId, policyIdsFilter, pageable);
-          }
-        }
-
-        if (isNull(authPolicyIdsPage)) {
+        if (isNull(policyIdPage)) {
           return Page.empty();
         }
-        return new PageImpl<>(authPolicyRepo.findAllById(
-            authPolicyIdsPage.getContent().stream().map(BigInteger::longValue).collect(
-                Collectors.toList())), pageable, authPolicyIdsPage.getTotalElements());
+
+        List<AuthPolicy> pagePolicies = authPolicyRepo.findAllById(
+            policyIdPage.getContent().stream().map(AuthPolicyIdP::getPolicyId)
+                .collect(Collectors.toList()));
+        return new PageImpl<>(pagePolicies, pageable, policyIdPage.getTotalElements());
       }
     }.execute();
   }
@@ -459,16 +429,13 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected Page<Tenant> process() {
-        Set<String> allIds = findAllIdInAndEqualValues(spec.getCriteria(),
-            "id", true);
-        Page<BigInteger> tenantIdsPage = authPolicyOrgRepo
-            .findUnAuthTenantIdsBysByAuthPolices(appId, allIds, pageable);
-        if (!tenantIdsPage.hasContent()) {
-          return Page.empty();
-        }
-        return new PageImpl<>(tenantRepo.findAllById(tenantIdsPage.getContent().stream()
-            .map(BigInteger::longValue).collect(Collectors.toList())), pageable,
-            tenantIdsPage.getTotalElements());
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        List<Long> authIds = authPolicyOrgRepo.findOpenAuthTenantIdByAppId(appId);
+
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.in("tenantId", idsFilter),
+            SearchCriteria.notIn("tenantId", authIds)));
+        return tenantRepo.findAll(spec, pageable);
       }
     }.execute();
   }
@@ -488,27 +455,23 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       @Override
       protected Page<User> process() {
         // Whether all tenant users are authorized
-        boolean tenantAllUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
-        if (tenantAllUserAuth) {
+        boolean allTenantUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
+        if (allTenantUserAuth) {
           return Page.empty();
         }
 
         // Query tenant user authorized organizations
-        Set<String> userIdsFilter = findAllIdInAndEqualValues(
-            spec.getCriteria(), "id", true);
-        String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "fullName", true);
-        List<Long> allAuthOrgIds = authPolicyOrgRepo.findAllAuthOrgIdsByAuthPolices(appId,
-            tenantId, null);
-        if (isEmpty(allAuthOrgIds)) {
-          // Query unauthorized from all users when authorized users is empty
-          return userRepo.findAllValidByIdAndName(tenantId, emptySafe(userIdsFilter, null),
-              nameMatch, pageable);
-        }
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, null, null);
+        Set<Long> authUserIds =
+            isNotEmpty(authOrgIds) ? userManager.findUserIdsByOrgIds(authOrgIds) : null;
 
-        // Query unauthorized users
-        return userRepo.findValidByOrgIdNotAndIdAndName(tenantId, allAuthOrgIds, null,
-            emptySafe(userIdsFilter, null), nameMatch, pageable);
+        // Query user page
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("enabled", true),
+            SearchCriteria.equal("deleted", false), SearchCriteria.in("id", idsFilter),
+            SearchCriteria.notIn("id", authUserIds)));
+        return userRepo.findAll(spec, pageable);
       }
     }.execute();
   }
@@ -527,18 +490,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected Page<Dept> process() {
-        // Query authorized department
-        List<Long> authDeptIds = authPolicyOrgRepo
-            .findAllAuthDeptIdsByAuthPolices(appId, tenantId, null);
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.DEPT, null);
 
-        // Query unauthorized department information
-        Set<String> deptIdsFilter = findAllIdInAndEqualValues(
-            spec.getCriteria(), "id", true);
-        String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "name", true);
-
-        return deptRepo.findByOrgIdNotAndIdAndName(tenantId, emptySafe(authDeptIds, null),
-            emptySafe(deptIdsFilter, null), nameMatch, pageable);
+        // Query department page
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.equal("tenantId", tenantId), SearchCriteria.in("id", idsFilter),
+            SearchCriteria.notIn("id", authOrgIds)));
+        return deptRepo.findAll(spec, pageable);
       }
     }.execute();
   }
@@ -557,21 +516,20 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected Page<Group> process() {
-        // Query authorized group
-        List<Long> authGroupIds = authPolicyOrgRepo
-            .findAllAuthGroupIdsByAuthPolices(appId, tenantId, null);
-        // Query unauthorized group information
-        Set<String> groupIdsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
-        String nameMatch = findMatchAndEqualValue(spec.getCriteria(),
-            "name", true);
-        return groupRepo.findValidByOrgIdNotAndIdAndName(tenantId, emptySafe(authGroupIds, null),
-            emptySafe(groupIdsFilter, null), nameMatch, pageable);
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.GROUP, null);
+
+        // Query group page
+        spec.getCriteria().addAll(SearchCriteria.criteria(
+            SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("enabled", true),
+            SearchCriteria.in("id", idsFilter), SearchCriteria.notIn("id", authOrgIds)));
+        return groupRepo.findAll(spec, pageable);
       }
     }.execute();
   }
 
   @Override
-  public Page<AuthPolicy> appUnauthPolicy(Long appId, AuthOrgType orgType, Long orgId,
+  public Page<AuthPolicy> orgUnauthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       GenericSpecification<AuthPolicy> spec, PageRequest pageable) {
     return new BizTemplate<Page<AuthPolicy>>() {
       final Long tenantId = getOptTenantId();
@@ -580,8 +538,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       @Override
       protected void checkParams() {
         // Check the org existed
-        assertTrue(!orgType.equals(AuthOrgType.TENANT)
-            || orgId.equals(tenantId), "The optTenantId is missing or incorrect");
+        assertTrue(!orgType.equals(AuthOrgType.TENANT) || orgId.equals(tenantId),
+            "The optTenantId is missing or incorrect");
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
         // Check the application is opened
         appOpenQuery.checkAndFind(appId, tenantId, false);
@@ -591,44 +549,68 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       protected Page<AuthPolicy> process() {
         closeMultiTenantCtrl();
 
-        Set<?> policyIdsFilter = findAllIdInAndEqualValues(
-            spec.getCriteria(), "id", true);
-
         // Query authorized policy
-        Page<BigInteger> authPolicyIdsPage;
-        switch (orgType) {
-          case USER:
-            // Query tenant user authorized organizations
-            List<Long> allAuthOrgIds = authPolicyOrgRepo
-                .findAllAuthOrgIdsByAuthPolices(appId, tenantId, null);
-            if (isEmpty(allAuthOrgIds)) {
-              return Page.empty();
-            }
-            authPolicyIdsPage = authPolicyOrgRepo
-                .findAuthPolicyIdsByAppIdAndTenantIdAndOrgIdInNot(appId, tenantId,
-                    allAuthOrgIds, policyIdsFilter, pageable);
-            break;
-          case TENANT:
-            // Downward execute
-          case GROUP:
-            // Downward execute
-          case DEPT:
-            // Downward execute
-          default: {
-            authPolicyIdsPage = authPolicyOrgRepo
-                .findAuthPolicyIdsByAppIdAndTenantIdAndOrgTypeAndOrgIdNot(appId, tenantId,
-                    orgType.getValue(), orgId, policyIdsFilter, pageable);
-          }
-        }
-        if (isNull(authPolicyIdsPage)) {
-          return Page.empty();
-        }
+        List<Long> authPolicyIds = getAuthPolicyIds(tenantId, appId, orgType,
+            Set.of(orgId.toString()), null);
 
-        return new PageImpl<>(authPolicyRepo.findAllById(authPolicyIdsPage.getContent()
-            .stream().map(BigInteger::longValue).collect(Collectors.toList())), pageable,
-            authPolicyIdsPage.getTotalElements());
+        Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
+        String nameFilter = getNameFilterValue(spec.getCriteria());
+
+        List<AuthPolicy> policies = authPolicyRepo.findAllPolicyByTenantId(tenantId).stream()
+            .filter(x -> x.getAppId().equals(appId)).filter(x -> !authPolicyIds.contains(x.getId()))
+            .filter(x -> idsFilter.isEmpty() || idsFilter.contains(x.getId().toString()))
+            .filter(x -> nameFilter.isEmpty() || x.getName().contains(nameFilter))
+            .toList();
+
+        return paginate(policies, pageable);
       }
     }.execute();
+  }
+
+  @Override
+  public List<Long> getAuthOrgIds(Long tenantId, Long appId, @Nullable AuthOrgType orgType,
+      @Nullable Set<String> idsFilter) {
+    Set<SearchCriteria> criteria = getOrgSearchCriteria(tenantId, appId, orgType, idsFilter);
+    return authPolicyOrgRepo.findProjectionByFilters(AuthPolicyOrg.class,
+            AuthPolicyOrgP.class, new GenericSpecification<>(criteria))
+        .stream().map(AuthPolicyOrgP::getOrgId).distinct().toList();
+  }
+
+  @Override
+  public List<Long> getAuthPolicyIds(Long tenantId, Long appId, @Nullable AuthOrgType orgType,
+      @Nullable Set<String> orgIdsFilter, @Nullable Set<String> policyIdsFilter) {
+    Set<SearchCriteria> criteria = getOrgSearchCriteria(tenantId, appId, orgType, orgIdsFilter);
+    if (isNotEmpty(policyIdsFilter)) {
+      criteria.add(SearchCriteria.in("policyId", policyIdsFilter));
+    }
+    return authPolicyOrgRepo.findProjectionByFilters(AuthPolicyOrg.class,
+            AuthPolicyOrgP.class, new GenericSpecification<>(criteria))
+        .stream().map(AuthPolicyOrgP::getPolicyId).distinct().toList();
+  }
+
+  @Override
+  public Page<AuthPolicyIdP> getAuthPolicyIds(Long tenantId, Long appId,
+      @Nullable AuthOrgType orgType, @Nullable Set<String> orgIdsFilter,
+      @Nullable Set<String> policyIdsFilter, Pageable pageable) {
+    Set<SearchCriteria> criteria = getOrgSearchCriteria(tenantId, appId, orgType, orgIdsFilter);
+    if (isNotEmpty(policyIdsFilter)) {
+      criteria.add(SearchCriteria.in("policyId", policyIdsFilter));
+    }
+    return authPolicyOrgRepo.findProjectionByFilters(AuthPolicyOrg.class,
+        AuthPolicyIdP.class, new GenericSpecification<>(criteria), pageable);
+  }
+
+  private static @NotNull Set<SearchCriteria> getOrgSearchCriteria(Long tenantId, Long appId,
+      AuthOrgType orgType, Set<String> orgIdsFilter) {
+    Set<SearchCriteria> criteria = SearchCriteria.criteria(
+        SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("appId", appId));
+    if (nonNull(orgType)) {
+      criteria.add(SearchCriteria.equal("orgType", orgType.getValue()));
+    }
+    if (isNotEmpty(orgIdsFilter)) {
+      criteria.add(SearchCriteria.in("orgId", orgIdsFilter));
+    }
+    return criteria;
   }
 
   private void setUserAuthPolicy(Long appId, Long tenantId, List<User> users) {
