@@ -299,18 +299,14 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
 
       @Override
       protected App process() {
-        // Join application apis
-        if (joinApi) {
-          appFuncQuery.setApis(appDb);
-        }
-
         // Query all functions of application or _ADMIN policy
-        Long appId = appDb.getId();
         // Note: Returning disabled is mandatory
         // The front-end needs to display disabled data copywriting
-        List<AppFunc> appAllFuncs = appFuncQuery.findAllByAppId(appId, onlyEnabled);
+        List<AppFunc> appAllFuncs = appFuncQuery.findAllByAppId(appDb.getId(), onlyEnabled);
+
         // Join function apis
         if (joinApi) {
+          appFuncQuery.setApis(appDb);
           appFuncQuery.setApis(appAllFuncs);
         }
         // Join function tags
@@ -321,35 +317,35 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
         // Operation and application administrator queries all application functions.
         boolean isAdmin = judgeIsAdminAppFunc(appDb, userDb);
         if (isAdmin) {
+          List<AppFunc> appFunc = appAllFuncs.stream()
+              .filter(x -> x.hasTags(applicationInfo.getEditionType()))
+              .map(x -> x.setHasAuth(true)).collect(Collectors.toList());
           if (joinTag) {
-            List<AppFunc> appFunc = appAllFuncs.stream()
-                .filter(x -> x.hasTags(applicationInfo.getEditionType()))
-                .map(x -> x.setHasAuth(true)).collect(Collectors.toList());
-            return appDb.setAppFunc(appFunc);
+            return appDb.setAppFunc(
+                appFunc.stream().filter(x -> x.hasTags(applicationInfo.getEditionType()))
+                    .collect(Collectors.toList()));
           }
-          return appDb.setAppFunc(appAllFuncs.stream().map(x -> x.setHasAuth(true))
-              .collect(Collectors.toList()));
+          return appDb.setAppFunc(appFunc);
         }
 
         // Query the authorized functions of non admin user
         List<Long> allOrgIds = userManager.getValidOrgAndUserIds(userId);
         allOrgIds.add(tenantId);
         List<Long> authPolicyIds = authPolicyOrgRepo.findAuthPolicyIdsOfNonSysAdminUser(
-            appId, tenantId, allOrgIds);
+            appDb.getId(), tenantId, allOrgIds);
 
         Map<Long, AppFunc> appHasAuthFuncsMap = isEmpty(authPolicyIds)
             ? Collections.emptyMap() : appFuncQuery.findValidByPolicyIds(authPolicyIds)
             .stream().collect(Collectors.toMap(AppFunc::getId, x -> x));
 
+        List<AppFunc> appFunc = appAllFuncs.stream()
+            .map(x -> x.setHasAuth(appHasAuthFuncsMap.containsKey(x.getId()))).toList();
         if (joinTag) {
-          return appDb.setAppFunc(appAllFuncs.stream()
+          return appDb.setAppFunc(appFunc.stream()
               .filter(x -> x.hasTags(applicationInfo.getEditionType()))
-              .map(x -> x.setHasAuth(appHasAuthFuncsMap.containsKey(x.getId())))
               .collect(Collectors.toList()));
         } else {
-          return appDb.setAppFunc(appAllFuncs.stream()
-              .map(x -> x.setHasAuth(appHasAuthFuncsMap.containsKey(x.getId())))
-              .collect(Collectors.toList()));
+          return appDb.setAppFunc(appFunc);
         }
       }
     }.execute();
