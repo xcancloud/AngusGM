@@ -199,7 +199,7 @@ const columns = [
   }
 ];
 
-const hintTip = t(`每个用户最多允许关联5个部门，当前用户已关联${count.value}个部门。`);
+const hintTip = computed(() => t(`每个用户最多允许关联5个部门，当前用户已关联${count.value}个部门。`));
 </script>
 <template>
   <div>

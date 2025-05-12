@@ -5,10 +5,11 @@ import { app, preference, cookie, http } from '@xcan-angus/tools';
 import router, { startupGuard } from '@/router';
 import store from '@/store';
 
+import '@xcan-angus/vue-ui/style.css';
 import 'tailwindcss/base.css';
 import 'tailwindcss/components.css';
 import 'tailwindcss/utilities.css';
-import '@xcan-angus/vue-ui/style.css';
+
 import '../public/iconfont/iconfont.js';
 
 const bootstrap = async () => {

@@ -190,7 +190,7 @@ const userGridColumns = [
 </script>
 <template>
   <div class="flex flex-col min-h-full">
-    <PureCard class="p-3.5 h-48 px-10 py-8 flex justify-between itmes-start mb-2">
+    <PureCard class="p-3.5 h-42 px-10 py-8 flex justify-between itmes-start mb-2">
       <Skeleton
         active
         :loading="firstLoad"

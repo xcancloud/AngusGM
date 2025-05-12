@@ -189,7 +189,7 @@ const columns = [
     align: 'center'
   }
 ];
-const hintTip = t(`每个用户最多允许关联200个组，当前用户已关联${count.value}个组。`);
+const hintTip = computed(() => t(`每个用户最多允许关联200个组，当前用户已关联${count.value}个组。`));
 </script>
 <template>
   <div>

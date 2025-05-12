@@ -180,7 +180,7 @@ const columns = [
   }
 ];
 
-const hintTip = t(`每个用户最多允许关联10个标签，当前用户已关联${count.value}个标签。`);
+const hintTip = computed(() => t(`每个用户最多允许关联10个标签，当前用户已关联${count.value}个标签。`));
 </script>
 <template>
   <div>
