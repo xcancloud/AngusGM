@@ -255,7 +255,13 @@
         <editionName>Community</editionName>
       </properties>
       <modules/>
-      <dependencies/>
+      <dependencies>
+        <dependency>
+          <groupId>cloud.xcan.angus</groupId>
+          <artifactId>xcan-angusstorage.core</artifactId>
+          <version>${xcan-angusstorage.version}</version>
+        </dependency>
+      </dependencies>
     </profile>
     <!-- Deploy only enterprise edition -->
     <profile>
@@ -266,7 +272,13 @@
         <editionName>Enterprise</editionName>
       </properties>
       <modules/>
-      <dependencies/>
+      <dependencies>
+        <dependency>
+          <groupId>cloud.xcan.angus</groupId>
+          <artifactId>xcan-angusstorage.core</artifactId>
+          <version>${xcan-angusstorage.version}</version>
+        </dependency>
+      </dependencies>
     </profile>
     <!-- Deploy only datacenter edition -->
     <profile>
@@ -277,7 +289,13 @@
         <editionName>Datacenter</editionName>
       </properties>
       <modules/>
-      <dependencies/>
+      <dependencies>
+        <dependency>
+          <groupId>cloud.xcan.angus</groupId>
+          <artifactId>xcan-angusstorage.core</artifactId>
+          <version>${xcan-angusstorage.version}</version>
+        </dependency>
+      </dependencies>
     </profile>
     <!-- Deploy only cloud service edition -->
     <profile>
