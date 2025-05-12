@@ -18,7 +18,7 @@ public class AnalysisConverter {
 
   public static SummaryQueryBuilder toQueryBuilder(CustomizationSummaryDto dto) {
     if (nonNull(dto.getProjectId())) {
-      dto.getFilters().add(SearchCriteria.equal("projectId", dto.getProjectId()));
+      dto.getFilters().add(SearchCriteria.equal("project_id", dto.getProjectId()));
     }
     return SummaryQueryBuilder.newBuilder().name(dto.getName())
         .groupBy(dto.getGroupBy()).groupByColumns(dto.getGroupByColumns())
