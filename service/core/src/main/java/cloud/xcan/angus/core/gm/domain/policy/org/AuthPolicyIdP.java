@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.domain.policy.org;
 
+import cloud.xcan.angus.api.commonlink.AuthOrgType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

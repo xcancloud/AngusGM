@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.user.impl;
 
 import cloud.xcan.angus.api.commonlink.user.User;
+import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.SneakyThrow0;
