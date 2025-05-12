@@ -146,7 +146,7 @@ public class AuthPolicyUserRest {
   @GetMapping("/user/{userId}/policy/associated")
   public ApiLocaleResult<PageResult<AuthPolicyAssociatedVo>> userAssociatedPolicyList(
       @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
-      @Valid AuthPolicyAssociatedFindDto dto) {
+      @Valid @ParameterObject AuthPolicyAssociatedFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.userAssociatedPolicyList(userId, dto));
   }
 
@@ -156,7 +156,7 @@ public class AuthPolicyUserRest {
   @GetMapping("/user/{userId}/unauth/policy")
   public ApiLocaleResult<PageResult<PolicyUnauthVo>> userUnauthPolicyList(
       @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
-      @Valid UnAuthPolicyAssociatedFindDto dto) {
+      @Valid @ParameterObject UnAuthPolicyAssociatedFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.userUnauthPolicyList(userId, dto));
   }
 }

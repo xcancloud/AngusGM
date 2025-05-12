@@ -7,7 +7,6 @@ import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaSearchD
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.tenant.TenantQuotaDetailVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
-import cloud.xcan.angus.core.utils.CoreUtils;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
 import org.springframework.data.jpa.domain.Specification;

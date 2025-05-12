@@ -206,14 +206,14 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
 
         boolean ignoreAuthOrg = getIgnoreAuthOrg(spec);
 
-        Page<AuthPolicy> authPolicyPage = authUserAssocPolicyListRepo.find(
+        Page<AuthPolicy> policyPage = authUserAssocPolicyListRepo.find(
             spec.getCriteria(), pageable, AuthPolicy.class, ignoreAuthOrg ?
                 AuthPolicyOrgConverter::objectArrToUserAssociatedAuthPolicy :
                 AuthPolicyOrgConverter::objectArrToUserAssociatedAuthPolicyAndOrg, null);
-        if (authPolicyPage.hasContent()) {
-          setOrgName(authPolicyPage);
+        if (policyPage.hasContent()) {
+          setOrgName(policyPage);
         }
-        return authPolicyPage;
+        return policyPage;
       }
     }.execute();
   }

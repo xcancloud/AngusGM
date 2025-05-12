@@ -87,7 +87,7 @@ public class AuthPolicyGroupRest {
   @GetMapping("/policy/{policyId}/unauth/group")
   public ApiLocaleResult<PageResult<GroupListVo>> policyUnauthGroupList(
       @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid AuthPolicyGroupFindDto dto) {
+      @Valid @ParameterObject AuthPolicyGroupFindDto dto) {
     return ApiLocaleResult.success(authPolicyGroupFacade.policyUnauthGroupList(policyId, dto));
   }
 
@@ -134,7 +134,7 @@ public class AuthPolicyGroupRest {
   @GetMapping("/group/{groupId}/policy")
   public ApiLocaleResult<PageResult<AuthPolicyVo>> groupPolicyList(
       @Parameter(name = "groupId", description = "Group id", required = true) @PathVariable("groupId") Long groupId,
-      @Valid AuthPolicyFindDto dto) {
+      @Valid @ParameterObject AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyGroupFacade.groupPolicyList(groupId, dto));
   }
 
@@ -144,7 +144,7 @@ public class AuthPolicyGroupRest {
   @GetMapping("/group/{groupId}/unauth/policy")
   public ApiLocaleResult<PageResult<PolicyUnauthVo>> groupUnauthPolicyList(
       @Parameter(name = "groupId", description = "Group id", required = true) @PathVariable("groupId") Long groupId,
-      @Valid UnAuthPolicyFindDto dto) {
+      @Valid @ParameterObject UnAuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyGroupFacade.groupUnauthPolicyList(groupId, dto));
   }
 

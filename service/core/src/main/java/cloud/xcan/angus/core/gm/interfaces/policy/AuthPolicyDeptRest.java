@@ -24,6 +24,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,7 +77,7 @@ public class AuthPolicyDeptRest {
   @GetMapping("/policy/{policyId}/dept")
   public ApiLocaleResult<PageResult<DeptListVo>> policyDeptList(
       @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid AuthPolicyDeptFindDto dto) {
+      @Valid @ParameterObject AuthPolicyDeptFindDto dto) {
     return ApiLocaleResult.success(authPolicyDeptFacade.policyDeptList(policyId, dto));
   }
 
@@ -86,7 +87,7 @@ public class AuthPolicyDeptRest {
   @GetMapping("/policy/{policyId}/unauth/dept")
   public ApiLocaleResult<PageResult<DeptListVo>> policyUnauthDeptList(
       @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid AuthPolicyDeptFindDto dto) {
+      @Valid @ParameterObject AuthPolicyDeptFindDto dto) {
     return ApiLocaleResult.success(authPolicyDeptFacade.policyUnauthDeptList(policyId, dto));
   }
 
@@ -133,7 +134,7 @@ public class AuthPolicyDeptRest {
   @GetMapping("/dept/{deptId}/policy")
   public ApiLocaleResult<PageResult<AuthPolicyVo>> deptPolicyList(
       @Parameter(name = "deptId", description = "Department id", required = true) @PathVariable("deptId") Long deptId,
-      @Valid AuthPolicyFindDto dto) {
+      @Valid @ParameterObject AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyDeptFacade.deptPolicyList(deptId, dto));
   }
 
@@ -143,7 +144,7 @@ public class AuthPolicyDeptRest {
   @GetMapping("/dept/{deptId}/unauth/policy")
   public ApiLocaleResult<PageResult<PolicyUnauthVo>> deptUnauthPolicyList(
       @Parameter(name = "deptId", description = "Department id", required = true) @PathVariable("deptId") Long deptId,
-      @Valid UnAuthPolicyFindDto dto) {
+      @Valid @ParameterObject UnAuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyDeptFacade.deptUnauthPolicyList(deptId, dto));
   }
 }
