@@ -82,16 +82,16 @@ const deptByGroup = ref<PieSetting[]>([
     key: 'level',
     value: t('level'),
     type: [
-      { value: 0, message: t('grade1') },
-      { value: 1, message: t('grade2') },
-      { value: 2, message: t('grade3') },
-      { value: 3, message: t('grade4') },
-      { value: 4, message: t('grade5') },
-      { value: 5, message: t('grade6') },
-      { value: 6, message: t('grade7') },
-      { value: 7, message: t('grade8') },
-      { value: 8, message: t('grade9') },
-      { value: 9, message: t('grade10') }
+      { value: 1, message: t('grade1') },
+      { value: 2, message: t('grade2') },
+      { value: 3, message: t('grade3') },
+      { value: 4, message: t('grade4') },
+      { value: 5, message: t('grade5') },
+      { value: 6, message: t('grade6') },
+      { value: 7, message: t('grade7') },
+      { value: 8, message: t('grade8') },
+      { value: 9, message: t('grade9') },
+      { value: 10, message: t('grade10') }
     ],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
   }
