@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
+import static cloud.xcan.angus.core.gm.application.converter.UserConverter.replaceToAuthUser;
 import static cloud.xcan.angus.core.utils.CoreUtils.calcPasswordStrength;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setMultiTenantCtrl;
@@ -13,7 +14,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUserRepo;
+import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
+import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
@@ -24,6 +27,7 @@ import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyTenantCmd;
 import cloud.xcan.angus.core.gm.application.cmd.to.TOUserCmd;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserQuery;
 import cloud.xcan.angus.core.gm.application.query.authuser.AuthUserSignQuery;
+import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
@@ -65,7 +69,16 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
   private AuthPolicyOrgRepo authPolicyOrgRepo;
 
   @Resource
+  private TenantQuery tenantQuery;
+
+  @Resource
   private ApplicationInfo applicationInfo;
+
+  @Override
+  public void replaceAuthUser(User userDb, String password, boolean initTenant){
+    Tenant tenantDb = tenantQuery.checkAndFind(userDb.getTenantId());
+    replace0(replaceToAuthUser(userDb, password, tenantDb), initTenant);
+  }
 
   @Override
   public void replace0(AuthUser user, Boolean initTenant) {

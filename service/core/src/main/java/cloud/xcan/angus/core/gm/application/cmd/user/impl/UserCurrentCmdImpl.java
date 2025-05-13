@@ -1,17 +1,19 @@
 package cloud.xcan.angus.core.gm.application.cmd.user.impl;
 
+import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceExisted;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreNull;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
+import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
-import cloud.xcan.angus.core.biz.ProtocolAssert;
+import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCurrentCmd;
@@ -36,6 +38,9 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
   private AuthUserQuery authUserQuery;
 
   @Resource
+  private AuthUserCmd authUserCmd;
+
+  @Resource
   private SmsCmd smsCmd;
 
   @Resource
@@ -49,9 +54,9 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
 
       @Override
       protected void checkParams() {
-        // Check user exists
+        // Check the user exists
         userDb = userQuery.checkAndFind(getUserId());
-        // Check username is not duplicate
+        // Check the username is not duplicate
         if (isNotEmpty(user.getUsername()) && !user.getUsername().equals(userDb.getUsername())) {
           userQuery.checkUsernameUpdate(user.getUsername(), userDb.getId());
         }
@@ -60,6 +65,8 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
       @Override
       protected Void process() {
         userRepo.save(copyPropertiesIgnoreNull(user, userDb));
+
+        authUserCmd.replaceAuthUser(userDb, null, false);
         return null;
       }
     }.execute();
@@ -75,15 +82,15 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
 
       @Override
       protected void checkParams() {
-        // Check mobile format
+        // Check the mobile format
         ValidatorUtils.isMobile(mobile, country);
-        // Check sms link secret
+        // Check the sms link secret
         authUserQuery.checkSmsLinkSecret(userId, linkSecret, bizKey);
-        // Check verification code
+        // Check the verification code
         smsCmd.checkVerificationCode(bizKey, mobile, verificationCode);
         //Check the same mobile exists under the tenant
         List<User> users = userRepo.findByMobile(mobile);
-        ProtocolAssert.assertResourceExisted(isEmpty(users)
+        assertResourceExisted(isEmpty(users)
             || users.get(0).getId().equals(userId), mobile, "User");
         userDb = userQuery.checkAndFind(userId);
       }
@@ -92,6 +99,8 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
       protected Void process() {
         userDb.setMobile(mobile).setItc(itc).setCountry(country);
         userRepo.save(userDb);
+
+        authUserCmd.replaceAuthUser(userDb, null, false);
         return null;
       }
     }.execute();
@@ -107,13 +116,13 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
 
       @Override
       protected void checkParams() {
-        // Check sms link secret
+        // Check the sms link secret
         authUserQuery.checkLinkSecret(userId, linkSecret, bizKey);
-        // Check verification code
+        // Check the verification code
         emailCmd.checkVerificationCode(bizKey, email, verificationCode);
         //Check the same mobile exists under the tenant
         List<User> users = userRepo.findByEmail(email);
-        ProtocolAssert.assertResourceExisted(isEmpty(users)
+        assertResourceExisted(isEmpty(users)
             || users.get(0).getId().equals(userId), email, "User");
         userDb = userQuery.checkAndFind(userId);
       }
@@ -122,6 +131,8 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
       protected Void process() {
         userDb.setEmail(email);
         userRepo.save(userDb);
+
+        authUserCmd.replaceAuthUser(userDb, null, false);
         return null;
       }
     }.execute();

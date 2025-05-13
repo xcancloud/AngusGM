@@ -54,7 +54,7 @@ public class UserConverter {
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
         .fullName(user.getFullName())
-        .passwordStrength(calcPasswordStrength(stringSafe(password)).getValue())
+        .passwordStrength(nonNull(password) ? calcPasswordStrength(password).getValue() : null)
         .sysAdmin(user.getSysAdmin())
         .toUser(false)
         .mobile(user.getMobile())

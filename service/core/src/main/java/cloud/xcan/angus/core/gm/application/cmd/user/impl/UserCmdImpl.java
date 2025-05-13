@@ -167,8 +167,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         IdKey<Long, Object> idKeys = insert(user);
 
         // Initialize tenant or user setting
-        settingUserCmd.tenantAndUserInit(optTenant.getId(),
-            UserSource.isNewSignup(user.getSource()), user.getId());
+        settingUserCmd.tenantAndUserInit(optTenant.getId(), isNewSignup(user.getSource()),
+            user.getId());
 
         // Initialize the oauth2 user
         authUserCmd.replace0(replaceToAuthUser(user, user.getPassword(), optTenant),
@@ -229,8 +229,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         userRepo.save(copyPropertiesIgnoreNull(user, userDb));
 
         // Update oauth2 user
-        Tenant tenantDb = tenantQuery.checkAndFind(user.getTenantId());
-        authUserCmd.replace0(replaceToAuthUser(userDb, user.getPassword(), tenantDb), false);
+        authUserCmd.replaceAuthUser(userDb, user.getPassword(), false);
 
         // Save operation log
         operationLogCmd.add(USER, userDb, UPDATED);
@@ -366,6 +365,10 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Check there is at least one system administrator
         assertTrue(userQuery.countValidSysAdminUser() > 0, USER_SYS_ADMIN_NUM_ERROR);
 
+        for (User userDb : usersDb) {
+          authUserCmd.replaceAuthUser(userDb, null, false);
+        }
+
         // Save operation log
         operationLogCmd.addAll(USER, usersDb.stream().filter(User::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(USER, usersDb.stream().filter(x -> !x.getEnabled()).toList(),
@@ -417,6 +420,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         }
         userRepo.save(userDb);
 
+        authUserCmd.replaceAuthUser(userDb, null, false);
+
         // Save operation log
         operationLogCmd.add(USER, userDb, locked ? LOCKED : UNLOCKED);
         return null;
@@ -445,6 +450,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
       protected Void process() {
         userDb.setSysAdmin(sysAdmin);
         userRepo.save(userDb);
+
+        authUserCmd.replaceAuthUser(userDb, null, false);
 
         // Save operation log
         operationLogCmd.add(USER, userDb, sysAdmin ? SET_SYS_ADMIN : CANCEL_SYS_ADMIN);
