@@ -3,7 +3,8 @@ import { ref, onMounted } from 'vue';
 import { Button, RadioGroup, Radio } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { Hints, modal, Card, Icon, Input, Grid } from '@xcan-angus/vue-ui';
-import { app, http, STORAGE, enumLoader } from '@xcan-angus/tools';
+import { app,  enumLoader } from '@xcan-angus/tools';
+import { storage as storageApi } from '@/api/index';
 
 const { t } = useI18n();
 const enumData = ref<{ value: string, message: string }[]>([]);
@@ -31,7 +32,7 @@ const handleChange = e => {
 const storage = ref();
 
 const loadStorage = async () => {
-  const [error, { data }] = await http.get(`${STORAGE}/storage/setting`);
+  const [error, { data }] = await storageApi.getSetting();
   if (error) {
     return;
   }
@@ -162,7 +163,7 @@ const handleSure = async () => {
   };
 
   editLoading.value = true;
-  const [error] = await http.put(`${STORAGE}/storage/setting`, params, { silence: true }); // TODO 移到api
+  const [error] = await storageApi.putSetting(params, { silence: true })
   editLoading.value = false;
   if (error) {
     if (error.code === 'BST001') {
