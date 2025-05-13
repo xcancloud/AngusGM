@@ -32,7 +32,7 @@ CREATE TABLE `api` (
   KEY `uidx_name` (`name`) USING BTREE,
   KEY `idx_service_code` (`service_code`) USING BTREE,
   KEY `idx_summary_group` (`method`,`type`,`enabled`,`created_date`) USING BTREE,
-  FULLTEXT KEY `fx_name_code_service_name_description` (`name`,`operation_id`,`service_name`,`description`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_code_service_name_description` (`name`,`operation_id`,`service_name`,`description`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='接口表';
 
 -- ----------------------------
@@ -123,7 +123,7 @@ CREATE TABLE `app` (
   KEY `uidx_show_name_name` (`show_name`,`code`) USING BTREE,
   KEY `idx_edition_type` (`edition_type`) USING BTREE,
   KEY `idx_version` (`version`) USING BTREE,
-  FULLTEXT KEY `fx_name_code_show_name_description` (`code`,`name`,`show_name`,`description`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_code_show_name_description` (`code`,`name`,`show_name`,`description`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='应用表';
 
 -- ----------------------------
@@ -131,7 +131,7 @@ CREATE TABLE `app` (
 -- ----------------------------
 DROP TABLE IF EXISTS `app_func`;
 CREATE TABLE `app_func` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
   `code` varchar(80) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '编码，规则名称英文蛇形表示',
   `name` varchar(100) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '名称',
   `show_name` varchar(40) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '展示名称',
@@ -161,8 +161,8 @@ CREATE TABLE `app_func` (
   KEY `idx_sequence` (`sequence`) USING BTREE,
   KEY `idx_client_id` (`client_id`) USING BTREE,
   KEY `idx_type` (`type`) USING BTREE,
-  FULLTEXT KEY `fx_name_code_description` (`code`,`name`,`description`) /*!50100 WITH PARSER `ngram` */ 
-) ENGINE=InnoDB AUTO_INCREMENT=1000111517002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='应用功能关联表';
+  FULLTEXT KEY `fx_name_code_description` (`code`,`name`,`description`) /*!50100 WITH PARSER `ngram` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='应用功能关联表';
 
 -- ----------------------------
 -- Table structure for app_open
@@ -254,7 +254,7 @@ CREATE TABLE `auth_policy` (
   KEY `idx_type` (`type`) USING BTREE,
   KEY `idx_client_id` (`client_id`) USING BTREE,
   KEY `idx_enabled` (`enabled`) USING BTREE,
-  FULLTEXT KEY `fx_code_name_description` (`code`,`name`,`description`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_code_name_description` (`code`,`name`,`description`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='授权策略表';
 
 -- ----------------------------
@@ -373,7 +373,7 @@ CREATE TABLE `c_district` (
   KEY `idx_city_code` (`city_code`) USING BTREE,
   KEY `idx_zip_code` (`zip_code`) USING BTREE,
   KEY `idx_country_code` (`country_code`) USING BTREE,
-  FULLTEXT KEY `fx_name` (`name`,`code`,`pin_yin`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name` (`name`,`code`,`pin_yin`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='区域表';
 
 -- ----------------------------
@@ -452,7 +452,7 @@ CREATE TABLE `c_setting_tenant_quota` (
   KEY `idx_quota` (`quota`) USING BTREE,
   KEY `idx_allow_change_flag` (`allow_change`) USING BTREE,
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
-  FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='租户配额设置';
 
 -- ----------------------------
@@ -493,7 +493,7 @@ CREATE TABLE `dept` (
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
   KEY `idx_created_date` (`created_date`) USING BTREE,
   KEY `idx_level` (`level`) USING BTREE,
-  FULLTEXT KEY `fx_name_code` (`code`,`name`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_code` (`code`,`name`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='部门';
 
 -- ----------------------------
@@ -657,7 +657,7 @@ CREATE TABLE `event` (
   KEY `idx_service_code` (`service_code`) USING BTREE,
   KEY `idx_summary_group` (`created_date`,`type`,`push_status`) USING BTREE,
   KEY `idx_summary_tenant_group` (`tenant_id`,`created_date`,`type`,`push_status`) USING BTREE,
-  FULLTEXT KEY `fx_description_code_ekey` (`description`,`code`,`e_key`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_description_code_ekey` (`description`,`code`,`e_key`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='事件表';
 
 -- ----------------------------
@@ -731,7 +731,7 @@ CREATE TABLE `event_template` (
   KEY `idx_created_date` (`created_date`) USING BTREE,
   KEY `idx_created_by` (`created_by`) USING BTREE,
   KEY `idx_ekey` (`e_key`) USING BTREE,
-  FULLTEXT KEY `fx_event_name_code_ekey` (`event_name`,`event_code`,`e_key`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_event_name_code_ekey` (`event_name`,`event_code`,`e_key`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='事件模版表';
 
 -- ----------------------------
@@ -794,7 +794,7 @@ CREATE TABLE `group0` (
   KEY `idx_directory_id` (`directory_id`) USING BTREE,
   KEY `idx_summary_group` (`enabled`,`source`,`created_date`) USING BTREE,
   KEY `idx_summary_tenant_group` (`tenant_id`,`enabled`,`source`,`created_date`) USING BTREE,
-  FULLTEXT KEY `fx_name_tag_value` (`name`,`code`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_tag_value` (`name`,`code`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户组';
 
 -- ----------------------------
@@ -896,7 +896,7 @@ CREATE TABLE `message` (
   KEY `idx_status` (`status`) USING BTREE,
   KEY `idx_summary_group` (`created_date`,`receive_type`,`status`) USING BTREE,
   KEY `idx_summary_tenant_group` (`tenant_id`,`created_date`,`receive_type`,`status`) USING BTREE,
-  FULLTEXT KEY `fx_title` (`title`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_title` (`title`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息表';
 
 -- ----------------------------
@@ -916,7 +916,7 @@ CREATE TABLE `message_center_online` (
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE KEY `uidx_user_id` (`user_id`) USING BTREE,
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
-  FULLTEXT KEY `fx_fullname_remote_address` (`full_name`,`remote_address`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_fullname_remote_address` (`full_name`,`remote_address`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息中心在线用户';
 
 -- ----------------------------
@@ -964,7 +964,7 @@ CREATE TABLE `notice` (
   KEY `idx_scope` (`scope`) USING BTREE,
   KEY `idx_created_date` (`created_date`) USING BTREE,
   KEY `idx_app_id` (`app_id`) USING BTREE,
-  FULLTEXT KEY `fx_content` (`content`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_content` (`content`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='通知表';
 
 -- ----------------------------
@@ -1135,7 +1135,7 @@ CREATE TABLE `operation_log` (
   KEY `idx_resource_id` (`resource_id`),
   KEY `idx_type` (`type`),
   KEY `idx_private0` (`private0`),
-  FULLTEXT KEY `fx_detail` (`detail`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_detail` (`detail`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='操作日志';
 
 -- ----------------------------
@@ -1154,7 +1154,7 @@ CREATE TABLE `org_tag` (
   UNIQUE KEY `idx_tenant_id_name` (`name`,`tenant_id`) USING BTREE,
   KEY `idx_create_date` (`created_date`) USING BTREE,
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
-  FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='标签';
 
 -- ----------------------------
@@ -1203,7 +1203,7 @@ CREATE TABLE `service` (
   UNIQUE KEY `uidx_code` (`code`) USING BTREE,
   KEY `idx_name` (`name`) USING BTREE,
   KEY `idx_summary_group` (`created_date`,`source`,`enabled`) USING BTREE,
-  FULLTEXT KEY `fx_name_code_description` (`name`,`code`,`description`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_code_description` (`name`,`code`,`description`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='服务表';
 
 -- ----------------------------
@@ -1366,7 +1366,7 @@ CREATE TABLE `tenant` (
   KEY `idx_lock_start_date` (`lock_start_date`) USING BTREE,
   KEY `idx_lock_end_date` (`lock_end_date`) USING BTREE,
   KEY `idx_summary_group` (`source`,`type`,`status`,`real_name_status`,`locked`,`created_date`) USING BTREE,
-  FULLTEXT KEY `fx_name_no` (`name`,`no`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_no` (`name`,`no`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='租户';
 
 -- ----------------------------
@@ -1397,7 +1397,7 @@ CREATE TABLE `tenant_cert_audit` (
 -- ----------------------------
 DROP TABLE IF EXISTS `to_role`;
 CREATE TABLE `to_role` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
   `name` varchar(100) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '名称',
   `code` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT '编码，规则名称英文蛇形表示',
   `enabled` int(1) NOT NULL COMMENT '有效状态：0-禁用；1-启用',
@@ -1411,8 +1411,8 @@ CREATE TABLE `to_role` (
   UNIQUE KEY `uidx_code` (`code`) USING BTREE,
   UNIQUE KEY `uidx_name` (`name`) USING BTREE,
   KEY `idx_app_id` (`app_id`) USING BTREE,
-  FULLTEXT KEY `fx_name_code` (`name`,`code`) /*!50100 WITH PARSER `ngram` */ 
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='运营策略（租户运营角色）表（非私有化表）';
+  FULLTEXT KEY `fx_name_code` (`name`,`code`) /*!50100 WITH PARSER `ngram` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='运营策略（租户运营角色）表（非私有化表）';
 
 -- ----------------------------
 -- Table structure for to_role_user
@@ -1507,7 +1507,7 @@ CREATE TABLE `user0` (
   KEY `uidx_tenantId_email` (`email`,`tenant_id`) USING BTREE,
   KEY `idx_summary_group` (`source`,`sys_admin`,`enabled`,`locked`,`gender`,`created_date`) USING BTREE,
   KEY `idx_summary_tenant_group` (`tenant_id`,`source`,`sys_admin`,`enabled`,`locked`,`gender`,`created_date`) USING BTREE,
-  FULLTEXT KEY `fx_name_mobile_title_username` (`full_name`,`mobile`,`title`,`username`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `fx_name_mobile_title_username` (`full_name`,`mobile`,`title`,`username`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户';
 
 -- ----------------------------
@@ -1547,7 +1547,7 @@ CREATE TABLE `web_tag` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_create_date` (`created_date`) USING BTREE,
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
-  FULLTEXT KEY `idx_name` (`name`) /*!50100 WITH PARSER `ngram` */ 
+  FULLTEXT KEY `idx_name` (`name`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='应用标签表';
 
 -- ----------------------------
@@ -1567,5 +1567,231 @@ CREATE TABLE `web_tag_target` (
   KEY `idx_target_id` (`target_id`) USING BTREE,
   KEY `idx_target_type` (`target_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='应用标签对象表';
+
+-- ----------------------------
+-- Table structure for bucket
+-- ----------------------------
+DROP TABLE IF EXISTS `bucket`;
+CREATE TABLE `bucket` (
+  `id` bigint(20) unsigned NOT NULL COMMENT '主键Id',
+  `name` varchar(40) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '名称',
+  `acl` varchar(24) COLLATE utf8mb4_bin NOT NULL COMMENT '桶访问控制类型：私有、公共读、公共读写',
+  `tenant_created` int(1) NOT NULL COMMENT '租户创建桶标识',
+  `created_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '创建人',
+  `created_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
+  `last_modified_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
+  `last_modified_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `unix_name` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='对象桶';
+
+-- ----------------------------
+-- Table structure for bucket_biz_config
+-- ----------------------------
+DROP TABLE IF EXISTS `bucket_biz_config`;
+CREATE TABLE `bucket_biz_config` (
+  `id` bigint(20) NOT NULL COMMENT 'PK',
+  `biz_key` varchar(80) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '接入业务Key',
+  `bucket_name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '授权桶名称',
+  `remark` varchar(200) COLLATE utf8mb4_bin NOT NULL COMMENT '备注',
+  `public_access` int(1) NOT NULL COMMENT '是否公开文件访问：公开访问文件（/pubapi）、私有访问文件（/api）',
+  `public_token_auth` int(1) NOT NULL COMMENT '公开令牌访问接口（私有访问文件也需要使用私有令牌认证）',
+  `encrypt` int(1) NOT NULL COMMENT '是否对文件加密存储',
+  `multi_tenant_ctrl` int(1) NOT NULL COMMENT '是否开启多租户控制(只针对下载时)',
+  `enabled_auth` int(1) NOT NULL COMMENT '开启空间认证标志',
+  `allow_tenant_created` int(1) NOT NULL COMMENT '允许租户业务创建桶标识',
+  `app_code` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT '应用编码',
+  `app_admin_code` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT '应用管理员编码',
+  `cache_age` int(11) NOT NULL DEFAULT '0' COMMENT '浏览器缓存时长，单位秒',
+  `private0` int(1) DEFAULT NULL COMMENT '是否私有化',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uidx_biz_key` (`biz_key`) USING BTREE,
+  KEY `idx_bucket_name` (`bucket_name`) USING BTREE,
+  KEY `idx_tenant_biz` (`enabled_auth`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='桶和业务授权表';
+
+-- ----------------------------
+-- Table structure for object_file
+-- ----------------------------
+DROP TABLE IF EXISTS `object_file`;
+CREATE TABLE `object_file` (
+  `id` bigint(20) NOT NULL COMMENT '主键',
+  `project_id` bigint(20) NOT NULL COMMENT '项目ID',
+  `name` varchar(400) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '文件或文件夹名称',
+  `unique_name` varchar(400) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '存储时唯一文件或文件夹名称',
+  `oid` bigint(20) DEFAULT NULL COMMENT '关联对象ID',
+  `path` varchar(600) COLLATE utf8mb4_bin DEFAULT '' COMMENT '文件或文件夹相对路径（prefix+name）/ S3对象Key',
+  `size` bigint(20) NOT NULL DEFAULT '0' COMMENT '文件或文件夹实际上传大小，和物理存储磁盘可能不一致的',
+  `content_type` varchar(100) COLLATE utf8mb4_bin DEFAULT '' COMMENT '文件格式',
+  `store_address` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '本地存储完整路径 / S3对象的URL地址',
+  `store_type` varchar(16) COLLATE utf8mb4_bin NOT NULL COMMENT '存储平台类型',
+  `space_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '父文件夹ID',
+  `parent_directory_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '父文件夹ID',
+  `instance_id` varchar(24) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '本地存储实例ID',
+  `biz_key` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT '业务类型',
+  `bucket_name` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '桶名称',
+  `upload_id` varchar(100) COLLATE utf8mb4_bin DEFAULT '' COMMENT '分片上传ID',
+  `upload_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '上传类型：NORMAL、INTERRUPTION_POINT_CONTINUE、PART',
+  `completed` int(1) DEFAULT '0' COMMENT '分片上传/断点续传是否上传完成标识',
+  `store_deleted` int(1) NOT NULL DEFAULT '0' COMMENT '存储文件删除状态',
+  `deleted_retry_num` int(11) NOT NULL DEFAULT '0' COMMENT '重试删除次数',
+  `public_token` varchar(40) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '公开访问令牌',
+  `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
+  `created_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '创建人',
+  `created_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
+  `last_modified_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
+  `last_modified_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uidx_upload_id` (`upload_id`) USING BTREE,
+  KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
+  KEY `idx_parent_dir_id` (`parent_directory_id`) USING BTREE,
+  KEY `idx_store_deleted_flag` (`store_deleted`) USING BTREE,
+  KEY `idx_path` (`path`) USING BTREE,
+  KEY `idx_space_id` (`space_id`) USING BTREE,
+  KEY `idx_instance_id` (`instance_id`) USING BTREE,
+  KEY `idx_deleted_retry_num` (`deleted_retry_num`) USING BTREE,
+  KEY `idx_oid` (`oid`) USING BTREE,
+  KEY `idx_size` (`size`) USING BTREE,
+  KEY `idx_project_id` (`project_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='对象文件元数据';
+
+-- ----------------------------
+-- Table structure for object_space
+-- ----------------------------
+DROP TABLE IF EXISTS `object_space`;
+CREATE TABLE `object_space` (
+  `id` bigint(20) NOT NULL COMMENT 'PK',
+  `project_id` bigint(20) DEFAULT NULL COMMENT '项目ID',
+  `name` varchar(100) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '空间名称',
+  `biz_key` varchar(80) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '接入业务Key',
+  `bucket_name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '授权桶名称',
+  `remark` varchar(200) COLLATE utf8mb4_bin DEFAULT '' COMMENT '备注',
+  `quota_size` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '允许最大字节数',
+  `size` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录/文件总大小',
+  `subdirectory_num` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录下子目录数',
+  `subfile_num` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录下子文件数',
+  `auth` int(1) NOT NULL COMMENT '是否权限控制',
+  `tenant_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '授权租户ID',
+  `customized` int(11) NOT NULL COMMENT '是否客户化业务',
+  `created_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '创建人',
+  `created_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
+  `last_modified_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
+  `last_modified_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uidx_tenant_name_biz_key` (`tenant_id`,`name`,`biz_key`) USING BTREE,
+  KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
+  KEY `idx_create_by` (`created_by`) USING BTREE,
+  KEY `idx_created_date` (`created_date`) USING BTREE,
+  KEY `idx_bucket_name` (`bucket_name`) USING BTREE,
+  KEY `idx_auth_flag` (`auth`) USING BTREE,
+  KEY `idx_name` (`name`) USING BTREE,
+  KEY `idx_size` (`size`) USING BTREE,
+  KEY `idx_project_id` (`project_id`),
+  KEY `idx_tenant_biz` (`customized`) USING BTREE,
+  FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='授权存储表';
+
+-- ----------------------------
+-- Table structure for object_space_auth
+-- ----------------------------
+DROP TABLE IF EXISTS `object_space_auth`;
+CREATE TABLE `object_space_auth` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `space_id` bigint(20) NOT NULL COMMENT '场景ID',
+  `auth_object_type` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT '授权对象：用户|部门|组',
+  `auth_object_id` bigint(20) NOT NULL COMMENT '授权对象ID',
+  `auth_data` json NOT NULL COMMENT '权限：查看|编辑|删除|发送请求|测试|授权|分享',
+  `creator` int(1) NOT NULL COMMENT '创建人授权标识',
+  `tenant_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '租户ID',
+  `created_by` bigint(20) NOT NULL COMMENT '创建人',
+  `created_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uidx_space_id_auth_creator` (`space_id`,`auth_object_id`,`auth_object_type`,`creator`) USING BTREE,
+  KEY `idx_created_by` (`created_by`) USING BTREE,
+  KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
+  KEY `idx_auth_object_id` (`auth_object_id`) USING BTREE,
+  KEY `idx_space_id` (`space_id`) USING BTREE,
+  KEY `idx_created_date` (`created_date`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='对象空间授权';
+
+-- ----------------------------
+-- Table structure for object_space_object
+-- ----------------------------
+DROP TABLE IF EXISTS `object_space_object`;
+CREATE TABLE `object_space_object` (
+  `id` bigint(20) NOT NULL COMMENT '主键',
+  `project_id` bigint(20) NOT NULL COMMENT '项目ID',
+  `name` varchar(400) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '目录/文件名称(上传文件名最大400)',
+  `type` varchar(16) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '文件类型：FILE、DIRECTORY',
+  `store_type` varchar(16) COLLATE utf8mb4_bin NOT NULL COMMENT '存储平台类型',
+  `fid` bigint(20) DEFAULT NULL COMMENT '关联对象文件ID',
+  `level` int(11) NOT NULL COMMENT '目录层级，最大5',
+  `size` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录/文件总大小',
+  `space_id` bigint(20) NOT NULL COMMENT '空间ID',
+  `parent_directory_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '父文件夹ID',
+  `parent_like_id` varchar(200) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '所有父子文件夹ID符号“-”相连（200字符最大支持10级）',
+  `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
+  `created_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '创建人',
+  `created_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '创建时间',
+  `last_modified_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
+  `last_modified_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
+  KEY `idx_parent_dir_id` (`parent_directory_id`) USING BTREE,
+  KEY `idx_parent_like_id` (`parent_like_id`) USING BTREE,
+  KEY `idx_space_id` (`space_id`) USING BTREE,
+  KEY `idx_created_by` (`created_by`) USING BTREE,
+  KEY `idx_created_date` (`created_date`) USING BTREE,
+  KEY `idx_type` (`type`) USING BTREE,
+  KEY `idx_fid` (`fid`) USING BTREE,
+  KEY `idx_store_type` (`store_type`) USING BTREE,
+  KEY `idx_project_id` (`project_id`),
+  KEY `idx_level_size_sub_num` (`level`,`size`) USING BTREE,
+  FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='对象文件元数据';
+
+-- ----------------------------
+-- Table structure for object_space_share
+-- ----------------------------
+DROP TABLE IF EXISTS `object_space_share`;
+CREATE TABLE `object_space_share` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `space_id` bigint(20) NOT NULL COMMENT '分享空间ID',
+  `share_type` varchar(20) COLLATE utf8mb4_bin NOT NULL DEFAULT 'SPACE_OBJECTS',
+  `all` int(1) NOT NULL COMMENT '分享空间全部对象标志',
+  `object_ids` json DEFAULT NULL COMMENT '分享对象IDs',
+  `quick_object_id` bigint(20) DEFAULT NULL COMMENT '快速分享对象ID',
+  `url` varchar(400) COLLATE utf8mb4_bin NOT NULL COMMENT '分享URL',
+  `expired` int(1) NOT NULL COMMENT '分享是否过期',
+  `expired_duration` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '过期时长',
+  `expired_date` datetime DEFAULT NULL COMMENT '分享过期时间',
+  `public0` int(1) NOT NULL COMMENT '公开或私有标志',
+  `public_token` varchar(40) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '公开访问令牌',
+  `password` varchar(40) COLLATE utf8mb4_bin DEFAULT '' COMMENT '私有密码',
+  `remark` varchar(200) COLLATE utf8mb4_bin DEFAULT '' COMMENT '备注',
+  `tenant_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '租户ID',
+  `created_by` bigint(20) NOT NULL COMMENT '创建人',
+  `created_date` datetime NOT NULL COMMENT '创建时间',
+  `last_modified_by` bigint(20) NOT NULL DEFAULT '-1' COMMENT '最后修改人',
+  `last_modified_date` datetime NOT NULL DEFAULT '2001-01-01 00:00:00' COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_space_id` (`space_id`) USING BTREE,
+  KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
+  KEY `idx_quick_object_id` (`quick_object_id`),
+  FULLTEXT KEY `fx_remark` (`remark`) /*!50100 WITH PARSER `ngram` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='空间分享';
+
+-- ----------------------------
+-- Table structure for storage_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `storage_setting`;
+CREATE TABLE `storage_setting` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
+  `pkey` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '配置参数key',
+  `pvalue` json NOT NULL COMMENT '配置参数值',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uidx_tid_key` (`pkey`) USING BTREE,
+  KEY `idx_key` (`pkey`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='系统设置';
 
 -- @formatter:on
