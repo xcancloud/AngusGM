@@ -39,7 +39,7 @@ const treeData = ref<{ name: string, id: string }[]>([{ name: tenantInfo.value.t
 
 const onLoadData: TreeProps['loadData'] = treeNode => {
   const { id } = treeNode;
-  return dept.searchDepts({ pid: id, pageSize: 2000 })
+  return dept.searchDepts({ pid: id, pageSize: 2000, orderBy: 'createdDate', orderSort: 'ASC' })
     .then(([error, resp]) => {
       if (error) {
         return;
