@@ -2,8 +2,9 @@
 import { onMounted, reactive, ref, computed, defineAsyncComponent } from 'vue';
 import { Popover, Button } from 'ant-design-vue';
 import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
-import { app, http, enumLoader, GM } from '@xcan-angus/tools';
+import { app, enumLoader } from '@xcan-angus/tools';
 import { useI18n } from 'vue-i18n';
+import { appopen } from '@/api/index';
 
 import { EventConfigList } from './PropsType';
 import { event } from '@/api';
@@ -120,7 +121,7 @@ const loadEnums = async () => {
 };
 
 const loadAppOptions = async (pageSize = 10) => {
-  const [, { data = { list: [] } }] = await http.get(`${GM}/appopen/list`, { pageSize });
+  const [, { data = { list: [] } }] = await appopen.getList({ pageSize });
   appList.value = data.list || [];
   if (+data.total > appList.value.length) {
     await loadAppOptions(+data.total);

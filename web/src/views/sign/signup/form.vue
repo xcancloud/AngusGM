@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { http, PUB_ESS } from '@xcan-angus/tools';
 import { useRouter } from 'vue-router';
 import { Modal, notification } from '@xcan-angus/vue-ui';
 import { Button, Checkbox } from 'ant-design-vue';
@@ -14,6 +13,8 @@ import InvitationCodeInput from '@/components/InvitationCodeInput/index.vue';
 import VerificationCodeInput from '@/components/VerificationCodeInput/index.vue';
 import EmailInput from '@/components/EmailInput/index.vue';
 import MobileInput from '@/components/MobileInput/index.vue';
+
+import { termsAndConditions, privacyPolicy} from './config';
 
 interface Props {
   type: string
@@ -59,7 +60,7 @@ const modelTitle = ref('');
 
 const mobileRef = ref();
 const emailRef = ref();
-const mobileVeriRef = ref(); // TODO 命名语法错误问题
+const mobileVerificationRef = ref();
 const mobilePassRef = ref();
 const mobileConfirmpassRef = ref();
 const emailConfirmpassRef = ref();
@@ -75,30 +76,30 @@ watch(() => props.type, () => {
   error.value = false;
 });
 
-const loadTerms = () => {
-  http.get(`${PUB_ESS}/content/setting/termsAndConditions`) // TODO 删除PUB_ESS引用，服务条款和隐私条款报错前端
-    .then(([error, resp]) => {
-      if (error) {
-        return;
-      }
-      terms.value = resp.data;
-    });
-  http.get(`${PUB_ESS}/content/setting/privacyPolicy`)
-    .then(([error, resp]) => {
-      if (error) {
-        return;
-      }
-      privacy.value = resp?.data || '';
-    });
-};
+// const loadTerms = () => {
+//   http.get(`${PUB_ESS}/content/setting/termsAndConditions`)
+//     .then(([error, resp]) => {
+//       if (error) {
+//         return;
+//       }
+//       terms.value = resp.data;
+//     });
+//   http.get(`${PUB_ESS}/content/setting/privacyPolicy`)
+//     .then(([error, resp]) => {
+//       if (error) {
+//         return;
+//       }
+//       privacy.value = resp?.data || '';
+//     });
+// };
 
 const openModal = (key) => {
   if (key === 'termsVisible') {
     modelTitle.value = t('xcan_cloud') + t('terms_cloud');
-    termsContent.value = terms.value;
+    termsContent.value = termsAndConditions;
   } else {
     modelTitle.value = t('xcan_cloud') + t('privacy_cloud');
-    termsContent.value = privacy.value;
+    termsContent.value = privacyPolicy;
   }
   visible.value = !visible.value;
 };
@@ -125,7 +126,7 @@ const validateMobileForm = () => {
     flag++;
   }
 
-  if (!mobileVeriRef.value?.validateData()) {
+  if (!mobileVerificationRef.value?.validateData()) {
     flag++;
   }
 
@@ -188,9 +189,9 @@ const signup = async () => {
   router.push('/signin');
 };
 
-onMounted(() => {
-  loadTerms();
-});
+// onMounted(() => {
+  // loadTerms();
+// });
 
 </script>
 <template>
@@ -202,7 +203,7 @@ onMounted(() => {
         class="input-container block-fixed" />
       <VerificationCodeInput
         key="mobile-veri"
-        ref="mobileVeriRef"
+        ref="mobileVerificationRef"
         v-model:value="mobileForm.verificationCode"
         :validateAccount="validateAccount"
         :account="mobileForm.account"
