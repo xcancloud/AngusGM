@@ -1,0 +1,1 @@
+All edition types share the same model and data.

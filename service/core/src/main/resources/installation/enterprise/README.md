@@ -1,0 +1,1 @@
+Enterprise edition schema and data.
