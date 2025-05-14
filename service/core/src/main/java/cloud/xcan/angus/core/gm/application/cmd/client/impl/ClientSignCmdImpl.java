@@ -84,6 +84,7 @@ public class ClientSignCmdImpl implements ClientSignCmd {
 
         CustomOAuth2RegisteredClient client = privateSignupToDomain(
             clientId, signupBiz, tenantId, tenantName, resourceId);
+        client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
         customOAuth2ClientRepository.save(client);
         return new ClientAuth().setClientId(clientId).setClientSecret(client.getClientSecret());
       }
