@@ -24,7 +24,7 @@ public interface MessageCurrentRepo extends BaseRepository<MessageSent, Long> {
   void updateDeletedByIdIn(Collection<Long> ids, LocalDateTime now);
 
   @Modifying
-  @Query(value = "UPDATE message_sent SET read = true , read_date = ?2 WHERE id IN ?1", nativeQuery = true)
+  @Query(value = "UPDATE message_sent SET `read` = true , read_date = ?2 WHERE id IN ?1", nativeQuery = true)
   void updateReadByIdIn(Collection<Long> ids, LocalDateTime now);
 
 }
