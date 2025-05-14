@@ -37,6 +37,7 @@ public class MessageSent extends EntitySupport<MessageSent, Long> {
 
   private Long receiveUserId;
 
+  @Column(name = "`read`")
   private Boolean read;
 
   @DateTimeFormat(pattern = DATE_FMT)
