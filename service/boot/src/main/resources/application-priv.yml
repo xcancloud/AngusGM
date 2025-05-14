@@ -23,42 +23,43 @@ xcan:
     mysql:
       driverClassName: com.mysql.cj.jdbc.Driver
       type: com.zaxxer.hikari.HikariDataSource
-      url: jdbc:mysql://${GM_MYSQL_HOST}:${GM_MYSQL_PORT}/${GM_MYSQL_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
-      username: ${GM_MYSQL_USER}
-      password: ${GM_MYSQL_PASSWORD}
-      schema:
-        - mysql/idgen-schema.sql
+      url: jdbc:mysql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+      username: ${GM_DB_USER}
+      password: ${GM_DB_PASSWORD}
     postgresql:
       driverClassName: org.postgresql.Driver
       type: com.zaxxer.hikari.HikariDataSource
-      url: jdbc:postgresql://${GM_POSTGRES_HOST}:${GM_POSTGRES_PORT}/${GM_POSTGRES_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
-      username: ${GM_POSTGRES_USER}
-      password: ${GM_POSTGRES_PASSWORD}
-      schema:
-        - postgresql/idgen-schema.sql
+      url: jdbc:postgresql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+      username: ${GM_DB_USER}
+      password: ${GM_DB_PASSWORD}
     commonlink:
       mysql:
         driverClassName: com.mysql.cj.jdbc.Driver
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://${COMMON_MYSQL_HOST}:${COMMON_MYSQL_PORT}/${COMMON_MYSQL_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
-        username: ${COMMON_MYSQL_USER}
-        password: ${COMMON_MYSQL_PASSWORD}
+        url: jdbc:mysql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+        username: ${GM_DB_USER}
+        password: ${GM_DB_PASSWORD}
       postgresql:
         driverClassName: org.postgresql.Driver
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://${COMMON_POSTGRES_HOST}:${COMMON_POSTGRES_PORT}/${COMMON_POSTGRES_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
-        username: ${COMMON_POSTGRES_USER}
-        password: ${COMMON_POSTGRES_PASSWORD}
+        url: jdbc:postgresql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+        username: ${GM_DB_USER}
+        password: ${GM_DB_PASSWORD}
   redis:
     enabled: true
-    deployment: SINGLE
-    host: ${GM_REDIS_HOST}
-    port: ${GM_REDIS_PORT}
-    password: ${GM_REDIS_PASSWORD}
+    deployment: ${REDIS_DEPLOYMENT:SINGLE}
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:YOUR_PASSWORD}
+    sentinel:
+      master: ${REDIS_SENTINEL_MASTER:YOUR_MASTER_ID}
+      nodes: ${REDIS_NODES:localhost:6379}
+    cluster:
+      nodes: ${REDIS_NODES:localhost:6379}
     lettuce:
       pool:
-        max-active: 8
-        max-idle: 8
+        max-active: 16
+        max-idle: 16
         min-idle: 5
 
 eureka:
@@ -73,7 +74,7 @@ eureka:
     initial-instance-info-replication-interval-seconds: 10
     registry-fetch-interval-seconds: 15
     serviceUrl:
-      defaultZone: http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
+      defaultZone: http://${EUREKA_USER_NAME}:${EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
   instance:
     app-name: '@artifactId@'
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
