@@ -35,7 +35,7 @@ xcan:
       username: ${GM_POSTGRES_USER}
       password: ${GM_POSTGRES_PASSWORD}
       schema:
-        - postgres/idgen-schema.sql
+        - postgresql/idgen-schema.sql
     commonlink:
       mysql:
         driverClassName: com.mysql.cj.jdbc.Driver
@@ -63,7 +63,7 @@ xcan:
 
 eureka:
   datacenter: self-host-dc1
-  environment: beta
+  environment: dev
   client:
     healthcheck:
       # Disable health check-triggered auto-deregistration
@@ -71,14 +71,14 @@ eureka:
     register-with-eureka: true
     eureka-connection-idle-timeout-seconds: 10
     initial-instance-info-replication-interval-seconds: 10
-    registry-fetch-interval-seconds: 10
+    registry-fetch-interval-seconds: 15
     serviceUrl:
       defaultZone: http://${GM_EUREKA_USER_NAME}:${GM_EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
   instance:
     app-name: '@artifactId@'
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
     lease-expiration-duration-in-seconds: 30
-    lease-renewal-interval-in-seconds: 10
+    lease-renewal-interval-in-seconds: 15
     prefer-ip-address: true
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
     health-check-url-path: /actuator/health
@@ -88,7 +88,7 @@ eureka:
     a-sgcache-expiry-timeout-ms: 300000
     registry-sync-retry-wait-ms: 3000
     eviction-interval-timer-in-ms: 5000
-    peer-eureka-nodes-update-interval-ms: 5000
+    peer-eureka-nodes-update-interval-ms: 10000
     renewal-threshold-update-interval-ms: 30000
 
 spring:
@@ -127,3 +127,4 @@ logging:
     com: WARN
     com.netflix: ERROR
     org.springframework.cloud.netflix.eureka.server: ERROR
+

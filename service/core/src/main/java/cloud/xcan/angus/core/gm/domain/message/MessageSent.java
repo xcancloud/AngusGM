@@ -31,34 +31,28 @@ public class MessageSent extends EntitySupport<MessageSent, Long> {
   @Id
   private Long id;
 
-  @Column(name = "message_id")
   private Long messageId;
 
-  @Column(name = "receive_tenant_id")
   private Long receiveTenantId;
 
-  @Column(name = "receive_user_id")
   private Long receiveUserId;
 
+  @Column(name = "`read`")
   private Boolean read;
 
-  @Column(name = "sent_date")
   @DateTimeFormat(pattern = DATE_FMT)
   private LocalDateTime sentDate;
 
-  @Column(name = "read_date")
   @DateTimeFormat(pattern = DATE_FMT)
   private LocalDateTime readDate;
 
   private Boolean deleted;
 
-  @Column(name = "deleted_date")
   @DateTimeFormat(pattern = DATE_FMT)
   private LocalDateTime deletedDate;
 
   @CreatedDate
   @DateTimeFormat(pattern = DATE_FMT)
-  @Column(name = "created_date", nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
   private LocalDateTime createdDate;
 
   @Transient

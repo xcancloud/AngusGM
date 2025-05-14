@@ -31,6 +31,7 @@ import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_MISSING_
 import static cloud.xcan.angus.remote.message.ProtocolException.M.QUERY_FIELD_EMPTY_T;
 import static cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProviderUtils.DEFAULT_ENCODING_ID;
 import static cloud.xcan.angus.spec.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
@@ -396,10 +397,11 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     Map<String, String> result = JsonUtils.convert(response.body(), new TypeReference<>() {
     });
     if (!response.isSuccessful()) {
+      assert result != null;
       if (response.code() == HttpStatus.UNAUTHORIZED.value) {
-        throw Unauthorized.of(Objects.requireNonNull(result).get("error_description"));
+        throw Unauthorized.of(nullSafe(result.get("error_description"), result.get("error")));
       } else {
-        throw ProtocolException.of(Objects.requireNonNull(result).get("error_description"));
+        throw ProtocolException.of(nullSafe(result.get("error_description"), result.get("error")));
       }
     }
     return result;

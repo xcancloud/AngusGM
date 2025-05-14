@@ -46,7 +46,7 @@ public class EventAssembler {
       event.setFullName(eventContent.getFullName());
       event.setTenantId(nullSafe(eventContent.getTenantId(), OWNER_TENANT_ID));
       event.setTenantName(eventContent.getTenantName());
-      event.setDescription(eventContent.getDescription());
+      event.setDescription(stringSafe(eventContent.getDescription()));
       event.setType(EventType.valueOf(eventContent.getType()));
       event.setSourceData(eventContent);
       event.setCode(eventContent.getCode());
