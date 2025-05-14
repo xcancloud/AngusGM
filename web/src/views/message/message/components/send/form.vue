@@ -2,10 +2,10 @@
 import { ref, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { enumLoader } from '@xcan-angus/tools';
-import { Grid, DatePicker, Input, Hints } from '@xcan-angus/vue-ui';
+import { DatePicker, Input, Hints } from '@xcan-angus/vue-ui';
 import dayjs from 'dayjs';
 import RichEditor from '@/components/RichEditor/index.vue';
-import { RadioGroup, Radio } from 'ant-design-vue';
+import { RadioGroup, Radio, Form, FormItem } from 'ant-design-vue';
 
 import { email } from '@/api';
 
@@ -44,6 +44,7 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const richContentRef = ref();
 
 const title = ref('');
 const content = ref('');
@@ -70,41 +71,6 @@ const loadSentType = async () => {
 onMounted(() => {
   init();
 });
-
-const columns = ref([
-  [
-    {
-      label: t('messageTitle'),
-      dataIndex: 'title',
-      required: true
-    },
-    {
-      label: t('messageContent'),
-      dataIndex: 'content',
-      required: true
-    },
-    {
-      label: t('receivingMethod'),
-      dataIndex: 'receiveType'
-    },
-    {
-      label: t('sendMethod'),
-      dataIndex: 'sendType'
-    }
-  ]
-]);
-
-const sendTypeChange = (e): void => {
-  if (e.target.value !== 'TIMING_SEND') {
-    columns.value[0].length = 4;
-    return;
-  }
-  columns.value[0].push({
-    label: t('sendDate'),
-    dataIndex: 'date',
-    required: true
-  });
-};
 
 const hasEmail = ref(false);
 const disabledEmail = ref(false);
@@ -220,7 +186,6 @@ const disabledDateTime = () => {
   };
 };
 
-
 const uploadOptions = { bizKey: 'messageFiles', mediaBizKey: 'messageFiles' };
 
 watch(() => props.notify, () => {
@@ -228,13 +193,37 @@ watch(() => props.notify, () => {
   content.value = '';
   sendType.value = 'SEND_NOW';
 });
+
+defineExpose({
+  validate: () => {
+    let result = true;
+    if (!title.value) {
+      titleRule.value = true;
+      result = false;
+    }
+
+    const contentData = richContentRef.value.getData();
+    if (!contentData?.length) {
+      result = false;
+      contentRule.value = true;
+      contentRuleMsg.value = t('请输入消息内容');
+    }
+
+    if (contentData && contentData.length > 8000) {
+      result = false;
+      contentRule.value = true;
+      contentRuleMsg.value = t('内容太长,无法发送');
+    }
+    return result;
+  }
+});
 </script>
 <template>
-  <Grid
-    :columns="columns"
-    nowrap
-    class="flex-1 pt-1">
-    <template #title>
+  <Form
+    :labelCol="{style: {width: '70px'}}"
+    class="flex-1 pt-1"
+    :colon="false">
+    <FormItem :label="t('messageTitle')" required>
       <Input
         v-model:value="title"
         :maxlength="100"
@@ -243,10 +232,11 @@ watch(() => props.notify, () => {
         :error="titleRule"
         :placeholder="t('pubPlaceholder',{name:t('title'),num:100})"
         @change="titleChange" />
-    </template>
-    <template #content>
+    </FormItem>
+    <FormItem :label="t('messageContent')" required>
       <RichEditor
         v-model:value="content"
+        ref="richContentRef"
         :uploadOptions="uploadOptions"
         :class="{'rich-editor-rule':contentRule}" />
       <div class="text-rule h-3.5">
@@ -254,8 +244,8 @@ watch(() => props.notify, () => {
           {{ contentRuleMsg }}
         </template>
       </div>
-    </template>
-    <template #receiveType>
+    </FormItem>
+    <FormItem :label="t('receivingMethod')">
       <RadioGroup
         v-model:value="receiveType"
         size="small"
@@ -273,12 +263,11 @@ watch(() => props.notify, () => {
       <div v-if="hasEmail" class="text-rule h-3.5">
         {{ t('sendTips2') }}
       </div>
-    </template>
-    <template #sendType>
+    </FormItem>
+    <FormItem :label="t('sendMethod')">
       <RadioGroup
         v-model:value="sendType"
-        size="small"
-        @change="sendTypeChange">
+        size="small">
         <Radio
           v-for="item in sentTypeList"
           :key="item.value"
@@ -286,21 +275,21 @@ watch(() => props.notify, () => {
           {{ item.message }}
         </Radio>
       </RadioGroup>
-    </template>
-    <template #date>
+    </FormItem>
+    <FormItem v-if="sendType === 'TIMING_SEND'" :label="t('sendDate')">
       <DatePicker
         v-model:value="timingDate"
         size="small"
         class="w-60"
-        :disabled="sendType === 'SEND_NOW'"
         :class="{'date-rule-error':dateRule}"
         :disabledDate="disabledDate"
         :showTime="{hideDisabledOptions: true, defaultValue: dayjs('00:00:00', 'HH:mm:ss') }"
         :disabledTime="disabledDateTime"
         type="date"
         @change="dateChange" />
-    </template>
-  </Grid>
+    </FormItem>
+  </Form>
+
 </template>
 <style scoped>
 :deep(.audit-rule-error .ant-input:not([disabled])) {

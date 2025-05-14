@@ -82,7 +82,7 @@ const zoomHandler = (type) => {
   } else {
     isMax.value = false;
   }
-}
+};
 
 defineExpose({
   getLength: () => {
@@ -93,7 +93,13 @@ defineExpose({
   },
   getData: () => {
     if (contents.value?.length) {
-      return JSON.stringify(contents.value)
+      if (contents.value?.length === 1) {
+        const content = (contents.value[0]?.insert || '').replace('\n', '');
+        if (!content?.length) {
+          return undefined;
+        }
+      }
+      return JSON.stringify(contents.value);
     } else {
       return undefined;
     }
