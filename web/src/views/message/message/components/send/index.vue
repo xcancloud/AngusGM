@@ -13,6 +13,7 @@ const SendList = defineAsyncComponent(() => import('./list.vue'));
 
 const { t } = useI18n();
 const router = useRouter();
+const formRef = ref();
 const tenantInfo: Ref = inject('tenantInfo', ref());
 const userList = ref<{ id: string; fullName: string; }[]>([]);
 const deptList = ref<{ id: string; name: string; }[]>([]);
@@ -39,19 +40,19 @@ const submit = async () => {
     return;
   }
 
-  if (!title.value || !content.value || content.value.length > 8000) {
-    if (!title.value) {
-      titleRule.value = true;
-    }
-    if (!content.value) {
-      contentRule.value = true;
-      propsContentRuleMsg.value = t('请输入消息内容');
-    }
-
-    if (content.value.length > 8000) {
-      contentRule.value = true;
-      propsContentRuleMsg.value = t('内容太长,无法发送');
-    }
+  if (!formRef.value.validate()) {
+    // if (!title.value) {
+    //   titleRule.value = true;
+    // }
+    // if (!content.value) {
+    //   contentRule.value = true;
+    //   propsContentRuleMsg.value = t('请输入消息内容');
+    // }
+    //
+    // if (content.value.length > 8000) {
+    //   contentRule.value = true;
+    //   propsContentRuleMsg.value = t('内容太长,无法发送');
+    // }
     return;
   }
 
@@ -128,7 +129,7 @@ const handleCancel = () => {
 </script>
 <template>
   <PureCard class="p-3.5 flex-1 h-full">
-    <div class="flex pl-3.5" style="height: calc(100% - 28px);">
+    <div class="flex space-x-3.5 pl-3.5" style="height: calc(100% - 28px);">
       <SendForm
         v-model:propsTitle="title"
         v-model:propsContent="content"
@@ -139,6 +140,7 @@ const handleCancel = () => {
         v-model:propsContentRule="contentRule"
         v-model:propsContentRuleMsg="propsContentRuleMsg"
         v-model:propsDateRule="dateRule"
+        ref="formRef"
         :notify="notify" />
       <SendList
         v-model:userList="userList"
