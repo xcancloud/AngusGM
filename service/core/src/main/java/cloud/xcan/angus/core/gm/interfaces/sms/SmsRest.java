@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "sms", description = "Handles sms message delivery operations, and audit logging for tracking sent communications.")
+@Tag(name = "Sms", description = "Handles sms message delivery operations, and audit logging for tracking sent communications.")
 @Validated
 @RestController
 @RequestMapping("/api/v1/sms")

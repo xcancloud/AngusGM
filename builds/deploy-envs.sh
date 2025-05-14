@@ -1,6 +1,6 @@
 #!/bin/bash
 # deploy-envs.sh - Secure environment files deployment tool
-# Usage: ./deploy-envs.sh remote-host
+# Usage: sh deploy-envs.sh remote-host
 
 # Get script absolute directory
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
