@@ -3,7 +3,7 @@ import { http } from '@xcan-angus/tools';
 let baseUrl: string;
 export default class UserToken {
   constructor (prefix: string) {
-    baseUrl = prefix + '/user';
+    baseUrl = prefix + '/auth/user';
   }
 
   getToken (): Promise<[Error | null, any]> {
