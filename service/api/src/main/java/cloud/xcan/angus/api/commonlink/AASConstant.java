@@ -80,8 +80,7 @@ public interface AASConstant {
    * For system token
    */
   String SYS_TOKEN_CLIENT_ID_FMT = XCAN_TENANT_PLATFORM_CODE + "_t%s_s%s";
-  //String SYS_TOKEN_CLIENT_NAME_FMT = "Tenant[%s]-System-Token[%s]";
-  String SYS_TOKEN_CLIENT_DESC_FMT = "Tenant[%s] system token `%s` access";
+  String SYS_TOKEN_CLIENT_DESC_FMT = "Tenant [%s] system token `%s` oauth2 client";
 
   /**
    * For private application open access
@@ -90,6 +89,5 @@ public interface AASConstant {
    */
   String SIGN2P_CLIENT_ID_FMT = XCAN_2P_PLATFORM_CODE + "_t%s_b%s_r%s";
   String SIGN2P_CLIENT_NAME_FMT = "Tenant[%s]-[%s][%s]";
-  String SIGN2P_CLIENT_DESC_FMT = "Tenant[%s] access cloud service from privatization application";
 
 }

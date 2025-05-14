@@ -10,6 +10,7 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
+import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.AASConstant;
@@ -20,6 +21,7 @@ import cloud.xcan.angus.spec.principal.PrincipalContext;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -72,23 +74,20 @@ public class ClientConverter {
 
   public static String getSystemTokenClientId(String tokenName, ClientSource source) {
     Principal principal = PrincipalContext.get();
-    return switch (source) {
-      case XCAN_SYS_TOKEN ->
-          String.format(SYS_TOKEN_CLIENT_ID_FMT, principal.getTenantId(), tokenName.trim());
-      default -> throw new IllegalStateException(
-          String.format("Generate the clientId based on %s is not supported", source.getValue()));
-    };
+    if (Objects.requireNonNull(source) == ClientSource.XCAN_SYS_TOKEN) {
+      return format(SYS_TOKEN_CLIENT_ID_FMT, principal.getTenantId(), tokenName.trim());
+    }
+    throw new IllegalStateException(format("Generate the clientId based on %s is not supported",
+        source.getValue()));
   }
 
   public static String getSystemTokenClientDesc(String tokenName, ClientSource source) {
     Principal principal = PrincipalContext.get();
-    return switch (source) {
-      case XCAN_SYS_TOKEN ->
-          String.format(SYS_TOKEN_CLIENT_DESC_FMT, principal.getTenantId(), tokenName);
-      default -> throw new IllegalStateException(
-          String.format("Generate the client description based on %s is not supported",
-              source.getValue()));
-    };
+    if (Objects.requireNonNull(source) == ClientSource.XCAN_SYS_TOKEN) {
+      return format(SYS_TOKEN_CLIENT_DESC_FMT, principal.getTenantId(), tokenName);
+    }
+    throw new IllegalStateException(
+        format("Generate the client description based on %s is not supported", source.getValue()));
   }
 
 }

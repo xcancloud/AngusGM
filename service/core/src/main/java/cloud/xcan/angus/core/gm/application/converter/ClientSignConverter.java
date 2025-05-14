@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.application.converter;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.MAX_TOKEN_VALIDITY_PERIOD;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.SIGN2P_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
+import static java.lang.String.format;
 
 import cloud.xcan.angus.api.commonlink.AASConstant;
 import cloud.xcan.angus.api.commonlink.client.Client2pSignupBiz;
@@ -34,7 +35,7 @@ public class ClientSignConverter {
         .clientIdIssuedAt(Instant.now())
         .clientSecret(UUID.randomUUID().toString())
         .clientSecretExpiresAt(null)
-        .clientName(String.format(AASConstant.SIGN2P_CLIENT_NAME_FMT, tenantId,
+        .clientName(format(AASConstant.SIGN2P_CLIENT_NAME_FMT, tenantId,
             signupBiz.name().toLowerCase(), resourceId))
         .clientAuthenticationMethods(methods -> {
           methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
@@ -42,11 +43,15 @@ public class ClientSignConverter {
         })
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .scope(SIGN2P_TOKEN_CLIENT_SCOPE)
-        .clientSettings(ClientSettings.builder().requireProofKey(false)
-            .requireAuthorizationConsent(false).build())
-        .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE)
-            .accessTokenTimeToLive(MAX_TOKEN_VALIDITY_PERIOD).build())
-        .description(String.format(AASConstant.SIGN2P_CLIENT_DESC_FMT, tenantId))
+        .clientSettings(ClientSettings.builder()
+            .requireProofKey(false)
+            .requireAuthorizationConsent(false)
+            .build())
+        .tokenSettings(TokenSettings.builder()
+            .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+            .accessTokenTimeToLive(MAX_TOKEN_VALIDITY_PERIOD)
+            .build())
+        .description(format("Tenant private `%s` oauth2 client", signupBiz.name()))
         .enabled(true)
         .platform(Platform.XCAN_2P.getValue())
         .source(ClientSource.XCAN_2P_SIGNIN.getValue())
