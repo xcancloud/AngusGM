@@ -4,6 +4,7 @@ import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.sendOauth2RenewRequest;
 import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.privateSignupToDomain;
 import static java.lang.String.format;
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 
@@ -54,7 +55,9 @@ public class ClientSignCmdImpl implements ClientSignCmd {
         try {
           return submitOauth2ClientSignInRequest(clientId, clientSecret, scope);
         } catch (Throwable e) {
-          throw new SysException(e.getMessage());
+          String cause = nonNull(e.getCause()) ? e.getCause().getMessage() : e.getMessage();
+          log.error(cause, e);
+          throw new SysException(cause);
         }
       }
     }.execute();
