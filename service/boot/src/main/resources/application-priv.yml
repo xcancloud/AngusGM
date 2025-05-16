@@ -62,6 +62,15 @@ xcan:
         max-active: 16
         max-idle: 16
         min-idle: 5
+  storage:
+    storeType: ${STORAGE_TYPE}
+    proxyAddress: ${STORAGE_FILES_PROXY_ADDRESS}
+    aesKey: ${STORAGE_FILES_ENCRYPTION_KEY}
+    localDir: ${STORAGE_LOCAL_DIR}
+    region: ${STORAGE_S3_REGION:}
+    endpoint: ${STORAGE_S3_ENDPOINT}
+    accessKey: ${STORAGE_S3_ACCESS_KEY}
+    secretKey: ${STORAGE_S3_SECRET_KEY}
 
 eureka:
   datacenter: self-host-dc1

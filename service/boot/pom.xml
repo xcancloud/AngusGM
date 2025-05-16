@@ -81,6 +81,8 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
         <includes>
+          <include>META-INF/*</include>
+          <include>banner.txt</include>
           <include>application.yml</include>
           <include>application-${profile.active}.yml</include>
           <include>spring-logback.xml</include>

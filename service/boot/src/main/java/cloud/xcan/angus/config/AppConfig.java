@@ -2,6 +2,7 @@ package cloud.xcan.angus.config;
 
 import cloud.xcan.angus.core.spring.condition.PrivateEditionCondition;
 import cloud.xcan.angus.core.spring.filter.VueRouterFilter;
+import cloud.xcan.angus.core.utils.SpringAppDirUtils;
 import cloud.xcan.angus.web.SneakyLogConfigurer;
 import feign.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -11,6 +12,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
+
+  @Bean
+  @ConditionalOnMissingBean
+  public SpringAppDirUtils appDirUtils(){
+    return new SpringAppDirUtils();
+  }
 
   @Bean
   @ConditionalOnMissingBean
