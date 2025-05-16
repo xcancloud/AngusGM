@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>cloud.xcan.angus</groupId>
+    <artifactId>AngusInfra</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>AngusGM</artifactId>
+  <name>AngusGM :: Parent</name>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>service</module>
+    <module>web</module>
+    <module>assembly</module> <!--Note: Must be packaged last-->
+  </modules>
+
+  <organization>
+    <name>XCan Company</name>
+    <url>http://www.xcan.company</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>XCan Business License, Version 1.0</name>
+      <url>http://www.xcan.company/licenses/XCBL-1.0</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <archive.name>gm</archive.name>
+    <hump.name>AngusGM</hump.name>
+    <docker.image.name>angusgm</docker.image.name>
+  </properties>
+</project>
