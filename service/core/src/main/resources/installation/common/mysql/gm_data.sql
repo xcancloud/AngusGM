@@ -15,7 +15,7 @@ INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `se
 -- ----------------------------
 INSERT INTO `tenant` (`id`, `no`, `name`, `type`, `source`, `real_name_status`, `status`, `apply_cancel_date`, `address`, `locked`, `last_lock_date`, `lock_start_date`,
                       `lock_end_date`, `remark`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
-            VALUES (:tenantId, 'T202401010000', ':tenantName', 'UNKNOWN', 'PLATFORM_SIGNUP', 'NOT_SUBMITTED', 'ENABLED', NULL, '', 0, NULL, NULL,
+            VALUES (:TENANT_ID, 'T202401010000', ':TENANT_NAME', 'UNKNOWN', 'PLATFORM_SIGNUP', 'NOT_SUBMITTED', 'ENABLED', NULL, '', 0, NULL, NULL,
                         NULL, '', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 
 -- ----------------------------
@@ -25,8 +25,8 @@ INSERT INTO `user0` (`id`, `username`, `first_name`, `last_name`, `full_name`, `
                      `landline`, `tenant_id`, `tenant_name`, `avatar`, `title`, `gender`, `address`, `source`, `directory_id`, `main_dept_id`, `online`, `online_date`,
                      `offline_date`, `dept_head`, `sys_admin`, `expired`, `expired_date`, `enabled`, `disable_reason`, `deleted`, `locked`, `last_lock_date`, `lock_start_date`,
                      `lock_end_date`, `last_modified_password_date`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
-            VALUES (:adminUserId, ':adminUsername', ':adminFirstname', ':adminLastname', ':adminFullName', '86', 'CN', ':adminEmail', '', 'EMAIL', ':adminEmail', NULL,
-                    '', :tenantId, ':tenantName', NULL, NULL, 'UNKNOWN', NULL, 'BACKGROUND_ADDED', NULL, NULL, 0, NULL,
+            VALUES (:GM_ADMIN_USER_ID, ':GM_ADMIN_USERNAME', '', '', ':GM_ADMIN_FULL_NAME', '86', 'CN', ':GM_ADMIN_EMAIL', '', 'EMAIL', ':GM_ADMIN_EMAIL', NULL,
+                    '', :TENANT_ID, ':TENANT_NAME', NULL, NULL, 'UNKNOWN', NULL, 'BACKGROUND_ADDED', NULL, NULL, 0, NULL,
                     NULL, 0, 1, 0, NULL, 1, '', 0, 0, NULL, NULL,
                     NULL, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 
@@ -36,8 +36,8 @@ INSERT INTO `user0` (`id`, `username`, `first_name`, `last_name`, `full_name`, `
 INSERT INTO `oauth2_user` (`id`, `username`, `password`, `enabled`, `account_non_expired`, `account_non_locked`, `credentials_non_expired`, `first_name`, `last_name`, `full_name`,
                            `mobile`, `email`, `sys_admin`, `to_user`, `tenant_id`, `tenant_name`, `tenant_real_name_status`, `main_dept_id`, `password_strength`, `password_expired_date`,
                            `last_modified_password_date`, `expired_date`, `deleted`, `directory_id`, `default_language`, `default_time_zone`)
-                VALUES (:adminUserId, ':adminUsername', ':adminEncryptedPassword', 1, 1, 1, 1, ':adminFirstname', ':adminLastname', ':adminFullName',
-                            '', ':adminEmail', 1, 0, :tenantId, ':tenantName', 'AUDITED', NULL, 'MEDIUM', NULL,
+                VALUES (:GM_ADMIN_USER_ID, ':GM_ADMIN_USERNAME', ':GM_ADMIN_ENCRYPTED_PASSWORD', 1, 1, 1, 1, '', '', ':GM_ADMIN_FULL_NAME',
+                            '', ':GM_ADMIN_EMAIL', 1, 0, :TENANT_ID, ':TENANT_NAME', 'AUDITED', NULL, 'MEDIUM', NULL,
                             '2024-01-01 00:00:00', NULL, 0, NULL, NULL, NULL);
 
 -- ----------------------------
@@ -48,13 +48,13 @@ INSERT INTO `oauth2_registered_client` (`id`, `client_id`, `client_name`, `clien
                                         `description`, `enabled`, `tenant_id`, `tenant_name`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
                                 VALUES ('1', 'xcan_tp', 'Tenant Client', 'client_secret_post,client_secret_basic', 'refresh_token,password', '', '',
                                         'user_trust', 'XCAN_TP', 'XCAN_TP_SIGNIN', '2025-04-07 11:44:52', '{noop}6917ae827c964acc8dd7638fe0581b67', NULL, '', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-authorization-consent\":false}', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.reuse-refresh-tokens\":false,\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",3600.000000000],\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat\",\"value\":\"reference\"},\"settings.token.refresh-token-time-to-live\":[\"java.time.Duration\",43200.000000000],\"settings.token.authorization-code-time-to-live\":[\"java.time.Duration\",300.000000000],\"settings.token.device-code-time-to-live\":[\"java.time.Duration\",300.000000000]}',
-                                        'Tenant-side access client', 1, :tenantId, ':tenantName', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+                                        'Tenant-side access client', 1, :TENANT_ID, ':TENANT_NAME', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `oauth2_registered_client` (`id`, `client_id`, `client_name`, `client_authentication_methods`, `authorization_grant_types`, `redirect_uris`, `post_logout_redirect_uris`,
                                         `scopes`, `platform`, `source`, `client_id_issued_at`, `client_secret`, `client_secret_expires_at`, `biz_tag`, `client_settings`, `token_settings`,
                                         `description`, `enabled`, `tenant_id`, `tenant_name`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
                                 VALUES ('6', ':clientCredentialsIntrospectClient', 'Client Credentials Introspect Client', 'client_secret_post,client_secret_basic', 'client_credentials', '', '',
                                         'inner_api_trust,opaque_token_introspect_trust', 'XCAN_INNER', 'XCAN_SYS_INTROSPECT', '2025-04-07 13:03:17', '{noop}:clientCredentialsIntrospectSecret', NULL, '', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-authorization-consent\":false}', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat\",\"value\":\"reference\"},\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",3600.000000000]}',
-                                        'Internal resource service authentication token client (for /innerapi)', 1, :tenantId, ':tenantName', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+                                        'Internal resource service authentication token client (for /innerapi)', 1, :TENANT_ID, ':TENANT_NAME', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 
 -- ----------------------------
 -- Table data for event_template
@@ -102,47 +102,47 @@ INSERT INTO `c_setting` (`id`, `key`, `value`, `global_default`) VALUES (15, 'TE
 -- Table data for c_setting_tenant
 -- ----------------------------
 INSERT INTO `c_setting_tenant` (`id`, `invitation_code`, `locale_data`, `func_data`, `perf_data`, `stability_data`, `security_data`, `server_api_proxy_data`, `tester_event_data`, `tenant_id`)
-                        VALUES (1, NULL, '{\"defaultLanguage\": \"zh_CN\"}', '{\"smoke\": true, \"security\": true, \"smokeCheckSetting\": {\"value\": \"API_AVAILABLE\", \"message\": \"xcm.enum.SmokeCheckSetting.API_AVAILABLE\"}, \"securityCheckSetting\": {\"value\": \"NOT_SECURITY_CODE\", \"message\": \"xcm.enum.SecurityCheckSetting.NOT_SECURITY_CODE\"}}', '{\"art\": \"500\", \"tps\": 500, \"threads\": 5000, \"duration\": \"50min\", \"errorRate\": 0.01, \"percentile\": {\"value\": \"P95\", \"message\": \"95%采样\"}, \"rampUpThreads\": 100, \"rampUpInterval\": \"1min\"}', '{\"art\": \"200\", \"cpu\": 75, \"tps\": 5000, \"disk\": 75, \"memory\": 75, \"network\": 75, \"threads\": 2000, \"duration\": \"30min\", \"errorRate\": 0.01, \"percentile\": {\"value\": \"P90\", \"message\": \"90%采样\"}}', '{\"alarm\": {\"alarmWay\": null, \"enabled\": false, \"receiveUser\": null}, \"signinLimit\": {\"enabled\": true, \"lockedPasswordErrorNum\": 6, \"signoutPeriodInMinutes\": 30, \"lockedDurationInMinutes\": 120, \"passwordErrorIntervalInMinutes\": 30}, \"signupAllow\": {\"enabled\": false, \"invitationCode\": null}, \"passwordPolicy\": {\"minLength\": 10}}', '{\"url\": \"wss://bj-c1-prod-angusproxy.xcan.cloud/angusProxy\", \"enabled\": true}', '[{\"eventCode\": \"TaskWillOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskAssignment\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskPendingConfirmation\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseWillOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseAssignment\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ApisModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ScenarioModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ReportGenerationSuccessful\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ExecutionTestCompleted\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ExecutionTestFailed\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}]', :tenantId);
+                        VALUES (1, NULL, '{\"defaultLanguage\": \"zh_CN\"}', '{\"smoke\": true, \"security\": true, \"smokeCheckSetting\": {\"value\": \"API_AVAILABLE\", \"message\": \"xcm.enum.SmokeCheckSetting.API_AVAILABLE\"}, \"securityCheckSetting\": {\"value\": \"NOT_SECURITY_CODE\", \"message\": \"xcm.enum.SecurityCheckSetting.NOT_SECURITY_CODE\"}}', '{\"art\": \"500\", \"tps\": 500, \"threads\": 5000, \"duration\": \"50min\", \"errorRate\": 0.01, \"percentile\": {\"value\": \"P95\", \"message\": \"95%采样\"}, \"rampUpThreads\": 100, \"rampUpInterval\": \"1min\"}', '{\"art\": \"200\", \"cpu\": 75, \"tps\": 5000, \"disk\": 75, \"memory\": 75, \"network\": 75, \"threads\": 2000, \"duration\": \"30min\", \"errorRate\": 0.01, \"percentile\": {\"value\": \"P90\", \"message\": \"90%采样\"}}', '{\"alarm\": {\"alarmWay\": null, \"enabled\": false, \"receiveUser\": null}, \"signinLimit\": {\"enabled\": true, \"lockedPasswordErrorNum\": 6, \"signoutPeriodInMinutes\": 30, \"lockedDurationInMinutes\": 120, \"passwordErrorIntervalInMinutes\": 30}, \"signupAllow\": {\"enabled\": false, \"invitationCode\": null}, \"passwordPolicy\": {\"minLength\": 10}}', '{\"url\": \"wss://bj-c1-prod-angusproxy.xcan.cloud/angusProxy\", \"enabled\": true}', '[{\"eventCode\": \"TaskWillOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskAssignment\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskPendingConfirmation\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"TaskModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseWillOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseOverdue\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseAssignment\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"FunctionCaseModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ApisModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ScenarioModification\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ReportGenerationSuccessful\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ExecutionTestCompleted\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}, {\"eventCode\": \"ExecutionTestFailed\", \"noticeTypes\": [\"IN_SITE\", \"EMAIL\"]}]', :TENANT_ID);
 
 -- ----------------------------
 -- Table data for c_setting_tenant_quota
 -- ----------------------------
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (1, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'User', 0, 1, 1, 20, 1, 1000000, -1, :tenantId);
+                                VALUES (1, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'User', 0, 1, 1, 20, 1, 1000000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (2, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserDept', 1, 0, 1, 5, 1, 2000, -1, :tenantId);
+                                VALUES (2, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserDept', 1, 0, 1, 5, 1, 2000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (3, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserGroup', 1, 0, 1, 200, 1, 2000, -1, :tenantId);
+                                VALUES (3, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserGroup', 1, 0, 1, 200, 1, 2000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (4, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'Dept', 1, 0, 1, 500, 1, 20000, -1, :tenantId);
+                                VALUES (4, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'Dept', 1, 0, 1, 500, 1, 20000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (5, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DeptLevel', 1, 0, 1, 5, 1, 10, -1, :tenantId);
+                                VALUES (5, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DeptLevel', 1, 0, 1, 5, 1, 10, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (6, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DeptUser', 1, 0, 1, 200, 1, 2000, -1, :tenantId);
+                                VALUES (6, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DeptUser', 1, 0, 1, 200, 1, 2000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (7, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'Group', 1, 0, 1, 200, 1, 20000, -1, :tenantId);
+                                VALUES (7, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'Group', 1, 0, 1, 200, 1, 20000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (8, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'GroupUser', 1, 0, 1, 200, 1, 2000, -1, :tenantId);
+                                VALUES (8, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'GroupUser', 1, 0, 1, 200, 1, 2000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (9, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'OrgTag', 1, 0, 1, 200, 1, 20000, -1, :tenantId);
+                                VALUES (9, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'OrgTag', 1, 0, 1, 200, 1, 20000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (10, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'OrgTargetTag', 1, 0, 0, 10, 1, 2000, -1, :tenantId);
+                                VALUES (10, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'OrgTargetTag', 1, 0, 0, 10, 1, 2000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (11, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'PolicyCustom', 1, 0, 1, 200, 1, 20000, -1, :tenantId);
+                                VALUES (11, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'PolicyCustom', 1, 0, 1, 200, 1, 20000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (12, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'FileStore', 1, 0, 1, 118111600640, 1073741824, 1099511627776, -1, :tenantId);
+                                VALUES (12, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'FileStore', 1, 0, 1, 118111600640, 1073741824, 1099511627776, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (13, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'SystemToken', 0, 1, 1, 10, 1, 100, -1, :tenantId);
+                                VALUES (13, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'SystemToken', 0, 1, 1, 10, 1, 100, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (14, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserToken', 0, 1, 1, 3, 1, 5, -1, :tenantId);
+                                VALUES (14, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserToken', 0, 1, 1, 3, 1, 5, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (15, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DataSpace', 1, 0, 1, 2000, 1, 100000, -1, :tenantId);
+                                VALUES (15, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DataSpace', 1, 0, 1, 2000, 1, 100000, -1, :TENANT_ID);
 
 -- ----------------------------
 -- Table data for c_setting_user
 -- ----------------------------
 INSERT INTO `c_setting_user` (`id`, `preference`, `api_proxy`, `social_bind`, `tenant_id`)
-                    VALUES (:adminUserId, '{\"language\": \"zh_CN\", \"themeCode\": \"light\"}', '{\"noProxy\": {\"name\": \"NO_PROXY\", \"enabled\": false}, \"cloudProxy\": {\"url\": \"wss://bj-c1-prod-angusproxy.xcan.cloud/angusProxy\", \"name\": \"CLOUD_PROXY\", \"enabled\": true}, \"clientProxy\": {\"url\": \"ws://localhost:6806/angusProxy\", \"name\": \"CLIENT_PROXY\", \"enabled\": false}, \"serverProxy\": {\"name\": \"SERVER_PROXY\", \"enabled\": false}}', NULL, :tenantId);
+                    VALUES (:GM_ADMIN_USER_ID, '{\"language\": \"zh_CN\", \"themeCode\": \"light\"}', '{\"noProxy\": {\"name\": \"NO_PROXY\", \"enabled\": false}, \"cloudProxy\": {\"url\": \"wss://bj-c1-prod-angusproxy.xcan.cloud/angusProxy\", \"name\": \"CLOUD_PROXY\", \"enabled\": true}, \"clientProxy\": {\"url\": \"ws://localhost:6806/angusProxy\", \"name\": \"CLIENT_PROXY\", \"enabled\": false}, \"serverProxy\": {\"name\": \"SERVER_PROXY\", \"enabled\": false}}', NULL, :TENANT_ID);
 
 -- ----------------------------
 -- Table data for email_template

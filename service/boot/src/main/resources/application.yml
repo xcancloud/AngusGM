@@ -64,7 +64,7 @@ xcan:
 
 info:
   app:
-    name: '@project.name@'
+    name: '@hump.name@'
     version: '@project.version@'
     editionType: '@editionType@'
     artifactId: '@artifactId@'

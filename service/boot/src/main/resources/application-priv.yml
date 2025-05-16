@@ -23,26 +23,26 @@ xcan:
     mysql:
       driverClassName: com.mysql.cj.jdbc.Driver
       type: com.zaxxer.hikari.HikariDataSource
-      url: jdbc:mysql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+      url: jdbc:mysql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_NAME}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
       username: ${GM_DB_USER}
       password: ${GM_DB_PASSWORD}
     postgresql:
       driverClassName: org.postgresql.Driver
       type: com.zaxxer.hikari.HikariDataSource
-      url: jdbc:postgresql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+      url: jdbc:postgresql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_NAME}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
       username: ${GM_DB_USER}
       password: ${GM_DB_PASSWORD}
     commonlink:
       mysql:
         driverClassName: com.mysql.cj.jdbc.Driver
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+        url: jdbc:mysql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_NAME}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
         username: ${GM_DB_USER}
         password: ${GM_DB_PASSWORD}
       postgresql:
         driverClassName: org.postgresql.Driver
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_DB}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
+        url: jdbc:postgresql://${GM_DB_HOST}:${GM_DB_PORT}/${GM_DB_NAME}?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=${info.app.timezone}&rewriteBatchedStatements=true
         username: ${GM_DB_USER}
         password: ${GM_DB_PASSWORD}
   redis:
