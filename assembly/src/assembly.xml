@@ -1,0 +1,57 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>${project.version}</id>
+  <baseDirectory>/</baseDirectory>
+
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <files>
+    <file>
+      <source>${project.parent.basedir}/LICENSE</source>
+    </file>
+    <file>
+      <source>${project.parent.basedir}/README.md</source>
+    </file>
+    <file>
+      <source>${project.parent.basedir}/README_zh.md</source>
+    </file>
+  </files>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.parent.basedir}/service/boot/target</directory>
+      <includes>
+        <include>${hump.name}-*.jar</include>
+        <include>*.sh</include>
+      </includes>
+      <fileMode>0755</fileMode>
+      <outputDirectory>.</outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${project.parent.basedir}/service/extension/dist</directory>
+      <includes>
+        <include>*.zip</include>
+      </includes>
+      <outputDirectory>plugins/</outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${project.parent.basedir}/service/conf</directory>
+      <includes>
+        <include>.priv-template.env</include>
+        <include>${archive.name}-logback.xml</include>
+      </includes>
+      <outputDirectory>conf/</outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${project.parent.basedir}/web/dist</directory>
+      <outputDirectory>statics/</outputDirectory>
+    </fileSet>
+
+  </fileSets>
+</assembly>
