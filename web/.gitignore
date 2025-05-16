@@ -1,6 +1,7 @@
 node_modules
 .DS_Store
 dist
+node
 dist-ssr
 *.local
 .eslintcache
@@ -16,9 +17,7 @@ public/meta/env
 public/meta/env.*
 public/*.conf
 stats.html
-.history/
 lib/packages/index.ts
-.devcontainer/
 .vscode
 *.zip
 coverage/

@@ -11,6 +11,7 @@ xcan:
       entityPackages:
         - cloud.xcan.angus.idgen.entity
         - cloud.xcan.angus.core.gm.domain
+        - cloud.xcan.angus.core.storage.domain
         - cloud.xcan.angus.api.commonlink
     hikari:
       readOnly: false
@@ -93,6 +94,18 @@ eureka:
     renewal-threshold-update-interval-ms: 30000
 
 spring:
+  web:
+    resources:
+      addMappings: false
+      static-locations: ${GM_WEB_STATICS:classpath:/statics/}
+  thymeleaf:
+    prefix: classpath:/templates
+    mode: HTML
+    suffix: .html
+    cache: false
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
   security:
     oauth2:
       resource-server:
@@ -124,8 +137,8 @@ spring:
 
 logging:
   level:
-    org: WARN
-    com: WARN
+    org: INFO
+    com: INFO
     com.netflix: ERROR
     org.springframework.cloud.netflix.eureka.server: ERROR
 

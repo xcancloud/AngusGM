@@ -17,7 +17,9 @@ public class JpaConfig {
       entityManagerFactoryRef = "entityManagerFactory",
       transactionManagerRef = "transactionManager",
       basePackages = {"cloud.xcan.angus.idgen.dao",
-          "cloud.xcan.angus.core.gm.infra.persistence.mysql.**"})
+          "cloud.xcan.angus.core.gm.infra.persistence.mysql.**",
+          "cloud.xcan.angus.core.storage.infra.persistence.mysql.**" /* For Private Edition */
+      })
   @ConditionalOnProperty(name = "xcan.datasource.extra.dbType", havingValue = "MYSQL")
   protected static class JpaEnableMysqlConfiguration {
 
@@ -30,7 +32,9 @@ public class JpaConfig {
       entityManagerFactoryRef = "entityManagerFactory",
       transactionManagerRef = "transactionManager",
       basePackages = {"cloud.xcan.angus.idgen.dao",
-          "cloud.xcan.angus.core.gm.infra.persistence.postgres.**"})
+          "cloud.xcan.angus.core.gm.infra.persistence.postgres.**",
+          "cloud.xcan.angus.core.storage.infra.persistence.postgres.**" /* For Private Edition */
+      })
   @ConditionalOnProperty(name = "xcan.datasource.extra.dbType", havingValue = "POSTGRES")
   protected static class JpaEnablePostgresConfiguration {
 

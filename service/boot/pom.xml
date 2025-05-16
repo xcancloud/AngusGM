@@ -7,19 +7,13 @@
 
   <parent>
     <groupId>cloud.xcan.angus</groupId>
-    <artifactId>xcan-angusgm.parent</artifactId>
+    <artifactId>xcan-angusgm.service</artifactId>
     <version>1.0.0</version>
   </parent>
 
   <artifactId>xcan-angusgm.boot</artifactId>
   <name>AngusGM :: Boot</name>
   <packaging>jar</packaging>
-
-  <properties>
-    <archive.name>gm</archive.name>
-    <hump.name>AngusGM</hump.name>
-    <docker.image.name>angusgm</docker.image.name>
-  </properties>
 
   <dependencies>
     <dependency>
@@ -76,54 +70,45 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
         <excludes>
-          <exclude>static/**</exclude>
+          <exclude>application-local.yml</exclude>
+          <exclude>application-dev.yml</exclude>
+          <exclude>application-prod.yml</exclude>
+          <exclude>application-priv.yml</exclude>
         </excludes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>static/**</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
         <filtering>true</filtering>
         <includes>
+          <include>application.yml</include>
+          <include>application-${profile.active}.yml</include>
           <include>spring-logback.xml</include>
         </includes>
       </resource>
-
-      <resource>
-        <directory>src/main/scripts</directory>
-        <includes>
-          <include>init-jdk.sh</include>
-          <include>startup-gm.sh</include>
-          <include>shutdown-gm.sh</include>
-        </includes>
-        <filtering>true</filtering>
-        <targetPath>${project.basedir}/target</targetPath>
-      </resource>
-
-      <resource>
-        <directory>src/main/docker</directory>
-        <includes>
-          <include>Dockerfile</include>
-        </includes>
-        <filtering>true</filtering>
-        <targetPath>${project.basedir}/target</targetPath>
-      </resource>
-
       <resource>
         <directory>conf</directory>
         <includes>
           <include>*.properties</include>
           <include>*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}/target</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/scripts</directory>
+        <includes>
+          <include>init-*.sh</include>
+          <include>startup-*.sh</include>
+          <include>shutdown-*.sh</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}/target</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/docker</directory>
+        <includes>
+          <include>Dockerfile</include>
         </includes>
         <filtering>true</filtering>
         <targetPath>${project.basedir}/target</targetPath>
@@ -144,6 +129,14 @@
         </executions>
         <configuration>
           <mainClass>cloud.xcan.angus.XCanAngusGMApplication</mainClass>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+          <skipSource>true</skipSource>
         </configuration>
       </plugin>
 

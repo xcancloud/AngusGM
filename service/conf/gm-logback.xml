@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+  <property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}"/>
+  <property name="LOG_NAME" value="gm"/>
+  <property name="ARTIFACT_ID" value="AngusGM"/>
+
+  <springProfile name="local,dev">
+    <property name="LOG_PATTERN"
+      value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } :: [%15.15t] %-40.40logger{39} -> %m%n"/>
+  </springProfile>
+
+  <springProfile name="prod,priv">
+    <property name="LOG_PATTERN"
+      value="[${ARTIFACT_ID}] :: %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -> %m%n"/>
+  </springProfile>
+
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+      <charset>utf8</charset>
+    </encoder>
+  </appender>
+
+  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
+    <file>${LOG_PATH}/${LOG_NAME}.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+      <charset>utf8</charset>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${LOG_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>256MB</maxFileSize>
+    </rollingPolicy>
+  </appender>
+
+  <appender class="ch.qos.logback.classic.AsyncAppender" name="FILE_ASYNC">
+    <discardingThreshold>0</discardingThreshold>
+    <queueSize>1024</queueSize>
+    <appender-ref ref="FILE"/>
+  </appender>
+
+  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="ERROR_FILE">
+    <file>${LOG_PATH}/${LOG_NAME}.error.log</file>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+      <charset>utf8</charset>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${LOG_NAME}-%d{yyyy-MM-dd}.%i.error.log</fileNamePattern>
+      <maxFileSize>256MB</maxFileSize>
+    </rollingPolicy>
+  </appender>
+
+  <appender class="ch.qos.logback.classic.AsyncAppender" name="ERROR_FILE_ASYNC">
+    <discardingThreshold>0</discardingThreshold>
+    <queueSize>1024</queueSize>
+    <appender-ref ref="ERROR_FILE"/>
+  </appender>
+
+  <springProfile name="local,dev">
+    <root level="INFO">
+      <appender-ref ref="STDOUT"/>
+      <appender-ref ref="FILE_ASYNC"/>
+      <appender-ref ref="ERROR_FILE_ASYNC"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="prod,priv">
+    <root level="INFO">
+      <appender-ref ref="FILE_ASYNC"/>
+      <appender-ref ref="ERROR_FILE_ASYNC"/>
+    </root>
+  </springProfile>
+
+</configuration>

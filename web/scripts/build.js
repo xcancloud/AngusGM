@@ -52,7 +52,7 @@ function start () {
   fs.writeFileSync(resolve('../public/meta/env'), envContent, 'utf8');
 
   // 3. Copy the environment configuration file to the public/meta/directory based on the environment variables
-  if (deployEnv !== 'priv') { // Not configuring Nginx in a private environment
+  if (deployEnv === 'priv') { // Not configuring Nginx in a private environment
     const deployEnvContent = fs.readFileSync(resolve(`../conf/.env.${deployEnv}`), 'utf8');
     fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
   }
