@@ -125,6 +125,10 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
   }
 
   private void rewriteEnvByBusiness() {
+    // Used by eureka
+    envs.put(GM_HOST, getInstallGMHost());
+    envs.put(GM_PORT, getInstallGMPort());
+
     envs.put(GM_APIS_URL_PREFIX, getGMWebsite());
   }
 
@@ -297,10 +301,6 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
   private void addEnvForInstallSql(DCache mainDCache) {
     envs.put(TENANT_ID, getFinalTenantId(mainDCache).toString());
     envs.put(TENANT_NAME, getFinalTenantName(mainDCache));
-
-    // Used by eureka
-    envs.put(GM_HOST, getInstallGMHost());
-    envs.put(GM_PORT, getInstallGMPort());
 
     //envs.put(GM_APP_OPEN_DATE, formatByDateTimePattern(new Date()));
     //envs.put(GM_APP_EXPIRATION_DATE, formatByDateTimePattern(getMaxFreeOpenDate()));
