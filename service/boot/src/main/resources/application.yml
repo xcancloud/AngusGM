@@ -85,6 +85,14 @@ spring:
     active: '@profile.active@'
   jmx:
     enabled: true
+  thymeleaf:
+    prefix: classpath:/templates
+    mode: HTML
+    suffix: .html
+    cache: false
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
   jackson:
     defaultPropertyInclusion: always
     dateFormat: ${JACKSON_DATE_FORMAT:yyyy-MM-dd HH:mm:ss}

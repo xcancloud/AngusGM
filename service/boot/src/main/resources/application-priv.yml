@@ -80,16 +80,16 @@ eureka:
       # Disable health check-triggered auto-deregistration
       enabled: false
     register-with-eureka: true
-    eureka-connection-idle-timeout-seconds: 10
-    initial-instance-info-replication-interval-seconds: 10
-    registry-fetch-interval-seconds: 15
+    eureka-connection-idle-timeout-seconds: 30
+    initial-instance-info-replication-interval-seconds: 60
+    registry-fetch-interval-seconds: 60
     serviceUrl:
       defaultZone: http://${EUREKA_USER_NAME}:${EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
   instance:
     app-name: '@artifactId@'
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
-    lease-expiration-duration-in-seconds: 30
-    lease-renewal-interval-in-seconds: 15
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 60
     prefer-ip-address: true
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
     health-check-url-path: /actuator/health
@@ -97,24 +97,16 @@ eureka:
     enable-self-preservation: false
     renewal-percent-threshold: 0.85
     a-sgcache-expiry-timeout-ms: 300000
-    registry-sync-retry-wait-ms: 3000
-    eviction-interval-timer-in-ms: 5000
-    peer-eureka-nodes-update-interval-ms: 10000
-    renewal-threshold-update-interval-ms: 30000
+    registry-sync-retry-wait-ms: 10000
+    eviction-interval-timer-in-ms: 10000
+    peer-eureka-nodes-update-interval-ms: 60000
+    renewal-threshold-update-interval-ms: 60000
 
 spring:
   web:
     resources:
       addMappings: false
-      static-locations: ${GM_WEB_STATICS:classpath:/statics/}
-  thymeleaf:
-    prefix: classpath:/templates
-    mode: HTML
-    suffix: .html
-    cache: false
-    encoding: UTF-8
-    servlet:
-      content-type: text/html
+      static-locations: ${GM_WEB_STATICS:classpath:/static/,file:./statics/}
   security:
     oauth2:
       resource-server:

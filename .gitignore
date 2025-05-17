@@ -1,14 +1,15 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 logs
-LOG_HOME_IS_UNDEFINED
-CATALINA_BASE_IS_UNDEFINED
 work
+dist
 tmp
 data
 .DS_Store
 .env
 conf/.*env
+LOG_HOME_IS_UNDEFINED
+CATALINA_BASE_IS_UNDEFINED
 
 ### STS ###
 .apt_generated
@@ -29,6 +30,5 @@ conf/.*env
 nbproject/private/
 build/
 nbbuild/
-dist/
 nbdist/
 .nb-gradle/

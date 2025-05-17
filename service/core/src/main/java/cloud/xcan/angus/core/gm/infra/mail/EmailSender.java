@@ -41,8 +41,8 @@ public class EmailSender {
 
   private final StringTemplateLoader templateLoader = new StringTemplateLoader();
   private final Configuration allTemplateConfig = new Configuration(Configuration.VERSION_2_3_22);
-  private final String BASE_TEMPLATE_KEY = "xcan_email_template";
-  private final String EVENT_NOTICE_TEMPLATE_KEY = "xcan_event_notice_template";
+  private final String BASE_TEMPLATE_KEY = "email_template";
+  private final String EVENT_NOTICE_TEMPLATE_KEY = "event_notice_template";
 
   private final ApplicationInfo applicationInfo;
 

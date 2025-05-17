@@ -54,7 +54,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <finalName>${hump.name}-${editionName}-Full</finalName>
+              <finalName>${hump.name}-${editionName}</finalName>
               <descriptors>
                 <descriptor>src/assembly.xml</descriptor>
               </descriptors>
