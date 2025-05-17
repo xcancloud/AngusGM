@@ -7,8 +7,8 @@
 # ---------------------------------------------------------------------------
 
 # Check parameters
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <host>"
+if [ $# -ne 2 ]; then
+    echo "Usage: <host> <port>"
     exit 1
 fi
 
