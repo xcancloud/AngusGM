@@ -157,13 +157,14 @@ deploy_private_edition() {
   ssh "$host" "rm -rf *" || {
     echo "ERROR: Failed to clean app directory"; exit 1
   }
-  scp -rp "dist/AngusGM-*.zip" "${host}:/tmp/" || {
+  dist_file=$(ls dist/AngusGM-*.zip)
+  scp -rp $dist_file "${host}:/tmp/" || {
     echo "ERROR: Failed to copy app zip file"; exit 1
   }
-  ssh "$host" "uzip /tmp/AngusGM-*.zip -d ${REMOTE_APP_DIR}" || {
+  ssh "$host" "unzip /tmp/${dist_file} -d ${REMOTE_APP_DIR}" || {
     echo "ERROR: Failed to uzip to app directory"; exit 1
   }
-  ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/.priv-test.env ${REMOTE_APP_DIR}/conf/.priv.env" || {
+  ssh "$host" "cp -f ${REMOTE_APP_CONF_DIR}/.priv-test.env ${REMOTE_APP_DIR}/conf/.priv.env" || {
     echo "ERROR: Failed to copy env files"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh debug" || {
