@@ -472,9 +472,9 @@ INSERT INTO `web_tag_target` (`id`, `tag_id`, `target_type`, `target_id`, `tenan
 DELETE FROM web_tag_target WHERE tag_id NOT IN (SELECT id FROM web_tag);
 
 -- ----------------------------
--- Table data for app_open
+-- Table data for app_open -> Do by code
 -- ----------------------------
-INSERT INTO `app_open` (`id`, `app_id`, `app_code`, `app_type`, `edition_type`, `version`, `client_id`, `tenant_id`, `user_id`, `open_date`, `expiration_date`, `expiration_deleted`, `op_client_open`, `created_date`) VALUES (1, 100006, 'AngusGM', 'BASE_APP', 'DATACENTER', '1.0.0', 'xcan_tp', :TENANT_ID, -1, ':GM_APP_OPEN_DATE', ':GM_APP_EXPIRATION_DATE', 0, 0, '2024-01-01 00:00:00');
+-- INSERT INTO `app_open` (`id`, `app_id`, `app_code`, `app_type`, `edition_type`, `version`, `client_id`, `tenant_id`, `user_id`, `open_date`, `expiration_date`, `expiration_deleted`, `op_client_open`, `created_date`) VALUES (1, 100006, 'AngusGM', 'BASE_APP', 'DATACENTER', '1.0.0', 'xcan_tp', :TENANT_ID, -1, ':GM_APP_OPEN_DATE', ':GM_APP_EXPIRATION_DATE', 0, 0, '2024-01-01 00:00:00');
 
 -- ----------------------------
 -- Table data for auth_policy

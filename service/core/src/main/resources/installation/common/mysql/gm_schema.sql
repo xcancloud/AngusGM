@@ -825,7 +825,7 @@ CREATE TABLE `id_config` (
   `biz_key` varchar(80) COLLATE utf8mb4_bin NOT NULL,
   `format` varchar(16) COLLATE utf8mb4_bin NOT NULL,
   `prefix` varchar(4) COLLATE utf8mb4_bin NOT NULL,
-  `date_format` varchar(8) COLLATE utf8mb4_bin NOT NULL,
+  `date_format` varchar(8) COLLATE utf8mb4_bin DEFAULT NULL,
   `seq_length` int(11) NOT NULL,
   `mode` varchar(8) COLLATE utf8mb4_bin NOT NULL,
   `scope` varchar(16) COLLATE utf8mb4_bin NOT NULL,

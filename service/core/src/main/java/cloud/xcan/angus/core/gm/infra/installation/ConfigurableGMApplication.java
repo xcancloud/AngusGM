@@ -10,6 +10,8 @@ import static cloud.xcan.angus.core.spring.env.AbstractEnvLoader.envs;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getFinalTenantId;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getFinalTenantName;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getGMWebsite;
+import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getInstallGMHost;
+import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getInstallGMPort;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getProductInfo;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.localDCaches;
 import static cloud.xcan.angus.core.spring.env.EnvHelper.getEnum;
@@ -30,6 +32,8 @@ import static cloud.xcan.angus.core.spring.env.EnvKeys.GM_DB_NAME;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.GM_DB_PASSWORD;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.GM_DB_PORT;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.GM_DB_USER;
+import static cloud.xcan.angus.core.spring.env.EnvKeys.GM_HOST;
+import static cloud.xcan.angus.core.spring.env.EnvKeys.GM_PORT;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.INSTALL_APPS;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.REDIS_DEPLOYMENT;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.REDIS_HOST;
@@ -260,7 +264,7 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
         Arrays.asList(nanoTime(), productInfo.getAppId(), appEdition.getValue(), productInfo.getCode(), "CLOUD_APP", productInfo.getVersion(),
             "xcan_tp", -1L, tenantId,
             nonNull(mainAppDCache) ? formatByDateTimePattern(mainAppDCache.getNbe()) : formatByDateTimePattern(new Date()),
-            nonNull(mainAppDCache) ? formatByDateTimePattern(mainAppDCache.getNaf()) : formatByDateTimePattern((appEdition.isPrivatizationFree() ? getMaxFreeOpenDate() : getMaxTrialOpenDate())),
+            nonNull(mainAppDCache) ? formatByDateTimePattern(mainAppDCache.getNaf()) : formatByDateTimePattern((getMaxFreeOpenDate())),
             0, 0, formatByDateTimePattern(new Date()))
     );
     // @formatter:off
@@ -294,8 +298,12 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
     envs.put(TENANT_ID, getFinalTenantId(mainDCache).toString());
     envs.put(TENANT_NAME, getFinalTenantName(mainDCache));
 
-    envs.put(GM_APP_OPEN_DATE, formatByDateTimePattern(new Date()));
-    envs.put(GM_APP_EXPIRATION_DATE, formatByDateTimePattern(getMaxFreeOpenDate()));
+    // Used by eureka
+    envs.put(GM_HOST, getInstallGMHost());
+    envs.put(GM_PORT, getInstallGMPort());
+
+    //envs.put(GM_APP_OPEN_DATE, formatByDateTimePattern(new Date()));
+    //envs.put(GM_APP_EXPIRATION_DATE, formatByDateTimePattern(getMaxFreeOpenDate()));
 
     envs.put(GM_ADMIN_USER_ID, DEFAULT_ADMIN_USER_ID);
     envs.put(GM_ADMIN_FULL_NAME, getString(GM_ADMIN_FULL_NAME, "User" + randomNumeric(6)));
