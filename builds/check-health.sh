@@ -14,7 +14,8 @@ fi
 
 # Configuration parameters
 HOST="$1"
-HEALTH_URL="http://$HOST:1806/actuator/health"
+PORT="$2"
+HEALTH_URL="http://$HOST:$PORT/actuator/health"
 TIMEOUT=120          # Total timeout in seconds
 INTERVAL=3          # Check interval in seconds
 

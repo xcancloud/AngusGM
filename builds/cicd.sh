@@ -23,6 +23,9 @@ NGINX_CONFIG_DIR="/etc/nginx/conf.d"
 
 CLEAR_MAVEN_REPO="/data/repository"
 
+PORT=1806
+PRIVATE_PORT=8802
+
 # Validate input parameters
 validate_parameters() {
   # Validate mandatory parameters
@@ -137,12 +140,12 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh debug" || {
     echo "ERROR: Failed to start service"; exit 1
   }
-  sh builds/check-health.sh ${host} || {
+  sh builds/check-health.sh ${host} ${PORT} || {
     echo "ERROR: Service health check failed"; exit 1
   }
 }
 
-# Deploy service module
+# Deploy private app
 deploy_private_edition() {
   echo "INFO: Deploying private edition to ${host}"
   ssh "$host" "mkdir -p ${REMOTE_APP_DIR}" || {
@@ -164,9 +167,9 @@ deploy_private_edition() {
     echo "ERROR: Failed to copy env files"; exit 1
   }
   ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh debug" || {
-    echo "ERROR: Failed to start service"; exit 1
+    echo "ERROR: Failed to start app"; exit 1
   }
-  sh builds/check-health.sh ${host} || {
+  sh builds/check-health.sh ${host} ${PRIVATE_PORT} || {
     echo "ERROR: Service health check failed"; exit 1
   }
 }
