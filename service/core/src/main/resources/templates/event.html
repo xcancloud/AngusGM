@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="">
+  <title>Event</title>
+  <style type="text/css">
+    .page {
+      height: 100%;
+      margin: 1rem;
+      color: #000;
+      font-family: Monaco, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .first-title {
+      padding-top: 8px;
+      border-top: 1px solid #6f8394;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    #title {
+      margin: 0 auto;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #6f8394;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    #main {
+      margin: auto;
+    }
+
+    ul li {
+      list-style: none;
+    }
+  </style>
+</head>
+
+<body>
+<div id="popContainer" class="page">
+  <div id="main">
+    <p id="title">Event</p>
+    <div id="lastDiv" style="padding-top: 16px;padding-right: 2.6rem;padding-left: 2rem;">
+      <div>
+        <span id="name">Name：</span>
+        <span th:text="${e.name}"></span>
+      </div>
+      <div>
+        <span id="Description">Desc：</span>
+        <span th:text="${e.description}"></span>
+      </div>
+      <div>
+        <span id="Date">Date：</span>
+        <span th:text="${e.createdDate}"></span>
+      </div>
+      <div>
+        <span id="Id">  Id：</span>
+        <span th:text="${e.id}"></span>
+      </div>
+      <div>
+        <span id="Code">Code：</span>
+        <span th:text="${e.code}"></span>
+      </div>
+      <div>
+        <span id="Type">Type：</span>
+        <span th:text="${e.type}"></span>
+      </div>
+    </div>
+    <div id="source">
+      <p class="first-title">
+        SOURCE</p>
+      <ul id="sourceUl" style="margin-top: -12px;">
+        <li><span>Client Id：</span>
+          <span th:text="${s.clientId}"></span></li>
+        <li><span>Service Code：</span>
+          <span th:text="${s.serviceCode}"></span></li>
+        <li><span>Service Name：</span>
+          <span th:text="${s.serviceName}"></span></li>
+        <li><span>Instance Id：</span>
+          <span th:text="${s.instanceId}"></span></li>
+        <li id="requestIdLi"><span>Request Id：</span>
+          <span id="requestId" th:text="${s.requestId}"></span>
+        </li>
+        <li><span>Request URI：</span><span id="uri" th:text="${s.uri}"></span></li>
+        <li><span>Request Method：</span><span id="method" th:text="${s.method}"></span></li>
+      </ul>
+    </div>
+    <div id="principal">
+      <p class="first-title">
+        PRINCIPAL</p>
+      <ul style="margin-top: -12px;">
+        <li id="tenantIdLi"><span>Tenant Id：</span>
+          <span id="tenantId" th:text="${s.tenantId}"></span>
+        </li>
+        <li id="tenantNameLi"><span>Tenant Name：</span>
+          <span id="tenantName" th:text="${s.tenantName}"></span></li>
+        <li id="userIdLi"><span>User Id：</span>
+          <span id="userId" th:text="${s.userId}"></span></li>
+        <li id="fullnameLi"><span>User Fullname：</span>
+          <span id="fullname" th:text="${s.fullname}"></span></li>
+      </ul>
+    </div>
+    <div id="exception">
+      <p class="first-title">
+        EXCEPTION</p>
+      <ul id="exceptionUl" style="margin-top: -12px;">
+        <li><span>Exception Key(eKey)：</span><span th:text="${s.eKey}"></span></li>
+        <li><span>Exception Level：</span><span th:text="${s.level}"></span></li>
+        <li><span>Exception Cause：</span>
+          <span style="word-break: break-word;white-space: pre-wrap;" id="cause"
+                th:text="${s.cause}"></span>
+        </li>
+        <li><span>Exception Ext：</span>
+          <div>
+            <pre id="ext" th:text="${s.ext}"></pre>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="biz">
+      <p class="first-title">
+        BUSINESS</p>
+      <ul id="bizUl" style="margin-top: -12px;">
+        <li><span>Biz Id：</span><span th:text="${s.bizId}"><span></span></li>
+        <li><span>Biz No：</span><span th:text="${s.bizNo}"><span></span></li>
+        <li><span>Biz Key：</span><span th:text="${s.bizKey}"><span></span></li>
+        <li><span>Big Biz Key：</span><span th:text="${s.bigBizKey}"><span></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    window.onresize = function () {
+        let winWidth = window.innerWidth;
+        if (winWidth <= 414) {
+            document.getElementById("requestId").style = "display:block"
+            document.getElementById("requestId").style = "display:block"
+        } else {
+            document.getElementById("cause").style = "display:inline"
+            document.getElementById("cause").style = "display:inline"
+        }
+    }
+
+    if (
+        document.getElementById("tenantId").innerHTML.length === 0
+    ) {
+        document.getElementById("tenantIdLi").style.display = "none";
+    } else {
+        document.getElementById("tenantIdLi").style.display = "block";
+    }
+
+    if (
+        document.getElementById("tenantName").innerHTML.length === 0
+    ) {
+        document.getElementById("tenantNameLi").style.display = "none";
+    } else {
+        document.getElementById("tenantNameLi").style.display = "block";
+    }
+    if (
+        document.getElementById("userId").innerHTML.length === 0
+    ) {
+        document.getElementById("userIdLi").style.display = "none";
+    } else {
+        document.getElementById("userIdLi").style.display = "block";
+    }
+
+    if (document.getElementById("fullname").innerHTML.length === 0) {
+        document.getElementById("fullnameLi").style.display = "none";
+    } else {
+        document.getElementById("fullnameLi").style.display = "block";
+    }
+
+    if (document.getElementById("ext").innerHTML.length > 0) {
+        let ext = document.getElementById("ext").innerHTML;
+        document.getElementById("ext").innerText = JSON.stringify(ext, null, 4);
+    }
+
+    if ("${e.exceptional}") {
+        document.getElementById("biz").style.display = "none";
+        document.getElementById("exception").style.display = "block";
+    } else {
+        document.getElementById("exception").style.display = "none";
+        document.getElementById("biz").style.display = "block";
+    }
+
+</script>
+
+</html>
