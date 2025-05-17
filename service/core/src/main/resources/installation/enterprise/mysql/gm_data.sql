@@ -4,6 +4,7 @@
 -- ----------------------------
 -- Note: After installation, it is necessary to modify the application URL.
 INSERT INTO `app` (`id`, `code`, `name`, `show_name`, `icon`, `type`, `edition_type`, `description`, `auth_ctrl`, `enabled`, `url`, `sequence`, `api_ids`, `version`, `open_stage`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (100007, 'AngusGM', 'AngusGM', 'AngusGM', '', 'BASE_APP', 'ENTERPRISE', '企业版全局管理', 1, 1, 'http://localhost:8802', 6, '[]', '1.0.0', 'SIGNUP', 'xcan_tp', :TENANT_ID, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+UPDATE `app` SET `created_date` = now(), `last_modified_date` = now();
 
 -- ----------------------------
 -- Table data for app_func
@@ -155,6 +156,7 @@ INSERT INTO `app_func` (`id`, `code`, `name`, `show_name`, `pid`, `icon`, `type`
 INSERT INTO `app_func` (`id`, `code`, `name`, `show_name`, `pid`, `icon`, `type`, `description`, `auth_ctrl`, `enabled`, `url`, `app_id`, `sequence`, `api_ids`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (1000071201018, 'UserTagsUnassociate', '取消关联标签', '取消关联', 1000071201002, '', 'BUTTON', '', 1, 1, '', 100007, 1, '[]', 'xcan_tp', :TENANT_ID, -1, '2024-01-02 11:22:22', -1, '2024-03-08 09:50:26');
 INSERT INTO `app_func` (`id`, `code`, `name`, `show_name`, `pid`, `icon`, `type`, `description`, `auth_ctrl`, `enabled`, `url`, `app_id`, `sequence`, `api_ids`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (1000071204013, 'info', '显示地址详情', '显示地址详情', 1000071204005, '', 'BUTTON', '', 1, 1, '/storespriv/cloud/info/{id}', 100007, 1, '[]', 'xcan_tp', :TENANT_ID, -1, '2024-01-02 11:22:22', -1, '2024-03-27 12:12:58');
 INSERT INTO `app_func` (`id`, `code`, `name`, `show_name`, `pid`, `icon`, `type`, `description`, `auth_ctrl`, `enabled`, `url`, `app_id`, `sequence`, `api_ids`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (1000071204014, 'open2p', '实际地址详情', '实际地址详情', 1000071204005, '', 'BUTTON', '', 1, 1, '/stores/cloud/open2p/{id}', 100007, 1, '[]', 'xcan_tp', :TENANT_ID, -1, '2024-01-02 11:22:22', -1, '2024-03-27 12:13:03');
+UPDATE `app_func` SET `created_date` = now(), `last_modified_date` = now();
 
 -- ----------------------------
 -- Table data for web_tag
@@ -483,6 +485,7 @@ DELETE FROM web_tag_target WHERE tag_id NOT IN (SELECT id FROM web_tag);
 INSERT INTO `auth_policy` (`id`, `name`, `code`, `enabled`, `type`, `default0`, `grant_stage`, `description`, `app_id`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (128001, '应用管理员', 'GM_ADMIN', 1, 'PRE_DEFINED', 1, 'SIGNUP_SUCCESS', '拥有“全局管理”应用所有的功能权限。', 100007, 'xcan_tp', :TENANT_ID, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `auth_policy` (`id`, `name`, `code`, `enabled`, `type`, `default0`, `grant_stage`, `description`, `app_id`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (128002, '一般用户', 'GM_USER', 1, 'PRE_DEFINED', 1, 'SIGNUP_SUCCESS', '拥有“全局管理”应用普通的操作权限，无法进行“删除、重置、设置身份”等重要操作。', 100007, 'xcan_tp', :TENANT_ID, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `auth_policy` (`id`, `name`, `code`, `enabled`, `type`, `default0`, `grant_stage`, `description`, `app_id`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (128003, '访客', 'GM_GUEST', 1, 'PRE_DEFINED', 1, 'SIGNUP_SUCCESS', '拥有进入“全局管理”应用的查看权限，无法进行功能操作。', 100007, 'xcan_tp', :TENANT_ID, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+UPDATE `auth_policy` SET `created_date` = now(), `last_modified_date` = now();
 
 -- ----------------------------
 -- Table data for auth_policy_func

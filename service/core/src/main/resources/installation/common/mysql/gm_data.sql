@@ -29,6 +29,7 @@ INSERT INTO `user0` (`id`, `username`, `first_name`, `last_name`, `full_name`, `
                     '', :TENANT_ID, ':TENANT_NAME', NULL, NULL, 'UNKNOWN', NULL, 'BACKGROUND_ADDED', NULL, NULL, 0, NULL,
                     NULL, 0, 1, 0, NULL, 1, '', 0, 0, NULL, NULL,
                     NULL, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+UPDATE `user0` SET `created_date` = now(), `last_modified_date` = now();
 
 -- ----------------------------
 -- Table data for oauth2_user
@@ -77,6 +78,7 @@ INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
                               `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
                     VALUES (6, 'QuotaError', '配额错误', 'QUOTA', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+UPDATE `event_template` SET `created_date` = now(), `last_modified_date` = now();
 
 -- ----------------------------
 -- Table data for c_setting
