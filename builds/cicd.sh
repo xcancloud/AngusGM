@@ -239,6 +239,15 @@ ci_by_module(){
 ci_private_edition(){
   # clone_repository
     echo "INFO: Building private app"
+
+    echo "INFO: Building web module"
+    cd web || exit 1
+    npm_build || {
+      echo "ERROR: Web build failed"; exit 1
+    }
+    cd ..
+
+    echo "INFO: Building service module and packaging app"
     maven_build || {
       echo "ERROR: Private app build failed"; exit 1
     }
