@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/setting/user")
-public class SettingUserDoorRest {
+public class SettingUserInnerRest {
 
   @Resource
   private SettingUserFacade settingUserFacade;
