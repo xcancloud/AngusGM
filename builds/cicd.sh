@@ -248,10 +248,6 @@ ci_private_edition(){
     npm_build || {
       echo "ERROR: Web build failed"; exit 1
     }
-
-    npm_build || {
-      echo "ERROR: Web build failed"; exit 1
-    }
     cd ..
 
     echo "INFO: Building service module and packaging app"
