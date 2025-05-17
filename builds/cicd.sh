@@ -239,7 +239,6 @@ ci_by_module(){
 ci_private_edition(){
   # clone_repository
     echo "INFO: Building private app"
-    cd "$REMOTE_APP_DIR" || exit 1
     maven_build || {
       echo "ERROR: Private app build failed"; exit 1
     }
