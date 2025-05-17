@@ -142,6 +142,35 @@ deploy_service() {
   }
 }
 
+# Deploy service module
+deploy_private_edition() {
+  echo "INFO: Deploying private edition to ${host}"
+  ssh "$host" "mkdir -p ${REMOTE_APP_DIR}" || {
+    echo "ERROR: Failed to init app directory"; exit 1
+  }
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh shutdown-gm.sh" || {
+    echo "WARN: Failed to stop app, proceeding anyway"
+  }
+  ssh "$host" "rm -rf *" || {
+    echo "ERROR: Failed to clean app directory"; exit 1
+  }
+  scp -rp "dist/AngusGM-*.zip" "${host}:/tmp/" || {
+    echo "ERROR: Failed to copy app zip file"; exit 1
+  }
+  ssh "$host" "uzip /tmp/AngusGM-*.zip -d ${REMOTE_APP_DIR}" || {
+    echo "ERROR: Failed to uzip to app directory"; exit 1
+  }
+  ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/.priv-test.env ${REMOTE_APP_DIR}/conf/.priv.env" || {
+    echo "ERROR: Failed to copy env files"; exit 1
+  }
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh debug" || {
+    echo "ERROR: Failed to start service"; exit 1
+  }
+  sh builds/check-health.sh ${host} || {
+    echo "ERROR: Service health check failed"; exit 1
+  }
+}
+
 # Build web module
 npm_build () {
   echo "INFO: npm install start"
@@ -186,6 +215,77 @@ deploy_web() {
   }
 }
 
+ci_by_module(){
+  # clone_repository
+  if echo "$module" | grep -q "service"; then
+    echo "INFO: Building service module"
+    cd "$SERVICE_DIR" || exit 1
+    maven_build || {
+      echo "ERROR: Service build failed"; exit 1
+    }
+    cd ..
+  fi
+
+  if echo "$module" | grep -q "web"; then
+    echo "INFO: Building web module"
+    cd "$WEB_DIR" || exit 1
+    npm_build || {
+      echo "ERROR: Web build failed"; exit 1
+    }
+    cd ..
+  fi
+}
+
+ci_private_edition(){
+  # clone_repository
+    echo "INFO: Building private app"
+    cd "$REMOTE_APP_DIR" || exit 1
+    maven_build || {
+      echo "ERROR: Private app build failed"; exit 1
+    }
+}
+
+cd_by_module(){
+  if [ -n "$hosts" ]; then
+    echo "INFO: Starting deployment to hosts: ${hosts}"
+    IFS=',' read -ra HOST_LIST <<< "$hosts"
+    for host in "${HOST_LIST[@]}"; do
+      if echo "$module" | grep -q "service"; then
+        deploy_service
+      fi
+      if echo "$module" | grep -q "web"; then
+        deploy_web
+      fi
+    done
+  else
+    echo "INFO: No hosts specified, skipping deployment"
+  fi
+}
+
+cd_private_edition(){
+  if [ -n "$hosts" ]; then
+    echo "INFO: Starting deployment to hosts: ${hosts}"
+    IFS=',' read -ra HOST_LIST <<< "$hosts"
+    for host in "${HOST_LIST[@]}"; do
+        deploy_private_edition
+    done
+  else
+    echo "INFO: No hosts specified, skipping deployment"
+  fi
+}
+
+cicd(){
+  if echo "$editionType" | grep -q "edition.cloud_service"; then
+    echo "INFO: Building cloud_service edition module"
+    ci_by_module
+    cd_by_module
+  else
+    echo "INFO: Building private edition app"
+    ci_private_edition
+    cd_private_edition
+  fi
+}
+
 # Main execution flow
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -207,42 +307,8 @@ validate_parameters
 # Step 2: Environment preparation
 prepare_environment
 
-# Step 3: CI Phase
-# clone_repository
-
-if echo "$module" | grep -q "service"; then
-  echo "INFO: Building service module"
-  cd "$SERVICE_DIR" || exit 1
-  maven_build || {
-    echo "ERROR: Service build failed"; exit 1
-  }
-  cd ..
-fi
-
-if echo "$module" | grep -q "web"; then
-  echo "INFO: Building web module"
-  cd "$WEB_DIR" || exit 1
-  npm_build || {
-    echo "ERROR: Web build failed"; exit 1
-  }
-  cd ..
-fi
-
-# Step 4: CD Phase
-if [ -n "$hosts" ]; then
-  echo "INFO: Starting deployment to hosts: ${hosts}"
-  IFS=',' read -ra HOST_LIST <<< "$hosts"
-  for host in "${HOST_LIST[@]}"; do
-    if echo "$module" | grep -q "service"; then
-      deploy_service
-    fi
-    if echo "$module" | grep -q "web"; then
-      deploy_web
-    fi
-  done
-else
-  echo "INFO: No hosts specified, skipping deployment"
-fi
+# Step 3: CI and CD Phase
+cicd
 
 echo "SUCCESS: CI/CD pipeline completed successfully"
 exit 0

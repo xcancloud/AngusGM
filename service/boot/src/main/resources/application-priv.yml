@@ -74,7 +74,7 @@ xcan:
 
 eureka:
   datacenter: self-host-dc1
-  environment: dev
+  environment: Priv
   client:
     healthcheck:
       # Disable health check-triggered auto-deregistration
