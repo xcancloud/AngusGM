@@ -157,10 +157,11 @@ deploy_private_edition() {
   ssh "$host" "rm -rf *" || {
     echo "ERROR: Failed to clean app directory"; exit 1
   }
-  dist_file=$(ls dist/AngusGM-*.zip)
-  scp -rp $dist_file "${host}:/tmp/" || {
+  dist_zip=$(ls dist/AngusGM-*.zip)
+  scp -rp $dist_zip "${host}:/tmp/" || {
     echo "ERROR: Failed to copy app zip file"; exit 1
   }
+  dist_file=$(basename "$dist_zip")
   ssh "$host" "unzip /tmp/${dist_file} -d ${REMOTE_APP_DIR}" || {
     echo "ERROR: Failed to uzip to app directory"; exit 1
   }
