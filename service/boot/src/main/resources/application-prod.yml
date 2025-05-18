@@ -64,14 +64,23 @@ xcan:
 eureka:
   datacenter: self-host-dc1
   environment: prod
+  server:
+    enable-self-preservation: false
+    renewal-percent-threshold: 0.85
+    a-sgcache-expiry-timeout-ms: 300000
+    registry-sync-retry-wait-ms: 3000
+    eviction-interval-timer-in-ms: 5000
+    peer-eureka-nodes-update-interval-ms: 10000
+    renewal-threshold-update-interval-ms: 30000
   client:
     healthcheck:
       # Disable health check-triggered auto-deregistration
       enabled: false
     register-with-eureka: true
-    eureka-connection-idle-timeout-seconds: 10
-    initial-instance-info-replication-interval-seconds: 10
-    registry-fetch-interval-seconds: 15
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    eureka-connection-idle-timeout-seconds: 30
+    initial-instance-info-replication-interval-seconds: 40
     serviceUrl:
       # defaultZone: http://${EUREKA_USER_NAME}:${EUREKA_USER_PASSWORD}@${GM_HOST_01}:${GM_PORT}/eureka/,http://${EUREKA_USER_NAME}:${EUREKA_USER_PASSWORD}@${GM_HOST_02}:${GM_PORT}/eureka/
       defaultZone: http://${EUREKA_USER_NAME}:${EUREKA_USER_PASSWORD}@${GM_HOST}:${GM_PORT}/eureka/
@@ -83,14 +92,6 @@ eureka:
     prefer-ip-address: true
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
     health-check-url-path: /actuator/health
-  server:
-    enable-self-preservation: false
-    renewal-percent-threshold: 0.85
-    a-sgcache-expiry-timeout-ms: 300000
-    registry-sync-retry-wait-ms: 3000
-    eviction-interval-timer-in-ms: 5000
-    peer-eureka-nodes-update-interval-ms: 10000
-    renewal-threshold-update-interval-ms: 30000
 
 spring:
   security:
