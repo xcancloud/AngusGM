@@ -16,6 +16,12 @@ JDK_URL_MAC="https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50
 
 # Function from previous implementation
 check_jdk_version() {
+    if [ -d "$JDK_DIR" ]; then
+       export JAVA_HOME="$JDK_DIR"
+       echo "The JAVA_HOME has been set to: $JAVA_HOME"
+       return 0
+    fi
+
     . /etc/profile
 
     if ! command -v java >/dev/null 2>&1; then
