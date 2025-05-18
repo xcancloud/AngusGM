@@ -97,8 +97,8 @@ eureka:
   instance:
     app-name: '@artifactId@'
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
-    lease-expiration-duration-in-seconds: 60
-    lease-renewal-interval-in-seconds: 60
+    lease-expiration-duration-in-seconds: 90
+    lease-renewal-interval-in-seconds: 30
     prefer-ip-address: true
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/
     health-check-url-path: /actuator/health
