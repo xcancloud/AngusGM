@@ -24,7 +24,7 @@ gatewayApiRouters.every(item => {
 export default {
   host: '0.0.0.0',
   port: 80,
-  allowedHosts: ["dev-host.xcan.cloud"],
+  allowedHosts: ['dev-host.xcan.cloud'],
   strictPort: true,
   open: false,
   proxy

@@ -81,60 +81,60 @@ const legend = props.dataSource.length > 8 && props.dataSource.length < 12
         data: props.dataSource.filter(item => item.name).slice(idx * 4, idx * 4 + 4)
       };
     }) : props.dataSource.length > 2
-    ? [{
-        orient: 'vertical',
-        top: 124,
-        right: '50%',
-        itemHeight: 8,
-        itemWidth: 12,
-        textStyle: {
-          width: 60,
-          fontsize: 10,
-          // color: '#8C8C8C',
-          overflow: 'truncate'
+      ? [{
+          orient: 'vertical',
+          top: 124,
+          right: '50%',
+          itemHeight: 8,
+          itemWidth: 12,
+          textStyle: {
+            width: 60,
+            fontsize: 10,
+            // color: '#8C8C8C',
+            overflow: 'truncate'
+          },
+          tooltip: {
+            show: true
+          },
+          itemGap: 6,
+          data: props.dataSource.filter(item => item.name).slice(0, Math.ceil(props.dataSource?.length / 2))
         },
-        tooltip: {
-          show: true
-        },
-        itemGap: 6,
-        data: props.dataSource.filter(item => item.name).slice(0, Math.ceil(props.dataSource?.length / 2))
-      },
-      {
-        orient: 'vertical',
-        left: '50%',
-        top: 124,
-        itemHeight: 8,
-        itemWidth: 12,
-        textStyle: {
-          width: 60,
-          fontsize: 10,
-          // color: '#8C8C8C',
-          overflow: 'truncate'
-        },
-        tooltip: {
-          show: true
-        },
-        itemGap: 6,
-        data: props.dataSource.filter(item => item.name).slice(Math.ceil(props.dataSource?.length / 2), props.dataSource?.length)
-      }]
-    : {
-        orient: 'horizontal',
-        top: 124,
-        left: 'center',
-        itemHeight: 8,
-        itemWidth: 12,
-        textStyle: {
-          width: 50,
-          fontsize: 10,
-          // color: '#8C8C8C',
-          overflow: 'truncate'
-        },
-        tooltip: {
-          show: true
-        },
-        itemGap: 6,
-        data: props.dataSource.filter(item => item.name)
-      };
+        {
+          orient: 'vertical',
+          left: '50%',
+          top: 124,
+          itemHeight: 8,
+          itemWidth: 12,
+          textStyle: {
+            width: 60,
+            fontsize: 10,
+            // color: '#8C8C8C',
+            overflow: 'truncate'
+          },
+          tooltip: {
+            show: true
+          },
+          itemGap: 6,
+          data: props.dataSource.filter(item => item.name).slice(Math.ceil(props.dataSource?.length / 2), props.dataSource?.length)
+        }]
+      : {
+          orient: 'horizontal',
+          top: 124,
+          left: 'center',
+          itemHeight: 8,
+          itemWidth: 12,
+          textStyle: {
+            width: 50,
+            fontsize: 10,
+            // color: '#8C8C8C',
+            overflow: 'truncate'
+          },
+          tooltip: {
+            show: true
+          },
+          itemGap: 6,
+          data: props.dataSource.filter(item => item.name)
+        };
 
 // 通用饼图配置
 const chartsOption = {
@@ -329,7 +329,7 @@ onMounted(() => {
 
 </script>
 <template>
-<!--  {{legend}}-->
+  <!--  {{legend}}-->
   <div
     ref="chartsRef"
     class="flex-1 h-full"
