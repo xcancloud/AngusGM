@@ -153,9 +153,6 @@ public class UserAssembler {
         .setTitle(dto.getTitle())
         .setGender(nullSafe(dto.getGender(), Gender.UNKNOWN))
         .setAddress(dto.getAddress())
-        .setPassword(dto.getPassword())
-        .setPasswordStrength(isEmpty(dto.getPassword()) ? PasswordStrength.UNKNOWN
-            : calcPasswordStrength(dto.getPassword()))
         .setMainDeptId(judgeMainDeptId(dto.getDepts()));
   }
 
@@ -175,9 +172,9 @@ public class UserAssembler {
         .setTitle(dto.getTitle())
         .setGender(nullSafe(dto.getGender(), Gender.UNKNOWN))
         .setAddress(dto.getAddress())
-        .setPassword(dto.getPassword())
-        .setPasswordStrength(isEmpty(dto.getPassword()) ? PasswordStrength.UNKNOWN
-            : calcPasswordStrength(dto.getPassword()))
+        .setPassword(isNull(dto.getId()) ? dto.getPassword() : null)
+        .setPasswordStrength(isNull(dto.getId()) && isEmpty(dto.getPassword())
+            ? PasswordStrength.UNKNOWN : calcPasswordStrength(dto.getPassword()))
         .setEnabled(isNull(dto.getId()) ? true : null)
         .setDisableReason(isNull(dto.getId()) ? "" : null)
         .setLocked(isNull(dto.getId()) ? false : null)

@@ -79,7 +79,7 @@ public class UserReplaceDto implements Serializable {
   @Schema(description = "User landline.", example = "010-88287890", maxLength = MAX_LANDLINE_LENGTH)
   private String landline;
 
-  @Password
+  @Password(allowNull = true)
   @Schema(description = "User signup password, used to log in to the system through the password.",
       example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String password;

@@ -10,7 +10,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.EMPTY_NUMBER;
 import static cloud.xcan.angus.spec.experimental.BizConstant.EMPTY_STR;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.convert;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
-import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -45,7 +44,6 @@ public class UserConverter {
 
   public static AuthUser replaceToAuthUser(User user, String password, Tenant tenantDb) {
     return AuthUser.username(user.getUsername())
-        .password(password)
         .disabled(user.getEnabled() || user.getDeleted())
         .accountExpired(user.getExpired())
         .accountLocked(nullSafe(user.getLocked(), false))
@@ -54,6 +52,7 @@ public class UserConverter {
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
         .fullName(user.getFullName())
+        .password(password)
         .passwordStrength(nonNull(password) ? calcPasswordStrength(password).getValue() : null)
         .sysAdmin(user.getSysAdmin())
         .toUser(false)

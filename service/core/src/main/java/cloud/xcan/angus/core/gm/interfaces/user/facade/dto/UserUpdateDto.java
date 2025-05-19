@@ -80,9 +80,9 @@ public class UserUpdateDto implements Serializable {
   @Schema(description = "User landline.", example = "010-88287890", maxLength = MAX_LANDLINE_LENGTH)
   private String landline;
 
-  @Password(allowNull = true)
-  @Schema(description = "User signup password, used to log in to the system through the password.", example = "xcan@123")
-  private String password;
+  //  @Password(allowNull = true)
+  //  @Schema(description = "User signup password, used to log in to the system through the password.", example = "xcan@123")
+  //  private String password;
 
   @Length(max = MAX_URL_LENGTH_X2)
   @Schema(description = "User avatar.", example = "http://prod-files.xcan.cloud/storage/pubapi/v1/file/logo.png",
