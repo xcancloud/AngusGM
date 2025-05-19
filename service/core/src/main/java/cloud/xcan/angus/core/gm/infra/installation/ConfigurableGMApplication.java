@@ -303,7 +303,8 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
     //envs.put(GM_APP_EXPIRATION_DATE, formatByDateTimePattern(getMaxFreeOpenDate()));
 
     envs.put(GM_ADMIN_USER_ID, DEFAULT_ADMIN_USER_ID);
-    envs.put(GM_ADMIN_FULL_NAME, getString(GM_ADMIN_FULL_NAME, "User" + randomNumeric(6)));
+    //envs.put(GM_ADMIN_FULL_NAME, getString(GM_ADMIN_FULL_NAME, "User" + randomNumeric(6))); <- Chinese garbled characters
+    envs.put(GM_ADMIN_FULL_NAME, getString(GM_ADMIN_USERNAME, DEFAULT_ADMIN_USERNAME));
     envs.put(GM_ADMIN_EMAIL, getString(GM_ADMIN_EMAIL, ""));
     envs.put(GM_ADMIN_USERNAME, getString(GM_ADMIN_USERNAME, DEFAULT_ADMIN_USERNAME));
 
