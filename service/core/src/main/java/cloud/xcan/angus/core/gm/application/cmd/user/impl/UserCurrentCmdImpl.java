@@ -6,7 +6,6 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.commonlink.user.User;

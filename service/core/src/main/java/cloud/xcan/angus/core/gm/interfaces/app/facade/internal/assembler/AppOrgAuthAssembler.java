@@ -32,7 +32,6 @@ import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyOrgVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
-import cloud.xcan.angus.spec.utils.ObjectUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

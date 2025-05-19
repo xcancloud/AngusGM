@@ -14,7 +14,6 @@ import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
 import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.validator.Mobile;
-import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
