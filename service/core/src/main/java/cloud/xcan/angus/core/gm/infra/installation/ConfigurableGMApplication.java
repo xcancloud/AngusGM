@@ -39,6 +39,7 @@ import static cloud.xcan.angus.core.spring.env.EnvKeys.REDIS_NODES;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.REDIS_PASSWORD;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.REDIS_PORT;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.REDIS_SENTINEL_MASTER;
+import static cloud.xcan.angus.core.spring.env.EnvKeys.STORAGE_FILES_PROXY_ADDRESS;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.TENANT_ID;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.TENANT_NAME;
 import static cloud.xcan.angus.core.spring.env.EnvKeys.VITE_GM_URL_PREFIX;
@@ -62,7 +63,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.lang.System.nanoTime;
 import static java.util.Collections.emptyMap;
 import static java.util.Objects.nonNull;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
@@ -127,6 +127,7 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
     envs.put(GM_PORT, getInstallGMPort());
 
     envs.put(GM_APIS_URL_PREFIX, getGMWebsite());
+    envs.put(STORAGE_FILES_PROXY_ADDRESS, getGMWebsite());
   }
 
   private void installApplication() throws Exception {
