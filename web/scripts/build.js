@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const args = process.argv.slice(2); // Remove node and script path
-console.log("> args: ", args)
+console.log('> args: ', args);
 
 const params = {};
 for (const arg of args) {
@@ -15,7 +15,7 @@ for (const arg of args) {
 }
 const deployEnv = params.env;
 const editionType = params.edition_type || 'COMMUNITY';
-console.log("> deployEnv: ", deployEnv, "editionType: ", editionType)
+console.log('> deployEnv: ', deployEnv, 'editionType: ', editionType);
 
 const packageInfo = require('../package.json');
 
@@ -41,11 +41,11 @@ const uuid = (() => {
 })();
 
 function start () {
-  console.log("> Generate version information to public/meta/")
+  console.log('> Generate version information to public/meta/');
   const versionContent = JSON.stringify({ version: packageInfo.version, uuid: uuid() }, null, 2);
   fs.writeFileSync(resolve('../public/meta/version.json'), versionContent, 'utf8');
 
-  console.log("> Update common env configuration file")
+  console.log('> Update common env configuration file');
   const envReplaceList = [
     { key: 'VITE_EDITION_TYPE', value: editionType },
     { key: 'VITE_PROFILE', value: deployEnv }
@@ -54,19 +54,19 @@ function start () {
   envContent = replace(envContent, envReplaceList);
   fs.writeFileSync(resolve('../public/meta/env'), envContent, 'utf8');
 
-  console.log("> Copy the environment configuration file to the public/meta/directory based on the environment variables")
+  console.log('> Copy the environment configuration file to the public/meta/directory based on the environment variables');
   if (deployEnv === 'priv') { // Not configuring Nginx in a private environment
     const deployEnvContent = fs.readFileSync(resolve(`../conf/.env.${deployEnv}`), 'utf8');
     fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
   }
 
-  console.log("> Copy the nginx configuration file to the public/")
+  console.log('> Copy the nginx configuration file to the public/');
   if (deployEnv !== 'priv') { // Not configuring Nginx in a private environment
     const nginxContent = fs.readFileSync(resolve(`../nginx/nginx_${deployEnv}_gm.conf`), 'utf8');
     fs.writeFileSync(resolve(`../public/nginx_${deployEnv}_gm.conf`), nginxContent, 'utf8');
   }
 
-  console.log("> Execute a dynamically generated npm script command to trigger the Vite build tool for deploy environment build workflows")
+  console.log('> Execute a dynamically generated npm script command to trigger the Vite build tool for deploy environment build workflows');
   execSync(`npm run vite:build:${deployEnv}`, { stdio: 'inherit' });
 }
 

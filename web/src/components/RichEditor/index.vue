@@ -46,12 +46,12 @@ onMounted(() => {
       if (props.value) {
         const values = JSON.parse(props.value);
         if (typeof values !== 'object') {
-          contents.value = [{insert: props.value}];
+          contents.value = [{ insert: props.value }];
         } else {
           contents.value = values || [];
         }
       } else {
-        contents.value = [];;
+        contents.value = [];
       }
       isQuillValue.value = true;
     } catch {
@@ -62,7 +62,6 @@ onMounted(() => {
   }, {
     immediate: true
   });
-
 
   watch(() => contents.value, () => {
     if (contents.value?.length) {
@@ -114,8 +113,8 @@ defineExpose({
   <template v-else-if="loaded">
     <div :class="{'fixed z-999 bg-white left-0 top-0 bottom-0 right-0 flex flex-col': isMax}">
       <Quill
-        v-model:value="contents"
         ref="quillRef"
+        v-model:value="contents"
         :toolbarOptions="props.toolbarOptions"
         :options="props.options"
         :mode="props.mode"

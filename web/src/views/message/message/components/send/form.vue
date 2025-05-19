@@ -235,8 +235,8 @@ defineExpose({
     </FormItem>
     <FormItem :label="t('messageContent')" required>
       <RichEditor
-        v-model:value="content"
         ref="richContentRef"
+        v-model:value="content"
         :uploadOptions="uploadOptions"
         :class="{'rich-editor-rule':contentRule}" />
       <div class="text-rule h-3.5">
@@ -289,7 +289,6 @@ defineExpose({
         @change="dateChange" />
     </FormItem>
   </Form>
-
 </template>
 <style scoped>
 :deep(.audit-rule-error .ant-input:not([disabled])) {

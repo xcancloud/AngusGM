@@ -51,7 +51,7 @@ onMounted(() => {
         contents.value = quillRef.value.getText();
         contents.value && (contents.value = contents.value.replaceAll('\n', ''));
       }
-    })
+    });
   }, {
     immediate: true
   });
@@ -65,11 +65,10 @@ onMounted(() => {
   </template>
   <template v-if="isQuillValue && loaded">
     <Quill
-      v-model:value="quillContents"
       ref="quillRef"
+      v-model:value="quillContents"
       :mode="props.mode"
       :disabled="true"
       style="display: none;" />
   </template>
 </template>
-

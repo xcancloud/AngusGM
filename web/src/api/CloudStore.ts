@@ -68,6 +68,6 @@ export default class CloudStore {
   }
 
   openApp (goodsId: string): Promise<[Error | null, any]> {
-    return http.post(`${baseUrl}/purchase/free/open`, {goodsId}, );
+    return http.post(`${baseUrl}/purchase/free/open`, { goodsId });
   }
 }

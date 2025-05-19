@@ -7,7 +7,6 @@ import { Card, PureCard, NoData } from '@xcan-angus/vue-ui';
 import RichEditor from '@/components/RichEditor/index.vue';
 // import RichBrowser from '@xcan/browser';
 
-
 import { message } from '@/api';
 
 interface Message {

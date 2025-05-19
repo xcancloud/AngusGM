@@ -29,7 +29,7 @@ import PrivLicense from '@/api/PrivLicense';
 import Signin from '@/api/Signin';
 import PubProxy from '@/api/PubProxy';
 import Storage from '@/api/Storage';
-import Appopen from '@/api/AppOpen'
+import Appopen from '@/api/AppOpen';
 
 export const tenant = new Tenant(GM);
 export const user = new User(GM);

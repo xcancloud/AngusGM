@@ -131,6 +131,7 @@ const handleCancel = () => {
   <PureCard class="p-3.5 flex-1 h-full">
     <div class="flex space-x-3.5 pl-3.5" style="height: calc(100% - 28px);">
       <SendForm
+        ref="formRef"
         v-model:propsTitle="title"
         v-model:propsContent="content"
         v-model:propsReceiveType="receiveType"
@@ -140,7 +141,6 @@ const handleCancel = () => {
         v-model:propsContentRule="contentRule"
         v-model:propsContentRuleMsg="propsContentRuleMsg"
         v-model:propsDateRule="dateRule"
-        ref="formRef"
         :notify="notify" />
       <SendList
         v-model:userList="userList"

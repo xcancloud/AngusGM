@@ -14,7 +14,7 @@ import VerificationCodeInput from '@/components/VerificationCodeInput/index.vue'
 import EmailInput from '@/components/EmailInput/index.vue';
 import MobileInput from '@/components/MobileInput/index.vue';
 
-import { termsAndConditions, privacyPolicy} from './config';
+import { termsAndConditions, privacyPolicy } from './config';
 
 interface Props {
   type: string
@@ -190,7 +190,7 @@ const signup = async () => {
 };
 
 // onMounted(() => {
-  // loadTerms();
+// loadTerms();
 // });
 
 </script>

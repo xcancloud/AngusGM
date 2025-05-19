@@ -12,7 +12,6 @@ const route = useRoute();
 const logoDefaultImg = new URL('./assets/angus-gm.png', import.meta.url).href;
 const sidebarMenus = ref<Array<unknown>>([]);
 
-
 onMounted(() => {
   setLayoutCodeCode('gm');
 });
