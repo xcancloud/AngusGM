@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Setter
 @Getter
@@ -43,6 +44,23 @@ public class Message {
   private Date sendDate;
 
   public Message() {
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+        .append("id", id)
+        .append("type", type)
+        .append("mediaType", mediaType)
+        .append("receiveObjectType", receiveObjectType)
+        .append("receiveObjectIds", receiveObjectIds)
+        .append("title", title)
+        .append("content", content)
+        .append("from", from)
+        .append("sendBy", sendBy)
+        .append("sendByName", sendByName)
+        .append("sendDate", sendDate)
+        .toString();
   }
 
   private Message(Builder builder) {

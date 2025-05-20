@@ -31,13 +31,12 @@ public class MessageNoticeService {
         if (LOCAL_ONLINE_USERS.containsValue(username)) {
           try {
             messagingTemplate.convertAndSendToUser(username, "/queue/message", message);
-            log.info("[WorkOrder] Message sent to user {}} : {}", username, message);
+            log.info("Send notice message {}} : {}", username, message);
           } catch (Exception e) {
             log.error("Send notice message to user[{}] exception: ", username, e);
           }
         }
       }
-
     }
   }
 }
