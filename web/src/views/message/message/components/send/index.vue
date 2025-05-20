@@ -41,18 +41,6 @@ const submit = async () => {
   }
 
   if (!formRef.value.validate()) {
-    // if (!title.value) {
-    //   titleRule.value = true;
-    // }
-    // if (!content.value) {
-    //   contentRule.value = true;
-    //   propsContentRuleMsg.value = t('请输入消息内容');
-    // }
-    //
-    // if (content.value.length > 8000) {
-    //   contentRule.value = true;
-    //   propsContentRuleMsg.value = t('内容太长,无法发送');
-    // }
     return;
   }
 

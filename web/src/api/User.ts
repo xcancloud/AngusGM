@@ -15,7 +15,7 @@ export default class User {
   }
 
   updateUser<T> (params: T): Promise<[Error | null, any]> {
-    return http.put(baseUrl, params);
+    return http.patch(baseUrl, params);
   }
 
   toggleUserEnabled (params: { id: string, enabled: boolean }[]): Promise<[Error | null, any]> {
