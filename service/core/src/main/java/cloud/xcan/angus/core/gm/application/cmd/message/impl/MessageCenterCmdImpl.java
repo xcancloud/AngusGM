@@ -51,7 +51,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
   private MessageCenterOnlineCmd messageCenterOnlineCmd;
 
   @Resource
-  private MessageNoticeService messageCenterNoticeService;
+  private MessageNoticeService messageNoticeService;
 
   @Resource
   private FeignBroadcastInvoker feignBroadcastInvoker;
@@ -115,38 +115,35 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
     switch (receiveObject) {
       case ALL: {
         List<String> onlineUsernames = userRepo.findUsernamesByOnline(true);
-        messageCenterNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
       }
       case TENANT: {
-        List<Long> tenantIds = message.getContent().getReceiveObjectIds();
-        List<String> onlineUsernames = userRepo.findUsernamesByTenantIdAndOnline(
-            tenantIds, true);
-        messageCenterNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        List<Long> tenantIds = message.getReceiveObjectIds();
+        List<String> onlineUsernames = userRepo.findUsernamesByTenantIdAndOnline(tenantIds, true);
+        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
       }
       case DEPT: {
-        List<Long> deptIds = message.getContent().getReceiveObjectIds();
-        Set<String> onlineUsernames = deptUserRepo.findUsernamesByDeptIdInAndOnline(
-            deptIds, true);
-        messageCenterNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        List<Long> deptIds = message.getReceiveObjectIds();
+        Set<String> onlineUsernames = deptUserRepo.findUsernamesByDeptIdInAndOnline(deptIds, true);
+        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
       }
       case GROUP: {
-        List<Long> groupIds = message.getContent().getReceiveObjectIds();
-        Set<String> onlineUsernames = groupUserRepo.findUsernamesByGroupIdInAndOnline(
-            groupIds, true);
-        messageCenterNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        List<Long> groupIds = message.getReceiveObjectIds();
+        Set<String> onlineUsernames = groupUserRepo.findUsernamesByGroupIdInAndOnline(groupIds, true);
+        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
       }
       case USER: {
-        List<Long> userIds = message.getContent().getReceiveObjectIds();
+        List<Long> userIds = message.getReceiveObjectIds();
         List<String> onlineUsernames = userRepo.findUsernamesByIdAndOnline(userIds, true);
-        messageCenterNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
       }
       case TO_POLICY: {
-        List<Long> topRoleIds = message.getContent().getReceiveObjectIds();
+        List<Long> topRoleIds = message.getReceiveObjectIds();
         Set<Long> roleUserIds = toRoleUserRepo.findAllByToRoleIdIn(topRoleIds)
             .stream().map(TORoleUser::getUserId).collect(Collectors.toSet());
         if (isNotEmpty(roleUserIds)) {
           List<String> onlineUsernames = userRepo.findUsernamesByIdAndOnline(roleUserIds, true);
-          messageCenterNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+          messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
         }
       }
       default: {
