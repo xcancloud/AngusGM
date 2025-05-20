@@ -35,4 +35,7 @@ public interface UserBaseRepo extends NameJoinRepository<UserBase, Long>,
   List<UserBase> findByFullNameIn(Collection<String> names);
 
   List<UserBase> findAllByTenantId(Long tenantId);
+
+  UserBase findByUsername(String username);
+
 }

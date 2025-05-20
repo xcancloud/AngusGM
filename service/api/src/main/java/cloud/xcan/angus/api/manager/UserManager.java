@@ -15,6 +15,8 @@ public interface UserManager {
 
   UserBase findUserBase(Long userId);
 
+  UserBase findUserBase(String username);
+
   List<User> findUsers(Collection<Long> userIds);
 
   List<UserBase> findUserBases(Collection<Long> userIds);

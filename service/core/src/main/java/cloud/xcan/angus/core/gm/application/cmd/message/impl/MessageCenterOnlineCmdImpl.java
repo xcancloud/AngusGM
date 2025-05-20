@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.message.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.MessageCenterConverter.assembleMessageCenterOnline;
-import static cloud.xcan.angus.core.gm.infra.message.MessageCenterConnectionListener.LOCAL_ONLINE_USERS;
+import static cloud.xcan.angus.core.gm.infra.message.MessageConnectionListener.LOCAL_ONLINE_USERS;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
@@ -11,23 +11,16 @@ import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnlineRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
-import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
-import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
-import cloud.xcan.angus.core.gm.application.query.user.impl.UserQueryImpl;
-import cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeMessage;
+import cloud.xcan.angus.core.gm.infra.message.Message;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.security.authentication.service.JdbcOAuth2AuthorizationService;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -45,8 +38,8 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
   private JdbcOAuth2AuthorizationService jdbcOAuth2AuthorizationService;
 
   @Override
-  public void offline(MessageCenterNoticeMessage message) {
-    List<Long> objectIds = message.getContent().getReceiveObjectIds();
+  public void offline(Message message) {
+    List<Long> objectIds = message.getReceiveObjectIds();
     if (isEmpty(objectIds)) {
       return;
     }

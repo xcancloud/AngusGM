@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.infra.message;
 
-import static cloud.xcan.angus.core.gm.infra.message.MessageCenterConnectionListener.LOCAL_ONLINE_USERS;
+import static cloud.xcan.angus.core.gm.infra.message.MessageConnectionListener.LOCAL_ONLINE_USERS;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import jakarta.annotation.Resource;
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @Slf4j
-public class MessageCenterNoticeService {
+public class MessageNoticeService {
 
   @Resource
   private SimpMessagingTemplate messagingTemplate;

@@ -85,6 +85,11 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
+  public UserBase findUserBase(String username) {
+    return userBaseRepo.findByUsername(username);
+  }
+
+  @Override
   public List<User> findUsers(Collection<Long> userIds) {
     return userRepo.findByIdIn(userIds);
   }

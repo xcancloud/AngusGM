@@ -7,7 +7,6 @@ import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLA
 
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import jakarta.annotation.Resource;
-import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +21,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
  * Listen to all WebSocket events.
  */
 @Slf4j
-public class MessageCenterConnectionListener implements
+public class MessageConnectionListener implements
     ApplicationListener<AbstractSubProtocolEvent> {
 
   public static final Map<String, String> LOCAL_ONLINE_USERS = new ConcurrentHashMap<>();
