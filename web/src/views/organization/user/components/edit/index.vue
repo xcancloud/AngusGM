@@ -509,6 +509,7 @@ onMounted(() => {
               </RadioGroup>
             </FormItem>
             <FormItem
+              v-if="!userId"
               :label="t('password')"
               :rules="passwordRule"
               name="password">
@@ -530,6 +531,7 @@ onMounted(() => {
               </Popover>
             </FormItem>
             <FormItem
+              v-if="!userId"
               :label="t('confirmPassword')"
               :rules="confirmPasswordRule"
               name="confirmPassword">
