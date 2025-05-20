@@ -32,13 +32,13 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
   @Query(value = "SELECT u.username FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.online = ?1", nativeQuery = true)
   List<String> findUsernamesByOnline(Boolean online);
 
-  @Query(value = "SELECT u.id FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.tenant_id = ?1 AND u.online = ?2", nativeQuery = true)
+  @Query(value = "SELECT u.id FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.tenant_id IN ?1 AND u.online = ?2", nativeQuery = true)
   List<Long> findIdsByTenantIdAndOnline(Collection<Long> tenantIds, Boolean online);
 
-  @Query(value = "SELECT u.username FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.tenant_id = ?1 AND u.online = ?2", nativeQuery = true)
+  @Query(value = "SELECT u.username FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.tenant_id IN ?1 AND u.online = ?2", nativeQuery = true)
   List<String> findUsernamesByTenantIdAndOnline(Collection<Long> tenantIds, Boolean online);
 
-  @Query(value = "SELECT u.username FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.id = ?1 AND u.online = ?2", nativeQuery = true)
+  @Query(value = "SELECT u.username FROM user0 u WHERE u.deleted = 0 AND u.enabled = 1 AND u.id IN ?1 AND u.online = ?2", nativeQuery = true)
   List<String> findUsernamesByIdAndOnline(Collection<Long> ids, Boolean online);
 
   @Override

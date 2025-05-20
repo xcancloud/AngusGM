@@ -19,10 +19,6 @@ public interface MessageCenterOnlineRepo extends BaseRepository<MessageCenterOnl
   List<MessageCenterOnline> findAllByUserIdIn(Collection<Long> userIds);
 
   @Modifying
-  @Query("update MessageCenterOnline a set a.online = true, a.onlineDate = now() where a.userId in ?1")
-  void updateOnlineStatus(List<Long> userId);
-
-  @Modifying
   @Query("update MessageCenterOnline a set a.online = false, a.offlineDate = now() where a.userId in ?1")
   void updateOfflineStatus(List<Long> userId);
 

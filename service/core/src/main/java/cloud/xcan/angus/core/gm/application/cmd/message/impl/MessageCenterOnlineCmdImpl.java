@@ -11,22 +11,29 @@ import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnlineRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
+import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
+import cloud.xcan.angus.core.gm.application.query.user.impl.UserQueryImpl;
 import cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeMessage;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.security.authentication.service.JdbcOAuth2AuthorizationService;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Biz
-public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Long> implements
-    MessageCenterOnlineCmd {
+public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Long>
+    implements MessageCenterOnlineCmd {
 
   @Resource
   private UserRepo userRepo;
@@ -34,104 +41,83 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
   @Resource
   private MessageCenterOnlineRepo messageCenterOnlineRepo;
 
+  @Resource
+  private JdbcOAuth2AuthorizationService jdbcOAuth2AuthorizationService;
+
   @Override
   public void offline(MessageCenterNoticeMessage message) {
-    new BizTemplate<Void>(false) {
+    List<Long> objectIds = message.getContent().getReceiveObjectIds();
+    if (isEmpty(objectIds)) {
+      return;
+    }
 
-      @Override
-      protected Void process() {
-        List<Long> objectIds = message.getContent().getReceiveObjectIds();
-        if (isEmpty(objectIds)) {
-          return null;
-        }
+    if (message.getReceiveObjectType().equals(ReceiveObjectType.USER)) {
+      offline0(objectIds);
 
-        if (message.getReceiveObjectType().equals(ReceiveObjectType.USER)) {
-          updateOfflineStatus0(objectIds);
+      // Invalidate user access token to force logout.
+      List<String> usernames = userRepo.findUsernamesByIdAndOnline(objectIds, true);
+      jdbcOAuth2AuthorizationService.removeByPrincipalName(usernames);
+    } else if (message.getReceiveObjectType().equals(ReceiveObjectType.TENANT)) {
+      List<Long> userIds = userRepo.findIdsByTenantIdAndOnline(objectIds, true);
+      if (isNotEmpty(userIds)) {
+        offline0(userIds);
 
-          // TODO Invalidate user access token to force logout.
-        } else if (message.getReceiveObjectType().equals(ReceiveObjectType.TENANT)) {
-          List<Long> userIds = userRepo.findIdsByTenantIdAndOnline(objectIds, true);
-          if (isNotEmpty(userIds)) {
-            updateOfflineStatus0(userIds);
-
-            // TODO Invalidate user access token to force logout.
-          }
-        }
-        return null;
+        // Invalidate user access token to force logout.
+        List<String> usernames = userRepo.findUsernamesByTenantIdAndOnline(objectIds, true);
+        jdbcOAuth2AuthorizationService.removeByPrincipalName(usernames);
       }
-    }.execute();
+    }
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void updateOnlineStatus(String username, Boolean online) {
-    new BizTemplate<Void>(false) {
+  public void updateOnlineStatus(String username, String userAgent, String deviceId,
+      String remoteAddress, Boolean online) {
+    User user = userRepo.findAllByUsername(username).get(0);
+    if (isNull(user)) {
+      return;
+    }
 
-      @Override
-      protected Void process() {
-        User user = userRepo.findAllByUsername(username).get(0);
-        if (isNull(user)) {
-          return null;
-        }
-
-        updateOnlineStatus0(online, user);
-        return null;
-      }
-    }.execute();
-  }
-
-  @Transactional(rollbackFor = Exception.class)
-  @Override
-  public void updateOnlineStatus(Long userId, Boolean online) {
-    new BizTemplate<Void>(false) {
-
-      @Override
-      protected Void process() {
-        User user = userRepo.findByUserId(userId);
-        if (isNull(user)) {
-          return null;
-        }
-
-        updateOnlineStatus0(online, user);
-        return null;
-      }
-    }.execute();
+    if (online) {
+      online0(userAgent, deviceId, remoteAddress, user);
+    } else {
+      offline0(userAgent, deviceId, remoteAddress, user);
+    }
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void shutdown() {
-    new BizTemplate<Void>(false) {
-
-      @Override
-      protected Void process() {
-        Collection<String> usernames = LOCAL_ONLINE_USERS.values();
-        if (isNotEmpty(usernames)) {
-          List<Long> userIds = userRepo.findIdsByUsernameIn(usernames);
-          updateOfflineStatus0(userIds);
-        }
-        return null;
+    Collection<String> usernames = LOCAL_ONLINE_USERS.values();
+    if (isNotEmpty(usernames)) {
+      List<Long> userIds = userRepo.findIdsByUsernameIn(usernames);
+      if (isEmpty(userIds)) {
+        userRepo.updateOfflineStatus(userIds);
       }
-    }.execute();
-  }
-
-  private void updateOnlineStatus0(Boolean online, User user) {
-    if (online) {
-      // Save online records.
-      insert0(assembleMessageCenterOnline(user));
-      // Update user online status.
-      userRepo.updateOnlineStatus(List.of(user.getId()));
-    } else {
-      // Update user offline status.
-      updateOfflineStatus0(List.of(user.getId()));
     }
   }
 
-  private void updateOfflineStatus0(List<Long> userIds) {
-    if (isNotEmpty(userIds)) {
-      messageCenterOnlineRepo.updateOfflineStatus(userIds);
-      userRepo.updateOfflineStatus(userIds);
+  private void offline0(List<Long> objectIds) {
+    List<User> users = userRepo.findByIdIn(objectIds);
+    if (isEmpty(users)) {
+      for (User user : users) {
+        offline0(null, null, null, user);
+      }
     }
+  }
+
+  private void online0(String userAgent, String deviceId, String remoteAddress, User user) {
+    // Save online records.
+    insert0(assembleMessageCenterOnline(user, userAgent, deviceId, remoteAddress, true));
+    // Update user online status.
+    userRepo.updateOnlineStatus(List.of(user.getId()));
+  }
+
+  private void offline0(String userAgent, String deviceId, String remoteAddress, User user) {
+    // Save offline records.
+    insert0(assembleMessageCenterOnline(user, userAgent, deviceId, remoteAddress, false));
+    // Update user offline status.
+    userRepo.updateOfflineStatus(List.of(user.getId()));
   }
 
   @Override

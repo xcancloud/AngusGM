@@ -5,6 +5,7 @@ import static cloud.xcan.angus.core.gm.infra.message.MessageCenterNoticeMessage.
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnline;
@@ -20,21 +21,19 @@ import java.util.UUID;
 
 public class MessageCenterConverter {
 
-  public static MessageCenterOnline assembleMessageCenterOnline(User user) {
+  public static MessageCenterOnline assembleMessageCenterOnline(User user,
+      String userAgent, String deviceId, String remoteAddress, boolean online) {
     MessageCenterOnline mCenterOnline = new MessageCenterOnline();
     mCenterOnline.setTenantId(user.getTenantId());
     mCenterOnline.setUserId(user.getId())
-        .setFullName(getUserFullName())
-        // TODO MessageCenterConnectionListener#SessionConnectEvent#Object source, Message<byte[]> message, @Nullable Principal user
-        // Read from Principal user
-        .setUserAgent(""/*user.getUserAgent()*/) //
-        .setDeviceId(""/*user.getDeviceId()*/)
-        .setRemoteAddress(""/*user.getRemoteAddress()*/)
-        .setOnline(true);
+        .setFullName(stringSafe(user.getFullName()))
+        .setUserAgent(stringSafe(userAgent))
+        .setDeviceId(stringSafe(deviceId))
+        .setRemoteAddress(stringSafe(remoteAddress))
+        .setOnline(online);
     if (mCenterOnline.getOnline()) {
       mCenterOnline.setOnlineDate(LocalDateTime.now());
     } else {
-      mCenterOnline.setOnlineDate(LocalDateTime.now());
       mCenterOnline.setOfflineDate(LocalDateTime.now());
     }
     return mCenterOnline;

@@ -540,8 +540,7 @@ CREATE TABLE `message_center_online`
     `online`         int(1) NOT NULL COMMENT 'Online status',
     `online_date`    datetime     DEFAULT NULL COMMENT 'Last online time',
     `offline_date`   datetime     DEFAULT NULL COMMENT 'Last offline time',
-    PRIMARY KEY (`user_id`) USING BTREE,
-    UNIQUE KEY `uidx_user_id` (`user_id`) USING BTREE,
+    KEY              `idx_user_id` (`user_id`) USING BTREE,
     KEY              `idx_tenant_id` (`tenant_id`) USING BTREE
 ) ENGINE=FEDERATED COMMENT='Message center online users' CONNECTION='xcan_gm_link/message_center_online';
 
