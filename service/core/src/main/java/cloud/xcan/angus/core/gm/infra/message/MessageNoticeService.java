@@ -23,7 +23,9 @@ public class MessageNoticeService {
    * Broadcast messages to all clients subscribed to /topic/messages.
    */
   public void sendBroadcast(Message message) {
-    messagingTemplate.convertAndSend(PUBLIC_TOPIC_DESTINATION, message);
+    String jsonMessage = toJson(message);
+    assert jsonMessage != null;
+    messagingTemplate.convertAndSend(PUBLIC_TOPIC_DESTINATION, jsonMessage);
   }
 
   /**
