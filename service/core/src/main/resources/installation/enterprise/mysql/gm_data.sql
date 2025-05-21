@@ -3,7 +3,7 @@
 -- Table data for app
 -- ----------------------------
 -- Note: After installation, it is necessary to modify the application URL.
-INSERT INTO `app` (`id`, `code`, `name`, `show_name`, `icon`, `type`, `edition_type`, `description`, `auth_ctrl`, `enabled`, `url`, `sequence`, `api_ids`, `version`, `open_stage`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (100007, 'AngusGM', 'AngusGM', 'AngusGM', '', 'BASE_APP', 'ENTERPRISE', '企业版全局管理', 1, 1, 'http://localhost:8802', 6, '[]', '1.0.0', 'SIGNUP', 'xcan_tp', :TENANT_ID, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
+INSERT INTO `app` (`id`, `code`, `name`, `show_name`, `icon`, `type`, `edition_type`, `description`, `auth_ctrl`, `enabled`, `url`, `sequence`, `api_ids`, `version`, `open_stage`, `client_id`, `tenant_id`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`) VALUES (100007, 'AngusGM', 'AngusGM', 'AngusGM', '', 'BASE_APP', 'ENTERPRISE', 'AngusGM企业版', 1, 1, 'http://localhost:8802', 6, '[]', '1.0.0', 'SIGNUP', 'xcan_tp', :TENANT_ID, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 UPDATE `app` SET `created_date` = now(), `last_modified_date` = now();
 
 -- ----------------------------

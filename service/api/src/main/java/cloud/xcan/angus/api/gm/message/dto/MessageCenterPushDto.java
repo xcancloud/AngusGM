@@ -37,14 +37,14 @@ public class MessageCenterPushDto implements Serializable {
 
   @NotNull
   @Schema(description = "Push message media type.", requiredMode = RequiredMode.REQUIRED)
-  private PushMediaType pushMediaType;
+  private PushMediaType mediaType;
 
   @Schema(description = "Send message user id.")
-  private Long sendUserId;
+  private Long sendBy;
 
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "Send message user full name.", maxLength = MAX_NAME_LENGTH)
-  private String sendUserName;
+  private String sendByName;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)

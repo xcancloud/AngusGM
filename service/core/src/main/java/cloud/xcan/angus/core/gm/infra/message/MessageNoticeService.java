@@ -11,14 +11,17 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @Slf4j
 public class MessageNoticeService {
 
+  public static final String PUBLIC_TOPIC_DESTINATION = "/topic/messages";
+  public static final String PRIVATE_USER_DESTINATION = "/queue/messages";
+
   @Resource
   private SimpMessagingTemplate messagingTemplate;
 
   /**
-   * Broadcast messages to all clients subscribed to /topic/message.
+   * Broadcast messages to all clients subscribed to /topic/messages.
    */
   public void sendBroadcast(String message) {
-    messagingTemplate.convertAndSend("/topic/message", message);
+    messagingTemplate.convertAndSend(PUBLIC_TOPIC_DESTINATION, message);
   }
 
   /**
@@ -30,7 +33,7 @@ public class MessageNoticeService {
       for (String username : usernames) {
         if (LOCAL_ONLINE_USERS.containsValue(username)) {
           try {
-            messagingTemplate.convertAndSendToUser(username, "/queue/message", message);
+            messagingTemplate.convertAndSendToUser(username, PRIVATE_USER_DESTINATION, message);
             log.info("Send notice message {}} : {}", username, message);
           } catch (Exception e) {
             log.error("Send notice message to user[{}] exception: ", username, e);

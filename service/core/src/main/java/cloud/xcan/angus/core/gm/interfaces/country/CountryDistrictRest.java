@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "CountryDistrict")
+@Tag(name = "CountryDistrict", description = "Query for supported district entrances.")
 @Validated
 @RestController
 @RequestMapping("/api/v1/country")

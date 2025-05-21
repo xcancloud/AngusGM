@@ -22,7 +22,7 @@ import cloud.xcan.angus.core.gm.infra.message.MessageNoticeService;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOfflineDto;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
 import cloud.xcan.angus.core.utils.GsonUtils;
-import cloud.xcan.angus.remote.client.FeignBroadcastInvoker;
+import cloud.xcan.angus.remote.client.HttpBroadcastInvoker;
 import cloud.xcan.angus.remote.message.ProtocolException;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -54,7 +54,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
   private MessageNoticeService messageNoticeService;
 
   @Resource
-  private FeignBroadcastInvoker feignBroadcastInvoker;
+  private HttpBroadcastInvoker feignBroadcastInvoker;
 
   @Resource
   private ApplicationInfo applicationInfo;
@@ -75,7 +75,11 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
         if (dto.isBroadcast()) {
           dto.setBroadcast(false);
           String offlineEndpoint = "/api/v1/message/center/push";
-          feignBroadcastInvoker.broadcast(applicationInfo.getArtifactId(), offlineEndpoint, dto);
+          try {
+            feignBroadcastInvoker.broadcast(applicationInfo.getArtifactId(), offlineEndpoint, dto);
+          } catch (Throwable e) {
+            log.error("Broadcast notice messages to all instances exception: ", e);
+          }
         } else {
           sendLocalWebSocketMessage(pushToNoticeDomain(dto));
         }
@@ -100,7 +104,11 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
         if (dto.isBroadcast()) {
           dto.setBroadcast(false);
           String offlineEndpoint = "/api/v1/message/center/online/off";
-          feignBroadcastInvoker.broadcast(applicationInfo.getArtifactId(), offlineEndpoint, dto);
+          try {
+            feignBroadcastInvoker.broadcast(applicationInfo.getArtifactId(), offlineEndpoint, dto);
+          } catch (Throwable e) {
+            log.error("Broadcast offline messages to all instances exception: ", e);
+          }
         } else {
           messageCenterOnlineCmd.offline(offlineToNoticeDomain(dto));
         }
@@ -129,7 +137,8 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
       }
       case GROUP: {
         List<Long> groupIds = message.getReceiveObjectIds();
-        Set<String> onlineUsernames = groupUserRepo.findUsernamesByGroupIdInAndOnline(groupIds, true);
+        Set<String> onlineUsernames = groupUserRepo.findUsernamesByGroupIdInAndOnline(groupIds,
+            true);
         messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
       }
       case USER: {

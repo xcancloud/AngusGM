@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -18,7 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     "cloud.xcan.angus.security"
 })
 @EnableEurekaServer
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"cloud.xcan.angus"})
 public class XCanAngusGMApplication {
 
   public static void main(String[] args) {

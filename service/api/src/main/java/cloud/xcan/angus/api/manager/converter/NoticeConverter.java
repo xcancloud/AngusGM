@@ -128,9 +128,9 @@ public class NoticeConverter {
 
   public static MessageCenterPushDto toMsgCenterPushDto(SendInsiteParam param) {
     return new MessageCenterPushDto()
-        .setPushMediaType(param.getPushMediaType())
-        .setSendUserId(nullSafe(param.getSendUserId(), getUserId()))
-        .setSendUserName(nullSafe(param.getSendUserName(), emptySafe(getUserFullName(), "System")))
+        .setMediaType(param.getPushMediaType())
+        .setSendBy(nullSafe(param.getSendUserId(), getUserId()))
+        .setSendByName(nullSafe(param.getSendUserName(), emptySafe(getUserFullName(), "System")))
         .setMessageId(param.getMessageId())
         .setTitle(param.getTitle())
         .setContent(param.getContent())

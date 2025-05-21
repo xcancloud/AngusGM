@@ -22,33 +22,33 @@ public class MessageCenterConverter {
 
   public static MessageCenterOnline assembleMessageCenterOnline(User user,
       String userAgent, String deviceId, String remoteAddress, boolean online) {
-    MessageCenterOnline mCenterOnline = new MessageCenterOnline();
-    mCenterOnline.setTenantId(user.getTenantId());
-    mCenterOnline.setUserId(user.getId())
+    MessageCenterOnline centerOnline = new MessageCenterOnline();
+    centerOnline.setTenantId(user.getTenantId());
+    centerOnline.setUserId(user.getId())
         .setFullName(stringSafe(user.getFullName()))
         .setUserAgent(stringSafe(userAgent))
         .setDeviceId(stringSafe(deviceId))
         .setRemoteAddress(stringSafe(remoteAddress))
         .setOnline(online);
-    if (mCenterOnline.getOnline()) {
-      mCenterOnline.setOnlineDate(LocalDateTime.now());
+    if (centerOnline.getOnline()) {
+      centerOnline.setOnlineDate(LocalDateTime.now());
     } else {
-      mCenterOnline.setOfflineDate(LocalDateTime.now());
+      centerOnline.setOfflineDate(LocalDateTime.now());
     }
-    return mCenterOnline;
+    return centerOnline;
   }
 
   public static Message pushToNoticeDomain(MessageCenterPushDto dto) {
     return Message.newBuilder()
         .id(isBlank(dto.getMessageId()) ? UUID.randomUUID().toString() : dto.getMessageId())
         .type(MessageType.NOTICE)
-        .mediaType(dto.getPushMediaType())
+        .mediaType(dto.getMediaType())
         .receiveObjectType(dto.getReceiveObjectType())
         .receiveObjectIds(dto.getReceiveObjectIds())
         .content(dto.getContent())
         .from(getUsername())
-        .sendBy(nullSafe(dto.getSendUserId(), getUserId()))
-        .sendByName(nullSafe(dto.getSendUserName(), getUserFullName()))
+        .sendBy(nullSafe(dto.getSendBy(), getUserId()))
+        .sendByName(nullSafe(dto.getSendByName(), getUserFullName()))
         .sendDate(new Date())
         .build();
   }

@@ -123,9 +123,10 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.engine.QueryParameters: debug
-    org.hibernate.engine.query.HQLQueryPlan: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org.springframework.security: debug
-    org.springframework.messaging: debug
+    org.hibernate.SQL: DEBUG
+    org.hibernate.engine.QueryParameters: DEBUG
+    org.hibernate.engine.query.HQLQueryPlan: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security: DEBUG
+    org.springframework.messaging: TRACE
+    org.springframework.web.socket: TRACE

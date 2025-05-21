@@ -21,8 +21,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
  * Listen to all WebSocket events.
  */
 @Slf4j
-public class MessageConnectionListener implements
-    ApplicationListener<AbstractSubProtocolEvent> {
+public class MessageConnectionListener implements ApplicationListener<AbstractSubProtocolEvent> {
 
   public static final Map<String, String> LOCAL_ONLINE_USERS = new ConcurrentHashMap<>();
 
