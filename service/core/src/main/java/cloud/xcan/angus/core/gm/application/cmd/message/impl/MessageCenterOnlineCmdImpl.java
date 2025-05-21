@@ -38,25 +38,24 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
   private JdbcOAuth2AuthorizationService jdbcOAuth2AuthorizationService;
 
   @Override
-  public void offline(Message message) {
-    List<Long> objectIds = message.getReceiveObjectIds();
-    if (isEmpty(objectIds)) {
+  public void offline(ReceiveObjectType receiveObjectType, List<Long> receiveObjectIds) {
+    if (isEmpty(receiveObjectIds)) {
       return;
     }
 
-    if (message.getReceiveObjectType().equals(ReceiveObjectType.USER)) {
-      offline0(objectIds);
+    if (receiveObjectType.equals(ReceiveObjectType.USER)) {
+      offline0(receiveObjectIds);
 
       // Invalidate user access token to force logout.
-      List<String> usernames = userRepo.findUsernamesByIdAndOnline(objectIds, true);
+      List<String> usernames = userRepo.findUsernamesByIdAndOnline(receiveObjectIds, true);
       jdbcOAuth2AuthorizationService.removeByPrincipalName(usernames);
-    } else if (message.getReceiveObjectType().equals(ReceiveObjectType.TENANT)) {
-      List<Long> userIds = userRepo.findIdsByTenantIdAndOnline(objectIds, true);
+    } else if (receiveObjectType.equals(ReceiveObjectType.TENANT)) {
+      List<Long> userIds = userRepo.findIdsByTenantIdAndOnline(receiveObjectIds, true);
       if (isNotEmpty(userIds)) {
         offline0(userIds);
 
         // Invalidate user access token to force logout.
-        List<String> usernames = userRepo.findUsernamesByTenantIdAndOnline(objectIds, true);
+        List<String> usernames = userRepo.findUsernamesByTenantIdAndOnline(receiveObjectIds, true);
         jdbcOAuth2AuthorizationService.removeByPrincipalName(usernames);
       }
     }

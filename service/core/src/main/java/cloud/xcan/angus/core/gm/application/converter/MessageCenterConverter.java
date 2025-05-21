@@ -53,18 +53,18 @@ public class MessageCenterConverter {
         .build();
   }
 
-  public static Message offlineToNoticeDomain(MessageCenterOfflineDto dto) {
-    return Message.newBuilder()
-        .id(UUID.randomUUID().toString())
-        .type(MessageType.QUIT)
-        .mediaType(PushMediaType.PLAIN_TEXT)
-        .receiveObjectType(dto.getReceiveObjectType())
-        .receiveObjectIds(dto.getReceiveObjectIds())
-        .from(getUsername())
-        .sendBy(getUserId())
-        .sendByName(getUserFullName())
-        .sendDate(new Date())
-        .build();
-  }
+  //  public static Message offlineToNoticeDomain(MessageCenterOfflineDto dto) {
+  //    return Message.newBuilder()
+  //        .id(UUID.randomUUID().toString())
+  //        .type(MessageType.KILL)
+  //        .mediaType(PushMediaType.PLAIN_TEXT)
+  //        .receiveObjectType(dto.getReceiveObjectType())
+  //        .receiveObjectIds(dto.getReceiveObjectIds())
+  //        .from(getUsername())
+  //        .sendBy(getUserId())
+  //        .sendByName(getUserFullName())
+  //        .sendDate(new Date())
+  //        .build();
+  //  }
 
 }

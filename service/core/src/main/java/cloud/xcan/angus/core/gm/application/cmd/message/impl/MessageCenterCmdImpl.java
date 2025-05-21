@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.application.cmd.message.impl;
 
-import static cloud.xcan.angus.core.gm.application.converter.MessageCenterConverter.offlineToNoticeDomain;
 import static cloud.xcan.angus.core.gm.application.converter.MessageCenterConverter.pushToNoticeDomain;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.QUERY_FIELD_EMPTY_T;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
@@ -21,7 +20,6 @@ import cloud.xcan.angus.core.gm.infra.message.Message;
 import cloud.xcan.angus.core.gm.infra.message.MessageNoticeService;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOfflineDto;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
-import cloud.xcan.angus.core.utils.GsonUtils;
 import cloud.xcan.angus.remote.client.HttpBroadcastInvoker;
 import cloud.xcan.angus.remote.message.ProtocolException;
 import jakarta.annotation.Resource;
@@ -110,7 +108,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
             log.error("Broadcast offline messages to all instances exception: ", e);
           }
         } else {
-          messageCenterOnlineCmd.offline(offlineToNoticeDomain(dto));
+          messageCenterOnlineCmd.offline(dto.getReceiveObjectType(), dto.getReceiveObjectIds());
         }
         return null;
       }
@@ -123,28 +121,28 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
     switch (receiveObject) {
       case ALL: {
         List<String> onlineUsernames = userRepo.findUsernamesByOnline(true);
-        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case TENANT: {
         List<Long> tenantIds = message.getReceiveObjectIds();
         List<String> onlineUsernames = userRepo.findUsernamesByTenantIdAndOnline(tenantIds, true);
-        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case DEPT: {
         List<Long> deptIds = message.getReceiveObjectIds();
         Set<String> onlineUsernames = deptUserRepo.findUsernamesByDeptIdInAndOnline(deptIds, true);
-        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case GROUP: {
         List<Long> groupIds = message.getReceiveObjectIds();
         Set<String> onlineUsernames = groupUserRepo.findUsernamesByGroupIdInAndOnline(groupIds,
             true);
-        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case USER: {
         List<Long> userIds = message.getReceiveObjectIds();
         List<String> onlineUsernames = userRepo.findUsernamesByIdAndOnline(userIds, true);
-        messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+        messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case TO_POLICY: {
         List<Long> topRoleIds = message.getReceiveObjectIds();
@@ -152,7 +150,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
             .stream().map(TORoleUser::getUserId).collect(Collectors.toSet());
         if (isNotEmpty(roleUserIds)) {
           List<String> onlineUsernames = userRepo.findUsernamesByIdAndOnline(roleUserIds, true);
-          messageNoticeService.sendUserMessage(onlineUsernames, GsonUtils.toJson(message));
+          messageNoticeService.sendUserMessage(onlineUsernames, message);
         }
       }
       default: {

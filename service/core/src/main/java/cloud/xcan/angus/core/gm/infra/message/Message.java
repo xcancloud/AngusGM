@@ -15,9 +15,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Accessors(chain = true)
 public class Message {
 
-  //  public final static String MESSAGE_CENTER_NOTICE = "MESSAGE_CENTER_NOTICE";
-  //  public final static String MESSAGE_CENTER_SIGN_OUT = "MESSAGE_CENTER_SIGN_OUT";
-
   public String id;
 
   public MessageType type;

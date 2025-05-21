@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.infra.message;
 
 import static cloud.xcan.angus.core.gm.infra.message.MessageConnectionListener.LOCAL_ONLINE_USERS;
+import static cloud.xcan.angus.spec.utils.JsonUtils.toJson;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import jakarta.annotation.Resource;
@@ -20,7 +21,7 @@ public class MessageNoticeService {
   /**
    * Broadcast messages to all clients subscribed to /topic/messages.
    */
-  public void sendBroadcast(String message) {
+  public void sendBroadcast(Message message) {
     messagingTemplate.convertAndSend(PUBLIC_TOPIC_DESTINATION, message);
   }
 
@@ -28,12 +29,14 @@ public class MessageNoticeService {
    * Send private messages to a specified user (the user client must subscribe to
    * /user/queue/message).
    */
-  public void sendUserMessage(Collection<String> usernames, String message) {
+  public void sendUserMessage(Collection<String> usernames, Message message) {
     if (isNotEmpty(usernames)) {
       for (String username : usernames) {
         if (LOCAL_ONLINE_USERS.containsValue(username)) {
           try {
-            messagingTemplate.convertAndSendToUser(username, PRIVATE_USER_DESTINATION, message);
+            String jsonMessage = toJson(message);
+            assert jsonMessage != null;
+            messagingTemplate.convertAndSendToUser(username, PRIVATE_USER_DESTINATION, jsonMessage);
             log.info("Send notice message {}} : {}", username, message);
           } catch (Exception e) {
             log.error("Send notice message to user[{}] exception: ", username, e);
