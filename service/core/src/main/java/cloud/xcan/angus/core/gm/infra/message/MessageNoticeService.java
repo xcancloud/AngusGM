@@ -4,6 +4,7 @@ import static cloud.xcan.angus.core.gm.infra.message.MessageConnectionListener.L
 import static cloud.xcan.angus.spec.utils.JsonUtils.toJson;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
+import cloud.xcan.angus.api.pojo.Message;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;

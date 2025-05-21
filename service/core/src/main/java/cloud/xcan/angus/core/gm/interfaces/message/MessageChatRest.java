@@ -4,7 +4,7 @@ import static cloud.xcan.angus.core.gm.infra.message.MessageNoticeService.PRIVAT
 
 import cloud.xcan.angus.api.enums.MessageType;
 import cloud.xcan.angus.api.enums.PushMediaType;
-import cloud.xcan.angus.core.gm.infra.message.Message;
+import cloud.xcan.angus.api.pojo.Message;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import java.security.Principal;

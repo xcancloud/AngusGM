@@ -14,7 +14,6 @@ import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
-import cloud.xcan.angus.core.gm.infra.message.Message;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.security.authentication.service.JdbcOAuth2AuthorizationService;
 import jakarta.annotation.Resource;

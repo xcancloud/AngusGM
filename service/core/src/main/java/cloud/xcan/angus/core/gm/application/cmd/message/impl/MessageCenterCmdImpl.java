@@ -16,7 +16,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
-import cloud.xcan.angus.core.gm.infra.message.Message;
+import cloud.xcan.angus.api.pojo.Message;
 import cloud.xcan.angus.core.gm.infra.message.MessageNoticeService;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOfflineDto;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
