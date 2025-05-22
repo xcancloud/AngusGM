@@ -1046,7 +1046,7 @@ CREATE TABLE `oauth2_registered_client` (
   `client_id_issued_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发行时间',
   `client_secret` varchar(200) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '密码，对应KeySecret',
   `client_secret_expires_at` timestamp NULL DEFAULT NULL COMMENT '过期时间',
-  `biz_tag` varchar(100) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '业务标识',
+  `biz_tag` varchar(100) COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '业务标识',
   `client_settings` varchar(1000) COLLATE utf8mb4_bin NOT NULL COMMENT '客户端设置参数',
   `token_settings` varchar(1000) COLLATE utf8mb4_bin NOT NULL COMMENT '令牌设置参数',
   `description` varchar(200) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '描述',
