@@ -44,7 +44,7 @@ public class UserConverter {
 
   public static AuthUser replaceToAuthUser(User user, String password, Tenant tenantDb) {
     return AuthUser.username(user.getUsername())
-        .disabled(user.getEnabled() || user.getDeleted())
+        .disabled(!user.getEnabled() || user.getDeleted())
         .accountExpired(user.getExpired())
         .accountLocked(nullSafe(user.getLocked(), false))
         .credentialsExpired((nullSafe(user.getPasswordExpired(), false)))
