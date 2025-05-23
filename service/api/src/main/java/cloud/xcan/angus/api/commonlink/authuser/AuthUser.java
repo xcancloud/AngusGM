@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,7 @@ import org.springframework.util.Assert;
 @Slf4j
 @Entity
 @Getter
+@Setter
 @Table(name = "oauth2_user")
 public class AuthUser extends CustomOAuth2User implements Resources<String> {
   // Build Fields -> Do in parent class.
