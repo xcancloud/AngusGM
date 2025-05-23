@@ -62,7 +62,8 @@ public class OperationLogCmdImpl extends CommCmd<OperationLog, Long> implements 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void addAll(List<OperationLog> operations) {
-    if (isEmpty(operations) && (isUserAction() || isNotEmpty(operations.get(0).getFullName()))
+    if (isNotEmpty(operations)
+        && (isUserAction() || isNotEmpty(operations.get(0).getFullName()))
         && settingPropertiesRegister.enabledOperationLog()) {
       batchInsert0(operations);
     }
