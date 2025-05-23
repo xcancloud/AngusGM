@@ -9,7 +9,7 @@
 - ***增强性能***：消除HTTP协议解析和JSON序列化开销
 - ***简化编码***：直接重用现有的实体定义和JPA存储库，而无需创建OpenFeign接口或DTO/VO对象
 
-***所有公共数据表统一通过 Federated/DBlink 逻辑存储在 `xcan_commonlink` 库，各业务服务配置连接到 `xcan_commonlink` 库来统一访问。***
+***所有公共数据表统一通过 Federated/DBlink 逻辑存储在 `xcan_anguscommonlink` 库，各业务服务配置连接到 `xcan_anguscommonlink` 库来统一访问。***
 
 ## 对外供提公共数据表
 
@@ -25,11 +25,11 @@
 
 ```sql
 -- 创建库
-CREATE DATABASE `xcan_commonlink` DEFAULT CHARACTER SET utf8mb4 ;
+CREATE DATABASE `xcan_anguscommonlink` DEFAULT CHARACTER SET utf8mb4 ;
 
 -- 创建用户（注意：线上环境需要在每个PXC节点创建用户）
 CREATE USER 'commonlink'@'%' IDENTIFIED BY 'your_password';
-grant all privileges on xcan_commonlink.* to commonlink@'%' identified by 'your_password';
+grant all privileges on xcan_anguscommonlink.* to commonlink@'%' identified by 'your_password';
 FLUSH PRIVILEGES;
 ```
 
@@ -39,29 +39,29 @@ FLUSH PRIVILEGES;
 
 ```sql
 -- GM -----
-GRANT select ON `xcan_gm`.`tenant` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`user0` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`dept` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`dept_user` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`group0` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`group_user` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`org_tag` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`org_tag_target` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`service` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`api` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`app` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`oauth2_user` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`auth_policy` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`to_role` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`to_user` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`to_role_user` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`app_open` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`message_center_online` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`c_i18n_messages` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`c_setting` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`c_setting_tenant` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`c_setting_tenant_quota` TO `commonlink`@`%`;
-GRANT select ON `xcan_gm`.`c_setting_user` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`tenant` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`user0` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`dept` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`dept_user` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`group0` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`group_user` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`org_tag` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`org_tag_target` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`service` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`api` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`app` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`oauth2_user` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`auth_policy` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`to_role` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`to_user` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`to_role_user` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`app_open` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`message_center_online` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`c_i18n_messages` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`c_setting` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`c_setting_tenant` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`c_setting_tenant_quota` TO `commonlink`@`%`;
+GRANT select ON `xcan_angusgm`.`c_setting_user` TO `commonlink`@`%`;
 FLUSH PRIVILEGES;
 ```
 
@@ -72,14 +72,14 @@ FLUSH PRIVILEGES;
 ```sql
 -- GM 库
 CREATE
-SERVER xcan_gm_link
+SERVER xcan_angusgm_link
 FOREIGN DATA WRAPPER mysql
-OPTIONS (USER 'commonlink', PASSWORD 'your_password', HOST 'your_mysql_host', PORT 3306, DATABASE 'xcan_gm');
+OPTIONS (USER 'commonlink', PASSWORD 'your_password', HOST 'your_mysql_host', PORT 3306, DATABASE 'xcan_angusgm');
 ```
 
 ##### 2. 创建联邦表
 
-***注意：联邦表是在 xcan_commonlink 库下创建。**
+***注意：联邦表是在 xcan_anguscommonlink 库下创建。**
 
 ```sql
 -- GM
@@ -119,7 +119,7 @@ CREATE TABLE `tenant`
     KEY                  `idx_lock_end_date` (`lock_end_date`) USING BTREE,
     KEY                  `idx_summary_group` (`source`,`type`,`status`,`real_name_status`,`locked`,`created_date`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_no` (`name`,`no`) /*!50100 WITH PARSER `ngram` */ 
-) ENGINE = FEDERATED COMMENT = 'Tenant'  CONNECTION = 'xcan_gm_link/tenant';
+) ENGINE = FEDERATED COMMENT = 'Tenant'  CONNECTION = 'xcan_angusgm_link/tenant';
 
 CREATE TABLE `user0`
 (
@@ -181,7 +181,7 @@ CREATE TABLE `user0`
     KEY                           `idx_summary_group` (`source`,`sys_admin`,`enabled`,`locked`,`gender`,`created_date`) USING BTREE,
     KEY                           `idx_summary_tenant_group` (`tenant_id`,`source`,`sys_admin`,`enabled`,`locked`,`gender`,`created_date`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_mobile_title_username` (`full_name`,`mobile`,`title`,`username`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='User' CONNECTION='xcan_gm_link/user0';
+) ENGINE=FEDERATED COMMENT='User' CONNECTION='xcan_angusgm_link/user0';
 
 CREATE TABLE `dept`
 (
@@ -205,7 +205,7 @@ CREATE TABLE `dept`
     KEY                  `idx_created_date` (`created_date`) USING BTREE,
     KEY                  `idx_level` (`level`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_code` (`code`,`name`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='Department'  CONNECTION = 'xcan_gm_link/dept';
+) ENGINE=FEDERATED COMMENT='Department'  CONNECTION = 'xcan_angusgm_link/dept';
 
 CREATE TABLE `dept_user`
 (
@@ -222,7 +222,7 @@ CREATE TABLE `dept_user`
     KEY            `idx_dept_id` (`dept_id`) USING BTREE,
     KEY            `idx_tenant_id` (`tenant_id`) USING BTREE,
     KEY            `uidx_dept_user_id` (`dept_id`,`user_id`) USING BTREE
-) ENGINE=FEDERATED COMMENT='Department-user relationship'  CONNECTION = 'xcan_gm_link/dept_user';
+) ENGINE=FEDERATED COMMENT='Department-user relationship'  CONNECTION = 'xcan_angusgm_link/dept_user';
 
 CREATE TABLE `group0`
 (
@@ -249,7 +249,7 @@ CREATE TABLE `group0`
     KEY                    `idx_summary_group` (`enabled`,`source`,`created_date`) USING BTREE,
     KEY                    `idx_summary_tenant_group` (`tenant_id`,`enabled`,`source`,`created_date`) USING BTREE
     -- , FULLTEXT KEY `fx_name_tag_value` (`name`,`code`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='User group' CONNECTION='xcan_gm_link/group0';
+) ENGINE=FEDERATED COMMENT='User group' CONNECTION='xcan_angusgm_link/group0';
 
 CREATE TABLE `group_user`
 (
@@ -266,7 +266,7 @@ CREATE TABLE `group_user`
     KEY            `idx_user_id` (`user_id`) USING BTREE,
     KEY            `idx_tenant_id` (`tenant_id`) USING BTREE,
     KEY            `idx_directory_id` (`directory_id`) USING BTREE
-) ENGINE=FEDERATED COMMENT='User group-member association' CONNECTION='xcan_gm_link/group_user';
+) ENGINE=FEDERATED COMMENT='User group-member association' CONNECTION='xcan_angusgm_link/group_user';
 
 CREATE TABLE `org_tag`
 (
@@ -282,7 +282,7 @@ CREATE TABLE `org_tag`
     KEY                  `idx_create_date` (`created_date`) USING BTREE,
     KEY                  `idx_tenant_id` (`tenant_id`) USING BTREE
     -- ,FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='Tag' CONNECTION = 'xcan_gm_link/org_tag';
+) ENGINE=FEDERATED COMMENT='Tag' CONNECTION = 'xcan_angusgm_link/org_tag';
 
 CREATE TABLE `org_tag_target`
 (
@@ -301,7 +301,7 @@ CREATE TABLE `org_tag_target`
     KEY            `idx_target_type` (`target_type`) USING BTREE,
     KEY            `idx_summary_group` (`created_date`,`target_type`) USING BTREE,
     KEY            `idx_summary_tenant_group` (`tenant_id`,`created_date`,`target_type`) USING BTREE
-) ENGINE=FEDERATED COMMENT='标签对象' CONNECTION = 'xcan_gm_link/org_tag_target';
+) ENGINE=FEDERATED COMMENT='标签对象' CONNECTION = 'xcan_angusgm_link/org_tag_target';
 
 -- AAS
 CREATE TABLE `service`
@@ -326,7 +326,7 @@ CREATE TABLE `service`
     KEY                  `idx_name` (`name`) USING BTREE,
     KEY                  `idx_summary_group` (`created_date`,`source`,`enabled`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_code_description` (`name`,`code`,`description`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='服务表' CONNECTION='xcan_gm_link/service';
+) ENGINE=FEDERATED COMMENT='服务表' CONNECTION='xcan_angusgm_link/service';
 
 CREATE TABLE `api`
 (
@@ -358,7 +358,7 @@ CREATE TABLE `api`
     KEY                    `idx_service_code` (`service_code`) USING BTREE,
     KEY                    `idx_summary_group` (`method`,`type`,`enabled`,`created_date`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_code_service_name_description` (`name`,`operation_id`,`service_name`,`description`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='接口表' CONNECTION='xcan_gm_link/api';
+) ENGINE=FEDERATED COMMENT='接口表' CONNECTION='xcan_angusgm_link/api';
 
 CREATE TABLE `app`
 (
@@ -391,7 +391,7 @@ CREATE TABLE `app`
     KEY                  `idx_edition_type` (`edition_type`) USING BTREE,
     KEY                  `idx_version` (`version`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_code_show_name_description` (`code`,`name`,`show_name`,`description`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='应用表' CONNECTION='xcan_gm_link/app';
+) ENGINE=FEDERATED COMMENT='应用表' CONNECTION='xcan_angusgm_link/app';
 
 CREATE TABLE `oauth2_user`
 (
@@ -425,7 +425,7 @@ CREATE TABLE `oauth2_user`
     KEY                           `idx_tenant_id` (`tenant_id`) USING BTREE,
     KEY                           `idx_tenant_real_name_status` (`tenant_real_name_status`) USING BTREE,
     KEY                           `idx_password_expired_date` (`password_expired_date`) USING BTREE
-) ENGINE=FEDERATED COMMENT='用户' CONNECTION='xcan_gm_link/oauth2_user';
+) ENGINE=FEDERATED COMMENT='用户' CONNECTION='xcan_angusgm_link/oauth2_user';
 
 CREATE TABLE `auth_policy`
 (
@@ -453,7 +453,7 @@ CREATE TABLE `auth_policy`
     KEY                  `idx_type` (`type`) USING BTREE,
     KEY                  `idx_client_id` (`client_id`) USING BTREE
     -- ,FULLTEXT KEY `fx_code_name_description` (`code`,`name`,`description`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='授权策略' CONNECTION='xcan_gm_link/auth_policy';
+) ENGINE=FEDERATED COMMENT='授权策略' CONNECTION='xcan_angusgm_link/auth_policy';
 
 CREATE TABLE `to_role`
 (
@@ -472,7 +472,7 @@ CREATE TABLE `to_role`
     UNIQUE KEY `uidx_name` (`name`) USING BTREE,
     KEY                  `idx_app_id` (`app_id`) USING BTREE
     -- ,FULLTEXT KEY `fx_name_code` (`name`,`code`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='运营策略（租户运营角色）' CONNECTION='xcan_gm_link/to_role';
+) ENGINE=FEDERATED COMMENT='运营策略（租户运营角色）' CONNECTION='xcan_angusgm_link/to_role';
 
 CREATE TABLE `to_user`
 (
@@ -483,7 +483,7 @@ CREATE TABLE `to_user`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uid_user_id` (`user_id`) USING BTREE,
     KEY            `idx_created_date` (`created_date`) USING BTREE
-) ENGINE=FEDERATED COMMENT='策略用户关联表' CONNECTION='xcan_gm_link/to_user';
+) ENGINE=FEDERATED COMMENT='策略用户关联表' CONNECTION='xcan_angusgm_link/to_user';
 
 CREATE TABLE `to_role_user`
 (
@@ -497,7 +497,7 @@ CREATE TABLE `to_role_user`
     KEY            `idx_policy_id` (`to_role_id`) USING BTREE,
     KEY            `idx_user_id` (`user_id`) USING BTREE,
     KEY            `idx_created_date` (`created_date`) USING BTREE
-) ENGINE=FEDERATED COMMENT='策略用户关联表' CONNECTION='xcan_gm_link/to_role_user';
+) ENGINE=FEDERATED COMMENT='策略用户关联表' CONNECTION='xcan_angusgm_link/to_role_user';
 
 CREATE TABLE `app_open`
 (
@@ -526,7 +526,7 @@ CREATE TABLE `app_open`
     KEY                  `idx_version` (`version`),
     KEY                  `idx_edition_type` (`edition_type`),
     KEY                  `idx_tenant_id_app` (`tenant_id`,`edition_type`,`app_code`,`version`) USING BTREE
-) ENGINE=FEDERATED COMMENT='应用开通表' CONNECTION='xcan_gm_link/app_open';
+) ENGINE=FEDERATED COMMENT='应用开通表' CONNECTION='xcan_angusgm_link/app_open';
 
 -- WPUSH
 CREATE TABLE `message_center_online`
@@ -543,7 +543,7 @@ CREATE TABLE `message_center_online`
     KEY              `idx_user_id` (`user_id`) USING BTREE,
     KEY              `idx_tenant_id` (`tenant_id`) USING BTREE
     -- ,FULLTEXT KEY `fx_full_name_remote_address` (`full_name`,`remote_address`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='消息中心在线用户' CONNECTION='xcan_gm_link/message_center_online';
+) ENGINE=FEDERATED COMMENT='消息中心在线用户' CONNECTION='xcan_angusgm_link/message_center_online';
 
 -- COMMON
 CREATE TABLE `c_i18n_messages`
@@ -559,7 +559,7 @@ CREATE TABLE `c_i18n_messages`
     KEY               `idx_type` (`type`) USING BTREE,
     KEY               `idx_language` (`language`) USING BTREE
     -- ,KEY `idx_default_message` (`default_message`) USING BTREE
-) ENGINE=FEDERATED COMMENT='国际化资源表' CONNECTION='xcan_gm_link/c_i18n_messages';
+) ENGINE=FEDERATED COMMENT='国际化资源表' CONNECTION='xcan_angusgm_link/c_i18n_messages';
 
 CREATE TABLE `c_setting`
 (
@@ -569,7 +569,7 @@ CREATE TABLE `c_setting`
     `global_default` int(1) NOT NULL COMMENT '是否全局默认值标志',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uidx_key` (`key`) USING BTREE
-) ENGINE=FEDERATED COMMENT='配置表' CONNECTION='xcan_gm_link/c_setting';
+) ENGINE=FEDERATED COMMENT='配置表' CONNECTION='xcan_angusgm_link/c_setting';
 
 CREATE TABLE `c_setting_tenant`
 (
@@ -586,7 +586,7 @@ CREATE TABLE `c_setting_tenant`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uidx_tenant_id` (`tenant_id`) USING BTREE,
     UNIQUE KEY `uidx_invitation_code` (`invitation_code`) USING BTREE
-) ENGINE=FEDERATED COMMENT='租户设置' CONNECTION='xcan_gm_link/c_setting_tenant';
+) ENGINE=FEDERATED COMMENT='租户设置' CONNECTION='xcan_angusgm_link/c_setting_tenant';
 
 CREATE TABLE `c_setting_tenant_quota`
 (
@@ -611,7 +611,7 @@ CREATE TABLE `c_setting_tenant_quota`
     KEY              `idx_allow_change` (`allow_change`) USING BTREE,
     KEY              `idx_tenant_id` (`tenant_id`) USING BTREE
     -- ,FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='租户配额设置' CONNECTION='xcan_gm_link/c_setting_tenant_quota';
+) ENGINE=FEDERATED COMMENT='租户配额设置' CONNECTION='xcan_angusgm_link/c_setting_tenant_quota';
 
 -- json -> varchar
 CREATE TABLE `c_setting_user`
@@ -623,7 +623,7 @@ CREATE TABLE `c_setting_user`
     `tenant_id`   bigint(20) NOT NULL COMMENT '租户ID',
     PRIMARY KEY (`id`) USING BTREE,
     KEY           `idx_tenant_id` (`tenant_id`) USING BTREE
-) ENGINE=FEDERATED COMMENT='用户' CONNECTION='xcan_gm_link/c_setting_user';
+) ENGINE=FEDERATED COMMENT='用户' CONNECTION='xcan_angusgm_link/c_setting_user';
 ```
 
 #### 创建公共数据表 - Postgres SQL

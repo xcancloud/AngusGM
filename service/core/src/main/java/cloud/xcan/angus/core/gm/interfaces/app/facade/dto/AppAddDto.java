@@ -81,7 +81,7 @@ public class AppAddDto {
   @NotEmpty
   @Length(max = MAX_URL_LENGTH)
   @Schema(description = "Application access url. The URL used to access the application.",
-      example = "http://dev-at.xcan.cloud/", requiredMode = RequiredMode.REQUIRED)
+      example = "http://dev-tester.xcan.cloud/", requiredMode = RequiredMode.REQUIRED)
   private String url;
 
   @Positive

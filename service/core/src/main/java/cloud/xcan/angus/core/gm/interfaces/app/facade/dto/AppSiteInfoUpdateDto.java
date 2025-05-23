@@ -30,7 +30,7 @@ public class AppSiteInfoUpdateDto {
   private String icon;
 
   @Length(max = MAX_URL_LENGTH)
-  @Schema(description = "Application access url. The URL used to access the application.", example = "http://dev-at.xcan.cloud/")
+  @Schema(description = "Application access url. The URL used to access the application.", example = "http://dev-tester.xcan.cloud/")
   private String url;
 
 }

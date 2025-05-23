@@ -65,7 +65,7 @@ public class AppFuncAddDto {
   private Boolean authCtrl;
 
   @Length(max = MAX_URL_LENGTH)
-  @Schema(example = "http://dev-at.xcan.cloud/scripts")
+  @Schema(example = "http://dev-tester.xcan.cloud/scripts")
   private String url;
 
   @Positive
