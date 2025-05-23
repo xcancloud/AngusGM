@@ -177,17 +177,19 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         checkRequiredParameters(userId, account, deviceId);
         // Check the clientId, clientSecret and scopes are correct
         clientDb = clientQuery.checkAndFind(clientId, clientSecret, scope);
-        // Check the existed account
-        userDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
       }
 
       @Override
       protected Map<String, String> process() {
-        PrincipalContext.get().setClientId(clientId)
-            .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
-            .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
-
         try {
+          // Check the existed account
+          userDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
+
+          // Set login user principal
+          PrincipalContext.get().setClientId(clientId)
+              .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
+              .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
+
           // Check the number of password errors
           checkSignInPasswordErrorNum(userDb.getTenantId(), userDb.getUsername());
 
