@@ -33,6 +33,7 @@ import static cloud.xcan.angus.security.authentication.password.OAuth2PasswordAu
 import static cloud.xcan.angus.spec.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static java.lang.Integer.parseInt;
+import static java.lang.Long.valueOf;
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -186,8 +187,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         try {
           // Set login user principal
           PrincipalContext.get().setClientId(clientId)
-              .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
-              .setTenantId(Long.valueOf(userDb.getTenantId()))
+              .setUserId(valueOf(userDb.getId())).setFullName(userDb.getFullName())
+              .setTenantId(valueOf(userDb.getTenantId()))
               .setTenantName(userDb.getTenantName());
 
           // Check the number of password errors
@@ -212,7 +213,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
           return result;
         } catch (Throwable e) {
           // Record the number of account or password errors
-          recordSignInPasswordErrorNum(Long.valueOf(userDb.getTenantId()), userDb.getUsername());
+          recordSignInPasswordErrorNum(valueOf(userDb.getTenantId()), userDb.getUsername());
           // Save sign-in log
           operationLogCmd.add(USER, userDb, SIGN_IN_FAIL, e.getMessage());
 
@@ -282,8 +283,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         // Save sign out log
         AuthUser userDb = authUserQuery.findByUsername(authorizationDb.getPrincipalName());
         PrincipalContext.get().setClientId(clientId)
-            .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
-            .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
+            .setUserId(valueOf(userDb.getId())).setFullName(userDb.getFullName())
+            .setTenantId(valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
         operationLogCmd.add(USER, userDb, SIGN_OUT);
         return null;
       }
@@ -309,7 +310,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
         // Check the password length
         authUserSignQuery.checkMinPasswordLengthByTenantSetting(
-            Long.valueOf(userDb.getTenantId()), newPassword);
+            valueOf(userDb.getTenantId()), newPassword);
       }
 
       @Override
@@ -320,8 +321,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         authUserRepo.save(userDb);
 
         // Save sign out log
-        PrincipalContext.get().setUserId(Long.valueOf(userDb.getId()))
-            .setFullName(userDb.getFullName()).setTenantId(Long.valueOf(userDb.getTenantId()))
+        PrincipalContext.get().setUserId(valueOf(userDb.getId()))
+            .setFullName(userDb.getFullName()).setTenantId(valueOf(userDb.getTenantId()))
             .setTenantName(userDb.getTenantName());
         operationLogCmd.add(USER, userDb, UPDATE_PASSWORD);
         return null;
@@ -350,7 +351,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
    */
   private void cacheUserDirectory(@Nullable AuthUser user) {
     if (nonNull(user) && user.supportDirectoryAuth()) {
-      UserDirectory userDirectory = userDirectoryRepo.findById(Long.valueOf(user.getDirectoryId()))
+      UserDirectory userDirectory = userDirectoryRepo.findById(valueOf(user.getDirectoryId()))
           .orElse(null);
       if (nonNull(userDirectory) && nonNull(userDirectory.getEnabled())
           && userDirectory.getEnabled()) {
@@ -454,21 +455,27 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
     String passwordErrorNumCacheKey = format(CACHE_PASSWORD_ERROR_NUM_PREFIX, finalAccount);
     String passwordErrorNum = stringRedisService.get(passwordErrorNumCacheKey);
-    if (nonNull(passwordErrorNum)) {
-      SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(
-          Long.valueOf(tenantId));
-      SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
-      // When sign-in limit is enabled
-      if (signinLimit.getEnabled()) {
-        Integer errorNum = signinLimit.getLockedPasswordErrorNum();
-        int lockedDurationInMinutes = signinLimit.getLockedDurationInMinutes();
-        if (parseInt(passwordErrorNum) >= errorNum) {
-          stringRedisService.set(passwordLockedCacheKey, String.valueOf(lockedDurationInMinutes),
-              lockedDurationInMinutes, TimeUnit.MINUTES);
-          stringRedisService.delete(passwordErrorNumCacheKey);
-          throw BizException.of(SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_CODE,
-              SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_T, new Object[]{errorNum});
-        }
+    if (isNull(passwordErrorNum)) {
+      return;
+    }
+
+    // When sign-in limit is configured
+    SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(valueOf(tenantId));
+    if (isNull(settingTenant) || isNull(settingTenant.getSecurityData())) {
+      return;
+    }
+
+    // When sign-in limit is enabled
+    SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
+    if (nonNull(signinLimit) && signinLimit.getEnabled()) {
+      Integer errorNum = signinLimit.getLockedPasswordErrorNum();
+      int lockedDurationInMinutes = signinLimit.getLockedDurationInMinutes();
+      if (parseInt(passwordErrorNum) >= errorNum) {
+        stringRedisService.set(passwordLockedCacheKey, String.valueOf(lockedDurationInMinutes),
+            lockedDurationInMinutes, TimeUnit.MINUTES);
+        stringRedisService.delete(passwordErrorNumCacheKey);
+        throw BizException.of(SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_CODE,
+            SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_T, new Object[]{errorNum});
       }
     }
   }
@@ -491,9 +498,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
     // When sign-in limit is configured
     SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(tenantId);
-    if (isNull(settingTenant.getSecurityData())) {
+    if (isNull(settingTenant) || isNull(settingTenant.getSecurityData())) {
       return;
     }
+
     // When sign-in limit is enabled
     SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
     if (nonNull(signinLimit) && signinLimit.getEnabled()
