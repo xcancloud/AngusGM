@@ -110,8 +110,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
           // Fix:: Authentication failed; nested exception is jakarta.mail.AuthenticationFailedException: 451 4.3.2 Temporary authentication failure (rate-limit)
           cachedEmailServer = enabledEmailServer;
           //Get the Transport object
-          Transport transport = setupServerConfig(enabledEmailServer, 5 * 1000, 5 * 1000)
-              .getTransport();
+          Transport transport = setupServerConfig(enabledEmailServer,
+              5 * 1000, 5 * 1000).getTransport();
           //connect mail smtp emailServer
           transport.connect();
           cachedHealthResult = transport.isConnected();
