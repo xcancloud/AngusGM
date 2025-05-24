@@ -496,7 +496,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
     // When sign-in limit is enabled
     SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
-    if (signinLimit.getEnabled()
+    if (nonNull(signinLimit) && signinLimit.getEnabled()
         && Integer.parseInt(passwordErrorNum) >= signinLimit.getLockedPasswordErrorNum()) {
       stringRedisService.set(passwordLockedCacheKey, passwordErrorNum,
           signinLimit.getPasswordErrorIntervalInMinutes(), TimeUnit.MINUTES);
