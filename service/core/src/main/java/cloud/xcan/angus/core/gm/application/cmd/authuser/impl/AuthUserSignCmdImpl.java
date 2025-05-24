@@ -187,7 +187,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
           // Set login user principal
           PrincipalContext.get().setClientId(clientId)
               .setUserId(Long.valueOf(userDb.getId())).setFullName(userDb.getFullName())
-              .setTenantId(Long.valueOf(userDb.getTenantId())).setTenantName(userDb.getTenantName());
+              .setTenantId(Long.valueOf(userDb.getTenantId()))
+              .setTenantName(userDb.getTenantName());
 
           // Check the number of password errors
           checkSignInPasswordErrorNum(userDb.getTenantId(), userDb.getUsername());
@@ -473,6 +474,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   public void recordSignInPasswordErrorNum(Long tenantId, String innerAccount) {
+    SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(tenantId);
+    if (isNull(settingTenant.getSecurityData())) {
+      return;
+    }
     String passwordLockedCacheKey = format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, innerAccount);
     String passwordLockedMinutes = stringRedisService.get(passwordLockedCacheKey);
     if (Objects.nonNull(passwordLockedMinutes)) {
@@ -487,7 +492,6 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
       passwordErrorNum = String.valueOf(1);
     }
     stringRedisService.set(passwordErrorNumCacheKey, passwordErrorNum);
-    SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(tenantId);
     // When sign-in limit is enabled
     SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
     if (signinLimit.getEnabled()
