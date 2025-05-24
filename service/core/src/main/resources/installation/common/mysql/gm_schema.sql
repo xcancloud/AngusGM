@@ -1665,9 +1665,6 @@ CREATE TABLE `object_space` (
   `bucket_name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '授权桶名称',
   `remark` varchar(200) COLLATE utf8mb4_bin DEFAULT '' COMMENT '备注',
   `quota_size` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '允许最大字节数',
-  `size` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录/文件总大小',
-  `subdirectory_num` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录下子目录数',
-  `subfile_num` bigint(20) NOT NULL DEFAULT '0' COMMENT '目录下子文件数',
   `auth` int(1) NOT NULL COMMENT '是否权限控制',
   `tenant_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '授权租户ID',
   `customized` int(11) NOT NULL COMMENT '是否客户化业务',
@@ -1683,9 +1680,8 @@ CREATE TABLE `object_space` (
   KEY `idx_bucket_name` (`bucket_name`) USING BTREE,
   KEY `idx_auth` (`auth`) USING BTREE,
   KEY `idx_name` (`name`) USING BTREE,
-  KEY `idx_size` (`size`) USING BTREE,
   KEY `idx_project_id` (`project_id`),
-  KEY `idx_tenant_biz` (`customized`) USING BTREE,
+  KEY `idx_customized` (`customized`) USING BTREE,
   FULLTEXT KEY `fx_name` (`name`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='授权存储表';
 
