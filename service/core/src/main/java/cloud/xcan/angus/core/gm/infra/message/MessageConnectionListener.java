@@ -1,9 +1,9 @@
 package cloud.xcan.angus.core.gm.infra.message;
 
-import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_PRINCIPAL;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR;
+import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.PRINCIPAL;
 
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import jakarta.annotation.Resource;
@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthentication;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -42,9 +42,9 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
   private void handleConnection(SessionConnectEvent event) {
     String sessionId = Objects.requireNonNull(
         event.getMessage().getHeaders().get("simpSessionId")).toString();
-    BearerTokenAuthentication user = (BearerTokenAuthentication) event.getUser();
-    Map<String, Object> attributes = user.getTokenAttributes();
-    Map<String, Object> principal = (Map<String, Object>) attributes.get(INTROSPECTION_CLAIM_NAMES_PRINCIPAL);
+    StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+    Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
+    Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
     String userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT).toString();
     String deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID).toString();
     String remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR).toString();
@@ -57,9 +57,9 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
 
   private void handleDisconnection(SessionDisconnectEvent event) {
     String sessionId = event.getSessionId();
-    BearerTokenAuthentication user = (BearerTokenAuthentication) event.getUser();
-    Map<String, Object> attributes = user.getTokenAttributes();
-    Map<String, Object> principal = (Map<String, Object>) attributes.get(INTROSPECTION_CLAIM_NAMES_PRINCIPAL);
+    StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+    Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
+    Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
     String userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT).toString();
     String deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID).toString();
     String remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR).toString();

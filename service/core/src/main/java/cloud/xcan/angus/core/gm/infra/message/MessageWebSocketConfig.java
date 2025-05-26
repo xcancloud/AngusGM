@@ -39,6 +39,7 @@ public class MessageWebSocketConfig implements WebSocketMessageBrokerConfigurer 
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     // Configure WebSocket endpoint and add token interceptor
     registry.addEndpoint("/ws/messageCenter")
+        .addInterceptors(new AuthHandshakeInterceptor())
         .setAllowedOriginPatterns("*")
         .withSockJS()
         .setHeartbeatTime(15000);
