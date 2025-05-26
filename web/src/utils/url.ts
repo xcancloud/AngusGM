@@ -17,7 +17,10 @@ const redirectTo = async (data?: { accessToken: string; refreshToken: string; cl
 const getRedirectUrl = async (): Promise<string> => {
   const { searchParams } = new URL(location.href);
   const target = searchParams.get('t');
-  const host = await site.getUrl('at');
+  let host = await site.getUrl('at');
+  if (!host || host === 'undefined') {
+    host = await site.getUrl('gm');
+  }
   if (!target) {
     return host;
   }
