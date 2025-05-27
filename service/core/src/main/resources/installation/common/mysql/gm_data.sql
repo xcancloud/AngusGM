@@ -403,5 +403,8 @@ INSERT INTO `bucket_biz_config` (`id`, `biz_key`, `bucket_name`, `remark`, `publ
 INSERT INTO `bucket_biz_config` (`id`, `biz_key`, `bucket_name`, `remark`, `public_access`, `public_token_auth`, `encrypt`, `multi_tenant_ctrl`,
                                  `enabled_auth`, `allow_tenant_created`, `app_code`, `app_admin_code`, `cache_age`, `private0`)
                 VALUES (104, 'angusTesterCaseAttachments', 'xcan-angustester', 'AngusTester测试用例附件', 1, 1, 0, 1, 0, 1, 'AngusTester', 'ANGUSTESTER_ADMIN', 2592000, 1);
+INSERT INTO `bucket_biz_config` (`id`, `biz_key`, `bucket_name`, `remark`, `public_access`, `public_token_auth`, `encrypt`, `multi_tenant_ctrl`,
+                                 `enabled_auth`, `allow_tenant_created`, `app_code`, `app_admin_code`, `cache_age`, `private0`)
+                VALUES (105, 'angusTesterEditorFile', 'xcan-angustester', 'AngusTester富文本编辑器文件', 1, 1, 0, 1, 0, 1, 'AngusTester', 'ANGUSTESTER_ADMIN', 2592000, 1);
 
 -- @formatter:on
