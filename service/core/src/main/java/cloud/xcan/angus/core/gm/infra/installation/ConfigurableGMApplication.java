@@ -242,9 +242,9 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
               + "license_no, main_license_no, provider, issuer, holder_id, holder,"
               + "goods_edition_type, goods_id, goods_type, goods_code, goods_name,"
               + "goods_version, order_no, subject, info, signature, "
-              + "issued_date, begin_date, end_date, content) "
+              + "issued_date, expired_date, content) "
               + "VALUES (?, ?, ?, " + "?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?,"
-              + "?, ?, ?, ?, ?," + "?, ?, ?, ? )",
+              + "?, ?, ?, ?, ?," + "?, ?, ? )",
           Arrays.asList(nanoTime(), MAIN_APP_SERVICES.contains(dCache.getPco()) ? 1 : 0, appEdition.getValue(),
               licenseNo, dCache.getMln(), dCache.getPro().getName(), dCache.getIss().getName(), dCache.getHid(), removeStart(dCache.getHol().getName(),"CN="),
               dCache.getVty(), dCache.getGid(), dCache.getPty(), dCache.getPco(), dCache.getPna(),

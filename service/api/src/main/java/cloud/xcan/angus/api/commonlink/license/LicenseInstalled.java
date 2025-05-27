@@ -22,19 +22,22 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class LicenseInstalled extends EntitySupport<LicenseInstalled, Long> {
 
-  /**** Non lcs information **/
   @Id
   private Long id;
 
   private Boolean main;
 
-  @Enumerated(EnumType.STRING)
-  private EditionType installEditionType;
-
-  /**** lcs information **/
   private String licenseNo;
 
   private String mainLicenseNo;
+
+  private Date issuedDate;
+
+  private Date expiredDate;
+
+  private String info;
+
+  private String content;
 
   private String provider;
 
@@ -43,6 +46,9 @@ public class LicenseInstalled extends EntitySupport<LicenseInstalled, Long> {
   private Long holderId;
 
   private String holder;
+
+  @Enumerated(EnumType.STRING)
+  private EditionType installEditionType;
 
   @Enumerated(EnumType.STRING)
   private EditionType goodsEditionType;
@@ -58,25 +64,11 @@ public class LicenseInstalled extends EntitySupport<LicenseInstalled, Long> {
 
   private String goodsVersion;
 
+  private String signature;
+
   private String orderNo;
 
   private String subject;
-
-  private String info;
-
-  /**
-   * License signature
-   */
-  private String signature;
-
-  private Date issuedDate;
-
-  private Date expiredDate;
-
-  /**
-   * License file base64 encoding text.
-   */
-  private String content;
 
   @Transient
   public static boolean isModified = false;
