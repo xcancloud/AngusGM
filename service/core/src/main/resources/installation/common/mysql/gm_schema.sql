@@ -1888,8 +1888,6 @@ CREATE TABLE `license_installed`  (
   UNIQUE INDEX `uidx_goods_edition_type`(`goods_code`, `goods_edition_type`) USING BTREE,
   UNIQUE INDEX `uidx_goods_id`(`goods_id`) USING BTREE,
   INDEX `idx_holder_id`(`holder_id`) USING BTREE,
-  INDEX `idx_issued_date`(`issued_date`) USING BTREE,
-  INDEX `idx_ begin_date`(`begin_date`) USING BTREE,
   INDEX `idx_install_edition_type`(`install_edition_type`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '租户私有化安装许可（私有化表）';
 -- @formatter:on
