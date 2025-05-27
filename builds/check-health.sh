@@ -16,7 +16,7 @@ fi
 HOST="$1"
 PORT="$2"
 HEALTH_URL="http://$HOST:$PORT/actuator/health"
-TIMEOUT=120          # Total timeout in seconds
+TIMEOUT=180          # Total timeout in seconds
 INTERVAL=3          # Check interval in seconds
 
 # Timeout control
