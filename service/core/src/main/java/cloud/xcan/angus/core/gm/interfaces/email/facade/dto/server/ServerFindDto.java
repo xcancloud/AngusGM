@@ -17,8 +17,4 @@ public class ServerFindDto extends PageQuery {
 
   private EmailProtocol protocol;
 
-  private String host;
-
-  private Integer port;
-
 }

@@ -90,8 +90,8 @@ public class ServerAssembler {
   public static Specification<EmailServer> getSpecification(ServerFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id")
-        .orderByFields("id")
+        .rangeSearchFields("id", "name")
+        .orderByFields("id", "name")
         .build();
     return new GenericSpecification<>(filters);
   }

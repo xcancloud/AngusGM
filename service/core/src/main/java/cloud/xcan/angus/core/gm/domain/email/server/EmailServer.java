@@ -46,20 +46,16 @@ public class EmailServer extends AuditingEntity<EmailTemplate, Long> implements 
 
   private Integer port;
 
-  @Column(name = "start_tls_enabled")
   private Boolean startTlsEnabled;
 
-  @Column(name = "ssl_enabled")
   private Boolean sslEnabled = true;
 
-  @Column(name = "auth_enabled")
   private Boolean authEnabled;
 
   @Type(JsonType.class)
   @Column(name = "auth_account_data", columnDefinition = "json")
   private AuthAccount authAccountData;
 
-  @Column(name = "subject_prefix")
   private String subjectPrefix;
 
   public boolean isValidSmtpServer() {

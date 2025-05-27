@@ -1,7 +1,9 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.addDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.replaceDtoToDomain;
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.toDetail;
 import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.ServerAssembler.updateDtoToDomain;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
@@ -66,14 +68,13 @@ public class EmailServerFacadeImpl implements EmailServerFacade {
   @Override
   public ServerDetailVo detail(Long id) {
     EmailServer emailServer = emailServerQuery.detail(id);
-    return ServerAssembler.toDetail(emailServer);
+    return toDetail(emailServer);
   }
 
   @Override
   public PageResult<ServerDetailVo> list(ServerFindDto dto) {
-    Page<EmailServer> serverPage = emailServerQuery
-        .find(ServerAssembler.getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(serverPage, ServerAssembler::toDetail);
+    Page<EmailServer> page = emailServerQuery.find(getSpecification(dto), dto.tranPage());
+    return buildVoPageResult(page, ServerAssembler::toDetail);
   }
 
 }
