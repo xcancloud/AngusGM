@@ -3,6 +3,7 @@ xcan:
     enabled: true
   cloud:
     gmApiUrlPrefix: ${GM_CLOUD_APIS_URL_PREFIX}
+    storeApiUrlPrefix: ${STORE_CLOUD_APIS_URL_PREFIX}
   event:
     gmApiUrlPrefix: ${GM_APIS_URL_PREFIX}
   datasource:

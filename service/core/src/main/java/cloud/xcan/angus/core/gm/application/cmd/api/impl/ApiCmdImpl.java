@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.application.cmd.api.impl;
 
 import static cloud.xcan.angus.core.gm.application.converter.ApiConverter.parseSwaggerDocs;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_SWAGGER_PARSE_ERROR;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_SWAGGER_PARSE_ERROR_CODE;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.API_SWAGGER_PARSE_ERROR;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.API_SWAGGER_PARSE_ERROR_CODE;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.API;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
@@ -16,7 +16,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.api.ApiRepo;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
@@ -389,14 +389,14 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     List<Api> apis = new ArrayList<>();
     try {
       HttpUrlConnectionSender httpSender = new HttpUrlConnectionSender();
-      parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender, AASConstant.SWAGGER_API_URL,
+      parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender, AuthConstant.SWAGGER_API_URL,
           ApiType.API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
-          AASConstant.SWAGGER_PUB_API_URL, ApiType.PUB_API);
+          AuthConstant.SWAGGER_PUB_API_URL, ApiType.PUB_API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
-          AASConstant.SWAGGER_DOOR_API_URL, ApiType.DOOR_API);
+          AuthConstant.SWAGGER_DOOR_API_URL, ApiType.DOOR_API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
-          AASConstant.SWAGGER_OPEN_API_TO_PRIVATE_URL, ApiType.OPEN_API_2P);
+          AuthConstant.SWAGGER_OPEN_API_TO_PRIVATE_URL, ApiType.OPEN_API_2P);
     } catch (Throwable e) {
       log.error("Parse swagger exception", e);
       throw BizException.of(API_SWAGGER_PARSE_ERROR_CODE, API_SWAGGER_PARSE_ERROR,

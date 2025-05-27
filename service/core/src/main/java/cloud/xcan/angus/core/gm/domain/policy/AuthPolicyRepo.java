@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.domain.policy;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_ADMIN_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_ADMIN_SUFFIX;
 
 import cloud.xcan.angus.api.commonlink.policy.PolicyType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;

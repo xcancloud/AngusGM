@@ -1,15 +1,15 @@
 package cloud.xcan.angus.core.gm.application.cmd.tenant.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.NOTICE_REAL_NAME_AUTH;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.NOTICE_REAL_NAME_AUTH_FAILURE_REASON;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_AUDIT_FAILURE_REASON_MISSING;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_CERT_MISSING_T;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_CERT_SUMMITED;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_LEGAL_PERSON_BUSINESS_INCONSISTENT;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_NAME_BUSINESS_INCONSISTENT;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_NAME_ID_CARD_INCONSISTENT;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_REAL_NAME_PASSED;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.NOTICE_REAL_NAME_AUTH;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.NOTICE_REAL_NAME_AUTH_FAILURE_REASON;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_AUDIT_FAILURE_REASON_MISSING;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_CERT_MISSING_T;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_CERT_SUMMITED;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_LEGAL_PERSON_BUSINESS_INCONSISTENT;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_NAME_BUSINESS_INCONSISTENT;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_NAME_ID_CARD_INCONSISTENT;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_REAL_NAME_PASSED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SUBMIT_TENANT_AUDIT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_AUDIT;

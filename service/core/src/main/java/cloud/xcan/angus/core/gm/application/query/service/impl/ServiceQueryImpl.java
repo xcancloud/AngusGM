@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.application.query.service.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceExisted;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SERVICE_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SERVICE_IS_DISABLED_T;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;

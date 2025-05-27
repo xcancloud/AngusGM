@@ -2,8 +2,8 @@ package cloud.xcan.angus.core.gm.application.query.app.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_FUNC_CODE_EXISTED_T;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_FUNC_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_FUNC_CODE_EXISTED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_FUNC_IS_DISABLED_T;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isMultiTenantCtrl;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setMultiTenantCtrl;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.distinctByKey;

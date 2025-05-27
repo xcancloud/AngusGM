@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.system.facade.dto;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.enums.ResourceAuthType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
@@ -32,7 +32,7 @@ public class SystemTokenAddDto {
   /**
    * Valid within 24 hours by default
    *
-   * @see AASConstant#DEFAULT_TOKEN_EXPIRE_SECOND
+   * @see AuthConstant#DEFAULT_TOKEN_EXPIRE_SECOND
    */
   @Future
   @Schema(description = "Expiration date of system token.", example = "2025-10-09 03:02:29")

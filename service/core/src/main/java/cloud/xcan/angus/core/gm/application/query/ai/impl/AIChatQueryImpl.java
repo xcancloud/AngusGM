@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.ai.impl;
 
-import static cloud.xcan.angus.core.gm.domain.ThirdCoreMessage.AI_AGENT_NOT_ENABLED;
+import static cloud.xcan.angus.core.gm.domain.ThirdMessage.AI_AGENT_NOT_ENABLED;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 

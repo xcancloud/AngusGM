@@ -5,10 +5,10 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.CACHE_SMS_CHECK_SECRET_
 import static cloud.xcan.angus.api.commonlink.UCConstant.DEFAULT_SECRET_VALID_SECOND;
 import static cloud.xcan.angus.api.commonlink.email.EmailBizKey.BIND_EMAIL;
 import static cloud.xcan.angus.api.commonlink.sms.SmsBizKey.BIND_MOBILE;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.EMAIL_BIND_EXISTED;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.MOBILE_BIND_EXISTED;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.SEND_EMAIL_ERROR_T;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.SEND_MOBILE_ERROR_T;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.EMAIL_BIND_EXISTED;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.MOBILE_BIND_EXISTED;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.SEND_EMAIL_ERROR_T;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.SEND_MOBILE_ERROR_T;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_LINK_SECRET_LENGTH;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;

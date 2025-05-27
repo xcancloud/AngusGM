@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.converter;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.SYS_TOKEN_CLIENT_DESC_FMT;
-import static cloud.xcan.angus.api.commonlink.AASConstant.SYS_TOKEN_CLIENT_ID_FMT;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.SYS_TOKEN_CLIENT_DESC_FMT;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.SYS_TOKEN_CLIENT_ID_FMT;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_USER_TOKEN;
 import static cloud.xcan.angus.api.enums.Platform.XCAN_TP;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.SYS_TOKEN_CLIENT_SCOPE;
@@ -13,7 +13,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.client.ClientSource;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.principal.Principal;
@@ -67,7 +67,7 @@ public class ClientConverter {
 
   private static Duration getExpireSecond(LocalDateTime expireDate) {
     if (isNull(expireDate)) {
-      return Duration.ofSeconds(AASConstant.DEFAULT_TOKEN_EXPIRE_SECOND);
+      return Duration.ofSeconds(AuthConstant.DEFAULT_TOKEN_EXPIRE_SECOND);
     }
     return Duration.between(LocalDateTime.now(), expireDate);
   }

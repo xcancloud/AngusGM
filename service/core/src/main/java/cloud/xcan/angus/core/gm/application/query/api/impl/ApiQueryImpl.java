@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.query.api.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.API_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.API_IS_DISABLED_T;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;

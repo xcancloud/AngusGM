@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.token;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
@@ -28,7 +28,7 @@ public class UserTokenAddDto {
   private String name;
 
   /**
-   * @see AASConstant#DEFAULT_TOKEN_EXPIRE_SECOND
+   * @see AuthConstant#DEFAULT_TOKEN_EXPIRE_SECOND
    */
   @Future
   @Schema(description = "Access token expire date, valid within `24` hours by default.",

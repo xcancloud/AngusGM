@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.dto;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.MAX_POLICY_FUNC_NUM;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.MAX_POLICY_FUNC_NUM;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_DESC_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 

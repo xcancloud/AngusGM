@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.policy.impl;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.OP_PLATFORM_ADMIN;
-import static cloud.xcan.angus.api.commonlink.AASConstant.TOP_PERMISSION_ADMIN;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.OP_PLATFORM_ADMIN;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.TOP_PERMISSION_ADMIN;
 import static cloud.xcan.angus.api.commonlink.AuthOrgType.USER;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertNotEmpty;
 import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findFirstValue;

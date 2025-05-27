@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.domain;
 
-public interface ThirdCoreMessage {
+public interface ThirdMessage {
 
   String AI_AGENT_NOT_ENABLED = "xcm.gm.ai.agent.not.enabled";
 

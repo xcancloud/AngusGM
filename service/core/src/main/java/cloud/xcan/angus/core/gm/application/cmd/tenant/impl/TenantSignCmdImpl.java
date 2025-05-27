@@ -4,7 +4,7 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.TOP_TENANT_ADMIN;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.TenantSignSmsConverter.toCancelConfirmSmsDto;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.MOBILE_IS_UNBIND;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.MOBILE_IS_UNBIND;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.TENANT_CANCEL;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;

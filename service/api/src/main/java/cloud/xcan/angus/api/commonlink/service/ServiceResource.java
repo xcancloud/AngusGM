@@ -1,6 +1,6 @@
 package cloud.xcan.angus.api.commonlink.service;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.TOKEN_AUTH_RESOURCE_IGNORE_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.TOKEN_AUTH_RESOURCE_IGNORE_SUFFIX;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 
 import jakarta.persistence.Transient;

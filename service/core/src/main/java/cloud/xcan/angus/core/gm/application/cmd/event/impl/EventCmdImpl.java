@@ -5,9 +5,9 @@ import static cloud.xcan.angus.api.commonlink.EventConstant.EVENT_DUPLICATE_KEY_
 import static cloud.xcan.angus.api.commonlink.EventConstant.EVENT_DUPLICATE_REDIS_KEY;
 import static cloud.xcan.angus.core.gm.application.converter.EventConverter.eventToNoticeMessage;
 import static cloud.xcan.angus.core.gm.application.converter.EventConverter.toPushEvent;
-import static cloud.xcan.angus.core.gm.domain.EventCoreMessage.EVENT_PUSH_INVALID;
-import static cloud.xcan.angus.core.gm.domain.EventCoreMessage.EVENT_PUSH_TEMPLATE_NOT_FOUND;
-import static cloud.xcan.angus.core.gm.domain.EventCoreMessage.EVENT_PUSH_TEMPLATE_SETTING_NOT_FOUND_T;
+import static cloud.xcan.angus.core.gm.domain.EventMessage.EVENT_PUSH_INVALID;
+import static cloud.xcan.angus.core.gm.domain.EventMessage.EVENT_PUSH_TEMPLATE_NOT_FOUND;
+import static cloud.xcan.angus.core.gm.domain.EventMessage.EVENT_PUSH_TEMPLATE_SETTING_NOT_FOUND_T;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getDefaultLanguage;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;

@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.application.query.tag.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_TAG_EXIST_ERROR_T;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_TAG_REPEAT_ERROR_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_TAG_EXIST_ERROR_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_TAG_REPEAT_ERROR_T;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_ERROR_KEY;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.duplicateByKey;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;

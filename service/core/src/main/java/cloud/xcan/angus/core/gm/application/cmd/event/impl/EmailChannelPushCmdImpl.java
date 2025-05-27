@@ -11,7 +11,7 @@ import cloud.xcan.angus.api.gm.email.dto.EmailSendDto;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventChannelPushCmd;
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
-import cloud.xcan.angus.core.gm.infra.remote.ChannelSendResponse;
+import cloud.xcan.angus.core.gm.infra.remote.push.ChannelSendResponse;
 import jakarta.annotation.Resource;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;

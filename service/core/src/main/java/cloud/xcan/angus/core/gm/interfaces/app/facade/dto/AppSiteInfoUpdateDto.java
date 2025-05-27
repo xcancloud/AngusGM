@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.dto;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.MAX_APP_FUNC_SHORT_NAME_LENGTH;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.MAX_APP_FUNC_SHORT_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_URL_LENGTH;
 
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.query.authuser.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceExisted;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NAME_EXISTED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.TOKEN_NAME_EXISTED_T;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;

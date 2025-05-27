@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.converter;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.APP_OPEN_YEAR;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.APP_OPEN_YEAR;
 
 import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
 import cloud.xcan.angus.core.gm.domain.app.App;

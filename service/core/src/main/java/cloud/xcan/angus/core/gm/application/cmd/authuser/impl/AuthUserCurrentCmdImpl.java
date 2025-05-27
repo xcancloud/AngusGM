@@ -1,10 +1,10 @@
 package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.OLD_PASSWORD_ERROR;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.PASSWORD_CANNOT_SAME;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.PASSWORD_HAS_BEEN_INITIALIZED;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.OLD_PASSWORD_ERROR;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.PASSWORD_CANNOT_SAME;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.PASSWORD_HAS_BEEN_INITIALIZED;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR;
 import static cloud.xcan.angus.core.utils.CoreUtils.calcPasswordStrength;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isBlank;

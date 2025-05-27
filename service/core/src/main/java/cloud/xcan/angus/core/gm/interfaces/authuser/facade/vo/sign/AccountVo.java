@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.authuser.facade.vo.sign;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -23,8 +23,8 @@ public class AccountVo {
   /**
    * Valid within 5 minute by default
    *
-   * @see AASConstant#LINK_SECRET_VALID_SECOND
+   * @see AuthConstant#LINK_SECRET_VALID_SECOND
    */
-  private Integer expiresIn = AASConstant.LINK_SECRET_VALID_SECOND;
+  private Integer expiresIn = AuthConstant.LINK_SECRET_VALID_SECOND;
 
 }

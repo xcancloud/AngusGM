@@ -7,7 +7,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 import cloud.xcan.angus.api.enums.EventType;
 import cloud.xcan.angus.core.biz.exception.BizException;
 import cloud.xcan.angus.core.event.source.EventContent;
-import cloud.xcan.angus.core.gm.domain.EventCoreMessage;
+import cloud.xcan.angus.core.gm.domain.EventMessage;
 import cloud.xcan.angus.core.gm.domain.event.Event;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventFindDto;
@@ -109,7 +109,7 @@ public class EventAssembler {
 
   public static EventPush testEventPush(EventChannelTestDto dto) {
     return new EventPush().setChannelType(dto.getChannelType())
-        .setContent(MessageHolder.message(EventCoreMessage.CHANNEL_TEST_MESSAGE))
+        .setContent(MessageHolder.message(EventMessage.CHANNEL_TEST_MESSAGE))
         .setAddress(dto.getAddress()).setName(dto.getName());
   }
 

@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.cmd.tenant.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.TenantConverter.assembleTenantInfo;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_CERT_MISSING_T;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_CERT_MISSING_T;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.TENANT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DISABLED;

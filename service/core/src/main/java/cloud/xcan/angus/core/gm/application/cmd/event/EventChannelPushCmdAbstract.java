@@ -2,8 +2,8 @@ package cloud.xcan.angus.core.gm.application.cmd.event;
 
 import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
-import cloud.xcan.angus.core.gm.infra.remote.ChannelSendResponse;
-import cloud.xcan.angus.core.gm.infra.remote.ThirdPushClient;
+import cloud.xcan.angus.core.gm.infra.remote.push.ChannelSendResponse;
+import cloud.xcan.angus.core.gm.infra.remote.push.ThirdPushClient;
 import feign.Feign;
 import feign.Target;
 import feign.codec.Decoder;

@@ -2,8 +2,8 @@ package cloud.xcan.angus.core.gm.application.query.event.impl;
 
 import static cloud.xcan.angus.core.biz.exception.QuotaException.M.QUOTA_OVER_LIMIT_T2;
 import static cloud.xcan.angus.core.gm.application.converter.EventTemplateConverter.getEventChannelCacheKey;
-import static cloud.xcan.angus.core.gm.domain.EventCoreMessage.RECEIVE_SETTING_DELETE_IN_USE_KEY;
-import static cloud.xcan.angus.core.gm.domain.EventCoreMessage.RECEIVE_SETTING_DELETE_IN_USE_T;
+import static cloud.xcan.angus.core.gm.domain.EventMessage.RECEIVE_SETTING_DELETE_IN_USE_KEY;
+import static cloud.xcan.angus.core.gm.domain.EventMessage.RECEIVE_SETTING_DELETE_IN_USE_T;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 

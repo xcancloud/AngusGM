@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.dept.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_MAIN_DEPT_NUM_ERROR;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.USER_MAIN_DEPT_NUM_ERROR;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.DEPT;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ADD_DEPT_USER;

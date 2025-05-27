@@ -8,7 +8,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.client.Client2pSignupBiz;
 import cloud.xcan.angus.api.commonlink.client.ClientAuth;
 import cloud.xcan.angus.core.biz.Biz;
@@ -69,7 +69,7 @@ public class ClientSignCmdImpl implements ClientSignCmd {
     return new BizTemplate<ClientAuth>() {
       @Override
       protected ClientAuth process() {
-        String clientId = String.format(AASConstant.SIGN2P_CLIENT_ID_FMT, tenantId,
+        String clientId = String.format(AuthConstant.SIGN2P_CLIENT_ID_FMT, tenantId,
             signupBiz.name().toLowerCase(), resourceId);
         CustomOAuth2RegisteredClient clientDb = clientQuery.findValidByClientId0(clientId);
         if (clientDb != null) {

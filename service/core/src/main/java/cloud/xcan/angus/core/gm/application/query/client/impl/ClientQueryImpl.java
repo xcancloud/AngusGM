@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.query.client.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.CLIENT_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.CLIENT_IS_DISABLED_T;
 import static cloud.xcan.angus.remote.message.http.Unauthorized.M.INVALID_CLIENT;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;

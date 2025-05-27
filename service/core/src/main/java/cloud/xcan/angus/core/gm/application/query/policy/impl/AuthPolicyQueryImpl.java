@@ -1,14 +1,14 @@
 package cloud.xcan.angus.core.gm.application.query.policy.impl;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.OP_PERMISSION_USER;
-import static cloud.xcan.angus.api.commonlink.AASConstant.OP_PLATFORM_ADMIN;
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_SUFFIX;
-import static cloud.xcan.angus.api.commonlink.AASConstant.TOP_PERMISSION_ADMIN;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.OP_PERMISSION_USER;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.OP_PLATFORM_ADMIN;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.TOP_PERMISSION_ADMIN;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertNotEmpty;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceExisted;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.POLICY_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.POLICY_IS_DISABLED_T;
 import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findFirstValue;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.checkHasAnyPolicy;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
@@ -30,7 +30,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.policy.PolicyType;
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.enums.EditionType;
@@ -443,7 +443,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
-   * The predefined policy code {@link AASConstant#POLICY_PRE_DEFINED_SUFFIX} cannot be repeated.
+   * The predefined policy code {@link AuthConstant#POLICY_PRE_DEFINED_SUFFIX} cannot be repeated.
    */
   @Override
   public void checkCodeSuffixRepeated(List<AuthPolicy> policies) {

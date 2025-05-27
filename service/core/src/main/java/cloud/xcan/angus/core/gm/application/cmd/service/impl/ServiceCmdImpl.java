@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.service.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SERVICE_EUREKA_NOT_EXISTED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SERVICE_EUREKA_NOT_EXISTED_T;
 import static cloud.xcan.angus.core.utils.CoreUtils.copyPropertiesIgnoreTenantAuditing;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;

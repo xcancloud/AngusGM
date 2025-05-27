@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.app.impl;
 
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_OPEN_EXPIRED_T;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_OPEN_NOT_FOUND_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_OPEN_EXPIRED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_OPEN_NOT_FOUND_T;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getApplicationInfo;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isCloudServiceEdition;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isOpClient;

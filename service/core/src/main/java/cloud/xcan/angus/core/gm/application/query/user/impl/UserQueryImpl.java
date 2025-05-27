@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.application.query.user.impl;
 
 import static cloud.xcan.angus.api.commonlink.UCConstant.TOP_TENANT_ADMIN;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_ACCOUNT_EXISTED_ERROR;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.USER_REFUSE_OPERATE_ADMIN;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.USER_ACCOUNT_EXISTED_ERROR;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.USER_REFUSE_OPERATE_ADMIN;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isMultiTenantCtrl;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantSysAdmin;

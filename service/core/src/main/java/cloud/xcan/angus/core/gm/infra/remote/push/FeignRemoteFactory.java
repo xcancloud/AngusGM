@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.infra.remote;
+package cloud.xcan.angus.core.gm.infra.remote.push;
 
 import cloud.xcan.angus.remote.client.DynamicFeignClient;
 import cloud.xcan.angus.security.FeignInnerApiAuthInterceptor;

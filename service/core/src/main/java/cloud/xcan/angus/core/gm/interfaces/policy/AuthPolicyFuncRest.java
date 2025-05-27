@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.policy;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.MAX_POLICY_FUNC_NUM;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.MAX_POLICY_FUNC_NUM;
 
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.AuthPolicyFuncFacade;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.func.AuthPolicyFuncTreeVo;

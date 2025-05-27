@@ -19,7 +19,7 @@ import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelRepo;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
-import cloud.xcan.angus.core.gm.infra.remote.ChannelSendResponse;
+import cloud.xcan.angus.core.gm.infra.remote.push.ChannelSendResponse;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import jakarta.annotation.Resource;

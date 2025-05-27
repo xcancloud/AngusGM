@@ -1,11 +1,11 @@
 package cloud.xcan.angus.core.gm.application.cmd.policy.impl;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_SUFFIX;
 import static cloud.xcan.angus.api.commonlink.policy.PolicyGrantStage.SIGNUP_SUCCESS;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.AuthTenantConverter.defaultInitToPolicyTenant;
 import static cloud.xcan.angus.core.gm.application.converter.AuthTenantConverter.openGrantInitToPolicyTenant;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.POLICY_PRE_SUFFIX_ERROR_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.POLICY_PRE_SUFFIX_ERROR_T;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.POLICY;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;

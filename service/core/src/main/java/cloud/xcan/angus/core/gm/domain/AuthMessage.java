@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.domain;
 
 
-public interface AASCoreMessage {
+public interface AuthMessage {
 
   String API_IS_DISABLED_T = "xcm.gm.api.is.disabled.t";
   String API_SWAGGER_PARSE_ERROR_CODE = "BAA002";

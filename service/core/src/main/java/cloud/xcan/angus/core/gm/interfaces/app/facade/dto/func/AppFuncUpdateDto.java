@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.APP_MAX_TAG;
-import static cloud.xcan.angus.api.commonlink.AASConstant.MAX_APP_FUNC_API_NUM_AP;
-import static cloud.xcan.angus.api.commonlink.AASConstant.MAX_APP_FUNC_SHORT_NAME_LENGTH;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.APP_MAX_TAG;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.MAX_APP_FUNC_API_NUM_AP;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.MAX_APP_FUNC_SHORT_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.DEFAULT_ROOT_PID;
 import static cloud.xcan.angus.spec.experimental.BizConstant.DEFAULT_SEQUENCE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;

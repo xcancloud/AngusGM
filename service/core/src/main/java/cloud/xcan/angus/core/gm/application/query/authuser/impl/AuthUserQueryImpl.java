@@ -6,9 +6,9 @@ import static cloud.xcan.angus.api.commonlink.client.ClientSource.isOperationCli
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertNotEmpty;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.LINK_SECRET_ILLEGAL_ERROR;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.LINK_SECRET_TIMEOUT_ERROR;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.LINK_SECRET_ILLEGAL_ERROR;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.LINK_SECRET_TIMEOUT_ERROR;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.ACCOUNT_PASSWORD_ERROR;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.ACCOUNT_PASSWORD_ERROR_KEY;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.USER_DISABLED_KEY;

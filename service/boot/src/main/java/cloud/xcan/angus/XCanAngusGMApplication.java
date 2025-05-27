@@ -16,7 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy(exposeProxy = true)
 @EnableFeignClients(basePackages = {
     "cloud.xcan.angus.api",
-    "cloud.xcan.angus.security"
+    "cloud.xcan.angus.security",
+    "cloud.xcan.angus.core.gm.infra.remote"
 })
 @EnableEurekaServer
 @SpringBootApplication(scanBasePackages = {"cloud.xcan.angus"})

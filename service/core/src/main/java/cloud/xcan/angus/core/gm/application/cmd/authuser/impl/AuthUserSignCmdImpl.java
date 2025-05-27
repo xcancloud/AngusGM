@@ -1,23 +1,23 @@
 package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.CACHE_PASSWORD_ERROR_LOCKED_PREFIX;
-import static cloud.xcan.angus.api.commonlink.AASConstant.CACHE_PASSWORD_ERROR_NUM_PREFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.CACHE_PASSWORD_ERROR_LOCKED_PREFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.CACHE_PASSWORD_ERROR_NUM_PREFIX;
 import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX;
 import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP;
 import static cloud.xcan.angus.api.commonlink.UCConstant.PASSWORD_PROXY_ENCRYP_TYPE;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.converter.UserSignConverter.signupToAddUser;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_ILLEGAL;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_TIMEOUT;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_ACCOUNT_EMPTY;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_DEVICE_ID_EMPTY;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR_LOCKED_RETRY_CODE;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR_LOCKED_RETRY_T;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_CODE;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_T;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NOT_SING_IN_LOGOUT;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NOT_SING_IN_LOGOUT_CODE;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.LINK_SECRET_ILLEGAL;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.LINK_SECRET_TIMEOUT;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_ACCOUNT_EMPTY;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_DEVICE_ID_EMPTY;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR_LOCKED_RETRY_CODE;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR_LOCKED_RETRY_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_CODE;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR_OVER_LIMIT_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.TOKEN_NOT_SING_IN_LOGOUT;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.TOKEN_NOT_SING_IN_LOGOUT_CODE;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_IN_FAIL;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.SIGN_IN_SUCCESS;
@@ -41,7 +41,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUserRepo;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
@@ -434,9 +434,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   private void checkForgetPasswordLinkSecret(Long userId, String linkSecret) {
-    String emailCacheKey = format(AASConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX,
+    String emailCacheKey = format(AuthConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX,
         EmailBizKey.PASSWORD_FORGET, userId);
-    String smsCacheKey = format(AASConstant.CACHE_SMS_CHECK_SECRET_PREFIX,
+    String smsCacheKey = format(AuthConstant.CACHE_SMS_CHECK_SECRET_PREFIX,
         SmsBizKey.PASSWORD_FORGET, userId);
     String emailLinkSecret = stringRedisService.get(emailCacheKey);
     String smsLinkSecret = stringRedisService.get(smsCacheKey);

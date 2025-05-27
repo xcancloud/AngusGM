@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.system.facade.internal.assembler;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.DEFAULT_TOKEN_EXPIRE_SECOND;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.DEFAULT_TOKEN_EXPIRE_SECOND;
 
 import cloud.xcan.angus.api.enums.ResourceAclType;
 import cloud.xcan.angus.api.enums.ResourceAuthType;

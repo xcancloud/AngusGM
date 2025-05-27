@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.tenant.impl;
 
 
-import static cloud.xcan.angus.core.gm.domain.ThirdCoreMessage.CERT_RECOGNIZE_ERROR;
+import static cloud.xcan.angus.core.gm.domain.ThirdMessage.CERT_RECOGNIZE_ERROR;
 
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;

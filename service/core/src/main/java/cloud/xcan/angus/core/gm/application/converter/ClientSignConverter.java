@@ -5,7 +5,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.SIGN2P_TOKE
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static java.lang.String.format;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.client.Client2pSignupBiz;
 import cloud.xcan.angus.api.commonlink.client.ClientSource;
 import cloud.xcan.angus.api.enums.Platform;
@@ -35,7 +35,7 @@ public class ClientSignConverter {
         .clientIdIssuedAt(Instant.now())
         .clientSecret(UUID.randomUUID().toString())
         .clientSecretExpiresAt(null)
-        .clientName(format(AASConstant.SIGN2P_CLIENT_NAME_FMT, tenantId,
+        .clientName(format(AuthConstant.SIGN2P_CLIENT_NAME_FMT, tenantId,
             signupBiz.name().toLowerCase(), resourceId))
         .clientAuthenticationMethods(methods -> {
           methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);

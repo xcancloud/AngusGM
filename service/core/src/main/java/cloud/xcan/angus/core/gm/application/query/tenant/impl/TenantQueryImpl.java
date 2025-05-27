@@ -5,7 +5,7 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.BID_TENANT;
 import static cloud.xcan.angus.api.commonlink.UCConstant.TENANT_SIGN_CANCEL_LOCK_MS;
 import static cloud.xcan.angus.api.commonlink.UCConstant.TOP_TENANT_ADMIN;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertForbidden;
-import static cloud.xcan.angus.core.gm.domain.UCCoreMessage.TENANT_IS_CANCELED;
+import static cloud.xcan.angus.core.gm.domain.UserMessage.TENANT_IS_CANCELED;
 import static cloud.xcan.angus.core.spring.SpringContextHolder.getBidGenerator;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;

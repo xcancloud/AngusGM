@@ -1,16 +1,16 @@
 package cloud.xcan.angus.core.gm.application.query.authuser.impl;
 
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.PASSWORD_IS_TOO_SHORT_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.PASSWORD_IS_TOO_SHORT_T;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.EMAIL_NOT_EXIST_T;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.MOBILE_NOT_EXIST_T;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_LINK_SECRET_LENGTH;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
-import cloud.xcan.angus.api.commonlink.AASConstant;
+import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenant;
@@ -67,7 +67,7 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
           String linkSecret = randomAlphabetic(MAX_LINK_SECRET_LENGTH);
           user.setLinkSecret(linkSecret);
           stringRedisService.set(String.format(CACHE_EMAIL_CHECK_SECRET_PREFIX, bizKey,
-              user.getId()), linkSecret, AASConstant.LINK_SECRET_VALID_SECOND, TimeUnit.SECONDS);
+              user.getId()), linkSecret, AuthConstant.LINK_SECRET_VALID_SECOND, TimeUnit.SECONDS);
         });
         return users;
       }
@@ -93,8 +93,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
           String linkSecret = randomAlphabetic(MAX_LINK_SECRET_LENGTH);
           u.setLinkSecret(linkSecret);
           stringRedisService.set(
-              String.format(AASConstant.CACHE_SMS_CHECK_SECRET_PREFIX, bizKey, u.getId()),
-              linkSecret, AASConstant.LINK_SECRET_VALID_SECOND, TimeUnit.SECONDS);
+              String.format(AuthConstant.CACHE_SMS_CHECK_SECRET_PREFIX, bizKey, u.getId()),
+              linkSecret, AuthConstant.LINK_SECRET_VALID_SECOND, TimeUnit.SECONDS);
         });
         return users;
       }

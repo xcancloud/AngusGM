@@ -3,12 +3,13 @@ package cloud.xcan.angus.core.gm.application.query.app.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceExisted;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.APP_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.APP_IS_DISABLED_T;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isMultiTenantCtrl;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setMultiTenantCtrl;
 import static cloud.xcan.angus.remote.message.http.ResourceExisted.M.RESOURCE_ALREADY_EXISTS_T2;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.math.NumberUtils.isDigits;
 
@@ -125,9 +126,9 @@ public class AppQueryImpl implements AppQuery {
     if (isDigits(idOrCode)) {
       appDb = appRepo.findById(Long.parseLong(idOrCode)).orElse(null);
     }
-    if (Objects.isNull(appDb)) {
+    if (isNull(appDb)) {
       appDb = findLatestByCode(idOrCode);
-      if (Objects.isNull(appDb)) {
+      if (isNull(appDb)) {
         throw ResourceNotFound.of(idOrCode, "App");
       }
     }
@@ -137,7 +138,7 @@ public class AppQueryImpl implements AppQuery {
   @Override
   public App checkAndFind(String code, EditionType editionType) {
     App appDb = findLatestByCode(code, editionType);
-    if (Objects.isNull(appDb)) {
+    if (isNull(appDb)) {
       throw ResourceNotFound.of(editionType.getValue() + ":" + code, "App");
     }
     return appDb;

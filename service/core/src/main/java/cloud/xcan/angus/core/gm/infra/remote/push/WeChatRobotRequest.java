@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.infra.remote;
+package cloud.xcan.angus.core.gm.infra.remote.push;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 
 @Getter
-public class DingTalkRobotRequest {
+public class WeChatRobotRequest {
 
   private String msgtype = "text";
 
@@ -34,6 +34,7 @@ public class DingTalkRobotRequest {
     public String getMsgType() {
       return "text";
     }
+
   }
 
   @Setter
@@ -41,8 +42,7 @@ public class DingTalkRobotRequest {
   @AllArgsConstructor
   public static class MarkDown {
 
-    private String title;
-    private String text;
+    private String content;
 
     public String getMsgType() {
       return "markdown";

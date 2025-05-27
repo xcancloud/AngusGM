@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.application.query.to.impl;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceExisted;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TO_POLICY_IS_DISABLED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.TO_POLICY_IS_DISABLED_T;
 import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_VALUE_DUPLICATE_T;
 import static cloud.xcan.angus.remote.message.http.ResourceExisted.M.RESOURCE_ALREADY_EXISTS_T2;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.duplicateByKey;

@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.domain;
 
-public interface EventCoreMessage {
+public interface EventMessage {
 
   String CHANNEL_TEST_MESSAGE = "xcm.gm.channel.test.message";
 

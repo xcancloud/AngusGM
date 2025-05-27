@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.infra.authentication.endpoint;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.TOKEN_REVOKE_ENDPOINT;
-import static cloud.xcan.angus.api.commonlink.AASConstant.USER_INFO_ENDPOINT;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.TOKEN_REVOKE_ENDPOINT;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.USER_INFO_ENDPOINT;
 import static java.util.Objects.nonNull;
 
 import io.swagger.v3.oas.annotations.tags.Tag;

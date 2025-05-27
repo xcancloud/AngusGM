@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.infra.authentication.service;
 
 
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_ILLEGAL;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.LINK_SECRET_TIMEOUT;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.LINK_SECRET_ILLEGAL;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.LINK_SECRET_TIMEOUT;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isBlank;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 

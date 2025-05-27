@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.system.impl;
 
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.TOKEN_NAME_EXISTED_T;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.TOKEN_NAME_EXISTED_T;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.checkTenantSysAdmin;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;

@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.domain;
 
-public interface UCCoreMessage {
+public interface UserMessage {
 
   String TENANT_AUDIT_FAILURE_REASON_MISSING = "xcm.gm.tenant.audit.failure.reason.missing";
   String TENANT_CERT_SUMMITED = "xcm.gm.tenant.cert.summited";

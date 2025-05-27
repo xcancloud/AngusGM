@@ -5,7 +5,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.XCAN_TENANT_PLATFOR
 
 import java.util.List;
 
-public interface AASConstant {
+public interface AuthConstant {
 
   String POLICY_PRE_DEFINED_ADMIN_SUFFIX = "_ADMIN";
   String POLICY_PRE_DEFINED_USER_SUFFIX = "_USER";

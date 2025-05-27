@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.infra.remote;
+package cloud.xcan.angus.core.gm.infra.remote.push;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,9 +1,9 @@
 package cloud.xcan.angus.core.gm.domain.policy;
 
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_ADMIN_SUFFIX;
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_EXT_SUFFIX;
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_GUEST_SUFFIX;
-import static cloud.xcan.angus.api.commonlink.AASConstant.POLICY_PRE_DEFINED_USER_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_ADMIN_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_EXT_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_GUEST_SUFFIX;
+import static cloud.xcan.angus.api.commonlink.AuthConstant.POLICY_PRE_DEFINED_USER_SUFFIX;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Objects.nonNull;

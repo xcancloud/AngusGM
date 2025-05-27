@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.application.cmd.authuser.impl;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.isUserSignIn;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
 import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.submitOauth2UserSignInRequest;
-import static cloud.xcan.angus.core.gm.domain.AASCoreMessage.SIGN_IN_PASSWORD_ERROR;
+import static cloud.xcan.angus.core.gm.domain.AuthMessage.SIGN_IN_PASSWORD_ERROR;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.USER_TOKEN;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
