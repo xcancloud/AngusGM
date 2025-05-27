@@ -149,7 +149,7 @@ onMounted(() => {
       <div class="flex justify-end items-center mb-2">
         <ButtonAuth
           code="MailServerAdd"
-          href="/system/email/service/add?type=add"
+          href="/system/email/server/add?type=add"
           type="primary"
           size="small"
           icon="icon-tianjia"
@@ -170,7 +170,7 @@ onMounted(() => {
           <template v-if="column.dataIndex === 'name'">
             <RouterLink
               v-if="app.has('MailServerDetail')"
-              :to="`/system/email/service/${record.id}?type=detail`"
+              :to="`/system/email/server/${record.id}?type=detail`"
               class="text-theme-special text-theme-text-hover">
               {{ record.name }}<span v-if="record.enabled" class="text-theme-special ml-1">({{
                 t('default')
@@ -210,7 +210,7 @@ onMounted(() => {
                     <template #icon>
                       <Icon icon="icon-shuxie" />
                     </template>
-                    <RouterLink :to="`/system/email/service/edit/${record.id}?type=edit`">
+                    <RouterLink :to="`/system/email/server/edit/${record.id}?type=edit`">
                       {{ app.getName('MailServerModify') }}
                     </RouterLink>
                   </MenuItem>
