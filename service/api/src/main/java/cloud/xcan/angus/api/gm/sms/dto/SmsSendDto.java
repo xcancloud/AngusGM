@@ -47,7 +47,6 @@ public class SmsSendDto implements Serializable {
   private Boolean urgent = false;
 
   @DoInFuture("Support SMS in other regions")
-  @Length(max = MAX_LANGUAGE_LENGTH)
   @Schema(description = "Use language to send sms content.", defaultValue = "zh_CN",
       example = "zh_CN", maxLength = MAX_LANGUAGE_LENGTH)
   private SupportedLanguage language = SupportedLanguage.zh_CN;
