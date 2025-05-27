@@ -1752,7 +1752,7 @@ export default {
     'user-7': '请输入用户邮箱属性',
     'user-8': '请输入用户密码属性',
     'user-mess-1': '搜索用户时要使用的LDAP用户对象类类型，例如：posixAccount。',
-    'user-mess-2': '搜搜索用户对象时使用的过滤条件，例如：(objectclass=posixAccount)。',
+    'user-mess-2': '搜索用户对象时使用的过滤条件，例如：(objectclass=posixAccount)。',
     'user-mess-3': '用户唯一名称对应的属性字段，例如：uid。',
     'user-mess-4': '用户名字对应的属性字段，例如：givenName。',
     'user-mess-5': '用户姓氏对应的属性字段，例如：sn。',
