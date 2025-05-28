@@ -6,7 +6,7 @@ import { setting } from '@/api';
 
 interface Props {
   visible: boolean;
-  defaults: number;
+  default0: number;
   max: number;
   min: number;
   name: string;
@@ -14,7 +14,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   visible: false,
-  defaults: 0,
+  default0: 0,
   max: 0,
   min: 0,
   name: undefined
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'update:visible', value: boolean): void, (e: 'ok'): void }>();
 
-const newQuota = ref(props.defaults);
+const newQuota = ref(props.default0);
 
 const handleOk = async () => {
   if (!newQuota.value) {

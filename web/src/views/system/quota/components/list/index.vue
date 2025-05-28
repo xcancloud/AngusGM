@@ -113,7 +113,7 @@ const columnsCloud = [
   },
   {
     title: '默认配额',
-    dataIndex: 'defaults',
+    dataIndex: 'default0',
     width: '10%'
   },
   {
@@ -146,7 +146,7 @@ const columnsPrivate = [
   },
   {
     title: '默认配额',
-    dataIndex: 'defaults',
+    dataIndex: 'default0',
     width: '10%'
   },
   {
@@ -226,7 +226,7 @@ const columns = computed(() => {
       <EditQuota
         v-if="currQuota"
         v-model:visible="visible"
-        :defaults="+currQuota.defaults"
+        :default0="+currQuota.default0"
         :max="+currQuota.max"
         :min="+currQuota.min"
         :name="currQuota.name.value"

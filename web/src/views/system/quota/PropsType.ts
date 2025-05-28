@@ -9,7 +9,7 @@ export type Quota = {
   allowChange: string;
   calcRemaining: string;
   quota: string;
-  defaults: string;
+  default0: string;
   min: string;
   max: string;
   tenantId: string;
