@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   mode: 'edit',
   height: 200,
-  options: () => ({}),
+  options: () => undefined,
   toolbarOptions: undefined
 });
 
@@ -111,7 +111,7 @@ defineExpose({
     <Browser :value="props.value" />
   </template>
   <template v-else-if="loaded">
-    <div :class="{'fixed z-999 bg-white left-0 top-0 bottom-0 right-0 flex flex-col': isMax}">
+    <div class="text-3" :class="{'fixed z-999 bg-white left-0 top-0 bottom-0 right-0 flex flex-col': isMax}">
       <Quill
         ref="quillRef"
         v-model:value="contents"
