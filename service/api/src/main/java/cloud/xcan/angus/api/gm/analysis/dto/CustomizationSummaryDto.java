@@ -1,5 +1,6 @@
 package cloud.xcan.angus.api.gm.analysis.dto;
 
+import static cloud.xcan.angus.remote.ApiConstant.RLimit.MAX_FILTER_SIZE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
 import cloud.xcan.angus.core.jpa.repository.summary.Aggregate;
@@ -50,8 +51,8 @@ public class CustomizationSummaryDto implements Serializable {
   @Schema(description = "Aggregate function and column configuration, supporting a maximum of `10` columns.")
   private List<Aggregate> aggregates;
 
-  @Size(max = 20)
-  @Schema(description = "Filter conditions, max `20`")
-  private List<SearchCriteria> filters = new ArrayList<>();
+  @Size(max = MAX_FILTER_SIZE)
+  @Schema(description = "Dynamic filter and search conditions, max " + MAX_FILTER_SIZE)
+  protected List<SearchCriteria> filters = new ArrayList<>();
 
 }
