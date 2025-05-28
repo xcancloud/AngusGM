@@ -34,7 +34,7 @@ public class AuthPolicyTenantRest {
   @Resource
   private AuthPolicyTenantFacade authPolicyTenantFacade;
 
-  @Operation(description = "Set the default policy of user access application.", operationId = "auth:tenant:app:policy:default:replace")
+  @Operation(summary = "Set the default policy of user access application.", operationId = "auth:tenant:app:policy:default:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Set successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -47,7 +47,7 @@ public class AuthPolicyTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete user access application default policy, prevent new users to access the application.", operationId = "auth:tenant:app:policy:default:delete")
+  @Operation(summary = "Delete user access application default policy, prevent new users to access the application.", operationId = "auth:tenant:app:policy:default:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -57,7 +57,7 @@ public class AuthPolicyTenantRest {
     authPolicyTenantFacade.defaultPolicyDelete(appId);
   }
 
-  @Operation(description = "Query the default policies of all authorized applications.", operationId = "auth:tenant:app:policy:default:list")
+  @Operation(summary = "Query the default policies of all authorized applications.", operationId = "auth:tenant:app:policy:default:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -66,7 +66,7 @@ public class AuthPolicyTenantRest {
     return ApiLocaleResult.success(authPolicyTenantFacade.defaultPolicy());
   }
 
-  @Operation(description = "Query all authorized applications of tenant.", operationId = "auth:tenant:app:list")
+  @Operation(summary = "Query all authorized applications of tenant.", operationId = "auth:tenant:app:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -75,7 +75,7 @@ public class AuthPolicyTenantRest {
     return ApiLocaleResult.success(authPolicyTenantFacade.tenantAppList());
   }
 
-  @Operation(description = "Query all functions list of authorized application.", operationId = "auth:tenant:app:func:list")
+  @Operation(summary = "Query all functions list of authorized application.", operationId = "auth:tenant:app:func:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -85,7 +85,7 @@ public class AuthPolicyTenantRest {
     return ApiLocaleResult.success(authPolicyTenantFacade.tenantAppFuncList(appId));
   }
 
-  @Operation(description = "Query all functions tree of authorized application.", operationId = "auth:tenant:app:func:tree")
+  @Operation(summary = "Query all functions tree of authorized application.", operationId = "auth:tenant:app:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

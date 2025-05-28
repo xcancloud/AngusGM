@@ -32,7 +32,7 @@ public class EventDoorRest {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(description = "Add events.")
+  @Operation(summary = "Add events.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @PostMapping

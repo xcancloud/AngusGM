@@ -29,7 +29,7 @@ public class UserDirectoryDoorRest {
   private UserDirectoryFacade userDirectoryFacade;
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(description = "Synchronize the users and groups from user directories.", operationId = "user:directory:sync:inner")
+  @Operation(summary = "Synchronize the users and groups from user directories.", operationId = "user:directory:sync:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Synchronize successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

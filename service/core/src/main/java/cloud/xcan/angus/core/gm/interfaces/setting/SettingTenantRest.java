@@ -33,7 +33,7 @@ public class SettingTenantRest {
   @Resource
   private SettingTenantFacade settingTenantFacade;
 
-  @Operation(description = "Replace the locale setting of the current tenant.",
+  @Operation(summary = "Replace the locale setting of the current tenant.",
       operationId = "setting:tenant:locale:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
@@ -43,7 +43,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the locale setting of the current tenant.",
+  @Operation(summary = "Query the locale setting of the current tenant.",
       operationId = "setting:tenant:locale:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -53,7 +53,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success(settingTenantFacade.localeDetail());
   }
 
-  @Operation(description = "Replace security setting of the current tenant.",
+  @Operation(summary = "Replace security setting of the current tenant.",
       operationId = "setting:tenant:security:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
@@ -63,7 +63,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Generate signup invitation code of the current tenant.",
+  @Operation(summary = "Generate signup invitation code of the current tenant.",
       operationId = "setting:tenant:signup:invitationCode:gen")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Generated successfully")})
@@ -72,7 +72,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.successData(settingTenantFacade.invitationCodeGen());
   }
 
-  @Operation(description = "Query security setting of the current tenant.",
+  @Operation(summary = "Query security setting of the current tenant.",
       operationId = "setting:tenant:security:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -82,7 +82,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success(settingTenantFacade.securityDetail());
   }
 
-  @Operation(description = "Replace the api proxy setting of the current tenant.",
+  @Operation(summary = "Replace the api proxy setting of the current tenant.",
       operationId = "setting:tenant:proxy:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
@@ -92,7 +92,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the api proxy setting of the current tenant.",
+  @Operation(summary = "Query the api proxy setting of the current tenant.",
       operationId = "setting:tenant:proxy:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -102,7 +102,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success(settingTenantFacade.proxyDetail());
   }
 
-  @Operation(description = "Replace the AngusTester event setting of the current tenant.",
+  @Operation(summary = "Replace the AngusTester event setting of the current tenant.",
       operationId = "setting:tenant:tester:event:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
@@ -112,7 +112,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the AngusTester event setting of the current tenant.",
+  @Operation(summary = "Query the AngusTester event setting of the current tenant.",
       operationId = "setting:tenant:tester:event:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -122,7 +122,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success(settingTenantFacade.testerEventDetail());
   }
 
-  @Operation(description = "Replace the default platform functionality indicators of the current tenant.",
+  @Operation(summary = "Replace the default platform functionality indicators of the current tenant.",
       operationId = "setting:tenant:indicator:func:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
@@ -133,7 +133,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the default platform functionality indicator of the current tenant.",
+  @Operation(summary = "Query the default platform functionality indicator of the current tenant.",
       operationId = "setting:indicator:func:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -143,7 +143,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success(settingTenantFacade.funcDetail());
   }
 
-  @Operation(description = "Replace the default platform performance indicators of the current tenant.",
+  @Operation(summary = "Replace the default platform performance indicators of the current tenant.",
       operationId = "setting:tenant:indicator:perf:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
@@ -154,7 +154,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the default platform performance indicator of the current tenant.",
+  @Operation(summary = "Query the default platform performance indicator of the current tenant.",
       operationId = "setting:indicator:perf:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -164,7 +164,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success(settingTenantFacade.perfDetail());
   }
 
-  @Operation(description = "Replace the default platform stability indicators of the current tenant.",
+  @Operation(summary = "Replace the default platform stability indicators of the current tenant.",
       operationId = "setting:tenant:indicator:stability:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
@@ -175,7 +175,7 @@ public class SettingTenantRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the default platform stability indicator of the current tenant.",
+  @Operation(summary = "Query the default platform stability indicator of the current tenant.",
       operationId = "setting:tenant:indicator:stability:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),

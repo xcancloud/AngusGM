@@ -32,7 +32,7 @@ public class CountryDistrictRest {
   @Resource
   private CountryDistrictFacade districtFacade;
 
-  @Operation(description = "Query the detail of district", operationId = "country:district:detail")
+  @Operation(summary = "Query the detail of district", operationId = "country:district:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -43,7 +43,7 @@ public class CountryDistrictRest {
     return ApiLocaleResult.success(districtFacade.district(countryCode, districtCode));
   }
 
-  @Operation(description = "Query the province list of country", operationId = "country:province:list")
+  @Operation(summary = "Query the province list of country", operationId = "country:province:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -53,7 +53,7 @@ public class CountryDistrictRest {
     return ApiLocaleResult.success(districtFacade.province(countryCode));
   }
 
-  @Operation(description = "Query the city list of province", operationId = "country:city:list")
+  @Operation(summary = "Query the city list of province", operationId = "country:city:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -64,7 +64,7 @@ public class CountryDistrictRest {
     return ApiLocaleResult.success(districtFacade.city(countryCode, provinceCode));
   }
 
-  @Operation(description = "Query the area list of city", operationId = "country:area:list")
+  @Operation(summary = "Query the area list of city", operationId = "country:area:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -75,7 +75,7 @@ public class CountryDistrictRest {
     return ApiLocaleResult.success(districtFacade.areas(countryCode, cityCode));
   }
 
-  @Operation(description = "Fulltext search the list of district", operationId = "country:district:search")
+  @Operation(summary = "Fulltext search the list of district", operationId = "country:district:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/district/search")
@@ -84,7 +84,7 @@ public class CountryDistrictRest {
     return ApiLocaleResult.success(districtFacade.search(dto));
   }
 
-  @Operation(description = "Query the district tree of country", operationId = "country:district:tree")
+  @Operation(summary = "Query the district tree of country", operationId = "country:district:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})

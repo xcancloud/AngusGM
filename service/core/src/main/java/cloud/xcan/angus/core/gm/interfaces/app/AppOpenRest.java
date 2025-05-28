@@ -44,7 +44,7 @@ public class AppOpenRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Open application.", operationId = "app:open")
+  @Operation(summary = "Open application.", operationId = "app:open")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Open successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -55,7 +55,7 @@ public class AppOpenRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Renewal the opened application.", operationId = "app:open:renew")
+  @Operation(summary = "Renewal the opened application.", operationId = "app:open:renew")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -69,7 +69,7 @@ public class AppOpenRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Cancel the opened application.", operationId = "app:open:cancel")
+  @Operation(summary = "Cancel the opened application.", operationId = "app:open:cancel")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Cancel successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -79,7 +79,7 @@ public class AppOpenRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the list of opened application.", operationId = "app:open:list")
+  @Operation(summary = "Query the list of opened application.", operationId = "app:open:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/list")

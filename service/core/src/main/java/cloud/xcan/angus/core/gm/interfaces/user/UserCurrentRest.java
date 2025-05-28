@@ -40,7 +40,7 @@ public class UserCurrentRest {
   @Resource
   private UserCurrentFacade userCurrentFacade;
 
-  @Operation(description = "Query tenant of current user.", operationId = "user:current:tenant:detail")
+  @Operation(summary = "Query tenant of current user.", operationId = "user:current:tenant:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -49,7 +49,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.tenantDetail());
   }
 
-  @Operation(description = "Update the current user.", operationId = "user:current:update")
+  @Operation(summary = "Update the current user.", operationId = "user:current:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -59,7 +59,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the detail of current user.", operationId = "user:current:detail")
+  @Operation(summary = "Query the detail of current user.", operationId = "user:current:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -68,7 +68,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.currentDetail());
   }
 
-  @Operation(description = "Send sms verification code to current user.", operationId = "user:current:sms:send")
+  @Operation(summary = "Send sms verification code to current user.", operationId = "user:current:sms:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully sent")})
@@ -78,7 +78,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check sms verification code of current user.", operationId = "user:current:sms:check")
+  @Operation(summary = "Check sms verification code of current user.", operationId = "user:current:sms:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
@@ -87,7 +87,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.checkSms(dto));
   }
 
-  @Operation(description = "Update the mobile of current user.", operationId = "user:current:mobile:update")
+  @Operation(summary = "Update the mobile of current user.", operationId = "user:current:mobile:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -97,7 +97,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Send email verification code to current user.", operationId = "user:current:email:send")
+  @Operation(summary = "Send email verification code to current user.", operationId = "user:current:email:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully sent")})
@@ -107,7 +107,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check email verification code of current user.", operationId = "user:current:email:check")
+  @Operation(summary = "Check email verification code of current user.", operationId = "user:current:email:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
@@ -116,7 +116,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.checkEmail(dto));
   }
 
-  @Operation(description = "Update the email of current user.", operationId = "user:current:email:update")
+  @Operation(summary = "Update the email of current user.", operationId = "user:current:email:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

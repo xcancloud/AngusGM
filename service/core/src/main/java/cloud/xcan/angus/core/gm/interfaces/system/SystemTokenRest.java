@@ -46,7 +46,7 @@ public class SystemTokenRest {
   @Resource
   private SystemTokenFacade systemTokenFacade;
 
-  @Operation(description = "Add system token.", operationId = "system:token:add")
+  @Operation(summary = "Add system token.", operationId = "system:token:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -55,7 +55,7 @@ public class SystemTokenRest {
     return ApiLocaleResult.success(systemTokenFacade.add(dto));
   }
 
-  @Operation(description = "Delete system tokens.", operationId = "system:token:delete")
+  @Operation(summary = "Delete system tokens.", operationId = "system:token:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping
@@ -64,7 +64,7 @@ public class SystemTokenRest {
     systemTokenFacade.delete(ids);
   }
 
-  @Operation(description = "Query the authorization of system token.", operationId = "system:token:auth:detail")
+  @Operation(summary = "Query the authorization of system token.", operationId = "system:token:auth:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/auth")
@@ -73,7 +73,7 @@ public class SystemTokenRest {
     return ApiLocaleResult.success(systemTokenFacade.auth(id));
   }
 
-  @Operation(description = "Query the value of system token.", operationId = "system:token:value:detail")
+  @Operation(summary = "Query the value of system token.", operationId = "system:token:value:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/value")
@@ -82,7 +82,7 @@ public class SystemTokenRest {
     return ApiLocaleResult.success(systemTokenFacade.value(id));
   }
 
-  @Operation(description = "Query all system tokens.", operationId = "system:token:all")
+  @Operation(summary = "Query all system tokens.", operationId = "system:token:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

@@ -59,7 +59,7 @@ public class TORoleRest {
   @Resource
   private TORoleFacade toRoleFacade;
 
-  @Operation(description = "Add operation roles.", operationId = "to:role:add")
+  @Operation(summary = "Add operation roles.", operationId = "to:role:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -69,7 +69,7 @@ public class TORoleRest {
     return ApiLocaleResult.success(toRoleFacade.add(dto));
   }
 
-  @Operation(description = "Update operation roles.", operationId = "to:role:update")
+  @Operation(summary = "Update operation roles.", operationId = "to:role:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -81,7 +81,7 @@ public class TORoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Replace operation roles.", operationId = "to:role:replace")
+  @Operation(summary = "Replace operation roles.", operationId = "to:role:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping
@@ -90,7 +90,7 @@ public class TORoleRest {
     return ApiLocaleResult.success(toRoleFacade.replace(dto));
   }
 
-  @Operation(description = "Delete operation roles.", operationId = "to:role:delete")
+  @Operation(summary = "Delete operation roles.", operationId = "to:role:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -100,7 +100,7 @@ public class TORoleRest {
     toRoleFacade.delete(ids);
   }
 
-  @Operation(description = "Enable or disable the operation roles.", operationId = "to:role:enabled")
+  @Operation(summary = "Enable or disable the operation roles.", operationId = "to:role:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -112,7 +112,7 @@ public class TORoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the detail of operation role.", operationId = "to:role:detail")
+  @Operation(summary = "Query the detail of operation role.", operationId = "to:role:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -122,7 +122,7 @@ public class TORoleRest {
     return ApiLocaleResult.success(toRoleFacade.detail(idOrCode));
   }
 
-  @Operation(description = "Query the list of operation role.", operationId = "to:role:list")
+  @Operation(summary = "Query the list of operation role.", operationId = "to:role:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -130,7 +130,7 @@ public class TORoleRest {
     return ApiLocaleResult.success(toRoleFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of operation role.", operationId = "to:role:search")
+  @Operation(summary = "Fulltext search the list of operation role.", operationId = "to:role:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

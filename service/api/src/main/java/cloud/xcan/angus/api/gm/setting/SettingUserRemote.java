@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface SettingUserRemote {
 
-  @Operation(description = "Query the preference setting of the current user.", operationId = "setting:user:preference:detail")
+  @Operation(summary = "Query the preference setting of the current user.", operationId = "setting:user:preference:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

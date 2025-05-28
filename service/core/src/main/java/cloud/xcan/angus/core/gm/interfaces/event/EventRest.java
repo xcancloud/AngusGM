@@ -35,7 +35,7 @@ public class EventRest {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(description = "Query the detail of event.", operationId = "event:detail")
+  @Operation(summary = "Query the detail of event.", operationId = "event:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -45,7 +45,7 @@ public class EventRest {
     return ApiLocaleResult.success(eventFacade.detail(id));
   }
 
-  @Operation(description = "Query the receive channels of event.", operationId = "event:channel:receive:all")
+  @Operation(summary = "Query the receive channels of event.", operationId = "event:channel:receive:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{eventCode}/channel")
@@ -54,7 +54,7 @@ public class EventRest {
     return ApiLocaleResult.success(eventFacade.receiveChannel(eventCode));
   }
 
-  @Operation(description = "Query the list of event.", operationId = "event:list")
+  @Operation(summary = "Query the list of event.", operationId = "event:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -62,7 +62,7 @@ public class EventRest {
     return ApiLocaleResult.success(eventFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of event.", operationId = "event:search")
+  @Operation(summary = "Fulltext search the list of event.", operationId = "event:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

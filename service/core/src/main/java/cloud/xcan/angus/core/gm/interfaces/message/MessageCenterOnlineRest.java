@@ -34,7 +34,7 @@ public class MessageCenterOnlineRest {
   @Resource
   private MessageCenterOnlineFacade messageCenterOnlineFacade;
 
-  @Operation(description = "Forced offline and logout users.", operationId = "message:center:offline")
+  @Operation(summary = "Forced offline and logout users.", operationId = "message:center:offline")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PostMapping("/off")
@@ -43,7 +43,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the online user information of the message center.", operationId = "message:center:online:detail")
+  @Operation(summary = "Query the online user information of the message center.", operationId = "message:center:online:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -53,7 +53,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.detail(userId));
   }
 
-  @Operation(description = "Query the online user information of the message center.", operationId = "message:center:online:list")
+  @Operation(summary = "Query the online user information of the message center.", operationId = "message:center:online:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -62,7 +62,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.list(dto));
   }
 
-  @Operation(description = "Search the online user information of the message center.", operationId = "message:center:online:search")
+  @Operation(summary = "Search the online user information of the message center.", operationId = "message:center:online:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

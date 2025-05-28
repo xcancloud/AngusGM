@@ -47,7 +47,7 @@ public class AuthPolicyGroupRest {
   @Resource
   private AuthPolicyGroupFacade authPolicyGroupFacade;
 
-  @Operation(description = "Authorize the policy to groups.", operationId = "auth:policy:group:add")
+  @Operation(summary = "Authorize the policy to groups.", operationId = "auth:policy:group:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -59,7 +59,7 @@ public class AuthPolicyGroupRest {
     return ApiLocaleResult.success(authPolicyGroupFacade.policyGroupAdd(policyId, groupIds));
   }
 
-  @Operation(description = "Delete the associated groups of authorization policy.", operationId = "auth:policy:group:delete")
+  @Operation(summary = "Delete the associated groups of authorization policy.", operationId = "auth:policy:group:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -71,7 +71,7 @@ public class AuthPolicyGroupRest {
     authPolicyGroupFacade.policyGroupDelete(policyId, groupIds);
   }
 
-  @Operation(description = "Query the group list of authorization policy.", operationId = "auth:policy:group:list")
+  @Operation(summary = "Query the group list of authorization policy.", operationId = "auth:policy:group:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/group")
@@ -81,7 +81,7 @@ public class AuthPolicyGroupRest {
     return ApiLocaleResult.success(authPolicyGroupFacade.policyGroupList(policyId, dto));
   }
 
-  @Operation(description = "Query the unauthorized group list of authorization policy.", operationId = "auth:policy:unauth:group:list")
+  @Operation(summary = "Query the unauthorized group list of authorization policy.", operationId = "auth:policy:unauth:group:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/unauth/group")
@@ -91,7 +91,7 @@ public class AuthPolicyGroupRest {
     return ApiLocaleResult.success(authPolicyGroupFacade.policyUnauthGroupList(policyId, dto));
   }
 
-  @Operation(description = "Authorize the policies to group.", operationId = "auth:group:policy:add")
+  @Operation(summary = "Authorize the policies to group.", operationId = "auth:group:policy:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -103,7 +103,7 @@ public class AuthPolicyGroupRest {
     return ApiLocaleResult.success(authPolicyGroupFacade.groupPolicyAdd(groupId, policyIds));
   }
 
-  @Operation(description = "Delete the authorization policies of group.", operationId = "auth:group:policy:delete")
+  @Operation(summary = "Delete the authorization policies of group.", operationId = "auth:group:policy:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -115,7 +115,7 @@ public class AuthPolicyGroupRest {
     authPolicyGroupFacade.groupPolicyDelete(groupId, policyIds);
   }
 
-  @Operation(description = "Delete the authorization policies of groups.", operationId = "auth:group:policy:delete:batch")
+  @Operation(summary = "Delete the authorization policies of groups.", operationId = "auth:group:policy:delete:batch")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -128,7 +128,7 @@ public class AuthPolicyGroupRest {
     authPolicyGroupFacade.groupPolicyDeleteBatch(groupIds, policyIds);
   }
 
-  @Operation(description = "Query the authorized policy list of group.", operationId = "auth:group:policy:list")
+  @Operation(summary = "Query the authorized policy list of group.", operationId = "auth:group:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/group/{groupId}/policy")
@@ -138,7 +138,7 @@ public class AuthPolicyGroupRest {
     return ApiLocaleResult.success(authPolicyGroupFacade.groupPolicyList(groupId, dto));
   }
 
-  @Operation(description = "Query the unauthorized policy list of group.", operationId = "auth:group:unauth:policy:list")
+  @Operation(summary = "Query the unauthorized policy list of group.", operationId = "auth:group:unauth:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/group/{groupId}/unauth/policy")

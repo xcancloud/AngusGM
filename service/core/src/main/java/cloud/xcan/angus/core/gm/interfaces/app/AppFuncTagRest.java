@@ -49,7 +49,7 @@ public class AppFuncTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Add the tags of application function.", operationId = "app:func:tag:add")
+  @Operation(summary = "Add the tags of application function.", operationId = "app:func:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -62,7 +62,7 @@ public class AppFuncTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Replace the tags of application function.", operationId = "app:func:tag:replace")
+  @Operation(summary = "Replace the tags of application function.", operationId = "app:func:tag:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -76,7 +76,7 @@ public class AppFuncTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Delete the tags of application function.", operationId = "app:func:tag:delete")
+  @Operation(summary = "Delete the tags of application function.", operationId = "app:func:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -88,7 +88,7 @@ public class AppFuncTagRest {
     appFuncTagFacade.funcTagDelete(funcId, tagIds);
   }
 
-  @Operation(description = "Query the tags list of application function.", operationId = "app:func:tag:list")
+  @Operation(summary = "Query the tags list of application function.", operationId = "app:func:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

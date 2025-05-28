@@ -25,7 +25,7 @@ public class EventPubView {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(description = "Query the html format content of event.", operationId = "event:detail:html")
+  @Operation(summary = "Query the html format content of event.", operationId = "event:detail:html")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}")

@@ -49,7 +49,7 @@ public class AuthPolicyUserRest {
   @Resource
   private AuthPolicyUserFacade authPolicyUserFacade;
 
-  @Operation(description = "Authorize the policy to users.", operationId = "auth:policy:user:add")
+  @Operation(summary = "Authorize the policy to users.", operationId = "auth:policy:user:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -61,7 +61,7 @@ public class AuthPolicyUserRest {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUserAdd(policyId, userIds));
   }
 
-  @Operation(description = "Delete the associated users of authorization policy.", operationId = "auth:policy:user:delete")
+  @Operation(summary = "Delete the associated users of authorization policy.", operationId = "auth:policy:user:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -73,7 +73,7 @@ public class AuthPolicyUserRest {
     authPolicyUserFacade.policyUserDelete(policyId, userIds);
   }
 
-  @Operation(description = "Query the user list of authorization policy.", operationId = "auth:policy:user:list")
+  @Operation(summary = "Query the user list of authorization policy.", operationId = "auth:policy:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/user")
@@ -83,7 +83,7 @@ public class AuthPolicyUserRest {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUserList(policyId, dto));
   }
 
-  @Operation(description = "Query the unauthorized user list of policy.", operationId = "auth:policy:unauth:user:list")
+  @Operation(summary = "Query the unauthorized user list of policy.", operationId = "auth:policy:unauth:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/unauth/user")
@@ -93,7 +93,7 @@ public class AuthPolicyUserRest {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUnauthUserList(policyId, dto));
   }
 
-  @Operation(description = "Authorize the policies to user.", operationId = "auth:user:policy:add")
+  @Operation(summary = "Authorize the policies to user.", operationId = "auth:user:policy:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -105,7 +105,7 @@ public class AuthPolicyUserRest {
     return ApiLocaleResult.success(authPolicyUserFacade.userPolicyAdd(userId, policyIds));
   }
 
-  @Operation(description = "Delete the authorization policies of user.", operationId = "auth:user:policy:delete")
+  @Operation(summary = "Delete the authorization policies of user.", operationId = "auth:user:policy:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -117,7 +117,7 @@ public class AuthPolicyUserRest {
     authPolicyUserFacade.userPolicyDelete(userId, policyIds);
   }
 
-  @Operation(description = "Delete the authorization policies of users.", operationId = "auth:user:policy:delete:batch")
+  @Operation(summary = "Delete the authorization policies of users.", operationId = "auth:user:policy:delete:batch")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -130,7 +130,7 @@ public class AuthPolicyUserRest {
     authPolicyUserFacade.userPolicyDeleteBatch(userIds, policyIds);
   }
 
-  @Operation(description = "Query the authorized policy list of user.", operationId = "auth:user:policy:list")
+  @Operation(summary = "Query the authorized policy list of user.", operationId = "auth:user:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/user/{userId}/policy")
@@ -140,7 +140,7 @@ public class AuthPolicyUserRest {
     return ApiLocaleResult.success(authPolicyUserFacade.userPolicyList(userId, dto));
   }
 
-  @Operation(description = "Query the all associated authorization policies of user.", operationId = "auth:user:policy:association:all")
+  @Operation(summary = "Query the all associated authorization policies of user.", operationId = "auth:user:policy:association:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/user/{userId}/policy/associated")
@@ -150,7 +150,7 @@ public class AuthPolicyUserRest {
     return ApiLocaleResult.success(authPolicyUserFacade.userAssociatedPolicyList(userId, dto));
   }
 
-  @Operation(description = "Query the unauthorized policy list of user.", operationId = "auth:user:unauth:policy:list")
+  @Operation(summary = "Query the unauthorized policy list of user.", operationId = "auth:user:unauth:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/user/{userId}/unauth/policy")

@@ -34,7 +34,7 @@ public class SystemLogRest {
   @Resource
   private SystemLogFacade systemLogFacade;
 
-  @Operation(description = "Query the all log file names of service instance.", operationId = "systemlog:instance:file:all")
+  @Operation(summary = "Query the all log file names of service instance.", operationId = "systemlog:instance:file:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/instance/{id}")
@@ -43,7 +43,7 @@ public class SystemLogRest {
     return ApiLocaleResult.success(systemLogFacade.fileList(instanceId));
   }
 
-  @Operation(description = "Query the content of log file.", operationId = "systemlog:instance:file:detail")
+  @Operation(summary = "Query the content of log file.", operationId = "systemlog:instance:file:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/instance/{id}/file/{name}")
@@ -57,7 +57,7 @@ public class SystemLogRest {
         systemLogFacade.fileDetail(instanceId, fileName, linesNum, tail));
   }
 
-  @Operation(description = "Delete when rolled the log file, otherwise only empty the log file content.", operationId = "systemlog:instance:file:clear")
+  @Operation(summary = "Delete when rolled the log file, otherwise only empty the log file content.", operationId = "systemlog:instance:file:clear")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/instance/{id}/file/{name}")

@@ -41,7 +41,7 @@ public class SmsRest {
   @Resource
   private SmsFacade smsFacade;
 
-  @Operation(description = "Send sms.", operationId = "sms:send")
+  @Operation(summary = "Send sms.", operationId = "sms:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sent successfully")})
   @PostMapping("/send")
@@ -50,7 +50,7 @@ public class SmsRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Send the test sms to channel.", operationId = "sms:channel:test:send")
+  @Operation(summary = "Send the test sms to channel.", operationId = "sms:channel:test:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Test successfully")})
   @PostMapping("/channel/test")
@@ -59,7 +59,7 @@ public class SmsRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check sms verification code.", operationId = "sms:verificationCode:check")
+  @Operation(summary = "Check sms verification code.", operationId = "sms:verificationCode:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")
@@ -68,7 +68,7 @@ public class SmsRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete sms.", operationId = "sms:delete")
+  @Operation(summary = "Delete sms.", operationId = "sms:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -78,7 +78,7 @@ public class SmsRest {
     smsFacade.delete(ids);
   }
 
-  @Operation(description = "Query the detail of sms.", operationId = "sms:detail")
+  @Operation(summary = "Query the detail of sms.", operationId = "sms:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -88,7 +88,7 @@ public class SmsRest {
     return ApiLocaleResult.success(smsFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of sms.", operationId = "sms:list")
+  @Operation(summary = "Query the list of sms.", operationId = "sms:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

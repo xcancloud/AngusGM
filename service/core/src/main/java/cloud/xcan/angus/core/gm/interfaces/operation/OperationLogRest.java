@@ -28,7 +28,7 @@ public class OperationLogRest {
   @Resource
   private OperationLogFacade optionFacade;
 
-  @Operation(description = "Query the operation logs list of user.", operationId = "log:operation:list")
+  @Operation(summary = "Query the operation logs list of user.", operationId = "log:operation:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -36,7 +36,7 @@ public class OperationLogRest {
     return ApiLocaleResult.success(optionFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the operation logs list of user.", operationId = "log:operation:search")
+  @Operation(summary = "Fulltext search the operation logs list of user.", operationId = "log:operation:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

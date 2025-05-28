@@ -43,7 +43,7 @@ public class EventTemplateRest {
   @Resource
   private EventTemplateFacade eventTemplateFacade;
 
-  @Operation(description = "Add event template.", operationId = "event:template:add")
+  @Operation(summary = "Add event template.", operationId = "event:template:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully")})
   @PostMapping
@@ -51,7 +51,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.add(dto));
   }
 
-  @Operation(description = "Replace event template.", operationId = "event:template:replace")
+  @Operation(summary = "Replace event template.", operationId = "event:template:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -60,7 +60,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.replace(dto));
   }
 
-  @Operation(description = "Replace the receive channel of event template.", operationId = "event:template:channel:replace")
+  @Operation(summary = "Replace the receive channel of event template.", operationId = "event:template:channel:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -70,7 +70,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Replace the receiver of event template.", operationId = "event:template:receiver:replace")
+  @Operation(summary = "Replace the receiver of event template.", operationId = "event:template:receiver:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping("/receiver")
@@ -79,7 +79,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete event template.", operationId = "event:template:delete")
+  @Operation(summary = "Delete event template.", operationId = "event:template:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -89,7 +89,7 @@ public class EventTemplateRest {
     eventTemplateFacade.delete(id);
   }
 
-  @Operation(description = "Query the detail of event template.", operationId = "event:template:detail")
+  @Operation(summary = "Query the detail of event template.", operationId = "event:template:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}")
@@ -98,7 +98,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.detail(id));
   }
 
-  @Operation(description = "Query the detail of current tenant event template and receive setting.", operationId = "event:template:current:detail")
+  @Operation(summary = "Query the detail of current tenant event template and receive setting.", operationId = "event:template:current:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/current")
@@ -107,7 +107,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.currentDetail(id));
   }
 
-  @Operation(description = "Query the list of event template.", operationId = "event:template:list")
+  @Operation(summary = "Query the list of event template.", operationId = "event:template:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -115,7 +115,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.list(dto));
   }
 
-  @Operation(description = "Query the list of current tenant event template and receive setting.", operationId = "event:template:current:list")
+  @Operation(summary = "Query the list of current tenant event template and receive setting.", operationId = "event:template:current:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/current")
@@ -124,7 +124,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.currentList(dto));
   }
 
-  @Operation(description = "Fulltext search the list of event template.", operationId = "event:template:search")
+  @Operation(summary = "Fulltext search the list of event template.", operationId = "event:template:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
@@ -132,7 +132,7 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.search(dto));
   }
 
-  @Operation(description = "Fulltext search the list of current tenant event template and receive setting.", operationId = "event:template:current:search")
+  @Operation(summary = "Fulltext search the list of current tenant event template and receive setting.", operationId = "event:template:current:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search/current")

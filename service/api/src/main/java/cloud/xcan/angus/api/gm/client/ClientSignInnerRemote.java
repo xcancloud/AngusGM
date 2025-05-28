@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface ClientSignInnerRemote {
 
-  @Operation(description = "Signup oauth2 client for private application edition or agent.", operationId = "client:signup:inner")
+  @Operation(summary = "Signup oauth2 client for private application edition or agent.", operationId = "client:signup:inner")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signup successfully")})

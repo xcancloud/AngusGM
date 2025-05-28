@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface ClientSignPubRemote {
 
-  @Operation(description = "Client sign-in for inner application.", operationId = "client:signin:pub")
+  @Operation(summary = "Client sign-in for inner application.", operationId = "client:signin:pub")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})

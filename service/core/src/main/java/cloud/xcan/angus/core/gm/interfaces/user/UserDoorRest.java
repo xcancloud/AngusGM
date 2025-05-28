@@ -33,7 +33,7 @@ public class UserDoorRest {
   @Resource
   private UserFacade userFacade;
 
-  @Operation(description = "Add user.", operationId = "user:add:inner")
+  @Operation(summary = "Add user.", operationId = "user:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)

@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface EmailRemote {
 
-  @Operation(description = "Send email", operationId = "email:add")
+  @Operation(summary = "Send email", operationId = "email:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully")})
   @PostMapping("/api/v1/email")
   ApiLocaleResult<?> send(@Valid @RequestBody EmailSendDto dto);
 
-  @Operation(description = "Check email verification code", operationId = "email:vc:check")
+  @Operation(summary = "Check email verification code", operationId = "email:vc:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Email does not exist, sendId error")

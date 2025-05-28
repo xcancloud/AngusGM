@@ -35,7 +35,7 @@ public class SmsChannelRest {
   @Resource
   private SmsChannelFacade smsChannelFacade;
 
-  @Operation(description = "Update sms channel.", operationId = "sms:channel:update")
+  @Operation(summary = "Update sms channel.", operationId = "sms:channel:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Update successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")
@@ -46,7 +46,7 @@ public class SmsChannelRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Enabled or disable sms channel", operationId = "sms:channel:enabled")
+  @Operation(summary = "Enabled or disable sms channel", operationId = "sms:channel:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")})
   @PatchMapping("/enabled")
@@ -55,7 +55,7 @@ public class SmsChannelRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the list of sms channel.", operationId = "sms:channel:list")
+  @Operation(summary = "Query the list of sms channel.", operationId = "sms:channel:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -63,7 +63,7 @@ public class SmsChannelRest {
     return ApiLocaleResult.success(smsChannelFacade.list(dto));
   }
 
-  @Operation(description = "Query the detail of sms channel.", operationId = "sms:channel:detail")
+  @Operation(summary = "Query the detail of sms channel.", operationId = "sms:channel:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})

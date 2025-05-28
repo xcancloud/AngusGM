@@ -50,7 +50,7 @@ public class TOUserRest {
   @Resource
   private TOUserFacade toUserFacade;
 
-  @Operation(description = "Add operation users.", operationId = "to:user:add")
+  @Operation(summary = "Add operation users.", operationId = "to:user:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -60,7 +60,7 @@ public class TOUserRest {
     return ApiLocaleResult.success(toUserFacade.add(dto));
   }
 
-  @Operation(description = "Delete operation users.", operationId = "to:user:delete")
+  @Operation(summary = "Delete operation users.", operationId = "to:user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -70,7 +70,7 @@ public class TOUserRest {
     toUserFacade.delete(userIds);
   }
 
-  @Operation(description = "Query the detail of operation user.", operationId = "to:user:detail")
+  @Operation(summary = "Query the detail of operation user.", operationId = "to:user:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -80,7 +80,7 @@ public class TOUserRest {
     return ApiLocaleResult.success(toUserFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of operation user.", operationId = "to:user:list")
+  @Operation(summary = "Query the list of operation user.", operationId = "to:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

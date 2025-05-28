@@ -27,7 +27,7 @@ public class ClientSignPubRest {
   @Resource
   private ClientSignFacade clientSignFacade;
 
-  @Operation(description = "Client sign-in for private, 3rd authorization or inner application.", operationId = "client:signin:pub")
+  @Operation(summary = "Client sign-in for private, 3rd authorization or inner application.", operationId = "client:signin:pub")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})

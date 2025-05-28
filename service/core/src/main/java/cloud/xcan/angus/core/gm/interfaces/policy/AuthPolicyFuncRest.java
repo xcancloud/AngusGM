@@ -39,7 +39,7 @@ public class AuthPolicyFuncRest {
   @Resource
   private AuthPolicyFuncFacade authPolicyFuncFacade;
 
-  @Operation(description = "Add application functions to authorization policy.", operationId = "auth:policy:func:delete")
+  @Operation(summary = "Add application functions to authorization policy.", operationId = "auth:policy:func:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -51,7 +51,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Replace application functions of authorization policy.", operationId = "auth:policy:func:replace")
+  @Operation(summary = "Replace application functions of authorization policy.", operationId = "auth:policy:func:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -63,7 +63,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete application functions of authorization policy.", operationId = "auth:policy:func:delete")
+  @Operation(summary = "Delete application functions of authorization policy.", operationId = "auth:policy:func:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -75,7 +75,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the application functions list of authorization policy.", operationId = "auth:policy:func:list")
+  @Operation(summary = "Query the application functions list of authorization policy.", operationId = "auth:policy:func:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -85,7 +85,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success(authPolicyFuncFacade.list(id));
   }
 
-  @Operation(description = "Query the application functions tree of authorization policy.", operationId = "auth:policy:func:tree")
+  @Operation(summary = "Query the application functions tree of authorization policy.", operationId = "auth:policy:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

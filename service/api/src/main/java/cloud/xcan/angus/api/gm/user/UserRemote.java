@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface UserRemote {
 
-  @Operation(description = "Query the list of user", operationId = "user:list")
+  @Operation(summary = "Query the list of user", operationId = "user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/user")
   ApiLocaleResult<PageResult<UserDetailVo>> list(@Valid @SpringQueryMap UserFindDto dto);
 
-  @Operation(description = "Fulltext search user", operationId = "user:search")
+  @Operation(summary = "Fulltext search user", operationId = "user:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/user/search")

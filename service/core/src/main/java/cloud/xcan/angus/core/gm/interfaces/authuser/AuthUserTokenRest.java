@@ -40,7 +40,7 @@ public class AuthUserTokenRest {
   @Resource
   private AuthUserTokenFacade authUserTokenFacade;
 
-  @Operation(description =
+  @Operation(summary =
       "Add token of current user. Used for customizing user authorization duration scenarios "
           + "while maintaining permissions identical to the associated user's access privileges.", operationId = "auth:user:token:add")
   @ApiResponses(value = {
@@ -51,7 +51,7 @@ public class AuthUserTokenRest {
     return ApiLocaleResult.success(authUserTokenFacade.add(dto));
   }
 
-  @Operation(description = "Delete the tokens of current user. Note: After deletion, "
+  @Operation(summary = "Delete the tokens of current user. Note: After deletion, "
       + "the access token will become invalid.", operationId = "auth:user:token:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -62,7 +62,7 @@ public class AuthUserTokenRest {
     authUserTokenFacade.delete(ids);
   }
 
-  @Operation(description = "Retrieve the value of the specified token associated with the current user.", operationId = "auth:token:value:detail")
+  @Operation(summary = "Retrieve the value of the specified token associated with the current user.", operationId = "auth:token:value:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/token/{id}/value")
@@ -71,7 +71,7 @@ public class AuthUserTokenRest {
     return ApiLocaleResult.success(authUserTokenFacade.value(id));
   }
 
-  @Operation(description = "Query the all tokens of current user.", operationId = "auth:user:token:all")
+  @Operation(summary = "Query the all tokens of current user.", operationId = "auth:user:token:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/token")

@@ -47,7 +47,7 @@ public class AuthPolicyDeptRest {
   @Resource
   private AuthPolicyDeptFacade authPolicyDeptFacade;
 
-  @Operation(description = "Authorize the policy to departments.", operationId = "auth:policy:dept:add")
+  @Operation(summary = "Authorize the policy to departments.", operationId = "auth:policy:dept:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -59,7 +59,7 @@ public class AuthPolicyDeptRest {
     return ApiLocaleResult.success(authPolicyDeptFacade.policyDeptAdd(policyId, deptIds));
   }
 
-  @Operation(description = "Delete the associated departments of authorization policy.", operationId = "auth:policy:dept:delete")
+  @Operation(summary = "Delete the associated departments of authorization policy.", operationId = "auth:policy:dept:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -71,7 +71,7 @@ public class AuthPolicyDeptRest {
     authPolicyDeptFacade.policyDeptDelete(policyId, deptIds);
   }
 
-  @Operation(description = "Query the departments list of authorization policy.", operationId = "auth:policy:dept:list")
+  @Operation(summary = "Query the departments list of authorization policy.", operationId = "auth:policy:dept:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/dept")
@@ -81,7 +81,7 @@ public class AuthPolicyDeptRest {
     return ApiLocaleResult.success(authPolicyDeptFacade.policyDeptList(policyId, dto));
   }
 
-  @Operation(description = "Query the unauthorized departments list of authorization policy.", operationId = "auth:policy:unauth:dept:list")
+  @Operation(summary = "Query the unauthorized departments list of authorization policy.", operationId = "auth:policy:unauth:dept:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/unauth/dept")
@@ -91,7 +91,7 @@ public class AuthPolicyDeptRest {
     return ApiLocaleResult.success(authPolicyDeptFacade.policyUnauthDeptList(policyId, dto));
   }
 
-  @Operation(description = "Authorize the policies to department.", operationId = "auth:dept:policy:add")
+  @Operation(summary = "Authorize the policies to department.", operationId = "auth:dept:policy:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -103,7 +103,7 @@ public class AuthPolicyDeptRest {
     return ApiLocaleResult.success(authPolicyDeptFacade.deptPolicyAdd(deptId, policyIds));
   }
 
-  @Operation(description = "Delete the authorization policies of department.", operationId = "auth:dept:policy:delete")
+  @Operation(summary = "Delete the authorization policies of department.", operationId = "auth:dept:policy:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -115,7 +115,7 @@ public class AuthPolicyDeptRest {
     authPolicyDeptFacade.deptPolicyDelete(deptId, policyIds);
   }
 
-  @Operation(description = "Delete the authorization policies of departments.", operationId = "auth:dept:policy:delete:batch")
+  @Operation(summary = "Delete the authorization policies of departments.", operationId = "auth:dept:policy:delete:batch")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -128,7 +128,7 @@ public class AuthPolicyDeptRest {
     authPolicyDeptFacade.deptPolicyDeleteBatch(deptIds, policyIds);
   }
 
-  @Operation(description = "Query the authorized policy list of department.", operationId = "auth:dept:policy:list")
+  @Operation(summary = "Query the authorized policy list of department.", operationId = "auth:dept:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/dept/{deptId}/policy")
@@ -138,7 +138,7 @@ public class AuthPolicyDeptRest {
     return ApiLocaleResult.success(authPolicyDeptFacade.deptPolicyList(deptId, dto));
   }
 
-  @Operation(description = "Query the unauthorized policy list of department.", operationId = "auth:dept:unauth:policy:list")
+  @Operation(summary = "Query the unauthorized policy list of department.", operationId = "auth:dept:unauth:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/dept/{deptId}/unauth/policy")

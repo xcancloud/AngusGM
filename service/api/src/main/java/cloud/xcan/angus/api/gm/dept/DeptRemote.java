@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface DeptRemote {
 
-  @Operation(description = "Query dept list", operationId = "dept:list")
+  @Operation(summary = "Query dept list", operationId = "dept:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/dept")
   ApiLocaleResult<PageResult<DeptDetailVo>> list(@Valid @SpringQueryMap DeptFindDto dto);
 
-  @Operation(description = "Search dept list", operationId = "dept:search")
+  @Operation(summary = "Search dept list", operationId = "dept:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/dept/search")

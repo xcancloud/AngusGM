@@ -29,7 +29,7 @@ public class ClientSignDoorRest {
   @Resource
   private ClientSignFacade clientSignFacade;
 
-  @Operation(description = "Signup oauth2 client for private application edition or agent.", operationId = "client:signup:inner")
+  @Operation(summary = "Signup oauth2 client for private application edition or agent.", operationId = "client:signup:inner")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signup successfully")})

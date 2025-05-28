@@ -47,7 +47,7 @@ public class DeptUserRest {
   @Resource
   private DeptUserFacade deptUserFacade;
 
-  @Operation(description = "Add users to department.", operationId = "dept:user:add")
+  @Operation(summary = "Add users to department.", operationId = "dept:user:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -60,7 +60,7 @@ public class DeptUserRest {
     return ApiLocaleResult.success(deptUserFacade.userAdd(deptId, userIds));
   }
 
-  @Operation(description = "Remove users from department.", operationId = "dept:user:delete")
+  @Operation(summary = "Remove users from department.", operationId = "dept:user:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -73,7 +73,7 @@ public class DeptUserRest {
     deptUserFacade.userDelete(deptId, userIds);
   }
 
-  @Operation(description = "Replace department head, there can only be one department head.", operationId = "dept:head:replace")
+  @Operation(summary = "Replace department head, there can only be one department head.", operationId = "dept:head:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -85,7 +85,7 @@ public class DeptUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the users list of department.", operationId = "dept:user:list")
+  @Operation(summary = "Query the users list of department.", operationId = "dept:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/{id}/user")

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface AuthPolicyDeptRemote {
 
-  @Operation(description = "Delete the policies authorization of departments", operationId = "auth:dept:policy:delete:batch")
+  @Operation(summary = "Delete the policies authorization of departments", operationId = "auth:dept:policy:delete:batch")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)

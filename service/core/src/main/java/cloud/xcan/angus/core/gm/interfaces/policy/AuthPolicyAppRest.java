@@ -30,7 +30,7 @@ public class AuthPolicyAppRest {
   @Resource
   private AuthPolicyAppFacade authPolicyAppFacade;
 
-  @Operation(description = "Query the authorization policy list of application.", operationId = "app:policy:list")
+  @Operation(summary = "Query the authorization policy list of application.", operationId = "app:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/app/{appId}/policy")
@@ -40,7 +40,7 @@ public class AuthPolicyAppRest {
     return ApiLocaleResult.success(authPolicyAppFacade.appPolicyList(appId, dto));
   }
 
-  @Operation(description = "Query the application detail of authorization policy.", operationId = "policy:app:detail")
+  @Operation(summary = "Query the application detail of authorization policy.", operationId = "policy:app:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/policy/{policyId}/app")

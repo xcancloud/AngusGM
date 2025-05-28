@@ -25,7 +25,7 @@ public class OperationLogDoorRest {
   @Resource
   private OperationLogFacade optionFacade;
 
-  @Operation(description = "Add user operation logs.", operationId = "log:operation:add:inner")
+  @Operation(summary = "Add user operation logs.", operationId = "log:operation:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully create")})
   @PostMapping

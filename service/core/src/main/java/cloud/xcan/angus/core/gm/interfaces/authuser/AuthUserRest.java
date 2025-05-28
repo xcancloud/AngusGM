@@ -44,7 +44,7 @@ public class AuthUserRest {
   @Resource
   private AuthUserFacade userFacade;
 
-  @Operation(description = "Update the password of user.", operationId = "auth:user:password:update")
+  @Operation(summary = "Update the password of user.", operationId = "auth:user:password:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Processed successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -54,7 +54,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check whether the user password is correct.", operationId = "auth:user:password:check")
+  @Operation(summary = "Check whether the user password is correct.", operationId = "auth:user:password:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Check successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -64,7 +64,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description =
+  @Operation(summary =
       "Delete oauth2 authorization users. Note: After deleting the authorized user, "
           + "they will not be able to log in to the system.", operationId = "auth:user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -77,7 +77,7 @@ public class AuthUserRest {
     userFacade.delete(ids);
   }
 
-  @Operation(description = "Modify the user's real-name status after the tenant real name authentication.",
+  @Operation(summary = "Modify the user's real-name status after the tenant real name authentication.",
       operationId = "auth:user:realname:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")
@@ -88,7 +88,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Update the password of current user.", operationId = "auth:user:password:update:current")
+  @Operation(summary = "Update the password of current user.", operationId = "auth:user:password:update:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Processed successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -99,7 +99,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check the password of current user.", operationId = "auth:user:password:check:current")
+  @Operation(summary = "Check the password of current user.", operationId = "auth:user:password:check:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Processed successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -109,7 +109,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Initialize the password of current user.", operationId = "auth:user:password:init:current")
+  @Operation(summary = "Initialize the password of current user.", operationId = "auth:user:password:init:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Processed successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -120,7 +120,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the all authorized application information of user.", operationId = "auth:user:app:all")
+  @Operation(summary = "Query the all authorized application information of user.", operationId = "auth:user:app:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{userId}/app")
@@ -129,7 +129,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success(userFacade.userAppList(userId));
   }
 
-  @Operation(description = "Query all authorized application functions list of user.", operationId = "auth:user:app:func:list")
+  @Operation(summary = "Query all authorized application functions list of user.", operationId = "auth:user:app:func:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -144,7 +144,7 @@ public class AuthUserRest {
         joinTag, onlyEnabled));
   }
 
-  @Operation(description = "Query all authorized application functions tree of user.", operationId = "auth:user:app:func:tree")
+  @Operation(summary = "Query all authorized application functions tree of user.", operationId = "auth:user:app:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

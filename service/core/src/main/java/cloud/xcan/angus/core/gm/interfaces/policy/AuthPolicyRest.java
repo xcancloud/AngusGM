@@ -55,7 +55,7 @@ public class AuthPolicyRest {
   @Resource
   private AuthPolicyFacade authPolicyFacade;
 
-  @Operation(description = "Add authorization policies.", operationId = "auth:policy:add")
+  @Operation(summary = "Add authorization policies.", operationId = "auth:policy:add")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
@@ -64,7 +64,7 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success(authPolicyFacade.add(dto));
   }
 
-  @Operation(description = "Update authorization policies.", operationId = "auth:policy:update")
+  @Operation(summary = "Update authorization policies.", operationId = "auth:policy:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -76,7 +76,7 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Replace authorization policies.", operationId = "auth:policy:update")
+  @Operation(summary = "Replace authorization policies.", operationId = "auth:policy:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -89,7 +89,7 @@ public class AuthPolicyRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Initialize the authorization policy for tenant or platform users.", operationId = "auth:policy:init")
+  @Operation(summary = "Initialize the authorization policy for tenant or platform users.", operationId = "auth:policy:init")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Initialized successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -99,7 +99,7 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Enabled or disabled the authorization policies.", operationId = "auth:policy:enabled")
+  @Operation(summary = "Enabled or disabled the authorization policies.", operationId = "auth:policy:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -111,7 +111,7 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete authorization policies.", operationId = "auth:policy:delete")
+  @Operation(summary = "Delete authorization policies.", operationId = "auth:policy:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -121,7 +121,7 @@ public class AuthPolicyRest {
     authPolicyFacade.delete(ids);
   }
 
-  @Operation(description = "Query the detail of authorization policy.", operationId = "auth:policy:detail")
+  @Operation(summary = "Query the detail of authorization policy.", operationId = "auth:policy:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -132,7 +132,7 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success(authPolicyFacade.detail(idOrCode));
   }
 
-  @Operation(description = "Query the list of authorization policy.", operationId = "auth:policy:list")
+  @Operation(summary = "Query the list of authorization policy.", operationId = "auth:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -140,7 +140,7 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success(authPolicyFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of authorization policy.", operationId = "auth:policy:search")
+  @Operation(summary = "Fulltext search the list of authorization policy.", operationId = "auth:policy:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

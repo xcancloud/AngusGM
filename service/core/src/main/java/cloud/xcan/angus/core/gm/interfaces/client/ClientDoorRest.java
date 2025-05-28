@@ -26,7 +26,7 @@ public class ClientDoorRest {
   @Resource
   private ClientFacade clientFacade;
 
-  @Operation(description = "Update oauth2 registered client.", operationId = "client:update:inner")
+  @Operation(summary = "Update oauth2 registered client.", operationId = "client:update:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")

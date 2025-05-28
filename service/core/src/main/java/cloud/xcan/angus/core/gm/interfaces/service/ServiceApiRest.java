@@ -43,7 +43,7 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Add the apis to service.", operationId = "service:api:add")
+  @Operation(summary = "Add the apis to service.", operationId = "service:api:add")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/api")
@@ -54,7 +54,7 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Synchronize the swagger apis from AngusDiscovery specified service instance.",
+  @Operation(summary = "Synchronize the swagger apis from AngusDiscovery specified service instance.",
       operationId = "service:api:discovery:sync")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Synchronize successfully")})
@@ -68,7 +68,7 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Synchronize the all swagger apis from AngusDiscovery service instances.",
+  @Operation(summary = "Synchronize the all swagger apis from AngusDiscovery service instances.",
       operationId = "service:api:discovery:syncs")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully")})
@@ -81,7 +81,7 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Delete the apis of service.", operationId = "service:api:delete")
+  @Operation(summary = "Delete the apis of service.", operationId = "service:api:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -92,7 +92,7 @@ public class ServiceApiRest {
     serviceApiFacade.apiDelete(id, ids);
   }
 
-  @Operation(description = "Query the list of service.", operationId = "service:api:list")
+  @Operation(summary = "Query the list of service.", operationId = "service:api:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/api")

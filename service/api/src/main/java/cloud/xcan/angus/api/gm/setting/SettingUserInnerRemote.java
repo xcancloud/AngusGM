@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface SettingUserInnerRemote {
 
-  @Operation(description = "Bind the social of the current user.", operationId = "setting:user:social:bind:inner")
+  @Operation(summary = "Bind the social of the current user.", operationId = "setting:user:social:bind:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
   @PatchMapping(value = "/innerapi/v1/setting/user/social/binding")
   ApiLocaleResult<?> socialBindingUpdate(@Valid @RequestBody UserSocialUpdateDto dto);
 
-  @Operation(description = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail:inner")
+  @Operation(summary = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

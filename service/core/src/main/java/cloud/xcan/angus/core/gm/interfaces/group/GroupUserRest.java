@@ -45,7 +45,7 @@ public class GroupUserRest {
   @Resource
   private GroupUserFacade groupUserFacade;
 
-  @Operation(description = "Add the users to group.", operationId = "group:user:add")
+  @Operation(summary = "Add the users to group.", operationId = "group:user:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -58,7 +58,7 @@ public class GroupUserRest {
     return ApiLocaleResult.success(groupUserFacade.userAdd(groupId, userIds));
   }
 
-  @Operation(description = "Remove the users from group.", operationId = "group:user:delete")
+  @Operation(summary = "Remove the users from group.", operationId = "group:user:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -71,7 +71,7 @@ public class GroupUserRest {
     groupUserFacade.userDelete(groupId, userIds);
   }
 
-  @Operation(description = "Query the users list of group.", operationId = "group:user:list")
+  @Operation(summary = "Query the users list of group.", operationId = "group:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/{id}/user")

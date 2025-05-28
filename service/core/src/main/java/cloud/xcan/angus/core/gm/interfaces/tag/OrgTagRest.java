@@ -45,7 +45,7 @@ public class OrgTagRest {
   @Resource
   private OrgTagFacade orgTagFacade;
 
-  @Operation(description = "Add tag", operationId = "org:tag:add")
+  @Operation(summary = "Add tag", operationId = "org:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -55,7 +55,7 @@ public class OrgTagRest {
     return ApiLocaleResult.success(orgTagFacade.add(dto));
   }
 
-  @Operation(description = "Update tags", operationId = "org:tag:update")
+  @Operation(summary = "Update tags", operationId = "org:tag:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -67,7 +67,7 @@ public class OrgTagRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete tags", operationId = "org:tag:delete")
+  @Operation(summary = "Delete tags", operationId = "org:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -77,7 +77,7 @@ public class OrgTagRest {
     orgTagFacade.delete(ids);
   }
 
-  @Operation(description = "Query the detail of tag", operationId = "org:tag:detail")
+  @Operation(summary = "Query the detail of tag", operationId = "org:tag:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -87,7 +87,7 @@ public class OrgTagRest {
     return ApiLocaleResult.success(orgTagFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of tags", operationId = "org:tag:list")
+  @Operation(summary = "Query the list of tags", operationId = "org:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -95,7 +95,7 @@ public class OrgTagRest {
     return ApiLocaleResult.success(orgTagFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search tags", operationId = "org:tag:search")
+  @Operation(summary = "Fulltext search tags", operationId = "org:tag:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

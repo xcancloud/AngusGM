@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface SettingTenantQuotaRemote {
 
-  @Operation(description = "Authorize or cancel to authorize tenant quotas by order.", operationId = "setting:tenant:quota:byorder:replace")
+  @Operation(summary = "Authorize or cancel to authorize tenant quotas by order.", operationId = "setting:tenant:quota:byorder:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
   @PatchMapping(value = "/api/v1/setting/tenant/quota/byorder")
   ApiLocaleResult<?> quotaReplaceByOrder(@Valid @RequestBody QuotaReplaceByOrderDto dto);
 
-  @Operation(description = "Check whether the purchase quota exceeds the upper limit.", operationId = "setting:tenant:quota:check")
+  @Operation(summary = "Check whether the purchase quota exceeds the upper limit.", operationId = "setting:tenant:quota:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
   @PatchMapping(value = "/api/v1/setting/tenant/quota/check")
   ApiLocaleResult<?> quotaCheck(@Valid @RequestBody HashSet<QuotaCheckDto> dtos);
 
-  @Operation(description = "Check whether the new purchase quota plus the cumulative purchase quota exceeds the upper limit.", operationId = "setting:tenant:quota:expansion:check")
+  @Operation(summary = "Check whether the new purchase quota plus the cumulative purchase quota exceeds the upper limit.", operationId = "setting:tenant:quota:expansion:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})

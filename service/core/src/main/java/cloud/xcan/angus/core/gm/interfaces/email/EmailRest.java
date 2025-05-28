@@ -42,7 +42,7 @@ public class EmailRest {
   @Resource
   private EmailFacade emailFacade;
 
-  @Operation(description = "Send email", operationId = "email:send")
+  @Operation(summary = "Send email", operationId = "email:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sent successfully")})
   @PostMapping
@@ -51,7 +51,7 @@ public class EmailRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Send the test email to server", operationId = "email:test")
+  @Operation(summary = "Send the test email to server", operationId = "email:test")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Tested successfully")})
   @PostMapping("/server/test")
@@ -60,7 +60,7 @@ public class EmailRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Delete emails", operationId = "email:delete")
+  @Operation(summary = "Delete emails", operationId = "email:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping
@@ -69,7 +69,7 @@ public class EmailRest {
     emailFacade.delete(ids);
   }
 
-  @Operation(description = "Check the email verification code is valid.", operationId = "email:verificationCode:check")
+  @Operation(summary = "Check the email verification code is valid.", operationId = "email:verificationCode:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")
@@ -78,7 +78,7 @@ public class EmailRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the detail of email", operationId = "email:detail")
+  @Operation(summary = "Query the detail of email", operationId = "email:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Email does not exist")})
@@ -88,7 +88,7 @@ public class EmailRest {
     return ApiLocaleResult.success(emailFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of email", operationId = "email:list")
+  @Operation(summary = "Query the list of email", operationId = "email:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

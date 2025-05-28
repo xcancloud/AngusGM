@@ -33,7 +33,7 @@ public class SmsTemplateRest {
   @Resource
   private SmsTemplateFacade smsTemplateFacade;
 
-  @Operation(description = "Update sms template.", operationId = "sms:template:update")
+  @Operation(summary = "Update sms template.", operationId = "sms:template:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Update successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -45,7 +45,7 @@ public class SmsTemplateRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the detail of sms template.", operationId = "sms:template:detail")
+  @Operation(summary = "Query the detail of sms template.", operationId = "sms:template:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -55,7 +55,7 @@ public class SmsTemplateRest {
     return ApiLocaleResult.success(smsTemplateFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of sms template.", operationId = "sms:template:list")
+  @Operation(summary = "Query the list of sms template.", operationId = "sms:template:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

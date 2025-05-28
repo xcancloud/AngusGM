@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface TenantRemote {
 
-  @Operation(description = "Query tenant list", operationId = "tenant:list")
+  @Operation(summary = "Query tenant list", operationId = "tenant:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/tenant")

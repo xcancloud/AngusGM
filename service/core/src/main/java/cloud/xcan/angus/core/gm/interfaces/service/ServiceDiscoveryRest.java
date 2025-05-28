@@ -23,7 +23,7 @@ public class ServiceDiscoveryRest {
   @Resource
   private DiscoveryClient discoveryClient;
 
-  @Operation(description = "Query the services of AngusDiscovery.", operationId = "discovery:service:list")
+  @Operation(summary = "Query the services of AngusDiscovery.", operationId = "discovery:service:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/discovery")
@@ -31,7 +31,7 @@ public class ServiceDiscoveryRest {
     return ApiLocaleResult.success(discoveryClient.getServices());
   }
 
-  @Operation(description = "Query the instances of AngusDiscovery service.", operationId = "discovery:instances:list")
+  @Operation(summary = "Query the instances of AngusDiscovery service.", operationId = "discovery:instances:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{serviceCode}/discovery/instances")

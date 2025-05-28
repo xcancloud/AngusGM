@@ -25,7 +25,7 @@ public class AIChatRest {
   @Resource
   private AIChatFacade aiChatFacade;
 
-  @Operation(description = "Chat and return result", operationId = "ai:chat:result")
+  @Operation(summary = "Chat and return result", operationId = "ai:chat:result")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Return successfully")})
   @GetMapping("/result")

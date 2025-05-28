@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface AppOpenInnerRemote {
 
-  @Operation(description = "Open application.", operationId = "app:open:inner")
+  @Operation(summary = "Open application.", operationId = "app:open:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Open successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping(value = "/innerapi/v1/app/open")
   ApiLocaleResult<IdKey<Long, Object>> open(@Valid @RequestBody AppOpenDto dto);
 
-  @Operation(description = "Renewal the opened application.", operationId = "app:open:renew:inner")
+  @Operation(summary = "Renewal the opened application.", operationId = "app:open:renew:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -36,7 +36,7 @@ public interface AppOpenInnerRemote {
   @PatchMapping(value = "/innerapi/v1/app/open/renew")
   ApiLocaleResult<?> renew(@Valid @RequestBody AppOpenRenewDto dto);
 
-  @Operation(description = "Cancel the opened application.", operationId = "app:open:cancel:inner")
+  @Operation(summary = "Cancel the opened application.", operationId = "app:open:cancel:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Cancel successfully")})
   @ResponseStatus(HttpStatus.CREATED)

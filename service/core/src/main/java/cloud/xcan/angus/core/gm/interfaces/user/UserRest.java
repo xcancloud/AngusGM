@@ -58,7 +58,7 @@ public class UserRest {
   @Resource
   private UserFacade userFacade;
 
-  @Operation(description = "Add user.", operationId = "user:add")
+  @Operation(summary = "Add user.", operationId = "user:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -67,7 +67,7 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.add(dto, UserSource.BACKGROUND_ADDED));
   }
 
-  @Operation(description = "Update user.", operationId = "user:update")
+  @Operation(summary = "Update user.", operationId = "user:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -77,7 +77,7 @@ public class UserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Replace user.", operationId = "user:replace")
+  @Operation(summary = "Replace user.", operationId = "user:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -86,7 +86,7 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.replace(dto));
   }
 
-  @Operation(description = "Delete users.", operationId = "user:delete")
+  @Operation(summary = "Delete users.", operationId = "user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping
@@ -95,7 +95,7 @@ public class UserRest {
     userFacade.delete(ids);
   }
 
-  @Operation(description = "Enable or disable users.", operationId = "user:enabled")
+  @Operation(summary = "Enable or disable users.", operationId = "user:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -107,7 +107,7 @@ public class UserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "DistributedLock or unlock  user.", operationId = "user:lock")
+  @Operation(summary = "DistributedLock or unlock  user.", operationId = "user:lock")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Locked or unlocked successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -118,7 +118,7 @@ public class UserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Set user as system administrator.", operationId = "user:admin")
+  @Operation(summary = "Set user as system administrator.", operationId = "user:admin")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Set successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -128,7 +128,7 @@ public class UserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the system administrators of tenant.", operationId = "user:admin:list")
+  @Operation(summary = "Query the system administrators of tenant.", operationId = "user:admin:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/sysadmin")
@@ -136,7 +136,7 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.sysAdminList());
   }
 
-  @Operation(description = "Check whether or not username existed.", operationId = "user:username:check")
+  @Operation(summary = "Check whether or not username existed.", operationId = "user:username:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Checked successfully")})
   @GetMapping(value = "/username/check")
@@ -146,7 +146,7 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.checkUsername(username));
   }
 
-  @Operation(description = "Query the detail of user.", operationId = "user:detail")
+  @Operation(summary = "Query the detail of user.", operationId = "user:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -156,7 +156,7 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of user.", operationId = "user:list")
+  @Operation(summary = "Query the list of user.", operationId = "user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -164,7 +164,7 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of user.", operationId = "user:search")
+  @Operation(summary = "Fulltext search the list of user.", operationId = "user:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

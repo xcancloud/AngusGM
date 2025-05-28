@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface TenantCertRecognizeRemote {
 
-  @Operation(description = "Recognize business license.", operationId = "cert:business:recognize")
+  @Operation(summary = "Recognize business license.", operationId = "cert:business:recognize")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully recognize")})
   @GetMapping("/api/v1/cert/business/recognize")
   ApiLocaleResult<BusinessRecognizeVo> businessRecognize(
       @Valid @SpringQueryMap BusinessRecognizeDto dto);
 
-  @Operation(description = "Recognize personal ID card.", operationId = "cert:idcard:recognize")
+  @Operation(summary = "Recognize personal ID card.", operationId = "cert:idcard:recognize")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully recognize")})
   @GetMapping("/api/v1/cert/idcard/recognize")

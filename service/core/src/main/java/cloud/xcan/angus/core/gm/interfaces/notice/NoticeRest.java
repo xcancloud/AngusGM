@@ -45,7 +45,7 @@ public class NoticeRest {
   @Resource
   private NoticeFacade noticeFacade;
 
-  @Operation(description = "Add application notice.", operationId = "notice:add")
+  @Operation(summary = "Add application notice.", operationId = "notice:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @PostMapping
@@ -53,7 +53,7 @@ public class NoticeRest {
     return ApiLocaleResult.success(noticeFacade.add(dto));
   }
 
-  @Operation(description = "Delete application notice.", operationId = "notice:delete")
+  @Operation(summary = "Delete application notice.", operationId = "notice:delete")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
@@ -62,7 +62,7 @@ public class NoticeRest {
     noticeFacade.delete(ids);
   }
 
-  @Operation(description = "Query the detail of application notice.", operationId = "notice:detail")
+  @Operation(summary = "Query the detail of application notice.", operationId = "notice:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -72,7 +72,7 @@ public class NoticeRest {
     return ApiLocaleResult.success(noticeFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of application notice.", operationId = "notice:list")
+  @Operation(summary = "Query the list of application notice.", operationId = "notice:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -80,7 +80,7 @@ public class NoticeRest {
     return ApiLocaleResult.success(noticeFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of application notice.", operationId = "notice:search")
+  @Operation(summary = "Fulltext search the list of application notice.", operationId = "notice:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
@@ -88,7 +88,7 @@ public class NoticeRest {
     return ApiLocaleResult.success(noticeFacade.search(dto));
   }
 
-  @Operation(description = "Query the latest global application notice.", operationId = "notice:global:latest")
+  @Operation(summary = "Query the latest global application notice.", operationId = "notice:global:latest")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/global/latest")
@@ -96,7 +96,7 @@ public class NoticeRest {
     return ApiLocaleResult.success(noticeFacade.globalLatest());
   }
 
-  @Operation(description = "Query the latest application notice.", operationId = "notice:app:latest")
+  @Operation(summary = "Query the latest application notice.", operationId = "notice:app:latest")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/app/{appId}/latest")

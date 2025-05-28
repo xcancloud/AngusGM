@@ -43,7 +43,7 @@ public class MessageRest {
   @Resource
   private MessageFacade messageFacade;
 
-  @Operation(description = "Add message.", operationId = "message:add")
+  @Operation(summary = "Add message.", operationId = "message:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @PostMapping
@@ -51,7 +51,7 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.add(dto));
   }
 
-  @Operation(description = "Delete messages.", operationId = "message:delete")
+  @Operation(summary = "Delete messages.", operationId = "message:delete")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
@@ -60,7 +60,7 @@ public class MessageRest {
     messageFacade.delete(ids);
   }
 
-  @Operation(description = "Query the detail of message.", operationId = "message:detail")
+  @Operation(summary = "Query the detail of message.", operationId = "message:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -69,7 +69,7 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of message.", operationId = "message:list")
+  @Operation(summary = "Query the list of message.", operationId = "message:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -77,7 +77,7 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of message.", operationId = "message:search")
+  @Operation(summary = "Fulltext search the list of message.", operationId = "message:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

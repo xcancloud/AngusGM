@@ -35,7 +35,7 @@ public class ApiLogRest {
   @Resource
   private ApiLogFacade apiLogFacade;
 
-  @Operation(description = "Query the detail of api request log.", operationId = "log:api:detail")
+  @Operation(summary = "Query the detail of api request log.", operationId = "log:api:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -45,7 +45,7 @@ public class ApiLogRest {
     return ApiLocaleResult.success(apiLogFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of api request log.", operationId = "log:api:list")
+  @Operation(summary = "Query the list of api request log.", operationId = "log:api:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

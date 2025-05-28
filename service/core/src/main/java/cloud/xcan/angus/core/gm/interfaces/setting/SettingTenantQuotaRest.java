@@ -37,7 +37,7 @@ public class SettingTenantQuotaRest {
   @Resource
   private SettingTenantQuotaFacade settingTenantQuotaFacade;
 
-  @Operation(description = "Replace the quota of tenant.", operationId = "setting:tenant:quota:replace")
+  @Operation(summary = "Replace the quota of tenant.", operationId = "setting:tenant:quota:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -49,7 +49,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Replace the quotas of tenant.", operationId = "setting:tenant:quota:replace:batch")
+  @Operation(summary = "Replace the quotas of tenant.", operationId = "setting:tenant:quota:replace:batch")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -59,7 +59,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Authorize or de-authorize tenant quotas by order.", operationId = "setting:tenant:quota:byorder:replace")
+  @Operation(summary = "Authorize or de-authorize tenant quotas by order.", operationId = "setting:tenant:quota:byorder:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -69,7 +69,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Initialize new quotas for all tenants.", operationId = "setting:tenant:quota:new:init")
+  @Operation(summary = "Initialize new quotas for all tenants.", operationId = "setting:tenant:quota:new:init")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -79,7 +79,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success(settingTenantQuotaFacade.newQuotaInit(name));
   }
 
-  @Operation(description = "Check whether the purchase quota exceeds the upper limit.", operationId = "setting:tenant:quota:check")
+  @Operation(summary = "Check whether the purchase quota exceeds the upper limit.", operationId = "setting:tenant:quota:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -89,7 +89,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Check whether the new purchase quota plus the cumulative purchase quota exceeds the upper limit.",
+  @Operation(summary = "Check whether the new purchase quota plus the cumulative purchase quota exceeds the upper limit.",
       operationId = "setting:tenant:quota:expansion:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
@@ -100,7 +100,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the quota detail of tenant.", operationId = "setting:tenant:quota:detail")
+  @Operation(summary = "Query the quota detail of tenant.", operationId = "setting:tenant:quota:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -110,7 +110,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success(settingTenantQuotaFacade.detail(name));
   }
 
-  @Operation(description = "Query the quota application list of tenant.", operationId = "setting:tenant:quota:app:list")
+  @Operation(summary = "Query the quota application list of tenant.", operationId = "setting:tenant:quota:app:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/app")
@@ -118,7 +118,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success(settingTenantQuotaFacade.appList());
   }
 
-  @Operation(description = "Query the quota list of tenant.", operationId = "setting:tenant:quota:list")
+  @Operation(summary = "Query the quota list of tenant.", operationId = "setting:tenant:quota:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -126,7 +126,7 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success(settingTenantQuotaFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the quota of tenant.", operationId = "setting:tenant:quota:search")
+  @Operation(summary = "Fulltext search the quota of tenant.", operationId = "setting:tenant:quota:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

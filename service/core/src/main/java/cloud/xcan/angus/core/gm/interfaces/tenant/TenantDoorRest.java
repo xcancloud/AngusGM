@@ -28,7 +28,7 @@ public class TenantDoorRest {
   @Resource
   private TenantFacade tenantFacade;
 
-  @Operation(description = "Query the list of tenant.", operationId = "tenant:list:inner")
+  @Operation(summary = "Query the list of tenant.", operationId = "tenant:list:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

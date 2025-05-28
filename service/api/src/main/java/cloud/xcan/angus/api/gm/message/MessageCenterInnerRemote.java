@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface MessageCenterInnerRemote {
 
-  @Operation(description = "Send messages", operationId = "message:center:push")
+  @Operation(summary = "Send messages", operationId = "message:center:push")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully sent")})
   @ResponseStatus(HttpStatus.CREATED)

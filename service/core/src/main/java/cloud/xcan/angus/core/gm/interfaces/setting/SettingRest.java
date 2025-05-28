@@ -29,7 +29,7 @@ public class SettingRest {
   @Resource
   private SettingFacade settingFacade;
 
-  @Operation(description = "Replace setting value.", operationId = "setting:value:replace")
+  @Operation(summary = "Replace setting value.", operationId = "setting:value:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -39,7 +39,7 @@ public class SettingRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Query the detail of setting value.", operationId = "setting:value:detail")
+  @Operation(summary = "Query the detail of setting value.", operationId = "setting:value:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

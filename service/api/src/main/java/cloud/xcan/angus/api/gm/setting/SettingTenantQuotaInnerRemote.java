@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "${xcan.service.gm:XCAN-ANGUSGM.BOOT}")
 public interface SettingTenantQuotaInnerRemote {
 
-  @Operation(description = "Authorize or de-authorize tenant quotas by order", operationId = "setting:tenant:quota:byorder:replace:inner")
+  @Operation(summary = "Authorize or de-authorize tenant quotas by order", operationId = "setting:tenant:quota:byorder:replace:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})

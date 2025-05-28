@@ -49,7 +49,7 @@ public class WebTagTargetRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Add the tag to targets", operationId = "web:tag:target:add")
+  @Operation(summary = "Add the tag to targets", operationId = "web:tag:target:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -63,7 +63,7 @@ public class WebTagTargetRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(description = "Delete the targets of tag ", operationId = "web:tag:target:delete")
+  @Operation(summary = "Delete the targets of tag ", operationId = "web:tag:target:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -75,7 +75,7 @@ public class WebTagTargetRest {
     webTagTargetFacade.targetDelete(tagId, targetIds);
   }
 
-  @Operation(description = "Query the targets list of tag", operationId = "web:tag:target:list")
+  @Operation(summary = "Query the targets list of tag", operationId = "web:tag:target:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/target")

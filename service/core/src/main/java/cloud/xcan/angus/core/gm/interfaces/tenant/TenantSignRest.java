@@ -28,7 +28,7 @@ public class TenantSignRest {
   @Resource
   private TenantSignFacade tenantSignFacade;
 
-  @Operation(description = "Cancel tenant account deletion request.", operationId = "tenant:sign:cancel:revoke")
+  @Operation(summary = "Cancel tenant account deletion request.", operationId = "tenant:sign:cancel:revoke")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully cancel signCancel")})
   @PostMapping("/cancel/revoke")
@@ -37,7 +37,7 @@ public class TenantSignRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Send SMS verification for tenant account deletion.", operationId = "tenant:sign:cancel:sms:send")
+  @Operation(summary = "Send SMS verification for tenant account deletion.", operationId = "tenant:sign:cancel:sms:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully sent signCancelSms")})
   @GetMapping("/cancel/sms/send")
@@ -46,7 +46,7 @@ public class TenantSignRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(description = "Confirm SMS code to finalize tenant account deletion.", operationId = "tenant:sign:cancel:sms:confirm")
+  @Operation(summary = "Confirm SMS code to finalize tenant account deletion.", operationId = "tenant:sign:cancel:sms:confirm")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/cancel/sms/confirm")

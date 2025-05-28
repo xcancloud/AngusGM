@@ -26,7 +26,7 @@ public class TenantCertRecognizeRest {
   @Resource
   private TenantCertRecognizeFacade certRecognizeFacade;
 
-  @Operation(description = "Recognize business license.", operationId = "cert:business:recognize")
+  @Operation(summary = "Recognize business license.", operationId = "cert:business:recognize")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully recognize")})
   @GetMapping("/business/recognize")
@@ -34,7 +34,7 @@ public class TenantCertRecognizeRest {
     return ApiLocaleResult.success(certRecognizeFacade.businessRecognize(dto));
   }
 
-  @Operation(description = "Recognize ID card.", operationId = "cert:idcard:recognize")
+  @Operation(summary = "Recognize ID card.", operationId = "cert:idcard:recognize")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully recognize")})
   @GetMapping("/idcard/recognize")

@@ -29,7 +29,7 @@ public class CountryRest {
   @Resource
   private CountryFacade countryFacade;
 
-  @Operation(description = "Query the detail of country", operationId = "country:detail")
+  @Operation(summary = "Query the detail of country", operationId = "country:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -39,7 +39,7 @@ public class CountryRest {
     return ApiLocaleResult.success(countryFacade.detail(id));
   }
 
-  @Operation(description = "Query the list of country", operationId = "country:list")
+  @Operation(summary = "Query the list of country", operationId = "country:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -47,7 +47,7 @@ public class CountryRest {
     return ApiLocaleResult.success(countryFacade.list(dto));
   }
 
-  @Operation(description = "Fulltext search the list of country", operationId = "country:search")
+  @Operation(summary = "Fulltext search the list of country", operationId = "country:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Search successfully")})
   @GetMapping("/search")

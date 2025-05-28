@@ -43,7 +43,7 @@ public class OrgTagTargetRest {
   @Resource
   private OrgTagTargetFacade orgTagTargetFacade;
 
-  @Operation(description = "Add the tag to targets", operationId = "org:tag:target:add")
+  @Operation(summary = "Add the tag to targets", operationId = "org:tag:target:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -55,7 +55,7 @@ public class OrgTagTargetRest {
     return ApiLocaleResult.success(orgTagTargetFacade.targetAdd(tagId, dto));
   }
 
-  @Operation(description = "Delete the tag of targets", operationId = "org:tag:target:delete")
+  @Operation(summary = "Delete the tag of targets", operationId = "org:tag:target:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -67,7 +67,7 @@ public class OrgTagTargetRest {
     orgTagTargetFacade.targetDelete(tagId, targetIds);
   }
 
-  @Operation(description = "Query the targets list of tag", operationId = "org:tag:target:list")
+  @Operation(summary = "Query the targets list of tag", operationId = "org:tag:target:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/target")
