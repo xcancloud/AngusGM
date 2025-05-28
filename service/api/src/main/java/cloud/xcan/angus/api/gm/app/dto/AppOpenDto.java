@@ -5,7 +5,6 @@ import cloud.xcan.angus.validator.Code;
 import cloud.xcan.angus.validator.Version;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -13,9 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Valid
-@Setter
 @Getter
+@Setter
 @Accessors(chain = true)
 public class AppOpenDto {
 
