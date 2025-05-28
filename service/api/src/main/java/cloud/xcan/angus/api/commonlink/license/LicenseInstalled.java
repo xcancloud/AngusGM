@@ -3,7 +3,6 @@ package cloud.xcan.angus.api.commonlink.license;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.GoodsType;
 import cloud.xcan.angus.spec.experimental.EntitySupport;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

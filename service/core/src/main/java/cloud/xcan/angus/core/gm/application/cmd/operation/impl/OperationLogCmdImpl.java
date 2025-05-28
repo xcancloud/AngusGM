@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.application.cmd.operation.impl;
 import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperation;
 import static cloud.xcan.angus.core.gm.application.converter.OperationLogConverter.toOperations;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isUserAction;
-import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static java.util.Objects.nonNull;
 

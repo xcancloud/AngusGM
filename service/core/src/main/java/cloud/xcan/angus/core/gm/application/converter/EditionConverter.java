@@ -5,7 +5,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.OWNER_TENANT_ID;
 import static cloud.xcan.angus.spec.experimental.BizConstant.PRODUCT_ISSUER;
 import static cloud.xcan.angus.spec.experimental.BizConstant.PRODUCT_PROVIDE;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
-import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.license.LicenseInstalled;

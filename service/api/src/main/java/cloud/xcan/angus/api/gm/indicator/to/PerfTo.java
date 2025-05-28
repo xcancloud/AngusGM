@@ -6,7 +6,6 @@ import cloud.xcan.angus.spec.unit.TimeValue;
 import cloud.xcan.angus.validator.TimeValueRange;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +17,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 
-@Valid
 @Getter
 @Setter
 @NoArgsConstructor

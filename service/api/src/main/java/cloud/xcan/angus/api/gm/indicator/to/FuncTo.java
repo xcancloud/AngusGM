@@ -5,7 +5,6 @@ import cloud.xcan.angus.api.gm.indicator.SecurityCheckSetting;
 import cloud.xcan.angus.api.gm.indicator.SmokeCheckSetting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 
-@Valid
 @Getter
 @Setter
 @NoArgsConstructor

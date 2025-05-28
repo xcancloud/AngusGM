@@ -15,7 +15,6 @@ import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.validator.Version;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -27,7 +26,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
 
-@Valid
 @Getter
 @Setter
 @Accessors(chain = true)

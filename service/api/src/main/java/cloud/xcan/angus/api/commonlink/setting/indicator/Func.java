@@ -5,13 +5,11 @@ import cloud.xcan.angus.api.gm.indicator.SecurityCheckSetting;
 import cloud.xcan.angus.api.gm.indicator.SmokeCheckSetting;
 import cloud.xcan.angus.spec.experimental.ValueObjectSupport;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 
-@Valid
 @Getter
 @Setter
 @Accessors(chain = true)
