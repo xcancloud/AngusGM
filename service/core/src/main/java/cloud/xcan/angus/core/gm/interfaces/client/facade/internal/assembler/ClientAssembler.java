@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.client.facade.internal.assembler;
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_USER_TOKEN;
 import static cloud.xcan.angus.api.enums.Platform.XCAN_TP;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
+import static cloud.xcan.angus.spec.utils.DateUtils.asInstant;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
@@ -33,8 +34,7 @@ public class ClientAssembler {
         .clientId(dto.getClientId())
         .clientIdIssuedAt(Instant.now())
         .clientSecret(dto.getClientSecret())
-        .clientSecretExpiresAt(nonNull(dto.getClientSecretExpiresAt())
-            ? Instant.from(dto.getClientSecretExpiresAt()) : null)
+        .clientSecretExpiresAt(asInstant(dto.getClientSecretExpiresAt()))
         .clientName(dto.getClientName())
         .clientAuthenticationMethods(methods -> {
           if (isNotEmpty(dto.getClientAuthenticationMethods())) {
@@ -87,8 +87,7 @@ public class ClientAssembler {
         .clientId(isNull(dto.getId()) ? dto.getClientId() : null)
         .clientIdIssuedAt(isNull(dto.getId()) ? Instant.now() : null)
         .clientSecret(dto.getClientSecret())
-        .clientSecretExpiresAt(nonNull(dto.getClientSecretExpiresAt())
-            ? Instant.from(dto.getClientSecretExpiresAt()) : null)
+        .clientSecretExpiresAt(asInstant(dto.getClientSecretExpiresAt()))
         .clientName(dto.getClientName())
         .clientAuthenticationMethods(methods -> {
           if (isNotEmpty(dto.getClientAuthenticationMethods())) {
@@ -139,8 +138,7 @@ public class ClientAssembler {
     return CustomOAuth2RegisteredClient
         .with(dto.getId())
         .clientSecret(dto.getClientSecret())
-        .clientSecretExpiresAt(nonNull(dto.getClientSecretExpiresAt())
-            ? Instant.from(dto.getClientSecretExpiresAt()) : null)
+        .clientSecretExpiresAt(asInstant(dto.getClientSecretExpiresAt()))
         .clientName(dto.getClientName())
         .clientAuthenticationMethods(methods -> {
           if (isNotEmpty(dto.getClientAuthenticationMethods())) {

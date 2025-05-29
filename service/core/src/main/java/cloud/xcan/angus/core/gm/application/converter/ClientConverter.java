@@ -9,9 +9,9 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.ClientSource.XCAN_S
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
+import static cloud.xcan.angus.spec.utils.DateUtils.asInstant;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.lang.String.format;
-import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.client.ClientSource;
@@ -40,7 +40,7 @@ public class ClientConverter {
         .clientId(getSystemTokenClientId(tokenName, ClientSource.XCAN_SYS_TOKEN))
         .clientIdIssuedAt(Instant.now())
         .clientSecret(UUID.randomUUID().toString())
-        .clientSecretExpiresAt(nonNull(expireDate) ? Instant.from(expireDate) : null)
+        .clientSecretExpiresAt(asInstant(expireDate))
         .clientName(tokenName)
         .clientAuthenticationMethods(methods -> {
           methods.add(ClientAuthenticationMethod.CLIENT_SECRET_POST);

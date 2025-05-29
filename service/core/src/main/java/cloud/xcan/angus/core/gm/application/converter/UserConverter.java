@@ -8,6 +8,7 @@ import static cloud.xcan.angus.core.utils.CoreUtils.calcPasswordStrength;
 import static cloud.xcan.angus.spec.SpecConstant.DEFAULT_ENCODING;
 import static cloud.xcan.angus.spec.experimental.BizConstant.EMPTY_NUMBER;
 import static cloud.xcan.angus.spec.experimental.BizConstant.EMPTY_STR;
+import static cloud.xcan.angus.spec.utils.DateUtils.asInstant;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.convert;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static java.util.Objects.nonNull;
@@ -31,7 +32,6 @@ import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
 import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectoryUserSchema;
 import java.io.UnsupportedEncodingException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.naming.NamingException;
@@ -59,10 +59,9 @@ public class UserConverter {
         .mobile(user.getMobile())
         .email(user.getEmail())
         .mainDeptId(nonNull(user.getMainDeptId()) ? user.getMainDeptId().toString() : null)
-        .passwordExpiredDate(nonNull(user.getPasswordExpiredDate())
-            ? Instant.from(user.getPasswordExpiredDate()) : null)
+        .passwordExpiredDate(asInstant(user.getPasswordExpiredDate()))
         .lastModifiedPasswordDate(null)
-        .expiredDate(nonNull(user.getExpiredDate()) ? Instant.from(user.getExpiredDate()) : null)
+        .expiredDate(asInstant(user.getExpiredDate()))
         .deleted(nullSafe(user.getDeleted(), false))
         .tenantId(tenantDb.getId().toString())
         .tenantName(tenantDb.getName())
