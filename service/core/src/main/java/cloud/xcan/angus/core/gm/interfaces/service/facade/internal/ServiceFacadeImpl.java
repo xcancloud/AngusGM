@@ -5,6 +5,7 @@ import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assemb
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.toServiceResourceApiVo;
+import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.toServiceResourceVo;
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.updateDtoToDomain;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
@@ -98,14 +99,14 @@ public class ServiceFacadeImpl implements ServiceFacade {
 
   @Override
   public List<ServiceResourceVo> resourceList(String serviceCode, Boolean auth) {
-    List<Service> serviceResources = serviceQuery.resourceList(serviceCode, auth);
-    return ServiceAssembler.toServiceResourceVo(serviceResources);
+    List<Service> resources = serviceQuery.resourceList(serviceCode, auth);
+    return toServiceResourceVo(resources);
   }
 
   @Override
   public List<ResourceApiVo> resourceApiList(String serviceCode, String resourceName,
       Boolean auth) {
-    Service serviceResourceApis = serviceQuery.resourceApiList(serviceCode, resourceName, auth);
-    return toServiceResourceApiVo(serviceResourceApis);
+    Service resourceApis = serviceQuery.resourceApiList(serviceCode, resourceName, auth);
+    return toServiceResourceApiVo(resourceApis);
   }
 }
