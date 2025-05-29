@@ -56,7 +56,6 @@ GRANT select ON `xcan_angusgm`.`to_role` TO `commonlink`@`%`;
 GRANT select ON `xcan_angusgm`.`to_user` TO `commonlink`@`%`;
 GRANT select ON `xcan_angusgm`.`to_role_user` TO `commonlink`@`%`;
 GRANT select ON `xcan_angusgm`.`app_open` TO `commonlink`@`%`;
-GRANT select ON `xcan_angusgm`.`message_center_online` TO `commonlink`@`%`;
 GRANT select ON `xcan_angusgm`.`c_i18n_messages` TO `commonlink`@`%`;
 GRANT select ON `xcan_angusgm`.`c_setting` TO `commonlink`@`%`;
 GRANT select ON `xcan_angusgm`.`c_setting_tenant` TO `commonlink`@`%`;
@@ -527,23 +526,6 @@ CREATE TABLE `app_open`
     KEY                  `idx_edition_type` (`edition_type`),
     KEY                  `idx_tenant_id_app` (`tenant_id`,`edition_type`,`app_code`,`version`) USING BTREE
 ) ENGINE=FEDERATED COMMENT='应用开通表' CONNECTION='xcan_angusgm_link/app_open';
-
--- WPUSH
-CREATE TABLE `message_center_online`
-(
-    `user_id`        bigint(20) NOT NULL COMMENT '用户ID',
-    `tenant_id`      bigint(20) NOT NULL COMMENT '租户ID',
-    `full_name`      varchar(100) NOT NULL COMMENT '用户姓名',
-    `user_agent`     varchar(200) NOT NULL COMMENT '用户终端',
-    `device_id`      varchar(160) DEFAULT NULL COMMENT '设备ID',
-    `remote_address` varchar(32)  NOT NULL COMMENT '访问ID地址',
-    `online`         int(1) NOT NULL COMMENT '是否在线',
-    `online_date`    datetime     DEFAULT NULL COMMENT '上次上线时间',
-    `offline_date`   datetime     DEFAULT NULL COMMENT '上次下线时间',
-    KEY              `idx_user_id` (`user_id`) USING BTREE,
-    KEY              `idx_tenant_id` (`tenant_id`) USING BTREE
-    -- ,FULLTEXT KEY `fx_full_name_remote_address` (`full_name`,`remote_address`) /*!50100 WITH PARSER `ngram` */
-) ENGINE=FEDERATED COMMENT='消息中心在线用户' CONNECTION='xcan_angusgm_link/message_center_online';
 
 -- COMMON
 CREATE TABLE `c_i18n_messages`

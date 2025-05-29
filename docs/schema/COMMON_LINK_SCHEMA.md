@@ -55,7 +55,6 @@ GRANT SELECT ON `xcan_gm`.`to_role` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`to_user` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`to_role_user` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`app_open` TO `commonlink`@`%`;
-GRANT SELECT ON `xcan_gm`.`message_center_online` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`c_i18n_messages` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`c_setting` TO `commonlink`@`%`;
 GRANT SELECT ON `xcan_gm`.`c_setting_tenant` TO `commonlink`@`%`;
@@ -527,22 +526,6 @@ CREATE TABLE `app_open`
     KEY                  `idx_edition_type` (`edition_type`),
     KEY                  `idx_tenant_id_app` (`tenant_id`,`edition_type`,`app_code`,`version`) USING BTREE
 ) ENGINE=FEDERATED COMMENT='Application activation table' CONNECTION='xcan_gm_link/app_open';
-
--- WPUSH
-CREATE TABLE `message_center_online`
-(
-    `user_id`        bigint(20) NOT NULL COMMENT 'User ID',
-    `tenant_id`      bigint(20) NOT NULL COMMENT 'Tenant ID',
-    `full_name`      varchar(100) NOT NULL COMMENT 'Full name',
-    `user_agent`     varchar(200) NOT NULL COMMENT 'User agent',
-    `device_id`      varchar(160) DEFAULT NULL COMMENT 'Device ID',
-    `remote_address` varchar(32)  NOT NULL COMMENT 'Access IP address',
-    `online`         int(1) NOT NULL COMMENT 'Online status',
-    `online_date`    datetime     DEFAULT NULL COMMENT 'Last online time',
-    `offline_date`   datetime     DEFAULT NULL COMMENT 'Last offline time',
-    KEY              `idx_user_id` (`user_id`) USING BTREE,
-    KEY              `idx_tenant_id` (`tenant_id`) USING BTREE
-) ENGINE=FEDERATED COMMENT='Message center online users' CONNECTION='xcan_gm_link/message_center_online';
 
 -- COMMON
 CREATE TABLE `c_i18n_messages`
