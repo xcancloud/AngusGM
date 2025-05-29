@@ -125,7 +125,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         try {
           result = submitOauth2UserSignInRequest(clientDb.getClientId(),
               clientDb.getClientSecret(), SignInType.ACCOUNT_PASSWORD, userDb.getId(),
-              userDb.getUsername(), userDb.getPassword(), USER_TOKEN_CLIENT_SCOPE);
+              userDb.getUsername(), userToken.getPassword(), USER_TOKEN_CLIENT_SCOPE);
         } catch (Throwable e) {
           if (e instanceof AbstractResultMessageException) {
             throw (AbstractResultMessageException) e;

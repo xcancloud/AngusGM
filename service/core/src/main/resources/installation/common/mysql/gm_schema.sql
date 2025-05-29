@@ -310,7 +310,7 @@ DROP TABLE IF EXISTS `auth_user_token`;
 CREATE TABLE `auth_user_token` (
   `id` bigint(20) NOT NULL COMMENT '主键ID',
   `name` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
-  `value` varchar(160) COLLATE utf8mb4_bin NOT NULL COMMENT '加密令牌',
+  `value` varchar(200) COLLATE utf8mb4_bin NOT NULL COMMENT '加密令牌',
   `expired_date` datetime NOT NULL COMMENT '过期时间',
   `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
   `created_by` bigint(20) NOT NULL COMMENT '创建人',
@@ -1301,7 +1301,7 @@ DROP TABLE IF EXISTS `system_token`;
 CREATE TABLE `system_token` (
   `id` bigint(20) NOT NULL COMMENT '主键ID',
   `name` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
-  `value` varchar(160) COLLATE utf8mb4_bin NOT NULL COMMENT '加密令牌',
+  `value` varchar(200) COLLATE utf8mb4_bin NOT NULL COMMENT '加密令牌',
   `expired_date` datetime NOT NULL COMMENT '过期时间',
   `auth_type` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT '资源授权类型',
   `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
