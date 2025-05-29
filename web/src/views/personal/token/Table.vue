@@ -116,36 +116,41 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     key: 'name',
-    ellipsis: true
+    ellipsis: true,
+    width: '25%'
   },
   {
     title: '令牌',
     dataIndex: 'token',
     key: 'token',
-    ellipsis: true
+    ellipsis: true,
+    width: '40%'
   },
   {
     title: '是否到期',
     dataIndex: 'expired',
     key: 'expired',
-    ellipsis: true
+    ellipsis: true,
+    width: '10%'
   },
   {
     title: '到期时间',
     dataIndex: 'expiredDate',
     key: 'expiredDate',
-    ellipsis: true
+    ellipsis: true,
+    width: '10%'
   },
   {
     title: '创建时间',
     dataIndex: 'createdDate',
     key: 'createdDate',
-    ellipsis: true
+    ellipsis: true,
+    width: '10%'
   },
   {
     title: '操作',
     dataIndex: 'action',
-    width: 60
+    width: '5%'
   }
 ];
 </script>

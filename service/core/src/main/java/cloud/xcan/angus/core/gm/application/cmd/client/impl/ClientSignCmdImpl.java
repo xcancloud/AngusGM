@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.client.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
-import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.sendOauth2RenewRequest;
+import static cloud.xcan.angus.core.gm.application.cmd.authuser.impl.AuthUserSignCmdImpl.sendOauth2Request;
 import static cloud.xcan.angus.core.gm.application.converter.ClientSignConverter.privateSignupToDomain;
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
@@ -98,6 +98,6 @@ public class ClientSignCmdImpl implements ClientSignCmd {
     if (isNotEmpty(scope)) {
       authContent = authContent + "&scope=" + scope;
     }
-    return sendOauth2RenewRequest(authContent);
+    return sendOauth2Request(authContent);
   }
 }

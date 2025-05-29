@@ -37,7 +37,7 @@ public interface AuthConstant {
   //////////////////// Policy ////////////////////////////
 
   int MAX_SYS_TOKEN_NUM = 3;
-  int DEFAULT_TOKEN_EXPIRE_SECOND = 24 * 60 * 60;
+  int DEFAULT_TOKEN_EXPIRE_SECOND = 30 * 24 * 60 * 60;
 
   int APP_MAX_TAG = 10;
 

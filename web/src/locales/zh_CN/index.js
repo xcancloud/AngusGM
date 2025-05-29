@@ -2119,7 +2119,7 @@ export default {
       addToken: '添加访问令牌',
       tokenName: '令牌名称',
       placeholder: '100个字符以内',
-      expireTimeDescription: '到期时间（不指定默认24小时内有效）',
+      expireTimeDescription: '到期时间（不指定默认30天内有效）',
       expireTime: '到期时间',
       typeSignPassword: '输入登录密码',
       copied: '已复制',

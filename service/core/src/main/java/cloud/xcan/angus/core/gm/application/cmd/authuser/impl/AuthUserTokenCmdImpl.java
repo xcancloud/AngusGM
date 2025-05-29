@@ -12,6 +12,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.CUSTOM_ACCE
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.USER_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.setRequestAttribute;
 import static cloud.xcan.angus.spec.utils.DateUtils.asInstant;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
@@ -37,7 +38,6 @@ import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.experimental.BizConstant.AuthKey;
-import cloud.xcan.angus.spec.principal.PrincipalContext;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -113,11 +113,10 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
             userDb.getUsername(), AuthUser.with(userDb));
 
         // Set expired date for cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator#generate(OAuth2TokenContext context)
-        PrincipalContext.addExtension(CUSTOM_ACCESS_TOKEN, true);
+        setRequestAttribute(CUSTOM_ACCESS_TOKEN, true);
         // The token is permanently valid when the value is null.
         if (nonNull(userToken.getExpiredDate())) {
-          PrincipalContext.addExtension(ACCESS_TOKEN_EXPIRED_DATE,
-              asInstant(userToken.getExpiredDate()));
+          setRequestAttribute(ACCESS_TOKEN_EXPIRED_DATE, asInstant(userToken.getExpiredDate()));
         }
 
         // Submit OAuth2 login authentication

@@ -31,6 +31,7 @@ import static cloud.xcan.angus.remote.message.ProtocolException.M.PARAM_MISSING_
 import static cloud.xcan.angus.remote.message.ProtocolException.M.QUERY_FIELD_EMPTY_T;
 import static cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProviderUtils.DEFAULT_ENCODING_ID;
 import static cloud.xcan.angus.spec.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static cloud.xcan.angus.spec.principal.PrincipalContext.getRequestId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.valueOf;
@@ -78,6 +79,7 @@ import cloud.xcan.angus.remote.message.http.Unauthorized;
 import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
+import cloud.xcan.angus.spec.experimental.BizConstant.Header;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import cloud.xcan.angus.spec.http.HttpMethod;
 import cloud.xcan.angus.spec.http.HttpSender;
@@ -381,21 +383,22 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     if (isNotEmpty(scope)) {
       authContent = authContent + "&scope=" + scope;
     }
-    return sendOauth2RenewRequest(authContent);
+    return sendOauth2Request(authContent);
   }
 
   private Map<String, String> submitOauth2RenewRequest(String clientId, String clientSecret,
       String refreshToken) throws Throwable {
     String authContent = format("client_id=%s&client_secret=%s&grant_type=%s&refresh_token=%s",
         clientId, clientSecret, AuthorizationGrantType.REFRESH_TOKEN.getValue(), refreshToken);
-    return sendOauth2RenewRequest(authContent);
+    return sendOauth2Request(authContent);
   }
 
-  public static Map<String, String> sendOauth2RenewRequest(String authContent) throws Throwable {
+  public static Map<String, String> sendOauth2Request(String authContent) throws Throwable {
     HttpSender sender = new HttpUrlConnectionSender();
     ApplicationInfo applicationInfo = SpringContextHolder.getBean(ApplicationInfo.class);
     String tokenEndpoint = format("http://%s/oauth2/token", applicationInfo.getInstanceId());
-    Response response = Request.build(tokenEndpoint, sender).withMethod(HttpMethod.POST)
+    Response response = Request.build(tokenEndpoint, sender)
+        .withMethod(HttpMethod.POST).withHeader(Header.REQUEST_ID, getRequestId())
         .withContent(APPLICATION_FORM_URLENCODED, authContent).send();
     Map<String, String> result = JsonUtils.convert(response.body(), new TypeReference<>() {
     });
