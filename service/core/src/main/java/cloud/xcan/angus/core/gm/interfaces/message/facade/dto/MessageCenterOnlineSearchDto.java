@@ -27,7 +27,7 @@ public class MessageCenterOnlineSearchDto extends PageQuery {
 
   @Override
   public String getDefaultOrderBy() {
-    return "userId";
+    return "id";
   }
 
 }

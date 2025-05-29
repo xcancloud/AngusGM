@@ -11,6 +11,7 @@ import { online } from '@/api';
 type User = {
   userId: string;
   fullName: string;
+  deviceId: string;
   userAgent: string;
   remoteAddress: string;
   online: boolean;
@@ -123,31 +124,40 @@ const columns = [
   {
     title: t('用户名称'),
     dataIndex: 'fullName',
-    width: 150
+    width: '12%'
   },
   {
     title: t('设备ID'),
     dataIndex: 'deviceId',
-    width: 260
+    width: '16%'
   },
   {
     title: t('terminalEquipment'),
-    dataIndex: 'userAgent'
+    dataIndex: 'userAgent',
+    width: '14%'
   },
   {
     title: 'IP',
     dataIndex: 'remoteAddress',
-    width: 160
+    width: '12%'
   },
   {
     title: t('onlineStatus'),
     dataIndex: 'online',
-    width: 80
+    width: '12%'
   },
   {
     title: t('upTime'),
     dataIndex: 'onlineDate',
-    width: 140,
+    width: '10%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: '离线时间',
+    dataIndex: 'offlineDate',
+    width: '12%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
@@ -155,7 +165,7 @@ const columns = [
   {
     title: t('logOut'),
     dataIndex: 'option',
-    width: 60,
+    width: '12%',
     align: 'center'
   }
 ];

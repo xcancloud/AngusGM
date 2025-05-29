@@ -18,8 +18,6 @@ public class MessageCenterOnlineFindDto extends PageQuery {
 
   private String fullName;
 
-  private String userAgent;
-
   private String deviceId;
 
   private String remoteAddress;
@@ -31,6 +29,6 @@ public class MessageCenterOnlineFindDto extends PageQuery {
 
   @Override
   public String getDefaultOrderBy() {
-    return "userId";
+    return "id";
   }
 }
