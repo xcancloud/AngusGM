@@ -286,7 +286,7 @@ onMounted(async () => {
         </div>
         <DatePicker
           v-model:value="formValue.expiredDate"
-          class="w-70 mt-1"
+          class="w-70 mt-2"
           size="small"
           showTime
           :disabled="!editable"
