@@ -1805,7 +1805,7 @@ export default {
     add_token_tip: '(只允许系统管理员创建、删除和查看系统令牌)',
     token_name: '令牌名称',
     token_auth: '授权范围',
-    limit_time: '到期时间(不指定24小时内有效)',
+    limit_time: '到期时间(不指定30天内有效)',
     date_placeholder: '到期时间',
     token_value: '访问令牌',
     action_copy: '复制Token',

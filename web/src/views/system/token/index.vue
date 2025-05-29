@@ -281,7 +281,9 @@ onMounted(async () => {
           @change="onServerChange" />
       </div>
       <div class="text-theme-title text-3 leading-3">
-        {{ t('systemToken.limit_time') }}
+        <div class="text-theme-title">
+          {{ t('systemToken.limit_time') }}
+        </div>
         <DatePicker
           v-model:value="formValue.expiredDate"
           class="w-70"
