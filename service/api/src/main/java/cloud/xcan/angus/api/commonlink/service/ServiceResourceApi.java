@@ -19,7 +19,7 @@ public class ServiceResourceApi {
 
   private String resourceName;
 
-  private String resourceDesc;
+  private String resourceDescription;
 
   @Id
   private Long apiId;

@@ -12,7 +12,6 @@ public class ResourceVo {
 
   private String resourceName;
 
-  // TODO i18n message
-  private String resourceDesc;
+  private String resourceDescription;
 
 }

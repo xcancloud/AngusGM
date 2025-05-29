@@ -13,8 +13,7 @@ public class ResourceApiVo {
 
   private String resourceName;
 
-  // TODO i18n message
-  private String resourceDesc;
+  private String resourceDescription;
 
   private List<ApiBaseVo> apis;
 

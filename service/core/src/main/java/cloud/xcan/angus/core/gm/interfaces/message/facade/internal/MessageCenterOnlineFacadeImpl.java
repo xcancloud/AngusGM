@@ -45,17 +45,17 @@ public class MessageCenterOnlineFacadeImpl implements MessageCenterOnlineFacade 
 
   @Override
   public PageResult<MessageCenterOnlineVo> list(MessageCenterOnlineFindDto dto) {
-    Page<MessageCenterOnline> bookPage = messageCenterOnlineQuery.find(
+    Page<MessageCenterOnline> page = messageCenterOnlineQuery.find(
         getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(bookPage, MessageCenterOnlineAssembler::toVo);
+    return buildVoPageResult(page, MessageCenterOnlineAssembler::toVo);
   }
 
   @Override
   public PageResult<MessageCenterOnlineVo> search(MessageCenterOnlineSearchDto dto) {
-    Page<MessageCenterOnline> bookPage = messageCenterOnlineSearch
+    Page<MessageCenterOnline> page = messageCenterOnlineSearch
         .search(getSearchCriteria(dto), dto.tranPage(),
             MessageCenterOnline.class, getMatchSearchFields(dto.getClass()));
-    return buildVoPageResult(bookPage, MessageCenterOnlineAssembler::toVo);
+    return buildVoPageResult(page, MessageCenterOnlineAssembler::toVo);
   }
 
 }

@@ -134,7 +134,7 @@ public class ServiceAssembler {
             new ServiceResourceVo().setServiceId(service.getId())
                 .setServiceName(service.getName())
                 .setServiceCode(service.getCode())
-                .setServiceDesc(service.getDescription())
+                .setServiceDescription(service.getDescription())
                 .setServiceEnabled(service.getEnabled())
                 .setResources(toResourceVo(service.getResources())))
         .collect(Collectors.toList());
@@ -144,7 +144,7 @@ public class ServiceAssembler {
     return isEmpty(resources) ? null : resources.stream()
         .map(resource -> new ResourceVo()
             .setResourceName(resource.getResourceName())
-            .setResourceDesc(isNotEmpty(resource.getResourceDesc())
+            .setResourceDescription(isNotEmpty(resource.getResourceDesc())
                 ? resource.getResourceDesc() : resource.getResourceName()))
         .collect(Collectors.toList());
   }
@@ -160,7 +160,7 @@ public class ServiceAssembler {
       List<ServiceResourceApi> resourceApi = resourceApiVos.get(key);
       if (isNotEmpty(resourceApi)) {
         apiVos.add(new ResourceApiVo().setResourceName(resourceApi.get(0).getResourceName())
-            .setResourceDesc(resourceApi.get(0).getResourceDesc())
+            .setResourceDescription(resourceApi.get(0).getResourceDescription())
             .setApis(toApiInfos(resourceApi)));
       }
     }

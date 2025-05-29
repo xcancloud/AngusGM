@@ -15,10 +15,9 @@ public class ServiceResourceVo {
 
   private String serviceCode;
 
-  // TODO i18n message
   private String serviceName;
-  // TODO i18n message
-  private String serviceDesc;
+
+  private String serviceDescription;
 
   private Boolean serviceEnabled;
 

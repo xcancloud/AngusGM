@@ -16,8 +16,6 @@ public class MessageCenterOnlineSearchDto extends PageQuery {
 
   private String fullName;
 
-  private String userAgent;
-
   private String deviceId;
 
   private String remoteAddress;
