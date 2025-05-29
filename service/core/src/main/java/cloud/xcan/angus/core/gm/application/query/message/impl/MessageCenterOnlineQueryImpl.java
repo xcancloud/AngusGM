@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.message.impl;
 
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnline;
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnlineRepo;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnlineRepo;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.message.MessageCenterOnlineQuery;

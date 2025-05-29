@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.message;
 
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnline;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

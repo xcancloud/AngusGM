@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assembler;
 
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnline;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOnlineFindDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOnlineSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.vo.MessageCenterOnlineVo;

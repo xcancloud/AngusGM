@@ -6,7 +6,7 @@ import static cloud.xcan.angus.core.gm.interfaces.message.facade.internal.assemb
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnline;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterCmd;
 import cloud.xcan.angus.core.gm.application.query.message.MessageCenterOnlineQuery;
 import cloud.xcan.angus.core.gm.application.query.message.MessageCenterOnlineSearch;

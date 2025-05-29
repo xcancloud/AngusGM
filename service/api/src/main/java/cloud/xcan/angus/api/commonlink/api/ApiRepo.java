@@ -25,13 +25,13 @@ public interface ApiRepo extends BaseRepository<Api, Long> {
 
   List<Api> findAllByServiceId(Long serviceId);
 
-  @Query(value = "SELECT DISTINCT service_code serviceCode, resource_name resourceName, resource_desc resourceDesc FROM api", nativeQuery = true)
+  @Query(value = "SELECT DISTINCT service_code serviceCode, resource_name resourceName, resource_description resourceDesc FROM api", nativeQuery = true)
   List<ServiceResource> findServiceResource();
 
-  @Query(value = "SELECT DISTINCT service_code serviceCode, resource_name resourceName, resource_desc resourceDesc FROM api WHERE service_code = ?1", nativeQuery = true)
+  @Query(value = "SELECT DISTINCT service_code serviceCode, resource_name resourceName, resource_description resourceDesc FROM api WHERE service_code = ?1", nativeQuery = true)
   List<ServiceResource> findServiceResourceByServiceCode(String serviceCode);
 
-  @Query(value = "SELECT DISTINCT service_code serviceCode, resource_name resourceName, resource_desc resourceDesc FROM api WHERE resource_name IN ?1", nativeQuery = true)
+  @Query(value = "SELECT DISTINCT service_code serviceCode, resource_name resourceName, resource_description resourceDesc FROM api WHERE resource_name IN ?1", nativeQuery = true)
   List<ServiceResource> findServiceResourceByResourceNameIn(Collection<String> resourceNames);
 
   @Query(value = "SELECT a.id FROM Api a WHERE a.serviceId IN ?1")

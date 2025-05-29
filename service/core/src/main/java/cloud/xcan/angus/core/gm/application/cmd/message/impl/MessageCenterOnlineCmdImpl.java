@@ -6,8 +6,8 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnline;
-import cloud.xcan.angus.api.commonlink.mcenter.MessageCenterOnlineRepo;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnlineRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
