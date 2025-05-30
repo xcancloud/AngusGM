@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider;
@@ -70,13 +71,18 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
 
   @Resource
+  private SystemTokenCmd systemTokenCmd;
+
+  @Resource
   private OperationLogCmd operationLogCmd;
+
+  @Resource
+  private PasswordEncoder passwordEncoder;
 
   /**
    * @see OAuth2ClientCredentialsAuthenticationProvider#authenticate(Authentication)
    * @see OAuth2AccessTokenGenerator#generate(OAuth2TokenContext)
    */
-  @Transactional(rollbackFor = Exception.class)
   @Override
   public SystemToken add(SystemToken systemToken, List<SystemTokenResource> resources) {
     return new BizTemplate<SystemToken>() {
@@ -104,10 +110,8 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
 
       @Override
       protected SystemToken process() {
-        // Generate client for system token
-        CustomOAuth2RegisteredClient client = toSystemTokenToDomain(systemToken.getName(),
-            systemToken.getExpiredDate());
-        customOAuth2ClientRepository.save(client);
+        CustomOAuth2RegisteredClient client = systemTokenCmd.saveCustomOAuth2RegisteredClient(
+            systemToken);
 
         // Submit OAuth2 login authentication
         Map<String, String> result;
@@ -122,23 +126,42 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
         }
 
         // Save system token
-        String systemAccessToken = result.get(AuthKey.ACCESS_TOKEN);
-        systemToken.setDecryptedValue(systemAccessToken);
-        systemToken.setValue(systemTokenQuery.encryptValue(systemAccessToken));
-        systemToken.setId(uidGenerator.getUID());
-        insert0(systemToken);
-
-        // Save system token resources
-        // Important:: Resources must be unique under all services
-        List<SystemTokenResource> tokenResources = toSystemTokenResource(systemToken.getId(),
-            resources, serviceResourceMap);
-        systemTokenResourceRepo.saveAll(tokenResources);
+        systemTokenCmd.saveSystemAccessToken(systemToken, resources, serviceResourceMap, result);
 
         // Save operation log
         operationLogCmd.add(SYSTEM_TOKEN, systemToken, CREATED);
         return systemToken;
       }
     }.execute();
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public CustomOAuth2RegisteredClient saveCustomOAuth2RegisteredClient(SystemToken systemToken) {
+    // Generate client for system token
+    CustomOAuth2RegisteredClient client = toSystemTokenToDomain(systemToken.getName(),
+        systemToken.getExpiredDate());
+    customOAuth2ClientRepository.deleteByClientId(client.getClientId());
+    client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
+    customOAuth2ClientRepository.save(client);
+    return client;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public void saveSystemAccessToken(SystemToken systemToken, List<SystemTokenResource> resources,
+      Map<String, List<ServiceResource>> serviceResourceMap, Map<String, String> result) {
+    String systemAccessToken = result.get(AuthKey.ACCESS_TOKEN);
+    systemToken.setDecryptedValue(systemAccessToken);
+    systemToken.setValue(systemTokenQuery.encryptValue(systemAccessToken));
+    systemToken.setId(uidGenerator.getUID());
+    insert0(systemToken);
+
+    // Save system token resources
+    // Important:: Resources must be unique under all services
+    List<SystemTokenResource> tokenResources = toSystemTokenResource(systemToken.getId(),
+        resources, serviceResourceMap);
+    systemTokenResourceRepo.saveAll(tokenResources);
   }
 
   /**
