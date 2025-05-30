@@ -67,9 +67,11 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
     Object remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR);
 
     String username = LOCAL_ONLINE_USERS.remove(sessionId);
-    messageCenterOnlineCmd.updateOnlineStatus(username, stringSafe(userAgent), stringSafe(deviceId),
-        stringSafe(remoteAddress), false);
-    log.info("MessageCenter: {} disconnected，Session ID: {}", username, sessionId);
+    if (username != null) {
+      messageCenterOnlineCmd.updateOnlineStatus(username, stringSafe(userAgent), stringSafe(deviceId),
+          stringSafe(remoteAddress), false);
+      log.info("MessageCenter: {} disconnected，Session ID: {}", username, sessionId);
+    }
   }
 
 }
