@@ -117,24 +117,41 @@ const searchOptions = [
     type: 'input',
     op: 'EQUAL',
     allowClear: true
+  },
+  {
+    valueKey: 'onlineDate',
+    type: 'date-range',
+    placeholder: [t('上线时间从'), t('上线时间截止')],
+    allowClear: true
+  },
+  {
+    valueKey: 'offlineDate',
+    type: 'date-range',
+    placeholder: [t('离线时间从'), t('离线时间截止')],
+    allowClear: true
   }
 ];
 
 const columns = [
   {
-    title: t('用户名称'),
+    title: t('用户'),
     dataIndex: 'fullName',
-    width: '12%'
+    width: '12%',
+    sorter: {
+      compare: (a, b) => a.offlineDate > b.offlineDate
+    },
   },
   {
     title: t('设备ID'),
     dataIndex: 'deviceId',
-    width: '16%'
+    width: '16%',
+    customRender: ({ text }) => text || '--'
   },
   {
     title: t('terminalEquipment'),
     dataIndex: 'userAgent',
-    width: '14%'
+    width: '14%',
+    customRender: ({ text }) => text || '--'
   },
   {
     title: 'IP',
@@ -150,6 +167,10 @@ const columns = [
     title: t('upTime'),
     dataIndex: 'onlineDate',
     width: '10%',
+    customRender: ({ text }) => text || '--',
+    sorter: {
+      compare: (a, b) => a.onlineDate > b.onlineDate
+    },
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
@@ -158,6 +179,10 @@ const columns = [
     title: '离线时间',
     dataIndex: 'offlineDate',
     width: '12%',
+    customRender: ({ text }) => text || '--',
+    sorter: {
+      compare: (a, b) => a.offlineDate > b.offlineDate
+    },
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
