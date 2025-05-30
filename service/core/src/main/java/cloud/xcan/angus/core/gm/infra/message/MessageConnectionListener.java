@@ -4,6 +4,7 @@ import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLA
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.PRINCIPAL;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import jakarta.annotation.Resource;
@@ -60,12 +61,13 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
     StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
-    String userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT).toString();
-    String deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID).toString();
-    String remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR).toString();
+    Object userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT);
+    Object deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID);
+    Object remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR);
 
     String username = LOCAL_ONLINE_USERS.remove(sessionId);
-    messageCenterOnlineCmd.updateOnlineStatus(username, userAgent, deviceId, remoteAddress, false);
+    messageCenterOnlineCmd.updateOnlineStatus(username, stringSafe(userAgent), stringSafe(deviceId),
+        stringSafe(remoteAddress), false);
     log.info("MessageCenter: {} disconnected，Session ID: {}", username, sessionId);
   }
 
