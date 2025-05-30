@@ -44,6 +44,7 @@ public class App extends TenantAuditingEntity<App, Long> implements Resources<Lo
 
   private String name;
 
+  @Column(name = "show_name")
   private String showName;
 
   private String icon;
@@ -52,6 +53,7 @@ public class App extends TenantAuditingEntity<App, Long> implements Resources<Lo
   private AppType type;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "edition_type")
   private EditionType editionType;
 
   private String description;
@@ -79,8 +81,10 @@ public class App extends TenantAuditingEntity<App, Long> implements Resources<Lo
   private String version;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "open_stage")
   private OpenStage openStage;
 
+  @Column(name = "client_id")
   private String clientId;
 
   @Transient
