@@ -16,6 +16,7 @@ public class MessageCenterOnlineAssembler {
     return new MessageCenterOnlineVo()
         .setUserId(online.getUserId())
         .setFullName(online.getFullName())
+        .setAvatar(online.getAvatar())
         .setUserAgent(online.getUserAgent())
         .setDeviceId(online.getDeviceId())
         .setRemoteAddress(online.getRemoteAddress())

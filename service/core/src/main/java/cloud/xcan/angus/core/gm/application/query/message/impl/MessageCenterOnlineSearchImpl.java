@@ -1,9 +1,10 @@
 package cloud.xcan.angus.core.gm.application.query.message.impl;
 
-import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
+import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.message.MessageCenterOnlineSearch;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnlineSearchRepo;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import jakarta.annotation.Resource;
@@ -17,6 +18,9 @@ public class MessageCenterOnlineSearchImpl implements MessageCenterOnlineSearch 
   @Resource
   private MessageCenterOnlineSearchRepo messageCenterOnlineSearchRepo;
 
+  @Resource
+  private UserManager userManager;
+
   @Override
   public Page<MessageCenterOnline> search(Set<SearchCriteria> criteria, Pageable pageable,
       Class<MessageCenterOnline> clz, String... matches) {
@@ -24,7 +28,12 @@ public class MessageCenterOnlineSearchImpl implements MessageCenterOnlineSearch 
 
       @Override
       protected Page<MessageCenterOnline> process() {
-        return messageCenterOnlineSearchRepo.find(criteria, pageable, clz, matches);
+        Page<MessageCenterOnline> page = messageCenterOnlineSearchRepo.find(
+            criteria, pageable, clz, matches);
+        if (page.hasContent()) {
+          userManager.setUserNameAndAvatar(page.getContent(), "userId", "fullName", "avatar");
+        }
+        return page;
       }
     }.execute();
   }

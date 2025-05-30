@@ -142,7 +142,7 @@ const columns = [
   {
     title: t('用户'),
     dataIndex: 'fullName',
-    width: '12%',
+    width: '8%',
     sorter: {
       compare: (a, b) => a.offlineDate > b.offlineDate
     },
@@ -150,24 +150,24 @@ const columns = [
   {
     title: t('设备ID'),
     dataIndex: 'deviceId',
-    width: '16%',
+    width: '15%',
     customRender: ({ text }) => text || '--'
   },
   {
     title: t('terminalEquipment'),
     dataIndex: 'userAgent',
-    width: '14%',
+    width: '25%',
     customRender: ({ text }) => text || '--'
   },
   {
     title: 'IP',
     dataIndex: 'remoteAddress',
-    width: '12%'
+    width: '10%'
   },
   {
     title: t('onlineStatus'),
     dataIndex: 'online',
-    width: '12%'
+    width: '10%'
   },
   {
     title: t('upTime'),
@@ -186,7 +186,7 @@ const columns = [
     title: '离线时间',
     dataIndex: 'offlineDate',
     key: 'offlineDate',
-    width: '12%',
+    width: '10%',
     customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.offlineDate > b.offlineDate

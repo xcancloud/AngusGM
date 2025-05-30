@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.message.impl;
 
+import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnlineRepo;
 import cloud.xcan.angus.core.biz.Biz;
@@ -17,6 +18,9 @@ public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
   @Resource
   private MessageCenterOnlineRepo messageCenterOnlineRepo;
 
+  @Resource
+  private UserManager userManager;
+
   @Override
   public MessageCenterOnline find(Long id) {
     return new BizTemplate<MessageCenterOnline>() {
@@ -33,10 +37,15 @@ public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
   public Page<MessageCenterOnline> find(Specification<MessageCenterOnline> spec,
       Pageable pageable) {
     return new BizTemplate<Page<MessageCenterOnline>>() {
-
       @Override
       protected Page<MessageCenterOnline> process() {
-        return messageCenterOnlineRepo.findAll(spec, pageable);
+        Page<MessageCenterOnline> page = messageCenterOnlineRepo.findAll(spec, pageable);
+        if (page.hasContent()) {
+          if (page.hasContent()) {
+            userManager.setUserNameAndAvatar(page.getContent(), "userId", "fullName", "avatar");
+          }
+        }
+        return page;
       }
     }.execute();
   }

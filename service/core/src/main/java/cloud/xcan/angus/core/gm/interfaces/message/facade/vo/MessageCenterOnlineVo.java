@@ -15,6 +15,8 @@ public class MessageCenterOnlineVo implements Serializable {
 
   private String fullName;
 
+  private String avatar;
+
   private String userAgent;
 
   private String deviceId;

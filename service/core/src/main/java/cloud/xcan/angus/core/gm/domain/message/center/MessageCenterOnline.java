@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,9 @@ public class MessageCenterOnline extends TenantEntity<MessageCenterOnline, Long>
   private LocalDateTime onlineDate;
 
   private LocalDateTime offlineDate;
+
+  @Transient
+  private String avatar;
 
   @Override
   public Long identity() {
