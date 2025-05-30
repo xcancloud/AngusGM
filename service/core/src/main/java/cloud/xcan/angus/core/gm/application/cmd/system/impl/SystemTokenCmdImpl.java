@@ -186,13 +186,17 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
         }
 
         for (SystemToken systemToken : systemTokensDb) {
-          clientCmd.deleteSystemTokenClient(systemToken.getName(), XCAN_SYS_TOKEN);
           String accessToken = systemTokenQuery.decryptValue(systemToken.getValue());
-          OAuth2Authorization authorizationDb = oauth2AuthorizationService.findByToken(
-              accessToken, null);
-          if (nonNull(authorizationDb)) {
-            oauth2AuthorizationService.remove(authorizationDb);
+          try {
+            OAuth2Authorization authorizationDb = oauth2AuthorizationService.findByToken(
+                accessToken, null);
+            if (nonNull(authorizationDb)) {
+              oauth2AuthorizationService.remove(authorizationDb);
+            }
+          } catch (Exception e) {
+            // NOOP
           }
+          clientCmd.deleteSystemTokenClient(systemToken.getName(), XCAN_SYS_TOKEN);
         }
         systemTokenRepo.deleteByIdIn(ids);
         systemTokenResourceRepo.deleteBySystemTokenIdIn(ids);
