@@ -44,7 +44,7 @@ type SearchParams = {
 
 const { t } = useI18n();
 
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], orderBy: 'id', orderSort: 'DESC' });
 const total = ref(0);
 const userList = ref<User[]>([]);
 const loading = ref(false);
@@ -74,10 +74,16 @@ const handleLogOut = async function (item: User) {
   disabled.value = false;
 };
 
-const tableChange = async (_pagination) => {
+const tableChange = async (_pagination, sorter: {
+  orderBy: string;
+  orderSort: 'DESC' | 'ASC'
+}) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
+  params.value.orderBy = sorter.orderBy;
+  params.value.orderSort = sorter.orderSort;
+
   disabled.value = true;
   await getList();
   disabled.value = false;
@@ -166,6 +172,7 @@ const columns = [
   {
     title: t('upTime'),
     dataIndex: 'onlineDate',
+    key: 'onlineDate',
     width: '10%',
     customRender: ({ text }) => text || '--',
     sorter: {
@@ -178,6 +185,7 @@ const columns = [
   {
     title: '离线时间',
     dataIndex: 'offlineDate',
+    key: 'offlineDate',
     width: '12%',
     customRender: ({ text }) => text || '--',
     sorter: {

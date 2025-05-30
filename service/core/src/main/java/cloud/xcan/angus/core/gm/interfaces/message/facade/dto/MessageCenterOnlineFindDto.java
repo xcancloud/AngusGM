@@ -27,6 +27,9 @@ public class MessageCenterOnlineFindDto extends PageQuery {
   @DateTimeFormat(pattern = DATE_FMT)
   private LocalDateTime onlineDate;
 
+  @DateTimeFormat(pattern = DATE_FMT)
+  private LocalDateTime offlineDate;
+
   @Override
   public String getDefaultOrderBy() {
     return "id";

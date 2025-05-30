@@ -28,9 +28,9 @@ public class MessageCenterOnlineAssembler {
       MessageCenterOnlineFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("userId")
+        .rangeSearchFields("userId", "onlineDate", "offlineDate")
         .matchSearchFields("fullName", "remoteAddress")
-        .orderByFields("id", "userId")
+        .orderByFields("id", "userId", "fullName", "onlineDate", "offlineDate")
         .build();
     return new GenericSpecification<>(filters);
   }
@@ -38,9 +38,9 @@ public class MessageCenterOnlineAssembler {
   public static Set<SearchCriteria> getSearchCriteria(MessageCenterOnlineSearchDto dto) {
     // Build the final filters
     return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("userId")
+        .rangeSearchFields("userId", "onlineDate", "offlineDate")
         .matchSearchFields("fullName", "remoteAddress")
-        .orderByFields("id", "userId")
+        .orderByFields("id", "userId", "fullName", "onlineDate", "offlineDate")
         .build();
   }
 
