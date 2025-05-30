@@ -177,9 +177,6 @@ const columns = [
     customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.onlineDate > b.onlineDate
-    },
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
     }
   },
   {
@@ -190,9 +187,6 @@ const columns = [
     customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.offlineDate > b.offlineDate
-    },
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
     }
   },
   {
