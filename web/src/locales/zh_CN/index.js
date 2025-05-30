@@ -410,7 +410,7 @@ export default {
   // 在线用户,
   terminalEquipment: '终端设备',
   upTime: '上线时间',
-  logOut: '登出',
+  logOut: '退出登录',
   onLinePlaceHolder: '查询姓名、IP',
   online: '在线状态',
   // 外观

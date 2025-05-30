@@ -142,32 +142,15 @@ const columns = [
   {
     title: t('用户'),
     dataIndex: 'fullName',
-    width: '8%',
+    width: '10%',
     sorter: {
       compare: (a, b) => a.offlineDate > b.offlineDate
     },
   },
   {
-    title: t('设备ID'),
-    dataIndex: 'deviceId',
-    width: '15%',
-    customRender: ({ text }) => text || '--'
-  },
-  {
-    title: t('terminalEquipment'),
-    dataIndex: 'userAgent',
-    width: '25%',
-    customRender: ({ text }) => text || '--'
-  },
-  {
-    title: 'IP',
-    dataIndex: 'remoteAddress',
-    width: '10%'
-  },
-  {
     title: t('onlineStatus'),
     dataIndex: 'online',
-    width: '10%'
+    width: '8%'
   },
   {
     title: t('upTime'),
@@ -190,9 +173,26 @@ const columns = [
     }
   },
   {
+    title: t('设备ID'),
+    dataIndex: 'deviceId',
+    width: '15%',
+    customRender: ({ text }) => text || '--'
+  },
+  {
+    title: t('terminalEquipment'),
+    dataIndex: 'userAgent',
+    width: '29%',
+    customRender: ({ text }) => text || '--'
+  },
+  {
+    title: 'IP',
+    dataIndex: 'remoteAddress',
+    width: '10%'
+  },
+  {
     title: t('logOut'),
     dataIndex: 'option',
-    width: '12%',
+    width: '8%',
     align: 'center'
   }
 ];
