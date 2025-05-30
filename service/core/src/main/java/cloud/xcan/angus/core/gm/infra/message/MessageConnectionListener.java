@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.infra.message;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR;
+import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_USERNAME;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.PRINCIPAL;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
@@ -46,11 +47,11 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
     StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
+    String username = principal.get(INTROSPECTION_CLAIM_NAMES_USERNAME).toString();
     String userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT).toString();
     String deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID).toString();
     String remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR).toString();
 
-    String username = event.getUser().getName();
     LOCAL_ONLINE_USERS.put(sessionId, username);
     messageCenterOnlineCmd.updateOnlineStatus(username, userAgent, deviceId, remoteAddress, true);
     log.info("MessageCenter: {} connected，Session ID: {}", username, sessionId);
