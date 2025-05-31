@@ -903,18 +903,25 @@ CREATE TABLE `message` (
 -- ----------------------------
 DROP TABLE IF EXISTS `message_center_online`;
 CREATE TABLE `message_center_online` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `tenant_id` bigint(20) NOT NULL COMMENT '租户ID',
   `full_name` varchar(100) COLLATE utf8mb4_bin NOT NULL COMMENT '用户姓名',
   `user_agent` varchar(200) COLLATE utf8mb4_bin NOT NULL COMMENT '用户终端',
   `device_id` varchar(160) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '设备ID',
   `remote_address` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '访问ID地址',
+  `session_id` varchar(40) COLLATE utf8mb4_bin NOT NULL COMMENT '回话ID',
   `online` int(1) NOT NULL COMMENT '是否在线',
   `online_date` datetime DEFAULT NULL COMMENT '上次上线时间',
   `offline_date` datetime DEFAULT NULL COMMENT '上次下线时间',
-  KEY `idx_user_id` (`user_id`) USING BTREE,
+  PRIMARY KEY (`id`),
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
-  FULLTEXT KEY `fx_fullname_remote_address` (`full_name`,`remote_address`) /*!50100 WITH PARSER `ngram` */
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_full_name` (`full_name`),
+  KEY `idx_online_date` (`online_date`),
+  KEY `idx_offline_date` (`offline_date`),
+  KEY `idx_session_id` (`session_id`),
+  FULLTEXT KEY `fx_fullname` (`full_name`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息中心在线用户';
 
 -- ----------------------------
