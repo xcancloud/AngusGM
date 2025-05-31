@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref, h, computed } from 'vue';
 import { Badge, Spin } from 'ant-design-vue';
-import { PureCard, Icon, SearchPanel, Table, IconRefresh } from '@xcan-angus/vue-ui';
+import { PureCard, Icon, SearchPanel, Table, Image, IconRefresh } from '@xcan-angus/vue-ui';
 import { app } from '@xcan-angus/tools';
 import { LoadingOutlined } from '@ant-design/icons-vue';
 
 import { useI18n } from 'vue-i18n';
 import { online } from '@/api';
 
-type User = {
+type Online = {
+  id: bigint;
   userId: string;
   fullName: string;
   deviceId: string;
@@ -46,7 +47,7 @@ const { t } = useI18n();
 
 const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], orderBy: 'id', orderSort: 'DESC' });
 const total = ref(0);
-const userList = ref<User[]>([]);
+const onlineList = ref<Online[]>([]);
 const loading = ref(false);
 const disabled = ref(false);
 const getList = async function () {
@@ -61,11 +62,11 @@ const getList = async function () {
     return;
   }
 
-  userList.value = data?.list.map(item => ({ ...item, loading: false }));
+  onlineList.value = data?.list.map(item => ({ ...item, loading: false }));
   total.value = +data.total;
 };
 
-const handleLogOut = async function (item: User) {
+const handleLogOut = async function (item: Online) {
   item.loading = true;
   await online.offlineUser({ receiveObjectIds: [item.userId], receiveObjectType: 'USER' });
   item.loading = false;
@@ -74,7 +75,7 @@ const handleLogOut = async function (item: User) {
   disabled.value = false;
 };
 
-const tableChange = async (_pagination, sorter: {
+const tableChange = async (_pagination, _filters, sorter: {
   orderBy: string;
   orderSort: 'DESC' | 'ASC'
 }) => {
@@ -140,12 +141,15 @@ const searchOptions = [
 
 const columns = [
   {
+    title: t('ID'),
+    dataIndex: 'id',
+    hide: true
+  },
+  {
     title: t('用户'),
     dataIndex: 'fullName',
     width: '10%',
-    sorter: {
-      compare: (a, b) => a.offlineDate > b.offlineDate
-    },
+    sorter: true
   },
   {
     title: t('onlineStatus'),
@@ -156,7 +160,7 @@ const columns = [
     title: t('upTime'),
     dataIndex: 'onlineDate',
     key: 'onlineDate',
-    width: '10%',
+    width: '12%',
     customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.onlineDate > b.onlineDate
@@ -166,28 +170,31 @@ const columns = [
     title: '离线时间',
     dataIndex: 'offlineDate',
     key: 'offlineDate',
-    width: '10%',
+    width: '12%',
     customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.offlineDate > b.offlineDate
     }
   },
   {
-    title: t('设备ID'),
-    dataIndex: 'deviceId',
-    width: '15%',
+    title: t('terminalEquipment'),
+    dataIndex: 'userAgent',
+    width: '42%',
+    groupName: 'userAgent',
     customRender: ({ text }) => text || '--'
   },
   {
-    title: t('terminalEquipment'),
-    dataIndex: 'userAgent',
-    width: '29%',
+    title: t('设备ID'),
+    dataIndex: 'deviceId',
+    width: '42%',
+    hide: true,
+    groupName: 'userAgent',
     customRender: ({ text }) => text || '--'
   },
   {
     title: 'IP',
     dataIndex: 'remoteAddress',
-    width: '10%'
+    width: '8%'
   },
   {
     title: t('logOut'),
@@ -218,14 +225,19 @@ const indicator = h(LoadingOutlined, {
         @click="getList" />
     </div>
     <Table
-      :dataSource="userList"
       :columns="columns"
+      :dataSource="onlineList"
       :pagination="pagination"
       :loading="loading"
-      rowKey="userId"
-      size="small"
+      rowKey="id"
       @change="tableChange">
       <template #bodyCell="{column,text,record}">
+        <template v-if="column.dataIndex === 'fullName'">
+          <div class="inline-flex items-center truncate">
+            <Image type="avatar" class="w-6 rounded-full mr-1" :src="record.avatar" />
+            <span class="flex-1 truncate" :tite="record.fullName">{{record.fullName}}</span>
+          </div>
+        </template>
         <template v-if="column.dataIndex === 'online'">
           <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online1'): t('offline1')" />
         </template>
@@ -249,22 +261,4 @@ const indicator = h(LoadingOutlined, {
     </Table>
   </PureCard>
 </template>
-<style scoped>
-@keyframes circle {
-  from {
-    transform: rotate(0deg);
-  }
 
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.circle-move {
-  animation-name: circle;
-  animation-duration: 1000ms;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: normal;
-}
-</style>
