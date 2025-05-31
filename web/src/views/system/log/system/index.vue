@@ -248,14 +248,8 @@ onBeforeUnmount(() => {
         </RadioGroup>
       </div>
       <div class="flex items-center">
-        <Button
-          size="small"
-          class="mr-6"
-          @click="saveToFile">
-          保存到文件
-        </Button>
         <div class="mr-6 flex items-center">
-          <span class="text-theme-content">{{ t('mess-b') }}<Colon /></span>
+          <span class="text-theme-content m-2">{{ t('mess-b') }}</span>
           <Switch
             v-model:checked="autoRefresh"
             :disabled="!logFile"
@@ -263,6 +257,12 @@ onBeforeUnmount(() => {
             size="small"
             @change="autoRefreshChange" />
         </div>
+        <Button
+          size="small"
+          class="mr-6"
+          @click="saveToFile">
+          保存到文件
+        </Button>
         <div class="flex items-center cursor-pointer hover:opacity-80 " @click="fullScreenEvent(true)">
           <Icon icon="icon-quanping" class="mr-1" />
           <span class="text-theme-content">{{ t('mess-d') }}</span>
