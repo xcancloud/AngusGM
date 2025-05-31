@@ -8,20 +8,19 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isBlank;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
-import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.MessageType;
 import cloud.xcan.angus.api.gm.message.dto.MessageCenterPushDto;
 import cloud.xcan.angus.api.pojo.Message;
-import cloud.xcan.angus.core.spring.SpringContextHolder;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 public class MessageCenterConverter {
 
-  public static MessageCenterOnline assembleMessageCenterOnline(User user,
-      String userAgent, String deviceId, String remoteAddress, boolean online) {
+  public static MessageCenterOnline assembleMessageCenterOnline(String sessionId, User user,
+      String userAgent, String deviceId, String remoteAddress) {
     MessageCenterOnline centerOnline = new MessageCenterOnline();
     centerOnline.setTenantId(user.getTenantId());
     centerOnline.setId(getCachedUidGenerator().getUID())
@@ -30,12 +29,9 @@ public class MessageCenterConverter {
         .setUserAgent(stringSafe(userAgent))
         .setDeviceId(stringSafe(deviceId))
         .setRemoteAddress(stringSafe(remoteAddress))
-        .setOnline(online);
-    if (centerOnline.getOnline()) {
-      centerOnline.setOnlineDate(LocalDateTime.now());
-    } else {
-      centerOnline.setOfflineDate(LocalDateTime.now());
-    }
+        .setOnline(true)
+        .setOnlineDate(LocalDateTime.now())
+        .setSessionId(sessionId);
     return centerOnline;
   }
 

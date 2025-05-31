@@ -224,11 +224,11 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
 
   @Modifying
   @Query("update User a set a.online = true, a.onlineDate = now() where a.id in ?1")
-  void updateOnlineStatus(List<Long> userId);
+  void updateOnlineStatus(Collection<Long> userId);
 
   @Modifying
   @Query("update User a set a.online = false, a.offlineDate = now() where a.id in ?1")
-  void updateOfflineStatus(List<Long> userId);
+  void updateOfflineStatus(Collection<Long> userId);
 
   @Modifying
   @Query(value = "UPDATE user0 SET mobile='', email='', username=UUID(), deleted=1 WHERE tenant_id IN (?1)", nativeQuery = true)

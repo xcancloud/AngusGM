@@ -11,6 +11,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class MessageCenterOnlineVo implements Serializable {
 
+  private Long id;
+
   private Long userId;
 
   private String fullName;

@@ -5,7 +5,6 @@ import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLA
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR;
 import static cloud.xcan.angus.security.model.SecurityConstant.INTROSPECTION_CLAIM_NAMES_USERNAME;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.PRINCIPAL;
-import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import jakarta.annotation.Resource;
@@ -53,23 +52,16 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
     String remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR).toString();
 
     LOCAL_ONLINE_USERS.put(sessionId, username);
-    messageCenterOnlineCmd.updateOnlineStatus(username, userAgent, deviceId, remoteAddress, true);
+    messageCenterOnlineCmd.updateOnlineStatus(sessionId, username, userAgent, deviceId,
+        remoteAddress, true);
     log.info("MessageCenter: {} connected，Session ID: {}", username, sessionId);
   }
 
   private void handleDisconnection(SessionDisconnectEvent event) {
     String sessionId = event.getSessionId();
-    StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-    Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-    Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
-    Object userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT);
-    Object deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID);
-    Object remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR);
-
     String username = LOCAL_ONLINE_USERS.remove(sessionId);
     if (username != null) {
-      messageCenterOnlineCmd.updateOnlineStatus(username, stringSafe(userAgent), stringSafe(deviceId),
-          stringSafe(remoteAddress), false);
+      messageCenterOnlineCmd.updateOnlineStatus(sessionId, username, null, null, null, false);
       log.info("MessageCenter: {} disconnected，Session ID: {}", username, sessionId);
     }
   }

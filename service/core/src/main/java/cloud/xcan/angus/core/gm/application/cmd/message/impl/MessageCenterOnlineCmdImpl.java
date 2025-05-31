@@ -6,19 +6,20 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
-import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
-import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnlineRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
+import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnlineRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.security.authentication.service.JdbcOAuth2AuthorizationService;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
     }
 
     if (receiveObjectType.equals(ReceiveObjectType.USER)) {
-      offline0(receiveObjectIds);
+      offlineByUserIds(receiveObjectIds);
 
       // Invalidate user access token to force logout.
       List<String> usernames = userRepo.findUsernamesByIdAndOnline(receiveObjectIds, true);
@@ -51,7 +52,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
     } else if (receiveObjectType.equals(ReceiveObjectType.TENANT)) {
       List<Long> userIds = userRepo.findIdsByTenantIdAndOnline(receiveObjectIds, true);
       if (isNotEmpty(userIds)) {
-        offline0(userIds);
+        offlineByUserIds(userIds);
 
         // Invalidate user access token to force logout.
         List<String> usernames = userRepo.findUsernamesByTenantIdAndOnline(receiveObjectIds, true);
@@ -62,17 +63,17 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void updateOnlineStatus(String username, String userAgent, String deviceId,
-      String remoteAddress, Boolean online) {
+  public void updateOnlineStatus(String sessionId, String username, String userAgent,
+      String deviceId, String remoteAddress, boolean online) {
     User user = userRepo.findAllByUsername(username).get(0);
     if (isNull(user)) {
       return;
     }
 
     if (online) {
-      online0(userAgent, deviceId, remoteAddress, user);
+      onlineBySession(sessionId, userAgent, deviceId, remoteAddress, user);
     } else {
-      offline0(userAgent, deviceId, remoteAddress, user);
+      offlineBySession(sessionId, user.getId());
     }
   }
 
@@ -88,27 +89,33 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
     }
   }
 
-  private void offline0(List<Long> objectIds) {
-    List<User> users = userRepo.findByIdIn(objectIds);
+  private void offlineByUserIds(List<Long> userIds) {
+    List<User> users = userRepo.findByIdIn(userIds);
     if (isEmpty(users)) {
-      for (User user : users) {
-        offline0(null, null, null, user);
-      }
+      offlineByUserId(users.stream().map(User::getId).collect(Collectors.toSet()));
     }
   }
 
-  private void online0(String userAgent, String deviceId, String remoteAddress, User user) {
+  private void onlineBySession(String sessionId, String userAgent, String deviceId, String remoteAddress,
+      User user) {
     // Save online records.
-    insert0(assembleMessageCenterOnline(user, userAgent, deviceId, remoteAddress, true));
+    insert0(assembleMessageCenterOnline(sessionId, user, userAgent, deviceId, remoteAddress));
     // Update user online status.
     userRepo.updateOnlineStatus(List.of(user.getId()));
   }
 
-  private void offline0(String userAgent, String deviceId, String remoteAddress, User user) {
-    // Save offline records.
-    insert0(assembleMessageCenterOnline(user, userAgent, deviceId, remoteAddress, false));
+  private void offlineBySession(String sessionId, Long userId) {
+    // Update offline records.
+    messageCenterOnlineRepo.updateOfflineBySessionIdAndUserId(sessionId, userId);
     // Update user offline status.
-    userRepo.updateOfflineStatus(List.of(user.getId()));
+    userRepo.updateOfflineStatus(List.of(userId));
+  }
+
+  private void offlineByUserId(Collection<Long> userIds) {
+    // Update offline records.
+    messageCenterOnlineRepo.updateOfflineByUserIdIn(userIds);
+    // Update user offline status.
+    userRepo.updateOfflineStatus(userIds);
   }
 
   @Override

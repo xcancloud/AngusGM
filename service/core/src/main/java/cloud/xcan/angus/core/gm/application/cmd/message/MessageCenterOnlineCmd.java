@@ -7,8 +7,8 @@ public interface MessageCenterOnlineCmd {
 
   void offline(ReceiveObjectType receiveObjectType, List<Long> receiveObjectIds);
 
-  void updateOnlineStatus(String username, String userAgent, String deviceId,
-      String remoteAddress, Boolean online);
+  void updateOnlineStatus(String sessionId, String username, String userAgent, String deviceId,
+      String remoteAddress, boolean online);
 
   void shutdown();
 

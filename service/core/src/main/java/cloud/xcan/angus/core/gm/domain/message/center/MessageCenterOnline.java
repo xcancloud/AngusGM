@@ -33,6 +33,8 @@ public class MessageCenterOnline extends TenantEntity<MessageCenterOnline, Long>
 
   private String remoteAddress;
 
+  private String sessionId;
+
   private Boolean online;
 
   private LocalDateTime onlineDate;

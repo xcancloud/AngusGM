@@ -14,6 +14,7 @@ public class MessageCenterOnlineAssembler {
 
   public static MessageCenterOnlineVo toVo(MessageCenterOnline online) {
     return new MessageCenterOnlineVo()
+        .setId(online.getId())
         .setUserId(online.getUserId())
         .setFullName(online.getFullName())
         .setAvatar(online.getAvatar())
