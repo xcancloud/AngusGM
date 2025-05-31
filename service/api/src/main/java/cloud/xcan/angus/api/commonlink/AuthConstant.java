@@ -51,10 +51,10 @@ public interface AuthConstant {
   String USER_INFO_ENDPOINT = "/api/v1/auth/user";
   String TOKEN_REVOKE_ENDPOINT = "/api/v1/auth/token";
 
-  String SWAGGER_API_URL = "/v3/api-docs?group=Api";
-  String SWAGGER_PUB_API_URL = "/v3/api-docs?group=Public%20Api";
-  String SWAGGER_DOOR_API_URL = "/v3/api-docs?group=Door%20Api";
-  String SWAGGER_OPEN_API_TO_PRIVATE_URL = "/v2/api-docs?group=Open%20Api%20to%20Private";
+  String SWAGGER_API_URL = "/v3/api-docs/user";
+  String SWAGGER_PUB_API_URL = "/v3/api-docs/public";
+  String SWAGGER_INNER_API_URL = "/v3/api-docs/inner";
+  String SWAGGER_OPEN_API_TO_PRIVATE_URL = "/v3/api-docs/openapi2p";
 
   // Used in infra-security
   int DEFAULT_TOKEN_SALT_LENGTH = 32;

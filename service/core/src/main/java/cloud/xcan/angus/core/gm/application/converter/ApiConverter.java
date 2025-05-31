@@ -5,6 +5,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH_X2;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 import static io.swagger.v3.oas.models.extension.ExtensionKey.RESOURCE_NAME_KEY;
 import static java.util.Objects.nonNull;
@@ -111,8 +112,8 @@ public class ApiConverter {
     return getBaseApi(serviceDb, key, apiType, safeResourceName(operation, operation.getTags()))
         .setOperationId(safeServiceCode(operation.getOperationId()))
         .setScopes(safeScope(operation.getSecurity()))
-        .setName(safeServiceName(operation.getSummary()))
-        .setDescription(description)
+        .setName(safeName(operation.getSummary()))
+        .setDescription(nullSafe(operation.getDescription(), description))
         .setMethod(method);
   }
 
@@ -148,7 +149,7 @@ public class ApiConverter {
     return null;
   }
 
-  public static String safeServiceName(String summary) {
+  public static String safeName(String summary) {
     return isNull(summary) ? "" : summary.length() > MAX_NAME_LENGTH_X2
         ? summary.substring(0, MAX_NAME_LENGTH_X2) : summary;
   }

@@ -393,8 +393,8 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
           ApiType.API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
           AuthConstant.SWAGGER_PUB_API_URL, ApiType.PUB_API);
-      parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
-          AuthConstant.SWAGGER_DOOR_API_URL, ApiType.DOOR_API);
+      //      parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
+      //          AuthConstant.SWAGGER_INNER_API_URL, ApiType.DOOR_API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
           AuthConstant.SWAGGER_OPEN_API_TO_PRIVATE_URL, ApiType.OPEN_API_2P);
     } catch (Throwable e) {
