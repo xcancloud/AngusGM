@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogInner"))
 @RestController
 @RequestMapping("/innerapi/v1/log/api")
-public class ApiLogDoorRest {
+public class ApiLogInnerRest {
 
   @Resource
   private ApiLogFacade apiLogFacade;

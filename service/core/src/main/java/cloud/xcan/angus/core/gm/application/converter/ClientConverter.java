@@ -2,10 +2,8 @@ package cloud.xcan.angus.core.gm.application.converter;
 
 import static cloud.xcan.angus.api.commonlink.AuthConstant.SYS_TOKEN_CLIENT_DESC_FMT;
 import static cloud.xcan.angus.api.commonlink.AuthConstant.SYS_TOKEN_CLIENT_ID_FMT;
-import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_USER_TOKEN;
 import static cloud.xcan.angus.api.enums.Platform.XCAN_TP;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.SYS_TOKEN_CLIENT_SCOPE;
-import static cloud.xcan.angus.spec.experimental.BizConstant.ClientSource.XCAN_SYS_TOKEN;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
@@ -54,8 +52,8 @@ public class ClientConverter {
         .description(getSystemTokenClientDesc(tokenName, ClientSource.XCAN_SYS_TOKEN))
         .enabled(true)
         .platform(XCAN_TP.getValue())
-        .source(XCAN_USER_TOKEN.getTokenPrefix())
-        .bizTag(XCAN_SYS_TOKEN)
+        .source(ClientSource.XCAN_SYS_TOKEN.getValue())
+        .bizTag(ClientSource.XCAN_SYS_TOKEN.getValue())
         .tenantId(getTenantId().toString())
         .tenantName(getTenantName())
         .createdBy(getUserId().toString())

@@ -9,6 +9,7 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.ACCESS_TOKEN_EXPIRED_DATE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.CUSTOM_ACCESS_TOKEN;
+import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.CUSTOM_ACCESS_TOKEN_NAME;
 import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.USER_TOKEN_CLIENT_SCOPE;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getClientId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
@@ -114,6 +115,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
 
         // Set expired date for cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator#generate(OAuth2TokenContext context)
         setRequestAttribute(CUSTOM_ACCESS_TOKEN, true);
+        setRequestAttribute(CUSTOM_ACCESS_TOKEN_NAME, userToken.getName());
         // The token is permanently valid when the value is null.
         if (nonNull(userToken.getExpiredDate())) {
           setRequestAttribute(ACCESS_TOKEN_EXPIRED_DATE, asInstant(userToken.getExpiredDate()));

@@ -212,13 +212,6 @@ public class UserConverter {
 
   public static String generatePassword(PasswordEncoderType encoderType, String password) {
     // Warn:: The format of Spring security MD5 and LDAP MD5 is inconsistent.
-    //    if (password.startsWith(PREFIX)) {
-    //      return password;
-    //    }
-    //    if (Objects.isNull(encoderType)) {
-    //      return PREFIX + PasswordEncoderType.PLAINTEXT.getValue() + SUFFIX + password;
-    //    }
-    //    return PREFIX + encoderType.getValue() + SUFFIX + password;
     if (password.contains(UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX)
         && password.contains(UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX)) {
       return UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX + PASSWORD_PROXY_ENCRYP_TYPE

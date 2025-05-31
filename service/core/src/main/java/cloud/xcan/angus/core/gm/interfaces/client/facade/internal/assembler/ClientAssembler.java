@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.client.facade.internal.assembler;
 
-import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_USER_TOKEN;
+import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_SYS_TOKEN;
 import static cloud.xcan.angus.api.enums.Platform.XCAN_TP;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.DateUtils.asInstant;
@@ -70,7 +70,7 @@ public class ClientAssembler {
         .description(dto.getDescription())
         .enabled(nullSafe(dto.getEnabled(), true))
         .platform(nullSafe(dto.getPlatform(), XCAN_TP).getValue())
-        .source(nullSafe(dto.getSource(), XCAN_USER_TOKEN).getValue())
+        .source(nullSafe(dto.getSource(), XCAN_SYS_TOKEN).getValue())
         .bizTag(dto.getBizTag())
         .tenantId(dto.getTenantId())
         .tenantName(dto.getTenantName())
@@ -123,7 +123,7 @@ public class ClientAssembler {
         .description(dto.getDescription())
         .enabled(nullSafe(dto.getEnabled(), true))
         .platform(isNull(dto.getId()) ? nullSafe(dto.getPlatform(), XCAN_TP).getValue() : null)
-        .source(isNull(dto.getId()) ? nullSafe(dto.getSource(), XCAN_USER_TOKEN).getValue() : null)
+        .source(isNull(dto.getId()) ? nullSafe(dto.getSource(), XCAN_SYS_TOKEN).getValue() : null)
         .bizTag(dto.getBizTag())
         .tenantId(isNull(dto.getId()) ? dto.getTenantId() : null)
         .tenantName(isNull(dto.getId()) ? dto.getTenantName() : null)

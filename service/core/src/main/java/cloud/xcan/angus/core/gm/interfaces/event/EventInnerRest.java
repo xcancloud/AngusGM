@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/event")
-public class EventDoorRest {
+public class EventInnerRest {
 
   @Resource
   private EventFacade eventFacade;
