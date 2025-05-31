@@ -582,7 +582,7 @@ export default {
   'request-mess-4': '操作5分钟内生效，默认保存7天',
   'request-mess-5': '请求信息',
   'request-mess-6': '请求报文信息',
-  'request-mess-7': '请求名称',
+  'request-mess-7': '接口',
   'request-mess-8': '请求编码',
   'request-mess-9': '服务名称',
   'request-mess-a': '服务编码',

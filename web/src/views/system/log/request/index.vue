@@ -281,7 +281,7 @@ const activeKey = ref(0);
 </script>
 <template>
   <div class="h-full">
-    <Hints :text="'请求日志默认保存'+clearBeforeDay+'天'" class="mb-1" />
+    <Hints :text="'查看“用户令牌”和“系统令牌”的访问请求日志。默认保存'+clearBeforeDay+'天的记录。'" class="mb-1" />
     <PureCard class="p-3.5" style="height: calc(100% - 24px);">
       <div ref="searchBar">
         <Statistics
