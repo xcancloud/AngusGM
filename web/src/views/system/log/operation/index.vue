@@ -29,7 +29,7 @@ type SearchParams = {
 }
 
 const showCount = ref(true);
-const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
+const Statistics = defineAsyncComponent(() => import('./Statistics/index.vue'));
 const SearchPanel = defineAsyncComponent((() => import('./SearchPanel/index.vue')));
 
 const { t } = useI18n();
