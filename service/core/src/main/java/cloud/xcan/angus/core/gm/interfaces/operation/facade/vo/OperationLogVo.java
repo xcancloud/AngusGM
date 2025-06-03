@@ -32,6 +32,8 @@ public class OperationLogVo implements Serializable {
 
   private String fullName;
 
+  private String avatar;
+
   private LocalDateTime optDate;
 
   private String description;

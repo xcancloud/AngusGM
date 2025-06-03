@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.operation.impl;
 
+import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.operation.OperationLogSearch;
@@ -17,6 +18,9 @@ public class OperationLogSearchImpl implements OperationLogSearch {
   @Resource
   private OperationLogSearchRepo operationLogSearchRepo;
 
+  @Resource
+  private UserManager userManager;
+
   @Override
   public Page<OperationLog> search(Set<SearchCriteria> criteria, Pageable pageable,
       Class<OperationLog> clz, String... matches) {
@@ -24,7 +28,11 @@ public class OperationLogSearchImpl implements OperationLogSearch {
 
       @Override
       protected Page<OperationLog> process() {
-        return operationLogSearchRepo.find(criteria, pageable, clz, matches);
+        Page<OperationLog> page = operationLogSearchRepo.find(criteria, pageable, clz, matches);
+        if (page.hasContent()) {
+          userManager.setUserNameAndAvatar(page.getContent(), "userId", "fullName", "avatar");
+        }
+        return page;
       }
     }.execute();
   }

@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,13 +54,14 @@ public class OperationLog extends TenantEntity<OperationLog, Long> {
   @Column(name = "opt_date")
   private LocalDateTime optDate;
 
-  @Column
   private String description;
 
-  @Column
   private String detail;
 
   private Boolean private0;
+
+  @Transient
+  private String avatar;
 
   @Override
   public Long identity() {

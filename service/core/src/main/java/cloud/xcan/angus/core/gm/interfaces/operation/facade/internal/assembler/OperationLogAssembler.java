@@ -56,6 +56,7 @@ public class OperationLogAssembler {
         .setType(operation.getType())
         .setUserId(operation.getUserId())
         .setFullName(operation.getFullName())
+        .setAvatar(operation.getAvatar())
         .setOptDate(operation.getOptDate())
         .setDescription(operation.getDescription())
         .setDetail(operation.getDetail())

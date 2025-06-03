@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.operation.impl;
 
+import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.operation.OperationLogQuery;
@@ -22,13 +23,20 @@ public class OperationLogQueryImpl implements OperationLogQuery {
   @Resource
   private OperationLogRepo optionLogRepo;
 
+  @Resource
+  private UserManager userManager;
+
   @Override
   public Page<OperationLog> list(Specification<OperationLog> spec, Pageable pageable) {
     return new BizTemplate<Page<OperationLog>>(true, true) {
 
       @Override
       protected Page<OperationLog> process() {
-        return optionLogRepo.findAll(spec, pageable);
+        Page<OperationLog> page = optionLogRepo.findAll(spec, pageable);
+        if (page.hasContent()) {
+          userManager.setUserNameAndAvatar(page.getContent(), "userId", "fullName", "avatar");
+        }
+        return page;
       }
     }.execute();
   }
