@@ -416,7 +416,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/system/locale/index.vue')
       },
       {
-        path: '/system/log/op',
+        path: '/system/log/operation',
         name: 'logOp',
         component: () => import('@/views/system/log/operation/index.vue')
       },
