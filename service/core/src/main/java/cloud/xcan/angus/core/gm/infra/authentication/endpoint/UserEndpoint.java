@@ -4,6 +4,8 @@ import static cloud.xcan.angus.api.commonlink.AuthConstant.TOKEN_REVOKE_ENDPOINT
 import static cloud.xcan.angus.api.commonlink.AuthConstant.USER_INFO_ENDPOINT;
 import static java.util.Objects.nonNull;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import java.security.Principal;
@@ -33,6 +35,8 @@ public class UserEndpoint {
   }
 
   @ResponseBody
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Revoke token successfully")})
   @RequestMapping(method = RequestMethod.DELETE, value = TOKEN_REVOKE_ENDPOINT)
   public ResponseEntity<Map<String, ?>> revokeToken(String access_token) {
     OAuth2Authorization authorization = oauth2AuthorizationService.findByToken(access_token, null);

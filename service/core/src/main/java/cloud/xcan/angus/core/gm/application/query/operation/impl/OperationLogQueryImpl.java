@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 @Slf4j
 @Biz
 @SummaryQueryRegister(name = "OperationLog", table = "operation_log",
-    groupByColumns = {"opt_date", "success"})
+    groupByColumns = {"opt_date", "resource"})
 public class OperationLogQueryImpl implements OperationLogQuery {
 
   @Resource
