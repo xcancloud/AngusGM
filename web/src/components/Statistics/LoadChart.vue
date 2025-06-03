@@ -169,9 +169,11 @@ const publicParams = {
 const pieloading = ref(true); // 饼图统计是否加载完成
 const pieChartData = ref<PieData []>([]);
 const loadCount = async () => {
+  const groupByColumns = props.pieParmas.map(item => item.key);
+  groupByColumns?.length ? publicParams.groupBy = 'STATUS' : delete publicParams.groupBy;
   const params = {
     ...publicParams,
-    groupByColumns: props.pieParmas.map(item => item.key),
+    groupByColumns,
     filters: dateFilters.value,
     dateRangeType: dateRangeType.value[0]
   };

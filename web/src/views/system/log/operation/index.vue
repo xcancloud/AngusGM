@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { Hints, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
+import { Hints, PureCard, Table } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { GM } from '@xcan-angus/tools';
 
@@ -30,20 +30,18 @@ type SearchParams = {
 
 const showCount = ref(true);
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
+const SearchPanel = defineAsyncComponent((() => import('./SearchPanel/index.vue')));
 
 const { t } = useI18n();
 const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 const loading = ref(false);
-const disabled = ref(false);
 const tableList = ref<any[]>([]);
 
-const searchChange = async (data: { key: string; value: string; op: FilterOp; }[]) => {
+const searchChange = async (data:{filters:{ key: string; value: string; op: FilterOp; }[]} ) => {
   params.value.pageNo = 1;
-  params.value.filters = data;
-  disabled.value = true;
+  params.value.filters = data.filters;
   await getList();
-  disabled.value = false;
 };
 
 const getList = async () => {
@@ -73,9 +71,7 @@ const tableChange = async (_pagination) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
-  disabled.value = true;
   await getList();
-  disabled.value = false;
 };
 
 const clearBeforeDay = ref<string>();
@@ -87,59 +83,16 @@ const getSettings = async () => {
 
   clearBeforeDay.value = data.operationLog?.clearBeforeDay;
 };
+
+const toggeleOpenCount = () => {
+  showCount.value = !showCount.value;
+};
+
 onMounted(() => {
   getSettings();
   getList();
 });
 
-const options = [
-  {
-    valueKey: 'id',
-    placeholder: t('查询日志ID'),
-    type: 'input',
-    op: 'EQUAL',
-    allowClear: true
-  },
-  {
-    valueKey: 'userId',
-    type: 'select-user',
-    allowClear: true
-  },
-  {
-    valueKey: 'requestId',
-    placeholder: t('查询请求ID'),
-    type: 'input',
-    op: 'EQUAL',
-    allowClear: true
-  },
-  {
-    valueKey: 'resourceName',
-    placeholder: t('查询操作资源'),
-    type: 'input',
-    allowClear: true
-  },
-  {
-    valueKey: 'success',
-    type: 'select',
-    allowClear: true,
-    options: [
-      {
-        label: t('op-search-3'),
-        value: false
-      },
-      {
-        label: t('op-search-4'),
-        value: true
-      }
-    ],
-    placeholder: t('查询是否成功')
-  },
-  {
-    valueKey: 'optDate',
-    type: 'date',
-    placeholder: t('操作时间')
-  }
-];
 
 const columns = [
   {
@@ -206,18 +159,12 @@ const columns = [
         dateType="DAY"
         resource="OperationLog"
         :geteway="GM" />
-      <div class="flex items-start">
-        <SearchPanel
-          :options="options"
-          class="flex-1 mr-2"
-          @change="searchChange" />
-        <IconCount v-model:value="showCount" class="mt-2" />
-        <IconRefresh
-          class="ml-2 mt-2"
-          :loading="loading"
-          :disabled="disabled"
-          @click="getList" />
-      </div>
+      <SearchPanel
+        :loading="loading"
+        :showCount="showCount"
+        @openCount="toggeleOpenCount"
+        @refresh="getList"
+        @change="searchChange"/>
       <Table
         :loading="loading"
         :dataSource="tableList"

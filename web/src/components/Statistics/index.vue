@@ -216,12 +216,12 @@ const requestLogsGroup = ref<PieSetting[]>([
 
 // 日志-操作日志配置
 const operationLogsGroup = ref<PieSetting[]>([
-  {
-    key: 'success',
-    value: t('是否成功'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
-    color: [COLOR[1], COLOR[3]]
-  }
+  // {
+  //   key: 'success',
+  //   value: t('是否成功'),
+  //   type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+  //   color: [COLOR[1], COLOR[3]]
+  // }
 ]);
 
 // 系统事件-事件模板统计
