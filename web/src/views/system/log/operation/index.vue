@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { Hints, PureCard, Table } from '@xcan-angus/vue-ui';
+import { Hints, PureCard, Table, Image } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { GM } from '@xcan-angus/tools';
 
@@ -93,50 +93,54 @@ onMounted(() => {
   getList();
 });
 
-
 const columns = [
+  // {
+  //   title: t('日志ID'),
+  //   dataIndex: 'id',
+  //   width: '12%',
+  //   customCell: () => {
+  //     return { style: 'white-space:nowrap;' };
+  //   }
+  // },
   {
-    title: t('日志ID'),
-    dataIndex: 'id',
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('op-table-1'),
+    title: t('操作人'),
     dataIndex: 'fullName',
-    width: '10%'
+    width: '20%'
   },
+
   {
-    title: t('请求ID'),
-    dataIndex: 'requestId',
-    width: '20%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    title: t('操作类型'),
+    dataIndex: 'type'
   },
+  // {
+  //   title: t('请求ID'),
+  //   dataIndex: 'requestId',
+  //   width: '20%',
+  //   customCell: () => {
+  //     return { style: 'white-space:nowrap;' };
+  //   }
+  // },
   {
     title: t('操作资源'),
-    dataIndex: 'resourceName',
-    width: '10%'
+    dataIndex: 'resource',
+    customRender: ({ text }) => text?.message
   },
   {
-    title: t('op-table-2'),
+    title: t('操作内容'),
     dataIndex: 'description'
   },
-  {
-    title: t('op-table-3'),
-    dataIndex: 'success',
-    width: '10%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('op-table-4'),
-    dataIndex: 'failureReason'
-  },
+  // {
+  //   title: t('op-table-3'),
+  //   dataIndex: 'success',
+  //   width: '10%',
+  //   customCell: () => {
+  //     return { style: 'white-space:nowrap;' };
+  //   }
+  // },
+  // {
+  //   title: t('op-table-4'),
+  //   dataIndex: 'failureReason'
+  // },
   {
     title: t('op-table-5'),
     dataIndex: 'optDate',
@@ -175,10 +179,19 @@ const columns = [
         class="mt-2"
         @change="tableChange">
         <template #bodyCell="{column, record}">
-          <div v-if="column.dataIndex === 'success'" class="flex items-center">
-            <span :class="['w-1.5 h-1.5 mr-2 rounded-full', record.success ? 'bg-success' : 'bg-danger']"></span>
-            <span>{{ record.success ? t('op-search-4') : t('op-search-3') }}</span>
-          </div>
+<!--          <div v-if="column.dataIndex === 'success'" class="flex items-center">-->
+<!--            <span :class="['w-1.5 h-1.5 mr-2 rounded-full', record.success ? 'bg-success' : 'bg-danger']"></span>-->
+<!--            <span>{{ record.success ? t('op-search-4') : t('op-search-3') }}</span>-->
+<!--          </div>-->
+          <template v-if="column.dataIndex === 'fullName'">
+            <div class="flex items-center">
+              <Image
+                type="avatar"
+                :src="record.avatar"
+                class="w-4 h-4 rounded-full mr-1" />
+              <span class="flex-1 truncate" :title="record.fullName">{{ record.fullName }}</span>
+            </div>
+          </template>
         </template>
       </Table>
     </PureCard>
