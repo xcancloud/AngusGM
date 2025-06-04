@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.application.query.operation.impl;
 
+import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantClient;
+import static cloud.xcan.angus.spec.experimental.BizConstant.XCAN_TENANT_PLATFORM_CODE;
+
 import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
@@ -28,6 +31,10 @@ public class OperationLogSearchImpl implements OperationLogSearch {
 
       @Override
       protected Page<OperationLog> process() {
+        if (isTenantClient()) {
+          criteria.add(SearchCriteria.equal("clientId", XCAN_TENANT_PLATFORM_CODE));
+        }
+
         Page<OperationLog> page = operationLogSearchRepo.find(criteria, pageable, clz, matches);
         if (page.hasContent()) {
           userManager.setUserNameAndAvatar(page.getContent(), "userId", "fullName", "avatar");

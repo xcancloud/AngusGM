@@ -150,15 +150,6 @@ const selectDate = (value) => {
   loadDateCount();
 };
 
-/**
- * 用户饼图统计参数
- * resource:对应数据库真实,有多少种name表示当前服务下分多少种统计（eg:User、Dept、Group、Tenant ）
- * groupByColumns: groupByColumns对应数据库表的字段,目前分为时间范围类型和其他类型，
- * aggregates[0].column: 通常统计传id即可
- * aggregates[0].function：统计类型 默认COUNT，其他参数参考/uc/api/v1/analysis/customization/summary接口
- * groupBy：分组类型，即按什么分组 具体参数参考/uc/api/v1/analysis/customization/summary接口
- * 备注：以上参数只支持结果里返回的，具体返回结构咨询后端
- */
 // 饼图公共参数
 const publicParams = {
   'aggregates[0].column': 'id',
@@ -471,14 +462,6 @@ const setBarCharCount = (data: Record<string, any>) => {
   barChartData.value.xData = dateRangeType.value[0] !== 'HOUR' ? keys : keys.map(item => dayjs(item).format('HH'));
   barChartData.value.yData = Object.values(data).map(item => item.COUNT_id ? +item.COUNT_id : null);
 };
-// 不要删除
-// 该接口查看可统计的类型和字段
-// const loadCountGroup = async () => {
-//   const [error, { data }] = await http.get(`/${props.geteway}/api/v1/analysis/customization/summary/definition`);
-//   if (error) {
-//     return;
-//   }
-// };
 
 onMounted(() => {
   // loadCountGroup();

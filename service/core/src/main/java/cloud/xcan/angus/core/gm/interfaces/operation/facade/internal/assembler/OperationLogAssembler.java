@@ -65,7 +65,7 @@ public class OperationLogAssembler {
         .setTenantName(operation.getTenantName());
   }
 
-  public static Specification<OperationLog> getSpecification(OperationLogFindDto dto) {
+  public static GenericSpecification<OperationLog> getSpecification(OperationLogFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "optDate")
@@ -79,7 +79,7 @@ public class OperationLogAssembler {
     return new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "optDate")
         .orderByFields("id", "resource", "type", "optDate")
-        .matchSearchFields("detail")
+        .matchSearchFields("description", "detail")
         .build();
   }
 }

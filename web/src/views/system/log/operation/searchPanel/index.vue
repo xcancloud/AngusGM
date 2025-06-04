@@ -30,45 +30,15 @@ const selectedMenuMap = ref<{[key: string]: boolean}>({});
 
 const searchPanelOptions = [
   {
-    valueKey: 'id',
-    placeholder: t('查询日志ID'),
+    valueKey: 'description',
+    placeholder: t('查询操作描述'),
     type: 'input',
-    op: 'EQUAL',
     allowClear: true
   },
   {
     valueKey: 'userId',
     type: 'select-user',
     allowClear: true
-  },
-  {
-    valueKey: 'requestId',
-    placeholder: t('查询请求ID'),
-    type: 'input',
-    op: 'EQUAL',
-    allowClear: true
-  },
-  {
-    valueKey: 'resourceName',
-    placeholder: t('查询操作资源'),
-    type: 'input',
-    allowClear: true
-  },
-  {
-    valueKey: 'success',
-    type: 'select',
-    allowClear: true,
-    options: [
-      {
-        label: t('op-search-3'),
-        value: false
-      },
-      {
-        label: t('op-search-4'),
-        value: true
-      }
-    ],
-    placeholder: t('查询是否成功')
   },
   {
     valueKey: 'optDate',

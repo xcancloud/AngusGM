@@ -29,8 +29,8 @@ type SearchParams = {
 }
 
 const showCount = ref(true);
-const Statistics = defineAsyncComponent(() => import('./Statistics/index.vue'));
-const SearchPanel = defineAsyncComponent((() => import('./SearchPanel/index.vue')));
+const Statistics = defineAsyncComponent(() => import('@/views/system/log/operation/statistics/index.vue'));
+const SearchPanel = defineAsyncComponent((() => import('@/views/system/log/operation/searchPanel/index.vue')));
 
 const { t } = useI18n();
 const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
@@ -67,10 +67,15 @@ const pagination = computed(() => {
   };
 });
 
-const tableChange = async (_pagination) => {
+const tableChange = async (_pagination, _filters, sorter: {
+  orderBy: string;
+  orderSort: 'DESC' | 'ASC'
+}) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
+  params.value.orderBy = sorter.orderBy;
+  params.value.orderSort = sorter.orderSort;
   await getList();
 };
 
@@ -84,7 +89,7 @@ const getSettings = async () => {
   clearBeforeDay.value = data.operationLog?.clearBeforeDay;
 };
 
-const toggeleOpenCount = () => {
+const toggleOpenCount = () => {
   showCount.value = !showCount.value;
 };
 
@@ -94,57 +99,46 @@ onMounted(() => {
 });
 
 const columns = [
-  // {
-  //   title: t('日志ID'),
-  //   dataIndex: 'id',
-  //   width: '12%',
-  //   customCell: () => {
-  //     return { style: 'white-space:nowrap;' };
-  //   }
-  // },
+  {
+    title: t('ID'),
+    dataIndex: 'id',
+    hide: true
+  },
   {
     title: t('操作人'),
     dataIndex: 'fullName',
-    width: '20%'
-  },
-
-  {
-    title: t('操作类型'),
-    dataIndex: 'type'
-  },
-  // {
-  //   title: t('请求ID'),
-  //   dataIndex: 'requestId',
-  //   width: '20%',
-  //   customCell: () => {
-  //     return { style: 'white-space:nowrap;' };
-  //   }
-  // },
-  {
-    title: t('操作资源'),
-    dataIndex: 'resource',
-    customRender: ({ text }) => text?.message
+    width: '15%',
+    sorter: true
   },
   {
     title: t('操作内容'),
-    dataIndex: 'description'
+    dataIndex: 'description',
+    width: '35%',
   },
-  // {
-  //   title: t('op-table-3'),
-  //   dataIndex: 'success',
-  //   width: '10%',
-  //   customCell: () => {
-  //     return { style: 'white-space:nowrap;' };
-  //   }
-  // },
-  // {
-  //   title: t('op-table-4'),
-  //   dataIndex: 'failureReason'
-  // },
+  {
+    title: t('操作资源'),
+    dataIndex: 'resource',
+    width: '15%',
+    customRender: ({ text }) => text?.message
+  },
+  {
+    title: t('操作资源名称'),
+    dataIndex: 'resourceName',
+    groupName: 'resource',
+    width: '20%',
+  },
+  {
+    title: t('操作资源ID'),
+    dataIndex: 'resourceId',
+    groupName: 'resource',
+    hide: true,
+    width: '20%',
+  },
   {
     title: t('op-table-5'),
     dataIndex: 'optDate',
-    width: '11%',
+    width: '15%',
+    sorter: true,
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
@@ -166,7 +160,7 @@ const columns = [
       <SearchPanel
         :loading="loading"
         :showCount="showCount"
-        @openCount="toggeleOpenCount"
+        @openCount="toggleOpenCount"
         @refresh="getList"
         @change="searchChange"/>
       <Table
@@ -179,10 +173,6 @@ const columns = [
         class="mt-2"
         @change="tableChange">
         <template #bodyCell="{column, record}">
-<!--          <div v-if="column.dataIndex === 'success'" class="flex items-center">-->
-<!--            <span :class="['w-1.5 h-1.5 mr-2 rounded-full', record.success ? 'bg-success' : 'bg-danger']"></span>-->
-<!--            <span>{{ record.success ? t('op-search-4') : t('op-search-3') }}</span>-->
-<!--          </div>-->
           <template v-if="column.dataIndex === 'fullName'">
             <div class="flex items-center">
               <Image

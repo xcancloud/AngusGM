@@ -24,16 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const { t } = useI18n();
-// ---------------蓝---------绿-----------黄------------红---------------浅蓝-------------紫----------橘黄---------灰色-------------粉色-------------浅蓝1
-
-/**
- * 饼图统计图配置说明：
- * key: 对应数据库表的列,请求接口的groupByColumns参数,返回的统计数据和顺序有关,可参照后台接口返回（开启loadCountGroup()可查看具体返回结果）
- * value: 每一列统计的类型名称,前端配置，对应统计图的title
- * type: 分两种 一种是统计结果有多种类型,对应具体的enum接口;另一种只有0 和 1（0和1前端配置）
- * color:rgba格式，配置rgb即可,颜色数组的长度对应type的长度，缺少会报错
- * 顺序决定统计的结果的顺序
- */
 
 // 日志-操作日志配置
 const operationLogsGroup = ref<PieSetting[]>([
@@ -65,7 +55,7 @@ const getLogResourceTypeColor = (value: string) => {
     case 'GROUP':
       return 'rgba(217, 217, 217, 1)';
     case 'USER':
-      return 'rgba(117, 118, 148, 1)';
+      return 'rgb(4,142,229)';
     case 'USER_DIRECTORY':
       return 'rgba(162, 222, 236, 1)';
     case 'USER_TOKEN':
