@@ -285,7 +285,7 @@ onMounted(() => {
         <span>快速查询</span>
         <Colon />
       </div>
-      <div class="flex  flex-wrap ml-2">
+      <div class="flex  flex-wrap ml-2 text-3">
         <div
           v-for="item in menuItems"
           :key="item.key"
@@ -303,7 +303,7 @@ onMounted(() => {
         class="flex-1 mr-3.5"
         @change="searchChange" />
 
-      <div class="flex items-center space-x-3">
+      <div class="inline-flex items-center space-x-3 h-7">
         <Tooltip
           arrowPointAtCenter
           placement="topLeft"
