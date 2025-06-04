@@ -6,8 +6,8 @@ export default class UserLog {
     baseUrl = prefix + '/log';
   }
 
-  getOperationLog (params): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/operation`, params);
+  searchOperationLog (params): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/operation/search`, params);
   }
 
   getApiLog (params): Promise<[Error | null, any]> {

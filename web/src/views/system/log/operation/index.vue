@@ -49,7 +49,7 @@ const getList = async () => {
     return;
   }
   loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await userLog.getOperationLog(params.value);
+  const [error, { data = { list: [], total: 0 } }] = await userLog.searchOperationLog(params.value);
   loading.value = false;
   if (error) {
     return;
