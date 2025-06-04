@@ -31,7 +31,7 @@ const selectedMenuMap = ref<{[key: string]: boolean}>({});
 const searchPanelOptions = [
   {
     valueKey: 'description',
-    placeholder: t('查询操作描述'),
+    placeholder: t('查询操作内容'),
     type: 'input',
     allowClear: true
   },
