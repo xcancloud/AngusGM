@@ -1135,12 +1135,11 @@ CREATE TABLE `operation_log` (
   KEY `idx_tenant_id` (`tenant_id`) USING BTREE,
   KEY `idx_user_id` (`user_id`) USING BTREE,
   KEY `idx_request_id` (`request_id`) USING BTREE,
-  KEY `idx_resource_name` (`resource`) USING BTREE,
   KEY `idx_reource` (`resource`),
   KEY `idx_resource_id` (`resource_id`),
   KEY `idx_type` (`type`),
   KEY `idx_private0` (`private0`),
-  FULLTEXT KEY `fx_detail` (`detail`) /*!50100 WITH PARSER `ngram` */
+  FULLTEXT KEY `fx_description` (`description`,`detail`) /*!50100 WITH PARSER `ngram` */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='操作日志';
 
 -- ----------------------------
