@@ -184,61 +184,6 @@ watch(() => props.dataSource, (newValue) => {
   myChart?.setOption(chartsOption, true, false);
   chartsOption.title.text = props.title;
   chartsOption.title.subtext = props.total;
-  chartsOption.legend = newValue.length > 2
-    ? [{
-      orient: 'vertical',
-      top: 124,
-      right: '50%',
-      itemHeight: 8,
-      itemWidth: 12,
-      textStyle: {
-        width: 60,
-        fontsize: 10,
-        // color: '#8C8C8C',
-        overflow: 'truncate'
-      },
-      tooltip: {
-        show: true
-      },
-      itemGap: 6,
-      data: newValue.filter(item => item.name).slice(0, Math.ceil(newValue?.length / 2))
-    },
-      {
-        orient: 'vertical',
-        left: '50%',
-        top: 124,
-        itemHeight: 8,
-        itemWidth: 12,
-        textStyle: {
-          width: 60,
-          fontsize: 10,
-          // color: '#8C8C8C',
-          overflow: 'truncate'
-        },
-        tooltip: {
-          show: true
-        },
-        itemGap: 6,
-        data: newValue.filter(item => item.name).slice(Math.ceil(newValue?.length / 2), newValue?.length)
-      }]
-    : {
-      orient: 'horizontal',
-      top: 124,
-      left: 'center',
-      itemHeight: 8,
-      itemWidth: 12,
-      textStyle: {
-        width: 60,
-        fontsize: 10,
-        // color: '#8C8C8C',
-        overflow: 'truncate'
-      },
-      tooltip: {
-        show: true
-      },
-      itemGap: 6,
-      data: newValue.filter(item => item.name)
-    };
   chartsOption.series[0].data = newValue;
   myChart?.setOption(chartsOption, true, false);
 }, { deep: true });
