@@ -173,7 +173,9 @@ public class UserConverter {
         .setDeleted(false)
         .setExpired(false)
         .setMainDeptId(EMPTY_NUMBER)
-        .setOnline(false);
+        .setOnline(false)
+        .setOnlineDate(null)
+        .setOfflineDate(null);
     user.setDirectoryId(ldap.getId());
     user.setSignupAccount("");
     user.setSignupAccountType(SignupType.NOOP);
