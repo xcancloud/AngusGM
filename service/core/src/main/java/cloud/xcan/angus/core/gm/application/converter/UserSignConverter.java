@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class UserSignConverter {
 
   public static User signupToAddUser(AuthUser user, String invitationCode) {
+    SignupType signupType = SignupType.valueOf(user.getSignupType().toUpperCase());
     return new User().setCountry(user.getCountry())
         .setPassword(user.getPassword())
         .setItc(user.getItc())
@@ -24,9 +25,8 @@ public class UserSignConverter {
         .setFirstName("").setLastName("")
         .setFullName(genFullname()).setUsername(genUsername())
         .setGender(Gender.UNKNOWN)
-        .setSignupAccount(SignupType.valueOf(user.getSignupType()).isEmail()
-            ? user.getEmail() : user.getMobile())
-        .setSignupAccountType(SignupType.valueOf(user.getSignupType()))
+        .setSignupAccount(signupType.isEmail() ? user.getEmail() : user.getMobile())
+        .setSignupAccountType(signupType)
         .setSignupDeviceId(user.getSignupDeviceId())
         .setInvitationCode(invitationCode)
         .setSource(UserSource.PLATFORM_SIGNUP)

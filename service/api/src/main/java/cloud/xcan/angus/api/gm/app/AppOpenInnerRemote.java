@@ -24,7 +24,7 @@ public interface AppOpenInnerRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Open successfully")})
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping(value = "/innerapi/v1/app/open")
+  @PostMapping(value = "/innerapi/v1/appopen")
   ApiLocaleResult<IdKey<Long, Object>> open(@Valid @RequestBody AppOpenDto dto);
 
   @Operation(summary = "Renewal the opened application.", operationId = "app:open:renew:inner")
@@ -33,14 +33,14 @@ public interface AppOpenInnerRemote {
       @ApiResponse(responseCode = "404", description = "Resource not found")
   })
   @ResponseStatus(HttpStatus.CREATED)
-  @PatchMapping(value = "/innerapi/v1/app/open/renew")
+  @PatchMapping(value = "/innerapi/v1/appopen/renew")
   ApiLocaleResult<?> renew(@Valid @RequestBody AppOpenRenewDto dto);
 
   @Operation(summary = "Cancel the opened application.", operationId = "app:open:cancel:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Cancel successfully")})
   @ResponseStatus(HttpStatus.CREATED)
-  @DeleteMapping(value = "/innerapi/v1/app/open/cancel")
+  @DeleteMapping(value = "/innerapi/v1/appopen/cancel")
   ApiLocaleResult<?> cancel(@Valid @RequestBody AppOpenCancelDto dto);
 
 }

@@ -23,7 +23,6 @@ module.exports = {
         xl: { max: '1280px' },
         lg: { max: '1024px' }
       },
-
       spacing: {
         '1/3': '33.33%',
         '11/12': '92%',
