@@ -17,9 +17,9 @@ const preventDefaultListener = (e) => {
     </div>
     <div class="layout-inner-container">
       <div class="img-front">
-        <div class="title">AngusTester</div>
+        <div class="title">AngusGM</div>
         <div class="content">
-          帮助软件研发团队高效且可持续地开展软件研发和测试活动，同时满足客户敏捷研发和测试的要求。
+          统一资源认证与授权中心 ▪ 开启安全和资源共享、以及基础资源统一化管理！
         </div>
         <img
           src="./assets/sign-in.svg"
