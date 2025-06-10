@@ -75,23 +75,10 @@ function start () {
     fs.writeFileSync(resolve(`../public/meta/env.${deployEnv}`), deployEnvContent, 'utf8');
   }
 
-  // 5. Delete all nginx configuration files under public/
-  if (deployEnv === 'priv') { // Not configuring Nginx in a private environment
-    const nginxFileNames = allEnv.map(item => {
-      return `nginx_${item}_gm`;
-    });
-    for (let i = 0, len = nginxFileNames.length; i < len; i++) {
-      const _path = resolve('../public/' + nginxFileNames[i] + '.conf');
-      if (fs.existsSync(_path)) {
-        fs.unlinkSync(_path);
-      }
-    }
-  }
-
-  // 6. Execute a dynamically generated npm script command to trigger the Vite build tool for deploy privatization environment build workflows
+  // 5. Execute a dynamically generated npm script command to trigger the Vite build tool for deploy privatization environment build workflows
   execSync(`npm run vite:build:${deployEnv}`, { stdio: 'inherit' });
 
-  // 7. Package compiled static resources and modified configurations
+  // 6. Package compiled static resources and modified configurations
   if (zipDist) {
     const source = './dist';
     const dest = 'dist.zip';

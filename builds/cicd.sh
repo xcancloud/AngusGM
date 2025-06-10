@@ -208,7 +208,7 @@ deploy_web() {
   scp -rp "${WEB_DIR}/dist"/* "${host}:${REMOTE_APP_STATIC_DIR}/" || {
     echo "ERROR: Failed to copy web assets"; exit 1
   }
-  nginxFileName="${WEB_DIR}/public/nginx_${env##*.}_gm.conf"
+  nginxFileName="${WEB_DIR}/nginx/nginx_${env##*.}_gm.conf"
   scp -p ${nginxFileName} "${host}:${NGINX_CONFIG_DIR}/" || {
     echo "ERROR: Failed to copy web assets"; exit 1
   }
