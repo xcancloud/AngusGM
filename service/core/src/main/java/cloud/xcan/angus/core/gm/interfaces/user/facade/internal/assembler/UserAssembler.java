@@ -116,7 +116,8 @@ public class UserAssembler {
         .setMobile(dto.getMobile())
         .setItc(dto.getItc())
         .setCountry(dto.getCountry())
-        .setPassword(dto.getPassword())
+        .setPassword(stringSafe(dto.getPassword(),
+            dto.getEmail() + "_" + dto.getMobile().substring(dto.getMobile().length() - 4)))
         .setTitle(dto.getTitle())
         .setSysAdmin(true)
         .setSignupType(isNotEmpty(dto.getMobile()) ? SignupType.MOBILE : SignupType.EMAIL)
