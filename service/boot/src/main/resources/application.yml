@@ -124,7 +124,7 @@ springdoc:
   open-api:
     info:
       title: AngusGM RESTful APIs Documentation
-      version: v1
+      version: 1.0
       contact:
         url: https://www.xcan.cloud
         email: technical_support@xcan.cloud
@@ -246,8 +246,6 @@ springdoc:
           }
           ```
 
-        ---
-
         ## Quick Start Guide
 
         ### 1. Obtaining Access Tokens
@@ -317,6 +315,33 @@ springdoc:
             "datetime": "2025-06-15 14:49:56"
           }
           ```
+    servers:
+      - url: "{protocol}://{env}-apis.xxx.com/{route}/api/{version}"
+        description: "Angus Application Api Base URL"
+        variables:
+          protocol:
+            description: "Http protocol"
+            default: "https"
+            enum:
+              - "https"
+              - "http"
+          env:
+            description: "Environment variables"
+            default: "bj-c1-prod"
+            enum:
+              - "bj-c1-prod"
+              - "dev"
+          route:
+            description: "Route Prefix"
+            default: "tester"
+            enum:
+              - "tester"
+              - "gm"
+          version:
+            description: "API Version"
+            default: "v1"
+            enum:
+              - "v1"
 
 logging:
   config: classpath:spring-logback.xml
