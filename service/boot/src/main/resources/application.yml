@@ -316,7 +316,7 @@ springdoc:
           }
           ```
     servers:
-      - url: "{protocol}://{env}-apis.xxx.com/{route}/api/{version}"
+      - url: "{protocol}://{env}-apis.xcan.cloud/{route}/api/{version}"
         description: "Angus Application Api Base URL"
         variables:
           protocol:
