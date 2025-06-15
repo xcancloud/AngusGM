@@ -123,13 +123,200 @@ springdoc:
     tags-sorter: alpha
   open-api:
     info:
-      title: AngusGM RESTFul OpenAPI Documentation
+      title: AngusGM RESTful APIs Documentation
+      version: v1
+      contact:
+        url: https://www.xcan.cloud
+        email: technical_support@xcan.cloud
+      license:
+        name: GPL-3.0
+        url: https://github.com/xcancloud/AngusGM/blob/main/LICENSE
       description: >
-        AngusGM OpenAPI Documentation is a comprehensive, standards-compliant technical reference 
-        that provides detailed specifications for all API endpoints, including authentication methods, 
-        request/response schemas (with JSON/XML examples), HTTP status codes, error handling patterns,
-        and interactive testing capabilities through Swagger UI integration, designed to empower developers 
-        with version-controlled documentation for seamless third-party system integration.
+        ## API Specification
+        
+        AngusGM is built on **RESTful design principles** and strictly adheres to the [OpenAPI 3.0](https://swagger.io/specification/v3/) specification format.
+
+        ### 1. Protocol Specification
+        
+        - **Mandatory HTTPS Usage**  
+          APIs are always served over HTTPS to ensure secure data transmission.  
+          > **Note**: Private deployment customers may not have security certificates configured and require separate handling.
+
+        - **API Version Management**  
+          Version numbers are embedded in URL paths:  
+          ```
+          /api/v1/resource
+          /api/v2/resource
+          ```
+
+        ### 2. Resource Naming Convention
+        
+        - Uniformly use **lowercase letters** or **lower camel case naming**  
+        - Examples:  
+          ```
+          /user
+          /productCategories
+          /orderItems
+          ```
+
+        ### 3. HTTP Method Specification
+          | Method      | Description                              | Success Code | Example                   |
+          |-------------|------------------------------------------|--------------|---------------------------|
+          | **GET**     | Retrieve resources                       | 200          | `GET /users`              |
+          | **POST**    | Create resources                         | 201          | `POST /users`             |
+          | **PUT**     | Replace entire resource (create if absent)| 200          | `PUT /users/{id}`         |
+          | **PATCH**   | Partial resource update                  | 200          | `PATCH /users/{id}`       |
+          | **DELETE**  | Delete resources                         | 204          | `DELETE /users/{id}`      |
+        
+        **Special Operation Patterns** - Use verbs/adjectives for granular operations:  
+          ```
+          PATCH /users/{id}/enabled   # Enable user
+          POST /orders/{id}/cancel    # Cancel order
+          ```
+
+        ### 4. Security Authentication
+        
+        **OAuth 2.0 Authentication** - Protected resources require authentication header:  
+        
+        ```
+        Authorization: Bearer <access_token>
+        ```
+
+        ### 5. Request Parameter Specification
+        
+        #### Request Headers
+          ```
+          Content-Type: application/json
+          Accept: application/json
+          Authorization: Bearer xxxxxxxxxxxx
+          ```
+
+        #### Query Parameters
+          | Parameter Type | Format Example                      | Description          |
+          |----------------|-------------------------------------|----------------------|
+          | Pagination     | `?pageNo=2&pageSize=20`             | Page number and size |
+          | Sorting        | `?orderBy=createdDate&orderSort=DESC` | Sort field and direction |
+          | Filtering      | `?status=active&role=admin`         | Field filters        |
+        
+        #### Request Body (JSON)
+          ```json
+          {
+            "name": "John Doe",
+            "email": "john@example.com",
+            "role": "member",
+            "preferences": {
+              "notifications": true,
+              "theme": "dark"
+            }
+          }
+          ```
+
+        ### 6. Response Specification
+        
+        #### Status Codes
+          | Code | Meaning                          |
+          |------|----------------------------------|
+          | 200  | OK - Request succeeded           |
+          | 201  | Created - Resource created       |
+          | 204  | No Content - Success, no content |
+          | 400  | Bad Request - Client error       |
+          | 401  | Unauthorized - Not authenticated |
+          | 403  | Forbidden - Access denied        |
+          | 404  | Not Found - Resource not exist   |
+          | 429  | Too Many Requests - Rate limited |
+          | 500  | Internal Server Error - Server failure |
+        
+        #### Response Body Structure
+          ```json
+          {
+            "code": "S",
+            "msg": "Operation succeeded",
+            "data": {
+              "total": 42,
+              "list": [
+                {
+                  "id": "301222970049691648",
+                  "username": "U20250628001287",
+                  "email": "user@example.com"
+                }
+              ]
+            },
+            "datetime": "2025-06-15 14:49:56",
+            "ext": {}
+          }
+          ```
+
+        ---
+
+        ## Quick Start Guide
+
+        ### 1. Obtaining Access Tokens
+        
+        #### System Access Token
+          **Use Case**: System-to-system integration  
+          **Acquisition Process**:
+          1. Log in to AngusGM application
+          2. Navigate to: **System** → **System Tokens**
+          3. Create new token:
+             - Enter token name
+             - Set permission scope
+             - Configure expiration time
+          4. Click **Create Token** to generate new credentials
+  
+          > **Note**: System tokens have full API permissions without data restrictions.
+
+        #### User Access Token
+          **Use Case**: User-level API operations  
+          **Acquisition Process**:
+          1. Log in to AngusGM application
+          2. Access: **User Profile** → **Access Tokens**
+          3. Create new token:
+             - Verify user password
+             - Set token name
+             - Configure validity period
+          4. Click **Create Token** to generate credentials
+  
+          > **Note**: User tokens inherit the user's API permissions and data access rights.
+
+        ### 2. API Service Endpoints
+          | Deployment Type   | Service Endpoint                     |
+          |-------------------|--------------------------------------|
+          | SaaS Cloud Edition| `https://bj-c1-prod-apis.xcan.cloud/gm` |
+          | Private Deployment| `http://GM_HOST:GM_PORT` (default)   |
+          |                   | Or configured via `GM_APIS_URL_PREFIX` |
+
+        ### 3. API Call Example
+          ```bash
+          curl -i 'https://bj-c1-prod-apis.xcan.cloud/gm/api/v1/user/search?pageNo=1&pageSize=10' \
+            -H 'Accept: application/json'
+            -H 'Authorization: Bearer 7RProMAjgCr40gMgrsnRROvMXHrXrDrzwqo7ti1V2ZXc6bjoWvVEOTkjbQnLAxMTi5fJrnET' 
+          ```
+
+        **Response Example**:
+          ```http
+          HTTP/1.1 200 OK
+          Date: Sun, 15 Jun 2025 06:49:56 GMT
+          Content-Type: application/json
+          XC-Request-Id: 34acb65c2c484188a2f9f3a3f4ca3d1f
+  
+          {
+            "code": "S",
+            "msg": "Success",
+            "data": {
+              "total": "1",
+              "list": [
+                {
+                  "id": "301222970049691648",
+                  "username": "U20250628001287",
+                  "fullName": "Zhang San",
+                  "email": "user@example.com",
+                  "createdDate": "2025-06-12 11:19:21"
+                }
+              ]
+            },
+            "datetime": "2025-06-15 14:49:56"
+          }
+          ```
 
 logging:
   config: classpath:spring-logback.xml
