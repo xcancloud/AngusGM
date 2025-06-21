@@ -116,7 +116,7 @@ INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, 
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
                                 VALUES (3, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'UserGroup', 1, 0, 1, 200, 1, 2000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
-                                VALUES (4, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'Dept', 1, 0, 1, 500, 1, 20000, -1, :TENANT_ID);
+                                VALUES (4, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'Dept', 1, 0, 1, 200, 1, 20000, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)
                                 VALUES (5, 'AngusGM', 'XCAN-ANGUSGM.BOOT', 'DeptLevel', 1, 0, 1, 5, 1, 10, -1, :TENANT_ID);
 INSERT INTO `c_setting_tenant_quota` (`id`, `app_code`, `service_code`, `name`, `allow_change`, `license_ctrl`, `calc_remaining`, `quota`, `min`, `max`, `capacity`, `tenant_id`)

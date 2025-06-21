@@ -1463,6 +1463,7 @@ export default {
       expand: '展开',
       collapse: '收起',
       nameLabel: '策略名称',
+      codeLabel: '策略编码',
       namePlaceholder: '限制1-100个字符',
       scopeLabel: '作用范围',
       appLabel: '选择应用',

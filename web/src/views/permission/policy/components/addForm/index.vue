@@ -342,7 +342,7 @@ defineExpose({
               size="small" />
           </FormItem>
           <FormItem
-            :label="t('code')"
+            :label="t('permissionsStrategy.add.codeLabel')"
             name="code"
             class="w-1/2">
             <Input
