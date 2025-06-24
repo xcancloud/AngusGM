@@ -9,6 +9,7 @@ import static cloud.xcan.angus.core.spring.env.AbstractEnvLoader.appHomeDir;
 import static cloud.xcan.angus.core.spring.env.AbstractEnvLoader.envs;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getFinalTenantId;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getFinalTenantName;
+import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getGMApisUrlPrefix;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getGMWebsite;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getInstallGMHost;
 import static cloud.xcan.angus.core.spring.env.ConfigurableApplicationAndEnvLoader.getInstallGMPort;
@@ -126,7 +127,7 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
     envs.put(GM_HOST, getInstallGMHost());
     envs.put(GM_PORT, getInstallGMPort());
 
-    envs.put(GM_APIS_URL_PREFIX, getGMWebsite());
+    envs.put(GM_APIS_URL_PREFIX, getGMApisUrlPrefix());
     envs.put(STORAGE_FILES_PROXY_ADDRESS, getGMWebsite());
   }
 
