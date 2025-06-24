@@ -107,6 +107,8 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
       throws Exception {
     // Whether to start the installation; skip execution if it is not enabled installation or a private edition.
     if (appEdition.isPrivatization()) {
+      System.out.println("Privatization enabled and configure application-");
+
       productInfo = getProductInfo();
 
       installApps.addAll(Arrays.stream(getString(INSTALL_APPS, "").trim().split(","))
