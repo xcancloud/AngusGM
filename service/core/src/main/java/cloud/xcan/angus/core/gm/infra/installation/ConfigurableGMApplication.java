@@ -127,8 +127,13 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
     envs.put(GM_HOST, getInstallGMHost());
     envs.put(GM_PORT, getInstallGMPort());
 
+    String gmApisUrlPrefix = getGMApisUrlPrefix();
     envs.put(GM_APIS_URL_PREFIX, getGMApisUrlPrefix());
-    envs.put(STORAGE_FILES_PROXY_ADDRESS, getGMWebsite());
+    System.out.println("Set GM_APIS_URL_PREFIX to " + gmApisUrlPrefix);
+
+    String gmWebsite = getGMWebsite();
+    envs.put(STORAGE_FILES_PROXY_ADDRESS, gmWebsite);
+    System.out.println("Set GM_WEBSITE to " + gmApisUrlPrefix);
   }
 
   private void installApplication() throws Exception {
