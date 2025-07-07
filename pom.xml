@@ -37,6 +37,36 @@
   <properties>
     <archive.name>gm</archive.name>
     <hump.name>AngusGM</hump.name>
-    <docker.image.name>angusgm</docker.image.name>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-specific-files</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/dist</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>docker</directory>
+                  <includes>
+                    <include>docker-cicd.sh</include>
+                    <include>Dockerfile</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
