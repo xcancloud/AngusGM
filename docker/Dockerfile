@@ -40,7 +40,7 @@ VOLUME ["${APP_HOME}/conf", "${APP_HOME}/data", "${APP_HOME}/logs", "${APP_HOME}
 EXPOSE ${GM_PORT}
 
 # Health check configuration
-HEALTHCHECK --interval=30s --timeout=3s \
+HEALTHCHECK --interval=15s --timeout=3s \
   CMD wget -qO- http://localhost:${GM_PORT}/actuator/health || exit 1
 
 # Application entry point
