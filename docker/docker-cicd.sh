@@ -20,24 +20,29 @@ RELEASE_DIR=${APP_PACKAGE_FILE}
 
 # Check if release zip exists and handle extraction
 if [ -f "$RELEASE_FILE" ]; then
-    echo "RELEASE FILE FOUND: $RELEASE_FILE"
+    echo "Release file found: $RELEASE_FILE"
 
     # Clean existing directory if present
     if [ -d "$RELEASE_DIR" ]; then
-        echo "CLEANING existing release directory"
+        echo "Cleaning existing release directory"
         rm -rf "$RELEASE_DIR"
     fi
 
     # Create new directory and extract zip contents
-    echo "EXTRACTING TO: $RELEASE_DIR"
+    echo "Extracting to: $RELEASE_DIR"
     unzip -qo "$RELEASE_FILE" -d "$RELEASE_DIR"
 
     # Navigate into release directory for Docker operations
-    echo "WORKING IN DIRECTORY: $(pwd)"
+    echo "Working in directory: $(pwd)"
 else
-    echo "RELEASE FILE NOT FOUND: $RELEASE_FILE"
-    echo "PROCEEDING with current directory contents"
+    echo "Release file not found: $RELEASE_FILE"
+    echo "Proceeding with current directory contents"
 fi
+
+cp -rp $RELEASE_DIR/conf $RELEASE_DIR/default-conf
+cp -rp $RELEASE_DIR/plugins $RELEASE_DIR/default-plugins
+rm -rf $RELEASE_DIR/conf $RELEASE_DIR/plugins
+mkdir -p $RELEASE_DIR/conf $RELEASE_DIR/plugins
 
 # Configure image parameters
 IMAGE_NAME0="xcancloud/@hump.name@-@editionName@"  # Registry image identifier
@@ -45,16 +50,16 @@ IMAGE_NAME=$(echo "$IMAGE_NAME0" | tr '[:upper:]' '[:lower:]')
 IMAGE_VERSION="@project.version@"                 # Semantic version from build
 
 # Build Docker image with current directory context
-echo "BUILDING: $IMAGE_NAME:$IMAGE_VERSION"
+echo "Building: $IMAGE_NAME:$IMAGE_VERSION"
 docker build -f ./Dockerfile -t "$IMAGE_NAME:$IMAGE_VERSION" .
 
 # Push version-tagged image to registry
-echo "PUBLISHING: $IMAGE_NAME:$IMAGE_VERSION"
+echo "Publishing: $IMAGE_NAME:$IMAGE_VERSION"
 docker push "$IMAGE_NAME:$IMAGE_VERSION"
 
 # Create and push 'latest' tag for most recent version
-echo "PUBLISHING: $IMAGE_NAME:latest"
+echo "Publishing: $IMAGE_NAME:latest"
 docker tag "$IMAGE_NAME:$IMAGE_VERSION" "$IMAGE_NAME:latest"
 docker push "$IMAGE_NAME:latest"
 
-echo "SUCCESS: Image published with version [$IMAGE_VERSION] and 'latest' tag"
+echo "Success: Image published with version [$IMAGE_VERSION] and 'latest' tag"

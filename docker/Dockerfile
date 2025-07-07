@@ -20,8 +20,7 @@ ENV GM_PORT=8802
 # Define application directory and create non-root user
 ENV APP_HOME=/opt/AngusGM
 RUN adduser -D angus && \
-    mkdir -p ${APP_HOME}/conf \
-             ${APP_HOME}/plugins && \
+    mkdir -p ${APP_HOME} && \
     chown -R angus:angus ${APP_HOME}
 
 # Copy application files from builder stage
@@ -45,4 +44,4 @@ HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget -qO- http://localhost:${GM_PORT}/actuator/health || exit 1
 
 # Application entry point
-ENTRYPOINT ["./startup-gm.sh"]
+CMD ["./startup-gm.sh", "--daemon=false"]

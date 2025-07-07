@@ -42,7 +42,6 @@
     <fileSet>
       <directory>${project.parent.basedir}/service/conf</directory>
       <includes>
-        <include>.priv.env</include>
         <include>.priv-template.env</include>
         <include>${archive.name}-logback.xml</include>
       </includes>

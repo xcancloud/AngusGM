@@ -2,13 +2,16 @@
 
 # ---------------------------------------------------------------------------
 # Start script for the angus application (Initialize by Maven).
-# Usage: ./startup-@archive.name@.sh [debug]
+# Usage: ./startup-@archive.name@.sh [--daemon] [--debug]
 # Author: XiaoLong Liu
 # ---------------------------------------------------------------------------
 
 # Init java environment
 initJdk(){
-  . ./init-jdk.sh
+  if [ -z "${JAVA_HOME}" ]; then
+    . ./init-jdk.sh
+  fi
+
   if [ -z "${JAVA_HOME}" ]; then
     echo "JAVA_HOME is not set"
     exit 2
@@ -33,8 +36,27 @@ initAppDir(){
   if [ -z "$APP_CONF_DIR" ] ; then
       APP_CONF_DIR="$APP_HOME"/conf
       APP_CONF_LOG_FILE="$APP_CONF_DIR"/@archive.name@-logback.xml
+
+      # If the configuration directory is empty, copy from the default configuration (In docker)
+      if [ -z "$(ls -A ${APP_CONF_DIR})" ]; then
+          echo "Initialize the configuration files by copy default-conf ..."
+          cp -rp ${APP_HOME}/default-conf/* ${APP_HOME}/conf
+          cp -rp ${APP_HOME}/default-conf/.priv* ${APP_HOME}/conf
+      fi
   fi
   echo "Conf Dir: $APP_CONF_DIR"
+
+  # Define plugins path
+  if [ -z "$PLUGIN_DIR" ] ; then
+      PLUGIN_DIR="$APP_HOME"/plugins
+
+      # If the plugins directory is empty, copy from the default plugins (In docker)
+      if [ -z "$(ls -A ${PLUGIN_DIR})" ]; then
+          echo "Initialize the plugin files by copy default-plugins ..."
+          cp -rp ${APP_HOME}/default-plugins/* ${APP_HOME}/plugins
+      fi
+  fi
+  echo "Plugin Dir: $PLUGIN_DIR"
 
   # Define the console log path for the application
   if [ -z "$APP_LOG_DIR" ] ; then
@@ -167,17 +189,29 @@ runApp(){
     JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(get_local_ip):$(generate_random_port)"
   fi
 
-  nohup ${JAVA_HOME}/bin/java -jar $JAVA_OPTS \
-    -DHOME_DIR=$APP_HOME \
-    -DCONF_DIR=$APP_CONF_DIR \
-    -DLOGS_DIR=$APP_LOG_DIR \
-    -DPLUGIN_DIR=$APP_HOME/plugins \
-    -Dlogback.configurationFile=$APP_CONF_LOG_FILE \
-    -Djava.io.tmpdir=$APP_TMPDIR \
-   $APP_HOME/$EXECUTABLE >> "$APP_CONSOLE_LOG" 2>&1 &
-  echo $! > "$APP_PID"
+  if [ "$DAEMON_MODE" = "true" ]; then
+      nohup ${JAVA_HOME}/bin/java -jar $JAVA_OPTS \
+        -DHOME_DIR=$APP_HOME \
+        -DCONF_DIR=$APP_CONF_DIR \
+        -DLOGS_DIR=$APP_LOG_DIR \
+        -DPLUGIN_DIR=$PLUGIN_DIR \
+        -Dlogback.configurationFile=$APP_CONF_LOG_FILE \
+        -Djava.io.tmpdir=$APP_TMPDIR \
+       $APP_HOME/$EXECUTABLE >> "$APP_CONSOLE_LOG" 2>&1 &
+      echo $! > "$APP_PID"
 
-  echo "@hump.name@ started, PID=$!"
+      echo "@hump.name@ started, PID=$!"
+  else
+     ${JAVA_HOME}/bin/java -jar $JAVA_OPTS \
+      -DHOME_DIR=$APP_HOME \
+      -DCONF_DIR=$APP_CONF_DIR \
+      -DLOGS_DIR=$APP_LOG_DIR \
+      -DPLUGIN_DIR=$PLUGIN_DIR \
+      -Dlogback.configurationFile=$APP_CONF_LOG_FILE \
+      -Djava.io.tmpdir=$APP_TMPDIR \
+     $APP_HOME/$EXECUTABLE
+  fi
+
 }
 
 ### Main Flow ###
@@ -187,11 +221,25 @@ CURRENT_HOME=`dirname "$0"`
 [ -z "$APP_HOME" ] && APP_HOME=`cd "$CURRENT_HOME" >/dev/null; pwd`
 echo "App Home: $APP_HOME"
 
+DAEMON_MODE=true
 DEBUG_MODE=false
 while [ $# -gt 0 ]; do
     case "$1" in
-        debug) DEBUG_MODE=true ;;
-        *)     break ;;
+        --daemon=*)
+            DAEMON_MODE="${1#*=}"
+            ;;
+        --daemon)
+            DAEMON_MODE=true
+            ;;
+        --debug=*)
+            DEBUG_MODE="${1#*=}"
+            ;;
+        --debug)
+            DEBUG_MODE=true
+            ;;
+        *)
+            echo "Warning: Ignore parameter '$1'"
+            ;;
     esac
     shift
 done
