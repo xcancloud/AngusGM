@@ -1,0 +1,27 @@
+services:
+  angusgm:
+    image: xcancloud/angusgm-enterprise:1.0.0
+    container_name: angusgm
+    restart: unless-stopped
+    volumes:
+      - ./gm/conf:/opt/AngusGM/conf
+      - ./gm/data:/opt/AngusGM/data
+      - ./gm/logs:/opt/AngusGM/logs
+      - ./gm/plugins:/opt/AngusGM/plugins
+      - ./gm/tmp:/opt/AngusGM/tmp
+    ports:
+      - "8802:8802"
+    networks:
+      - angus-network
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+
+networks:
+  angus-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

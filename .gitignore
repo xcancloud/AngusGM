@@ -32,3 +32,12 @@ build/
 nbbuild/
 nbdist/
 .nb-gradle/
+/docker/compose/mysql/
+/docker/compose/nginx/conf.d
+/docker/compose/nginx/logs
+/docker/compose/redis/
+/docker/compose/gm/data/
+/docker/compose/gm/logs/
+/docker/compose/gm/plugins/
+/docker/compose/gm/tmp/
+/docker/compose/gm/conf/.priv.env

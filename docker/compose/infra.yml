@@ -1,0 +1,120 @@
+# mkdir -p {nginx/conf.d,nginx/logs,mysql/data,mysql/conf,redis/data,redis/conf}
+# docker compose up -d
+services:
+  nginx-config-generator:
+    image: xcancloud/config-generator:1.0.0
+    container_name: nginx-config-generator
+    volumes:
+      - .:/workdir
+    environment:
+      ENV_FILE: "/workdir/.env"
+      INPUT_FILE_PATHS: "/workdir/templates/nginx/gm.conf"
+      OUTPUT_PATH: "/workdir/nginx/conf.d"
+      FULL_SUBSTITUTION: false
+    restart: "no"
+  nginx:
+    image: nginx:1.27
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      #- "443:443"
+    depends_on:
+      - nginx-config-generator
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      #- ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/logs:/var/log/nginx
+    networks:
+      - angus-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+
+  mysql:
+    image: percona/percona-server:5.7.34-37
+    container_name: mysql7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Angus123}
+      MYSQL_DATABASE: ${MYSQL_APP_DATABASE:-angus}
+      TZ: ${TZ:-UTC}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=1000
+      - --innodb_buffer_pool_size=1G
+      - --innodb_log_file_size=256M
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
+      #- ./mysql-init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - angus-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+
+  redis-config-generator:
+    image: xcancloud/config-generator:1.0.0
+    container_name: redis-config-generator
+    volumes:
+      - .:/workdir
+    environment:
+      ENV_FILE: "/workdir/.env"
+      INPUT_FILE_PATHS: "/workdir/templates/redis/redis.conf"
+      OUTPUT_PATH: "/workdir/redis/conf"
+      FULL_SUBSTITUTION: false
+    restart: "no"
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis7
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --requirepass ${REDIS_PASSWORD:-Angus123}
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    depends_on:
+      - redis-config-generator
+    networks:
+      - angus-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+
+networks:
+  angus-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
