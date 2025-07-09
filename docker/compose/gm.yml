@@ -1,27 +1,23 @@
+# mkdir -p /opt/AngusGM && cd /opt/AngusGM
+# mkdir /opt/AngusGM/{conf,data,logs,plugins,tmp}
+# docker compose -f gm.yml up -d
 services:
   angusgm:
     image: xcancloud/angusgm-enterprise:1.0.0
     container_name: angusgm
     restart: unless-stopped
     volumes:
-      - ./gm/conf:/opt/AngusGM/conf
-      - ./gm/data:/opt/AngusGM/data
-      - ./gm/logs:/opt/AngusGM/logs
-      - ./gm/plugins:/opt/AngusGM/plugins
-      - ./gm/tmp:/opt/AngusGM/tmp
+      - ./conf:/opt/AngusGM/conf
+      - ./data:/opt/AngusGM/data
+      - ./logs:/opt/AngusGM/logs
+      - ./plugins:/opt/AngusGM/plugins
+      - ./tmp:/opt/AngusGM/tmp
     ports:
       - "8802:8802"
-    networks:
-      - angus-network
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 65535
-        hard: 65535
-
-networks:
-  angus-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+    environment:
+      TZ: ${TIMEZONE:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8802/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -353,12 +353,6 @@ logging:
   file:
     path: ${log.dir:logs}
 
-feign:
-  okhttp:
-    enabled: true
-  httpclient:
-    enabled: false
-
 management:
   endpoints:
     web:
