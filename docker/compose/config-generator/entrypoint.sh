@@ -16,9 +16,7 @@ if [[ ${#missing_vars[@]} -gt 0 ]]; then
     exit 1
 fi
 
-# Default to full substitution if not specified, so the default value is true.
-# If it is true, use the envsubst command in the script below to replace. Note: Non-existent variables will be replaced with empty;
-# otherwise, customize the replacement method to only replace variables in .env and only replace those in the format of ${env variable}.
+# Default to full substitution if not specified
 FULL_SUBSTITUTION=${FULL_SUBSTITUTION:-true}
 
 # Load environment variables
@@ -54,6 +52,17 @@ for file in $INPUT_FILE_PATHS; do
     else
         output_file="$OUTPUT_PATH"
     fi
+
+    # 关键优化：检查输出文件是否已存在
+    if [[ -e "$output_file" ]]; then
+        echo "Output file $output_file already exists, skipping"
+        continue
+    fi
+
+    # 确保输出目录存在
+    output_dir=$(dirname "$output_file")
+    mkdir -p "$output_dir"
+
     echo "Processing file: $file -> $output_file"
 
     if [[ "$FULL_SUBSTITUTION" == "true" ]]; then
@@ -80,9 +89,6 @@ for file in $INPUT_FILE_PATHS; do
             done
             echo "$line" >> "$temp_output"
         done < "$file"
-
-        output_dir=$(dirname "$output_file")
-        mkdir -p "$output_dir"
 
         # Atomically replace output file
         mv -f "$temp_output" "$output_file"

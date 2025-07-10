@@ -137,7 +137,7 @@ deploy_service() {
   ssh "$host" "cd ${REMOTE_APP_DIR} && cp -f ${REMOTE_APP_CONF_DIR}/.*.env conf/" || {
     echo "ERROR: Failed to copy env files"; exit 1
   }
-  ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh debug" || {
+  ssh "$host" "cd ${REMOTE_APP_DIR} && sh startup-gm.sh --debug" || {
     echo "ERROR: Failed to start service"; exit 1
   }
   sh builds/check-health.sh ${host} ${PORT} || {
