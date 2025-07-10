@@ -1,4 +1,4 @@
-# mkdir -p {nginx/conf.d,nginx/logs,mysql/data,mysql/conf,redis/data,redis/conf}
+# mkdir -p {nginx/conf.d,nginx/logs,mysql/data,mysql/conf,redis/data}
 # docker compose -f infra.yml up -d
 services:
   nginx-config-generator:

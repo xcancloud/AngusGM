@@ -1,5 +1,5 @@
 # mkdir -p /opt/AngusGM && cd /opt/AngusGM
-# mkdir -p {nginx/conf.d,nginx/logs,mysql/data,mysql/conf,redis/data,redis/conf}
+# mkdir -p {nginx/conf.d,nginx/logs,mysql/data,mysql/conf,redis/data}
 # mkdir -p gm/{data,logs,plugins,tmp}
 # docker compose -f gm-full.yml up -d
 services:
