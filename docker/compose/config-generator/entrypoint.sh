@@ -48,7 +48,12 @@ for file in $INPUT_FILE_PATHS; do
         continue
     fi
 
-    output_file="$OUTPUT_PATH/$(basename "$file")"
+    filename=$(basename "$file")
+    if [ -d "$OUTPUT_PATH" ]; then
+        output_file="$OUTPUT_PATH/$filename"
+    else
+        output_file="$OUTPUT_PATH"
+    fi
     echo "Processing file: $file -> $output_file"
 
     if [[ "$FULL_SUBSTITUTION" == "true" ]]; then
@@ -75,6 +80,9 @@ for file in $INPUT_FILE_PATHS; do
             done
             echo "$line" >> "$temp_output"
         done < "$file"
+
+        output_dir=$(dirname "$output_file")
+        mkdir -p "$output_dir"
 
         # Atomically replace output file
         mv -f "$temp_output" "$output_file"

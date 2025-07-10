@@ -10,7 +10,7 @@ services:
       - .:/workdir
     environment:
       ENV_FILE: "/workdir/.env"
-      INPUT_FILE_PATHS: "/workdir/templates/nginx"
+      INPUT_FILE_PATHS: "/workdir/templates/nginx/gm.conf"
       OUTPUT_PATH: "/workdir/nginx/conf.d"
       FULL_SUBSTITUTION: false
     restart: "no"
@@ -71,17 +71,6 @@ services:
       timeout: 5s
       retries: 10
 
-  redis-config-generator:
-    image: xcancloud/config-generator:1.0.0
-    container_name: redis-config-generator
-    volumes:
-      - .:/workdir
-    environment:
-      ENV_FILE: "/workdir/.env"
-      INPUT_FILE_PATHS: "/workdir/templates/redis/redis.conf"
-      OUTPUT_PATH: "/workdir/redis/conf"
-      FULL_SUBSTITUTION: false
-    restart: "no"
   redis:
     image: redis:7.0-alpine
     container_name: redis
