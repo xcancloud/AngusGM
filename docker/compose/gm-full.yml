@@ -10,7 +10,7 @@ services:
       - .:/workdir
     environment:
       ENV_FILE: "/workdir/.env"
-      INPUT_FILE_PATHS: "/workdir/templates/nginx/gm.conf"
+      INPUT_FILE_PATHS: "/workdir/templates/nginx"
       OUTPUT_PATH: "/workdir/nginx/conf.d"
       FULL_SUBSTITUTION: false
     restart: "no"
@@ -34,7 +34,7 @@ services:
       - angus-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/health"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 10
     ulimits:
@@ -67,7 +67,7 @@ services:
       - angus-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 10
 
@@ -100,7 +100,7 @@ services:
       - angus-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 10
 
@@ -138,7 +138,7 @@ services:
       - angus-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8802/actuator/health"]
-      interval: 30s
+      interval: 15s
       timeout: 5s
       retries: 3
 

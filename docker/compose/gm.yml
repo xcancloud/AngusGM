@@ -18,6 +18,6 @@ services:
       TZ: ${TIMEZONE:-UTC}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8802/actuator/health"]
-      interval: 30s
+      interval: 15s
       timeout: 5s
       retries: 3
