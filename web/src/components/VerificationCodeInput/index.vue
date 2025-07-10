@@ -79,7 +79,7 @@ const getCode = () => {
   }
 
   error.value = false;
-  http.post(action, params, { paramsType: props.sendType === 'mobile' }).catch(e => {
+  http.post(action, params).catch(e => {
     error.value = true;
     errorMessage.value = e.message || t('network-error');
     resetSecond();
