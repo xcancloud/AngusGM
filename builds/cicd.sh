@@ -189,7 +189,7 @@ npm_build () {
 
   echo "INFO: npm run build:env start"
   env0=${env##*.};
-  editionType0="${editionType##*.}"; editionType0="${editionType0^^}"
+  editionType0=$(echo "${editionType##*.}" | tr '[:lower:]' '[:upper:]')
   echo "INFO: npm build deployEnv=${env0} , editionType=${editionType0}"
   npm run build:env -- --env=${env0} --edition_type=${editionType0}
   if [ $? -ne 0 ]; then
@@ -258,8 +258,11 @@ ci_private_edition(){
 cd_by_module(){
   if [ -n "$hosts" ]; then
     echo "INFO: Starting deployment to hosts: ${hosts}"
-    IFS=',' read -ra HOST_LIST <<< "$hosts"
-    for host in "${HOST_LIST[@]}"; do
+
+    OLD_IFS="$IFS"
+    IFS=','
+
+    for host in $hosts; do
       if echo "$module" | grep -q "service"; then
         deploy_service
       fi
@@ -267,6 +270,8 @@ cd_by_module(){
         deploy_web
       fi
     done
+
+    IFS="$OLD_IFS"
   else
     echo "INFO: No hosts specified, skipping deployment"
   fi
@@ -275,10 +280,14 @@ cd_by_module(){
 cd_private_edition(){
   if [ -n "$hosts" ]; then
     echo "INFO: Starting deployment to hosts: ${hosts}"
-    IFS=',' read -ra HOST_LIST <<< "$hosts"
-    for host in "${HOST_LIST[@]}"; do
-        deploy_private_edition
+    OLD_IFS="$IFS"
+    IFS=','
+
+    for host in $hosts; do
+      deploy_private_edition
     done
+
+    IFS="$OLD_IFS"
   else
     echo "INFO: No hosts specified, skipping deployment"
   fi
