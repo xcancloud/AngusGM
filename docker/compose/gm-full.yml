@@ -123,11 +123,6 @@ services:
       TZ: ${TIMEZONE:-UTC}
     networks:
       - angus-network
-    healthcheck:
-      test: [ "CMD", "sh", "-c", "wget -q -O - http://127.0.0.1:8802/actuator/health | grep '\"status\":\"UP\"'" ]
-      interval: 15s
-      timeout: 5s
-      retries: 20
 
 networks:
   angus-network:
