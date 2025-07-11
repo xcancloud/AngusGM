@@ -26,7 +26,7 @@ timeout_end=$((start_time + TIMEOUT))
 echo "Checking service health (Timeout: ${TIMEOUT}s)..."
 
 # Health check loop
-while [[ $(date +%s) -lt $timeout_end ]]; do
+while [ $(date +%s) -lt $timeout_end ]; do
     # Get HTTP status code and response body in one call
     response=$(curl -s -w "\n%{http_code}" "$HEALTH_URL")
     http_code=$(echo "$response" | tail -n1)
