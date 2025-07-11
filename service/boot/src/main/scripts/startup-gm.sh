@@ -190,7 +190,7 @@ runApp(){
   fi
 
   if [ "$DAEMON_MODE" = "true" ]; then
-      nohup ${JAVA_HOME}/bin/java -Xms256m -Xmx512m -jar $JAVA_OPTS \
+      nohup ${JAVA_HOME}/bin/java -Xms256m -Xmx1024m -jar $JAVA_OPTS \
         -DHOME_DIR=$APP_HOME \
         -DCONF_DIR=$APP_CONF_DIR \
         -DLOGS_DIR=$APP_LOG_DIR \
