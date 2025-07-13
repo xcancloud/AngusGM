@@ -29,6 +29,8 @@ public class AuthPolicyDetailVo {
 
   private String description;
 
+  private String clientId;
+
   private Long appId;
 
   @NameJoinField(id = "appId", repository = "appRepo")

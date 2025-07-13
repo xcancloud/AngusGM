@@ -112,6 +112,7 @@ public class AuthPolicyAssembler {
         .setDefault0(policy.getDefault0())
         .setGrantStage(policy.getGrantStage())
         .setDescription(policy.getDescription())
+        .setClientId(policy.getClientId())
         .setAppId(policy.getAppId())
         .setEnabled(policy.getEnabled())
         .setTenantId(policy.getTenantId())
