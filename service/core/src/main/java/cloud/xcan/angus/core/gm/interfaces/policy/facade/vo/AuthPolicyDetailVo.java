@@ -50,4 +50,11 @@ public class AuthPolicyDetailVo {
 
   private LocalDateTime createdDate;
 
+  private Long lastModifiedBy;
+
+  @NameJoinField(id = "lastModifiedBy", repository = "commonUserBaseRepo")
+  private String lastModifiedByName;
+
+  private LocalDateTime lastModifiedDate;
+
 }
