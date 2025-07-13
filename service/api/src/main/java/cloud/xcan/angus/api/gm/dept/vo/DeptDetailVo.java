@@ -28,6 +28,8 @@ public class DeptDetailVo implements Serializable {
   @NameJoinField(id = "pid", repository = "commonDeptRepo")
   private String parentName;
 
+  private String parentLikeId;
+
   private Boolean hasSubDept;
 
   private Long tenantId;

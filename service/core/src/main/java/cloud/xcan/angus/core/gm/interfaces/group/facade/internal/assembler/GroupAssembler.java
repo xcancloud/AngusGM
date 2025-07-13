@@ -59,6 +59,8 @@ public class GroupAssembler {
         .setEnabled(group.getEnabled())
         .setCreatedDate(group.getCreatedDate())
         .setRemark(group.getRemark())
+        .setDirectoryId(group.getDirectoryId())
+        .setDirectoryGidNumber(group.getDirectoryGidNumber())
         .setTenantId(group.getTenantId())
         .setCreatedBy(group.getCreatedBy())
         .setCreatedDate(group.getCreatedDate())

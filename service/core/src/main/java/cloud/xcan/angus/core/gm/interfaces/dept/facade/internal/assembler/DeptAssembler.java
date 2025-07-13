@@ -68,6 +68,7 @@ public class DeptAssembler {
         .setCode(dept.getCode())
         .setName(dept.getName())
         .setPid(pidSafe(dept.getPid()))
+        .setParentLikeId(dept.getParentLikeId())
         .setLevel(dept.getLevel())
         .setHasSubDept(dept.getHasSubDept())
         .setTenantId(dept.getTenantId())
