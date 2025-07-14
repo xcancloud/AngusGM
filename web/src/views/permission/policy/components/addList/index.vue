@@ -224,22 +224,29 @@ const showTip = (id: string) => {
 </script>
 
 <template>
-  <Card :title="t('permissionsStrategy.added.title')" class="flex-1">
+  <Card class="flex-1">
+    <template #title>
+      <div class="flex items-center space-x-2">
+        <div>{{ t('permissionsStrategy.added.title') }}</div>
+        <Input
+          v-model:value="state.searchValue"
+          :placeholder="t('permissionsStrategy.added.searchPlaceholder')"
+          class="w-70"
+          size="small"
+          allowClear
+          @change="resetPageNoLoad">
+          <template #suffix>
+            <Icon
+              icon="icon-sousuo"
+              class="text-3 leading-3 text-theme-content cursor-pointer"
+              @click="resetPageNoLoad" />
+          </template>
+        </Input>
+      </div>
+    </template>
+
     <template #rightExtra>
-      <Input
-        v-model:value="state.searchValue"
-        :placeholder="t('permissionsStrategy.added.searchPlaceholder')"
-        class="w-70"
-        size="small"
-        allowClear
-        @change="resetPageNoLoad">
-        <template #suffix>
-          <Icon
-            icon="icon-sousuo"
-            class="text-3 leading-3 text-theme-content cursor-pointer"
-            @click="resetPageNoLoad" />
-        </template>
-      </Input>
+
       <IconRefresh
         class="ml-1"
         :loading="state.loading"

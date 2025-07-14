@@ -2,7 +2,7 @@
 import { ref, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Form, FormItem } from 'ant-design-vue';
-import { Modal, Input } from '@xcan-angus/vue-ui';
+import { Modal, Input, notification } from '@xcan-angus/vue-ui';
 
 import { dept } from '@/api';
 
@@ -52,6 +52,7 @@ const save = () => {
     if (error) {
       return;
     }
+    notification.success(t('editSuccess'));
     emit('save', params.name || '');
   });
 };
