@@ -1528,7 +1528,7 @@ export default {
         addSuccess: '添加成功',
         delConfirm: '是否确认删除该策略下的{name}？',
         delSuccess: '删除成功',
-        title: '授权{name}',
+        title: '已授权{name}',
         placeholder: '输入选择{name}',
         addBtn: '添加',
         noData: '暂无{name}数据～'

@@ -11,6 +11,6 @@ export default class Online {
   }
 
   offlineUser<T> (params: T): Promise<[Error | null, any]> {
-    return http.del(`${baseUrl}/online`, params, { dataType: true });
+    return http.post(`${baseUrl}/online/off`, params);
   }
 }

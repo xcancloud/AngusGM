@@ -68,7 +68,7 @@ const getList = async function () {
 
 const handleLogOut = async function (item: Online) {
   item.loading = true;
-  await online.offlineUser({ receiveObjectIds: [item.userId], receiveObjectType: 'USER' });
+  await online.offlineUser({ receiveObjectIds: [item.userId], receiveObjectType: 'USER', broadcast: false });
   item.loading = false;
   disabled.value = true;
   await getList();

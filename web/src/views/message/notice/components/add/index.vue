@@ -125,7 +125,7 @@ const submitForm = () => {
       if (error) {
         return;
       }
-      notification.success(t('sentSuccessfully'));
+      notification.success(t('successSubmit'));
       resetForm();
       router.push('/messages/notice');
     });
