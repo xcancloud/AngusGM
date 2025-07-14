@@ -19,7 +19,7 @@ const preventDefaultListener = (e) => {
       <div class="img-front">
         <div class="title">AngusGM</div>
         <div class="content">
-          统一资源认证与授权中心 ▪ 开启安全和资源共享、以及基础资源统一化管理！
+          统一资源认证与授权中心 ▪ 开启安全和资源共享 ▪ 基础资源统一化管理！
         </div>
         <img
           src="./assets/sign-in.svg"
