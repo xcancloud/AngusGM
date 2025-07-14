@@ -316,7 +316,7 @@ springdoc:
           }
           ```
     servers:
-      - url: "{protocol}://{env}-apis.xcan.cloud/{route}/api/{version}"
+      - url: "{protocol}://{env}-apis.xcan.cloud/{route}"
         description: "Angus Application Api Base URL"
         variables:
           protocol:
@@ -333,15 +333,9 @@ springdoc:
               - "dev"
           route:
             description: "Route Prefix"
-            default: "tester"
+            default: "gm"
             enum:
-              - "tester"
               - "gm"
-          version:
-            description: "API Version"
-            default: "v1"
-            enum:
-              - "v1"
 
 logging:
   config: classpath:spring-logback.xml
