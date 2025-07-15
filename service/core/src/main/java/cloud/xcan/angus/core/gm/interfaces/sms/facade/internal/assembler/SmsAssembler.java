@@ -14,7 +14,7 @@ import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.api.gm.sms.dto.SmsSendDto;
 import cloud.xcan.angus.core.gm.domain.sms.InputParam;
 import cloud.xcan.angus.core.gm.domain.sms.Sms;
-import cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.sign.SignSmsSendDto;
+import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.sign.SignSmsSendDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.SmsFindDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.channel.SmsChannelTestSendDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.SmsDetailVo;

@@ -19,7 +19,7 @@ import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.api.gm.email.dto.EmailSendDto;
 import cloud.xcan.angus.api.pojo.Attachment;
 import cloud.xcan.angus.core.gm.domain.email.Email;
-import cloud.xcan.angus.core.gm.interfaces.authuser.facade.dto.sign.SignEmailSendDto;
+import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.sign.SignEmailSendDto;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailFindDto;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailTestDto;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailDetailVo;

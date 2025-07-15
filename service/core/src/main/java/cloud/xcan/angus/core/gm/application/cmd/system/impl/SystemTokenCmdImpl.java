@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.application.cmd.system.impl;
 
 import static cloud.xcan.angus.api.commonlink.client.ClientSource.XCAN_SYS_TOKEN;
-import static cloud.xcan.angus.core.gm.application.cmd.client.impl.ClientSignCmdImpl.submitOauth2ClientSignInRequest;
-import static cloud.xcan.angus.core.gm.application.converter.ClientConverter.toSystemTokenToDomain;
+import static cloud.xcan.angus.core.gm.application.cmd.auth.impl.AuthClientSignCmdImpl.submitOauth2ClientSignInRequest;
+import static cloud.xcan.angus.core.gm.application.converter.AuthClientConverter.toSystemTokenToDomain;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.SYSTEM_TOKEN;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.CREATED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
@@ -15,7 +15,7 @@ import cloud.xcan.angus.api.commonlink.service.ServiceResource;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
-import cloud.xcan.angus.core.gm.application.cmd.client.ClientCmd;
+import cloud.xcan.angus.core.gm.application.cmd.auth.AuthClientCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.system.SystemTokenCmd;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
@@ -59,7 +59,7 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
   private SystemTokenQuery systemTokenQuery;
 
   @Resource
-  private ClientCmd clientCmd;
+  private AuthClientCmd clientCmd;
 
   @Resource
   private ApiQuery apiQuery;
