@@ -106,7 +106,7 @@ const submit = async () => {
     return;
   }
   notify.value++;
-  notification.success(t('sentSuccessfully'));
+  notification.success(t('submitSuccessfully'));
   router.push(`/messages/message?id=${res.data.id}`);
 };
 
