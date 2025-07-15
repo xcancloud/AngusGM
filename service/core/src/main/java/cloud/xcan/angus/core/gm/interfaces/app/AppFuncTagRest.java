@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppFuncTag", description = "Provides tags management operation of application function (including application, menus, button and panel)")
+@Tag(name = "AppFunctionTag", description = "Provides tags management operation of application function (including application, menus, button and panel)")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app/func")
