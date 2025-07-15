@@ -364,6 +364,7 @@ export default {
   sendContent: '发送内容',
   receivingPhone: '接收手机号',
   sentSuccessfully: '发送成功',
+  submitSuccessfully: '提交成功',
   sending: '发送中...',
   sendFailed: '发送失败',
   send: '发送',
