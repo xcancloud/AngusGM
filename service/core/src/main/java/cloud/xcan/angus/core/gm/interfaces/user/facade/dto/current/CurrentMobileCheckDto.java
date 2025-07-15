@@ -26,7 +26,7 @@ public class CurrentMobileCheckDto implements Serializable {
   @EnumPart(enumClass = SmsBizKey.class, allowableValues = {
       "PASSWORD_FORGET", "PASSWORD_UPDATE", "SIGN_CANCEL", "MODIFY_MOBILE", "BIND_MOBILE"
   })
-  @Schema(description = "Sms business type key.", example = "MODIFY_MOBILE",
+  @Schema(description = "Sms business type key", example = "MODIFY_MOBILE",
       allowableValues = {
           "PASSWORD_FORGET", "PASSWORD_UPDATE", "SIGN_CANCEL", "MODIFY_MOBILE", "BIND_MOBILE"
       }, requiredMode = RequiredMode.REQUIRED)
@@ -34,18 +34,18 @@ public class CurrentMobileCheckDto implements Serializable {
 
   @NotBlank
   @Mobile
-  @Schema(description = "User mobile.", example = "13813000000", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User mobile", example = "13813000000", requiredMode = RequiredMode.REQUIRED)
   private String mobile;
 
   @NotBlank
   @Length(max = MAX_COUNTRY_LENGTH)
-  @Schema(description = "User country code.", example = "CN", maxLength = MAX_COUNTRY_LENGTH,
+  @Schema(description = "User country code", example = "CN", maxLength = MAX_COUNTRY_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String country;
 
   @NotBlank
   @Length(max = MAX_VERIFICATION_CODE_LENGTH)
-  @Schema(description = "Sms verification code.", example = "778717", maxLength = MAX_VERIFICATION_CODE_LENGTH,
+  @Schema(description = "Sms verification code", example = "778717", maxLength = MAX_VERIFICATION_CODE_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String verificationCode;
 

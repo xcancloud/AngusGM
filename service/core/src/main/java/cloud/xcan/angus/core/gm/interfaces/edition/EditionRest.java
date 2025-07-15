@@ -26,7 +26,7 @@ public class EditionRest {
   @Resource
   private EditionFacade editionFacade;
 
-  @Operation(summary = "Query the installed and authorized edition of product.", operationId = "edition:installed:detail")
+  @Operation(summary = "Query the installed and authorized edition of product", operationId = "edition:installed:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/installed")
@@ -35,7 +35,7 @@ public class EditionRest {
     return ApiLocaleResult.success(editionFacade.installed(goodsCode));
   }
 
-  @Operation(summary = "Query the latest and upgradeable edition of product.", operationId = "edition:upgradeable:detail")
+  @Operation(summary = "Query the latest and upgradeable edition of product", operationId = "edition:upgradeable:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/upgradeable")

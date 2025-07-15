@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "EmailTemplate", description = "Standardizes email content creation through reusable "
-    + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency.")
+    + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency")
 @Validated
 @RestController
 @RequestMapping("/api/v1/email/template/")
@@ -33,7 +33,7 @@ public class EmailTemplateRest {
   @Resource
   private EmailTemplateFacade templateFacade;
 
-  @Operation(summary = "Update email template.", operationId = "email:template:update")
+  @Operation(summary = "Update email template", operationId = "email:template:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")})
   @PatchMapping(value = "/{id}")
@@ -44,7 +44,7 @@ public class EmailTemplateRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of email template.", operationId = "email:template:detail")
+  @Operation(summary = "Query the detail of email template", operationId = "email:template:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -54,7 +54,7 @@ public class EmailTemplateRest {
     return ApiLocaleResult.success(templateFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of email template.", operationId = "email:template:list")
+  @Operation(summary = "Query the list of email template", operationId = "email:template:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

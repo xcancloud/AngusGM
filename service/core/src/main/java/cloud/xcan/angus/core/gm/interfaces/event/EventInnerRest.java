@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "EventInner", description = "Used for external systems or services to submit event data programmatically.")
+@Tag(name = "EventInner", description = "Used for external systems or services to submit event data programmatically")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/event")
@@ -32,7 +32,7 @@ public class EventInnerRest {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(summary = "Add events.")
+  @Operation(summary = "Add events")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @PostMapping

@@ -21,26 +21,26 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class AppTagTargetFindDto extends PageQuery {
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Application tag id. It is required. Note: Value may be in the filter.",
+  @Schema(description = "Application tag id. It is required. Note: Value may be in the filter",
       requiredMode = RequiredMode.REQUIRED)
   private Long tagId;
 
   //@NotNull -> Required -> The value may be in the filter
   @Schema(description = "Application tag associated target type (APP/MENU/BUTTON/PANEL). "
-      + "It is required. Note: Value may be in the filter.", requiredMode = RequiredMode.REQUIRED)
+      + "It is required. Note: Value may be in the filter", requiredMode = RequiredMode.REQUIRED)
   private WebTagTargetType targetType;
 
-  @Schema(description = "Application tag associated target id.")
+  @Schema(description = "Application tag associated target id")
   private Long targetId;
 
-  @Schema(description = "Application tag associated target name.", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Application tag associated target name", maxLength = MAX_NAME_LENGTH)
   private String targetName;
 
-  @Schema(description = "The user id of association application tag.")
+  @Schema(description = "The user id of association application tag")
   private Long createdBy;
 
   @DateTimeFormat(pattern = DATE_FMT)
-  @Schema(description = "The date of association application tag.")
+  @Schema(description = "The date of association application tag")
   private LocalDateTime createdDate;
 
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "ServiceDiscovery", description = "Provides a unified entry for querying AngusDiscovery (Service Registration Center) services and instances information.")
+@Tag(name = "ServiceDiscovery", description = "Provides a unified entry for querying AngusDiscovery (Service Registration Center) services and instances information")
 @RestController
 @RequestMapping("/api/v1/service")
 public class ServiceDiscoveryRest {
@@ -23,7 +23,7 @@ public class ServiceDiscoveryRest {
   @Resource
   private DiscoveryClient discoveryClient;
 
-  @Operation(summary = "Query the services of AngusDiscovery.", operationId = "discovery:service:list")
+  @Operation(summary = "Query the services of AngusDiscovery", operationId = "discovery:service:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/discovery")
@@ -31,7 +31,7 @@ public class ServiceDiscoveryRest {
     return ApiLocaleResult.success(discoveryClient.getServices());
   }
 
-  @Operation(summary = "Query the instances of AngusDiscovery service.", operationId = "discovery:instances:list")
+  @Operation(summary = "Query the instances of AngusDiscovery service", operationId = "discovery:instances:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{serviceCode}/discovery/instances")

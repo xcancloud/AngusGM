@@ -14,10 +14,10 @@ import lombok.Setter;
 public class EventTemplateChannelReplaceDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Event template id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Event template id", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
-  @Schema(description = "Event template channel ids. If the value is empty, the event channels will be cleared.")
+  @Schema(description = "Event template channel ids. If the value is empty, the event channels will be cleared")
   private Set<Long> channelIds;
 
 }

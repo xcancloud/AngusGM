@@ -23,7 +23,7 @@ public class UserTokenAddDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(example = "User access token name. The identifier must be unique.",
+  @Schema(example = "User access token name. The identifier must be unique",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String name;
 
@@ -31,13 +31,13 @@ public class UserTokenAddDto {
    * @see AuthConstant#DEFAULT_TOKEN_EXPIRE_SECOND
    */
   @Future
-  @Schema(description = "Access token expire date, valid within `24` hours by default.",
+  @Schema(description = "Access token expire date, valid within `24` hours by default",
       example = "2025-06-28 19:00:00")
   private LocalDateTime expiredDate;
 
   @Password
   @NotNull
-  @Schema(example = "Current user password.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(example = "Current user password", requiredMode = RequiredMode.REQUIRED)
   private String password;
 
 }

@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "UserDirectory", description = "User directory service management for system LDAP unified authentication login.")
+@Tag(name = "UserDirectory", description = "User directory service management for system LDAP unified authentication login")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user/directory")
@@ -47,7 +47,7 @@ public class UserDirectoryRest {
   private UserDirectoryFacade userDirectoryFacade;
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Add user directory.", operationId = "user:directory:add")
+  @Operation(summary = "Add user directory", operationId = "user:directory:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -57,7 +57,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Replace user directory.", operationId = "user:directory:replace")
+  @Operation(summary = "Replace user directory", operationId = "user:directory:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -70,7 +70,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Update the sequence value and change the user directory synchronization order.", operationId = "user:directory:reorder")
+  @Operation(summary = "Update the sequence value and change the user directory synchronization order", operationId = "user:directory:reorder")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -82,7 +82,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Enable or disable user directory.", operationId = "user:directory:enabled")
+  @Operation(summary = "Enable or disable user directory", operationId = "user:directory:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -94,7 +94,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Synchronize the users and groups from user directories.", operationId = "user:directories:sync")
+  @Operation(summary = "Synchronize the users and groups from user directories", operationId = "user:directories:sync")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Synchronize successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -105,7 +105,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Synchronize the users and groups from user directory.", operationId = "user:directory:sync")
+  @Operation(summary = "Synchronize the users and groups from user directory", operationId = "user:directory:sync")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Synchronize successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -117,7 +117,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Test user directory configuration.", operationId = "user:directory:test")
+  @Operation(summary = "Test user directory configuration", operationId = "user:directory:test")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Test successfully")})
   @PostMapping("/test")
@@ -126,7 +126,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Delete user directory.", operationId = "user:directory:delete")
+  @Operation(summary = "Delete user directory", operationId = "user:directory:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping("/{id}")
@@ -138,7 +138,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Query the detail of user directory.", operationId = "user:directory:detail")
+  @Operation(summary = "Query the detail of user directory", operationId = "user:directory:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -149,7 +149,7 @@ public class UserDirectoryRest {
   }
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Query the list of user directory.", operationId = "user:directory:list")
+  @Operation(summary = "Query the list of user directory", operationId = "user:directory:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

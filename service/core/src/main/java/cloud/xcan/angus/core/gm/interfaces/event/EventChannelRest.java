@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "EventChannel", description = "Manage event notification channels such as Webhooks, WeChat robots, and DingTalk robots.")
+@Tag(name = "EventChannel", description = "Manage event notification channels such as Webhooks, WeChat robots, and DingTalk robots")
 @Validated
 @RestController
 @RequestMapping("/api/v1/event/channel")
@@ -37,7 +37,7 @@ public class EventChannelRest {
   @Resource
   private EventChannelFacade eventChannelFacade;
 
-  @Operation(summary = "Add receive event channel.", operationId = "event:channel:add")
+  @Operation(summary = "Add receive event channel", operationId = "event:channel:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Retrieved successfully")})
   @PostMapping
@@ -45,7 +45,7 @@ public class EventChannelRest {
     return ApiLocaleResult.success(eventChannelFacade.add(dto));
   }
 
-  @Operation(summary = "Replace receive event channel.", operationId = "event:channel:replace")
+  @Operation(summary = "Replace receive event channel", operationId = "event:channel:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -54,7 +54,7 @@ public class EventChannelRest {
     return ApiLocaleResult.success(eventChannelFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete receive event channel.", operationId = "event:channel:delete")
+  @Operation(summary = "Delete receive event channel", operationId = "event:channel:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Delete successfully")})
   @DeleteMapping("/{id}")
@@ -64,7 +64,7 @@ public class EventChannelRest {
     eventChannelFacade.delete(id);
   }
 
-  @Operation(summary = "Query the list of receive event channel type.", operationId = "event:channel:list")
+  @Operation(summary = "Query the list of receive event channel type", operationId = "event:channel:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/type/{channelType}")
@@ -73,7 +73,7 @@ public class EventChannelRest {
     return ApiLocaleResult.success(eventChannelFacade.channelList(channelType));
   }
 
-  @Operation(summary = "Test receive event channel.", operationId = "event:channel:test")
+  @Operation(summary = "Test receive event channel", operationId = "event:channel:test")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Test successfully")})
   @PostMapping("/test")

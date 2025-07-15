@@ -27,46 +27,46 @@ import org.hibernate.validator.constraints.Length;
 public class ServerUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Mail server id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Mail server id", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Mail server name.", example = "XCan Email Server", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Mail server name", example = "XCan Email Server", maxLength = MAX_NAME_LENGTH)
   private String name;
 
-  @DoInFuture("Support the receiving protocol: POP3, IMAP.")
+  @DoInFuture("Support the receiving protocol: POP3, IMAP")
   @EnumPart(enumClass = EmailProtocol.class, allowableValues = {"SMTP"})
-  @Schema(description = "Mail server protocol, only `SMTP` is supported.", allowableValues = {
+  @Schema(description = "Mail server protocol, only `SMTP` is supported", allowableValues = {
       "SMTP"})
   private EmailProtocol protocol;
 
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(description = "Email server remark.", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Email server remark", maxLength = MAX_NAME_LENGTH)
   private String remark;
 
   @Length(max = MAX_HOST_LENGTH)
-  @Schema(description = "Email server hostname, ip or domain.", example = "smtp.xcancloud.com", maxLength = MAX_HOST_LENGTH)
+  @Schema(description = "Email server hostname, ip or domain", example = "smtp.xcancloud.com", maxLength = MAX_HOST_LENGTH)
   private String host;
 
   @Port
-  @Schema(description = "Email server port.", example = "465", minimum = "1", maximum = "65535")
+  @Schema(description = "Email server port", example = "465", minimum = "1", maximum = "65535")
   private Integer port;
 
-  @Schema(description = "Whether to enable starttls when connecting to the mail server.")
+  @Schema(description = "Whether to enable starttls when connecting to the mail server")
   private Boolean startTlsEnabled;
 
-  @Schema(description = "Whether to enable socket when communicating with the mail server.")
+  @Schema(description = "Whether to enable socket when communicating with the mail server")
   private Boolean sslEnabled;
 
-  @Schema(description = "Whether mail server authentication is required.")
+  @Schema(description = "Whether mail server authentication is required")
   private Boolean authEnabled;
 
   @Valid
-  @Schema(description = "Email server authentication account information.")
+  @Schema(description = "Email server authentication account information")
   private AuthAccountTo authAccount;
 
   @Length(max = MAX_SUBJECT_PREFIX_LENGTH)
-  @Schema(description = "Email subject prefix.", maxLength = MAX_SUBJECT_PREFIX_LENGTH)
+  @Schema(description = "Email subject prefix", maxLength = MAX_SUBJECT_PREFIX_LENGTH)
   private String subjectPrefix;
 
 }

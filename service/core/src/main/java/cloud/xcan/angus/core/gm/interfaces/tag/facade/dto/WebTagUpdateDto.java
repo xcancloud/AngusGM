@@ -19,18 +19,18 @@ import org.hibernate.validator.constraints.Length;
 public class WebTagUpdateDto {
 
   @NotNull
-  @Schema(description = "Web application tag id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application tag id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Web application tag name.", example = "dev", maxLength = MAX_NAME_LENGTH,
+  @Schema(description = "Web application tag name", example = "dev", maxLength = MAX_NAME_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Web application tag description.", maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Web application tag description", maxLength = MAX_DESC_LENGTH)
   private String description;
 
 }

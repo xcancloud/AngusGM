@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "EmailServer", description =
     "Email server configuration management, authentication protocols, "
-        + "and delivery policies to ensure reliable, compliant email communication across systems.")
+        + "and delivery policies to ensure reliable, compliant email communication across systems")
 @Validated
 @RestController
 @RequestMapping("/api/v1/email/server")
@@ -50,7 +50,7 @@ public class EmailServerRest {
   @Resource
   private EmailServerFacade emailServerFacade;
 
-  @Operation(summary = "Add email server.", operationId = "email:server:add")
+  @Operation(summary = "Add email server", operationId = "email:server:add")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
@@ -58,7 +58,7 @@ public class EmailServerRest {
     return ApiLocaleResult.success(emailServerFacade.add(dto));
   }
 
-  @Operation(summary = "Update email server.", operationId = "email:server:update")
+  @Operation(summary = "Update email server", operationId = "email:server:update")
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Updated successfully")})
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody ServerUpdateDto dto) {
@@ -66,14 +66,14 @@ public class EmailServerRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace email server.", operationId = "email:server:replace")
+  @Operation(summary = "Replace email server", operationId = "email:server:replace")
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@Valid @RequestBody ServerReplaceDto dto) {
     return ApiLocaleResult.success(emailServerFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete email server.", operationId = "email:server:delete")
+  @Operation(summary = "Delete email server", operationId = "email:server:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping
@@ -82,7 +82,7 @@ public class EmailServerRest {
     emailServerFacade.delete(ids);
   }
 
-  @Operation(summary = "Enable or disable email server.", operationId = "email:server:enabled")
+  @Operation(summary = "Enable or disable email server", operationId = "email:server:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -93,7 +93,7 @@ public class EmailServerRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the enabled email server.", operationId = "email:server:check")
+  @Operation(summary = "Check the enabled email server", operationId = "email:server:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/check")
@@ -102,7 +102,7 @@ public class EmailServerRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of email server.", operationId = "email:server:detail")
+  @Operation(summary = "Query the detail of email server", operationId = "email:server:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Email server does not exist")})
@@ -112,7 +112,7 @@ public class EmailServerRest {
     return ApiLocaleResult.success(emailServerFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of email server.", operationId = "email:server:list")
+  @Operation(summary = "Query the list of email server", operationId = "email:server:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

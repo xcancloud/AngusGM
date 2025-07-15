@@ -19,7 +19,7 @@ public class SignCancelSmsConfirmDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_VERIFICATION_CODE_LENGTH)
-  @Schema(description = "Sms verification code.", example = "778717", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Sms verification code", example = "778717", requiredMode = RequiredMode.REQUIRED)
   private String verificationCode;
 
 }

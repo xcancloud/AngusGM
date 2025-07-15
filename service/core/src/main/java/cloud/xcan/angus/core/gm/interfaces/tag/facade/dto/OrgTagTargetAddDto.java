@@ -16,11 +16,11 @@ import lombok.experimental.Accessors;
 public class OrgTagTargetAddDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Tag organization type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tag organization type", requiredMode = RequiredMode.REQUIRED)
   private OrgTargetType targetType;
 
   @NotNull
-  @Schema(description = "Tag organization id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tag organization id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long targetId;
 
   @Override

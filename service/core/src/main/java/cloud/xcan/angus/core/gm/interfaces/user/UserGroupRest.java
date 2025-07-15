@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "UserGroup", description = "Controls user-to-group membership mappings to regulate "
-    + "user visibility and access privileges based on organizational groups.")
+    + "user visibility and access privileges based on organizational groups")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user")
@@ -46,7 +46,7 @@ public class UserGroupRest {
   @Resource
   private UserGroupFacade userGroupFacade;
 
-  @Operation(summary = "Add the user to groups.", operationId = "user:group:add")
+  @Operation(summary = "Add the user to groups", operationId = "user:group:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -59,7 +59,7 @@ public class UserGroupRest {
     return ApiLocaleResult.success(userGroupFacade.groupAdd(userId, groupIds));
   }
 
-  @Operation(summary = "Replace the groups of user.", operationId = "user:group:replace")
+  @Operation(summary = "Replace the groups of user", operationId = "user:group:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -72,7 +72,7 @@ public class UserGroupRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Remove the user from groups.", operationId = "user:group:delete")
+  @Operation(summary = "Remove the user from groups", operationId = "user:group:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -85,7 +85,7 @@ public class UserGroupRest {
     userGroupFacade.groupDelete(userId, groupIds);
   }
 
-  @Operation(summary = "Query the groups list of user.", operationId = "user:group:list")
+  @Operation(summary = "Query the groups list of user", operationId = "user:group:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/{id}/group")

@@ -16,16 +16,16 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class TenantHealthCheckVo implements Serializable {
 
-  @Schema(description = "Enable health check flag.", example = "true")
+  @Schema(description = "Enable health check flag", example = "true")
   private Boolean enabled = true;
 
-  @Schema(description = "Alarm way when abnormal.")
+  @Schema(description = "Alarm way when abnormal")
   private List<AlarmWay> alarmWay;
 
-  @Schema(description = "Abnormal alarm recipient.")
+  @Schema(description = "Abnormal alarm recipient")
   private List<UserName> receiveUser;
 
-  @Schema(description = "Last health check date.")
+  @Schema(description = "Last health check date")
   private LocalDateTime healthCheckDate;
 
 }

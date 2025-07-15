@@ -16,11 +16,11 @@ import lombok.experimental.Accessors;
 public class UserDirectoryReorderDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Directory id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Directory id", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull
-  @Schema(description = "Sorting value, the synchronization priority is high if the value is small.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Sorting value, the synchronization priority is high if the value is small", requiredMode = RequiredMode.REQUIRED)
   private Integer sequence;
 
   @Override

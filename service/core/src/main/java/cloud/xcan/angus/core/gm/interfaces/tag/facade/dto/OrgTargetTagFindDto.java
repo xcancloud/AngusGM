@@ -18,12 +18,12 @@ public class OrgTargetTagFindDto extends PageQuery {
 
   @JsonIgnore
   //Required -> Internal parameters
-  @Schema(description = "Tag organization id.", requiredMode = RequiredMode.REQUIRED, hidden = true)
+  @Schema(description = "Tag organization id", requiredMode = RequiredMode.REQUIRED, hidden = true)
   private Long targetId;
 
   @JsonIgnore
   //Required -> Internal parameters
-  @Schema(description = "Tag organization type.", requiredMode = RequiredMode.REQUIRED, hidden = true)
+  @Schema(description = "Tag organization type", requiredMode = RequiredMode.REQUIRED, hidden = true)
   private OrgTargetType targetType;
 
   private Long tagId;

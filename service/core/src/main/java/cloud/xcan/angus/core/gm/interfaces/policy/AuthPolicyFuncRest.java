@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicyFunc", description = "Provides a unified entry for querying the relationship between functions (button,  menus, panel) and authorization policies.")
+@Tag(name = "AuthPolicyFunc", description = "Provides a unified entry for querying the relationship between functions (button,  menus, panel) and authorization policies")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/policy")
@@ -39,7 +39,7 @@ public class AuthPolicyFuncRest {
   @Resource
   private AuthPolicyFuncFacade authPolicyFuncFacade;
 
-  @Operation(summary = "Add application functions to authorization policy.", operationId = "auth:policy:func:delete")
+  @Operation(summary = "Add application functions to authorization policy", operationId = "auth:policy:func:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -51,7 +51,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace application functions of authorization policy.", operationId = "auth:policy:func:replace")
+  @Operation(summary = "Replace application functions of authorization policy", operationId = "auth:policy:func:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -63,7 +63,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete application functions of authorization policy.", operationId = "auth:policy:func:delete")
+  @Operation(summary = "Delete application functions of authorization policy", operationId = "auth:policy:func:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -75,7 +75,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the application functions list of authorization policy.", operationId = "auth:policy:func:list")
+  @Operation(summary = "Query the application functions list of authorization policy", operationId = "auth:policy:func:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -85,7 +85,7 @@ public class AuthPolicyFuncRest {
     return ApiLocaleResult.success(authPolicyFuncFacade.list(id));
   }
 
-  @Operation(summary = "Query the application functions tree of authorization policy.", operationId = "auth:policy:func:tree")
+  @Operation(summary = "Query the application functions tree of authorization policy", operationId = "auth:policy:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

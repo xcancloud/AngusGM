@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Service", description = "Provides a unified entry for managing Angus series application services.")
+@Tag(name = "Service", description = "Provides a unified entry for managing Angus series application services")
 @Validated
 @RestController
 @RequestMapping("/api/v1/service")
@@ -58,7 +58,7 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add services.", operationId = "service:add")
+  @Operation(summary = "Add services", operationId = "service:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -69,7 +69,7 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update services.", operationId = "service:update")
+  @Operation(summary = "Update services", operationId = "service:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")})
   @PatchMapping
@@ -80,7 +80,7 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace services.", operationId = "service:replace")
+  @Operation(summary = "Replace services", operationId = "service:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping
@@ -90,7 +90,7 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete services.", operationId = "service:delete")
+  @Operation(summary = "Delete services", operationId = "service:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -102,7 +102,7 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable services.", operationId = "service:enabled")
+  @Operation(summary = "Enable or disable services", operationId = "service:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -114,7 +114,7 @@ public class ServiceRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of service.", operationId = "service:detail")
+  @Operation(summary = "Query the detail of service", operationId = "service:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -124,7 +124,7 @@ public class ServiceRest {
     return ApiLocaleResult.success(serviceFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of service.", operationId = "service:list")
+  @Operation(summary = "Query the list of service", operationId = "service:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -132,7 +132,7 @@ public class ServiceRest {
     return ApiLocaleResult.success(serviceFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of service.", operationId = "service:search")
+  @Operation(summary = "Fulltext search the list of service", operationId = "service:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
@@ -140,7 +140,7 @@ public class ServiceRest {
     return ApiLocaleResult.success(serviceFacade.search(dto));
   }
 
-  @Operation(summary = "Query the all resources of service.", operationId = "service:resource:all")
+  @Operation(summary = "Query the all resources of service", operationId = "service:resource:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -153,7 +153,7 @@ public class ServiceRest {
     return ApiLocaleResult.success(serviceFacade.resourceList(serviceCode, auth));
   }
 
-  @Operation(summary = "Query the all apis of service or resource.", operationId = "service:resource:api:all")
+  @Operation(summary = "Query the all apis of service or resource", operationId = "service:resource:api:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/resource/api")

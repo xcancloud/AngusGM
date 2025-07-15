@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppTag", description = "Assigns and categorizes applications using metadata tags.")
+@Tag(name = "AppTag", description = "Assigns and categorizes applications using metadata tags")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app")
@@ -49,7 +49,7 @@ public class AppTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add the tags of application.", operationId = "app:tag:add")
+  @Operation(summary = "Add the tags of application", operationId = "app:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -62,7 +62,7 @@ public class AppTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace the tags of application.", operationId = "app:tag:replace")
+  @Operation(summary = "Replace the tags of application", operationId = "app:tag:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -76,7 +76,7 @@ public class AppTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the tags of application.", operationId = "app:tag:delete")
+  @Operation(summary = "Delete the tags of application", operationId = "app:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -88,7 +88,7 @@ public class AppTagRest {
     appTagFacade.appTagDelete(appId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of application.", operationId = "app:tag:list")
+  @Operation(summary = "Query the tags list of application", operationId = "app:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

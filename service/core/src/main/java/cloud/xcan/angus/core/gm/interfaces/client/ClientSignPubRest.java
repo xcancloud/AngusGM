@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "ClientSignPub", description = "Used for OAuth2 client login to obtain inter system call access token.")
+@Tag(name = "ClientSignPub", description = "Used for OAuth2 client login to obtain inter system call access token")
 @Validated
 @RestController
 @RequestMapping("/pubapi/v1/client")
@@ -27,7 +27,7 @@ public class ClientSignPubRest {
   @Resource
   private ClientSignFacade clientSignFacade;
 
-  @Operation(summary = "Client sign-in for private, 3rd authorization or inner application.", operationId = "client:signin:pub")
+  @Operation(summary = "Client sign-in for private, 3rd authorization or inner application", operationId = "client:signin:pub")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})

@@ -15,11 +15,11 @@ import lombok.experimental.Accessors;
 public class WebTagTargetAddDto {
 
   @NotNull
-  @Schema(description = "Web application resource type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application resource type", requiredMode = RequiredMode.REQUIRED)
   private WebTagTargetType targetType;
 
   @NotNull
-  @Schema(description = "Web application resource id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application resource id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long targetId;
 
   @Override

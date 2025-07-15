@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "CombinedNotice", description = "Provides a unified entry for users to send messages, such as in-site message, SMS, and email.")
+@Tag(name = "CombinedNotice", description = "Provides a unified entry for users to send messages, such as in-site message, SMS, and email")
 @Validated
 @RestController
 @RequestMapping("/api/v1/notice/combined")
@@ -25,7 +25,7 @@ public class NoticeCombinedRest {
   @Resource
   private NoticeCombinedFacade noticeCombinedFacade;
 
-  @Operation(summary = "Send notifications, in-site messages, SMS, and email.", operationId = "notice:send")
+  @Operation(summary = "Send notifications, in-site messages, SMS, and email", operationId = "notice:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/send")

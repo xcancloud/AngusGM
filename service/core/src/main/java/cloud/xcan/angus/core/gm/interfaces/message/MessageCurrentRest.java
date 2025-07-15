@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "MessageCurrent", description = "Manages current individual user interactions with messages, including deletion, read status, and retrieval.")
+@Tag(name = "MessageCurrent", description = "Manages current individual user interactions with messages, including deletion, read status, and retrieval")
 @Validated
 @RestController
 @RequestMapping("/api/v1/message")
@@ -40,7 +40,7 @@ public class MessageCurrentRest {
   @Resource
   private MessageCurrentFacade messageCurrentFacade;
 
-  @Operation(summary = "Delete the messages of current user.", operationId = "message:delete:current")
+  @Operation(summary = "Delete the messages of current user", operationId = "message:delete:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -50,7 +50,7 @@ public class MessageCurrentRest {
     messageCurrentFacade.delete(ids);
   }
 
-  @Operation(summary = "Submit the read status of message.", operationId = "message:read:current")
+  @Operation(summary = "Submit the read status of message", operationId = "message:read:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Submit successfully")})
   @ResponseStatus(HttpStatus.OK)
@@ -61,7 +61,7 @@ public class MessageCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the message information of current user.", operationId = "message:detail:current")
+  @Operation(summary = "Query the message information of current user", operationId = "message:detail:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -70,7 +70,7 @@ public class MessageCurrentRest {
     return ApiLocaleResult.success(messageCurrentFacade.detail(id));
   }
 
-  @Operation(summary = "Query the message list of current user.", operationId = "message:list:current")
+  @Operation(summary = "Query the message list of current user", operationId = "message:list:current")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/current")
@@ -78,7 +78,7 @@ public class MessageCurrentRest {
     return ApiLocaleResult.success(messageCurrentFacade.list(dto));
   }
 
-  @Operation(summary = "Message status count.", operationId = "message:status:count")
+  @Operation(summary = "Message status count", operationId = "message:status:count")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/status/count")

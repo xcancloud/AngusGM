@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "SmsInner", description = "Provides programmatic sms send and validity verification for cross-system service call.")
+@Tag(name = "SmsInner", description = "Provides programmatic sms send and validity verification for cross-system service call")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/sms")
@@ -29,7 +29,7 @@ public class SmsDoorRest {
   @Resource
   private SmsDoorFacade smsDoorFacade;
 
-  @Operation(summary = "Send sms.", operationId = "sms:send:inner")
+  @Operation(summary = "Send sms", operationId = "sms:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sent successfully")})
   @PostMapping("/send")
@@ -38,7 +38,7 @@ public class SmsDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check sms verification code.", operationId = "sms:verificationCode:check:inner")
+  @Operation(summary = "Check sms verification code", operationId = "sms:verificationCode:check:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")

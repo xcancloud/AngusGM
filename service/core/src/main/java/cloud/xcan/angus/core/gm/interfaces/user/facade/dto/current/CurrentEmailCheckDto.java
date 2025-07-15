@@ -26,7 +26,7 @@ public class CurrentEmailCheckDto implements Serializable {
   @EnumPart(enumClass = EmailBizKey.class, allowableValues = {
       "PASSWORD_FORGET", "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
   })
-  @Schema(description = "Email business type key.", example = "BIND_EMAIL",
+  @Schema(description = "Email business type key", example = "BIND_EMAIL",
       allowableValues = {
           "PASSWORD_FORGET", "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
       }, requiredMode = RequiredMode.REQUIRED)
@@ -35,13 +35,13 @@ public class CurrentEmailCheckDto implements Serializable {
   @Email
   @NotBlank
   @Length(max = MAX_EMAIL_LENGTH)
-  @Schema(description = "User e-mail.", example = "james@xcan.cloud", maxLength = MAX_EMAIL_LENGTH,
+  @Schema(description = "User e-mail", example = "james@xcan.cloud", maxLength = MAX_EMAIL_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String email;
 
   @NotBlank
   @Length(max = MAX_VERIFICATION_CODE_LENGTH)
-  @Schema(description = "Email verification code.", example = "778717", maxLength = MAX_VERIFICATION_CODE_LENGTH,
+  @Schema(description = "Email verification code", example = "778717", maxLength = MAX_VERIFICATION_CODE_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String verificationCode;
 

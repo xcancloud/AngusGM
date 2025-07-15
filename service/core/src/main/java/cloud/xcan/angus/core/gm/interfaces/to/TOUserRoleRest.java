@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("@PPS.isOpClient()")
 @CloudServiceEdition
 @Conditional(value = CloudServiceEditionCondition.class)
-@Tag(name = "TOUserRole", description = "Provides a unified entry for querying or authorizing the relationship between users and operational roles.")
+@Tag(name = "TOUserRole", description = "Provides a unified entry for querying or authorizing the relationship between users and operational roles")
 @Validated
 @RestController
 @RequestMapping("/api/v1/to")
@@ -44,7 +44,7 @@ public class TOUserRoleRest {
   @Resource
   private TOUserRoleFacade toUserRoleFacade;
 
-  @Operation(summary = "Authorized the operation roles to user.", operationId = "to:user:role:auth")
+  @Operation(summary = "Authorized the operation roles to user", operationId = "to:user:role:auth")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Authorize successful"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -57,7 +57,7 @@ public class TOUserRoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the operation roles of user.", operationId = "to:user:role:delete")
+  @Operation(summary = "Delete the operation roles of user", operationId = "to:user:role:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -69,7 +69,7 @@ public class TOUserRoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Authorized to operation role to users.", operationId = "to:role:user:auth")
+  @Operation(summary = "Authorized to operation role to users", operationId = "to:role:user:auth")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Authorize successful"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -82,7 +82,7 @@ public class TOUserRoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the user operation roles.", operationId = "to:role:user:delete")
+  @Operation(summary = "Delete the user operation roles", operationId = "to:role:user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})

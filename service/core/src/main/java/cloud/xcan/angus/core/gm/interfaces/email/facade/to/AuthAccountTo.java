@@ -20,12 +20,12 @@ public class AuthAccountTo implements Serializable {
 
   @NotBlank
   @Length(max = MAX_EMAIL_LENGTH)
-  @Schema(description = "Authentication account username.", example = "test@xcan.cloud",
+  @Schema(description = "Authentication account username", example = "test@xcan.cloud",
       maxLength = MAX_EMAIL_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String account;
 
   @Length(max = MAX_PASSWORD_LENGTH)
-  @Schema(description = "Authentication account password.", example = "xcan@123",
+  @Schema(description = "Authentication account password", example = "xcan@123",
       maxLength = MAX_PASSWORD_LENGTH)
   private String password;
 

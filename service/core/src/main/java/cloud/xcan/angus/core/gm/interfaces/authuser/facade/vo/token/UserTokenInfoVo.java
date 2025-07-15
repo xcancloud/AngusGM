@@ -11,19 +11,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserTokenInfoVo {
 
-  @Schema(description = "User access token id.")
+  @Schema(description = "User access token id")
   private Long id;
 
-  @Schema(description = "User access token name.")
+  @Schema(description = "User access token name")
   private String name;
 
-  @Schema(description = "User access token expired date.")
+  @Schema(description = "User access token expired date")
   private LocalDateTime expiredDate;
 
-  @Schema(description = "User access token creator.")
+  @Schema(description = "User access token creator")
   private Long createdBy;
 
-  @Schema(description = "User access token creation date.")
+  @Schema(description = "User access token creation date")
   private LocalDateTime createdDate;
 
 }

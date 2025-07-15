@@ -23,23 +23,23 @@ import org.hibernate.validator.constraints.Length;
 public class GroupUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Group Id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Group Id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Group name.", example = "Product Group", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Group name", example = "Product Group", maxLength = MAX_NAME_LENGTH)
   private String name;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Group code.", example = "PRODUCT_001", maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "Group code", example = "PRODUCT_001", maxLength = MAX_CODE_LENGTH)
   private String code;
 
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(description = "Group remark.", example = "This a group remark ...",
+  @Schema(description = "Group remark", example = "This a group remark ..",
       maxLength = MAX_REMARK_LENGTH)
   private String remark;
 
   @Size(max = MAX_RELATION_QUOTA)
-  @Schema(description = "Group association tag ids, the maximum support is `2000`.")
+  @Schema(description = "Group association tag ids, the maximum support is `2000`")
   private List<Long> tagIds;
 }

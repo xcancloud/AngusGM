@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "ClientSignInner", description = "Used for OAuth2 client registration.")
+@Tag(name = "ClientSignInner", description = "Used for OAuth2 client registration")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/client")
@@ -29,7 +29,7 @@ public class ClientSignDoorRest {
   @Resource
   private ClientSignFacade clientSignFacade;
 
-  @Operation(summary = "Signup oauth2 client for private application edition or agent.", operationId = "client:signup:inner")
+  @Operation(summary = "Signup oauth2 client for private application edition or agent", operationId = "client:signup:inner")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signup successfully")})

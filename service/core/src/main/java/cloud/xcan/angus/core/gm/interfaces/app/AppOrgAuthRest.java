@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppOrgAuth", description = "Retrieves user-specific application access permissions within an organization.")
+@Tag(name = "AppOrgAuth", description = "Retrieves user-specific application access permissions within an organization")
 @Validated
 @RestController
 @RequestMapping("/api/v1")
@@ -59,7 +59,7 @@ public class AppOrgAuthRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Query the authorized tenant list of application.", operationId = "app:auth:tenant:list")
+  @Operation(summary = "Query the authorized tenant list of application", operationId = "app:auth:tenant:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -71,7 +71,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthTenant(appId, dto));
   }
 
-  @Operation(summary = "Query the authorized user list of application.", operationId = "app:auth:user:list")
+  @Operation(summary = "Query the authorized user list of application", operationId = "app:auth:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -83,7 +83,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthUser(appId, dto));
   }
 
-  @Operation(summary = "Query the authorized departments list of application.", operationId = "app:auth:dept:list")
+  @Operation(summary = "Query the authorized departments list of application", operationId = "app:auth:dept:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -95,7 +95,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthDept(appId, dto));
   }
 
-  @Operation(summary = "Query the authorized groups list of application.", operationId = "app:auth:group:list")
+  @Operation(summary = "Query the authorized groups list of application", operationId = "app:auth:group:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -107,7 +107,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthGroup(appId, dto));
   }
 
-  @Operation(summary = "Query the all global authorized policies of application.", operationId = "app:auth:global:all")
+  @Operation(summary = "Query the all global authorized policies of application", operationId = "app:auth:global:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -118,7 +118,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthGlobal(appId));
   }
 
-  @Operation(summary = "Check the authorized organization(Tenant/User/Department/Group) of application.", operationId = "app:auth:org:check")
+  @Operation(summary = "Check the authorized organization(Tenant/User/Department/Group) of application", operationId = "app:auth:org:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -131,7 +131,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthOrgCheck(appId, orgType, orgId));
   }
 
-  @Operation(summary = "Query the authorized application policies list of organization(Tenant/User/Department/Group).", operationId = "app:auth:policy:list")
+  @Operation(summary = "Query the authorized application policies list of organization(Tenant/User/Department/Group)", operationId = "app:auth:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -145,7 +145,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appAuthPolicy(appId, orgType, orgId, dto));
   }
 
-  @Operation(summary = "Query the authorized application list of organization(Tenant/User/Department/Group).", operationId = "org:auth:app:list")
+  @Operation(summary = "Query the authorized application list of organization(Tenant/User/Department/Group)", operationId = "org:auth:app:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Organization not found")
@@ -158,7 +158,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.orgAuthApp(orgType, orgId, joinPolicy));
   }
 
-  @Operation(summary = "Check organization(Tenant/User/Department/Group) authorized application.", operationId = "org:auth:app:check")
+  @Operation(summary = "Check organization(Tenant/User/Department/Group) authorized application", operationId = "org:auth:app:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Organization not found")
@@ -173,7 +173,7 @@ public class AppOrgAuthRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Query the application unauthorized tenants.", operationId = "app:unauth:tenant:list")
+  @Operation(summary = "Query the application unauthorized tenants", operationId = "app:unauth:tenant:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -185,7 +185,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthTenant(appId, dto));
   }
 
-  @Operation(summary = "Query the application unauthorized users.", operationId = "app:unauth:user:list")
+  @Operation(summary = "Query the application unauthorized users", operationId = "app:unauth:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -197,7 +197,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthUser(appId, dto));
   }
 
-  @Operation(summary = "Query the application unauthorized departments.", operationId = "app:unauth:department:list")
+  @Operation(summary = "Query the application unauthorized departments", operationId = "app:unauth:department:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -209,7 +209,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthDept(appId, dto));
   }
 
-  @Operation(summary = "Query the application unauthorized groups.", operationId = "app:unauth:group:list")
+  @Operation(summary = "Query the application unauthorized groups", operationId = "app:unauth:group:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -221,7 +221,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthGroup(appId, dto));
   }
 
-  @Operation(summary = "Query the application unauthorized policies.", operationId = "app:unauth:policy:list")
+  @Operation(summary = "Query the application unauthorized policies", operationId = "app:unauth:policy:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -235,7 +235,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.appUnauthPolicy(appId, orgType, orgId, dto));
   }
 
-  @Operation(summary = "Authorize the application policies to the users.", operationId = "app:user:policy:auth")
+  @Operation(summary = "Authorize the application policies to the users", operationId = "app:user:policy:auth")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -248,7 +248,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.authUserPolicy(appId, dto));
   }
 
-  @Operation(summary = "Authorize the application policies to the departments.", operationId = "app:dept:policy:auth")
+  @Operation(summary = "Authorize the application policies to the departments", operationId = "app:dept:policy:auth")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -261,7 +261,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.authDeptPolicy(appId, dto));
   }
 
-  @Operation(summary = "Authorize the application policies to the groups.", operationId = "app:group:policy:auth")
+  @Operation(summary = "Authorize the application policies to the groups", operationId = "app:group:policy:auth")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -274,7 +274,7 @@ public class AppOrgAuthRest {
     return ApiLocaleResult.success(appOrgAuthFacade.authGroupPolicy(appId, dto));
   }
 
-  @Operation(summary = "Delete the authorized users of application.", operationId = "app:user:policy:auth:delete")
+  @Operation(summary = "Delete the authorized users of application", operationId = "app:user:policy:auth:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -287,7 +287,7 @@ public class AppOrgAuthRest {
     appOrgAuthFacade.authUserDelete(appId, dto);
   }
 
-  @Operation(summary = "Delete the authorized departments of application.", operationId = "app:dept:policy:auth:delete")
+  @Operation(summary = "Delete the authorized departments of application", operationId = "app:dept:policy:auth:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")
@@ -300,7 +300,7 @@ public class AppOrgAuthRest {
     appOrgAuthFacade.authDeptDelete(appId, dto);
   }
 
-  @Operation(summary = "Delete the authorized groups of application.", operationId = "app:group:policy:auth:delete")
+  @Operation(summary = "Delete the authorized groups of application", operationId = "app:group:policy:auth:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "App not found")

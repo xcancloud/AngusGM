@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "OperationLogInner", description = "Provides a unified api for collecting and recording user operation logs.")
+@Tag(name = "OperationLogInner", description = "Provides a unified api for collecting and recording user operation logs")
 @RestController
 @RequestMapping("/innerapi/v1/log/operation")
 public class OperationLogDoorRest {
@@ -25,7 +25,7 @@ public class OperationLogDoorRest {
   @Resource
   private OperationLogFacade optionFacade;
 
-  @Operation(summary = "Add user operation logs.", operationId = "log:operation:add:inner")
+  @Operation(summary = "Add user operation logs", operationId = "log:operation:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully create")})
   @PostMapping

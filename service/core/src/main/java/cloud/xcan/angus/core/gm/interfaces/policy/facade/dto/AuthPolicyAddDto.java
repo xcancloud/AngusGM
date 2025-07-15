@@ -25,23 +25,23 @@ public class AuthPolicyAddDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Authorization policy name.", example = "System administrator",
+  @Schema(description = "Authorization policy name", example = "System administrator",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Code
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Authorization policy code.", example = "admin",
+  @Schema(description = "Authorization policy code", example = "admin",
       maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String code;
 
   @NotNull
-  @Schema(description = "Authorization policy type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorization policy type", requiredMode = RequiredMode.REQUIRED)
   private PolicyType type;
 
   @NotNull
-  @Schema(description = "Default authorization policy flag.", defaultValue = "false", example = "false",
+  @Schema(description = "Default authorization policy flag", defaultValue = "false", example = "false",
       requiredMode = RequiredMode.REQUIRED)
   private Boolean default0;
 
@@ -50,17 +50,17 @@ public class AuthPolicyAddDto {
   //private PolicyGrantStage grantStage;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Authorization policy description.", example = "System management policy",
+  @Schema(description = "Authorization policy description", example = "System management policy",
       maxLength = MAX_DESC_LENGTH)
   private String description;
 
   @NotNull
-  @Schema(description = "The application id of authorization policy.", example = "1",
+  @Schema(description = "The application id of authorization policy", example = "1",
       requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 
   @Size(max = MAX_POLICY_FUNC_NUM)
-  @Schema(description = "The application function ids of authorization policy, the maximum support is `2000`.")
+  @Schema(description = "The application function ids of authorization policy, the maximum support is `2000`")
   private Set<Long> funcIds;
 
 }

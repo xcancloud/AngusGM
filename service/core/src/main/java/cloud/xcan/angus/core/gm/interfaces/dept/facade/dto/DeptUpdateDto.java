@@ -40,7 +40,7 @@ public class DeptUpdateDto implements Serializable {
   private Long pid;
 
   @Size(max = MAX_RELATION_QUOTA)
-  @Schema(description = "Department association tag ids, the maximum support is `2000`.")
+  @Schema(description = "Department association tag ids, the maximum support is `2000`")
   private List<Long> tagIds;
 
 }

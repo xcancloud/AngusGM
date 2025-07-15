@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Setting", description = "Centralizes system-wide settings for unified control and consistency.")
+@Tag(name = "Setting", description = "Centralizes system-wide settings for unified control and consistency")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting")
@@ -29,7 +29,7 @@ public class SettingRest {
   @Resource
   private SettingFacade settingFacade;
 
-  @Operation(summary = "Replace setting value.", operationId = "setting:value:replace")
+  @Operation(summary = "Replace setting value", operationId = "setting:value:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -39,7 +39,7 @@ public class SettingRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of setting value.", operationId = "setting:value:detail")
+  @Operation(summary = "Query the detail of setting value", operationId = "setting:value:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "TenantCertRecognize", description = "Validates official IDs or business licenses via third-party APIs for automated authentication.")
+@Tag(name = "TenantCertRecognize", description = "Validates official IDs or business licenses via third-party APIs for automated authentication")
 @Validated
 @RestController
 @RequestMapping("/api/v1/cert")
@@ -26,7 +26,7 @@ public class TenantCertRecognizeRest {
   @Resource
   private TenantCertRecognizeFacade certRecognizeFacade;
 
-  @Operation(summary = "Recognize business license.", operationId = "cert:business:recognize")
+  @Operation(summary = "Recognize business license", operationId = "cert:business:recognize")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully recognize")})
   @GetMapping("/business/recognize")
@@ -34,7 +34,7 @@ public class TenantCertRecognizeRest {
     return ApiLocaleResult.success(certRecognizeFacade.businessRecognize(dto));
   }
 
-  @Operation(summary = "Recognize ID card.", operationId = "cert:idcard:recognize")
+  @Operation(summary = "Recognize ID card", operationId = "cert:idcard:recognize")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully recognize")})
   @GetMapping("/idcard/recognize")

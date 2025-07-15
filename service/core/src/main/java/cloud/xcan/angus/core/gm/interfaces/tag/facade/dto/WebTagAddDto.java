@@ -17,13 +17,13 @@ public class WebTagAddDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Web application tag name.", example = "dev", maxLength = MAX_NAME_LENGTH,
+  @Schema(description = "Web application tag name", example = "dev", maxLength = MAX_NAME_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Web application tag description.", example = "dev", maxLength = MAX_DESC_LENGTH,
+  @Schema(description = "Web application tag description", example = "dev", maxLength = MAX_DESC_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String description;
 

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "SmsTemplate", description = "Standardizes sms content creation through reusable "
-    + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency.")
+    + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency")
 @Validated
 @RestController
 @RequestMapping("/api/v1/sms/template")
@@ -33,7 +33,7 @@ public class SmsTemplateRest {
   @Resource
   private SmsTemplateFacade smsTemplateFacade;
 
-  @Operation(summary = "Update sms template.", operationId = "sms:template:update")
+  @Operation(summary = "Update sms template", operationId = "sms:template:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Update successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -45,7 +45,7 @@ public class SmsTemplateRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of sms template.", operationId = "sms:template:detail")
+  @Operation(summary = "Query the detail of sms template", operationId = "sms:template:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -55,7 +55,7 @@ public class SmsTemplateRest {
     return ApiLocaleResult.success(smsTemplateFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of sms template.", operationId = "sms:template:list")
+  @Operation(summary = "Query the list of sms template", operationId = "sms:template:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

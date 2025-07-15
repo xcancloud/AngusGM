@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Client", description = "Manages OAuth2 client registrations. "
     + "The OAuth2 client acts on behalf of the user to request resource access permissions "
-    + "and securely exchange credentials for access tokens to interact with protected APIs.")
+    + "and securely exchange credentials for access tokens to interact with protected APIs")
 @OperationClient
 @PreAuthorize("@PPS.isOpClient()")
 @Conditional(value = CloudServiceEditionCondition.class)
@@ -53,7 +53,7 @@ public class ClientRest {
   @Resource
   private ClientFacade clientFacade;
 
-  @Operation(summary = "Add oauth2 registered client.", operationId = "client:add")
+  @Operation(summary = "Add oauth2 registered client", operationId = "client:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -62,7 +62,7 @@ public class ClientRest {
     return ApiLocaleResult.success(clientFacade.add(dto));
   }
 
-  @Operation(summary = "Update oauth2 registered client.", operationId = "client:update")
+  @Operation(summary = "Update oauth2 registered client", operationId = "client:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -73,7 +73,7 @@ public class ClientRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace oauth2 registered client.", operationId = "client:replace")
+  @Operation(summary = "Replace oauth2 registered client", operationId = "client:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -83,7 +83,7 @@ public class ClientRest {
     return ApiLocaleResult.success(clientFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete oauth2 registered clients.", operationId = "client:delete")
+  @Operation(summary = "Delete oauth2 registered clients", operationId = "client:delete")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
@@ -92,7 +92,7 @@ public class ClientRest {
     clientFacade.delete(clientIds);
   }
 
-  @Operation(summary = "Query the detail of oauth2 registered client.", operationId = "client:detail")
+  @Operation(summary = "Query the detail of oauth2 registered client", operationId = "client:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -102,7 +102,7 @@ public class ClientRest {
     return ApiLocaleResult.success(clientFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of oauth2 registered client.", operationId = "client:list")
+  @Operation(summary = "Query the list of oauth2 registered client", operationId = "client:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

@@ -20,17 +20,17 @@ import org.hibernate.validator.constraints.Length;
 public class SignEmailCheckDto {
 
   @NotNull
-  @Schema(description = "Sign email business types.", example = "SIGNIN", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Sign email business types", example = "SIGNIN", requiredMode = RequiredMode.REQUIRED)
   private EmailBizKey bizKey;
 
   @Email
   @NotEmpty
-  @Schema(description = "Email verification code receiving address.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email verification code receiving address", requiredMode = RequiredMode.REQUIRED)
   private String email;
 
   @NotEmpty
   @Length(max = MAX_VERIFICATION_CODE_LENGTH)
-  @Schema(description = "Email verification code.", example = "897261",
+  @Schema(description = "Email verification code", example = "897261",
       maxLength = MAX_VERIFICATION_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String verificationCode;
 

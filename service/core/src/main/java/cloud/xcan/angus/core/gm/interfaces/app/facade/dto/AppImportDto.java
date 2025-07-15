@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class AppImportDto {
 
   @NotNull
-  @Schema(description = "Import application file format type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Import application file format type", requiredMode = RequiredMode.REQUIRED)
   private ExportFileType importType;
 
 }

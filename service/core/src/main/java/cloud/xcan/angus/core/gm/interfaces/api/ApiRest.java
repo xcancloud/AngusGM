@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Api", description = "Controls API endpoint definitions and access policies.")
+@Tag(name = "Api", description = "Controls API endpoint definitions and access policies")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "Api"))
 @Conditional(CloudServiceEditionCondition.class)
 @OperationClient
@@ -61,7 +61,7 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add apis.", operationId = "api:add")
+  @Operation(summary = "Add apis", operationId = "api:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -73,7 +73,7 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update apis.", operationId = "api:update")
+  @Operation(summary = "Update apis", operationId = "api:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -86,7 +86,7 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace apis.", operationId = "api:replace")
+  @Operation(summary = "Replace apis", operationId = "api:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping
@@ -97,7 +97,7 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete apis.", operationId = "api:delete")
+  @Operation(summary = "Delete apis", operationId = "api:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -110,7 +110,7 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable apis.", operationId = "api:enabled")
+  @Operation(summary = "Enable or disable apis", operationId = "api:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")})
   @PatchMapping("/enabled")
@@ -120,7 +120,7 @@ public class ApiRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of api.", operationId = "api:detail")
+  @Operation(summary = "Query the detail of api", operationId = "api:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -130,7 +130,7 @@ public class ApiRest {
     return ApiLocaleResult.success(apiFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of api.", operationId = "api:list")
+  @Operation(summary = "Query the list of api", operationId = "api:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -138,7 +138,7 @@ public class ApiRest {
     return ApiLocaleResult.success(apiFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of api.", operationId = "api:search")
+  @Operation(summary = "Fulltext search the list of api", operationId = "api:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

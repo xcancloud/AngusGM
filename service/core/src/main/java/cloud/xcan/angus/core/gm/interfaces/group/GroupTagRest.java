@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "GroupTag", description = "Assigns tags to group for resource categorization, or query access control grouping.")
+@Tag(name = "GroupTag", description = "Assigns tags to group for resource categorization, or query access control grouping")
 @Validated
 @RestController
 @RequestMapping("/api/v1/group")
@@ -44,7 +44,7 @@ public class GroupTagRest {
   @Resource
   private GroupTagFacade groupTagFacade;
 
-  @Operation(summary = "Add the tags of group.", operationId = "group:tag:add")
+  @Operation(summary = "Add the tags of group", operationId = "group:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -56,7 +56,7 @@ public class GroupTagRest {
     return ApiLocaleResult.success(groupTagFacade.tagAdd(groupId, tagIds));
   }
 
-  @Operation(summary = "Replace the tags of group.", operationId = "group:tag:replace")
+  @Operation(summary = "Replace the tags of group", operationId = "group:tag:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -68,7 +68,7 @@ public class GroupTagRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the tags of group.", operationId = "group:tag:delete")
+  @Operation(summary = "Delete the tags of group", operationId = "group:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -80,7 +80,7 @@ public class GroupTagRest {
     groupTagFacade.tagDelete(groupId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of group.", operationId = "group:tag:list")
+  @Operation(summary = "Query the tags list of group", operationId = "group:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

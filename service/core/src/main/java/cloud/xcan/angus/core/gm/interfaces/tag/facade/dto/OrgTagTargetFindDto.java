@@ -17,17 +17,17 @@ import lombok.experimental.Accessors;
 public class OrgTagTargetFindDto extends PageQuery {
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Tag id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tag id", requiredMode = RequiredMode.REQUIRED)
   private Long tagId;
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Tag organization type: USER/DEPT/GROUP.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tag organization type: USER/DEPT/GROUP", requiredMode = RequiredMode.REQUIRED)
   private OrgTargetType targetType;
 
-  @Schema(description = "Tag organization id.")
+  @Schema(description = "Tag organization id")
   private Long targetId;
 
-  @Schema(description = "Tag organization name.")
+  @Schema(description = "Tag organization name")
   private String targetName;
 
   private Long createdBy;

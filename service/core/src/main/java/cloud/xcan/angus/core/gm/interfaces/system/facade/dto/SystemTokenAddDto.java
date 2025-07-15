@@ -26,7 +26,7 @@ public class SystemTokenAddDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "System token name.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "System token name", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   /**
@@ -35,16 +35,16 @@ public class SystemTokenAddDto {
    * @see AuthConstant#DEFAULT_TOKEN_EXPIRE_SECOND
    */
   @Future
-  @Schema(description = "Expiration date of system token.", example = "2025-10-09 03:02:29")
+  @Schema(description = "Expiration date of system token", example = "2025-10-09 03:02:29")
   private LocalDateTime expiredDate;
 
   @NotNull
-  @Schema(description = "Resource authorization type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Resource authorization type", requiredMode = RequiredMode.REQUIRED)
   private ResourceAuthType authType;
 
   @Valid
   @NotEmpty
-  @Schema(description = "Authorized resources.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorized resources", requiredMode = RequiredMode.REQUIRED)
   private List<AuthorizedResourceDto> resources;
 
 }

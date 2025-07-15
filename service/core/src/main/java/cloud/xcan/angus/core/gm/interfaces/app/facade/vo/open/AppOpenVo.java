@@ -40,33 +40,33 @@ public class AppOpenVo {
 
   private List<AppTagInfoVo> appTags;
 
-  @Schema(description = "Open application user id.")
+  @Schema(description = "Open application user id")
   private Long userId;
 
   @NameJoinField(id = "userId", repository = "commonUserBaseRepo")
-  @Schema(description = "Open application user name.")
+  @Schema(description = "Open application user name")
   private String userName;
 
-  @Schema(description = "Open application tenant id.")
+  @Schema(description = "Open application tenant id")
   protected Long tenantId;
 
   @NameJoinField(id = "tenantId", repository = "commonTenantRepo")
-  @Schema(description = "Open application tenant name.")
+  @Schema(description = "Open application tenant name")
   protected String tenantName;
 
-  @Schema(description = "Open expiration deleted flag.")
+  @Schema(description = "Open expiration deleted flag")
   private Boolean expirationDeleted;
 
-  @Schema(description = "Operation client open flag.")
+  @Schema(description = "Operation client open flag")
   private Boolean opClientOpen;
 
-  @Schema(description = "Open application date.")
+  @Schema(description = "Open application date")
   protected LocalDateTime openDate;
 
-  @Schema(description = "Open expiration date.")
+  @Schema(description = "Open expiration date")
   protected LocalDateTime expirationDate;
 
-  @Schema(description = "Open creation date.")
+  @Schema(description = "Open creation date")
   protected LocalDateTime createdDate;
 
 }

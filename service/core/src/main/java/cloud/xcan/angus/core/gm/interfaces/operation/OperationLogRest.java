@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "OperationLog", description = "Provides a unified api for query user operation logs.")
+@Tag(name = "OperationLog", description = "Provides a unified api for query user operation logs")
 @Validated
 @RestController
 @RequestMapping("/api/v1/log/operation")
@@ -28,7 +28,7 @@ public class OperationLogRest {
   @Resource
   private OperationLogFacade optionFacade;
 
-  @Operation(summary = "Query the operation logs list of user.", operationId = "log:operation:list")
+  @Operation(summary = "Query the operation logs list of user", operationId = "log:operation:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -36,7 +36,7 @@ public class OperationLogRest {
     return ApiLocaleResult.success(optionFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the operation logs list of user.", operationId = "log:operation:search")
+  @Operation(summary = "Fulltext search the operation logs list of user", operationId = "log:operation:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

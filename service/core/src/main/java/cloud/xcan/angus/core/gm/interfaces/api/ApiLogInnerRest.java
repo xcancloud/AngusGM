@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "ApiLogInner", description = "Aggregates and stores API interaction data for analysis.")
+@Tag(name = "ApiLogInner", description = "Aggregates and stores API interaction data for analysis")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogInner"))
 @RestController
 @RequestMapping("/innerapi/v1/log/api")
@@ -32,7 +32,7 @@ public class ApiLogInnerRest {
   @Resource
   private ApiLogFacade apiLogFacade;
 
-  @Operation(summary = "Receives and save api request logs.", operationId = "log:api:add:inner")
+  @Operation(summary = "Receives and save api request logs", operationId = "log:api:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully created")})
   @ResponseStatus(HttpStatus.CREATED)

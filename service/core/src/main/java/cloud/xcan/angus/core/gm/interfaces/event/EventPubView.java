@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "EventPubView", description = "Provide HTML-based visualization for event details, "
-    + "allowing users to view event information in a browser-rendered format.")
+    + "allowing users to view event information in a browser-rendered format")
 @Validated
 @Controller
 @RequestMapping("/pubview/v1/event")
@@ -25,7 +25,7 @@ public class EventPubView {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(summary = "Query the html format content of event.", operationId = "event:detail:html")
+  @Operation(summary = "Query the html format content of event", operationId = "event:detail:html")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}")

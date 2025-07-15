@@ -34,33 +34,33 @@ public class SettingValueReplaceDto implements Serializable {
   private SettingKey key;
 
   @Valid
-  @Schema(description = "Third-party social account login system configuration.")
+  @Schema(description = "Third-party social account login system configuration")
   private SocialTo social;
 
   @Valid
-  @Schema(description = "AI agent configuration.")
+  @Schema(description = "AI agent configuration")
   private AIAgent aiAgent;
 
   // TODO Change to the following Properties format.
   @Valid
-  @Schema(description = "Tenant health check notification configuration.")
+  @Schema(description = "Tenant health check notification configuration")
   private TenantHealthCheckDto healthCheck;
 
-  @Schema(description = "API request log configuration.")
+  @Schema(description = "API request log configuration")
   private ApiLogProperties apiLog;
 
-  @Schema(description = "System user operation log configuration.")
+  @Schema(description = "System user operation log configuration")
   private OperationLogProperties operationLog;
 
-  @Schema(description = "System log configuration.")
+  @Schema(description = "System log configuration")
   private SystemLogProperties systemLog;
 
   @Min(0)
-  @Schema(description = "Maximum resource activity count.", minimum = "0")
+  @Schema(description = "Maximum resource activity count", minimum = "0")
   private Integer maxResourceActivities;
 
   @Min(0)
-  @Schema(description = "Maximum metrics retention days.", minimum = "0")
+  @Schema(description = "Maximum metrics retention days", minimum = "0")
   private Integer maxMetricsDays;
 
 }

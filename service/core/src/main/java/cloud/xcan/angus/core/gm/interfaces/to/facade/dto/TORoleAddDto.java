@@ -22,24 +22,24 @@ public class TORoleAddDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Operation role name.", example = "System administrator",
+  @Schema(description = "Operation role name", example = "System administrator",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @Code
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Operation role code.", example = "TOP_TENANT_ADMIN",
+  @Schema(description = "Operation role code", example = "TOP_TENANT_ADMIN",
       maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String code;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Operation role description.", maxLength = MAX_CODE_LENGTH,
+  @Schema(description = "Operation role description", maxLength = MAX_CODE_LENGTH,
       example = "System management policy")
   private String description;
 
   @NotNull
-  @Schema(description = "Operation application id.", example = "1",
+  @Schema(description = "Operation application id", example = "1",
       requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 

@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Group", description = "Manages group organizational unit creation, modification, and status maintenance, etc.")
+@Tag(name = "Group", description = "Manages group organizational unit creation, modification, and status maintenance, etc")
 @Validated
 @RestController
 @RequestMapping("/api/v1/group")
@@ -50,7 +50,7 @@ public class GroupRest {
   @Resource
   private GroupFacade groupFacade;
 
-  @Operation(summary = "Add groups.", operationId = "group:add")
+  @Operation(summary = "Add groups", operationId = "group:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -60,7 +60,7 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.add(dto));
   }
 
-  @Operation(summary = "Update groups.", operationId = "group:update")
+  @Operation(summary = "Update groups", operationId = "group:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -71,7 +71,7 @@ public class GroupRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace groups.", operationId = "group:replace")
+  @Operation(summary = "Replace groups", operationId = "group:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping
@@ -80,7 +80,7 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete groups.", operationId = "group:delete")
+  @Operation(summary = "Delete groups", operationId = "group:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -112,7 +112,7 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of group.", operationId = "group:list")
+  @Operation(summary = "Query the list of group", operationId = "group:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -120,7 +120,7 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of group.", operationId = "group:search")
+  @Operation(summary = "Fulltext search the list of group", operationId = "group:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

@@ -18,12 +18,12 @@ import org.hibernate.validator.constraints.Length;
 public class AppTagUpdateDto {
 
   @NotNull
-  @Schema(description = "Application tag id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application tag id", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Application tag name.", maxLength = MAX_NAME_LENGTH,
+  @Schema(description = "Application tag name", maxLength = MAX_NAME_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String name;
 

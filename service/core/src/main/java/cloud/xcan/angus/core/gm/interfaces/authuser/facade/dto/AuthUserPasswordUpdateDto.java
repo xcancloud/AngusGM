@@ -15,12 +15,12 @@ import lombok.experimental.Accessors;
 public class AuthUserPasswordUpdateDto {
 
   @NotNull
-  @Schema(description = "Update password user id.", example = "100", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Update password user id", example = "100", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Password
   @NotNull
-  @Schema(description = "User new password.", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User new password", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String newPassword;
 
 }

@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthAppOrgFindDto extends PageQuery {
 
-  @Schema(description = "Organization (user, group or department) id.")
+  @Schema(description = "Organization (user, group or department) id")
   private Long id;
 
 }

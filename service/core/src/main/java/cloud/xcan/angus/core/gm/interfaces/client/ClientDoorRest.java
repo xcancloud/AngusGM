@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "ClientInner", description = "Provides client entry for internal system updates.")
+@Tag(name = "ClientInner", description = "Provides client entry for internal system updates")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/client")
@@ -26,7 +26,7 @@ public class ClientDoorRest {
   @Resource
   private ClientFacade clientFacade;
 
-  @Operation(summary = "Update oauth2 registered client.", operationId = "client:update:inner")
+  @Operation(summary = "Update oauth2 registered client", operationId = "client:update:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")

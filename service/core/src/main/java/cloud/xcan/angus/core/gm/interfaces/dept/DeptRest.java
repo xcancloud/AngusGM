@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Dept", description = "Manages department organizational unit creation, modification, and hierarchical structure maintenance, etc.")
+@Tag(name = "Dept", description = "Manages department organizational unit creation, modification, and hierarchical structure maintenance, etc")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")
@@ -50,7 +50,7 @@ public class DeptRest {
   @Resource
   private DeptFacade deptFacade;
 
-  @Operation(summary = "Add departments.", operationId = "dept:add")
+  @Operation(summary = "Add departments", operationId = "dept:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -60,7 +60,7 @@ public class DeptRest {
     return ApiLocaleResult.success(deptFacade.add(dto));
   }
 
-  @Operation(summary = "Update departments.", operationId = "dept:update")
+  @Operation(summary = "Update departments", operationId = "dept:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")})
   @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -71,7 +71,7 @@ public class DeptRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace departments.", operationId = "dept:replace")
+  @Operation(summary = "Replace departments", operationId = "dept:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping
@@ -80,7 +80,7 @@ public class DeptRest {
     return ApiLocaleResult.success(deptFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete departments.", operationId = "dept:delete")
+  @Operation(summary = "Delete departments", operationId = "dept:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping
@@ -91,7 +91,7 @@ public class DeptRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the navigation position of department tree.", operationId = "dept:navigation")
+  @Operation(summary = "Query the navigation position of department tree", operationId = "dept:navigation")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -101,7 +101,7 @@ public class DeptRest {
     return ApiLocaleResult.success(deptFacade.navigation(id));
   }
 
-  @Operation(summary = "Query the detail of department.", operationId = "dept:detail")
+  @Operation(summary = "Query the detail of department", operationId = "dept:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -111,7 +111,7 @@ public class DeptRest {
     return ApiLocaleResult.success(deptFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of department.", operationId = "dept:list")
+  @Operation(summary = "Query the list of department", operationId = "dept:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -119,7 +119,7 @@ public class DeptRest {
     return ApiLocaleResult.success(deptFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of department.", operationId = "dept:search")
+  @Operation(summary = "Fulltext search the list of department", operationId = "dept:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")
@@ -127,7 +127,7 @@ public class DeptRest {
     return ApiLocaleResult.success(deptFacade.search(dto));
   }
 
-  @Operation(summary = "Query the number of sub departments and department users number.", operationId = "dept:sub:count")
+  @Operation(summary = "Query the number of sub departments and department users number", operationId = "dept:sub:count")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

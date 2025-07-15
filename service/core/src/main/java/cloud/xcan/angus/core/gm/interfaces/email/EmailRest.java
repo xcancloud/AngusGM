@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Email", description = "Handles email message delivery operations, and audit logging for tracking sent communications.")
+@Tag(name = "Email", description = "Handles email message delivery operations, and audit logging for tracking sent communications")
 @Validated
 @RestController
 @RequestMapping("/api/v1/email")
@@ -69,7 +69,7 @@ public class EmailRest {
     emailFacade.delete(ids);
   }
 
-  @Operation(summary = "Check the email verification code is valid.", operationId = "email:verificationCode:check")
+  @Operation(summary = "Check the email verification code is valid", operationId = "email:verificationCode:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")

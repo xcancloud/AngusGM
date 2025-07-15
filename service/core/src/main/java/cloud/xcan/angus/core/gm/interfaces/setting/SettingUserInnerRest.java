@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "SettingUserInner", description = "Handles internal system access to user configurations for administrative or automated adjustments.")
+@Tag(name = "SettingUserInner", description = "Handles internal system access to user configurations for administrative or automated adjustments")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/setting/user")
@@ -31,7 +31,7 @@ public class SettingUserInnerRest {
   @Resource
   private SettingUserFacade settingUserFacade;
 
-  @Operation(summary = "Bind the social of the current user.", operationId = "setting:user:social:bind:inner")
+  @Operation(summary = "Bind the social of the current user", operationId = "setting:user:social:bind:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -41,13 +41,13 @@ public class SettingUserInnerRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail:inner")
+  @Operation(summary = "Query the apis proxy of the current user", operationId = "setting:user:apis:proxy:detail:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
   @GetMapping(value = "/apis/proxy")
   public ApiLocaleResult<UserApiProxyVo> proxyDetailByInner(
-      @Parameter(name = "tenantId", description = "Query tenant id.", required = true)
+      @Parameter(name = "tenantId", description = "Query tenant id", required = true)
       @RequestParam(value = "tenantId", required = true) Long tenantId) {
     return ApiLocaleResult.success(settingUserFacade.proxyDetailByInner(tenantId));
   }

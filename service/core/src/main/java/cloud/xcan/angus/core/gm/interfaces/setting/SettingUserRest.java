@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "SettingUser", description = "Provides user-specific configuration access for personalized settings within authorized limits.")
+@Tag(name = "SettingUser", description = "Provides user-specific configuration access for personalized settings within authorized limits")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting/user")
@@ -34,7 +34,7 @@ public class SettingUserRest {
   @Resource
   private SettingUserFacade settingUserFacade;
 
-  @Operation(summary = "Update the preference setting of the current user.", operationId = "setting:user:preference:update")
+  @Operation(summary = "Update the preference setting of the current user", operationId = "setting:user:preference:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -44,7 +44,7 @@ public class SettingUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the preference setting of the current user.", operationId = "setting:user:preference:detail")
+  @Operation(summary = "Query the preference setting of the current user", operationId = "setting:user:preference:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -53,7 +53,7 @@ public class SettingUserRest {
     return ApiLocaleResult.success(settingUserFacade.preferenceDetail());
   }
 
-  @Operation(summary = "Update the apis proxy of the current user.", operationId = "setting:user:apis:proxy:update")
+  @Operation(summary = "Update the apis proxy of the current user", operationId = "setting:user:apis:proxy:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")})
   @PatchMapping("/apis/proxy")
@@ -62,7 +62,7 @@ public class SettingUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Enable the apis proxy of the current user.", operationId = "setting:user:apis:proxy:enabled")
+  @Operation(summary = "Enable the apis proxy of the current user", operationId = "setting:user:apis:proxy:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")})
   @PatchMapping("/apis/proxy/enabled")
@@ -71,7 +71,7 @@ public class SettingUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the apis proxy of the current user.", operationId = "setting:user:apis:proxy:detail")
+  @Operation(summary = "Query the apis proxy of the current user", operationId = "setting:user:apis:proxy:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -80,7 +80,7 @@ public class SettingUserRest {
     return ApiLocaleResult.success(settingUserFacade.proxyDetail());
   }
 
-  @Operation(summary = "Unbind social of the current user.", operationId = "setting:user:social:unbind")
+  @Operation(summary = "Unbind social of the current user", operationId = "setting:user:social:unbind")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Unbind successfully")})
   @PostMapping(value = "/social/unbind")
@@ -90,7 +90,7 @@ public class SettingUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the binding social information of the current user.", operationId = "setting:user:social:binding:detail")
+  @Operation(summary = "Query the binding social information of the current user", operationId = "setting:user:social:binding:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved binding")})
   @GetMapping(value = "/social/binding")

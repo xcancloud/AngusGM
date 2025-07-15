@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "AppOpenInner", description =
     "Used for opening applications through system calls in the background (/innerapi). "
         + "Enable automated onboarding and configuration of applications, granting authorized access to resources "
-        + "based on organizational/user permissions while enforcing security policies.")
+        + "based on organizational/user permissions while enforcing security policies")
 @Conditional(CloudServiceEditionCondition.class)
 @Validated
 @RestController
@@ -40,7 +40,7 @@ public class AppOpenDoorRest {
   @Resource
   private AppOpenFacade appOpenFacade;
 
-  @Operation(summary = "Open application.", operationId = "app:open:inner")
+  @Operation(summary = "Open application", operationId = "app:open:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Open successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -49,7 +49,7 @@ public class AppOpenDoorRest {
     return ApiLocaleResult.success(appOpenFacade.open(dto));
   }
 
-  @Operation(summary = "Renewal the opened application.", operationId = "app:open:renew:inner")
+  @Operation(summary = "Renewal the opened application", operationId = "app:open:renew:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -61,7 +61,7 @@ public class AppOpenDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Cancel the opened application.", operationId = "app:open:cancel:inner")
+  @Operation(summary = "Cancel the opened application", operationId = "app:open:cancel:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Cancel successfully")})
   @ResponseStatus(HttpStatus.CREATED)

@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthUserToken", description = "Controls user token issuance, validation, and revocation.")
+@Tag(name = "AuthUserToken", description = "Controls user token issuance, validation, and revocation")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/user")
@@ -42,7 +42,7 @@ public class AuthUserTokenRest {
 
   @Operation(summary =
       "Add token of current user. Used for customizing user authorization duration scenarios "
-          + "while maintaining permissions identical to the associated user's access privileges.", operationId = "auth:user:token:add")
+          + "while maintaining permissions identical to the associated user's access privileges", operationId = "auth:user:token:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -52,7 +52,7 @@ public class AuthUserTokenRest {
   }
 
   @Operation(summary = "Delete the tokens of current user. Note: After deletion, "
-      + "the access token will become invalid.", operationId = "auth:user:token:delete")
+      + "the access token will become invalid", operationId = "auth:user:token:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -62,7 +62,7 @@ public class AuthUserTokenRest {
     authUserTokenFacade.delete(ids);
   }
 
-  @Operation(summary = "Retrieve the value of the specified token associated with the current user.", operationId = "auth:token:value:detail")
+  @Operation(summary = "Retrieve the value of the specified token associated with the current user", operationId = "auth:token:value:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/token/{id}/value")
@@ -71,7 +71,7 @@ public class AuthUserTokenRest {
     return ApiLocaleResult.success(authUserTokenFacade.value(id));
   }
 
-  @Operation(summary = "Query the all tokens of current user.", operationId = "auth:user:token:all")
+  @Operation(summary = "Query the all tokens of current user", operationId = "auth:user:token:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/token")

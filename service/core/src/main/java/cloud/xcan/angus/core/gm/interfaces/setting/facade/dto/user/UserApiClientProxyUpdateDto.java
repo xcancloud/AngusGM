@@ -18,7 +18,7 @@ public class UserApiClientProxyUpdateDto implements Serializable {
 
   @NotEmpty
   @Length(max = MAX_URL_LENGTH)
-  @Schema(description = "User client proxy access address url.", example = "ws://localhost:6806/angusProxy",
+  @Schema(description = "User client proxy access address url", example = "ws://localhost:6806/angusProxy",
       maxLength = MAX_URL_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String url;
 

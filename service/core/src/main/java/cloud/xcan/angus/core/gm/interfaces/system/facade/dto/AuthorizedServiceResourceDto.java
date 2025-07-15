@@ -20,11 +20,11 @@ public class AuthorizedServiceResourceDto {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Authorized service code.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorized service code", requiredMode = RequiredMode.REQUIRED)
   private String serviceCode;
 
   @NotEmpty
-  @Schema(description = "Authorized resources.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorized resources", requiredMode = RequiredMode.REQUIRED)
   private List<AuthorizedResourceDto> resources;
 
 }

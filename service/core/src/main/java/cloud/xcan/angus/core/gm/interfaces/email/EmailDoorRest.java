@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "EmailInner", description = "Provides programmatic email send and real-time validity verification for cross-system service call.")
+@Tag(name = "EmailInner", description = "Provides programmatic email send and real-time validity verification for cross-system service call")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/email")
@@ -29,7 +29,7 @@ public class EmailDoorRest {
   @Resource
   private EmailDoorFacade emailDoorFacade;
 
-  @Operation(summary = "Send email.", operationId = "email:send:inner")
+  @Operation(summary = "Send email", operationId = "email:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sent successfully")})
   @PostMapping
@@ -38,7 +38,7 @@ public class EmailDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the email verification code is valid.", operationId = "email:verificationCode:check:inner")
+  @Operation(summary = "Check the email verification code is valid", operationId = "email:verificationCode:check:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping("/verificationCode/check")

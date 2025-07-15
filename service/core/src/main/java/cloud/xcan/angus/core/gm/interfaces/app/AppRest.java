@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@Tag(name = "App", description = "Manages application configurations and lifecycle processes.")
+@Tag(name = "App", description = "Manages application configurations and lifecycle processes")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app")
@@ -61,7 +61,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add application.", operationId = "app:add")
+  @Operation(summary = "Add application", operationId = "app:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -72,7 +72,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update application.", operationId = "app:update")
+  @Operation(summary = "Update application", operationId = "app:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -85,7 +85,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace application.", operationId = "app:replace")
+  @Operation(summary = "Replace application", operationId = "app:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")})
   @PutMapping
@@ -93,7 +93,7 @@ public class AppRest {
     return ApiLocaleResult.success(appFacade.replace(dto));
   }
 
-  @Operation(summary = "Update application site information.", operationId = "app:site:update")
+  @Operation(summary = "Update application site information", operationId = "app:site:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -105,7 +105,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete applications.", operationId = "app:delete")
+  @Operation(summary = "Delete applications", operationId = "app:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -117,7 +117,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable applications.", operationId = "app:enabled")
+  @Operation(summary = "Enable or disable applications", operationId = "app:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")
   })
@@ -129,7 +129,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Import application.", operationId = "app:import")
+  @Operation(summary = "Import application", operationId = "app:import")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Import successfully")
   })
@@ -142,7 +142,7 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Export application.", operationId = "app:export")
+  @Operation(summary = "Export application", operationId = "app:export")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Export successfully")
   })
@@ -151,7 +151,7 @@ public class AppRest {
     appFacade.export(dto, response);
   }
 
-  @Operation(summary = "Query the detail of application.", operationId = "app:detail")
+  @Operation(summary = "Query the detail of application", operationId = "app:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -161,7 +161,7 @@ public class AppRest {
     return ApiLocaleResult.success(appFacade.detail(id));
   }
 
-  @Operation(summary = "Query the detail of application.", operationId = "app:detail:bycode")
+  @Operation(summary = "Query the detail of application", operationId = "app:detail:bycode")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -172,7 +172,7 @@ public class AppRest {
     return ApiLocaleResult.success(appFacade.detail(code, editionType));
   }
 
-  @Operation(summary = "Query the list of application.", operationId = "app:list")
+  @Operation(summary = "Query the list of application", operationId = "app:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -180,7 +180,7 @@ public class AppRest {
     return ApiLocaleResult.success(appFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of application.", operationId = "app:search")
+  @Operation(summary = "Fulltext search the list of application", operationId = "app:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

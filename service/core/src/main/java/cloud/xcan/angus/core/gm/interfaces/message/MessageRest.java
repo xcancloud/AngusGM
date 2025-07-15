@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Message", description = "Handles the lifecycle (send, delete, query) and targeted distribution of messages to diverse organizational entities.")
+@Tag(name = "Message", description = "Handles the lifecycle (send, delete, query) and targeted distribution of messages to diverse organizational entities")
 @Validated
 @RestController
 @RequestMapping("/api/v1/message")
@@ -43,7 +43,7 @@ public class MessageRest {
   @Resource
   private MessageFacade messageFacade;
 
-  @Operation(summary = "Add message.", operationId = "message:add")
+  @Operation(summary = "Add message", operationId = "message:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @PostMapping
@@ -51,7 +51,7 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.add(dto));
   }
 
-  @Operation(summary = "Delete messages.", operationId = "message:delete")
+  @Operation(summary = "Delete messages", operationId = "message:delete")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
@@ -60,7 +60,7 @@ public class MessageRest {
     messageFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of message.", operationId = "message:detail")
+  @Operation(summary = "Query the detail of message", operationId = "message:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -69,7 +69,7 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of message.", operationId = "message:list")
+  @Operation(summary = "Query the list of message", operationId = "message:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -77,7 +77,7 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of message.", operationId = "message:search")
+  @Operation(summary = "Fulltext search the list of message", operationId = "message:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

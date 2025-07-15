@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Length;
 public class LocaleTo implements Serializable {
 
   @NotNull
-  @Schema(description = "Default language.", defaultValue = "zh_CN", example = "zh_CN", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Default language", defaultValue = "zh_CN", example = "zh_CN", requiredMode = RequiredMode.REQUIRED)
   private SupportedLanguage defaultLanguage;
 
   @Length(max = 20)

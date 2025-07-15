@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "CombinedNoticeInner", description = "Provides a unified entry for system to send messages, such as in-site messages, SMS, and emails.")
+@Tag(name = "CombinedNoticeInner", description = "Provides a unified entry for system to send messages, such as in-site messages, SMS, and emails")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/notice/combined")
@@ -26,7 +26,7 @@ public class NoticeCombinedDoorRest {
   @Resource
   NoticeDoorFacade noticeDoorFacade;
 
-  @Operation(summary = "Send notifications, support in-site message, SMS, and email.", operationId = "notice:send:inner")
+  @Operation(summary = "Send notifications, support in-site message, SMS, and email", operationId = "notice:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/send")

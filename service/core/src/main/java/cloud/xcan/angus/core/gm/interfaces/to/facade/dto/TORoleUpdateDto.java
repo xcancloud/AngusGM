@@ -18,16 +18,16 @@ import org.hibernate.validator.constraints.Length;
 public class TORoleUpdateDto {
 
   @NotNull
-  @Schema(description = "Operation role id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Operation role id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Operation role name.", example = "System administrator",
+  @Schema(description = "Operation role name", example = "System administrator",
       maxLength = MAX_NAME_LENGTH)
   private String name;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Operation role description.", example = "System management policy",
+  @Schema(description = "Operation role description", example = "System management policy",
       maxLength = MAX_DESC_LENGTH)
   private String description;
 

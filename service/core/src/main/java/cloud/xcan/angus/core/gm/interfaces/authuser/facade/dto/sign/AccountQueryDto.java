@@ -16,12 +16,12 @@ import org.hibernate.validator.constraints.Length;
 public class AccountQueryDto {
 
   @Password
-  @Schema(description = "User login password.", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User login password", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String password;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "User login account ( your username, mobile or email).",
+  @Schema(description = "User login account ( your username, mobile or email)",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String account;
 

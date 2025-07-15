@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Tag(name = "AnalysisCustomization", description =
     "Customized definition statistical analysis implementation apis, "
-        + "used to query supported analysis resource definition information and to retrieve analysis and statistical information.")
+        + "used to query supported analysis resource definition information and to retrieve analysis and statistical information")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "AnalysisCustomization"))
 // @ConditionalOnMissingClass -> Main application
 @Validated
@@ -38,7 +38,7 @@ public class AnalysisCustomizationRest {
   @Resource
   private AnalysisCustomizationFacade analysisCustomizationFacade;
 
-  @Operation(summary = "Resource customization analysis definition.", operationId = "analysis:customization:summary:definition")
+  @Operation(summary = "Resource customization analysis definition", operationId = "analysis:customization:summary:definition")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/summary/definition")
@@ -46,7 +46,7 @@ public class AnalysisCustomizationRest {
     return ApiLocaleResult.success(analysisCustomizationFacade.definitions());
   }
 
-  @Operation(summary = "Resource customization analysis.", operationId = "analysis:customization:summary")
+  @Operation(summary = "Resource customization analysis", operationId = "analysis:customization:summary")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/summary")
@@ -54,7 +54,7 @@ public class AnalysisCustomizationRest {
     return ApiLocaleResult.success(analysisCustomizationFacade.summary(dto));
   }
 
-  @Operation(summary = "Batch resources customization analysis.", operationId = "analysis:customization:summary:batch")
+  @Operation(summary = "Batch resources customization analysis", operationId = "analysis:customization:summary:batch")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/summary/batch")

@@ -12,11 +12,11 @@ import lombok.Setter;
 public class CurrentAuthUserPasswordUpdateDto {
 
   @Password(allowNull = false)
-  @Schema(description = "User old password.", example = "123@5678_", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User old password", example = "123@5678_", requiredMode = RequiredMode.REQUIRED)
   private String oldPassword;
 
   @Password(allowNull = false)
-  @Schema(description = "User new password.", example = "876@4321_", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User new password", example = "876@4321_", requiredMode = RequiredMode.REQUIRED)
   private String newPassword;
 
 }

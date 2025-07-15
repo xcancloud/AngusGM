@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "SmsChannel", description =
     "Provides management for third-party SMS channel configuration. "
-        + "If the SMS cannot be sent, please confirm whether the corresponding plugin for the SMS channel is installed or if the SMS template is correct.")
+        + "If the SMS cannot be sent, please confirm whether the corresponding plugin for the SMS channel is installed or if the SMS template is correct")
 @Validated
 @RestController
 @RequestMapping("/api/v1/sms/channel")
@@ -35,7 +35,7 @@ public class SmsChannelRest {
   @Resource
   private SmsChannelFacade smsChannelFacade;
 
-  @Operation(summary = "Update sms channel.", operationId = "sms:channel:update")
+  @Operation(summary = "Update sms channel", operationId = "sms:channel:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Update successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")
@@ -55,7 +55,7 @@ public class SmsChannelRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the list of sms channel.", operationId = "sms:channel:list")
+  @Operation(summary = "Query the list of sms channel", operationId = "sms:channel:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -63,7 +63,7 @@ public class SmsChannelRest {
     return ApiLocaleResult.success(smsChannelFacade.list(dto));
   }
 
-  @Operation(summary = "Query the detail of sms channel.", operationId = "sms:channel:detail")
+  @Operation(summary = "Query the detail of sms channel", operationId = "sms:channel:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})

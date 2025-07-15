@@ -17,14 +17,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Accessors(chain = true)
 public class AppTagFindDto extends PageQuery {
 
-  @Schema(description = "Application tag id.")
+  @Schema(description = "Application tag id")
   private Long id;
 
-  @Schema(description = "Application tag name.", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Application tag name", maxLength = MAX_NAME_LENGTH)
   private String name;
 
   @DateTimeFormat(pattern = DATE_FMT)
-  @Schema(description = "Application tag created date.")
+  @Schema(description = "Application tag created date")
   private LocalDateTime createdDate;
 
 }

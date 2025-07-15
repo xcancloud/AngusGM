@@ -23,41 +23,41 @@ public class EventTemplateReplaceDto implements Serializable {
 
   @Schema(description =
       "Event template id. The ID is required when modifying an existing template, "
-          + "create a new template when the value is empty.", example = "1")
+          + "create a new template when the value is empty", example = "1")
   private Long id;
 
   @NotBlank
   @Length(max = MAX_KEY_LENGTH)
-  @Schema(description = "Application code of the event.", maxLength = MAX_KEY_LENGTH,
+  @Schema(description = "Application code of the event", maxLength = MAX_KEY_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String appCode;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Template event code.", maxLength = MAX_CODE_LENGTH,
+  @Schema(description = "Template event code", maxLength = MAX_CODE_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String eventCode;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Template event name.", maxLength = MAX_NAME_LENGTH,
+  @Schema(description = "Template event name", maxLength = MAX_NAME_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String eventName;
 
   @NotNull
-  @Schema(description = "Template event type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Template event type", requiredMode = RequiredMode.REQUIRED)
   private EventType eventType;
 
   @Length(max = MAX_KEY_LENGTH)
-  @Schema(description = "Resource type of the event.", maxLength = MAX_KEY_LENGTH)
+  @Schema(description = "Resource type of the event", maxLength = MAX_KEY_LENGTH)
   private String targetType;
 
   @NotNull
-  @Schema(description = "Whether or not privatized edition template flag.",
+  @Schema(description = "Whether or not privatized edition template flag",
       requiredMode = RequiredMode.REQUIRED)
   private Boolean private0;
 
-  @Schema(description = "Receiving channels allowed or supported by the event template.")
+  @Schema(description = "Receiving channels allowed or supported by the event template")
   private Set<ReceiveChannelType> allowedChannelTypes;
 
 }

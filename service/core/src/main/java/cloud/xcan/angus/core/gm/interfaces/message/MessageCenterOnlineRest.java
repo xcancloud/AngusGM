@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "MessageCenterOnline", description = "Monitors real-time user online statuses, such as querying online users or forced logouts.")
+@Tag(name = "MessageCenterOnline", description = "Monitors real-time user online statuses, such as querying online users or forced logouts")
 @Validated
 @RestController
 @RequestMapping("/api/v1/message/center/online")
@@ -34,7 +34,7 @@ public class MessageCenterOnlineRest {
   @Resource
   private MessageCenterOnlineFacade messageCenterOnlineFacade;
 
-  @Operation(summary = "Forced offline and logout users.", operationId = "message:center:offline")
+  @Operation(summary = "Forced offline and logout users", operationId = "message:center:offline")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PostMapping("/off")
@@ -43,7 +43,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the online user information of the message center.", operationId = "message:center:online:detail")
+  @Operation(summary = "Query the online user information of the message center", operationId = "message:center:online:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Not found resource")})
@@ -53,7 +53,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.detail(userId));
   }
 
-  @Operation(summary = "Query the online user information of the message center.", operationId = "message:center:online:list")
+  @Operation(summary = "Query the online user information of the message center", operationId = "message:center:online:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -62,7 +62,7 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.list(dto));
   }
 
-  @Operation(summary = "Search the online user information of the message center.", operationId = "message:center:online:search")
+  @Operation(summary = "Search the online user information of the message center", operationId = "message:center:online:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

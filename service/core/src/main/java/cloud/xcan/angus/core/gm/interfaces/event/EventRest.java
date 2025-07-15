@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Event", description =
     "enable retrieval of historical event records and associated channel configurations. Users can filter, sort, "
-        + "and paginate event logs, while also querying configured event channels to audit event routing and processing workflows.")
+        + "and paginate event logs, while also querying configured event channels to audit event routing and processing workflows")
 @Validated
 @RestController
 @RequestMapping("/api/v1/event")
@@ -35,7 +35,7 @@ public class EventRest {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(summary = "Query the detail of event.", operationId = "event:detail")
+  @Operation(summary = "Query the detail of event", operationId = "event:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -45,7 +45,7 @@ public class EventRest {
     return ApiLocaleResult.success(eventFacade.detail(id));
   }
 
-  @Operation(summary = "Query the receive channels of event.", operationId = "event:channel:receive:all")
+  @Operation(summary = "Query the receive channels of event", operationId = "event:channel:receive:all")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{eventCode}/channel")
@@ -54,7 +54,7 @@ public class EventRest {
     return ApiLocaleResult.success(eventFacade.receiveChannel(eventCode));
   }
 
-  @Operation(summary = "Query the list of event.", operationId = "event:list")
+  @Operation(summary = "Query the list of event", operationId = "event:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -62,7 +62,7 @@ public class EventRest {
     return ApiLocaleResult.success(eventFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of event.", operationId = "event:search")
+  @Operation(summary = "Fulltext search the list of event", operationId = "event:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "DeptUser", description = "Controls department-to-user membership mappings to regulate "
-    + "user visibility and access privileges based on organizational departments.")
+    + "user visibility and access privileges based on organizational departments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")
@@ -47,7 +47,7 @@ public class DeptUserRest {
   @Resource
   private DeptUserFacade deptUserFacade;
 
-  @Operation(summary = "Add users to department.", operationId = "dept:user:add")
+  @Operation(summary = "Add users to department", operationId = "dept:user:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -60,7 +60,7 @@ public class DeptUserRest {
     return ApiLocaleResult.success(deptUserFacade.userAdd(deptId, userIds));
   }
 
-  @Operation(summary = "Remove users from department.", operationId = "dept:user:delete")
+  @Operation(summary = "Remove users from department", operationId = "dept:user:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -73,7 +73,7 @@ public class DeptUserRest {
     deptUserFacade.userDelete(deptId, userIds);
   }
 
-  @Operation(summary = "Replace department head, there can only be one department head.", operationId = "dept:head:replace")
+  @Operation(summary = "Replace department head, there can only be one department head", operationId = "dept:head:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -85,7 +85,7 @@ public class DeptUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the users list of department.", operationId = "dept:user:list")
+  @Operation(summary = "Query the users list of department", operationId = "dept:user:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping(value = "/{id}/user")

@@ -16,7 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Tag(name = "MessageCenterWS", description = "Message center WebSocket sending and receiving endpoint.")
+@Tag(name = "MessageCenterWS", description = "Message center WebSocket sending and receiving endpoint")
 @RestController
 public class MessageChatRest {
 
@@ -35,7 +35,7 @@ public class MessageChatRest {
         .type(MessageType.REPLY)
         .mediaType(PushMediaType.PLAIN_TEXT)
         .content("Do not use WebSocket to send messages to the server. "
-            + "Please use RESTFul api for sending instead.")
+            + "Please use RESTFul api for sending instead")
         .build();
 
     messagingTemplate.convertAndSendToUser(principal.getName(), PRIVATE_USER_DESTINATION, reply);

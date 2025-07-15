@@ -30,7 +30,7 @@ public class UnAuthPolicyFindDto extends PageQuery {
   private Boolean enabled;
 
   @JsonIgnore
-  @Schema(description = "Whether or not ignore the authorization organization information flag.", defaultValue = "false", hidden = true)
+  @Schema(description = "Whether or not ignore the authorization organization information flag", defaultValue = "false", hidden = true)
   private transient Boolean ignoreAuthOrg = true;
 
   private PolicyGrantStage grantStage;

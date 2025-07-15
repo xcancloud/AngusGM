@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "UserCurrent", description = "Personal center current user operation api entry.")
+@Tag(name = "UserCurrent", description = "Personal center current user operation api entry")
 @TenantClient
 @Validated
 @RestController
@@ -40,7 +40,7 @@ public class UserCurrentRest {
   @Resource
   private UserCurrentFacade userCurrentFacade;
 
-  @Operation(summary = "Query tenant of current user.", operationId = "user:current:tenant:detail")
+  @Operation(summary = "Query tenant of current user", operationId = "user:current:tenant:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -49,7 +49,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.tenantDetail());
   }
 
-  @Operation(summary = "Update the current user.", operationId = "user:current:update")
+  @Operation(summary = "Update the current user", operationId = "user:current:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -59,7 +59,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of current user.", operationId = "user:current:detail")
+  @Operation(summary = "Query the detail of current user", operationId = "user:current:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -68,7 +68,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.currentDetail());
   }
 
-  @Operation(summary = "Send sms verification code to current user.", operationId = "user:current:sms:send")
+  @Operation(summary = "Send sms verification code to current user", operationId = "user:current:sms:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully sent")})
@@ -78,7 +78,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check sms verification code of current user.", operationId = "user:current:sms:check")
+  @Operation(summary = "Check sms verification code of current user", operationId = "user:current:sms:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
@@ -87,7 +87,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.checkSms(dto));
   }
 
-  @Operation(summary = "Update the mobile of current user.", operationId = "user:current:mobile:update")
+  @Operation(summary = "Update the mobile of current user", operationId = "user:current:mobile:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -97,7 +97,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Send email verification code to current user.", operationId = "user:current:email:send")
+  @Operation(summary = "Send email verification code to current user", operationId = "user:current:email:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully sent")})
@@ -107,7 +107,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check email verification code of current user.", operationId = "user:current:email:check")
+  @Operation(summary = "Check email verification code of current user", operationId = "user:current:email:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
@@ -116,7 +116,7 @@ public class UserCurrentRest {
     return ApiLocaleResult.success(userCurrentFacade.checkEmail(dto));
   }
 
-  @Operation(summary = "Update the email of current user.", operationId = "user:current:email:update")
+  @Operation(summary = "Update the email of current user", operationId = "user:current:email:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

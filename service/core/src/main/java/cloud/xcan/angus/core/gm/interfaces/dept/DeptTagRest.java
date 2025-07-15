@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "DeptTag", description = "Assigns tags to department for resource categorization, or query access control grouping.")
+@Tag(name = "DeptTag", description = "Assigns tags to department for resource categorization, or query access control grouping")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")
@@ -44,7 +44,7 @@ public class DeptTagRest {
   @Resource
   private DeptTagFacade deptTagFacade;
 
-  @Operation(summary = "Add the tags of department.", operationId = "dept:tag:add")
+  @Operation(summary = "Add the tags of department", operationId = "dept:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -56,7 +56,7 @@ public class DeptTagRest {
     return ApiLocaleResult.success(deptTagFacade.tagAdd(deptId, tagIds));
   }
 
-  @Operation(summary = "Replace the tags of department.", operationId = "department:tag:replace")
+  @Operation(summary = "Replace the tags of department", operationId = "department:tag:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -68,7 +68,7 @@ public class DeptTagRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the tags of department.", operationId = "dept:tag:delete")
+  @Operation(summary = "Delete the tags of department", operationId = "dept:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -80,7 +80,7 @@ public class DeptTagRest {
     deptTagFacade.tagDelete(deptId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of department.", operationId = "dept:tag:list")
+  @Operation(summary = "Query the tags list of department", operationId = "dept:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

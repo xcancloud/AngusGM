@@ -21,25 +21,25 @@ import org.hibernate.validator.constraints.Length;
 public class CurrentEmailUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Email business type key.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email business type key", requiredMode = RequiredMode.REQUIRED)
   private EmailBizKey bizKey;
 
   @Email
   @NotBlank
   @Length(max = MAX_EMAIL_LENGTH)
-  @Schema(description = "User email.", example = "james@xcan.cloud",
+  @Schema(description = "User email", example = "james@xcan.cloud",
       maxLength = MAX_EMAIL_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String email;
 
   @NotBlank
   @Length(max = MAX_VERIFICATION_CODE_LENGTH)
-  @Schema(description = "Email verification code.", example = "778717",
+  @Schema(description = "Email verification code", example = "778717",
       maxLength = MAX_VERIFICATION_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String verificationCode;
 
   @NotBlank
   @Length(max = MAX_LINK_SECRET_LENGTH)
-  @Schema(description = "Email linkSecret.", maxLength = MAX_LINK_SECRET_LENGTH,
+  @Schema(description = "Email linkSecret", maxLength = MAX_LINK_SECRET_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String linkSecret;
 

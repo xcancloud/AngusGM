@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "ApiLog", description = "Inspects recorded API transaction details for auditing or debugging.")
+@Tag(name = "ApiLog", description = "Inspects recorded API transaction details for auditing or debugging")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLog"))
 @Validated
 @RestController
@@ -35,7 +35,7 @@ public class ApiLogRest {
   @Resource
   private ApiLogFacade apiLogFacade;
 
-  @Operation(summary = "Query the detail of api request log.", operationId = "log:api:detail")
+  @Operation(summary = "Query the detail of api request log", operationId = "log:api:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -45,7 +45,7 @@ public class ApiLogRest {
     return ApiLocaleResult.success(apiLogFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of api request log.", operationId = "log:api:list")
+  @Operation(summary = "Query the list of api request log", operationId = "log:api:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

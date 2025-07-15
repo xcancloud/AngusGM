@@ -27,7 +27,7 @@ public class AppFuncTreeVo implements TreeNode<AppFuncTreeVo> {
   private Long appId;
   private Integer sequence;
 
-  @Schema(description = "Whether to authorize control.")
+  @Schema(description = "Whether to authorize control")
   private Boolean authCtrl;
 
   private Boolean enabled;

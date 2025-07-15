@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "TenantInner", description = "Internal system unified tenant management entry.")
+@Tag(name = "TenantInner", description = "Internal system unified tenant management entry")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/tenant")
@@ -28,7 +28,7 @@ public class TenantDoorRest {
   @Resource
   private TenantFacade tenantFacade;
 
-  @Operation(summary = "Query the list of tenant.", operationId = "tenant:list:inner")
+  @Operation(summary = "Query the list of tenant", operationId = "tenant:list:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping

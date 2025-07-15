@@ -15,11 +15,11 @@ import lombok.experimental.Accessors;
 public class UserSysAdminSetDto implements Serializable {
 
   @NotNull
-  @Schema(description = "User id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull
-  @Schema(description = "Whether or not system administrator flag.", example = "false", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Whether or not system administrator flag", example = "false", requiredMode = RequiredMode.REQUIRED)
   private Boolean sysAdmin = false;
 
 }

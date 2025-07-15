@@ -17,12 +17,12 @@ import lombok.Setter;
 @Getter
 public class MessageCenterOfflineDto implements Serializable {
 
-  @Schema(description = "Send messages to other instances of the service.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Send messages to other instances of the service", requiredMode = RequiredMode.REQUIRED)
   private boolean broadcast = true;
 
   @NotNull
   @EnumPart(enumClass = ReceiveObjectType.class, allowableValues = {"TENANT", "USER"})
-  @Schema(description = "Receive message object type.", allowableValues = {"TENANT", "USER"})
+  @Schema(description = "Receive message object type", allowableValues = {"TENANT", "USER"})
   private ReceiveObjectType receiveObjectType;
 
   @Size(max = MAX_PUSH_OBJECT_NUM)

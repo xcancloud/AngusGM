@@ -24,7 +24,7 @@ public class CurrentEmailSendDto implements Serializable {
   @EnumPart(enumClass = EmailBizKey.class, allowableValues = {
       "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
   })
-  @Schema(description = "Email business type key.", example = "BIND_EMAIL",
+  @Schema(description = "Email business type key", example = "BIND_EMAIL",
       allowableValues = {
           "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
       }, requiredMode = RequiredMode.REQUIRED)
@@ -32,7 +32,7 @@ public class CurrentEmailSendDto implements Serializable {
 
   @NotNull
   @Size(max = MAX_EMAIL_ADDRESS)
-  @Schema(description = "List of email receiving addresses, supporting up to `500` addresses.", type = "array",
+  @Schema(description = "List of email receiving addresses, supporting up to `500` addresses", type = "array",
       example = "[\"james@xcancloud.com\"]", requiredMode = RequiredMode.REQUIRED)
   private Set<String> toAddress;
 

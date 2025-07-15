@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "TenantCertAudit", description = "Verifies and audits tenant identity documents to ensure compliance and authenticity.")
+@Tag(name = "TenantCertAudit", description = "Verifies and audits tenant identity documents to ensure compliance and authenticity")
 @Conditional(CloudServiceEditionCondition.class)
 @OperationClient
 @Validated
@@ -40,7 +40,7 @@ public class TenantCertAuditRest {
   private TenantCertAuditFacade tenantCertAuditFacade;
 
   @TenantClient
-  @Operation(summary = "Submit real-name authentication certificate.", operationId = "tenant:certificate:submit")
+  @Operation(summary = "Submit real-name authentication certificate", operationId = "tenant:certificate:submit")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Submit successfully")})
   @PostMapping("/audit/submit")
@@ -51,7 +51,7 @@ public class TenantCertAuditRest {
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
   @OperationClient
-  @Operation(summary = "Audit tenant certificate information.", operationId = "tenant:certificate:audit")
+  @Operation(summary = "Audit tenant certificate information", operationId = "tenant:certificate:audit")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Audit succeeded")})
   @PatchMapping("/audit")
@@ -60,7 +60,7 @@ public class TenantCertAuditRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the real-name audit of tenant.", operationId = "tenant:certificate:audit:check")
+  @Operation(summary = "Check the real-name audit of tenant", operationId = "tenant:certificate:audit:check")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully audit")})
   @GetMapping("/audit/check")
@@ -69,7 +69,7 @@ public class TenantCertAuditRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Quote the detail of tenant real-name audit.", operationId = "tenant:certificate:audit:detail")
+  @Operation(summary = "Quote the detail of tenant real-name audit", operationId = "tenant:certificate:audit:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully audit")})
   @GetMapping("/audit")

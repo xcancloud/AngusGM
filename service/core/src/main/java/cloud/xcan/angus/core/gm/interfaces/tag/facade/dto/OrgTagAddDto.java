@@ -17,7 +17,7 @@ public class OrgTagAddDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Organization tag name.", example = "developer", maxLength = MAX_NAME_LENGTH,
+  @Schema(description = "Organization tag name", example = "developer", maxLength = MAX_NAME_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String name;
 

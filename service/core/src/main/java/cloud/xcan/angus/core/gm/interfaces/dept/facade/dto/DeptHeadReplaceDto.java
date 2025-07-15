@@ -14,11 +14,11 @@ import lombok.experimental.Accessors;
 public class DeptHeadReplaceDto implements Serializable {
 
   @NotNull
-  @Schema(description = "User id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long userId;
 
   @NotNull
-  @Schema(description = "Whether or not the department head flag.", example = "true",
+  @Schema(description = "Whether or not the department head flag", example = "true",
       requiredMode = RequiredMode.REQUIRED)
   public Boolean head;
 

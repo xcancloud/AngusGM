@@ -19,12 +19,12 @@ import org.hibernate.validator.constraints.Length;
 public class OrgTagUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Organization tag id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Organization tag id", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Organization tag name.", example = "dev", maxLength = MAX_NAME_LENGTH,
+  @Schema(description = "Organization tag name", example = "dev", maxLength = MAX_NAME_LENGTH,
       requiredMode = RequiredMode.REQUIRED)
   private String name;
 

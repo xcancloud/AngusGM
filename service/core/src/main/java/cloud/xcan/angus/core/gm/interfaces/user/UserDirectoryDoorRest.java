@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "UserDirectoryInner", description = "Internal system call for synchronizing user and group information with the directory service api.")
+@Tag(name = "UserDirectoryInner", description = "Internal system call for synchronizing user and group information with the directory service api")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/user/directory")
@@ -29,7 +29,7 @@ public class UserDirectoryDoorRest {
   private UserDirectoryFacade userDirectoryFacade;
 
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
-  @Operation(summary = "Synchronize the users and groups from user directories.", operationId = "user:directory:sync:inner")
+  @Operation(summary = "Synchronize the users and groups from user directories", operationId = "user:directory:sync:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Synchronize successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

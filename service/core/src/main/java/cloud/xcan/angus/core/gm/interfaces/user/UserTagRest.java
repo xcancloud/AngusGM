@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "UserTag", description = "Assigns tags to user for resource categorization, or query access control grouping.")
+@Tag(name = "UserTag", description = "Assigns tags to user for resource categorization, or query access control grouping")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user")
@@ -45,7 +45,7 @@ public class UserTagRest {
   @Resource
   private UserTagFacade userTagFacade;
 
-  @Operation(summary = "Add the tags to user.", operationId = "user:tag:add")
+  @Operation(summary = "Add the tags to user", operationId = "user:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -57,7 +57,7 @@ public class UserTagRest {
     return ApiLocaleResult.success(userTagFacade.tagAdd(userId, tagIds));
   }
 
-  @Operation(summary = "Replace the tags of user.", operationId = "user:tag:replace")
+  @Operation(summary = "Replace the tags of user", operationId = "user:tag:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -69,7 +69,7 @@ public class UserTagRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the tags of user.", operationId = "user:tag:delete")
+  @Operation(summary = "Delete the tags of user", operationId = "user:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -81,7 +81,7 @@ public class UserTagRest {
     userTagFacade.tagDelete(userId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of user.", operationId = "user:tag:list")
+  @Operation(summary = "Query the tags list of user", operationId = "user:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
