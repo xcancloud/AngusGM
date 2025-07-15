@@ -317,7 +317,7 @@ springdoc:
           ```
     servers:
       - url: "{protocol}://{env}-apis.xcan.cloud/{route}"
-        description: "Angus Application Api Base URL"
+        description: "Application Api Base URL"
         variables:
           protocol:
             description: "Http protocol"
