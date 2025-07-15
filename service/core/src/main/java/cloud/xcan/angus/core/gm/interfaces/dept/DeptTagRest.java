@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "DeptTag", description = "Assigns tags to department for resource categorization, or query access control grouping")
+@Tag(name = "DepartmentTag", description = "Assigns tags to department for resource categorization, or query access control grouping")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")

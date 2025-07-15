@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Tag(name = "EventInner", description = "Used for external systems or services to submit event data programmatically")
+@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/event")

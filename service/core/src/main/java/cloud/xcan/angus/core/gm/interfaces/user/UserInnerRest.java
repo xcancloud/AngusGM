@@ -28,12 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/user")
-public class UserDoorRest {
+public class UserInnerRest {
 
   @Resource
   private UserFacade userFacade;
 
-  @Operation(summary = "Add user", operationId = "user:add:inner")
+  @Operation(summary = "Add user by inner api", operationId = "user:add:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)

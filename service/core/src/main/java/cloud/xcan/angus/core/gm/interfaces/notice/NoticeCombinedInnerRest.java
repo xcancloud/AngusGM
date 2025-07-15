@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/notice/combined")
-public class NoticeCombinedDoorRest {
+public class NoticeCombinedInnerRest {
 
   @Resource
   NoticeDoorFacade noticeDoorFacade;
 
-  @Operation(summary = "Send notifications, support in-site message, SMS, and email", operationId = "notice:send:inner")
+  @Operation(summary = "Send notifications", description = "Support in-site message, SMS, and email", operationId = "notice:send:inner")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/send")

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/user/directory")
-public class UserDirectoryDoorRest {
+public class UserDirectoryInnerRest {
 
   @Resource
   private UserDirectoryFacade userDirectoryFacade;

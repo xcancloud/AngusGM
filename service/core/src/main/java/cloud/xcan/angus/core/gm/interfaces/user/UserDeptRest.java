@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "UserDept", description = "Controls user-to-department membership mappings to regulate "
+@Tag(name = "UserDepartment", description = "Controls user-to-department membership mappings to regulate "
     + "user visibility and access privileges based on organizational departments")
 @Validated
 @RestController
