@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "AuthUser", description = "Administers OAuth2 user identities and authorization grants")
+@Tag(name = "AuthUser", description = "Managing OAuth2 user identities and authorization permissions")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/user")
@@ -64,9 +64,9 @@ public class AuthUserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary =
-      "Delete oauth2 authorization users. Note: After deleting the authorized user, "
-          + "they will not be able to log in to the system", operationId = "auth:user:delete")
+  @Operation(summary = "Delete oauth2 authorization users",
+      description = "Note: After deleting the authorized user, they will not be able to log in to the system",
+      operationId = "auth:user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
@@ -77,7 +77,8 @@ public class AuthUserRest {
     userFacade.delete(ids);
   }
 
-  @Operation(summary = "Modify the user's real-name status after the tenant real name authentication",
+  @Operation(summary = "Modify the user's real-name status",
+      description = "Modify the user's real-name status after the tenant real name authentication",
       operationId = "auth:user:realname:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully")
@@ -129,7 +130,7 @@ public class AuthUserRest {
     return ApiLocaleResult.success(userFacade.userAppList(userId));
   }
 
-  @Operation(summary = "Query all authorized application functions list of user", operationId = "auth:user:app:func:list")
+  @Operation(summary = "Query all authorized application function list of user", operationId = "auth:user:app:func:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -144,7 +145,7 @@ public class AuthUserRest {
         joinTag, onlyEnabled));
   }
 
-  @Operation(summary = "Query all authorized application functions tree of user", operationId = "auth:user:app:func:tree")
+  @Operation(summary = "Query all authorized application function tree of user", operationId = "auth:user:app:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

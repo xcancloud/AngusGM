@@ -44,9 +44,10 @@ public class AuthUserPubRest {
   @Resource
   private AuthUserSignFacade userSignFacade;
 
-  @Operation(summary = "User signup", description =
-      "Enable users to securely create account via mobile number or email, "
-          + "while ensuring identity verification for authorized access to the system. Note: Duplicate registration is not supported", operationId = "auth:user:signup")
+  @Operation(summary = "User signup",
+      description = "Enable users to securely create account via mobile number or email, "
+          + "while ensuring identity verification for authorized access to the system. Note: Duplicate registration is not supported",
+      operationId = "auth:user:signup")
   @ResponseStatus(HttpStatus.CREATED)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Signup successfully")})
@@ -57,9 +58,10 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.signup(deviceId, dto));
   }
 
-  @Operation(summary = "User sign-in", description =
-      "Enable authentication through username, mobile number, or email, "
-          + "verifying credentials to grant secure access and generate authorization tokens for protected resources", operationId = "auth:user:signin")
+  @Operation(summary = "User sign-in",
+      description = "Enable authentication through username, mobile number, or email, "
+          + "verifying credentials to grant secure access and generate authorization tokens for protected resources",
+      operationId = "auth:user:signin")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
@@ -70,11 +72,12 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.signin(deviceId, dto));
   }
 
-  @Operation(summary = "User sign-in by get request", description =
-      "Enable authentication through username, mobile number, or email, "
+  @Operation(summary = "User sign-in by get request",
+      description = "Enable authentication through username, mobile number, or email, "
           + "verifying credentials to grant secure access and generate authorization tokens for protected resources. "
           + "Note: The GET request interface is used for convenient debugging or quick login, "
-          + "while the POST method is recommended in production environments", hidden = true, operationId = "auth:user:signin:get")
+          + "while the POST method is recommended in production environments",
+      hidden = true, operationId = "auth:user:signin:get")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
@@ -85,9 +88,10 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.signin(deviceId, dto));
   }
 
-  @Operation(summary = "User renew", description =
-      "Use OAuth2 refresh token enables clients to securely obtain a new access token "
-          + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources", operationId = "auth:user:renew")
+  @Operation(summary = "User renew",
+      description = "Use OAuth2 refresh token enables clients to securely obtain a new access token "
+          + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources",
+      operationId = "auth:user:renew")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully")})
@@ -96,11 +100,12 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.renew(dto));
   }
 
-  @Operation(summary = "User renew by get request", description =
-      "Use OAuth2 refresh token enables clients to securely obtain a new access token "
+  @Operation(summary = "User renew by get request",
+      description = "Use OAuth2 refresh token enables clients to securely obtain a new access token "
           + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources. "
           + "Note: The GET request interface is used for convenient debugging or quick retrieval of access tokens, "
-          + "while the POST method is recommended in production environments", hidden = true, operationId = "auth:user:renew:get")
+          + "while the POST method is recommended in production environments",
+      hidden = true, operationId = "auth:user:renew:get")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Renew successfully")})
@@ -109,9 +114,10 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.renew(dto));
   }
 
-  @Operation(summary = "User sign out", description =
-      "Enable securely terminates authenticated sessions "
-          + "by invalidating access token, preventing unauthorized access to protected resources", operationId = "auth:user:signout")
+  @Operation(summary = "User sign out",
+      description = "Enable securely terminates authenticated sessions "
+          + "by invalidating access token, preventing unauthorized access to protected resources",
+      operationId = "auth:user:signout")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signout successfully")})
@@ -121,11 +127,12 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "User sign out by get request", description =
-      "Enable securely terminates authenticated sessions "
-          + "by invalidating access token, preventing unauthorized access to protected resources. "
+  @Operation(summary = "User sign out by get request",
+      description = "Enable securely terminates authenticated sessions by invalidating access token, "
+          + "preventing unauthorized access to protected resources. "
           + "Note: The GET request interface is used for convenient debugging or quick logout system, "
-          + "while the POST method is recommended in production environments", hidden = true, operationId = "auth:user:signout:get")
+          + "while the POST method is recommended in production environments",
+      hidden = true, operationId = "auth:user:signout:get")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signout successfully")})
@@ -135,9 +142,10 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query registered accounts", description =
-      "Retrieve registered tenant accounts to choose and access a specific tenant during the login process. "
-          + "Note: Only return accounts that match both the account and password", operationId = "auth:user:signin:account")
+  @Operation(summary = "Query registered accounts",
+      description = "Retrieve registered tenant accounts to choose and access a specific tenant during the login process. "
+          + "Note: Only return accounts that match both the account and password",
+      operationId = "auth:user:signin:account")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
@@ -146,9 +154,10 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.tenantAccount(dto));
   }
 
-  @Operation(summary = "User reset password after forget", description =
-      "Enable users to securely reset their password via a verification process, "
-          + "ensuring account recovery while preventing unauthorized access", operationId = "auth:user:password:forget")
+  @Operation(summary = "User reset password after forget",
+      description = "Enable users to securely reset their password via a verification process, "
+          + "ensuring account recovery while preventing unauthorized access",
+      operationId = "auth:user:password:forget")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -158,9 +167,9 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Send the sms verification code", description =
-      "Send the sms verification code of user sign, "
-          + "such as: sms signup, sign-in, password recovery, etc", operationId = "auth:user:sign:sms:send")
+  @Operation(summary = "Send the sms verification code",
+      description = "Send the sms verification code of user sign, such as: sms signup, sign-in, password recovery, etc",
+      operationId = "auth:user:sign:sms:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Send successfully")})
@@ -170,8 +179,9 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the sms verification code of user sign", description =
-      "Check the sms verification code of user sign, such as: sms signup, sign-in, password recovery, etc", operationId = "auth:user:sign:sms:check")
+  @Operation(summary = "Check the sms verification code of user sign",
+      description = "Check the sms verification code of user sign, such as: sms signup, sign-in, password recovery, etc",
+      operationId = "auth:user:sign:sms:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Check successfully")})
@@ -180,9 +190,9 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success(userSignFacade.checkSignSms(dto));
   }
 
-  @Operation(summary = "Send the email verification code of user sign", description =
-      "Send the email verification code of user sign, "
-          + "such as: email signup, sign-in, password recovery, etc", operationId = "auth:user:sign:email:send")
+  @Operation(summary = "Send the email verification code of user sign",
+      description = "Send the email verification code of user sign, such as: email signup, sign-in, password recovery, etc",
+      operationId = "auth:user:sign:email:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Send successfully")})
@@ -192,9 +202,9 @@ public class AuthUserPubRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the email verification code of user sign", description =
-      "Check the email verification code of user sign, "
-          + "such as: email signup, sign-in, password recovery, etc", operationId = "auth:user:sign:email:check")
+  @Operation(summary = "Check the email verification code of user sign",
+      description = "Check the email verification code of user sign, such as: email signup, sign-in, password recovery, etc",
+      operationId = "auth:user:sign:email:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Check successfully")})
