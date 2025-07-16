@@ -49,7 +49,7 @@ import cloud.xcan.angus.api.manager.SettingTenantManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
-import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;

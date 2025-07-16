@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicyDept", description = "Provides a unified entry for querying the relationship between departments and authorization policies")
+@Tag(name = "AuthPolicyDepartment", description = "Provides a unified entry for querying the relationship between departments and authorization policies")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth")

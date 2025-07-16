@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppOrgAuth", description = "Retrieves user-specific application access permissions within an organization")
+@Tag(name = "AppOrganizationAuthorization", description = "Retrieves user-specific application access permissions within an organization")
 @Validated
 @RestController
 @RequestMapping("/api/v1")

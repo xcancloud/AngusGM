@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "WebTag")
+@Tag(name = "WebTag", description = "Identify and categorize software applications and functions for quick recognition and management")
 @Validated
 @RestController
 @RequestMapping("/api/v1/web/tag")
@@ -49,7 +49,7 @@ public class WebTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add tag", operationId = "web:tag:add")
+  @Operation(summary = "Add web tags", operationId = "web:tag:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
@@ -61,7 +61,7 @@ public class WebTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update tags", operationId = "web:tag:update")
+  @Operation(summary = "Update web tags", operationId = "web:tag:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
@@ -75,7 +75,7 @@ public class WebTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete tags", operationId = "web:tag:delete")
+  @Operation(summary = "Delete web tags", operationId = "web:tag:delete")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -85,7 +85,7 @@ public class WebTagRest {
     webTagFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of tag", operationId = "web:tag:detail")
+  @Operation(summary = "Query the detail of web tag", operationId = "web:tag:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -95,7 +95,7 @@ public class WebTagRest {
     return ApiLocaleResult.success(webTagFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of tags", operationId = "web:tag:list")
+  @Operation(summary = "Query the list of web tags", operationId = "web:tag:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
@@ -103,7 +103,7 @@ public class WebTagRest {
     return ApiLocaleResult.success(webTagFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of tags", operationId = "web:tag:search")
+  @Operation(summary = "Fulltext search the list of web tags", operationId = "web:tag:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/search")

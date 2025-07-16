@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "DeptUser", description = "Controls department-to-user membership mappings to regulate "
+@Tag(name = "DepartmentUser", description = "Controls department-to-user membership mappings to regulate "
     + "user visibility and access privileges based on organizational departments")
 @Validated
 @RestController
@@ -73,7 +73,7 @@ public class DeptUserRest {
     deptUserFacade.userDelete(deptId, userIds);
   }
 
-  @Operation(summary = "Replace department head, there can only be one department head", operationId = "dept:head:replace")
+  @Operation(summary = "Replace department head", description = "There can only be one department head", operationId = "dept:head:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})

@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Validated
-@Tag(name = "WebTagTarget")
+@Tag(name = "WebTagTarget", description = "Web tags and associated resource relationship maintenance and management")
 @RestController
 @RequestMapping("/api/v1/web/tag")
 public class WebTagTargetRest {

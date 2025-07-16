@@ -4,6 +4,7 @@ import static cloud.xcan.angus.api.commonlink.AuthConstant.TOKEN_REVOKE_ENDPOINT
 import static cloud.xcan.angus.api.commonlink.AuthConstant.USER_INFO_ENDPOINT;
 import static java.util.Objects.nonNull;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "User", description = "Unified user management entry for the system.")
+@Tag(name = "UserAuth", description = "Unified user management entry for the system.")
 @RestController
 public class UserEndpoint {
 
@@ -29,12 +30,14 @@ public class UserEndpoint {
   private OAuth2AuthorizationService oauth2AuthorizationService;
 
   @ResponseBody
+  @Operation(summary = "Query user authentication and authorization information", operationId = "auth:user:principal")
   @GetMapping(USER_INFO_ENDPOINT)
   public Principal user(Principal principal) {
     return principal;
   }
 
   @ResponseBody
+  @Operation(summary = "Revoke access token", operationId = "auth:token:revoke")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Revoke token successfully")})
   @RequestMapping(method = RequestMethod.DELETE, value = TOKEN_REVOKE_ENDPOINT)

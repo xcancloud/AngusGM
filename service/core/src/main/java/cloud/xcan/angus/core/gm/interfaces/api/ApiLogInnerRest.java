@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Tag(name = "ApiLogInner", description = "Aggregates and stores API interaction data for analysis")
+@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogInner"))
 @RestController
 @RequestMapping("/innerapi/v1/log/api")

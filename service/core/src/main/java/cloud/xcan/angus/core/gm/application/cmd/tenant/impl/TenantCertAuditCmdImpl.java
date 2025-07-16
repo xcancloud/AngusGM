@@ -36,7 +36,7 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizAssert;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
-import cloud.xcan.angus.core.gm.application.cmd.authuser.AuthUserCmd;
+import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCertAuditCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertAuditQuery;

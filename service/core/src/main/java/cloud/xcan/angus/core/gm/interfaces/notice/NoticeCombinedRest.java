@@ -25,7 +25,7 @@ public class NoticeCombinedRest {
   @Resource
   private NoticeCombinedFacade noticeCombinedFacade;
 
-  @Operation(summary = "Send notifications, in-site messages, SMS, and email", operationId = "notice:send")
+  @Operation(summary = "Send notifications", description = "Support in-site message, SMS, and email", operationId = "notice:send")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/send")

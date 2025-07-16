@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Tag(name = "AppOpenInner", description =
     "Used for opening applications through system calls in the background (/innerapi). "
         + "Enable automated onboarding and configuration of applications, granting authorized access to resources "
         + "based on organizational/user permissions while enforcing security policies")
 @Conditional(CloudServiceEditionCondition.class)
+@PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/appopen")

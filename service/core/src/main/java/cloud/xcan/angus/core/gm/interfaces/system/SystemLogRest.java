@@ -57,7 +57,7 @@ public class SystemLogRest {
         systemLogFacade.fileDetail(instanceId, fileName, linesNum, tail));
   }
 
-  @Operation(summary = "Delete when rolled the log file, otherwise only empty the log file content", operationId = "systemlog:instance:file:clear")
+  @Operation(summary = "Delete content of log file", operationId = "systemlog:instance:file:clear")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @PostMapping("/instance/{id}/file/{name}")

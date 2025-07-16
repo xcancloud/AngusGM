@@ -1,6 +1,6 @@
 package cloud.xcan.angus.api.gm.client;
 
-import cloud.xcan.angus.api.gm.client.dto.ClientUpdateDto;
+import cloud.xcan.angus.api.gm.client.dto.AuthClientUpdateDto;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,6 +18,6 @@ public interface ClientInnerRemote {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")
   })
-  @PatchMapping(value = "/innerapi/v1/client")
-  ApiLocaleResult<?> update(@RequestBody ClientUpdateDto dto);
+  @PatchMapping(value = "/innerapi/v1/auth/client")
+  ApiLocaleResult<?> update(@RequestBody AuthClientUpdateDto dto);
 }

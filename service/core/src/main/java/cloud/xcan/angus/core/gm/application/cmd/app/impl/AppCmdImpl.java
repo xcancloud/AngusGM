@@ -26,7 +26,7 @@ import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tag.WebTagTargetCmd;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
-import cloud.xcan.angus.core.gm.application.query.client.ClientQuery;
+import cloud.xcan.angus.core.gm.application.query.auth.AuthClientQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.app.AppRepo;
@@ -60,7 +60,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
   private AppOpenRepo appOpenRepo;
 
   @Resource
-  private ClientQuery clientQuery;
+  private AuthClientQuery clientQuery;
 
   @Resource
   private AuthPolicyCmd authPolicyCmd;

@@ -1,7 +1,7 @@
 package cloud.xcan.angus.api.gm.client;
 
-import cloud.xcan.angus.api.gm.client.dto.ClientSignInDto;
-import cloud.xcan.angus.api.gm.client.vo.ClientSignVo;
+import cloud.xcan.angus.api.gm.client.dto.AuthClientSignInDto;
+import cloud.xcan.angus.api.gm.client.vo.AuthClientSignVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,8 +21,8 @@ public interface ClientSignPubRemote {
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
-  @PostMapping(value = "/pubapi/v1/client/signin")
-  ApiLocaleResult<ClientSignVo> signin(@Valid @RequestBody ClientSignInDto dto);
+  @PostMapping(value = "/pubapi/v1/auth/client/signin")
+  ApiLocaleResult<AuthClientSignVo> signin(@Valid @RequestBody AuthClientSignInDto dto);
 
 
 }

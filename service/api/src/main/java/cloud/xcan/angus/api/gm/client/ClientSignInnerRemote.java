@@ -1,7 +1,7 @@
 package cloud.xcan.angus.api.gm.client;
 
-import cloud.xcan.angus.api.gm.client.dto.ClientSignupDto;
-import cloud.xcan.angus.api.gm.client.vo.ClientSignupVo;
+import cloud.xcan.angus.api.gm.client.dto.AuthClientSignupDto;
+import cloud.xcan.angus.api.gm.client.vo.AuthClientSignupVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +21,7 @@ public interface ClientSignInnerRemote {
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Signup successfully")})
-  @PostMapping(value = "/innerapi/v1/client/signup")
-  ApiLocaleResult<ClientSignupVo> signupByDoor(@Valid @RequestBody ClientSignupDto dto);
+  @PostMapping(value = "/innerapi/v1/auth/client/signup")
+  ApiLocaleResult<AuthClientSignupVo> signupByDoor(@Valid @RequestBody AuthClientSignupDto dto);
 
 }

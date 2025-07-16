@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Dept", description = "Manages department organizational unit creation, modification, and hierarchical structure maintenance, etc")
+@Tag(name = "Department", description = "Manages department organizational unit creation, modification, and hierarchical structure maintenance, etc")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")

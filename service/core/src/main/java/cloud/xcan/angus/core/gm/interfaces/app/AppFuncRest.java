@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppFunc", description = "Organizes system function (menus, button, panel) and permission assignments")
+@Tag(name = "AppFunction", description = "Organizes system functions (including menu, button, and panel) and permission assignments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app")
@@ -52,7 +52,7 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add application functions, including menu, button, and panel", operationId = "app:func:add")
+  @Operation(summary = "Add application functions", operationId = "app:func:add")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{appId}/func")
@@ -64,7 +64,7 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update application menu, button and panel functions", operationId = "app:func:update")
+  @Operation(summary = "Update application functions", operationId = "app:func:update")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated successfully"),
       @ApiResponse(responseCode = "404", description = "App function does not existed")})
@@ -78,7 +78,7 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace application menu, button and panel functions", operationId = "app:func:replace")
+  @Operation(summary = "Replace application functions", operationId = "app:func:replace")
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping("/{appId}/func")
   public ApiLocaleResult<?> replace(
@@ -90,7 +90,7 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the menu, button and panel functions of application", operationId = "app:func:delete")
+  @Operation(summary = "Delete the functions of application", operationId = "app:func:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
   @DeleteMapping(value = "/{appId}/func")
@@ -102,7 +102,7 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable the menu, button and panel functions of application", operationId = "app:func:enabled")
+  @Operation(summary = "Enable or disable the functions of application", operationId = "app:func:enabled")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")})
   @PatchMapping("/{appId}/func/enabled")
@@ -113,7 +113,7 @@ public class AppFuncRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the menu, button or panel function detail of application", operationId = "app:func:detail")
+  @Operation(summary = "Query the function detail of application", operationId = "app:func:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "App function does not existed")})
@@ -123,7 +123,7 @@ public class AppFuncRest {
     return ApiLocaleResult.success(appFuncFacade.detail(id));
   }
 
-  @Operation(summary = "Query the menu, button and panel functions list of application", operationId = "app:func:list")
+  @Operation(summary = "Query the functions list of application", operationId = "app:func:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{appId}/func")
@@ -133,7 +133,7 @@ public class AppFuncRest {
     return ApiLocaleResult.success(appFuncFacade.list(appId, dto));
   }
 
-  @Operation(summary = "Fulltext search the menu, button and panel functions list of application", operationId = "app:func:search")
+  @Operation(summary = "Fulltext search the function list of application", operationId = "app:func:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{appId}/func/search")
@@ -143,7 +143,7 @@ public class AppFuncRest {
     return ApiLocaleResult.success(appFuncFacade.search(appId, dto));
   }
 
-  @Operation(summary = "Query the menu, button and panel functions tree of application", operationId = "app:func:tree")
+  @Operation(summary = "Query the function tree of application", operationId = "app:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{appId}/func/tree")
@@ -153,7 +153,7 @@ public class AppFuncRest {
     return ApiLocaleResult.success(appFuncFacade.tree(appId, dto));
   }
 
-  @Operation(summary = "Fulltext search the menu, button and panel functions tree of application", operationId = "app:func:tree:search")
+  @Operation(summary = "Fulltext search the function tree of application", operationId = "app:func:tree:search")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{appId}/func/tree/search")
