@@ -15,7 +15,7 @@ const { t } = useI18n();
 const router = useRouter();
 const formRef = ref();
 const tenantInfo: Ref = inject('tenantInfo', ref());
-const userList = ref<{ id: string; fullName: string; }[]>([]);
+const userList = ref<{ id: string; name: string; }[]>([]);
 const deptList = ref<{ id: string; name: string; }[]>([]);
 const groupList = ref<{ id: string; name: string; }[]>([]);
 const title = ref<string>('');
@@ -80,7 +80,7 @@ const submit = async () => {
       return;
     }
     params = { ...params, receiveObjectType: receiveObjectType.value };
-    params = { ...params, receiveObjects: userList.value.map(item => ({ id: item.id, name: item.fullName })) };
+    params = { ...params, receiveObjects: userList.value };
   }
   if (receiveObjectType.value === 'GROUP') {
     if (!groupList.value.length) {
@@ -98,7 +98,6 @@ const submit = async () => {
     params = { ...params, receiveObjectType: receiveObjectType.value };
     params = { ...params, receiveObjects: deptList.value };
   }
-
   loading.value = true;
   const [error, res] = await message.sendMessage(params);
   loading.value = false;

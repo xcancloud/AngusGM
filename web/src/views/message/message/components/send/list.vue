@@ -36,9 +36,9 @@ withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'update:receiveObjectType', value: ReceiveObjectType): void,
-  (e: 'update:userList', value: { id: string, fullName: string }[]): void,
-  (e: 'update:groupList', value: { id: string, name: string }[]): void,
-  (e: 'update:deptList', value: { id: string, name: string }[]): void,
+  (e: 'update:userList', value: {id: string, name: string}[]): void,
+  (e: 'update:groupList', value: {id: string, name: string}[]): void,
+  (e: 'update:deptList', value: {id: string, name: string}[]): void,
 }>();
 
 const { t } = useI18n();
@@ -88,7 +88,7 @@ const paginationChange = (page: number, size: number) => {
   }
 };
 
-const checkedList = ref<string[]>([]);
+const checkedList = ref<{id: string, name: string}[]>([]);
 const receiveObjectTypeChange = (value: ReceiveObjectType) => {
   params.value.pageNo = 1;
   checkedList.value = [];
@@ -181,51 +181,22 @@ const buildTree = (_treeData) => {
   return result;
 };
 
-const handleCheck = (event: InputEvent, id: string) => {
+const handleCheck = (event: InputEvent, obj: {id: string; name: string}) => {
   const checked = event.target.checked;
   if (checked) {
-    checkedList.value.push(id);
+    checkedList.value.push(obj);
   } else {
-    checkedList.value = checkedList.value.filter(item => item !== id);
+    checkedList.value = checkedList.value.filter(item => item.id !== obj.id);
   }
-  // checkedList.value = checkedKeys;
-  // if (!checkedList.value.length) {
-  //   indeterminate.value = false;
-  //   return;
-  // }
-
-  // let dataList;
-  //
-  // switch (receiveType.value) {
-  //   case 'USER':
-  //     dataList = userDataList.value;
-  //     break;
-  //   case 'GROUP':
-  //     dataList = groupDataList.value;
-  //     break;
-  //   case 'DEPT':
-  //     dataList = deptDataList.value;
-  //     break;
-  //   default:
-  //     dataList = [];
-  // }
-  //
-  // if (dataList.length === checkedList.value.length) {
-  //   checkedAll.value = true;
-  //   indeterminate.value = false;
-  // } else {
-  //   checkedAll.value = false;
-  //   indeterminate.value = true;
-  // }
 };
 
-const handleCheckDept = (_checkIds: string[], e: {checked: boolean, node: {id: string}}) => {
+const handleCheckDept = (_checkIds: string[], e: {checked: boolean, node: {id: string, name: string}}) => {
   const checked = e.checked;
-  const id = e.node.id;
+  const obj = { id: e.node.id, name: e.node.name };
   if (checked) {
-    checkedList.value.push(id);
+    checkedList.value.push(obj);
   } else {
-    checkedList.value = checkedList.value.filter(item => item !== id);
+    checkedList.value = checkedList.value.filter(item => item.id !== obj.id);
   }
 };
 
@@ -247,20 +218,24 @@ const searchChange = debounce(duration.search, (event: any): void => {
   }
 });
 
-watch(() => checkedList.value, (newValue) => {
+watch(() => checkedList.value, () => {
   if (receiveType.value === 'USER') {
-    emit('update:userList', userDataList.value.filter(item => newValue.includes(item.id)));
+    emit('update:userList', checkedList.value);
   }
 
   if (receiveType.value === 'DEPT') {
-    emit('update:deptList', deptDataList.value.filter(item => newValue.includes(item.id)));
+    emit('update:deptList', checkedList.value);
   }
 
   if (receiveType.value === 'GROUP') {
-    emit('update:groupList', groupDataList.value.filter(item => newValue.includes(item.id)));
+    emit('update:groupList', checkedList.value);
   }
 }, {
   immediate: true
+});
+
+const checkedIds = computed(() => {
+  return checkedList.value.map(i => i.id);
 });
 
 // 当前页全选
@@ -268,17 +243,17 @@ const indeterminate = ref<boolean>(false);
 const checkedAll = computed(() => {
   if (receiveType.value === 'USER') {
     return userDataList.value.every(item => {
-      return checkedList.value.includes((item.id));
+      return checkedIds.value.includes(item.id);
     });
   }
   if (receiveType.value === 'GROUP') {
     return groupDataList.value.every(item => {
-      return checkedList.value.includes((item.id));
+      return checkedIds.value.includes(item.id);
     });
   }
   if (receiveType.value === 'DEPT') {
     return deptDataList.value.every(item => {
-      return checkedList.value.includes((item.id));
+      return checkedIds.value.includes(item.id);
     });
   }
   return false;
@@ -294,23 +269,23 @@ const onCheckAllChange = e => {
       case 'USER':
         // checkedList.value = userDataList.value.map(item => item.id);
         userDataList.value.forEach(item => {
-          if (!checkedList.value.includes(item.id)) {
-            checkedList.value.push(item.id);
+          if (!checkedIds.value.includes(item.id)) {
+            checkedList.value.push({ id: item.id, name: item.fullName });
           }
         });
         break;
       case 'GROUP':
         // checkedList.value = groupDataList.value.map(item => item.id);
         groupDataList.value.forEach(item => {
-          if (!checkedList.value.includes(item.id)) {
-            checkedList.value.push(item.id);
+          if (!checkedIds.value.includes(item.id)) {
+            checkedList.value.push({ id: item.id, name: item.name });
           }
         });
         break;
       case 'DEPT':
         deptDataList.value.forEach(item => {
-          if (!checkedList.value.includes(item.id)) {
-            checkedList.value.push(item.id);
+          if (!checkedIds.value.includes(item.id)) {
+            checkedList.value.push({ id: item.id, name: item.name });
           }
         });
         // checkedList.value = deptDataList.value.map(item => item.id);
@@ -319,14 +294,13 @@ const onCheckAllChange = e => {
   } else {
     switch (receiveType.value) {
       case 'USER':
-        checkedList.value = checkedList.value.filter(id => !userDataList.value.map(item => item.id).includes(id));
-
+        checkedList.value = checkedList.value.filter(checked => !userDataList.value.map(item => item.id).includes(checked.id));
         break;
       case 'GROUP':
-        checkedList.value = checkedList.value.filter(id => !groupDataList.value.map(item => item.id).includes(id));
+        checkedList.value = checkedList.value.filter(checked => !groupDataList.value.map(item => item.id).includes(checked.id));
         break;
       case 'DEPT':
-        checkedList.value = checkedList.value.filter(id => !deptDataList.value.map(item => item.id).includes(id));
+        checkedList.value = checkedList.value.filter(checked => !deptDataList.value.map(item => item.id).includes(checked.id));
         break;
     }
     indeterminate.value = false;
@@ -389,7 +363,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
           <template v-if="receiveType === 'GROUP'">
             <template v-if="groupDataList.length">
               <CheckboxGroup
-                :value="checkedList"
+                :value="checkedIds"
                 class="space-y-2">
                 <div
                   v-for="item, in groupDataList"
@@ -397,8 +371,8 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
                   class="flex-1 flex items-center">
                   <Checkbox
                     :value="item.id"
-                    :disabled="checkedList.length >= 500 && !checkedList.includes(item.id)"
-                    @change="handleCheck($event, item.id)">
+                    :disabled="checkedIds.length >= 500 && !checkedIds.includes(item.id)"
+                    @change="handleCheck($event, {id: item.id, name: item.name})">
                   </Checkbox>
                   <Icon icon="icon-zu1" class="ml-2 mr-2 -mt-0.25 text-4" />
                   <Tooltip
@@ -423,7 +397,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
           <template v-if="receiveType === 'USER'">
             <template v-if="userDataList.length">
               <CheckboxGroup
-                :value="checkedList"
+                :value="checkedIds"
                 class="space-y-2">
                 <div
                   v-for="item in userDataList"
@@ -431,8 +405,8 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
                   class="relative flex-1 flex items-center">
                   <Checkbox
                     :value="item.id"
-                    :disabled="checkedList.length >= 500 && !checkedList.includes(item.id)"
-                    @change="handleCheck($event, item.id)">
+                    :disabled="checkedIds.length >= 500 && !checkedIds.includes(item.id)"
+                    @change="handleCheck($event, {id: item.id, name: item.fullName})">
                   </Checkbox>
                   <Image
                     :src="item?.avatar"
@@ -468,7 +442,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
             <template v-if="deptTreeData.length">
               <Tree
                 v-model:expandedKeys="expandedKeys"
-                :checkedKeys="checkedList"
+                :checkedKeys="checkedIds"
                 :fieldNames="treeFieldNames"
                 checkable
                 showIcon
