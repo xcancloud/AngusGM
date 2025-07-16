@@ -316,26 +316,8 @@ springdoc:
           }
           ```
     servers:
-      - url: "{protocol}://{env}-apis.xcan.cloud/{route}"
-        description: "Application Api Base URL"
-        variables:
-          protocol:
-            description: "Http protocol"
-            default: "https"
-            enum:
-              - "https"
-              - "http"
-          env:
-            description: "Environment variables"
-            default: "bj-c1-prod"
-            enum:
-              - "bj-c1-prod"
-              - "dev"
-          route:
-            description: "Route Prefix"
-            default: "gm"
-            enum:
-              - "gm"
+      - url: "https://bj-c1-prod-apis.xcan.cloud/gm"
+        description: "AngusGM Cloud Service API Endpoint"
 
 logging:
   config: classpath:spring-logback.xml
