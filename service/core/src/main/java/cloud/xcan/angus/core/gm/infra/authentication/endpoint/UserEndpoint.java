@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "User", description = "Unified user management entry for the system.")
+@Tag(name = "UserAuth", description = "Unified user management entry for the system.")
 @RestController
 public class UserEndpoint {
 
@@ -30,6 +30,7 @@ public class UserEndpoint {
   private OAuth2AuthorizationService oauth2AuthorizationService;
 
   @ResponseBody
+  @Operation(summary = "Query user authentication and authorization information", operationId = "auth:user:principal")
   @GetMapping(USER_INFO_ENDPOINT)
   public Principal user(Principal principal) {
     return principal;
