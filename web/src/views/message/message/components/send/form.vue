@@ -238,6 +238,7 @@ defineExpose({
         ref="richContentRef"
         v-model:value="content"
         :uploadOptions="uploadOptions"
+        :height="360"
         :class="{'rich-editor-rule':contentRule}" />
       <div class="text-rule h-3.5">
         <template v-if="contentRule">
