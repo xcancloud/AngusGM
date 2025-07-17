@@ -3,7 +3,6 @@ package cloud.xcan.angus.api.commonlink.user;
 import cloud.xcan.angus.core.jpa.entity.projection.IdAndName;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.core.jpa.repository.NameJoinRepository;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -76,10 +75,10 @@ public interface UserRepo extends NameJoinRepository<User, Long>, BaseRepository
       Pageable page);
 
   @Query(value = "SELECT u.id FROM user0 u WHERE u.deleted = 0 AND u.enabled =1", nativeQuery = true)
-  Page<BigInteger> findValidId(Pageable page);
+  Page<Long> findValidId(Pageable page);
 
   @Query(value = "SELECT u.id FROM user0 u WHERE u.tenant_id = ?1  and u.deleted = 0 AND u.enabled =1", nativeQuery = true)
-  Page<BigInteger> findValidIdByTenantId(Long tenantId, Pageable page);
+  Page<Long> findValidIdByTenantId(Long tenantId, Pageable page);
 
   @Query(value = "SELECT u.email FROM user0 u WHERE u.tenant_id IN (?1)  and u.deleted = 0 AND u.enabled =1", nativeQuery = true)
   Page<String> findValidEmailByTenantIdIn(Collection<?> tenantIds, Pageable page);

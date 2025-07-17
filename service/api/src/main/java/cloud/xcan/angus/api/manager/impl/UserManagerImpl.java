@@ -503,13 +503,12 @@ public class UserManagerImpl implements UserManager {
   public Set<Long> getAllValidUserIds() {
     int page = -1;
     Set<Long> allUserIds = new HashSet<>();
-    Page<BigInteger> userIdPage;
+    Page<Long> userIdPage;
     // Page<Long> userIdPage; -> Fix:: ClassCastException: class java.math.BigInteger cannot be cast to class java.lang.Long (java.math.BigInteger and java.lang.Long are in module java.base of loader 'bootstrap')at com.mysql.jdbc.ConnectionImpl.buildCollationMapping(Connec
     do {
       userIdPage = userRepo.findValidId(PageRequest.of(++page, 2000));
       if (userIdPage.hasContent()) {
-        allUserIds.addAll(userIdPage.getContent().stream().map(BigInteger::longValue)
-            .collect(Collectors.toSet()));
+        allUserIds.addAll(userIdPage.getContent());
       }
     } while (userIdPage.hasNext());
     return allUserIds;
@@ -519,13 +518,12 @@ public class UserManagerImpl implements UserManager {
   public Set<Long> getAllValidUserIdsByTenantId(Long tenantId) {
     int page = -1;
     Set<Long> allUserIds = new HashSet<>();
-    Page<BigInteger> userIdPage;
+    Page<Long> userIdPage;
     // Page<Long> userIdPage; -> Fix:: ClassCastException: class java.math.BigInteger cannot be cast to class java.lang.Long (java.math.BigInteger and java.lang.Long are in module java.base of loader 'bootstrap')at com.mysql.jdbc.ConnectionImpl.buildCollationMapping(Connec
     do {
       userIdPage = userRepo.findValidIdByTenantId(tenantId, PageRequest.of(++page, 2000));
       if (userIdPage.hasContent()) {
-        allUserIds.addAll(userIdPage.getContent().stream().map(BigInteger::longValue)
-            .collect(Collectors.toSet()));
+        allUserIds.addAll(userIdPage.getContent());
       }
     } while (userIdPage.hasNext());
     return allUserIds;
