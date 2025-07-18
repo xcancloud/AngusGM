@@ -2068,7 +2068,7 @@ export default {
       typeLandline: '座机号',
       typeAddress: '地址',
       registerTime: '注册时间',
-      group: '组',
+      group: '用户组',
       systemId: '系统身份',
       deptId: '部门身份',
       ownDept: '所在部门',
