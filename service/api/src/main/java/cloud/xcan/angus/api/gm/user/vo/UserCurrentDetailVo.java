@@ -5,9 +5,13 @@ import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
+import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
+import cloud.xcan.angus.api.gm.user.to.UserGroupTo;
 import cloud.xcan.angus.remote.NameJoinField;
+import cloud.xcan.angus.remote.info.IdAndName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -89,6 +93,11 @@ public class UserCurrentDetailVo implements Serializable {
 
   private UserPreferenceVo preference;
 
+  private List<IdAndName> tags;
+
+  private List<UserDeptTo> depts;
+
+  private List<UserGroupTo> groups;
 }
 
 

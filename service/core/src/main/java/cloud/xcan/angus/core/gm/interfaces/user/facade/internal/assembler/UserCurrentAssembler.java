@@ -1,8 +1,14 @@
 package cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler;
 
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
+
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.gm.user.dto.UserCurrentUpdateDto;
+import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
+import cloud.xcan.angus.api.gm.user.to.UserGroupTo;
 import cloud.xcan.angus.api.gm.user.vo.UserCurrentDetailVo;
+import cloud.xcan.angus.remote.info.IdAndName;
+import java.util.stream.Collectors;
 
 
 public class UserCurrentAssembler {
@@ -59,7 +65,19 @@ public class UserCurrentAssembler {
         .setLastModifiedDate(user.getLastModifiedDate())
         .setPasswordStrength(user.getPasswordStrength())
         .setPasswordExpired(user.getPasswordExpired())
-        .setPasswordExpiredDate(user.getPasswordExpiredDate());
+        .setPasswordExpiredDate(user.getPasswordExpiredDate())
+        .setTags(isEmpty(user.getTags()) ? null : user.getTags().stream()
+            .map(tag -> new IdAndName().setId(tag.getTag().getId()).setName(tag.getTag().getName()))
+            .collect(Collectors.toList()))
+        .setDepts(isEmpty(user.getDepts()) ? null : user.getDepts().stream()
+            .map(dept -> new UserDeptTo().setId(dept.getDeptId())
+                .setName(dept.getDept().getName()).setMainDept(dept.getMainDept())
+                .setDeptHead(dept.getDeptHead()))
+            .collect(Collectors.toList()))
+        .setGroups(isEmpty(user.getGroups()) ? null : user.getGroups().stream()
+            .map(group -> new UserGroupTo().setId(group.getGroupId())
+                .setName(group.getGroup().getName()))
+            .collect(Collectors.toList()));
   }
 
 }
