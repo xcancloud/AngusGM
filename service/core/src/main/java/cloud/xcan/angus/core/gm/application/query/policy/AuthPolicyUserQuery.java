@@ -26,8 +26,7 @@ public interface AuthPolicyUserQuery {
 
   List<App> userAppList(Long userId);
 
-  App userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi, Boolean joinTag
-      , Boolean onlyEnabled);
+  App userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi, Boolean onlyEnabled);
 
   void checkSwitchUnAuthOrgCondition(GenericSpecification<AuthPolicy> spec);
 

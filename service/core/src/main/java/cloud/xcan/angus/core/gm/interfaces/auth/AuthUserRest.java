@@ -139,10 +139,8 @@ public class AuthUserRest {
       @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
       @Parameter(name = "appIdOrCode", description = "Application id or code", required = true) @PathVariable("appIdOrCode") String appIdOrCode,
       @Parameter(name = "joinApi", description = "Association query function api flag", required = false) @RequestParam(value = "joinApi", required = false) Boolean joinApi,
-      @Parameter(name = "joinTag", description = "Association query function tag flag", required = false) @RequestParam(value = "joinTag", required = false) Boolean joinTag,
       @Parameter(name = "onlyEnabled", description = "Only return enabled function, default true", required = false) @RequestParam(value = "onlyEnabled", required = false) Boolean onlyEnabled) {
-    return ApiLocaleResult.success(userFacade.userAppFuncList(userId, appIdOrCode, joinApi,
-        joinTag, onlyEnabled));
+    return ApiLocaleResult.success(userFacade.userAppFuncList(userId, appIdOrCode, joinApi, onlyEnabled));
   }
 
   @Operation(summary = "Query all authorized application function tree of user", operationId = "auth:user:app:func:tree")
@@ -154,10 +152,8 @@ public class AuthUserRest {
       @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
       @Parameter(name = "appIdOrCode", description = "Application id or code", required = true) @PathVariable("appIdOrCode") String appIdOrCode,
       @Parameter(name = "joinApi", description = "Association query function api flag", required = false) @RequestParam(value = "joinApi", required = false) Boolean joinApi,
-      @Parameter(name = "joinTag", description = "Association query function tag flag", required = false) @RequestParam(value = "joinTag", required = false) Boolean joinTag,
       @Parameter(name = "onlyEnabled", description = "Only return enabled function, default true", required = false) @RequestParam(value = "onlyEnabled", required = false) Boolean onlyEnabled) {
-    return ApiLocaleResult.success(userFacade.appFuncTree(userId, appIdOrCode, joinApi,
-        joinTag, onlyEnabled));
+    return ApiLocaleResult.success(userFacade.appFuncTree(userId, appIdOrCode, joinApi, onlyEnabled));
   }
 
 }

@@ -30,10 +30,8 @@ public interface AuthUserFacade {
 
   List<AppVo> userAppList(Long userId);
 
-  AuthAppVo userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi,
-      Boolean joinTag, Boolean onlyEnabled);
+  AuthAppVo userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi, Boolean onlyEnabled);
 
-  AuthAppTreeVo appFuncTree(Long userId, String appIdOrCode, Boolean joinApi,
-      Boolean joinTag, Boolean onlyEnabled);
+  AuthAppTreeVo appFuncTree(Long userId, String appIdOrCode, Boolean joinApi, Boolean onlyEnabled);
 
 }

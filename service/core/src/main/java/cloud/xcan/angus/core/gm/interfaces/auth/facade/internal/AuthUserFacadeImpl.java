@@ -89,9 +89,9 @@ public class AuthUserFacadeImpl implements AuthUserFacade {
 
   @Override
   public AuthAppVo userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi,
-      Boolean joinTag, Boolean onlyEnabled) {
+      Boolean onlyEnabled) {
     App app = authPolicyUserQuery.userAppFuncList(userId, appIdOrCode,
-        nullSafe(joinApi, false), nullSafe(joinTag, false), nullSafe(onlyEnabled, true));
+        nullSafe(joinApi, false),  nullSafe(onlyEnabled, true));
     List<AuthAppFuncVo> funcVos = app.getAppFunc().stream().map(AuthUserAssembler::toAuthFuncVo)
         .collect(Collectors.toList());
     return AuthUserAssembler.toAuthAppVo(app, funcVos);
@@ -99,9 +99,9 @@ public class AuthUserFacadeImpl implements AuthUserFacade {
 
   @Override
   public AuthAppTreeVo appFuncTree(Long userId, String appIdOrCode, Boolean joinApi,
-      Boolean joinTag, Boolean onlyEnabled) {
+      Boolean onlyEnabled) {
     App app = authPolicyUserQuery.userAppFuncList(userId, appIdOrCode,
-        nullSafe(joinApi, false), nullSafe(joinTag, false), nullSafe(onlyEnabled, true));
+        nullSafe(joinApi, false), nullSafe(onlyEnabled, true));
     List<AuthAppFuncVo> funcVos = app.getAppFunc().stream().map(AuthUserAssembler::toAuthFuncVo)
         .collect(Collectors.toList());
     List<AuthAppFuncTreeVo> funcVosTree = isEmpty(funcVos) ? null :

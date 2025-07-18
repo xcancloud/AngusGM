@@ -278,7 +278,7 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
 
   @Override
   public App userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi,
-      Boolean joinTag, Boolean onlyEnabled) {
+      Boolean onlyEnabled) {
     return new BizTemplate<App>(false) {
       final Long tenantId = getOptTenantId();
       App appDb;
@@ -304,14 +304,13 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
         // The front-end needs to display disabled data copywriting
         List<AppFunc> appAllFuncs = appFuncQuery.findAllByAppId(appDb.getId(), onlyEnabled);
 
+        // Join function tags
+        appFuncQuery.setTags(appAllFuncs);
+
         // Join function apis
         if (joinApi) {
           appFuncQuery.setApis(appDb);
           appFuncQuery.setApis(appAllFuncs);
-        }
-        // Join function tags
-        if (joinTag) {
-          appFuncQuery.setTags(appAllFuncs);
         }
 
         // Operation and application administrator queries all application functions.
@@ -320,11 +319,6 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
           List<AppFunc> appFunc = appAllFuncs.stream()
               .filter(x -> x.hasTags(applicationInfo.getEditionType()))
               .map(x -> x.setHasAuth(true)).collect(Collectors.toList());
-          if (joinTag) {
-            return appDb.setAppFunc(
-                appFunc.stream().filter(x -> x.hasTags(applicationInfo.getEditionType()))
-                    .collect(Collectors.toList()));
-          }
           return appDb.setAppFunc(appFunc);
         }
 
@@ -339,14 +333,9 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
             .stream().collect(Collectors.toMap(AppFunc::getId, x -> x));
 
         List<AppFunc> appFunc = appAllFuncs.stream()
+            .filter(x -> x.hasTags(applicationInfo.getEditionType()))
             .map(x -> x.setHasAuth(appHasAuthFuncsMap.containsKey(x.getId()))).toList();
-        if (joinTag) {
-          return appDb.setAppFunc(appFunc.stream()
-              .filter(x -> x.hasTags(applicationInfo.getEditionType()))
-              .collect(Collectors.toList()));
-        } else {
-          return appDb.setAppFunc(appFunc);
-        }
+        return appDb.setAppFunc(appFunc);
       }
     }.execute();
   }
