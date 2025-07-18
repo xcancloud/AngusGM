@@ -332,6 +332,9 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Delete oauth2 user
         authUserCmd.delete(ids);
 
+        // Delete oauth2 authorization, force user to log out
+        authUserCmd.deleteAuthorization(usersDb.stream().map(User::getUsername).toList());
+
         // Save operation log
         operationLogCmd.addAll(USER, usersDb, DELETED);
         return null;
@@ -356,6 +359,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected Void process() {
+        // Update enabled status of the user
         Map<Long, User> usersMap = users.stream().collect(Collectors.toMap(User::getId, x -> x));
         for (User userDb : usersDb) {
           userDb.setEnabled(usersMap.get(userDb.getId()).getEnabled());
@@ -365,14 +369,20 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         // Check there is at least one system administrator
         assertTrue(userQuery.countValidSysAdminUser() > 0, USER_SYS_ADMIN_NUM_ERROR);
 
+        // Update enabled status of the oauth user
         for (User userDb : usersDb) {
           authUserCmd.replaceAuthUser(userDb, null, false);
         }
 
+        // Delete oauth2 authorization, force user to log out
+        List<User> disabledUsers = usersDb.stream().filter(x -> !x.getEnabled()).toList();
+        if (isNotEmpty(disabledUsers)){
+          authUserCmd.deleteAuthorization(disabledUsers.stream().map(User::getUsername).toList());
+        }
+
         // Save operation log
         operationLogCmd.addAll(USER, usersDb.stream().filter(User::getEnabled).toList(), ENABLED);
-        operationLogCmd.addAll(USER, usersDb.stream().filter(x -> !x.getEnabled()).toList(),
-            DISABLED);
+        operationLogCmd.addAll(USER, disabledUsers , DISABLED);
         return null;
       }
     }.execute();
@@ -410,6 +420,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected Void process() {
+        // Update locked status of the user
         if (locked) {
           userDb.setLocked((isNull(lockStartDate) && isNull(lockEndDate))
                   || (nonNull(lockStartDate) && lockStartDate
@@ -420,7 +431,13 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         }
         userRepo.save(userDb);
 
+        // Update locked status of the oauth user
         authUserCmd.replaceAuthUser(userDb, null, false);
+
+        // Delete oauth2 authorization, force user to log out
+        if (locked){
+          authUserCmd.deleteAuthorization(List.of(userDb.getUsername()));
+        }
 
         // Save operation log
         operationLogCmd.add(USER, userDb, locked ? LOCKED : UNLOCKED);

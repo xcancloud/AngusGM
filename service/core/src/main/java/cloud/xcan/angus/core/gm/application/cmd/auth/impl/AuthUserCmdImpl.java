@@ -31,8 +31,10 @@ import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.core.spring.boot.ApplicationInfo;
+import cloud.xcan.angus.security.authentication.service.JdbcOAuth2AuthorizationService;
 import jakarta.annotation.Resource;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +69,9 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
+
+  @Resource
+  private JdbcOAuth2AuthorizationService auth2AuthorizationService;
 
   @Resource
   private TenantQuery tenantQuery;
@@ -178,6 +183,11 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
         return null;
       }
     }.execute();
+  }
+
+  @Override
+  public void deleteAuthorization(List<String> principalNames){
+    auth2AuthorizationService.removeByPrincipalName(principalNames);
   }
 
   @Override
