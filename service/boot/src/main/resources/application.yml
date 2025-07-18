@@ -50,11 +50,6 @@ xcan:
       defaultPenetrationExpiration: 300000
       expires: { setting: 7200000, settingTenant: 7200000 }
       topic: j2cache:angus
-  validator:
-    enabled: true
-    extraMessages:
-      - classpath:/i18n/messages-gm-api
-      - classpath:/i18n/messages-gm-core
   tenant:
     enableAutoAudit: true
   cert-recognize:
@@ -83,8 +78,8 @@ spring:
     name: '@artifactId@'
   profiles:
     active: '@profile.active@'
-  jmx:
-    enabled: true
+  messages:
+    basename: i18n/messages-infra-spec,i18n/messages-infra-remote,i18n/messages-gm-api,i18n/messages-gm-core
   thymeleaf:
     prefix: classpath:/templates
     mode: HTML
@@ -260,7 +255,7 @@ springdoc:
              - Set permission scope
              - Configure expiration time
           4. Click **Create Token** to generate new credentials
-  
+        
           > **Note**: System tokens have full API permissions without data restrictions.
 
         #### User Access Token
@@ -273,7 +268,7 @@ springdoc:
              - Set token name
              - Configure validity period
           4. Click **Create Token** to generate credentials
-  
+        
           > **Note**: User tokens inherit the user's API permissions and data access rights.
 
         ### 2. API Service Endpoints
@@ -296,7 +291,7 @@ springdoc:
           Date: Sun, 15 Jun 2025 06:49:56 GMT
           Content-Type: application/json
           XC-Request-Id: 34acb65c2c484188a2f9f3a3f4ca3d1f
-  
+        
           {
             "code": "S",
             "msg": "Success",
