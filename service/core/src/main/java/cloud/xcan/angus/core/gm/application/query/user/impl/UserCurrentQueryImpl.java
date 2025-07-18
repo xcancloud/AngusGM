@@ -59,7 +59,7 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
 
       @Override
       protected User process() {
-        return userQuery.detail(getUserId(), false);
+        return userQuery.detail(getUserId(), true);
       }
     }.execute();
   }
