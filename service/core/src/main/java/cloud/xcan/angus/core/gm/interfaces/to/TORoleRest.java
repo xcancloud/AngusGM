@@ -6,7 +6,6 @@ import cloud.xcan.angus.core.gm.interfaces.to.facade.TORoleFacade;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleAddDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleFindDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleVo;
@@ -43,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @OperationClient
 @PreAuthorize("@PPS.isOpClient()")
@@ -128,14 +126,6 @@ public class TORoleRest {
   @GetMapping
   public ApiLocaleResult<PageResult<TORoleVo>> list(@Valid @ParameterObject TORoleFindDto dto) {
     return ApiLocaleResult.success(toRoleFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of operation role", operationId = "to:role:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<TORoleVo>> search(@Valid @ParameterObject TORoleSearchDto dto) {
-    return ApiLocaleResult.success(toRoleFacade.search(dto));
   }
 
 }

@@ -5,13 +5,14 @@ import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 public interface GroupQuery {
 
   Group detail(Long id);
 
-  Page<Group> find(GenericSpecification<Group> spec, Pageable pageable);
+  Page<Group> list(GenericSpecification<Group> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   List<Group> findByIdIn(Collection<Long> ids);
 

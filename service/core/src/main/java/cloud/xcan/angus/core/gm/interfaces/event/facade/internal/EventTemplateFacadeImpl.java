@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.event.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventTemplateAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventTemplateAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventTemplateAssembler.toAddDomain;
 import static cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventTemplateAssembler.toCurrentVo;
@@ -16,7 +15,6 @@ import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateChannelCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateReceiverCmd;
 import cloud.xcan.angus.core.gm.application.query.event.EventTemplateQuery;
-import cloud.xcan.angus.core.gm.application.query.event.EventTemplateSearch;
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.EventTemplateFacade;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateAddDto;
@@ -24,7 +22,6 @@ import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTempla
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateFindDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReceiverDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventTemplateAssembler;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateCurrentDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateVo;
@@ -45,9 +42,6 @@ public class EventTemplateFacadeImpl implements EventTemplateFacade {
 
   @Resource
   private EventTemplateCmd eventTemplateCmd;
-
-  @Resource
-  private EventTemplateSearch eventTemplateSearch;
 
   @Resource
   private EventTemplateChannelCmd eventTemplateChannelCmd;
@@ -99,34 +93,15 @@ public class EventTemplateFacadeImpl implements EventTemplateFacade {
 
   @Override
   public PageResult<EventTemplateVo> list(EventTemplateFindDto dto) {
-    Page<EventTemplate> page = eventTemplateQuery.list(getSpecification(dto),
-        false, dto.tranPage());
+    Page<EventTemplate> page = eventTemplateQuery.list(getSpecification(dto), false,
+        dto.tranPage(), dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, EventTemplateAssembler::toVo);
   }
 
   @Override
   public PageResult<EventTemplateCurrentDetailVo> currentList(EventTemplateFindDto dto) {
-    Page<EventTemplate> page = eventTemplateQuery.list(getSpecification(dto),
-        true, dto.tranPage());
-    if (page.isEmpty()) {
-      return PageResult.empty();
-    }
-    List<EventTemplateCurrentDetailVo> vos = getEventTemplateCurrentDetailVos(page);
-    return PageResult.of(page.getTotalElements(), vos);
-  }
-
-  @Override
-  public PageResult<EventTemplateVo> search(EventTemplateSearchDto dto) {
-    Page<EventTemplate> page = eventTemplateSearch.search(getSearchCriteria(dto),
-        false, dto.tranPage(),
-        EventTemplate.class, getMatchSearchFields(dto.getClass()));
-    return buildVoPageResult(page, EventTemplateAssembler::toVo);
-  }
-
-  @Override
-  public PageResult<EventTemplateCurrentDetailVo> currentSearch(EventTemplateSearchDto dto) {
-    Page<EventTemplate> page = eventTemplateSearch.search(getSearchCriteria(dto),
-        true, dto.tranPage(), EventTemplate.class, getMatchSearchFields(dto.getClass()));
+    Page<EventTemplate> page = eventTemplateQuery.list(getSpecification(dto), true,
+        dto.tranPage(), dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     if (page.isEmpty()) {
       return PageResult.empty();
     }

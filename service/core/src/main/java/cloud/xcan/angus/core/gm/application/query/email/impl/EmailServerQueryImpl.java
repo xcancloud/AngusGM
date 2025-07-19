@@ -61,7 +61,7 @@ public class EmailServerQueryImpl implements EmailServerQuery {
   }
 
   @Override
-  public Page<EmailServer> find(Specification<EmailServer> spec, PageRequest pageable) {
+  public Page<EmailServer> list(Specification<EmailServer> spec, PageRequest pageable) {
     return new BizTemplate<Page<EmailServer>>() {
 
       @Override

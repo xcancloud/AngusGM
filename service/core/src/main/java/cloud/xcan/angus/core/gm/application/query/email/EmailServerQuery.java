@@ -10,7 +10,7 @@ public interface EmailServerQuery {
 
   EmailServer detail(Long id);
 
-  Page<EmailServer> find(Specification<EmailServer> spec, PageRequest pageable);
+  Page<EmailServer> list(Specification<EmailServer> spec, PageRequest pageable);
 
   void checkEnable(EmailProtocol protocol);
 

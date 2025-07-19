@@ -55,14 +55,6 @@ public class SmsChannelRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the list of sms channel", operationId = "sms:channel:list")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping
-  public ApiLocaleResult<PageResult<SmsChannelVo>> list(@Valid @ParameterObject SmsChannelFindDto dto) {
-    return ApiLocaleResult.success(smsChannelFacade.list(dto));
-  }
-
   @Operation(summary = "Query the detail of sms channel", operationId = "sms:channel:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
@@ -72,5 +64,14 @@ public class SmsChannelRest {
       @Parameter(name = "id", description = "SMS channel id", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(smsChannelFacade.detail(id));
   }
+
+  @Operation(summary = "Query the list of sms channel", operationId = "sms:channel:list")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+  @GetMapping
+  public ApiLocaleResult<PageResult<SmsChannelVo>> list(@Valid @ParameterObject SmsChannelFindDto dto) {
+    return ApiLocaleResult.success(smsChannelFacade.list(dto));
+  }
+
 
 }

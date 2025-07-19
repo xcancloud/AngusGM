@@ -23,7 +23,7 @@ public class AuthPolicyAppAssembler {
         .setCreatedDate(policy.getCreatedDate());
   }
 
-  public static GenericSpecification<AuthPolicy> getFindCriteria(AppPolicyFindDto dto) {
+  public static GenericSpecification<AuthPolicy> getSpecification(AppPolicyFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .matchSearchFields("code", "name", "description")

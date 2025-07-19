@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.to.facade;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleAddDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleFindDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleVo;
@@ -29,7 +28,5 @@ public interface TORoleFacade {
   TORoleDetailVo detail(String idOrCode);
 
   PageResult<TORoleVo> list(TORoleFindDto dto);
-
-  PageResult<TORoleVo> search(TORoleSearchDto dto);
 
 }

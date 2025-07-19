@@ -12,13 +12,14 @@ public interface AuthPolicyQuery {
 
   AuthPolicy detail(String idOrCode);
 
-  Page<AuthPolicy> list(GenericSpecification<AuthPolicy> spec, PageRequest pageable);
+  Page<AuthPolicy> list(GenericSpecification<AuthPolicy> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   List<AuthPolicy> findTenantAppDefaultPolices(Long tenantId);
 
-  List<AuthPolicy> findOpenableTenantClientPolicies();
+  List<AuthPolicy> findOperableTenantClientPolicies();
 
-  List<AuthPolicy> findOpenableOpClientPoliciesByAppId(Long appId);
+  List<AuthPolicy> findOperableOpClientPoliciesByAppId(Long appId);
 
   List<AuthPolicy> findByAppIdIn(Collection<Long> appIds);
 

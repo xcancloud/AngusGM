@@ -5,7 +5,6 @@ import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantFindDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantLockedDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantReplaceDto;
-import cloud.xcan.angus.api.gm.tenant.dto.TenantSearchDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantUpdateDto;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantVo;
@@ -31,8 +30,6 @@ public interface TenantFacade {
   TenantDetailVo detail(Long id);
 
   PageResult<TenantVo> list(TenantFindDto dto);
-
-  PageResult<TenantVo> search(TenantSearchDto dto);
 
 
 }

@@ -1,14 +1,14 @@
 package cloud.xcan.angus.core.gm.application.query.country;
 
 import cloud.xcan.angus.core.gm.domain.country.Country;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 public interface CountryQuery {
 
-  Country find(Long id);
+  Country detail(Long id);
 
-  Page<Country> find(Specification<Country> spec, Pageable pageable);
-
+  Page<Country> list(GenericSpecification<Country> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 }

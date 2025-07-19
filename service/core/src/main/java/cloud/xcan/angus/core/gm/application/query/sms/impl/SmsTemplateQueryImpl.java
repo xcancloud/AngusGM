@@ -30,7 +30,7 @@ public class SmsTemplateQueryImpl implements SmsTemplateQuery {
   }
 
   @Override
-  public Page<SmsTemplate> find(Specification<SmsTemplate> spec, PageRequest pageable) {
+  public Page<SmsTemplate> list(Specification<SmsTemplate> spec, PageRequest pageable) {
     return new BizTemplate<Page<SmsTemplate>>() {
       @Override
       protected Page<SmsTemplate> process() {

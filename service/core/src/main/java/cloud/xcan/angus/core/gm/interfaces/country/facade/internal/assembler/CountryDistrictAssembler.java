@@ -2,8 +2,9 @@ package cloud.xcan.angus.core.gm.interfaces.country.facade.internal.assembler;
 
 
 import cloud.xcan.angus.core.gm.domain.country.district.District;
-import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryDistrictSearchDto;
+import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryDistrictFindDto;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDistrictDetailVo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
@@ -28,13 +29,14 @@ public class CountryDistrictAssembler {
     //  .setGeoData(CountryDistrictAssembler.geoDataToVo(district.getGeoData()));
   }
 
-
-  public static Set<SearchCriteria> getSearchCriteria(CountryDistrictSearchDto dto) {
+  public static GenericSpecification<District> getSpecification(CountryDistrictFindDto dto) {
     // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
+    Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id")
         .matchSearchFields("name", "code", "pinYin")
         .orderByFields("id", "code")
         .build();
+    return new GenericSpecification<>(filters);
   }
+
 }

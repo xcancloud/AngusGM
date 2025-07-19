@@ -9,14 +9,14 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.operation.OperationLogQuery;
 import cloud.xcan.angus.core.gm.domain.operation.OperationLog;
 import cloud.xcan.angus.core.gm.domain.operation.OperationLogRepo;
+import cloud.xcan.angus.core.gm.domain.operation.OperationLogSearchRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 
 @Slf4j
@@ -29,10 +29,14 @@ public class OperationLogQueryImpl implements OperationLogQuery {
   private OperationLogRepo optionLogRepo;
 
   @Resource
+  private OperationLogSearchRepo operationLogSearchRepo;
+
+  @Resource
   private UserManager userManager;
 
   @Override
-  public Page<OperationLog> list(GenericSpecification<OperationLog> spec, Pageable pageable) {
+  public Page<OperationLog> list(GenericSpecification<OperationLog> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<OperationLog>>(true, true) {
 
       @Override
@@ -40,7 +44,9 @@ public class OperationLogQueryImpl implements OperationLogQuery {
         if (isTenantClient()) {
           spec.add(SearchCriteria.equal("clientId", XCAN_TENANT_PLATFORM_CODE));
         }
-        Page<OperationLog> page = optionLogRepo.findAll(spec, pageable);
+        Page<OperationLog> page = fullTextSearch
+            ? operationLogSearchRepo.find(spec.getCriteria(), pageable, OperationLog.class, match)
+            : optionLogRepo.findAll(spec, pageable);
         if (page.hasContent()) {
           userManager.setUserNameAndAvatar(page.getContent(), "userId", "fullName", "avatar");
         }
@@ -48,5 +54,4 @@ public class OperationLogQueryImpl implements OperationLogQuery {
       }
     }.execute();
   }
-
 }

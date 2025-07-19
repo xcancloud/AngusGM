@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.tag.facade;
 
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.WebTagDetailVo;
 import cloud.xcan.angus.remote.PageResult;
@@ -23,5 +22,4 @@ public interface WebTagFacade {
 
   PageResult<WebTagDetailVo> list(WebTagFindDto dto);
 
-  PageResult<WebTagDetailVo> search(WebTagSearchDto dto);
 }

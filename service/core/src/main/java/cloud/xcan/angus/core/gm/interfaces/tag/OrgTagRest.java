@@ -5,7 +5,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.OrgTagFacade;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.OrgTagDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -95,12 +94,5 @@ public class OrgTagRest {
     return ApiLocaleResult.success(orgTagFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of organization tags", operationId = "org:tag:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<OrgTagDetailVo>> search(@Valid @ParameterObject OrgTagSearchDto dto) {
-    return ApiLocaleResult.success(orgTagFacade.search(dto));
-  }
 
 }

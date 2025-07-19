@@ -13,7 +13,7 @@ public interface AppFuncQuery {
 
   AppFunc detail(Long id);
 
-  List<AppFunc> list(GenericSpecification<AppFunc> spec);
+  List<AppFunc> list(GenericSpecification<AppFunc> spec, boolean fullTextSearch, String[] match);
 
   List<AppFunc> findAndAllParent(Collection<AppFunc> funcs);
 
@@ -39,8 +39,6 @@ public interface AppFuncQuery {
   List<AppFunc> findSub(Long appId, Collection<Long> funcIds);
 
   Set<Long> findFuncAndSubIds(Long appId, Collection<Long> funcIds);
-
-  List<Long> findSubIds(Long appId, Collection<Long> funcIds);
 
   List<AppFunc> findValidByPolicyIds(Collection<Long> authFuncIds);
 

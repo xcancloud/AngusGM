@@ -4,7 +4,6 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagTargetAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.OrgTagDetailVo;
@@ -13,7 +12,6 @@ import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class OrgTagAssembler {
@@ -54,21 +52,13 @@ public class OrgTagAssembler {
         .setTagId(tagId);
   }
 
-  public static Specification<OrgTag> getSpecification(OrgTagFindDto dto) {
+  public static GenericSpecification<OrgTag> getSpecification(OrgTagFindDto dto) {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
         .orderByFields("id", "createdDate")
         .matchSearchFields("name")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(OrgTagSearchDto dto) {
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .orderByFields("id", "createdDate")
-        .matchSearchFields("name")
-        .build();
   }
 
 }

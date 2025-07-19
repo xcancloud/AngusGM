@@ -37,6 +37,7 @@ import cloud.xcan.angus.core.gm.application.query.tag.OrgTagTargetQuery;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.user.UserListRepo;
+import cloud.xcan.angus.core.gm.domain.user.UserSearchRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.core.utils.PrincipalContextUtils;
@@ -65,6 +66,9 @@ public class UserQueryImpl implements UserQuery {
 
   @Resource
   private UserListRepo userListRepo;
+
+  @Resource
+  private UserSearchRepo userSearchRepo;
 
   @Resource
   private AuthUserRepo commonAuthUserRepo;
@@ -112,12 +116,14 @@ public class UserQueryImpl implements UserQuery {
 
   @SneakyThrow0
   @Override
-  public Page<User> find(GenericSpecification<User> spec, Pageable pageable) {
+  public Page<User> list(GenericSpecification<User> spec, Pageable pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<User>>(true, true) {
-
       @Override
       protected Page<User> process() {
-        return userListRepo.find(spec.getCriteria(), pageable, User.class, null);
+        return fullTextSearch
+            ? userSearchRepo.find(spec.getCriteria(), pageable, User.class, match)
+            : userListRepo.find(spec.getCriteria(), pageable, User.class, null);
       }
     }.execute();
   }

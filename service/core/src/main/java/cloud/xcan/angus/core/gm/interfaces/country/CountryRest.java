@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.country;
 
 import cloud.xcan.angus.core.gm.interfaces.country.facade.CountryFacade;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryFindDto;
-import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountrySearchDto;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -47,11 +46,4 @@ public class CountryRest {
     return ApiLocaleResult.success(countryFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of country", operationId = "country:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Search successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<CountryDetailVo>> search(@Valid @ParameterObject CountrySearchDto dto) {
-    return ApiLocaleResult.success(countryFacade.search(dto));
-  }
 }

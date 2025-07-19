@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.addDtoToDomain;
-import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler.toAppFuncDetailVo;
@@ -14,7 +13,6 @@ import cloud.xcan.angus.core.biz.JoinSupplier;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppFuncCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
-import cloud.xcan.angus.core.gm.application.query.app.AppFuncSearch;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.AppFuncFacade;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncAddDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncFindDto;
@@ -41,9 +39,6 @@ public class AppFuncFacadeImpl implements AppFuncFacade {
 
   @Resource
   private AppFuncQuery appFuncQuery;
-
-  @Resource
-  private AppFuncSearch appFuncSearch;
 
   @Resource
   private JoinSupplier joinSupplier;
@@ -91,29 +86,15 @@ public class AppFuncFacadeImpl implements AppFuncFacade {
   @NameJoin
   @Override
   public List<AppFuncVo> list(Long appId, AppFuncFindDto dto) {
-    List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto));
-    return appFunctions.stream().map(AppFuncAssembler::toAppFuncVo).collect(Collectors.toList());
-  }
-
-  @NameJoin
-  @Override
-  public List<AppFuncVo> search(Long appId, AppFuncFindDto dto) {
-    List<AppFunc> appFunctions = appFuncSearch.search(getSearchCriteria(appId, dto)
-        , AppFunc.class, getMatchSearchFields(dto.getClass()));
+    List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return appFunctions.stream().map(AppFuncAssembler::toAppFuncVo).collect(Collectors.toList());
   }
 
   @Override
   public List<AppFuncTreeVo> tree(Long appId, AppFuncFindDto dto) {
-    List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto));
-    joinSupplier.execute(() -> appFunctions);
-    return toTree(appFunctions);
-  }
-
-  @Override
-  public List<AppFuncTreeVo> treeSearch(Long appId, AppFuncFindDto dto) {
-    List<AppFunc> appFunctions = appFuncSearch.search(getSearchCriteria(appId, dto)
-        , AppFunc.class, getMatchSearchFields(dto.getClass()));
+    List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     joinSupplier.execute(() -> appFunctions);
     return toTree(appFunctions);
   }

@@ -3,14 +3,12 @@ package cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.WebTagDetailVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class WebTagAssembler {
@@ -34,21 +32,13 @@ public class WebTagAssembler {
         .setLastModifiedDate(tag.getLastModifiedDate());
   }
 
-  public static Specification<WebTag> getSpecification(WebTagFindDto dto) {
+  public static GenericSpecification<WebTag> getSpecification(WebTagFindDto dto) {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
         .orderByFields("id", "createdDate")
         .matchSearchFields("name")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(WebTagSearchDto dto) {
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .orderByFields("id", "createdDate")
-        .matchSearchFields("name")
-        .build();
   }
 
 }

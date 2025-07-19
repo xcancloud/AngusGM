@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.country.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryDistrictSearchDto;
+import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryDistrictFindDto;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDistrictDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDistrictTreeVo;
 import cloud.xcan.angus.remote.PageResult;
@@ -18,5 +18,5 @@ public interface CountryDistrictFacade {
 
   List<CountryDistrictDetailVo> areas(String countryCode, String cityCode);
 
-  PageResult<CountryDistrictDetailVo> search(CountryDistrictSearchDto dto);
+  PageResult<CountryDistrictDetailVo> list(CountryDistrictFindDto dto);
 }

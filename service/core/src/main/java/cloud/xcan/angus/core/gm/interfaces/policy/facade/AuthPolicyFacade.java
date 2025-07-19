@@ -4,7 +4,6 @@ import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyAddDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyInitDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicySearchDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyVo;
@@ -32,7 +31,5 @@ public interface AuthPolicyFacade {
   AuthPolicyDetailVo detail(String idOrCode);
 
   PageResult<AuthPolicyVo> list(AuthPolicyFindDto dto);
-
-  PageResult<AuthPolicyVo> search(AuthPolicySearchDto dto);
 
 }

@@ -2,19 +2,20 @@ package cloud.xcan.angus.core.gm.application.query.tag;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.core.gm.domain.app.App;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 
 public interface WebTagQuery {
 
   WebTag detail(Long id);
 
-  Page<WebTag> find(Specification<WebTag> spec, Pageable pageable);
+  Page<WebTag> list(GenericSpecification<WebTag> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   List<WebTag> findAllById(Collection<Long> tagIdSet);
 
@@ -35,4 +36,5 @@ public interface WebTagQuery {
   void setAppTags(Collection<Long> appIds);
 
   void setAppTags(List<App> apps);
+
 }

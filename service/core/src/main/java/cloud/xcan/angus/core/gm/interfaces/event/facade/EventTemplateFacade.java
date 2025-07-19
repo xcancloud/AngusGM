@@ -5,7 +5,6 @@ import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTempla
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateFindDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReceiverDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateCurrentDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateVo;
 import cloud.xcan.angus.remote.PageResult;
@@ -31,11 +30,5 @@ public interface EventTemplateFacade {
   PageResult<EventTemplateVo> list(EventTemplateFindDto dto);
 
   PageResult<EventTemplateCurrentDetailVo> currentList(EventTemplateFindDto dto);
-
-  PageResult<EventTemplateVo> search(EventTemplateSearchDto dto);
-
-  PageResult<EventTemplateCurrentDetailVo> currentSearch(EventTemplateSearchDto dto);
-
-  //List<EventTemplateCurrentDetailVo> angusTesterExecTemplateList();
 
 }

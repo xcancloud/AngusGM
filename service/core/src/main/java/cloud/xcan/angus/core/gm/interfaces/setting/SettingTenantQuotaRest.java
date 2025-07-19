@@ -5,7 +5,6 @@ import cloud.xcan.angus.api.gm.setting.dto.quota.QuotaReplaceByOrderDto;
 import cloud.xcan.angus.api.gm.setting.dto.quota.QuotaReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.SettingTenantQuotaFacade;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaFindDto;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.tenant.TenantQuotaDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -126,12 +125,5 @@ public class SettingTenantQuotaRest {
     return ApiLocaleResult.success(settingTenantQuotaFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the quota of tenant", operationId = "setting:tenant:quota:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> search(@Valid @ParameterObject TenantQuotaSearchDto dto) {
-    return ApiLocaleResult.success(settingTenantQuotaFacade.search(dto));
-  }
 
 }

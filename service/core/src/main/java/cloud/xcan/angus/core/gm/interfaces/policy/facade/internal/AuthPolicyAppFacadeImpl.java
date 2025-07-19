@@ -1,7 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler.toDetailVo;
-import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAppAssembler.getFindCriteria;
+import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAppAssembler.getSpecification;
+import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.core.biz.NameJoin;
@@ -31,7 +32,8 @@ public class AuthPolicyAppFacadeImpl implements AuthPolicyAppFacade {
   @Override
   public PageResult<AppPolicyVo> appPolicyList(Long appId, AppPolicyFindDto dto) {
     dto.setAppId(appId);
-    Page<AuthPolicy> page = authPolicyQuery.list(getFindCriteria(dto), dto.tranPage());
+    Page<AuthPolicy> page = authPolicyQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, AuthPolicyAppAssembler::toPolicyListVo);
   }
 

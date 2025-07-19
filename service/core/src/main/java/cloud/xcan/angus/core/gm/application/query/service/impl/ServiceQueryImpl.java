@@ -19,6 +19,8 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
 import cloud.xcan.angus.core.gm.domain.service.ServiceResourceApiRepo;
+import cloud.xcan.angus.core.gm.domain.service.ServiceSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.LongKeyCountSummary;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -30,8 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Biz
@@ -41,6 +42,9 @@ public class ServiceQueryImpl implements ServiceQuery {
 
   @Resource
   private ServiceRepo serviceRepo;
+
+  @Resource
+  private ServiceSearchRepo serviceSearchRepo;
 
   @Resource
   private ApiRepo apiRepo;
@@ -63,12 +67,15 @@ public class ServiceQueryImpl implements ServiceQuery {
   }
 
   @Override
-  public Page<Service> find(Specification<Service> spec, Pageable pageable) {
+  public Page<Service> list(GenericSpecification<Service> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Service>>() {
 
       @Override
       protected Page<Service> process() {
-        Page<Service> servicePage = serviceRepo.findAll(spec, pageable);
+        Page<Service> servicePage = fullTextSearch
+        ? serviceSearchRepo.find(spec.getCriteria(), pageable, Service.class, match)
+        : serviceRepo.findAll(spec, pageable);
         setApiNum(servicePage.getContent());
         return servicePage;
       }

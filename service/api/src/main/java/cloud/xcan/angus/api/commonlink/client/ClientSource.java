@@ -4,7 +4,6 @@ import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.spec.experimental.EndpointRegister;
 import cloud.xcan.angus.spec.locale.EnumMessage;
-import java.util.Map;
 import lombok.Getter;
 
 @Getter

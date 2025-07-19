@@ -6,7 +6,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.pidSafe;
 
 import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.gm.dept.dto.DeptFindDto;
-import cloud.xcan.angus.api.gm.dept.dto.DeptSearchDto;
 import cloud.xcan.angus.api.gm.dept.vo.DeptDetailVo;
 import cloud.xcan.angus.api.gm.dept.vo.DeptListVo;
 import cloud.xcan.angus.core.gm.interfaces.dept.facade.dto.DeptAddDto;
@@ -102,15 +101,6 @@ public class DeptAssembler {
         .orderByFields("id", "name", "createdDate")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(DeptSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("name", "code")
-        .orderByFields("id", "name", "createdDate")
-        .build();
   }
 
 }

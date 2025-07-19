@@ -13,7 +13,6 @@ import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTempla
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateFindDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReceiverDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.channel.EventChannelInfoVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateCurrentDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateReceiveVo;
@@ -25,7 +24,6 @@ import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class EventTemplateAssembler {
@@ -107,7 +105,7 @@ public class EventTemplateAssembler {
     return vo;
   }
 
-  public static Specification<EventTemplate> getSpecification(EventTemplateFindDto dto) {
+  public static GenericSpecification<EventTemplate> getSpecification(EventTemplateFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .matchSearchFields("eventName", "eventCode", "eKey")
@@ -117,12 +115,4 @@ public class EventTemplateAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(EventTemplateSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .matchSearchFields("eventName", "eventCode", "eKey")
-        .rangeSearchFields("id", "createdDate")
-        .orderByFields("id", "createdDate")
-        .build();
-  }
 }

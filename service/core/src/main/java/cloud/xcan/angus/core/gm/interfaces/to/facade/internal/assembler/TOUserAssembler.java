@@ -4,11 +4,9 @@ package cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 
 import cloud.xcan.angus.api.commonlink.to.TORole;
-import cloud.xcan.angus.api.commonlink.to.TORoleUser;
 import cloud.xcan.angus.api.commonlink.to.TOUser;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TOUserAddDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TOUserFindDto;
-import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TOUserRoleListDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TOUserDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TOUserRoleVo;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TOUserVo;
@@ -18,7 +16,6 @@ import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class TOUserAssembler {
@@ -55,7 +52,7 @@ public class TOUserAssembler {
         .collect(Collectors.toList());
   }
 
-  public static Specification<TOUser> getSpecification(TOUserFindDto dto) {
+  public static GenericSpecification<TOUser> getSpecification(TOUserFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "userId", "createdDate")
@@ -64,12 +61,4 @@ public class TOUserAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Specification<TORoleUser> getSpecification(TOUserRoleListDto dto) {
-    // Build the final filters
-    Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "userId", "toRoleId", "createdDate")
-        .orderByFields("id", "createdDate")
-        .build();
-    return new GenericSpecification<>(filters);
-  }
 }

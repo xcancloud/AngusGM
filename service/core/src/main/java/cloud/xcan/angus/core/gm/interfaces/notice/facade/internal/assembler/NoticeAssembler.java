@@ -13,7 +13,6 @@ import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.time.LocalDateTime;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class NoticeAssembler {
@@ -62,7 +61,7 @@ public class NoticeAssembler {
         .setCreatedDate(notice.getCreatedDate());
   }
 
-  public static Specification<Notice> getSpecification(NoticeFindDto dto) {
+  public static GenericSpecification<Notice> getSpecification(NoticeFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate", "timingDate")
@@ -70,15 +69,6 @@ public class NoticeAssembler {
         .matchSearchFields("content")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(NoticeFindDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate", "timingDate")
-        .orderByFields("id", "createdDate", "timingDate")
-        .matchSearchFields("content")
-        .build();
   }
 
 }

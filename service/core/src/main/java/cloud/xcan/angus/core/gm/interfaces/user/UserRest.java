@@ -5,7 +5,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
-import cloud.xcan.angus.api.gm.user.dto.UserSearchDto;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
 import cloud.xcan.angus.api.gm.user.vo.UserListVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.UserFacade;
@@ -164,11 +163,4 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of user", operationId = "user:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<UserListVo>> search(@Valid @ParameterObject UserSearchDto dto) {
-    return ApiLocaleResult.success(userFacade.search(dto));
-  }
 }

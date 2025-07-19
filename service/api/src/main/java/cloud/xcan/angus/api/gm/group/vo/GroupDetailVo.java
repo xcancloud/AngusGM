@@ -3,7 +3,6 @@ package cloud.xcan.angus.api.gm.group.vo;
 import cloud.xcan.angus.api.commonlink.group.GroupSource;
 import cloud.xcan.angus.remote.NameJoinField;
 import cloud.xcan.angus.remote.info.IdAndName;
-import jakarta.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;

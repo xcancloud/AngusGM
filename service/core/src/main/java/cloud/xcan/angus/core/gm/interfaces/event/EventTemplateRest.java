@@ -6,7 +6,6 @@ import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTempla
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateFindDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReceiverDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.template.EventTemplateSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateCurrentDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.template.EventTemplateVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -60,7 +59,8 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.replace(dto));
   }
 
-  @Operation(summary = "Replace the receive channel of event template", operationId = "event:template:channel:replace")
+  @Operation(summary = "Replace the receive channel of event template",
+      operationId = "event:template:channel:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
@@ -70,7 +70,8 @@ public class EventTemplateRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace the receiver of event template", operationId = "event:template:receiver:replace")
+  @Operation(summary = "Replace the receiver of event template",
+      operationId = "event:template:receiver:replace")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Replaced successfully")})
   @PutMapping("/receiver")
@@ -98,7 +99,8 @@ public class EventTemplateRest {
     return ApiLocaleResult.success(eventTemplateFacade.detail(id));
   }
 
-  @Operation(summary = "Query the detail of current tenant event template and receive setting", operationId = "event:template:current:detail")
+  @Operation(summary = "Query the detail of current tenant event template and receive setting",
+      operationId = "event:template:current:detail")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/{id}/current")
@@ -111,34 +113,19 @@ public class EventTemplateRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<EventTemplateVo>> list(@Valid @ParameterObject EventTemplateFindDto dto) {
+  public ApiLocaleResult<PageResult<EventTemplateVo>> list(
+      @Valid @ParameterObject EventTemplateFindDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.list(dto));
   }
 
-  @Operation(summary = "Query the list of current tenant event template and receive setting", operationId = "event:template:current:list")
+  @Operation(summary = "Query the list of current tenant event template and receive setting",
+      operationId = "event:template:current:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/current")
   public ApiLocaleResult<PageResult<EventTemplateCurrentDetailVo>> currentList(
       @Valid @ParameterObject EventTemplateFindDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.currentList(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of event template", operationId = "event:template:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<EventTemplateVo>> search(@Valid @ParameterObject EventTemplateSearchDto dto) {
-    return ApiLocaleResult.success(eventTemplateFacade.search(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of current tenant event template and receive setting", operationId = "event:template:current:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search/current")
-  public ApiLocaleResult<PageResult<EventTemplateCurrentDetailVo>> currentSearch(
-      @Valid @ParameterObject EventTemplateSearchDto dto) {
-    return ApiLocaleResult.success(eventTemplateFacade.currentSearch(dto));
   }
 
 }

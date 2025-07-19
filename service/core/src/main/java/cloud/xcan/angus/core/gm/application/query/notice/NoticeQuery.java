@@ -1,10 +1,10 @@
 package cloud.xcan.angus.core.gm.application.query.notice;
 
 import cloud.xcan.angus.core.gm.domain.notice.Notice;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public interface NoticeQuery {
@@ -15,9 +15,11 @@ public interface NoticeQuery {
 
   Notice appLatest(Long appId);
 
-  Page<Notice> find(Specification<Notice> spec, PageRequest pageable);
+  Page<Notice> list(GenericSpecification<Notice> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   void checkAppSendTimingParam(Notice notice);
 
   void setAppInfo(List<Notice> notices);
+
 }

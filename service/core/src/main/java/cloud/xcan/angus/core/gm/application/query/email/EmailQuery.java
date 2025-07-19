@@ -9,9 +9,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface EmailQuery {
 
-  Page<Email> find(Specification<Email> spec, Pageable pageable);
+  Email detail(Long id);
 
-  Email checkAndFind(Long id);
+  Page<Email> list(Specification<Email> spec, Pageable pageable);
 
   EmailTemplate checkAndFindTemplate(Email email);
 

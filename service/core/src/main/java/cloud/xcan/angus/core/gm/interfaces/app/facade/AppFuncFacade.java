@@ -28,10 +28,6 @@ public interface AppFuncFacade {
 
   List<AppFuncVo> list(Long appId, AppFuncFindDto dto);
 
-  List<AppFuncVo> search(Long appId, AppFuncFindDto dto);
-
   List<AppFuncTreeVo> tree(Long appId, AppFuncFindDto dto);
-
-  List<AppFuncTreeVo> treeSearch(Long appId, AppFuncFindDto dto);
 
 }

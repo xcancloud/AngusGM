@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.notice.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.notice.facade.internal.assembler.NoticeAssembler.addToDomain;
-import static cloud.xcan.angus.core.gm.interfaces.notice.facade.internal.assembler.NoticeAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.notice.facade.internal.assembler.NoticeAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.notice.facade.internal.assembler.NoticeAssembler.toLatestVo;
 import static cloud.xcan.angus.core.gm.interfaces.notice.facade.internal.assembler.NoticeAssembler.toVo;
@@ -11,7 +10,6 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.notice.NoticeCmd;
 import cloud.xcan.angus.core.gm.application.query.notice.NoticeQuery;
-import cloud.xcan.angus.core.gm.application.query.notice.NoticeSearch;
 import cloud.xcan.angus.core.gm.domain.notice.Notice;
 import cloud.xcan.angus.core.gm.interfaces.notice.facade.NoticeFacade;
 import cloud.xcan.angus.core.gm.interfaces.notice.facade.dto.NoticeAddDto;
@@ -36,9 +34,6 @@ public class NoticeFacadeImpl implements NoticeFacade {
   @Resource
   private NoticeQuery noticeQuery;
 
-  @Resource
-  private NoticeSearch noticeSearch;
-
   @Override
   public IdKey<Long, Object> add(NoticeAddDto dto) {
     Notice notice = addToDomain(dto);
@@ -57,21 +52,6 @@ public class NoticeFacadeImpl implements NoticeFacade {
     return toVo(notice);
   }
 
-  @NameJoin
-  @Override
-  public PageResult<NoticeVo> list(NoticeFindDto dto) {
-    Page<Notice> page = noticeQuery.find(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, NoticeAssembler::toVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<NoticeVo> search(NoticeFindDto dto) {
-    Page<Notice> page = noticeSearch.search(getSearchCriteria(dto), dto.tranPage(),
-        Notice.class, getMatchSearchFields(dto.getClass()));
-    return buildVoPageResult(page, NoticeAssembler::toVo);
-  }
-
   @Override
   public NoticeLatestVo globalLatest() {
     return toLatestVo(noticeQuery.globalLatest());
@@ -81,4 +61,13 @@ public class NoticeFacadeImpl implements NoticeFacade {
   public NoticeLatestVo appLatest(Long appId) {
     return toLatestVo(noticeQuery.appLatest(appId));
   }
+
+  @NameJoin
+  @Override
+  public PageResult<NoticeVo> list(NoticeFindDto dto) {
+    Page<Notice> page = noticeQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+    return buildVoPageResult(page, NoticeAssembler::toVo);
+  }
+
 }

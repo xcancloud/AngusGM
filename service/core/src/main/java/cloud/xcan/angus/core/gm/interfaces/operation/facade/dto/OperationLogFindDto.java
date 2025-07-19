@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.operation.facade.dto;
 import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.remote.PageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

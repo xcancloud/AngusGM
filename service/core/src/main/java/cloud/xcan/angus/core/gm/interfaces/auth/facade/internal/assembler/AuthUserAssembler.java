@@ -27,7 +27,7 @@ public class AuthUserAssembler {
         .setUrl(appFunc.getUrl())
         .setSequence(appFunc.getSequence())
         .setHasAuth(appFunc.getHasAuth())
-        .setApis(AppFuncAssembler.toAppApiVos(appFunc.getApis()))
+        .setApis(AppFuncAssembler.toApiVos(appFunc.getApis()))
         .setTags(AppFuncAssembler.toTagVos(appFunc.getTags()));
   }
 

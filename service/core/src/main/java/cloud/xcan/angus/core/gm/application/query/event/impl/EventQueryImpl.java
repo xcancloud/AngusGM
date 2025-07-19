@@ -5,7 +5,9 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.event.EventQuery;
 import cloud.xcan.angus.core.gm.domain.event.Event;
 import cloud.xcan.angus.core.gm.domain.event.EventRepo;
+import cloud.xcan.angus.core.gm.domain.event.EventSearchRepo;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPushStatus;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -13,7 +15,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 
 @Slf4j
@@ -24,6 +25,9 @@ public class EventQueryImpl implements EventQuery {
 
   @Resource
   private EventRepo eventRepo;
+
+  @Resource
+  private EventSearchRepo eventSearchRepo;
 
   @Override
   public Event detail(Long id) {
@@ -43,12 +47,15 @@ public class EventQueryImpl implements EventQuery {
   }
 
   @Override
-  public Page<Event> list(Specification<Event> spec, PageRequest pageable) {
+  public Page<Event> list(GenericSpecification<Event> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Event>>() {
 
       @Override
       protected Page<Event> process() {
-        return eventRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? eventSearchRepo.find(spec.getCriteria(), pageable, Event.class, match)
+            : eventRepo.findAll(spec, pageable);
       }
     }.execute();
   }

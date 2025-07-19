@@ -58,7 +58,7 @@ public class AuthClientFacadeImpl implements AuthClientFacade {
 
   @Override
   public List<AuthClientDetailVo> list(AuthClientFindDto dto) {
-    List<CustomOAuth2RegisteredClient> clients = authClientQuery.find(dto.getId(),
+    List<CustomOAuth2RegisteredClient> clients = authClientQuery.list(dto.getId(),
         dto.getClientId(), dto.getTenantId());
     return clients.stream().map(AuthClientAssembler::toDetailVo).collect(Collectors.toList());
   }

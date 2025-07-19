@@ -45,6 +45,7 @@ import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicyListRepo;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicyRepo;
+import cloud.xcan.angus.core.gm.domain.policy.AuthPolicySearchRepo;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
@@ -73,6 +74,9 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
 
   @Resource
   private AuthPolicyListRepo authPolicyListRepo;
+
+  @Resource
+  private AuthPolicySearchRepo authPolicySearchRepo;
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
@@ -125,8 +129,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Query user-defined and platform preset policies.
    */
   @Override
-  public Page<AuthPolicy> list(GenericSpecification<AuthPolicy> spec,
-      PageRequest pageable) {
+  public Page<AuthPolicy> list(GenericSpecification<AuthPolicy> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<AuthPolicy>>(false) {
       @Override
       protected void checkParams() {
@@ -138,8 +142,9 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
 
       @Override
       protected Page<AuthPolicy> process() {
-        Page<AuthPolicy> page = authPolicyListRepo.find(spec.getCriteria(), pageable,
-            AuthPolicy.class, null);
+        Page<AuthPolicy> page = fullTextSearch
+            ? authPolicySearchRepo.find(spec.getCriteria(), pageable, AuthPolicy.class, match)
+            : authPolicyListRepo.find(spec.getCriteria(), pageable, AuthPolicy.class, null);
         if (page.hasContent()) {
           setAppInfo(page.getContent());
         }
@@ -163,7 +168,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Query the policies that can be opened on the tenant client.
    */
   @Override
-  public List<AuthPolicy> findOpenableTenantClientPolicies() {
+  public List<AuthPolicy> findOperableTenantClientPolicies() {
     return authPolicyRepo.findOpenableTenantClientPolicies();
   }
 
@@ -177,7 +182,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * need to include.
    */
   @Override
-  public List<AuthPolicy> findOpenableOpClientPoliciesByAppId(Long appId) {
+  public List<AuthPolicy> findOperableOpClientPoliciesByAppId(Long appId) {
     return authPolicyRepo.findOpenableOpClientPoliciesByAppId(appId);
   }
 

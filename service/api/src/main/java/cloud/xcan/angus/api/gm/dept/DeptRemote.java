@@ -1,7 +1,6 @@
 package cloud.xcan.angus.api.gm.dept;
 
 import cloud.xcan.angus.api.gm.dept.dto.DeptFindDto;
-import cloud.xcan.angus.api.gm.dept.dto.DeptSearchDto;
 import cloud.xcan.angus.api.gm.dept.vo.DeptDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -27,7 +26,7 @@ public interface DeptRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/dept/search")
-  ApiLocaleResult<PageResult<DeptDetailVo>> search(@Valid @SpringQueryMap DeptSearchDto dto);
+  ApiLocaleResult<PageResult<DeptDetailVo>> search(@Valid @SpringQueryMap DeptFindDto dto);
 
 
 }

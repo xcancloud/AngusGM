@@ -18,12 +18,10 @@ public interface NoticeFacade {
 
   NoticeVo detail(Long id);
 
-  PageResult<NoticeVo> list(NoticeFindDto dto);
-
-  PageResult<NoticeVo> search(NoticeFindDto dto);
-
   NoticeLatestVo globalLatest();
 
   NoticeLatestVo appLatest(Long appId);
+
+  PageResult<NoticeVo> list(NoticeFindDto dto);
 
 }

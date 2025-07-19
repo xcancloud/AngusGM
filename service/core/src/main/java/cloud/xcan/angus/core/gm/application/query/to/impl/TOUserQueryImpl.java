@@ -14,6 +14,8 @@ import cloud.xcan.angus.api.commonlink.to.TOUserRepo;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.to.TOUserQuery;
+import cloud.xcan.angus.core.gm.domain.to.TOUserSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import java.util.Collection;
@@ -21,14 +23,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 @Biz
 public class TOUserQueryImpl implements TOUserQuery {
 
   @Resource
   private TOUserRepo toUserRepo;
+
+  @Resource
+  private TOUserSearchRepo toUserSearchRepo;
 
   @Resource
   private TORoleRepo toRoleRepo;
@@ -51,12 +55,15 @@ public class TOUserQueryImpl implements TOUserQuery {
   }
 
   @Override
-  public Page<TOUser> find(Specification<TOUser> spec, Pageable pageable) {
+  public Page<TOUser> list(GenericSpecification<TOUser> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<TOUser>>() {
 
       @Override
       protected Page<TOUser> process() {
-        return toUserRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? toUserSearchRepo.find(spec.getCriteria(), pageable, TOUser.class, match)
+            : toUserRepo.findAll(spec, pageable);
       }
     }.execute();
   }

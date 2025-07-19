@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.email.facade.dto.server;
 
 import cloud.xcan.angus.core.gm.domain.email.server.EmailProtocol;
 import cloud.xcan.angus.remote.PageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -16,6 +16,8 @@ import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagQuery;
+import cloud.xcan.angus.core.gm.domain.tag.OrgTagSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import cloud.xcan.angus.spec.utils.ObjectUtils;
@@ -25,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 
 @Biz
@@ -36,6 +37,9 @@ public class OrgTagQueryImpl implements OrgTagQuery {
 
   @Resource
   private OrgTagRepo orgTagRepo;
+
+  @Resource
+  private OrgTagSearchRepo orgTagSearchRepo;
 
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
@@ -52,12 +56,15 @@ public class OrgTagQueryImpl implements OrgTagQuery {
   }
 
   @Override
-  public Page<OrgTag> list(Specification<OrgTag> spec, Pageable pageable) {
+  public Page<OrgTag> list(GenericSpecification<OrgTag> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<OrgTag>>(true, true) {
 
       @Override
       protected Page<OrgTag> process() {
-        return orgTagRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? orgTagSearchRepo.find(spec.getCriteria(), pageable, OrgTag.class, match)
+            : orgTagRepo.findAll(spec, pageable);
       }
     }.execute();
   }

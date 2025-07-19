@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.setting.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantQuotaAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantQuotaAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantQuotaAssembler.toQuotaDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
@@ -14,10 +13,8 @@ import cloud.xcan.angus.api.gm.setting.dto.quota.QuotaReplaceDto;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingTenantQuotaCmd;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuotaQuery;
-import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuotaSearch;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.SettingTenantQuotaFacade;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaFindDto;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler.TenantQuotaAssembler;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.tenant.TenantQuotaDetailVo;
 import cloud.xcan.angus.remote.PageResult;
@@ -34,9 +31,6 @@ public class SettingTenantQuotaFacadeImpl implements SettingTenantQuotaFacade {
 
   @Resource
   private SettingTenantQuotaQuery settingTenantQuotaQuery;
-
-  @Resource
-  private SettingTenantQuotaSearch settingTenantQuotaSearch;
 
   @Resource
   private SettingTenantQuotaCmd settingTenantQuotaCmd;
@@ -96,17 +90,10 @@ public class SettingTenantQuotaFacadeImpl implements SettingTenantQuotaFacade {
   @Override
   public PageResult<TenantQuotaDetailVo> list(TenantQuotaFindDto findDto) {
     Page<SettingTenantQuota> quotas = settingTenantQuotaQuery
-        .find(getSpecification(findDto), findDto.tranPage());
+        .list(getSpecification(findDto), findDto.tranPage(), findDto.fullTextSearch,
+            getMatchSearchFields(findDto.getClass()));
     return buildVoPageResult(quotas, TenantQuotaAssembler::toQuotaDetailVo);
   }
 
-  @NameJoin
-  @Override
-  public PageResult<TenantQuotaDetailVo> search(TenantQuotaSearchDto dto) {
-    Page<SettingTenantQuota> page = settingTenantQuotaSearch
-        .search(getSearchCriteria(dto), dto.tranPage(), SettingTenantQuota.class,
-            getMatchSearchFields(dto.getClass()));
-    return buildVoPageResult(page, TenantQuotaAssembler::toQuotaDetailVo);
-  }
 
 }

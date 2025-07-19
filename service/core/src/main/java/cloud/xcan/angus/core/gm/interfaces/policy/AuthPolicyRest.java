@@ -7,7 +7,6 @@ import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyAddDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyInitDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicySearchDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyVo;
@@ -138,14 +137,6 @@ public class AuthPolicyRest {
   @GetMapping
   public ApiLocaleResult<PageResult<AuthPolicyVo>> list(@Valid @ParameterObject AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of authorization policy", operationId = "auth:policy:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<AuthPolicyVo>> search(@Valid @ParameterObject AuthPolicySearchDto dto) {
-    return ApiLocaleResult.success(authPolicyFacade.search(dto));
   }
 
 }

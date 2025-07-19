@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.group;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 
 import cloud.xcan.angus.api.gm.group.dto.GroupFindDto;
-import cloud.xcan.angus.api.gm.group.dto.GroupSearchDto;
 import cloud.xcan.angus.api.gm.group.vo.GroupDetailVo;
 import cloud.xcan.angus.api.gm.group.vo.GroupListVo;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.GroupFacade;
@@ -118,14 +117,6 @@ public class GroupRest {
   @GetMapping
   public ApiLocaleResult<PageResult<GroupListVo>> list(@Valid @ParameterObject GroupFindDto dto) {
     return ApiLocaleResult.success(groupFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of group", operationId = "group:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<GroupListVo>> search(@Valid @ParameterObject GroupSearchDto dto) {
-    return ApiLocaleResult.success(groupFacade.search(dto));
   }
 
 }

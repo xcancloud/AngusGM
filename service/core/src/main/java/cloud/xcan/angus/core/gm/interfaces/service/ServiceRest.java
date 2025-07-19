@@ -8,7 +8,6 @@ import cloud.xcan.angus.core.gm.interfaces.service.facade.ServiceFacade;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceAddDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceFindDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ResourceApiVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceResourceVo;
@@ -130,14 +129,6 @@ public class ServiceRest {
   @GetMapping
   public ApiLocaleResult<PageResult<ServiceVo>> list(@Valid @ParameterObject ServiceFindDto dto) {
     return ApiLocaleResult.success(serviceFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of service", operationId = "service:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<ServiceVo>> search(@Valid @ParameterObject ServiceSearchDto dto) {
-    return ApiLocaleResult.success(serviceFacade.search(dto));
   }
 
   @Operation(summary = "Query the all resources of service", operationId = "service:resource:all")

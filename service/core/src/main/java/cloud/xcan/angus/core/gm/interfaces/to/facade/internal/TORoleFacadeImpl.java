@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.to.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler.toTORoleDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
@@ -10,12 +9,10 @@ import cloud.xcan.angus.api.commonlink.to.TORole;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.to.TORoleCmd;
 import cloud.xcan.angus.core.gm.application.query.to.TORoleQuery;
-import cloud.xcan.angus.core.gm.application.query.to.TORoleSearch;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.TORoleFacade;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleAddDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleFindDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TORoleAssembler;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleDetailVo;
@@ -39,9 +36,6 @@ public class TORoleFacadeImpl implements TORoleFacade {
 
   @Resource
   private TORoleQuery toRoleQuery;
-
-  @Resource
-  private TORoleSearch toRoleSearch;
 
   @Override
   public List<IdKey<Long, Object>> add(List<TORoleAddDto> dto) {
@@ -81,15 +75,9 @@ public class TORoleFacadeImpl implements TORoleFacade {
   @NameJoin
   @Override
   public PageResult<TORoleVo> list(TORoleFindDto dto) {
-    Page<TORole> page = toRoleQuery.list(getSpecification(dto), dto.tranPage());
+    Page<TORole> page = toRoleQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, TORoleAssembler::toRoleVo);
   }
 
-  @NameJoin
-  @Override
-  public PageResult<TORoleVo> search(TORoleSearchDto dto) {
-    Page<TORole> page = toRoleSearch.search(getSearchCriteria(dto), dto.tranPage(),
-        TORole.class, getMatchSearchFields(dto.getClass()));
-    return buildVoPageResult(page, TORoleAssembler::toRoleVo);
-  }
 }

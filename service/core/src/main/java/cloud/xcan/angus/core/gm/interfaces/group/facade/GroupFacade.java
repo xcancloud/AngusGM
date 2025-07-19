@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade;
 
 import cloud.xcan.angus.api.gm.group.dto.GroupFindDto;
-import cloud.xcan.angus.api.gm.group.dto.GroupSearchDto;
 import cloud.xcan.angus.api.gm.group.vo.GroupDetailVo;
 import cloud.xcan.angus.api.gm.group.vo.GroupListVo;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupAddDto;
@@ -30,6 +29,5 @@ public interface GroupFacade {
 
   PageResult<GroupListVo> list(GroupFindDto dto);
 
-  PageResult<GroupListVo> search(GroupSearchDto dto);
 
 }

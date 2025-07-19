@@ -9,7 +9,6 @@ import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppExportDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppImportDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSiteInfoUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppDetailVo;
@@ -178,14 +177,6 @@ public class AppRest {
   @GetMapping
   public ApiLocaleResult<PageResult<AppVo>> list(@Valid @ParameterObject AppFindDto dto) {
     return ApiLocaleResult.success(appFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of application", operationId = "app:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<AppVo>> search(@Valid @ParameterObject AppSearchDto dto) {
-    return ApiLocaleResult.success(appFacade.search(dto));
   }
 
 }

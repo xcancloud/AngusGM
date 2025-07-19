@@ -11,10 +11,12 @@ import cloud.xcan.angus.core.gm.application.query.event.EventTemplateQuery;
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
 import cloud.xcan.angus.core.gm.domain.event.channel.EventChannelP;
 import cloud.xcan.angus.core.gm.domain.event.template.EventTemplateRepo;
+import cloud.xcan.angus.core.gm.domain.event.template.EventTemplateSearchRepo;
 import cloud.xcan.angus.core.gm.domain.event.template.channel.EventTemplateChannelRepo;
 import cloud.xcan.angus.core.gm.domain.event.template.receiver.EventTemplateReceiver;
 import cloud.xcan.angus.core.gm.domain.event.template.receiver.EventTemplateReceiverRepo;
 import cloud.xcan.angus.core.gm.infra.config.EventTemplateCache;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -24,7 +26,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
@@ -34,6 +35,9 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
 
   @Resource
   private EventTemplateRepo eventTemplateRepo;
+
+  @Resource
+  private EventTemplateSearchRepo eventTemplateSearchRepo;
 
   @Resource
   private EventTemplateReceiverRepo eventTemplateReceiverRepo;
@@ -68,13 +72,15 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
   }
 
   @Override
-  public Page<EventTemplate> list(Specification<EventTemplate> spec,
-      boolean joinTenantSetting, PageRequest pageable) {
+  public Page<EventTemplate> list(GenericSpecification<EventTemplate> spec,
+      boolean joinTenantSetting, PageRequest pageable, boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<EventTemplate>>() {
 
       @Override
       protected Page<EventTemplate> process() {
-        Page<EventTemplate> templates = eventTemplateRepo.findAll(spec, pageable);
+        Page<EventTemplate> templates = fullTextSearch
+            ? eventTemplateSearchRepo.find(spec.getCriteria(), pageable, EventTemplate.class, match)
+            : eventTemplateRepo.findAll(spec, pageable);
         if (templates.hasContent() && joinTenantSetting) {
           setReceiveSetting(templates);
         }

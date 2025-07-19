@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.channel;
 
 import cloud.xcan.angus.remote.PageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

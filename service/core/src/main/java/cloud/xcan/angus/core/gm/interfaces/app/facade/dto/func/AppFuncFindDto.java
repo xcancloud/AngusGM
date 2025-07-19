@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func;
 import cloud.xcan.angus.api.commonlink.app.func.AppFuncType;
 import cloud.xcan.angus.remote.AbstractQuery;
 import cloud.xcan.angus.remote.OrderSort;
+import cloud.xcan.angus.remote.PageQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;

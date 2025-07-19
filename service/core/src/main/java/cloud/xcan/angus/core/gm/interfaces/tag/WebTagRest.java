@@ -5,7 +5,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.WebTagFacade;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.WebTagDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -101,14 +100,6 @@ public class WebTagRest {
   @GetMapping
   public ApiLocaleResult<PageResult<WebTagDetailVo>> list(@Valid @ParameterObject WebTagFindDto dto) {
     return ApiLocaleResult.success(webTagFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of web tags", operationId = "web:tag:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<WebTagDetailVo>> search(@Valid @ParameterObject WebTagSearchDto dto) {
-    return ApiLocaleResult.success(webTagFacade.search(dto));
   }
 
 }

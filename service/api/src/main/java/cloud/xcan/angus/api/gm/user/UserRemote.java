@@ -2,7 +2,6 @@ package cloud.xcan.angus.api.gm.user;
 
 
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
-import cloud.xcan.angus.api.gm.user.dto.UserSearchDto;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -22,11 +21,5 @@ public interface UserRemote {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/user")
   ApiLocaleResult<PageResult<UserDetailVo>> list(@Valid @SpringQueryMap UserFindDto dto);
-
-  @Operation(summary = "Fulltext search user", operationId = "user:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/api/v1/user/search")
-  ApiLocaleResult<PageResult<UserDetailVo>> search(@Valid @SpringQueryMap UserSearchDto dto);
 
 }

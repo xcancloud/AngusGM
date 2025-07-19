@@ -2,17 +2,18 @@ package cloud.xcan.angus.core.gm.application.query.setting;
 
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuota;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 public interface SettingTenantQuotaQuery {
 
   SettingTenantQuota detail(String name);
 
-  Page<SettingTenantQuota> find(Specification<SettingTenantQuota> spec, PageRequest pageable);
+  Page<SettingTenantQuota> list(GenericSpecification<SettingTenantQuota> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   void quotaCheck(Map<QuotaResource, Long> dtosMap);
 

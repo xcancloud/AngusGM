@@ -5,11 +5,12 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.country.CountryQuery;
 import cloud.xcan.angus.core.gm.domain.country.Country;
 import cloud.xcan.angus.core.gm.domain.country.CountryRepo;
+import cloud.xcan.angus.core.gm.domain.country.CountrySearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 @Biz
 public class CountryQueryImpl implements CountryQuery {
@@ -17,8 +18,11 @@ public class CountryQueryImpl implements CountryQuery {
   @Resource
   private CountryRepo countryRepo;
 
+  @Resource
+  private CountrySearchRepo countrySearchRepo;
+
   @Override
-  public Country find(Long id) {
+  public Country detail(Long id) {
     return new BizTemplate<Country>() {
 
       @Override
@@ -30,12 +34,15 @@ public class CountryQueryImpl implements CountryQuery {
   }
 
   @Override
-  public Page<Country> find(Specification<Country> spec, Pageable pageable) {
+  public Page<Country> list(GenericSpecification<Country> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Country>>() {
 
       @Override
       protected Page<Country> process() {
-        return countryRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? countrySearchRepo.find(spec.getCriteria(), pageable, Country.class, match)
+            : countryRepo.findAll(spec, pageable);
       }
     }.execute();
   }

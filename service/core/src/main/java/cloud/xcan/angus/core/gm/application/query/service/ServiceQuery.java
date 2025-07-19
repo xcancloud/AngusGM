@@ -2,17 +2,18 @@ package cloud.xcan.angus.core.gm.application.query.service;
 
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.service.Service;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 public interface ServiceQuery {
 
   Service detail(Long id);
 
-  Page<Service> find(Specification<Service> spec, Pageable pageable);
+  Page<Service> list(GenericSpecification<Service> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   List<Api> apiList(Long id);
 

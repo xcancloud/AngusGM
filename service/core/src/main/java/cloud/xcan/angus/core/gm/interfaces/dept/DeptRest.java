@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.dept;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 
 import cloud.xcan.angus.api.gm.dept.dto.DeptFindDto;
-import cloud.xcan.angus.api.gm.dept.dto.DeptSearchDto;
 import cloud.xcan.angus.api.gm.dept.vo.DeptDetailVo;
 import cloud.xcan.angus.api.gm.dept.vo.DeptListVo;
 import cloud.xcan.angus.core.gm.domain.dept.DeptSubCount;
@@ -117,14 +116,6 @@ public class DeptRest {
   @GetMapping
   public ApiLocaleResult<PageResult<DeptListVo>> list(@Valid @ParameterObject DeptFindDto dto) {
     return ApiLocaleResult.success(deptFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of department", operationId = "dept:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<DeptListVo>> search(@Valid @ParameterObject DeptSearchDto dto) {
-    return ApiLocaleResult.success(deptFacade.search(dto));
   }
 
   @Operation(summary = "Query the number of sub departments and department users number", operationId = "dept:sub:count")

@@ -15,7 +15,6 @@ import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyAddDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyAssociatedFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicySearchDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.UnAuthPolicyAssociatedFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.UnAuthPolicyFindDto;
@@ -178,13 +177,6 @@ public class AuthPolicyAssembler {
         .setOrgId(policy.getOrgId())
         .setOrgType(policy.getOrgType())
         .setOrgName(policy.getOrgName());
-  }
-
-  public static Set<SearchCriteria> getCriteria(AuthPolicySearchDto dto) {
-    return new SearchCriteriaBuilder<>(dto)
-        .matchSearchFields("code", "name", "description")
-        .orderByFields("id", "createdDate")
-        .build();
   }
 
   public static GenericSpecification<AuthPolicy> getSpecification(AuthPolicyFindDto dto) {

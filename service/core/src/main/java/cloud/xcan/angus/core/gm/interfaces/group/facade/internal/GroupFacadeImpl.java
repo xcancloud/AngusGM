@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.group.facade.internal.assembler.GroupAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.group.facade.internal.assembler.GroupAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.group.facade.internal.assembler.GroupAssembler.toDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
@@ -8,13 +7,11 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.gm.group.dto.GroupFindDto;
-import cloud.xcan.angus.api.gm.group.dto.GroupSearchDto;
 import cloud.xcan.angus.api.gm.group.vo.GroupDetailVo;
 import cloud.xcan.angus.api.gm.group.vo.GroupListVo;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
-import cloud.xcan.angus.core.gm.application.query.group.GroupSearch;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.GroupFacade;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupAddDto;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupReplaceDto;
@@ -39,9 +36,6 @@ public class GroupFacadeImpl implements GroupFacade {
 
   @Resource
   private GroupQuery groupQuery;
-
-  @Resource
-  private GroupSearch groupSearch;
 
   @Override
   public List<IdKey<Long, Object>> add(List<GroupAddDto> dto) {
@@ -85,15 +79,8 @@ public class GroupFacadeImpl implements GroupFacade {
   @NameJoin
   @Override
   public PageResult<GroupListVo> list(GroupFindDto dto) {
-    Page<Group> page = groupQuery.find(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, GroupAssembler::toListVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<GroupListVo> search(GroupSearchDto dto) {
-    Page<Group> page = groupSearch.search(getSearchCriteria(dto), dto.tranPage(),
-        Group.class, getMatchSearchFields(dto.getClass()));
+    Page<Group> page = groupQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, GroupAssembler::toListVo);
   }
 

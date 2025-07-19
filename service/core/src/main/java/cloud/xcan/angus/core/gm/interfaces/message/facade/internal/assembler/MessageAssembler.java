@@ -8,7 +8,6 @@ import cloud.xcan.angus.core.gm.domain.message.MessageInfo;
 import cloud.xcan.angus.core.gm.domain.message.MessageStatus;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageAddDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageFindDto;
-import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.vo.MessageDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.vo.MessageVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
@@ -16,7 +15,6 @@ import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.time.LocalDateTime;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class MessageAssembler {
@@ -69,7 +67,7 @@ public class MessageAssembler {
         .setCreatedByName(message.getCreatedByName());
   }
 
-  public static Specification<MessageInfo> getSpecification(MessageFindDto dto) {
+  public static GenericSpecification<MessageInfo> getSpecification(MessageFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate", "timingDate")
@@ -79,12 +77,4 @@ public class MessageAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(MessageSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate", "timingDate")
-        .orderByFields("id", "userId", "createdDate")
-        .matchSearchFields("title")
-        .build();
-  }
 }

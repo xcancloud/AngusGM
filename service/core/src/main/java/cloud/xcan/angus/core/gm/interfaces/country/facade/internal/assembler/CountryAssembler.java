@@ -3,13 +3,11 @@ package cloud.xcan.angus.core.gm.interfaces.country.facade.internal.assembler;
 
 import cloud.xcan.angus.core.gm.domain.country.Country;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryFindDto;
-import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountrySearchDto;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDetailVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 public class CountryAssembler {
 
@@ -24,21 +22,14 @@ public class CountryAssembler {
         .setName(country.getName());
   }
 
-  public static Specification<Country> getSpecification(CountryFindDto findDto) {
+  public static GenericSpecification<Country> getSpecification(CountryFindDto findDto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(findDto)
-        .matchSearchFields("code", "name", "chineseName", "iso2", "iso3", "abbr")
+        .matchSearchFields("code", "name", "chineseName")
         .rangeSearchFields("id")
         .orderByFields("id", "code")
         .build();
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(CountrySearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .matchSearchFields("name", "chineseName")
-        .orderByFields("id", "createdDate")
-        .build();
-  }
 }

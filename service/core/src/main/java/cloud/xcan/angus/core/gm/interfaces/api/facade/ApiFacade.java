@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.api.facade;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiAddDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiFindDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiDetailVo;
 import cloud.xcan.angus.remote.PageResult;
@@ -27,7 +26,5 @@ public interface ApiFacade {
   ApiDetailVo detail(Long id);
 
   PageResult<ApiDetailVo> list(ApiFindDto dto);
-
-  PageResult<ApiDetailVo> search(ApiSearchDto dto);
 
 }

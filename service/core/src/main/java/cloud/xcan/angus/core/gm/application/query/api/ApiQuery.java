@@ -2,19 +2,20 @@ package cloud.xcan.angus.core.gm.application.query.api;
 
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.service.ServiceResource;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 public interface ApiQuery {
 
   Api detail(Long id);
 
-  Page<Api> list(Specification<Api> spec, Pageable pageable);
+  Page<Api> list(GenericSpecification<Api> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   List<Api> findAllById(Collection<Long> apiIds);
 

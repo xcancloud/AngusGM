@@ -25,6 +25,7 @@ import cloud.xcan.angus.core.gm.application.query.tag.WebTagTargetQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.app.func.AppFuncListRepo;
 import cloud.xcan.angus.core.gm.domain.app.func.AppFuncRepo;
+import cloud.xcan.angus.core.gm.domain.app.func.AppFuncSearchRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
@@ -50,6 +52,9 @@ public class AppFuncQueryImpl implements AppFuncQuery {
 
   @Resource
   private AppFuncListRepo appFuncListRepo;
+
+  @Resource
+  private AppFuncSearchRepo appFuncSearchRepo;
 
   @Resource
   private ApiQuery apiQuery;
@@ -81,7 +86,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
   }
 
   @Override
-  public List<AppFunc> list(GenericSpecification<AppFunc> spec) {
+  public List<AppFunc> list(GenericSpecification<AppFunc> spec, boolean fullTextSearch,
+      String[] match) {
     return new BizTemplate<List<AppFunc>>() {
       @Override
       protected void checkParams() {
@@ -90,11 +96,13 @@ public class AppFuncQueryImpl implements AppFuncQuery {
 
       @Override
       protected List<AppFunc> process() {
-        List<AppFunc> func = appFuncListRepo.find(spec.getCriteria(),
-            PageRequest.of(0, 10000, JpaSort.by(Order.asc("id"))),
-            AppFunc.class, null).getContent();
-        List<AppFunc> allAppFunc = findAndAllParent(func.stream().map(x -> x.setHit(true))
-            .collect(Collectors.toList()));
+        PageRequest request = PageRequest.of(0, 10000, JpaSort.by(Order.asc("id")));
+        Page<AppFunc> page = fullTextSearch
+            ? appFuncSearchRepo.find(spec.getCriteria(), request, AppFunc.class, match)
+            : appFuncListRepo.find(spec.getCriteria(), request, AppFunc.class, null);
+
+        List<AppFunc> allAppFunc = findAndAllParent(page.getContent().stream()
+            .map(x -> x.setHit(true)).collect(Collectors.toList()));
         setTargetTags(allAppFunc);
         return allAppFunc;
       }
@@ -271,11 +279,6 @@ public class AppFuncQueryImpl implements AppFuncQuery {
       }
     } while (isNotEmpty(appFuncSubs));
     return allFuncAndSub;
-  }
-
-  @Override
-  public List<Long> findSubIds(Long appId, Collection<Long> funcIds) {
-    return findSub(appId, funcIds).stream().map(AppFunc::getId).collect(Collectors.toList());
   }
 
   @Override

@@ -16,7 +16,9 @@ import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.WebTagQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.tag.WebTagRepo;
+import cloud.xcan.angus.core.gm.domain.tag.WebTagSearchRepo;
 import cloud.xcan.angus.core.gm.domain.tag.WebTagTargetRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -27,8 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 
 @Biz
@@ -36,6 +37,9 @@ public class WebTagQueryImpl implements WebTagQuery {
 
   @Resource
   private WebTagRepo webTagRepo;
+
+  @Resource
+  private WebTagSearchRepo webTagSearchRepo;
 
   @Resource
   private WebTagTargetRepo webTagTargetRepo;
@@ -55,12 +59,15 @@ public class WebTagQueryImpl implements WebTagQuery {
   }
 
   @Override
-  public Page<WebTag> find(Specification<WebTag> spec, Pageable pageable) {
+  public Page<WebTag> list(GenericSpecification<WebTag> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<WebTag>>() {
 
       @Override
       protected Page<WebTag> process() {
-        return webTagRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? webTagSearchRepo.find(spec.getCriteria(), pageable, WebTag.class, match)
+            : webTagRepo.findAll(spec, pageable);
       }
     }.execute();
   }
@@ -72,8 +79,8 @@ public class WebTagQueryImpl implements WebTagQuery {
 
   @Override
   public List<WebTag> findByTargetId(Long targetId) {
-    Set<Long> tagIds = webTagTargetRepo.findAllByTargetId(targetId).stream()
-        .map(WebTagTarget::getTagId).collect(Collectors.toSet());
+    Set<Long> tagIds = webTagTargetRepo.findAllByTargetId(targetId)
+        .stream().map(WebTagTarget::getTagId).collect(Collectors.toSet());
     if (isNotEmpty(tagIds)) {
       return webTagRepo.findAllById(tagIds);
     }

@@ -41,24 +41,24 @@ public class EmailQueryImpl implements EmailQuery {
   private EmailTemplateQuery emailTemplateQuery;
 
   @Override
-  public Page<Email> find(Specification<Email> spec, Pageable pageable) {
-    return new BizTemplate<Page<Email>>() {
-
-      @Override
-      protected Page<Email> process() {
-        return emailRepo.findAll(spec, pageable);
-      }
-    }.execute();
-  }
-
-  @Override
-  public Email checkAndFind(Long id) {
+  public Email detail(Long id) {
     return new BizTemplate<Email>() {
 
       @Override
       protected Email process() {
         return emailRepo.findById(id)
             .orElseThrow(() -> ResourceNotFound.of(String.valueOf(id), "Email"));
+      }
+    }.execute();
+  }
+
+  @Override
+  public Page<Email> list(Specification<Email> spec, Pageable pageable) {
+    return new BizTemplate<Page<Email>>() {
+
+      @Override
+      protected Page<Email> process() {
+        return emailRepo.findAll(spec, pageable);
       }
     }.execute();
   }

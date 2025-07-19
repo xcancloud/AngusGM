@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.to.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TOUserAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.to.facade.internal.assembler.TOUserAssembler.toDetailVo;
+import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.commonlink.to.TOUser;
@@ -54,7 +55,8 @@ public class TOUserFacadeImpl implements TOUserFacade {
   @NameJoin
   @Override
   public PageResult<TOUserVo> list(TOUserFindDto dto) {
-    Page<TOUser> page = toUserQuery.find(getSpecification(dto), dto.tranPage());
+    Page<TOUser> page = toUserQuery.list(getSpecification(dto), dto.tranPage()
+        ,dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, TOUserAssembler::toVo);
   }
 }

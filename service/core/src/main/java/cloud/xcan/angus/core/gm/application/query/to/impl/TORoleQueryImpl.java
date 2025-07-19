@@ -20,6 +20,8 @@ import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.to.TORoleQuery;
+import cloud.xcan.angus.core.gm.domain.to.TORoleSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +32,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 
 @Biz
@@ -38,6 +39,9 @@ public class TORoleQueryImpl implements TORoleQuery {
 
   @Resource
   private TORoleRepo toRoleRepo;
+
+  @Resource
+  private TORoleSearchRepo toRoleSearchRepo;
 
   @Resource
   private TORoleUserRepo toRoleUserRepo;
@@ -69,12 +73,15 @@ public class TORoleQueryImpl implements TORoleQuery {
   }
 
   @Override
-  public Page<TORole> list(Specification<TORole> spec, PageRequest pageable) {
+  public Page<TORole> list(GenericSpecification<TORole> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<TORole>>() {
 
       @Override
       protected Page<TORole> process() {
-        return toRoleRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? toRoleSearchRepo.find(spec.getCriteria(), pageable, TORole.class, match)
+            : toRoleRepo.findAll(spec, pageable);
       }
     }.execute();
   }

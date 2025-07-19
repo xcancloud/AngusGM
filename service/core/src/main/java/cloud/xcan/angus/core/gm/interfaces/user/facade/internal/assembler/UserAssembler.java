@@ -24,7 +24,6 @@ import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddByMobileDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
-import cloud.xcan.angus.api.gm.user.dto.UserSearchDto;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
 import cloud.xcan.angus.api.gm.user.to.UserGroupTo;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
@@ -361,13 +360,4 @@ public class UserAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(UserSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("fullName", "mobile", "title", "username")
-        .orderByFields("id", "fullName", "createdDate")
-        //.inAndNotFields("tagId")
-        .build();
-  }
 }

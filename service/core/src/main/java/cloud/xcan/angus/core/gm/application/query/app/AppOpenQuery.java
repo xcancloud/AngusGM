@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 
 public interface AppOpenQuery {
 
-  Page<AppOpen> find(GenericSpecification<AppOpen> spec, PageRequest pageable);
+  Page<AppOpen> list(GenericSpecification<AppOpen> spec, PageRequest pageable);
 
   AppOpen checkAndFind(Long appId, Long tenantId, boolean checkExpired);
 

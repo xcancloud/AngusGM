@@ -5,7 +5,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.group.GroupSource;
 import cloud.xcan.angus.api.gm.group.dto.GroupFindDto;
-import cloud.xcan.angus.api.gm.group.dto.GroupSearchDto;
 import cloud.xcan.angus.api.gm.group.vo.GroupDetailVo;
 import cloud.xcan.angus.api.gm.group.vo.GroupListVo;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupAddDto;
@@ -97,12 +96,4 @@ public class GroupAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(GroupSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("name", "code")
-        .orderByFields("id", "name", "createdDate")
-        .build();
-  }
 }

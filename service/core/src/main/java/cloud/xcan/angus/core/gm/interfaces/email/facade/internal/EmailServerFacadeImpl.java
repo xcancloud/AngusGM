@@ -73,7 +73,7 @@ public class EmailServerFacadeImpl implements EmailServerFacade {
 
   @Override
   public PageResult<ServerDetailVo> list(ServerFindDto dto) {
-    Page<EmailServer> page = emailServerQuery.find(getSpecification(dto), dto.tranPage());
+    Page<EmailServer> page = emailServerQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, ServerAssembler::toDetail);
   }
 

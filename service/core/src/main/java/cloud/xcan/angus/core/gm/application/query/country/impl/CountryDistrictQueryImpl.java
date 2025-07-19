@@ -6,19 +6,26 @@ import cloud.xcan.angus.core.gm.application.converter.DistrictConverter;
 import cloud.xcan.angus.core.gm.application.query.country.CountryDistrictQuery;
 import cloud.xcan.angus.core.gm.domain.country.district.District;
 import cloud.xcan.angus.core.gm.domain.country.district.DistrictRepo;
+import cloud.xcan.angus.core.gm.domain.country.district.DistrictSearchRepo;
 import cloud.xcan.angus.core.gm.domain.country.district.model.DistrictLevel;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDistrictTreeVo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @Biz
 public class CountryDistrictQueryImpl implements CountryDistrictQuery {
 
   @Resource
   private DistrictRepo districtRepo;
+
+  @Resource
+  private DistrictSearchRepo districtSearchRepo;
 
   @Override
   public District detail(String countryCode, String districtCode) {
@@ -27,6 +34,19 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
       @Override
       protected District process() {
         return districtRepo.findByCountryCodeAndCode(countryCode, districtCode);
+      }
+    }.execute();
+  }
+
+  @Override
+  public Page<District> list(GenericSpecification<District> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
+    return new BizTemplate<Page<District>>() {
+      @Override
+      protected Page<District> process() {
+        return fullTextSearch
+            ? districtSearchRepo.find(spec.getCriteria(), pageable, District.class, match)
+            : districtRepo.findAll(spec, pageable);
       }
     }.execute();
   }

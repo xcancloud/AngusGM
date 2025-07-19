@@ -1,18 +1,19 @@
 package cloud.xcan.angus.core.gm.application.query.tag;
 
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 
 public interface OrgTagQuery {
 
   OrgTag detail(Long id);
 
-  Page<OrgTag> list(Specification<OrgTag> spec, Pageable pageable);
+  Page<OrgTag> list(GenericSpecification<OrgTag> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   OrgTag checkAndFind(Long id);
 
@@ -25,4 +26,5 @@ public interface OrgTagQuery {
   void checkUpdateTagName(Long tenantId, List<OrgTag> tags);
 
   void checkQuota(Long tenantId, long incr);
+
 }

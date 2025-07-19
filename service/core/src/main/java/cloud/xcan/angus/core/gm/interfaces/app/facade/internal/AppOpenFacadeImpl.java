@@ -49,7 +49,7 @@ public class AppOpenFacadeImpl implements AppOpenFacade {
   @NameJoin
   @Override
   public PageResult<AppOpenVo> list(AppOpenFindDto dto) {
-    Page<AppOpen> openPage = appOpenQuery.find(getSpecification(dto), dto.tranPage());
+    Page<AppOpen> openPage = appOpenQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(openPage, AppOpenAssembler::toVo);
   }
 }

@@ -133,16 +133,6 @@ public class AppFuncRest {
     return ApiLocaleResult.success(appFuncFacade.list(appId, dto));
   }
 
-  @Operation(summary = "Fulltext search the function list of application", operationId = "app:func:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/{appId}/func/search")
-  public ApiLocaleResult<List<AppFuncVo>> search(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid @ParameterObject AppFuncFindDto dto) {
-    return ApiLocaleResult.success(appFuncFacade.search(appId, dto));
-  }
-
   @Operation(summary = "Query the function tree of application", operationId = "app:func:tree")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
@@ -153,13 +143,4 @@ public class AppFuncRest {
     return ApiLocaleResult.success(appFuncFacade.tree(appId, dto));
   }
 
-  @Operation(summary = "Fulltext search the function tree of application", operationId = "app:func:tree:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/{appId}/func/tree/search")
-  public ApiLocaleResult<List<AppFuncTreeVo>> treeSearch(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Valid @ParameterObject AppFuncFindDto dto) {
-    return ApiLocaleResult.success(appFuncFacade.treeSearch(appId, dto));
-  }
 }

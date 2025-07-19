@@ -7,7 +7,6 @@ import cloud.xcan.angus.core.gm.interfaces.api.facade.ApiFacade;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiAddDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiFindDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiDetailVo;
 import cloud.xcan.angus.core.spring.condition.CloudServiceEditionCondition;
@@ -136,14 +135,6 @@ public class ApiRest {
   @GetMapping
   public ApiLocaleResult<PageResult<ApiDetailVo>> list(@Valid @ParameterObject ApiFindDto dto) {
     return ApiLocaleResult.success(apiFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of api", operationId = "api:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<ApiDetailVo>> search(@Valid @ParameterObject ApiSearchDto dto) {
-    return ApiLocaleResult.success(apiFacade.search(dto));
   }
 
 }

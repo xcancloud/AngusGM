@@ -8,7 +8,7 @@ public interface AuthClientQuery {
 
   CustomOAuth2RegisteredClient detail(String id);
 
-  List<CustomOAuth2RegisteredClient> find(String id, String clientId, String tenantId);
+  List<CustomOAuth2RegisteredClient> list(String id, String clientId, String tenantId);
 
   CustomOAuth2RegisteredClient checkAndFind(String clientId);
 

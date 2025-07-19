@@ -1,16 +1,16 @@
 package cloud.xcan.angus.core.gm.application.query.event;
 
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 public interface EventTemplateQuery {
 
   EventTemplate detail(Long id, boolean joinTenantSetting);
 
-  Page<EventTemplate> list(Specification<EventTemplate> spec,
-      boolean joinTenantSetting, PageRequest pageable);
+  Page<EventTemplate> list(GenericSpecification<EventTemplate> spec,
+      boolean joinTenantSetting, PageRequest pageable, boolean fullTextSearch, String[] match);
 
   EventTemplate checkAndFind(Long id);
 

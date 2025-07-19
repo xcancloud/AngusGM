@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.message;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.MessageCenterOnlineFacade;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOfflineDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOnlineFindDto;
-import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageCenterOnlineSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.vo.MessageCenterOnlineVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -62,13 +61,5 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success(messageCenterOnlineFacade.list(dto));
   }
 
-  @Operation(summary = "Search the online user information of the message center", operationId = "message:center:online:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<MessageCenterOnlineVo>> search(
-      @Valid @ParameterObject MessageCenterOnlineSearchDto dto) {
-    return ApiLocaleResult.success(messageCenterOnlineFacade.search(dto));
-  }
 
 }

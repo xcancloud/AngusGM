@@ -10,7 +10,7 @@ public interface SmsTemplateQuery {
 
   SmsTemplate detail(Long id);
 
-  Page<SmsTemplate> find(Specification<SmsTemplate> spec, PageRequest pageable);
+  Page<SmsTemplate> list(Specification<SmsTemplate> spec, PageRequest pageable);
 
 
 }

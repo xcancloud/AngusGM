@@ -4,7 +4,6 @@ import cloud.xcan.angus.api.gm.setting.dto.quota.QuotaCheckDto;
 import cloud.xcan.angus.api.gm.setting.dto.quota.QuotaReplaceByOrderDto;
 import cloud.xcan.angus.api.gm.setting.dto.quota.QuotaReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaFindDto;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.TenantQuotaSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.tenant.TenantQuotaDetailVo;
 import cloud.xcan.angus.remote.PageResult;
 import java.util.HashSet;
@@ -29,7 +28,5 @@ public interface SettingTenantQuotaFacade {
   List<String> appList();
 
   PageResult<TenantQuotaDetailVo> list(TenantQuotaFindDto findDto);
-
-  PageResult<TenantQuotaDetailVo> search(TenantQuotaSearchDto dto);
 
 }

@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler.addDtoToDomain;
-import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler.siteUpdateDtoToDomain;
@@ -15,14 +14,12 @@ import cloud.xcan.angus.api.enums.ExportFileType;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
-import cloud.xcan.angus.core.gm.application.query.app.AppSearch;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.AppFacade;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppAddDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppExportDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSiteInfoUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler;
@@ -49,9 +46,6 @@ public class AppFacadeImpl implements AppFacade {
 
   @Resource
   private AppQuery appQuery;
-
-  @Resource
-  private AppSearch appSearch;
 
   @Override
   public IdKey<Long, Object> add(AppAddDto dto) {
@@ -111,15 +105,8 @@ public class AppFacadeImpl implements AppFacade {
   @NameJoin
   @Override
   public PageResult<AppVo> list(AppFindDto dto) {
-    Page<App> appPage = appQuery.find(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(appPage, AppAssembler::toVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<AppVo> search(AppSearchDto dto) {
-    Page<App> page = appSearch.search(getSearchCriteria(dto), dto.tranPage(),
-        App.class, getMatchSearchFields(dto.getClass()));
+    Page<App> page = appQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, AppAssembler::toVo);
   }
 

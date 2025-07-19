@@ -22,6 +22,7 @@ import cloud.xcan.angus.core.gm.application.query.tag.WebTagQuery;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.app.AppListRepo;
 import cloud.xcan.angus.core.gm.domain.app.AppRepo;
+import cloud.xcan.angus.core.gm.domain.app.AppSearchRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 
 @Biz
@@ -41,6 +42,9 @@ public class AppQueryImpl implements AppQuery {
 
   @Resource
   private AppListRepo appListRepo;
+
+  @Resource
+  private AppSearchRepo appSearchRepo;
 
   @Resource
   private ApiQuery apiQuery;
@@ -89,12 +93,15 @@ public class AppQueryImpl implements AppQuery {
   }
 
   @Override
-  public Page<App> find(GenericSpecification<App> spec, Pageable pageable) {
+  public Page<App> list(GenericSpecification<App> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<App>>(false) {
 
       @Override
       protected Page<App> process() {
-        return appListRepo.find(spec.getCriteria(), pageable, App.class, null);
+        return fullTextSearch
+            ? appSearchRepo.find(spec.getCriteria(), pageable, App.class, match)
+            : appListRepo.find(spec.getCriteria(), pageable, App.class, null);
       }
     }.execute();
   }

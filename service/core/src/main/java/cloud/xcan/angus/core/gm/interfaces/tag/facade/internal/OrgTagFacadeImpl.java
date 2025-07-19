@@ -1,19 +1,17 @@
 package cloud.xcan.angus.core.gm.interfaces.tag.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.OrgTagAssembler.domainToDetailVo;
-import static cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.OrgTagAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.OrgTagAssembler.getSpecification;
+import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.tag.OrgTagCmd;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagQuery;
-import cloud.xcan.angus.core.gm.application.query.tag.OrgTagSearch;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.OrgTagFacade;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.OrgTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.OrgTagAssembler;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.OrgTagDetailVo;
@@ -35,9 +33,6 @@ public class OrgTagFacadeImpl implements OrgTagFacade {
 
   @Resource
   private OrgTagQuery orgTagQuery;
-
-  @Resource
-  public OrgTagSearch orgTagSearch;
 
   @Override
   public List<IdKey<Long, Object>> add(List<OrgTagAddDto> dto) {
@@ -65,15 +60,8 @@ public class OrgTagFacadeImpl implements OrgTagFacade {
   @NameJoin
   @Override
   public PageResult<OrgTagDetailVo> list(OrgTagFindDto dto) {
-    Page<OrgTag> page = orgTagQuery.list(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, OrgTagAssembler::domainToDetailVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<OrgTagDetailVo> search(OrgTagSearchDto dto) {
-    Page<OrgTag> page = orgTagSearch.search(getSearchCriteria(dto), dto.tranPage()
-        , OrgTag.class, "name");
+    Page<OrgTag> page = orgTagQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, OrgTagAssembler::domainToDetailVo);
   }
 

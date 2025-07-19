@@ -8,7 +8,6 @@ import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleAddDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleFindDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.dto.TORoleUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.to.facade.vo.TORoleUserVo;
@@ -20,7 +19,6 @@ import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class TORoleAssembler {
@@ -90,22 +88,14 @@ public class TORoleAssembler {
         ).collect(Collectors.toList());
   }
 
-  public static Specification<TORole> getSpecification(TORoleFindDto dto) {
+  public static GenericSpecification<TORole> getSpecification(TORoleFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
+        .rangeSearchFields("id", "createdDate")
         .matchSearchFields("name", "code")
         .orderByFields("id", "createdDate")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(TORoleSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("name", "code")
-        .orderByFields("id")
-        .build();
   }
 
 }

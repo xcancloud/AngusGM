@@ -4,6 +4,7 @@ import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.api.enums.ApiType;
 import cloud.xcan.angus.remote.PageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

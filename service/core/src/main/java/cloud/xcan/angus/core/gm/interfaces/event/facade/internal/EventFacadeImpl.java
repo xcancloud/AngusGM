@@ -13,7 +13,6 @@ import cloud.xcan.angus.core.event.source.EventContent;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventCmd;
 import cloud.xcan.angus.core.gm.application.query.event.EventChannelQuery;
 import cloud.xcan.angus.core.gm.application.query.event.EventQuery;
-import cloud.xcan.angus.core.gm.application.query.event.EventSearch;
 import cloud.xcan.angus.core.gm.application.query.event.EventTemplateQuery;
 import cloud.xcan.angus.core.gm.domain.email.template.EventTemplate;
 import cloud.xcan.angus.core.gm.domain.event.Event;
@@ -21,8 +20,6 @@ import cloud.xcan.angus.core.gm.domain.event.ReceiveChannelType;
 import cloud.xcan.angus.core.gm.domain.event.channel.EventChannel;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.EventFacade;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventFindDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventSearchDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventAssembler;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler.EventChannelAssembler;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventReceiveChannelVo;
@@ -46,9 +43,6 @@ public class EventFacadeImpl implements EventFacade {
 
   @Resource
   private EventCmd eventCmd;
-
-  @Resource
-  private EventSearch eventSearch;
 
   @Resource
   private EventTemplateQuery eventTemplateQuery;
@@ -87,16 +81,8 @@ public class EventFacadeImpl implements EventFacade {
 
   @Override
   public PageResult<EventVo> list(EventFindDto dto) {
-    Page<Event> page = eventQuery.list(getSpecification(dto), dto.tranPage());
-    List<EventVo> voPage = page.getContent().stream()
-        .map(e -> toVo(e, eventUrlPrefix)).collect(Collectors.toList());
-    return PageResult.of(page.getTotalElements(), voPage);
-  }
-
-  @Override
-  public PageResult<EventVo> search(EventSearchDto dto) {
-    Page<Event> page = eventSearch.search(EventAssembler.getSearchCriteria(dto),
-        dto.tranPage(), Event.class, getMatchSearchFields(dto.getClass()));
+    Page<Event> page = eventQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     List<EventVo> voPage = page.getContent().stream()
         .map(e -> toVo(e, eventUrlPrefix)).collect(Collectors.toList());
     return PageResult.of(page.getTotalElements(), voPage);

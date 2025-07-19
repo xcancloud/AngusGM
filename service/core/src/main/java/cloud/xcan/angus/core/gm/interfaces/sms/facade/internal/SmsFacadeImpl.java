@@ -54,12 +54,12 @@ public class SmsFacadeImpl implements SmsFacade {
 
   @Override
   public SmsDetailVo detail(Long id) {
-    return toDetailVo(smsQuery.find(id));
+    return toDetailVo(smsQuery.detail(id));
   }
 
   @Override
   public PageResult<SmsDetailVo> list(SmsFindDto dto) {
-    Page<Sms> page = smsQuery.find(getSpecification(dto), dto.tranPage());
+    Page<Sms> page = smsQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, SmsAssembler::toDetailVo);
   }
 }

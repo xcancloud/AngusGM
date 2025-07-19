@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.service.facade;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceAddDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceFindDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ResourceApiVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceResourceVo;
@@ -29,8 +28,6 @@ public interface ServiceFacade {
   ServiceVo detail(Long id);
 
   PageResult<ServiceVo> list(ServiceFindDto dto);
-
-  PageResult<ServiceVo> search(ServiceSearchDto dto);
 
   List<ServiceResourceVo> resourceList(String serviceCode, Boolean auth);
 

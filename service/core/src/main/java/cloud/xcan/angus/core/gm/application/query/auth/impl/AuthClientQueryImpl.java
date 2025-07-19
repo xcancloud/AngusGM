@@ -46,7 +46,7 @@ public class AuthClientQueryImpl implements AuthClientQuery {
   }
 
   @Override
-  public List<CustomOAuth2RegisteredClient> find(String id, String clientId, String tenantId) {
+  public List<CustomOAuth2RegisteredClient> list(String id, String clientId, String tenantId) {
     return new BizTemplate<List<CustomOAuth2RegisteredClient>>() {
 
       @Override

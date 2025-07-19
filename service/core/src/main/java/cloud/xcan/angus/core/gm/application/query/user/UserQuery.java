@@ -17,7 +17,8 @@ public interface UserQuery {
 
   User detail(Long id, boolean joinAssoc);
 
-  Page<User> find(GenericSpecification<User> spec, Pageable pageable);
+  Page<User> list(GenericSpecification<User> spec, Pageable pageable,
+      boolean fullTextSearch, String[] match);
 
   Tenant tenantDetail(Long id);
 
@@ -64,5 +65,4 @@ public interface UserQuery {
   void checkAddEmail(String email, UserSource userSource);
 
   void checkUserQuota(Long tenantId, long incr, Long userId);
-
 }

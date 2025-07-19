@@ -10,9 +10,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface MessageCurrentQuery {
 
-  Page<MessageSent> list(Specification<MessageSent> spec, Pageable pageable);
-
   MessageSent detail(Long id);
+
+  Page<MessageSent> list(Specification<MessageSent> spec, Pageable pageable);
 
   List<MessageStatusCountVo> statusCount(Long userid);
 }

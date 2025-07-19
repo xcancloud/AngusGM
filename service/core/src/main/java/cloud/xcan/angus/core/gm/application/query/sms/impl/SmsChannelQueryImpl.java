@@ -33,7 +33,7 @@ public class SmsChannelQueryImpl implements SmsChannelQuery {
   }
 
   @Override
-  public Page<SmsChannel> find(Specification<SmsChannel> spec, Pageable pageable) {
+  public Page<SmsChannel> list(Specification<SmsChannel> spec, Pageable pageable) {
     return new BizTemplate<Page<SmsChannel>>() {
 
       @Override

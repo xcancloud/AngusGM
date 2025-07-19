@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.dept.facade;
 
 import cloud.xcan.angus.api.gm.dept.dto.DeptFindDto;
-import cloud.xcan.angus.api.gm.dept.dto.DeptSearchDto;
 import cloud.xcan.angus.api.gm.dept.vo.DeptDetailVo;
 import cloud.xcan.angus.api.gm.dept.vo.DeptListVo;
 import cloud.xcan.angus.core.gm.domain.dept.DeptSubCount;
@@ -31,7 +30,5 @@ public interface DeptFacade {
   DeptDetailVo detail(Long id);
 
   PageResult<DeptListVo> list(DeptFindDto dto);
-
-  PageResult<DeptListVo> search(DeptSearchDto dto);
 
 }

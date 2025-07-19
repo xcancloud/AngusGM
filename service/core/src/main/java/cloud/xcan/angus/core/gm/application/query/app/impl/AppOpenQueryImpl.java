@@ -46,7 +46,7 @@ public class AppOpenQueryImpl implements AppOpenQuery {
   private WebTagQuery webTagQuery;
 
   @Override
-  public Page<AppOpen> find(GenericSpecification<AppOpen> spec, PageRequest pageable) {
+  public Page<AppOpen> list(GenericSpecification<AppOpen> spec, PageRequest pageable) {
     return new BizTemplate<Page<AppOpen>>(false) {
 
       @Override

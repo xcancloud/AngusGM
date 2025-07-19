@@ -14,6 +14,8 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingQuery;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuotaQuery;
+import cloud.xcan.angus.core.gm.domain.setting.SettingTenantQuotaRepoSearch;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
 import jakarta.annotation.Resource;
@@ -21,13 +23,15 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 @Biz
 public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
 
   @Resource
   private SettingTenantQuotaRepo settingTenantQuotaRepo;
+
+  @Resource
+  private SettingTenantQuotaRepoSearch settingTenantQuotaRepoSearch;
 
   @Resource
   private SettingQuery settingQuery;
@@ -53,13 +57,16 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
   }
 
   @Override
-  public Page<SettingTenantQuota> find(Specification<SettingTenantQuota> spec,
-      PageRequest pageable) {
+  public Page<SettingTenantQuota> list(GenericSpecification<SettingTenantQuota> spec,
+      PageRequest pageable, boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<SettingTenantQuota>>(true, true) {
 
       @Override
       protected Page<SettingTenantQuota> process() {
-        Page<SettingTenantQuota> tenantQuotas = settingTenantQuotaRepo.findAll(spec, pageable);
+        Page<SettingTenantQuota> tenantQuotas = fullTextSearch
+            ? settingTenantQuotaRepoSearch.find(spec.getCriteria(), pageable,
+            SettingTenantQuota.class, match)
+            : settingTenantQuotaRepo.findAll(spec, pageable);
         if (tenantQuotas.hasContent()) {
           // Associated tenant setting default value
           setDefaultQuota(tenantQuotas);

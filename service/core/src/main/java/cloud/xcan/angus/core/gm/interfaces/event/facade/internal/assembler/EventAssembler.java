@@ -11,7 +11,6 @@ import cloud.xcan.angus.core.gm.domain.EventMessage;
 import cloud.xcan.angus.core.gm.domain.event.Event;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPush;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventFindDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.channel.EventChannelTestDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventVo;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.Specification;
 
 
 @Slf4j
@@ -216,7 +214,7 @@ public class EventAssembler {
     return sb.toString();
   }
 
-  public static Specification<Event> getSpecification(EventFindDto dto) {
+  public static GenericSpecification<Event> getSpecification(EventFindDto dto) {
     if (Objects.nonNull(dto.getNonTenantEvent())) {
       if (dto.getNonTenantEvent()) {
         dto.setTenantId(-1L);
@@ -233,19 +231,4 @@ public class EventAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(EventSearchDto dto) {
-    if (Objects.nonNull(dto.getNonTenantEvent())) {
-      if (dto.getNonTenantEvent()) {
-        dto.setTenantId(-1L);
-      }
-      // Non-persistent field
-      dto.setNonTenantEvent(null);
-    }
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .matchSearchFields("description", "code", "eKey")
-        .orderByFields("id", "createdDate", "tenantId", "userId")
-        .rangeSearchFields("id", "createdDate")
-        .build();
-  }
 }

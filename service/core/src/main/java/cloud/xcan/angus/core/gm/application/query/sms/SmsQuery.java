@@ -12,9 +12,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface SmsQuery {
 
-  Sms find(Long id);
+  Sms detail(Long id);
 
-  Page<Sms> find(Specification<Sms> spec, Pageable pageable);
+  Page<Sms> list(Specification<Sms> spec, Pageable pageable);
 
   List<Sms> findSmsInPending(int count);
 

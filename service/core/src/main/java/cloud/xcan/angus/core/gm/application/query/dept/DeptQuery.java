@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 public interface DeptQuery {
 
@@ -15,7 +15,8 @@ public interface DeptQuery {
 
   Dept detail(Long id);
 
-  Page<Dept> list(GenericSpecification<Dept> spec, Pageable pageable);
+  Page<Dept> list(GenericSpecification<Dept> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   DeptSubCount subCount(Long id);
 
@@ -41,6 +42,5 @@ public interface DeptQuery {
       Map<Long, Dept> parentDeptDbMap, boolean add);
 
   void checkTagQuota(Long optTenantId, List<Dept> dept);
-
 
 }

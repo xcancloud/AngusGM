@@ -19,6 +19,7 @@ import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.group.GroupUserQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagTargetQuery;
 import cloud.xcan.angus.core.gm.domain.group.GroupListRepo;
+import cloud.xcan.angus.core.gm.domain.group.GroupSearchRepo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 @Biz
 @SummaryQueryRegister(name = "Group", table = "group0", topAuthority = TOP_TENANT_ADMIN,
@@ -42,6 +43,9 @@ public class GroupQueryImpl implements GroupQuery {
 
   @Resource
   private GroupListRepo groupListRepo;
+
+  @Resource
+  private GroupSearchRepo groupSearchRepo;
 
   @Resource
   private GroupManager groupManager;
@@ -58,8 +62,6 @@ public class GroupQueryImpl implements GroupQuery {
   @Override
   public Group detail(Long id) {
     return new BizTemplate<Group>(true, true) {
-
-
       @Override
       protected Group process() {
         Group groupDb = groupRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "Group"));
@@ -71,12 +73,14 @@ public class GroupQueryImpl implements GroupQuery {
   }
 
   @Override
-  public Page<Group> find(GenericSpecification<Group> spec, Pageable pageable) {
+  public Page<Group> list(GenericSpecification<Group> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Group>>(true, true) {
-
       @Override
       protected Page<Group> process() {
-        Page<Group> page = groupListRepo.find(spec.getCriteria(), pageable, Group.class, null);
+        Page<Group> page = fullTextSearch
+            ? groupSearchRepo.find(spec.getCriteria(), pageable, Group.class, match)
+            : groupListRepo.find(spec.getCriteria(), pageable, Group.class, null);
         if (page.hasContent()) {
           setUserNum(page.getContent());
         }
@@ -152,8 +156,8 @@ public class GroupQueryImpl implements GroupQuery {
     List<GroupUserNum> userNums = userGroupQuery
         .userCount(groups.stream().map(Group::getId).collect(Collectors.toSet()));
     if (isNotEmpty(userNums)) {
-      Map<Long, GroupUserNum> userNumsMap = userNums.stream().collect(Collectors.toMap(
-          GroupUserNum::getGroupId, x -> x));
+      Map<Long, GroupUserNum> userNumsMap = userNums.stream().collect(
+          Collectors.toMap(GroupUserNum::getGroupId, x -> x));
       for (Group group : groups) {
         if (nonNull(userNumsMap.get(group.getId()))) {
           group.setUserNum(userNumsMap.get(group.getId()).getUserNum());

@@ -9,7 +9,7 @@ public interface SmsChannelQuery {
 
   SmsChannel detail(Long id);
 
-  Page<SmsChannel> find(Specification<SmsChannel> spec, Pageable pageable);
+  Page<SmsChannel> list(Specification<SmsChannel> spec, Pageable pageable);
 
   SmsChannel findEnabled();
 }

@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.addDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.addDtoToTenantAudit;
-import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler.toDetailVo;
@@ -18,14 +17,12 @@ import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantFindDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantLockedDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantReplaceDto;
-import cloud.xcan.angus.api.gm.tenant.dto.TenantSearchDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantUpdateDto;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantVo;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
-import cloud.xcan.angus.core.gm.application.query.tenant.TenantSearch;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.TenantFacade;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAuditAssembler;
@@ -49,9 +46,6 @@ public class TenantFacadeImpl implements TenantFacade {
 
   @Resource
   private TenantQuery tenantQuery;
-
-  @Resource
-  private TenantSearch tenantSearch;
 
   @Override
   public IdKey<Long, Object> add(TenantAddDto dto) {
@@ -103,15 +97,8 @@ public class TenantFacadeImpl implements TenantFacade {
   @NameJoin
   @Override
   public PageResult<TenantVo> list(TenantFindDto dto) {
-    Page<Tenant> page = tenantQuery.find(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, TenantAssembler::toVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<TenantVo> search(TenantSearchDto dto) {
-    Page<Tenant> page = tenantSearch.search(getSearchCriteria(dto),
-        dto.tranPage(), Tenant.class, getMatchSearchFields(dto.getClass()));
+    Page<Tenant> page = tenantQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, TenantAssembler::toVo);
   }
 

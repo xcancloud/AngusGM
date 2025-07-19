@@ -6,9 +6,11 @@ import cloud.xcan.angus.core.gm.application.query.message.MessageQuery;
 import cloud.xcan.angus.core.gm.domain.message.Message;
 import cloud.xcan.angus.core.gm.domain.message.MessageInfo;
 import cloud.xcan.angus.core.gm.domain.message.MessageInfoRepo;
+import cloud.xcan.angus.core.gm.domain.message.MessageInfoSearchRepo;
 import cloud.xcan.angus.core.gm.domain.message.MessageReceiveType;
 import cloud.xcan.angus.core.gm.domain.message.MessageRepo;
 import cloud.xcan.angus.core.gm.domain.message.MessageStatus;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -17,8 +19,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 
 @Slf4j
@@ -33,8 +33,11 @@ public class MessageQueryImpl implements MessageQuery {
   @Resource
   private MessageInfoRepo messageInfoRepo;
 
+  @Resource
+  private MessageInfoSearchRepo messageSearchRepo;
+
   @Override
-  public Message findById(Long id) {
+  public Message detail(Long id) {
     return new BizTemplate<Message>() {
 
       @Override
@@ -45,12 +48,15 @@ public class MessageQueryImpl implements MessageQuery {
   }
 
   @Override
-  public Page<MessageInfo> find(Specification<MessageInfo> spec, Pageable pageable) {
+  public Page<MessageInfo> find(GenericSpecification<MessageInfo> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<MessageInfo>>() {
 
       @Override
       protected Page<MessageInfo> process() {
-        return messageInfoRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? messageSearchRepo.find(spec.getCriteria(), pageable, MessageInfo.class, match)
+            : messageInfoRepo.findAll(spec, pageable);
       }
     }.execute();
   }

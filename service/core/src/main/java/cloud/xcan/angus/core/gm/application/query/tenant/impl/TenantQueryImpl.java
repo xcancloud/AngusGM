@@ -19,6 +19,8 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.SneakyThrow0;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
+import cloud.xcan.angus.core.gm.domain.tenant.TenantSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.LongKeyCountSummary;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -31,8 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 
 @Biz
@@ -43,6 +44,9 @@ public class TenantQueryImpl implements TenantQuery {
 
   @Resource
   private TenantRepo tenantRepo;
+
+  @Resource
+  private TenantSearchRepo tenantSearchRepo;
 
   @Resource
   private UserBaseRepo userBaseRepo;
@@ -77,11 +81,14 @@ public class TenantQueryImpl implements TenantQuery {
   }
 
   @Override
-  public Page<Tenant> find(Specification<Tenant> spec, Pageable pageable) {
+  public Page<Tenant> list(GenericSpecification<Tenant> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Tenant>>() {
       @Override
       protected Page<Tenant> process() {
-        Page<Tenant> page = tenantRepo.findAll(spec, pageable);
+        Page<Tenant> page = fullTextSearch
+            ? tenantSearchRepo.find(spec.getCriteria(), pageable, Tenant.class, match)
+            : tenantRepo.findAll(spec, pageable);
         setUserCount(page.getContent());
         return page;
       }

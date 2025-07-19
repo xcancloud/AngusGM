@@ -65,7 +65,7 @@ public class SmsQueryImpl implements SmsQuery {
   private RedisService<String> stringRedisService;
 
   @Override
-  public Sms find(Long id) {
+  public Sms detail(Long id) {
     return new BizTemplate<Sms>() {
 
       @Override
@@ -77,7 +77,7 @@ public class SmsQueryImpl implements SmsQuery {
   }
 
   @Override
-  public Page<Sms> find(Specification<Sms> spec, Pageable pageable) {
+  public Page<Sms> list(Specification<Sms> spec, Pageable pageable) {
     return new BizTemplate<Page<Sms>>() {
 
       @Override

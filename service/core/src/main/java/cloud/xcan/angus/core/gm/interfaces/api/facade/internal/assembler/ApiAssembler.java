@@ -7,7 +7,6 @@ import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiAddDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiFindDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.dto.ApiUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiInfoVo;
@@ -16,7 +15,6 @@ import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class ApiAssembler {
@@ -96,7 +94,7 @@ public class ApiAssembler {
         .setResourceDescription(api.getResourceDescription());
   }
 
-  public static Specification<Api> getSpecification(ApiFindDto dto) {
+  public static GenericSpecification<Api> getSpecification(ApiFindDto dto) {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
@@ -106,12 +104,4 @@ public class ApiAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(ApiSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("name", "code", "serviceName", "description")
-        .orderByFields("id", "createdDate")
-        .build();
-  }
 }

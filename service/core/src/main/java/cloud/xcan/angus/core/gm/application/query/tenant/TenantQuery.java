@@ -1,11 +1,11 @@
 package cloud.xcan.angus.core.gm.application.query.tenant;
 
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 public interface TenantQuery {
 
@@ -13,7 +13,8 @@ public interface TenantQuery {
 
   List<Tenant> findAllById(Set<Long> ids);
 
-  Page<Tenant> find(Specification<Tenant> spec, Pageable pageable);
+  Page<Tenant> list(GenericSpecification<Tenant> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   Tenant find0(Long id);
 
@@ -30,4 +31,5 @@ public interface TenantQuery {
   void checkTenantCanceled(Tenant tenantDb);
 
   void setUserCount(List<Tenant> tenants);
+
 }

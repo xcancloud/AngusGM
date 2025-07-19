@@ -4,7 +4,6 @@ import static cloud.xcan.angus.core.utils.BeanFieldUtils.getNullPropertyNames;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.tag.AppTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.tag.AppTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.tag.AppTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
@@ -41,15 +40,6 @@ public class AppTagAssembler {
         .orderByFields("id", "createdDate")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(AppTagSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("name")
-        .orderByFields("id", "createdDate")
-        .build();
   }
 
 }

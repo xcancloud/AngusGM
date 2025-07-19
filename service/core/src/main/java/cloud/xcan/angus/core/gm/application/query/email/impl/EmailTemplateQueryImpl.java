@@ -33,7 +33,7 @@ public class EmailTemplateQueryImpl implements EmailTemplateQuery {
   }
 
   @Override
-  public Page<EmailTemplate> find(Specification<EmailTemplate> spec,
+  public Page<EmailTemplate> list(Specification<EmailTemplate> spec,
       PageRequest pageable) {
     return new BizTemplate<Page<EmailTemplate>>() {
 

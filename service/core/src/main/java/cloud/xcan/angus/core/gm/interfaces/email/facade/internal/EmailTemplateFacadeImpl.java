@@ -39,7 +39,7 @@ public class EmailTemplateFacadeImpl implements EmailTemplateFacade {
 
   @Override
   public PageResult<EmailTemplateDetailVo> list(EmailTemplateFindDto dto) {
-    Page<EmailTemplate> page = emailTemplateQuery.find(getSpecification(dto), dto.tranPage());
+    Page<EmailTemplate> page = emailTemplateQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, EmailTemplateAssembler::toDetail);
   }
 

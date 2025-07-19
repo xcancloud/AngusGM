@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.sms.facade.internal;
 import static cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsChannelAssembler.getSmsChannelVo;
 import static cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsChannelAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsChannelAssembler.updateDtoToDomain;
+import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsChannelCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
@@ -15,8 +16,6 @@ import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.channel.SmsChannelVo;
 import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;
 import jakarta.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -48,17 +47,8 @@ public class SmsChannelFacadeImpl implements SmsChannelFacade {
 
   @Override
   public PageResult<SmsChannelVo> list(SmsChannelFindDto dto) {
-    Page<SmsChannel> page = smsChannelQuery.find(getSpecification(dto), dto.tranPage());
-    return getDetailPageResult(page);
+    Page<SmsChannel> page = smsChannelQuery.list(getSpecification(dto), dto.tranPage());
+    return buildVoPageResult(page, SmsChannelAssembler::toVo);
   }
 
-  private PageResult<SmsChannelVo> getDetailPageResult(Page<SmsChannel> page) {
-    if (page.hasContent()) {
-      List<SmsChannelVo> vos = page.getContent()
-          .stream().map(SmsChannelAssembler::toVo)
-          .collect(Collectors.toList());
-      return PageResult.of(page.getTotalElements(), vos);
-    }
-    return PageResult.empty();
-  }
 }

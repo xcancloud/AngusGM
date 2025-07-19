@@ -8,7 +8,6 @@ import cloud.xcan.angus.core.gm.domain.operation.OperationLog;
 import cloud.xcan.angus.core.gm.domain.operation.OperationResourceType;
 import cloud.xcan.angus.core.gm.domain.operation.OperationType;
 import cloud.xcan.angus.core.gm.interfaces.operation.facade.dto.OperationLogFindDto;
-import cloud.xcan.angus.core.gm.interfaces.operation.facade.dto.OperationLogSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.operation.facade.vo.OperationLogVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class OperationLogAssembler {
@@ -70,16 +68,9 @@ public class OperationLogAssembler {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "optDate")
         .orderByFields("id", "resource", "type", "optDate")
+        .matchSearchFields("description", "detail")
         .build();
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(OperationLogSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "optDate")
-        .orderByFields("id", "resource", "type", "optDate")
-        .matchSearchFields("description", "detail")
-        .build();
-  }
 }

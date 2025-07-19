@@ -1,19 +1,17 @@
 package cloud.xcan.angus.core.gm.interfaces.tag.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.WebTagAssembler.domainToDetailVo;
-import static cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.WebTagAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.WebTagAssembler.getSpecification;
+import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.tag.WebTagCmd;
 import cloud.xcan.angus.core.gm.application.query.tag.WebTagQuery;
-import cloud.xcan.angus.core.gm.application.query.tag.WebTagSearch;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.WebTagFacade;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.WebTagAssembler;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.WebTagDetailVo;
@@ -35,9 +33,6 @@ public class WebTagFacadeImpl implements WebTagFacade {
 
   @Resource
   private WebTagQuery webTagQuery;
-
-  @Resource
-  public WebTagSearch webTagSearch;
 
   @Override
   public List<IdKey<Long, Object>> add(List<WebTagAddDto> dto) {
@@ -65,15 +60,8 @@ public class WebTagFacadeImpl implements WebTagFacade {
   @NameJoin
   @Override
   public PageResult<WebTagDetailVo> list(WebTagFindDto dto) {
-    Page<WebTag> page = webTagQuery.find(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, WebTagAssembler::domainToDetailVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<WebTagDetailVo> search(WebTagSearchDto dto) {
-    Page<WebTag> page = webTagSearch.search(getSearchCriteria(dto), dto.tranPage()
-        , WebTag.class, "name");
+    Page<WebTag> page = webTagQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, WebTagAssembler::domainToDetailVo);
   }
 

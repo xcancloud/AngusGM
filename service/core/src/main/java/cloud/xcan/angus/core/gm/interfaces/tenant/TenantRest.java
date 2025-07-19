@@ -8,7 +8,6 @@ import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantFindDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantLockedDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantReplaceDto;
-import cloud.xcan.angus.api.gm.tenant.dto.TenantSearchDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantUpdateDto;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantVo;
@@ -140,12 +139,4 @@ public class TenantRest {
     return ApiLocaleResult.success(tenantFacade.list(dto));
   }
 
-  @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Fulltext search tenant", operationId = "tenant:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<TenantVo>> search(@Valid @ParameterObject TenantSearchDto dto) {
-    return ApiLocaleResult.success(tenantFacade.search(dto));
-  }
 }

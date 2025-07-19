@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.event;
 
 import cloud.xcan.angus.core.gm.interfaces.event.facade.EventFacade;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventFindDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventReceiveChannelVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventVo;
@@ -60,14 +59,6 @@ public class EventRest {
   @GetMapping
   public ApiLocaleResult<PageResult<EventVo>> list(@Valid @ParameterObject EventFindDto dto) {
     return ApiLocaleResult.success(eventFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of event", operationId = "event:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<EventVo>> search(@Valid @ParameterObject EventSearchDto dto) {
-    return ApiLocaleResult.success(eventFacade.search(dto));
   }
 
 }

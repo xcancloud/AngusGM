@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.country;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
 
 import cloud.xcan.angus.core.gm.interfaces.country.facade.CountryDistrictFacade;
-import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryDistrictSearchDto;
+import cloud.xcan.angus.core.gm.interfaces.country.facade.dto.CountryDistrictFindDto;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDistrictDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.country.facade.vo.CountryDistrictTreeVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -75,13 +75,13 @@ public class CountryDistrictRest {
     return ApiLocaleResult.success(districtFacade.areas(countryCode, cityCode));
   }
 
-  @Operation(summary = "Fulltext search the list of district", operationId = "country:district:search")
+  @Operation(summary = "Query the list of district", operationId = "country:district:list")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/district/search")
-  public ApiLocaleResult<PageResult<CountryDistrictDetailVo>> search(
-      @Valid CountryDistrictSearchDto dto) {
-    return ApiLocaleResult.success(districtFacade.search(dto));
+  @GetMapping("/district")
+  public ApiLocaleResult<PageResult<CountryDistrictDetailVo>> list(
+      @Valid CountryDistrictFindDto dto) {
+    return ApiLocaleResult.success(districtFacade.list(dto));
   }
 
   @Operation(summary = "Query the district tree of country", operationId = "country:district:tree")

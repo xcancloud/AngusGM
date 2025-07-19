@@ -40,7 +40,7 @@ public class SmsTemplateFacadeImpl implements SmsTemplateFacade {
 
   @Override
   public PageResult<SmsTemplateDetailVo> list(SmsTemplateFindDto dto) {
-    Page<SmsTemplate> page = smsTemplateQuery.find(getSpecification(dto), dto.tranPage());
+    Page<SmsTemplate> page = smsTemplateQuery.list(getSpecification(dto), dto.tranPage());
     return buildVoPageResult(page, SmsTemplateAssembler::toVo);
   }
 }

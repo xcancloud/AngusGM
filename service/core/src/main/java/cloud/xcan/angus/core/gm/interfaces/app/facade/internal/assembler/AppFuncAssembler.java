@@ -208,13 +208,6 @@ public class AppFuncAssembler {
     return apis.stream().map(ApiAssembler::toInfo).collect(Collectors.toList());
   }
 
-  public static List<ApiInfoVo> toAppApiVos(List<Api> apis) {
-    if (isEmpty(apis)) {
-      return null;
-    }
-    return apis.stream().map(ApiAssembler::toInfo).collect(Collectors.toList());
-  }
-
   public static GenericSpecification<AppFunc> getSpecification(Long appId, AppFuncFindDto dto) {
     dto.setAppId(appId);
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
@@ -226,13 +219,4 @@ public class AppFuncAssembler {
     return new GenericSpecification<>(filters);
   }
 
-  public static Set<SearchCriteria> getSearchCriteria(Long appId, AppFuncFindDto dto) {
-    dto.setAppId(appId);
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "code", "createdDate")
-        .matchSearchFields("name", "code", "description")
-        .inAndNotFields("id", "code", "pid", "apiId", "tagId")
-        .orderByFields("sequence")
-        .build();
-  }
 }

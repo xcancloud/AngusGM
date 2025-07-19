@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.event.facade;
 
 import cloud.xcan.angus.core.event.source.EventContent;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventFindDto;
-import cloud.xcan.angus.core.gm.interfaces.event.facade.dto.EventSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventReceiveChannelVo;
 import cloud.xcan.angus.core.gm.interfaces.event.facade.vo.EventVo;
@@ -20,7 +19,5 @@ public interface EventFacade {
   List<EventReceiveChannelVo> receiveChannel(String eventCode);
 
   PageResult<EventVo> list(EventFindDto dto);
-
-  PageResult<EventVo> search(EventSearchDto dto);
 
 }

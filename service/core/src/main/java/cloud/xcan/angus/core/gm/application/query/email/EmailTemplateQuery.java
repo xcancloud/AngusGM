@@ -10,7 +10,7 @@ public interface EmailTemplateQuery {
 
   EmailTemplate detail(Long id);
 
-  Page<EmailTemplate> find(Specification<EmailTemplate> spec, PageRequest pageable);
+  Page<EmailTemplate> list(Specification<EmailTemplate> spec, PageRequest pageable);
 
   EmailTemplate check(SupportedLanguage language, String code);
 

@@ -1,10 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
-import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagTargetAddDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTagTargetFindDto;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.WebTargetTagFindDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.WebTagTargetDetailVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
@@ -39,17 +37,6 @@ public class WebTagTargetAssembler {
         .rangeSearchFields("targetId", "createdDate")
         .orderByFields("targetId", "createdDate")
         .matchSearchFields("targetName")
-        .build();
-    return new GenericSpecification<>(filters);
-  }
-
-  public static GenericSpecification<OrgTagTarget> getTargetTagSpecification(
-      WebTargetTagFindDto dto) {
-    // Build the final filters
-    Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("tagId", "createdDate")
-        .orderByFields("tagId", "createdDate")
-        .matchSearchFields("tagName")
         .build();
     return new GenericSpecification<>(filters);
   }

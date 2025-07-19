@@ -1,7 +1,6 @@
 package cloud.xcan.angus.api.gm.group;
 
 import cloud.xcan.angus.api.gm.group.dto.GroupFindDto;
-import cloud.xcan.angus.api.gm.group.dto.GroupSearchDto;
 import cloud.xcan.angus.api.gm.group.vo.GroupDetailVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -27,6 +26,6 @@ public interface GroupRemote {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
   @GetMapping("/api/v1/group/search")
-  ApiLocaleResult<PageResult<GroupDetailVo>> search(@Valid @SpringQueryMap GroupSearchDto dto);
+  ApiLocaleResult<PageResult<GroupDetailVo>> search(@Valid @SpringQueryMap GroupFindDto dto);
 
 }

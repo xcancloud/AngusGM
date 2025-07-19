@@ -5,7 +5,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.MessageFacade;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageAddDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageFindDto;
-import cloud.xcan.angus.core.gm.interfaces.message.facade.dto.MessageSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.vo.MessageDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.message.facade.vo.MessageVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -77,11 +76,4 @@ public class MessageRest {
     return ApiLocaleResult.success(messageFacade.list(dto));
   }
 
-  @Operation(summary = "Fulltext search the list of message", operationId = "message:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<MessageVo>> search(@Valid @ParameterObject MessageSearchDto dto) {
-    return ApiLocaleResult.success(messageFacade.search(dto));
-  }
 }

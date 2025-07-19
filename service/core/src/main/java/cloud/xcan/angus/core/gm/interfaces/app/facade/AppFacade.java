@@ -6,7 +6,6 @@ import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppAddDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppExportDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSiteInfoUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppDetailVo;
@@ -43,7 +42,5 @@ public interface AppFacade {
   AppDetailVo detail(String code, EditionType editionType);
 
   PageResult<AppVo> list(AppFindDto dto);
-
-  PageResult<AppVo> search(AppSearchDto dto);
 
 }

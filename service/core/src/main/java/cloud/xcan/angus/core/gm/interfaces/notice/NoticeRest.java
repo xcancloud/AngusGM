@@ -72,22 +72,6 @@ public class NoticeRest {
     return ApiLocaleResult.success(noticeFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of application notice", operationId = "notice:list")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping
-  public ApiLocaleResult<PageResult<NoticeVo>> list(@Valid @ParameterObject NoticeFindDto dto) {
-    return ApiLocaleResult.success(noticeFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the list of application notice", operationId = "notice:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<NoticeVo>> search(@Valid @ParameterObject NoticeFindDto dto) {
-    return ApiLocaleResult.success(noticeFacade.search(dto));
-  }
-
   @Operation(summary = "Query the latest global application notice", operationId = "notice:global:latest")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
@@ -103,6 +87,14 @@ public class NoticeRest {
   public ApiLocaleResult<NoticeLatestVo> appLatest(
       @Parameter(name = "appId", description = "App id", required = true) @PathVariable("appId") Long appId) {
     return ApiLocaleResult.success(noticeFacade.appLatest(appId));
+  }
+
+  @Operation(summary = "Query the list of application notice", operationId = "notice:list")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+  @GetMapping
+  public ApiLocaleResult<PageResult<NoticeVo>> list(@Valid @ParameterObject NoticeFindDto dto) {
+    return ApiLocaleResult.success(noticeFacade.list(dto));
   }
 
 }

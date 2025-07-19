@@ -15,6 +15,8 @@ import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
+import cloud.xcan.angus.core.gm.domain.api.ApiSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -24,8 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 
 @Biz
 @SummaryQueryRegister(name = "Api", table = "api", isMultiTenantCtrl = false,
@@ -34,6 +35,9 @@ public class ApiQueryImpl implements ApiQuery {
 
   @Resource
   private ApiRepo apiRepo;
+
+  @Resource
+  private ApiSearchRepo apiSearchRepo;
 
   @Resource
   private ServiceQuery serviceQuery;
@@ -51,12 +55,15 @@ public class ApiQueryImpl implements ApiQuery {
   }
 
   @Override
-  public Page<Api> list(Specification<Api> spec, Pageable pageable) {
+  public Page<Api> list(GenericSpecification<Api> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Api>>() {
 
       @Override
       protected Page<Api> process() {
-        return apiRepo.findAll(spec, pageable);
+        return fullTextSearch
+            ? apiSearchRepo.find(spec.getCriteria(), pageable, Api.class, match)
+            : apiRepo.findAll(spec, pageable);
       }
     }.execute();
   }
@@ -111,8 +118,8 @@ public class ApiQueryImpl implements ApiQuery {
   @Override
   public Map<String, List<ServiceResource>> checkAndFindResource(Collection<String> resources) {
     List<ServiceResource> resourceNames = apiRepo.findServiceResourceByResourceNameIn(resources);
-    resources.removeAll(resourceNames.stream().map(ServiceResource::getResourceName).collect(
-        Collectors.toSet()));
+    resources.removeAll(resourceNames.stream().map(ServiceResource::getResourceName)
+        .collect(Collectors.toSet()));
     if (isNotEmpty(resources)) {
       throw ResourceNotFound.of(resources.iterator().next(), "Resource");
     }

@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade.internal;
 
+import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailAssembler.testToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailAssembler.toDetailVo;
 import static cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailAssembler.toDomain;
@@ -52,14 +53,14 @@ public class EmailFacadeImpl implements EmailFacade {
 
   @Override
   public EmailDetailVo detail(Long id) {
-    Email email = emailQuery.checkAndFind(id);
+    Email email = emailQuery.detail(id);
     return toDetailVo(email);
   }
 
   @Override
   public PageResult<EmailDetailVo> list(EmailFindDto dto) {
-    Page<Email> emailPage = emailQuery.find(EmailAssembler.getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(emailPage, EmailAssembler::toDetailVo);
+    Page<Email> page = emailQuery.list(getSpecification(dto), dto.tranPage());
+    return buildVoPageResult(page, EmailAssembler::toDetailVo);
   }
 
 }

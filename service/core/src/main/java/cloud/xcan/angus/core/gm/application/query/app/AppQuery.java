@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 
 public interface AppQuery {
@@ -16,7 +16,8 @@ public interface AppQuery {
 
   App detail(String code, EditionType editionType);
 
-  Page<App> find(GenericSpecification<App> spec, Pageable pageable);
+  Page<App> list(GenericSpecification<App> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   App findLatestByCode(String code);
 

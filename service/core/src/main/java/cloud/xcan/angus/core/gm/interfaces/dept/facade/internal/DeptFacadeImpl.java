@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.dept.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.toDetailVo;
 import static cloud.xcan.angus.core.gm.interfaces.dept.facade.internal.assembler.DeptAssembler.toNavigationVo;
@@ -9,13 +8,11 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.gm.dept.dto.DeptFindDto;
-import cloud.xcan.angus.api.gm.dept.dto.DeptSearchDto;
 import cloud.xcan.angus.api.gm.dept.vo.DeptDetailVo;
 import cloud.xcan.angus.api.gm.dept.vo.DeptListVo;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptCmd;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
-import cloud.xcan.angus.core.gm.application.query.dept.DeptSearch;
 import cloud.xcan.angus.core.gm.domain.dept.DeptSubCount;
 import cloud.xcan.angus.core.gm.interfaces.dept.facade.DeptFacade;
 import cloud.xcan.angus.core.gm.interfaces.dept.facade.dto.DeptAddDto;
@@ -38,9 +35,6 @@ public class DeptFacadeImpl implements DeptFacade {
 
   @Resource
   private DeptCmd deptCmd;
-
-  @Resource
-  private DeptSearch deptSearch;
 
   @Resource
   private DeptQuery deptQuery;
@@ -85,15 +79,8 @@ public class DeptFacadeImpl implements DeptFacade {
   @NameJoin
   @Override
   public PageResult<DeptListVo> list(DeptFindDto dto) {
-    Page<Dept> page = deptQuery.list(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, DeptAssembler::toListVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<DeptListVo> search(DeptSearchDto dto) {
-    Page<Dept> page = deptSearch.search(getSearchCriteria(dto), dto.tranPage(),
-        Dept.class, getMatchSearchFields(dto.getClass()));
+    Page<Dept> page = deptQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, DeptAssembler::toListVo);
   }
 

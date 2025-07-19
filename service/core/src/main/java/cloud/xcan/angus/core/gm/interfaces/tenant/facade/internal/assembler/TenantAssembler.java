@@ -14,7 +14,6 @@ import cloud.xcan.angus.api.gm.tenant.dto.TenantAddByMobileDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantFindDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantReplaceDto;
-import cloud.xcan.angus.api.gm.tenant.dto.TenantSearchDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantUpdateDto;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantVo;
@@ -23,7 +22,6 @@ import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
 import java.util.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 
 public class TenantAssembler {
@@ -144,23 +142,13 @@ public class TenantAssembler {
         .setLocked(false)*/;
   }
 
-  public static Specification<Tenant> getSpecification(TenantFindDto dto) {
+  public static GenericSpecification<Tenant> getSpecification(TenantFindDto dto) {
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate", "applyCancelDate", "lastLockDate", "lockStartDate",
-            "lockEndDate")
+        .rangeSearchFields("id", "createdDate", "applyCancelDate",
+            "lastLockDate", "lockStartDate", "lockEndDate")
         .orderByFields("id", "name", "createdDate")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(TenantSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .matchSearchFields("name", "no")
-        .rangeSearchFields("id", "createdDate", "applyCancelDate", "lastLockDate", "lockStartDate",
-            "lockEndDate")
-        .orderByFields("id", "name", "createdDate")
-        .build();
   }
 
 }

@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.internal;
 
-import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler.getCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler.toDetailVo;
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
@@ -9,14 +8,12 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.policy.AuthPolicyCmd;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
-import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicySearch;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.AuthPolicyFacade;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyAddDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyInitDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicySearchDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.AuthPolicyUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAssembler;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyDetailVo;
@@ -40,9 +37,6 @@ public class AuthPolicyFacadeImpl implements AuthPolicyFacade {
 
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
-  @Resource
-  private AuthPolicySearch authPolicySearch;
 
   @Override
   public List<IdKey<Long, Object>> add(List<AuthPolicyAddDto> dto) {
@@ -87,15 +81,8 @@ public class AuthPolicyFacadeImpl implements AuthPolicyFacade {
   @NameJoin
   @Override
   public PageResult<AuthPolicyVo> list(AuthPolicyFindDto dto) {
-    Page<AuthPolicy> page = authPolicyQuery.list(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, AuthPolicyAssembler::toAuthPolicyVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<AuthPolicyVo> search(AuthPolicySearchDto dto) {
-    Page<AuthPolicy> page = authPolicySearch.search(getCriteria(dto),
-        dto.tranPage(), getMatchSearchFields(dto.getClass()));
+    Page<AuthPolicy> page = authPolicyQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, AuthPolicyAssembler::toAuthPolicyVo);
   }
 

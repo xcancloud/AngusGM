@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.service.facade.internal;
 
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.addDtoToDomain;
-import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler.toServiceResourceApiVo;
@@ -14,12 +13,10 @@ import cloud.xcan.angus.api.commonlink.service.Service;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.service.ServiceCmd;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
-import cloud.xcan.angus.core.gm.application.query.service.ServiceSearch;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.ServiceFacade;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceAddDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceFindDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ResourceApiVo;
@@ -44,9 +41,6 @@ public class ServiceFacadeImpl implements ServiceFacade {
 
   @Resource
   private ServiceQuery serviceQuery;
-
-  @Resource
-  private ServiceSearch serviceSearch;
 
   @Override
   public IdKey<Long, Object> add(ServiceAddDto dto) {
@@ -84,16 +78,9 @@ public class ServiceFacadeImpl implements ServiceFacade {
 
   @NameJoin
   @Override
-  public PageResult<ServiceVo> list(ServiceFindDto findDto) {
-    Page<Service> page = serviceQuery.find(getSpecification(findDto), findDto.tranPage());
-    return buildVoPageResult(page, ServiceAssembler::toServiceDetailVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<ServiceVo> search(ServiceSearchDto dto) {
-    Page<Service> page = serviceSearch.search(getSearchCriteria(dto), dto.tranPage(),
-        Service.class, getMatchSearchFields(dto.getClass()));
+  public PageResult<ServiceVo> list(ServiceFindDto dto) {
+    Page<Service> page = serviceQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, ServiceAssembler::toServiceDetailVo);
   }
 

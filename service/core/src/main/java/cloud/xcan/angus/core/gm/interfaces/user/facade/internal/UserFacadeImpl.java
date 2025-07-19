@@ -4,7 +4,6 @@ import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.dtoToUserDeptDomain;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.dtoToUserGroupDomain;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.dtoToUserTagDomain;
-import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.getSearchCriteria;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.getSpecification;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.replaceDtoToDomain;
 import static cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler.toAdminListVo;
@@ -16,13 +15,11 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
-import cloud.xcan.angus.api.gm.user.dto.UserSearchDto;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
 import cloud.xcan.angus.api.gm.user.vo.UserListVo;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
-import cloud.xcan.angus.core.gm.application.query.user.UserSearch;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.UserFacade;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.UserAddDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.UserLockedDto;
@@ -51,9 +48,6 @@ public class UserFacadeImpl implements UserFacade {
 
   @Resource
   private UserQuery userQuery;
-
-  @Resource
-  private UserSearch userSearch;
 
   @Override
   public IdKey<Long, Object> add(UserAddDto dto, UserSource userSource) {
@@ -120,15 +114,8 @@ public class UserFacadeImpl implements UserFacade {
   @NameJoin
   @Override
   public PageResult<UserListVo> list(UserFindDto dto) {
-    Page<User> page = userQuery.find(getSpecification(dto), dto.tranPage());
-    return buildVoPageResult(page, UserAssembler::toListVo);
-  }
-
-  @NameJoin
-  @Override
-  public PageResult<UserListVo> search(UserSearchDto dto) {
-    Page<User> page = userSearch.search(getSearchCriteria(dto), dto.tranPage(), User.class,
-        getMatchSearchFields(dto.getClass()));
+    Page<User> page = userQuery.list(getSpecification(dto), dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, UserAssembler::toListVo);
   }
 

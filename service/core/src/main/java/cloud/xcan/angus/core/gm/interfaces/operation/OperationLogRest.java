@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.operation;
 
 import cloud.xcan.angus.core.gm.interfaces.operation.facade.OperationLogFacade;
 import cloud.xcan.angus.core.gm.interfaces.operation.facade.dto.OperationLogFindDto;
-import cloud.xcan.angus.core.gm.interfaces.operation.facade.dto.OperationLogSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.operation.facade.vo.OperationLogVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
@@ -34,14 +33,6 @@ public class OperationLogRest {
   @GetMapping
   public ApiLocaleResult<PageResult<OperationLogVo>> list(@Valid @ParameterObject OperationLogFindDto dto) {
     return ApiLocaleResult.success(optionFacade.list(dto));
-  }
-
-  @Operation(summary = "Fulltext search the operation logs list of user", operationId = "log:operation:search")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
-  @GetMapping("/search")
-  public ApiLocaleResult<PageResult<OperationLogVo>> search(@Valid @ParameterObject OperationLogSearchDto dto) {
-    return ApiLocaleResult.success(optionFacade.search(dto));
   }
 
 }

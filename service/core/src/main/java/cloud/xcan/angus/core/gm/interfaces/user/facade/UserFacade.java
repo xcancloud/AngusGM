@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.interfaces.user.facade;
 
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
-import cloud.xcan.angus.api.gm.user.dto.UserSearchDto;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
 import cloud.xcan.angus.api.gm.user.vo.UserListVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.UserAddDto;
@@ -43,8 +42,5 @@ public interface UserFacade {
   UserDetailVo detail(Long id);
 
   PageResult<UserListVo> list(UserFindDto findDto);
-
-  PageResult<UserListVo> search(UserSearchDto dto);
-
 
 }

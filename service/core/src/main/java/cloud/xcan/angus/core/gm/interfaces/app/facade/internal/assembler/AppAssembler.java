@@ -10,7 +10,6 @@ import cloud.xcan.angus.core.gm.interfaces.api.facade.internal.assembler.ApiAsse
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppAddDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppReplaceDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSearchDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSiteInfoUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppDetailVo;
@@ -158,15 +157,6 @@ public class AppAssembler {
         .orderByFields("id", "sequence", "createdDate")
         .build();
     return new GenericSpecification<>(filters);
-  }
-
-  public static Set<SearchCriteria> getSearchCriteria(AppSearchDto dto) {
-    // Build the final filters
-    return new SearchCriteriaBuilder<>(dto)
-        .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("name", "code", "showName", "description")
-        .orderByFields("id", "sequence", "createdDate")
-        .build();
   }
 
 }

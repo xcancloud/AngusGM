@@ -22,6 +22,7 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagTargetQuery;
 import cloud.xcan.angus.core.gm.domain.dept.DeptListRepo;
+import cloud.xcan.angus.core.gm.domain.dept.DeptSearchRepo;
 import cloud.xcan.angus.core.gm.domain.dept.DeptSubCount;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 
 @Biz
@@ -55,6 +56,9 @@ public class DeptQueryImpl implements DeptQuery {
 
   @Resource
   private DeptListRepo deptListRepo;
+
+  @Resource
+  private DeptSearchRepo deptSearchRepo;
 
   @Resource
   private DeptUserRepo deptUserRepo;
@@ -109,12 +113,15 @@ public class DeptQueryImpl implements DeptQuery {
   }
 
   @Override
-  public Page<Dept> list(GenericSpecification<Dept> spec, Pageable pageable) {
+  public Page<Dept> list(GenericSpecification<Dept> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<Dept>>(true, true) {
 
       @Override
       protected Page<Dept> process() {
-        Page<Dept> page = deptListRepo.find(spec.getCriteria(), pageable, Dept.class, null);
+        Page<Dept> page = fullTextSearch
+            ? deptSearchRepo.find(spec.getCriteria(), pageable,  Dept.class, match)
+            : deptListRepo.find(spec.getCriteria(), pageable, Dept.class, null);
         setHasSubDept(page.getContent());
         return page;
       }

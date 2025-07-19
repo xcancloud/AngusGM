@@ -17,6 +17,8 @@ import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.app.AppRepo;
 import cloud.xcan.angus.core.gm.domain.notice.Notice;
 import cloud.xcan.angus.core.gm.domain.notice.NoticeRepo;
+import cloud.xcan.angus.core.gm.domain.notice.NoticeSearchRepo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryRegister;
 import cloud.xcan.angus.remote.message.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -27,7 +29,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 
 @Slf4j
@@ -38,6 +39,9 @@ public class NoticeQueryImpl implements NoticeQuery {
 
   @Resource
   private NoticeRepo noticeRepo;
+
+  @Resource
+  private NoticeSearchRepo noticeSearchRepo;
 
   @Resource
   private AppRepo appRepo;
@@ -52,19 +56,6 @@ public class NoticeQueryImpl implements NoticeQuery {
             .orElseThrow(() -> ResourceNotFound.of(id, "Notice"));
         setAppInfo(List.of(notice));
         return notice;
-      }
-    }.execute();
-  }
-
-  @Override
-  public Page<Notice> find(Specification<Notice> spec, PageRequest pageable) {
-    return new BizTemplate<Page<Notice>>() {
-
-      @Override
-      protected Page<Notice> process() {
-        Page<Notice> page = noticeRepo.findAll(spec, pageable);
-        setAppInfo(page.getContent());
-        return page;
       }
     }.execute();
   }
@@ -108,6 +99,22 @@ public class NoticeQueryImpl implements NoticeQuery {
           setAppInfo(List.of(finalNotice));
         }
         return finalNotice;
+      }
+    }.execute();
+  }
+
+  @Override
+  public Page<Notice> list(GenericSpecification<Notice> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match) {
+    return new BizTemplate<Page<Notice>>() {
+
+      @Override
+      protected Page<Notice> process() {
+        Page<Notice> page = fullTextSearch
+            ? noticeSearchRepo.find(spec.getCriteria(), pageable, Notice.class, match)
+            : noticeRepo.findAll(spec, pageable);
+        setAppInfo(page.getContent());
+        return page;
       }
     }.execute();
   }

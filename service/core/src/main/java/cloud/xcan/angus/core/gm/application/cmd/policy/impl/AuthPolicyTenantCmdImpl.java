@@ -179,7 +179,7 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
 
     // closeMultiTenantCtrl(); -> Should be called
     // Query the policies that can be opened on the tenant client.
-    List<AuthPolicy> policies = authPolicyQuery.findOpenableTenantClientPolicies();
+    List<AuthPolicy> policies = authPolicyQuery.findOperableTenantClientPolicies();
     if (isEmpty(policies)) {
       return;
     }
@@ -227,7 +227,7 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
     // NOOP:: Opening applications for tenant
 
     // Authorize the opened application to tenant
-    List<AuthPolicy> policies = authPolicyQuery.findOpenableOpClientPoliciesByAppId(app.getId());
+    List<AuthPolicy> policies = authPolicyQuery.findOperableOpClientPoliciesByAppId(app.getId());
     if (isEmpty(policies)) {
       return;
     }
