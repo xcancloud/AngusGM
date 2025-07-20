@@ -30,7 +30,7 @@ type SearchParams = {
 
 const showCount = ref(true);
 const Statistics = defineAsyncComponent(() => import('@/views/system/log/operation/statistics/index.vue'));
-const SearchPanel = defineAsyncComponent((() => import('@/views/system/log/operation/searchPanel/index.vue')));
+const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));
 
 const { t } = useI18n();
 const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
@@ -38,7 +38,7 @@ const total = ref(0);
 const loading = ref(false);
 const tableList = ref<any[]>([]);
 
-const searchChange = async (data:{filters:{ key: string; value: string; op: FilterOp; }[]} ) => {
+const searchChange = async (data:{filters:{ key: string; value: string; op: FilterOp; }[]}) => {
   params.value.pageNo = 1;
   params.value.filters = data.filters;
   await getList();
@@ -113,7 +113,7 @@ const columns = [
   {
     title: t('操作内容'),
     dataIndex: 'description',
-    width: '35%',
+    width: '35%'
   },
   {
     title: t('操作资源'),
@@ -125,14 +125,14 @@ const columns = [
     title: t('操作资源名称'),
     dataIndex: 'resourceName',
     groupName: 'resource',
-    width: '20%',
+    width: '20%'
   },
   {
     title: t('操作资源ID'),
     dataIndex: 'resourceId',
     groupName: 'resource',
     hide: true,
-    width: '20%',
+    width: '20%'
   },
   {
     title: t('op-table-5'),
@@ -162,7 +162,7 @@ const columns = [
         :showCount="showCount"
         @openCount="toggleOpenCount"
         @refresh="getList"
-        @change="searchChange"/>
+        @change="searchChange" />
       <Table
         :loading="loading"
         :dataSource="tableList"

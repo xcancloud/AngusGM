@@ -248,7 +248,6 @@ const showTip = (id: string) => {
     </template>
 
     <template #rightExtra>
-
       <IconRefresh
         class="ml-1"
         :loading="state.loading"

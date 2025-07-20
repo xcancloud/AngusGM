@@ -22,8 +22,8 @@ export default class CloudStore {
     return http.get(`${baseUrl}/installation/${recordId}`);
   }
 
-  searchCloudGoods<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/cloud/goods/search`, params);
+  getCloudGoodsList<T> (params: T): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/cloud/goods`, params);
   }
 
   // id <=> goodsId

@@ -71,7 +71,7 @@ const hotList = ref([{
   tags: [],
   introduction: 'AngusTester是一个现代化的云测试服务平台。 使用AngusTester可以帮助测试人员和开发人员更高效地完成“性能、功能、稳定性、自动化”等测试工作。AngusTester主要能力由“接口管理、测试管理、数据模拟与生成、服务模拟”四部分组成，支持测试对象包括：服务、接口、协议、中间件等。',
   id: '',
-  purcahseUrl: '',
+  purchaseUrl: '',
   purchase: false
 }]);
 
@@ -105,7 +105,7 @@ const loadAngus = async () => {
 
   const cloudAngus = data?.list?.[0];
   if (cloudAngus) {
-    hotList.value[0].purcahseUrl = cloudAngus.pricingUrl;
+    hotList.value[0].purchaseUrl = cloudAngus.pricingUrl;
     hotList.value[0].id = cloudAngus.goodsId;
     hotList.value[0].purchase = cloudAngus.purchase;
   }
@@ -151,13 +151,13 @@ const starGoods = async (goods: Goods) => {
     goods.starNum = goods.starNum - 1;
   }
 };
-const topay = (purcahseUrl) => {
-  window.parent.postMessage({ e: 'purchase', value: purcahseUrl }, '*');
+const topay = (purchaseUrl) => {
+  window.parent.postMessage({ e: 'purchase', value: purchaseUrl }, '*');
 };
 
 onMounted(async () => {
-  const purcahseUrl = await site.getUrl('www');
-  hotList.value[0].purcahseUrl = purcahseUrl + '/purchase';
+  const purchaseUrl = await site.getUrl('www');
+  hotList.value[0].purchaseUrl = purchaseUrl + '/purchase';
   loadGoods();
   loadAngus();
 });
@@ -188,7 +188,7 @@ onMounted(async () => {
                 v-if="!item.purchase"
                 type="primary"
                 class="mr-3"
-                @click="topay(item.purcahseUrl)">
+                @click="topay(item.purchaseUrl)">
                 立即购买
               </Button>
               <Button

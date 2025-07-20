@@ -234,8 +234,11 @@ const indicator = h(LoadingOutlined, {
       <template #bodyCell="{column,text,record}">
         <template v-if="column.dataIndex === 'fullName'">
           <div class="inline-flex items-center truncate">
-            <Image type="avatar" class="w-6 rounded-full mr-1" :src="record.avatar" />
-            <span class="flex-1 truncate" :tite="record.fullName">{{record.fullName}}</span>
+            <Image
+              type="avatar"
+              class="w-6 rounded-full mr-1"
+              :src="record.avatar" />
+            <span class="flex-1 truncate" :tite="record.fullName">{{ record.fullName }}</span>
           </div>
         </template>
         <template v-if="column.dataIndex === 'online'">
@@ -261,4 +264,3 @@ const indicator = h(LoadingOutlined, {
     </Table>
   </PureCard>
 </template>
-

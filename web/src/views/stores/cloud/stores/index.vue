@@ -70,7 +70,7 @@ const params = reactive({
 });
 
 const loading = ref(false);
-const downLoading = ref(false);
+const downloading = ref(false);
 
 // 商品列表
 const goodsList = ref<Goods[]>([]);
@@ -81,7 +81,7 @@ const hotList = ref([{
   tags: [],
   introduction: 'AngusTester是一个现代化的云测试服务平台。 使用AngusTester可以帮助测试人员和开发人员更高效地完成“性能、功能、稳定性、自动化”等测试工作。AngusTester主要能力由“接口管理、测试管理、数据模拟与生成、服务模拟”四部分组成，支持测试对象包括：服务、接口、协议、中间件等。',
   id: '',
-  purcahseUrl: '',
+  purchaseUrl: '',
   purchase: false
 }]);
 
@@ -92,7 +92,7 @@ const loadGoods = async () => {
   }
   loading.value = true;
   const { current, pageSize } = pagination;
-  const [error, res] = await store.searchCloudGoods({ pageNo: current, pageSize, ...params });
+  const [error, res] = await store.getCloudGoodsList({ pageNo: current, pageSize, ...params });
   loading.value = false;
   if (error) {
     return;
@@ -101,15 +101,15 @@ const loadGoods = async () => {
   pagination.total = +res.data.total;
 };
 
-// 获取 angus
+// 获取 AngusTester
 const loadAngus = async () => {
-  const [error, { data = { list: [] } }] = await store.searchCloudGoods({ code: 'AngusTester', editionType: 'CLOUD_SERVICE' });
+  const [error, { data = { list: [] } }] = await store.getCloudGoodsList({ code: 'AngusTester', editionType: 'CLOUD_SERVICE' });
   if (error) {
     return;
   }
   const cloudAngus = (data.list || []).find(angus => angus.editionType.value === 'CLOUD_SERVICE');
   if (cloudAngus) {
-    hotList.value[0].purcahseUrl = cloudAngus.pricingUrl;
+    hotList.value[0].purchaseUrl = cloudAngus.pricingUrl;
     hotList.value[0].id = cloudAngus.goodsId;
     hotList.value[0].purchase = cloudAngus.purchase;
   }
@@ -148,15 +148,15 @@ const starGoods = async (goods: Goods) => {
     goods.starNum = goods.starNum - 1;
   }
 };
-const topay = (purcahseUrl) => {
-  // window.parent.postMessage({ e: 'purchase', value: purcahseUrl }, '*');
-  // window.parent.location.href = purcahseUrl;
-  window.open(purcahseUrl, '_blank');
+const topay = (purchaseUrl) => {
+  // window.parent.postMessage({ e: 'purchase', value: purchaseUrl }, '*');
+  // window.parent.location.href = purchaseUrl;
+  window.open(purchaseUrl, '_blank');
 };
 
 onMounted(async () => {
   const host = await site.getUrl('www');
-  hotList.value[0].purcahseUrl = host + '/purchase';
+  hotList.value[0].purchaseUrl = host + '/purchase';
   loadGoods();
   loadAngus();
 });
@@ -187,7 +187,7 @@ onMounted(async () => {
                 v-if="!item.purchase"
                 type="primary"
                 class="mr-3"
-                @click="topay(item.purcahseUrl)">
+                @click="topay(item.purchaseUrl)">
                 立即购买
               </Button>
               <ButtonAuth
@@ -221,7 +221,7 @@ onMounted(async () => {
         class="ml-2"
         @click="loadGoods" />
     </PureCard>
-    <Spin :spinning="loading || downLoading">
+    <Spin :spinning="loading || downloading">
       <div class="space-y-2">
         <NoData v-show="!goodsList.length" class="py-20" />
         <PureCard
@@ -300,7 +300,7 @@ onMounted(async () => {
             </div>
             <div class="self-center ml-5">
               <ShowButton
-                v-model:downLoading="downLoading"
+                v-model:downLoading="downloading"
                 :goods="goods"
                 :disabled="!['CloudNode'].includes(goods.code)"
                 @reload="loadGoods" />
