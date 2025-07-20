@@ -116,17 +116,19 @@ const loadList = async () => {
   const params: {
     pageNo: number,
     pageSize: number,
-    filters: { key: string, op: string, value: string }[]
+    filters: { key: string, op: string, value: string }[],
+    fullTextSearch: boolean
   } = {
     pageNo: pagination.current,
     pageSize: pagination.pageSize,
-    filters: []
+    filters: [],
+    fullTextSearch: true
   };
   if (state.searchValue) {
     params.filters = [{ key: 'name', op: 'MATCH_END', value: state.searchValue }];
   }
   state.loading = true;
-  const [error, res] = await auth.searchPolicy(params);
+  const [error, res] = await auth.getPolicyList(params);
   state.loading = false;
   if (error) {
     return;

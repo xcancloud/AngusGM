@@ -46,8 +46,8 @@ export default class Auth {
     return http.del(`${baseUrl}/policy`, { ids });
   }
 
-  searchPolicy (params): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/policy/search`, params);
+  getPolicyList (params): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/policy`, params);
   }
 
   getPolicyFunctionsById (policyId: string): Promise<[Error | null, any]> {
