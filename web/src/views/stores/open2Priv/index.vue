@@ -82,7 +82,7 @@ const loadGoods = async () => {
   }
   loading.value = true;
   const { current, pageSize } = pagination;
-  const [error, res] = await http.get(`${window.location.ancestorOrigins[0]}/${API}/${VERSION}/store/priv/goods/search`, {
+  const [error, res] = await http.get(`${window.location.ancestorOrigins[0]}/${API}/${VERSION}/store/priv/goods`, {
     pageNo: current,
     pageSize,
     ...params
@@ -98,7 +98,7 @@ const loadGoods = async () => {
 
 // 获取 angus
 const loadAngus = async () => {
-  const [error, { data }] = await http.get(`${window.location.ancestorOrigins[0]}/${API}/${VERSION}/store/priv/goods/search`, { code: 'AngusTester' });
+  const [error, { data }] = await http.get(`${window.location.ancestorOrigins[0]}/${API}/${VERSION}/store/priv/goods`, { code: 'AngusTester' });
   if (error) {
     return;
   }

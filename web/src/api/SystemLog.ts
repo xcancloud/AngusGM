@@ -17,15 +17,4 @@ export default class SystemLog {
     return http.get(`${baseUrl}/instance/${id}/file/${name}`, params);
   }
 
-  // getSystemLogfiles (ip: string | undefined) {
-  //   return axios.get(`//${ip}/actuator/systemlog`);
-  // }
-
-  // getLogContent (data:any) {
-  //   return axios.get(`//${data.ip}/actuator/systemlog/name`, { params: data.value });
-  // }
-
-  // clearLogContent (data:any) {
-  //   return axios.post(`//${data.ip}/actuator/systemlog/name?name=${data.value.name}`);
-  // }
 }

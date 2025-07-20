@@ -145,7 +145,8 @@ const load = async () => {
   const params: Record<string, any> = {
     filters: searchForm,
     pageNo: pagination.current,
-    pageSize: pagination.pageSize
+    pageSize: pagination.pageSize,
+    fullTextSearch: true
   };
   state.loading = true;
   const [error, res] = await message.searchMessageList(params);

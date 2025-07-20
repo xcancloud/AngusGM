@@ -30,7 +30,7 @@ const tenantInfo: Ref = inject('tenantInfo', ref());
 
 const showCount = ref(true);
 const loading = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 const userList = ref<User[]>([]);
 const state = reactive<{
@@ -59,7 +59,7 @@ const init = async () => {
 
 const loadUserList = async (): Promise<void> => {
   loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await user.getUsers(params.value);
+  const [error, { data = { list: [], total: 0 } }] = await user.getUserList(params.value);
   loading.value = false;
   if (error) {
     return;
@@ -261,7 +261,7 @@ const searchOptions = ref([
     placeholder: '选择或查询标签',
     valueKey: 'tagId',
     type: 'select',
-    action: `${GM}/org/tag/search`,
+    action: `${GM}/org/tag`,
     fieldNames: { label: 'name', value: 'id' },
     showSearch: true,
     allowClear: true,

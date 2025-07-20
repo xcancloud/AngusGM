@@ -169,7 +169,7 @@ const saveEditName = (name) => {
 };
 
 const del = async () => {
-  const [error, res] = await dept.getCountNum(currentActionNode.value.id as string);
+  const [error, res] = await dept.getDeptCount(currentActionNode.value.id as string);
   if (error) {
     return;
   }
@@ -291,7 +291,8 @@ const delDeptUser = async (userIds: string[], type?: 'Table' | 'Modal') => {
 
 const getSearchDeptParams = computed(() => {
   return {
-    tagId: searchTagId.value
+    tagId: searchTagId.value,
+    fullTextSearch: true
   };
 });
 
@@ -395,7 +396,7 @@ const confirmMove = async (targetId) => {
   notify.value += 1;
 };
 
-const treeLoding = ref(false);
+const treeLoading = ref(false);
 const handleRefreshDeptList = () => {
   notify.value++;
 };
@@ -620,7 +621,7 @@ const rightOpenMove = (selected) => {
           <Select
             v-model:value="searchDeptId"
             :showSearch="true"
-            :action="`${GM}/dept/search`"
+            :action="`${GM}/dept`"
             :params="getSearchDeptParams"
             class="w-40"
             size="small"
@@ -636,7 +637,7 @@ const rightOpenMove = (selected) => {
             size="small"
             showSearch
             :placeholder="t('tagPlaceholder')"
-            :action="`${GM}/org/tag/search`"
+            :action="`${GM}/org/tag`"
             @change="handleSearchTag" />
           <ButtonAuth
             code="DeptAdd"
@@ -644,16 +645,16 @@ const rightOpenMove = (selected) => {
             icon="icon-tianjia"
             @click="addDept()" />
           <IconRefresh
-            :loading="treeLoding"
+            :loading="treeLoading"
             :disabled="refreshDisabled"
             @click="handleRefreshDeptList" />
         </div>
         <Tree
           ref="treeSelect"
-          v-model:loading="treeLoding"
+          v-model:loading="treeLoading"
           v-model:selectedKey="selectedDept"
           :params="treeParams"
-          :action="`${GM}/dept/search`"
+          :action="`${GM}/dept`"
           :fieldNames="treeFieldNames"
           :autoload="!searchDeptId"
           :treeData="state.dataSource"

@@ -27,11 +27,11 @@ export default class Dept {
     return http.get(`${baseUrl}/${params.id}/navigation`, {}, { silence: false });
   }
 
-  searchDepts (params) {
-    return http.get(`${baseUrl}/search`, params);
+  getDeptList (params: unknown) {
+    return http.get(`${baseUrl}`, params);
   }
 
-  getCountNum (id: string) {
+  getDeptCount (id: string) {
     return http.get(`${baseUrl}/${id}/count`, {});
   }
 

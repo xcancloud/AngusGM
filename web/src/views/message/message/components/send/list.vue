@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
+import {ref, watch, computed, onMounted} from 'vue';
+import {useI18n} from 'vue-i18n';
 import {
   Hints,
   IconRequired,
@@ -14,12 +14,12 @@ import {
   Spin,
   NoData
 } from '@xcan-angus/vue-ui';
-import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan-angus/tools';
-import { Divider, CheckboxGroup, Checkbox, Tooltip, Popover, Pagination, Tree } from 'ant-design-vue';
-import { dept, user, group } from '@/api';
+import {debounce} from 'throttle-debounce';
+import {duration} from '@xcan-angus/tools';
+import {Divider, CheckboxGroup, Checkbox, Tooltip, Popover, Pagination, Tree} from 'ant-design-vue';
+import {dept, user, group} from '@/api';
 
-import { ReceiveObjectType } from './PropsType';
+import {ReceiveObjectType} from './PropsType';
 
 interface Props {
   receiveObjectType: ReceiveObjectType;
@@ -41,11 +41,11 @@ const emit = defineEmits<{
   (e: 'update:deptList', value: { id: string, name: string }[]): void,
 }>();
 
-const { t } = useI18n();
+const {t} = useI18n();
 
 const receiveType = ref<ReceiveObjectType>('USER');
 
-const excludes = ({ value }) => {
+const excludes = ({value}) => {
   return ['TO_POLICY', 'POLICY', 'ALL'].includes(value);
 };
 
@@ -56,10 +56,15 @@ const loading = ref(false);
 const total = ref(0);
 // 用户列表
 const userDataList = ref<{ id: string, fullName: string, avatar?: '', isEdit?: boolean }[]>([]);
-const params = ref<{ pageNo: number, pageSize: number, filters: any[] }>({ pageNo: 1, pageSize: 30, filters: [] });
+const params = ref<{ pageNo: number, pageSize: number, filters: any[], fullTextSearch: boolean }>({
+  pageNo: 1,
+  pageSize: 30,
+  filters: [],
+  fullTextSearch: true
+});
 const loadUserList = async () => {
   loading.value = true;
-  const [error, { data }] = await user.getUsers(params.value);
+  const [error, {data}] = await user.getUserList(params.value);
   loading.value = false;
   isFirstLoad.value = false;
 
@@ -121,7 +126,7 @@ const expandedKeys = ref<string[]>([]);
 const groupDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
 const loadGroupList = async () => {
   loading.value = true;
-  const [error, { data }] = await group.searchGroups(params.value);
+  const [error, {data}] = await group.getGroupList(params.value);
   loading.value = false;
   if (error) {
     return;
@@ -134,7 +139,7 @@ const deptTreeData = ref<any[]>([]);
 const deptDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
 const loadDeptList = async () => {
   loading.value = true;
-  const [error, { data }] = await dept.searchDepts(params.value);
+  const [error, {data}] = await dept.getDeptList(params.value);
   loading.value = false;
   if (error) {
     return;
@@ -192,7 +197,7 @@ const handleCheck = (event: InputEvent, obj: { id: string; name: string }) => {
 
 const handleCheckDept = (_checkIds: string[], e: { checked: boolean, node: { id: string, name: string } }) => {
   const checked = e.checked;
-  const obj = { id: e.node.id, name: e.node.name };
+  const obj = {id: e.node.id, name: e.node.name};
   if (checked) {
     checkedList.value.push(obj);
   } else {
@@ -208,11 +213,11 @@ const searchChange = debounce(duration.search, (event: any): void => {
   const value = event.target.value;
   checkedList.value = [];
   if (receiveType.value === 'USER') {
-    params.value.filters = value ? [{ key: 'fullName', op: 'MATCH_END', value: value }] : [];
+    params.value.filters = value ? [{key: 'fullName', op: 'MATCH_END', value: value}] : [];
     loadUserList();
   } else {
     if (['DEPT', 'GROUP'].includes(receiveType.value)) {
-      params.value.filters = value ? [{ key: 'name', op: 'MATCH_END', value: value }] : [];
+      params.value.filters = value ? [{key: 'name', op: 'MATCH_END', value: value}] : [];
       receiveType.value === 'DEPT' ? loadDeptList() : loadGroupList();
     }
   }
@@ -270,7 +275,7 @@ const onCheckAllChange = e => {
         // checkedList.value = userDataList.value.map(item => item.id);
         userDataList.value.forEach(item => {
           if (!checkedIds.value.includes(item.id)) {
-            checkedList.value.push({ id: item.id, name: item.fullName });
+            checkedList.value.push({id: item.id, name: item.fullName});
           }
         });
         break;
@@ -278,14 +283,14 @@ const onCheckAllChange = e => {
         // checkedList.value = groupDataList.value.map(item => item.id);
         groupDataList.value.forEach(item => {
           if (!checkedIds.value.includes(item.id)) {
-            checkedList.value.push({ id: item.id, name: item.name });
+            checkedList.value.push({id: item.id, name: item.name});
           }
         });
         break;
       case 'DEPT':
         deptDataList.value.forEach(item => {
           if (!checkedIds.value.includes(item.id)) {
-            checkedList.value.push({ id: item.id, name: item.name });
+            checkedList.value.push({id: item.id, name: item.name});
           }
         });
         // checkedList.value = deptDataList.value.map(item => item.id);
@@ -333,16 +338,16 @@ const getPopupContainer = (node: HTMLElement): HTMLElement => {
   return document.body;
 };
 const columns = [
-  [{ label: '名称', dataIndex: 'fullName' }, { label: 'ID', dataIndex: 'id' }]
+  [{label: '名称', dataIndex: 'fullName'}, {label: 'ID', dataIndex: 'id'}]
 ];
 
-const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
+const treeFieldNames = {title: 'name', key: 'id', children: 'children'};
 </script>
 <template>
   <PureCard class="w-100 h-full">
     <Spin class="h-full p-2 text-3 leading-3 flex flex-col" :spinning="loading">
       <div class="flex items-center whitespace-nowrap">
-        <IconRequired class="mr-1" />
+        <IconRequired class="mr-1"/>
         {{ t('recipient') }}
         <SelectEnum
           v-model:value="receiveType"
@@ -352,13 +357,13 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
           @change="receiveObjectTypeChange">
         </SelectEnum>
       </div>
-      <Divider />
+      <Divider/>
       <template v-if="receiveType !=='TENANT'">
         <Input
           :disabled="disabled"
           :placeholder="t('appName')"
           allowClear
-          @change="searchChange" />
+          @change="searchChange"/>
         <div class="flex-1 overflow-y-auto -mr-2 pt-2">
           <template v-if="receiveType === 'GROUP'">
             <template v-if="groupDataList.length">
@@ -374,7 +379,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
                     :disabled="checkedIds.length >= 500 && !checkedIds.includes(item.id)"
                     @change="handleCheck($event, {id: item.id, name: item.name})">
                   </Checkbox>
-                  <Icon icon="icon-zu1" class="ml-2 mr-2 -mt-0.25 text-4" />
+                  <Icon icon="icon-zu1" class="ml-2 mr-2 -mt-0.25 text-4"/>
                   <Tooltip
                     placement="bottomLeft"
                     overlayClassName="ant-dropdown-sm"
@@ -390,7 +395,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
             </template>
             <template v-else>
               <template v-if="!isFirstLoad && !loading">
-                <NoData class="h-full" />
+                <NoData class="h-full"/>
               </template>
             </template>
           </template>
@@ -410,9 +415,8 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
                   </Checkbox>
                   <Image
                     :src="item?.avatar"
-
                     type="avatar"
-                    class="w-4 h-4 rounded-full ml-2 " />
+                    class="w-4 h-4 rounded-full ml-2 "/>
                   <Popover
                     placement="bottomLeft"
                     overlayClassName="ant-dropdown-sm"
@@ -423,7 +427,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
                       <Grid
                         :columns="columns"
                         :dataSource="item"
-                        nowrap />
+                        nowrap/>
                     </template>
                     <div class="flex-1 truncate cursor-pointer leading-5 px-2 rounded bg-theme-menu-hover">
                       {{ item.fullName }}
@@ -434,7 +438,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
             </template>
             <template v-else>
               <template v-if="!isFirstLoad && !loading">
-                <NoData class="h-full" />
+                <NoData class="h-full"/>
               </template>
             </template>
           </template>
@@ -451,13 +455,13 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
                 :treeData="deptTreeData"
                 @check="handleCheckDept">
                 <template #icon>
-                  <Icon icon="icon-bumen1" class="text-4 -ml-2" />
+                  <Icon icon="icon-bumen1" class="text-4 -ml-2"/>
                 </template>
               </Tree>
             </template>
             <template v-else>
               <template v-if="!isFirstLoad && !loading">
-                <NoData class="h-full" />
+                <NoData class="h-full"/>
               </template>
             </template>
           </template>
@@ -472,7 +476,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
           showLessItems
           size="small"
           class="mt-2 mr-2"
-          @change="paginationChange" />
+          @change="paginationChange"/>
         <template v-if="showAllSelect">
           <div class="border-t border-theme-divider mt-2 py-1 flex items-center">
             <Checkbox
@@ -481,7 +485,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
               @change="onCheckAllChange">
               {{ t('当前页全选') }}
             </Checkbox>
-            <Hints :text="t('sendTips')" class="mt-1.5" />
+            <Hints :text="t('sendTips')" class="mt-1.5"/>
           </div>
         </template>
       </template>

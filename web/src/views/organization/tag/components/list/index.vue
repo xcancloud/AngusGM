@@ -22,7 +22,7 @@ const { t } = useI18n();
 
 const loading = ref(false);
 const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 20, filters: [] });
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 20, filters: [], fullTextSearch: true });
 const total = ref(0);
 const tagList = ref<OrgTag[]>([]);
 const checkedTag = ref<OrgTag | undefined>(undefined); // 选择的标签
@@ -36,7 +36,7 @@ const loadTagList = async (): Promise<void> => {
   }
 
   loading.value = true;
-  const [error, { data }] = await orgTag.searchTags(params.value);
+  const [error, { data }] = await orgTag.getTagList(params.value);
   loading.value = false;
   if (error) {
     return;

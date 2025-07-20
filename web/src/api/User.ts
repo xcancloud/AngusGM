@@ -6,8 +6,8 @@ export default class User {
     baseUrl = prefix + '/user';
   }
 
-  getUsers<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/search`, params);
+  getUserList<T> (params: T): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}`, params);
   }
 
   addUser<T> (params: T): Promise<[Error | null, any]> {

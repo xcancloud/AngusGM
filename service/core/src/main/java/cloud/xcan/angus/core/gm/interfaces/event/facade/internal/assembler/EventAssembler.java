@@ -3,6 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.event.facade.internal.assembler;
 import static cloud.xcan.angus.spec.experimental.BizConstant.OWNER_TENANT_ID;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
+import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.enums.EventType;
 import cloud.xcan.angus.core.biz.exception.BizException;
@@ -134,77 +135,77 @@ public class EventAssembler {
     StringBuilder sb = new StringBuilder();
     sb.append("### ").append(source.getType()).append(br).append("=============")
         .append(br);
-    if (Objects.nonNull(event.getName())) {
+    if (nonNull(event.getName())) {
       sb.append("> Event Name: **").append(event.getName()).append("**").append(br);
     }
-    if (Objects.nonNull(event.getDescription())) {
+    if (nonNull(event.getDescription())) {
       sb.append("> Event Desc: ").append(event.getDescription()).append(br);
     }
-    if (Objects.nonNull(event.getCreatedDate())) {
+    if (nonNull(event.getCreatedDate())) {
       sb.append("> Event Date: ").append(event.getCreatedDate()).append(br);
     }
-    if (Objects.nonNull(event.getId())) {
+    if (nonNull(event.getId())) {
       sb.append("> Event ID: ").append(event.getId()).append(br);
     }
-    if (Objects.nonNull(event.getCode())) {
+    if (nonNull(event.getCode())) {
       sb.append("> Event Code: ").append(event.getCode()).append(br);
     }
-    if (Objects.nonNull(event.getType())) {
+    if (nonNull(event.getType())) {
       sb.append("> Event Type: ").append(event.getType().getValue()).append(br);
     }
-    if (Objects.nonNull(url)) {
+    if (nonNull(url)) {
       sb.append("> Event Url: [Please see detail](").append(url).append(")").append(br);
     }
     sb.append("### SOURCE").append(br);
-    if (Objects.nonNull(source.getClientId())) {
+    if (nonNull(source.getClientId())) {
       sb.append("> Client Id: ").append(source.getClientId()).append(br);
     }
-    if (Objects.nonNull(source.getServiceCode())) {
+    if (nonNull(source.getServiceCode())) {
       sb.append("> Service Code: ").append(source.getServiceCode()).append(br);
     }
-    if (Objects.nonNull(source.getServiceName())) {
+    if (nonNull(source.getServiceName())) {
       sb.append("> Service Name: ").append(source.getServiceName()).append(br);
     }
-    if (Objects.nonNull(source.getInstanceId())) {
+    if (nonNull(source.getInstanceId())) {
       sb.append("> Instance Name: ").append(source.getInstanceId()).append(br);
     }
-    if (Objects.nonNull(source.getRequestId())) {
+    if (nonNull(source.getRequestId())) {
       sb.append("> Request Id: ").append(source.getRequestId()).append(br);
     }
-    if (Objects.nonNull(source.getMethod())) {
+    if (nonNull(source.getMethod())) {
       sb.append("> Request method: ").append(source.getMethod()).append(br);
     }
-    if (Objects.nonNull(source.getUri())) {
+    if (nonNull(source.getUri())) {
       sb.append("> Request uri: ").append(source.getUri()).append(br);
     }
-    if (Objects.nonNull(source.getTenantId())) {
+    if (nonNull(source.getTenantId())) {
       sb.append("### PRINCIPAL").append(br);
       sb.append("> Tenant Id: ").append(source.getTenantId()).append(br);
       sb.append("> Tenant Name: ").append(source.getTenantName()).append(br);
-      if (Objects.nonNull(source.getUserId())) {
+      if (nonNull(source.getUserId())) {
         sb.append("> User Id: ").append(source.getUserId()).append(br);
         sb.append("> User Fullname: ").append(source.getFullName()).append(br);
       }
     }
     if (event.getType().exceptional) {
       sb.append("### EXCEPTION").append(br);
-      if (Objects.nonNull(source.getCode())) {
+      if (nonNull(source.getCode())) {
         sb.append("> Exception Code: ").append(source.getCode()).append(br);
       }
-      if (Objects.nonNull(source.getEKey())) {
+      if (nonNull(source.getEKey())) {
         sb.append("> Exception Key(eKey): ").append(source.getEKey()).append(br);
       }
-      if (Objects.nonNull(source.getLevel())) {
+      if (nonNull(source.getLevel())) {
         sb.append("> Exception Level: `").append(source.getLevel()).append("`").append(br);
       }
-      if (Objects.nonNull(source.getExt())) {
+      if (nonNull(source.getExt())) {
         sb.append("> Exception Ext: ").append(GsonUtils.toJson(source.getExt())).append(br);
       }
-      if (Objects.nonNull(source.getExt())) {
+      if (nonNull(source.getExt())) {
         sb.append("> Exception cause: `").append(source.getCause()).append("`").append(br);
       }
     } else {
-      if (Objects.nonNull(event.getTargetType())) {
+      if (nonNull(event.getTargetType())) {
         sb.append("### BUSINESS").append(br);
         sb.append("> Resource Type: ").append(event.getType()).append(br);
         sb.append("> Resource Id: ").append(event.getTargetId()).append(br);
@@ -215,7 +216,7 @@ public class EventAssembler {
   }
 
   public static GenericSpecification<Event> getSpecification(EventFindDto dto) {
-    if (Objects.nonNull(dto.getNonTenantEvent())) {
+    if (nonNull(dto.getNonTenantEvent())) {
       if (dto.getNonTenantEvent()) {
         dto.setTenantId(-1L);
       }

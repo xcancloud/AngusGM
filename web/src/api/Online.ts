@@ -6,8 +6,8 @@ export default class Online {
     baseUrl = prefix + '/message/center';
   }
 
-  searchOnlineUsers<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/online/search`, params);
+  getOnlineUserList<T> (params: T): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/online`, params);
   }
 
   offlineUser<T> (params: T): Promise<[Error | null, any]> {

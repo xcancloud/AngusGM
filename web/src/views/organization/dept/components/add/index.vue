@@ -119,7 +119,7 @@ const close = () => {
           internal
           :fieldNames="{ label: 'name', value: 'id' }"
           :maxTags="10"
-          :action="`${GM}/org/tag/search`"
+          :action="`${GM}/org/tag`"
           :placeholder="t('tagPlaceholder')"
           mode="multiple" />
       </FormItem>

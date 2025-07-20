@@ -11,6 +11,6 @@ export default class License {
   }
 
   getLicenseInCloud<T> (params: T, configs?: Record<string, any>): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/release/search`, params, configs);
+    return http.get(`${baseUrl}/release`, params, configs);
   }
 }

@@ -175,7 +175,7 @@ const options = [
     valueKey: 'serviceCode',
     placeholder: t('选择或搜索服务'),
     type: 'select',
-    action: `${GM}/service/search`,
+    action: `${GM}/service`,
     fieldNames: { label: 'name', value: 'code' },
     showSearch: true,
     allowClear: true

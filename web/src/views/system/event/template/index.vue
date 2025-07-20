@@ -96,7 +96,8 @@ const eventConfigList = ref<EventConfigList[]>([]);
 const params: { pageNo: number, pageSize: number, filters: Record<string, string>[] } = reactive({
   pageNo: 1,
   pageSize: 10,
-  filters: []
+  filters: [],
+  fullTextSearch: true
 });
 
 const total = ref(0);
@@ -146,7 +147,7 @@ const getEventTemplate = async () => {
     return;
   }
   loading.value = true;
-  const [error, res] = await event.searchTemplate(params);
+  const [error, res] = await event.getTemplateList(params);
   loading.value = false;
   if (error) {
     return;

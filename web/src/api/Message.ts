@@ -19,7 +19,7 @@ export default class Message {
   }
 
   searchMessageList<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/search`, params);
+    return http.get(`${baseUrl}`, params);
   }
 
   deleteCurrentMessages (ids: string[]): Promise<[Error | null, any]> {

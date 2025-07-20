@@ -30,8 +30,8 @@ export default class Setting {
     return http.get(`${baseUrl}/tenant/quota/app`);
   }
 
-  searchTenantQuota<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/tenant/quota/search`, params);
+  getTenantQuotaList<T> (params: T): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/tenant/quota`, params);
   }
 
   updateTenantLocale<T> (params: T): Promise<[Error | null, any]> {

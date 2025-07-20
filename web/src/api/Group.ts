@@ -26,8 +26,8 @@ export default class Group {
     return http.del(`${baseUrl}`, { ids });
   }
 
-  searchGroups<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/search`, params);
+  getGroupList<T> (params: T): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}`, params);
   }
 
   getGroupDetail (id: string): Promise<[Error | null, any]> {

@@ -18,7 +18,7 @@ export default class Notice {
     return http.get(`${baseUrl}/${id}`);
   }
 
-  searchNoticeList<T> (params: T): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/search`, params);
+  getNoticeList<T> (params: T): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}`, params);
   }
 }

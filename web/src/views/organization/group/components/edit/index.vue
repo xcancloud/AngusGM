@@ -102,9 +102,7 @@ onMounted(() => {
     loadGroupTagList();
   }
 });
-const action = computed(() => {
-  return `${GM}/org/tag/search`;
-});
+
 </script>
 <template>
   <PureCard class="min-h-full p-3.5">
@@ -171,7 +169,7 @@ const action = computed(() => {
             internal
             :fieldNames="{ label: 'name', value: 'id' }"
             :maxTags="10"
-            :action="action"
+            :action="`${GM}/org/tag`"
             :placeholder="t('tagPlaceholder')"
             mode="multiple" />
         </FormItem>

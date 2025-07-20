@@ -6,14 +6,15 @@ export default class Event {
     baseUrl = prefix + '/event';
   }
 
-  searchEventList (params: {
+  getEventList (params: {
     pageNo: number,
     pageSize: number;
     orderSort?: string;
     orderBy?: string;
-    filters?: Record<string, string>[]
+    filters?: Record<string, string>[];
+    fullTextSearch?: boolean
   }): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/search`, params);
+    return http.get(`${baseUrl}`, params);
   }
 
   addTemplate<T> (params: T): Promise<[Error | null, any]> {
@@ -36,12 +37,13 @@ export default class Event {
     return http.get(`${baseUrl}/template/${id}/current`);
   }
 
-  searchTemplate (params: {
+  getTemplateList (params: {
     pageNo: number,
-    pageSize: number,
-    filters: Record<string, string>[]
-  }): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/template/search`, params);
+    pageSize: number;
+    filters?: Record<string, string>[];
+    fullTextSearch?: boolean
+    }): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/template`, params);
   }
 
   addChannel (params: { address: string; name: string; channelType: string }): Promise<[Error | null, any]> {

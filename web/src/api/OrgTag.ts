@@ -22,8 +22,8 @@ export default class OrgTag {
     return http.get(`${baseUrl}/tag/${id}`);
   }
 
-  searchTags (params) {
-    return http.get(`${baseUrl}/tag/search`, params);
+  getTagList (params) {
+    return http.get(`${baseUrl}/tag`, params);
   }
 
   addTagTarget (tagId, dtos) {

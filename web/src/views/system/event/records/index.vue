@@ -31,7 +31,7 @@ const selectedItem = ref<EventRecord>({
 const Options = [
   {
     placeholder: t('placeholder.p1'),
-    valueKey: 'description',
+    valueKey: 'code',
     type: 'input',
     op: 'MATCH',
     allowClear: true
@@ -164,9 +164,10 @@ const eventRecordList = ref<EventRecord[]>([]);
 const params = reactive({
   pageNo: 1,
   pageSize: 10,
-  filters: [] as Record<string, string>[],
   orderSort: 'DESC',
-  sortBy: 'createdDate'
+  sortBy: 'createdDate',
+  fullTextSearch: true,
+  filters: [] as Record<string, string>[]
 });
 
 const total = ref(0);
@@ -177,7 +178,7 @@ const getEventList = async () => {
     return;
   }
   loading.value = true;
-  const [error, res] = await event.searchEventList({ ...params });
+  const [error, res] = await event.getEventList({ ...params });
   loading.value = false;
   if (error) {
     return;

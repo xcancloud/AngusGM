@@ -34,7 +34,7 @@ const loadList = async () => {
   }
   loading.value = true;
   const _params = appCode.value ? { ...params.value, appCode: appCode.value } : params.value;
-  const [error, { data = { list: [], total: 0 } }] = await setting.searchTenantQuota(_params);
+  const [error, { data = { list: [], total: 0 } }] = await setting.getTenantQuotaList(_params);
   loading.value = false;
   if (error) {
     return;

@@ -104,7 +104,7 @@ const getProductTypeColor = (value) => {
     v-model:spinning="spinng"
     style="height: calc(100% - 76px);"
     class="-mr-2"
-    :action="`${GM}/store/installation/search`"
+    :action="`${GM}/store/installation`"
     :params="params"
     :notify="notify"
     @change="handleChange">

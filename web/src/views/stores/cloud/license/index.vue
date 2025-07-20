@@ -12,7 +12,7 @@ const { t } = useI18n();
 
 const loading = ref(false);
 const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 
 const pagination = computed(() => {

@@ -26,7 +26,7 @@ const { t } = useI18n();
 const loading = ref(false);
 const showCount = ref(true);
 const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 const groupList = ref<ListGroup[]>([]);
 
@@ -47,7 +47,7 @@ const loadGroupList = async (): Promise<void> => {
     return;
   }
   loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await group.searchGroups(params.value);
+  const [error, { data = { list: [], total: 0 } }] = await group.getGroupList(params.value);
   loading.value = false;
   if (error) {
     return;
@@ -193,7 +193,7 @@ const searchOptions = ref([
     placeholder: t('tagPlaceholder'),
     valueKey: 'tagId',
     type: 'select',
-    action: `${GM}/org/tag/search`,
+    action: `${GM}/org/tag`,
     fieldNames: { label: 'name', value: 'id' },
     showSearch: true,
     allowClear: true,

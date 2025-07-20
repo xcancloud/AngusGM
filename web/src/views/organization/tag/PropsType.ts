@@ -15,9 +15,10 @@ export type Filters = { key: string, value: string, op: FilterOp }[]
 export type SearchParams = {
   pageNo?: number;
   pageSize?: number;
-  filters?: Filters;
   orderBy?: string;
   orderSort?: 'ASC' | 'DESC';
+  fullTextSearch?: boolean;
+  filters?: Filters;
 }
 
 export type TargetType = 'USER' | 'DEPT' | 'GROUP'

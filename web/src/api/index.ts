@@ -44,7 +44,6 @@ export const systemToken = new SystemToken(GM);
 export const service = new Service(GM);
 export const social = new Social(GM);
 export const online = new Online(GM);
-// export const actuator = new Actuator();
 export const email = new Email(GM);
 export const event = new Event(GM);
 export const systemLog = new SystemLog(GM);

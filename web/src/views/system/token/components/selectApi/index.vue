@@ -82,7 +82,7 @@ defineExpose({ clearData });
       <Select
         v-model:value="serviceCode"
         class="w-100"
-        :action="`${GM}/service/search`"
+        :action="`${GM}/service`"
         :fieldNames="{value: 'code', label: 'name'}"
         :disabled="props.disabled"
         :placeholder="t('selectToken')"

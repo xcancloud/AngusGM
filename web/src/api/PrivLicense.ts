@@ -9,8 +9,4 @@ export default class License {
   getLicenseInPriv<T> (params: T, configs?: Record<string, any>): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}`, params, configs);
   }
-
-  getLicenseInCloud<T> (params: T, configs?: Record<string, any>): Promise<[Error | null, any]> {
-    return http.get(`${baseUrl}/release/search`, params, configs);
-  }
 }

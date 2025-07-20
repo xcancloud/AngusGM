@@ -130,7 +130,8 @@ const getParams = () => {
   return {
     pageSize,
     pageNo: current,
-    filters: searchParams.value
+    filters: searchParams.value,
+    fullTextSearch: true
   };
 };
 
@@ -143,7 +144,7 @@ const getNoticeList = async () => {
   }
   const params = getParams();
   loading.value = true;
-  const [error, res] = await notice.searchNoticeList(params);
+  const [error, res] = await notice.getNoticeList(params);
   loading.value = false;
   if (error) {
     return;

@@ -23,9 +23,10 @@ type Filters = { key: string, value: string, op: FilterOp }[]
 type SearchParams = {
   pageNo?: number;
   pageSize?: number;
-  filters?: Filters;
   orderBy?: string;
   orderSort?: 'ASC' | 'DESC';
+  fullTextSearch?: boolean;
+  filters?: Filters;
 }
 
 const showCount = ref(true);
@@ -33,7 +34,7 @@ const Statistics = defineAsyncComponent(() => import('@/views/system/log/operati
 const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));
 
 const { t } = useI18n();
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 const loading = ref(false);
 const tableList = ref<any[]>([]);
@@ -49,7 +50,7 @@ const getList = async () => {
     return;
   }
   loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await userLog.searchOperationLog(params.value);
+  const [error, { data = { list: [], total: 0 } }] = await userLog.getOperationLogList(params.value);
   loading.value = false;
   if (error) {
     return;
