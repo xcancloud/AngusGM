@@ -133,14 +133,6 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
       boolean fullTextSearch, String[] match) {
     return new BizTemplate<Page<AuthPolicy>>(false) {
       @Override
-      protected void checkParams() {
-        // Check the opened application existed
-        String appId = findFirstValue(spec.getCriteria(), "appId");
-        assertNotEmpty(appId, "The query parameter appId is required");
-        appOpenQuery.checkAndFind(Long.valueOf(appId), getOptTenantId(), false);
-      }
-
-      @Override
       protected Page<AuthPolicy> process() {
         Page<AuthPolicy> page = fullTextSearch
             ? authPolicySearchRepo.find(spec.getCriteria(), pageable, AuthPolicy.class, match)
