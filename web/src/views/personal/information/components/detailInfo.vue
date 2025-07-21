@@ -2,6 +2,7 @@
 import { computed, ref, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PureCard, Grid, Icon, Input } from '@xcan-angus/vue-ui';
+import { Tag } from 'ant-design-vue';
 import { regexp } from '@xcan-angus/tools';
 import { user } from '@/api';
 
@@ -40,13 +41,14 @@ const columns = [
   ],
   [
     { dataIndex: 'createdDate', label: t('personalCenter.information.registerTime') },
-    { dataIndex: 'group', label: t('personalCenter.information.group') },
     { dataIndex: 'sysAdmin', label: t('personalCenter.information.systemId') },
+    { dataIndex: 'group', label: t('personalCenter.information.group') },
     { dataIndex: 'depts', label: t('personalCenter.information.ownDept') },
-    { dataIndex: 'otherAccount', label: t('personalCenter.information.otherAccount'), offset: true },
-    {
-      label: t('所属租户'), dataIndex: 'tenantName'
-    }
+    { dataIndex: 'tags', label: t('用户标签') },
+    { dataIndex: 'otherAccount', label: t('personalCenter.information.otherAccount'), offset: true }
+    // {
+    //   label: t('所属租户'), dataIndex: 'tenantName'
+    // }
   ]
 ];
 
@@ -222,11 +224,11 @@ const cancelAddressEdit = () => {
 };
 
 const depts = computed(() => {
-  return tenantInfo.value?.depts?.map((item: any) => item.name)?.join('/');
+  return tenantInfo.value?.depts || [];
 });
 
 const groups = computed(() => {
-  return tenantInfo.value?.groups?.map((item: any) => item.name)?.join(',');
+  return tenantInfo.value?.groups || [];
 });
 
 const phone = computed(() => {
@@ -379,7 +381,19 @@ watch(() => tenantInfo.value, (newValue: any) => {
           </template>
         </div>
       </template>
-      <template #group>{{ groups }}</template>
+      <template #group>
+        <template v-if="groups?.length">
+          <div
+            v-for="item in groups"
+            :key="item.id"
+            class="inline-flex space-x-1 mr-2">
+            <div class="w-5 h-5 rounded-full bg-blue-tips flex items-center justify-center">
+              <Icon class="inline h-full text-theme-content text-4" icon="icon-zu" />
+            </div>
+            <span>{{ item.name }}</span>
+          </div>
+        </template>
+      </template>
       <template #sysAdmin>
         {{ tenantInfo.sysAdmin ? t('personalCenter.information.systemAdmin') :
           t('personalCenter.information.generalUser') }}
@@ -388,7 +402,24 @@ watch(() => tenantInfo.value, (newValue: any) => {
         {{ tenantInfo.deptHead ? t('personalCenter.information.principal') :
           t('personalCenter.information.generalUser') }}
       </template>
-      <template #depts>{{ depts }}</template>
+      <template #depts>
+        <template v-if="depts?.length" >
+          <div
+            v-for="item in depts"
+            :key="item.id"
+            class="inline-flex  space-x-1 mr-2">
+            <div class="w-5 h-5 rounded-full bg-blue-tips flex items-center justify-center">
+              <Icon class="inline h-full text-theme-content text-4" icon="icon-bumen" />
+            </div>
+            <span>{{ item.name }}</span>
+          </div>
+        </template>
+      </template>
+      <template #tags>
+        <div v-if="tenantInfo.tags">
+          <Tag v-for="item in tenantInfo.tags" :key="item.id">{{item.name}}</Tag>
+        </div>
+      </template>
       <template #otherAccount>
         <div class="flex justify-between">
           <div>

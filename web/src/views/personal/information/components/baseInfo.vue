@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, inject, ref, nextTick, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Grid, PureCard, Icon, Image, Input, Cropper } from '@xcan-angus/vue-ui';
-import { site } from '@xcan-angus/tools';
+import {Grid, PureCard, Icon, Image, Input, Cropper, notification} from '@xcan-angus/vue-ui';
+import { site, clipboard } from '@xcan-angus/tools';
 
 import defaultAvatar from '../assets/default.jpg';
 
@@ -101,6 +101,7 @@ const columns = computed(() => {
       break;
   }
   return [[
+    { dataIndex: 'tenantId', label: t('账号ID')},
     { dataIndex: 'accountName', label },
     { dataIndex: 'username', label: t('personalCenter.information.userName') }
   ]];
@@ -147,6 +148,14 @@ const cancelEditUserName = () => {
   userName.value = tenantInfo.value?.tenantName;
   editUserName.value = false;
 };
+
+const copyID = () => {
+  clipboard.toClipboard(tenantInfo.value?.tenantId)
+    .then(() => {
+      notification.success('复制到剪贴板');
+    });
+};
+
 </script>
 <template>
   <PureCard class="flex items-center w-11/12 2xl:px-6 mx-auto px-15 py-6 mb-2">
@@ -159,6 +168,12 @@ const cancelEditUserName = () => {
       </div>
     </div>
     <Grid class="ml-12" :columns="columns">
+      <template #tenantId>
+        <div class="flex space-x-2 items-center">
+          <span>{{ tenantInfo?.tenantId }}</span>
+          <Icon icon="icon-fuzhi" class="text-4 text-text-link cursor-pointer" @click="copyID" />
+        </div>
+      </template>
       <template #accountName>
         <div class="flex">
           <span>{{ accountName }}</span>
