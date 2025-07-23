@@ -41,8 +41,9 @@ const { t } = useI18n();
 const params = ref<{
   filters: { key: 'fullName', op: 'MATCH_END', value: string | undefined }[],
   enabled: boolean,
-  tagId?: string
-}>({ filters: [], enabled: true });
+  tagId?: string,
+  fullTextSearch: boolean;
+}>({ filters: [], enabled: true, fullTextSearch: true });
 const notify = ref(0);
 const dataList = ref<{ id: string, fullName: string, avatar?: '', enabled: boolean }[]>([]);
 const checkedList = ref<string[]>([]);
@@ -216,7 +217,7 @@ const modalTitle = computed(() => {
       </Input>
       <Select
         :placeholder="t('tagPlaceholder')"
-        :action="`${GM}/org/tag/search`"
+        :action="`${GM}/org/tag?fullTextSearch=true`"
         :fieldNames="{ label: 'name', value: 'id' }"
         showSearcht
         allowClear
@@ -234,7 +235,7 @@ const modalTitle = computed(() => {
     </div>
     <Scroll
       v-model="loading"
-      :action="`${GM}/user/search`"
+      :action="`${GM}/user`"
       :params="params"
       :notify="notify"
       :lineHeight="28"

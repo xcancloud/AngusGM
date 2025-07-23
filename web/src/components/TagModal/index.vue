@@ -39,7 +39,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const params = ref<{ filters: { key: 'name', op: 'MATCH_END', value: string | undefined }[] }>({ filters: [] });
+const params = ref<{ filters: { key: 'name', op: 'MATCH_END', value: string | undefined }[], fullTextSearch: boolean }>({ filters: [], fullTextSearch: true });
 const notify = ref(0);
 const dataList = ref<{ id: string, name: string }[]>([]); // 所有人员
 const checkedList = ref<string[]>([]);
@@ -147,7 +147,7 @@ const getDisabled = (id) => {
 };
 
 const action = computed(() => {
-  return `${GM}/org/tag/search`;
+  return `${GM}/org/tag`;
 });
 
 </script>

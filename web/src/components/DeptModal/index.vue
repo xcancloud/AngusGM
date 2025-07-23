@@ -40,7 +40,7 @@ const handleCancel = () => {
   emit('update:visible', false);
 };
 
-const params = ref<{ tagId?: string }>({});
+const params = ref<{ tagId?: string, fullTextSearch: boolean }>({ fullTextSearch: true });
 const notify = ref(0);
 const oldDeptIds = ref<string[]>([]);
 const checkedKeys = ref<string[]>([]);
@@ -109,7 +109,8 @@ const tagChange = (value) => {
 const selectTagId = ref(undefined);
 const getSearchDeptParams = computed(() => {
   return {
-    tagId: selectTagId.value
+    tagId: selectTagId.value,
+    fullTextSearch: true
   };
 });
 
@@ -142,7 +143,7 @@ const deptChange = async (value: string) => {
     <div class="-mt-3 pl-3">
       <div class="flex mb-2">
         <Select
-          :action="`${GM}/dept/search`"
+          :action="`${GM}/dept`"
           size="small"
           class="w-1/2 mr-2"
           :showSearch="true"
@@ -154,8 +155,9 @@ const deptChange = async (value: string) => {
         <Select
           v-model:value="selectTagId"
           :placeholder="t('tagPlaceholder')"
-          :action="`${GM}/org/tag/search`"
+          :action="`${GM}/org/tag`"
           :fieldNames="{ label: 'name', value: 'id' }"
+          :params="{fullTextSearch: true}"
           showSearcht
           allowClear
           class="w-1/2"
@@ -171,7 +173,7 @@ const deptChange = async (value: string) => {
       </div>
       <Tree
         v-model:checkedKeys="checkedKeys"
-        :action="`${GM}/dept/search?`"
+        :action="`${GM}/dept?`"
         :fieldNames="{ children: 'hasSubDept' }"
         :checkable="true"
         :params="params"

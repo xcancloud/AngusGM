@@ -38,8 +38,9 @@ const { t } = useI18n();
 const params = ref<{
   filters: { key: 'name', op: 'MATCH_END', value: string | undefined }[],
   enabled: boolean,
-  tagId?: string
-}>({ filters: [], enabled: true });
+  tagId?: string,
+  fullTextSearch: boolean
+}>({ filters: [], enabled: true, fullTextSearch: true });
 const dataList = ref<{ id: string, name: string, code: string }[]>([]);
 const checkedList = ref<string[]>([]);
 const indeterminate = ref<boolean>(false);
@@ -181,8 +182,9 @@ watch(() => props.tagId, () => {
         </Input>
         <Select
           :placeholder="t('tagPlaceholder')"
-          :action="`${GM}/org/tag/search`"
+          :action="`${GM}/org/tag`"
           :fieldNames="{ label: 'name', value: 'id' }"
+          :params="{fullTextSearch: true}"
           showSearcht
           allowClear
           class="w-1/2"
@@ -200,7 +202,7 @@ watch(() => props.tagId, () => {
         </div>
       </div>
       <Scroll
-        :action="`${GM}/group/search`"
+        :action="`${GM}/group`"
         style="height: 292px;"
         class="py-1"
         :lineHeight="30"
