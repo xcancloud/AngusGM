@@ -1,6 +1,6 @@
 package cloud.xcan.angus.api.gm.tenant.dto.audit;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseLegalPersonCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.GovernmentCert;

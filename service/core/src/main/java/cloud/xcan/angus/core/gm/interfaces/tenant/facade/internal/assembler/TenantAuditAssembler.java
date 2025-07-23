@@ -4,7 +4,7 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserFullName;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantReplaceDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantUpdateDto;
 import cloud.xcan.angus.api.gm.tenant.dto.audit.TenantRealNameAuditDto;

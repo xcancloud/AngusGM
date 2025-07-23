@@ -7,8 +7,8 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddByMobileDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;

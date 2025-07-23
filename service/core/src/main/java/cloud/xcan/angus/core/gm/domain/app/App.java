@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.domain.app;
 
 import cloud.xcan.angus.api.commonlink.api.Api;
-import cloud.xcan.angus.api.commonlink.app.AppType;
-import cloud.xcan.angus.api.commonlink.app.OpenStage;
+import cloud.xcan.angus.api.enums.AppType;
+import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.api.enums.EditionType;

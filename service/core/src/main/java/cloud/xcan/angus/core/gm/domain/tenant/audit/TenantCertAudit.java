@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.domain.tenant.audit;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseLegalPersonCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.GovernmentCert;

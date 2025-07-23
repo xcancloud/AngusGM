@@ -10,7 +10,7 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_REMARK_LENGTH;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseLegalPersonCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.GovernmentCert;

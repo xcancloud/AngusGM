@@ -20,7 +20,7 @@ import cloud.xcan.angus.api.commonlink.UCConstant;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;

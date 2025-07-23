@@ -2,8 +2,8 @@ package cloud.xcan.angus.core.gm.interfaces.app.facade.dto;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
-import cloud.xcan.angus.api.commonlink.app.AppType;
-import cloud.xcan.angus.api.commonlink.app.OpenStage;
+import cloud.xcan.angus.api.enums.AppType;
+import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.remote.OrderSort;
 import cloud.xcan.angus.remote.PageQuery;

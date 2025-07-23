@@ -1,5 +1,6 @@
 package cloud.xcan.angus.api.commonlink.tenant;
 
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.core.jpa.repository.NameJoinRepository;

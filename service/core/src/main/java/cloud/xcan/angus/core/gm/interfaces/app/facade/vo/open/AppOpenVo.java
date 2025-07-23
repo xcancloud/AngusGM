@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.open;
 
-import cloud.xcan.angus.api.commonlink.app.AppType;
+import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagInfoVo;
 import cloud.xcan.angus.remote.NameJoinField;

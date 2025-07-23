@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.cmd.auth;
 
 
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.commonlink.user.User;
 import java.util.List;
 import java.util.Set;

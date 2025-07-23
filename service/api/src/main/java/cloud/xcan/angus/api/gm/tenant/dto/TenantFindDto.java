@@ -1,10 +1,9 @@
 package cloud.xcan.angus.api.gm.tenant.dto;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.remote.PageQuery;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

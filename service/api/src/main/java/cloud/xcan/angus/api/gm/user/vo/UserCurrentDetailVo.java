@@ -1,6 +1,6 @@
 package cloud.xcan.angus.api.gm.user.vo;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.UserSource;

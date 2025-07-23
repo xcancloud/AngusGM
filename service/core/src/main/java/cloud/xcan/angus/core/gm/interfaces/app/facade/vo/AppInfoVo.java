@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.vo;
 
-import cloud.xcan.angus.api.commonlink.app.AppType;
-import cloud.xcan.angus.api.commonlink.app.OpenStage;
+import cloud.xcan.angus.api.enums.AppType;
+import cloud.xcan.angus.api.enums.OpenStage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

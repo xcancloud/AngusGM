@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.org;
 
-import cloud.xcan.angus.api.commonlink.app.AppType;
+import cloud.xcan.angus.api.enums.AppType;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

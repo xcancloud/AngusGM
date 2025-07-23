@@ -4,8 +4,8 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_ADDRESS_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_REMARK_LENGTH;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.UserSource;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;

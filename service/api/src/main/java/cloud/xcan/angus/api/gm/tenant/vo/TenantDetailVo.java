@@ -1,7 +1,7 @@
 package cloud.xcan.angus.api.gm.tenant.vo;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.remote.NameJoinField;

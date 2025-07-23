@@ -2,7 +2,7 @@ package cloud.xcan.angus.api.gm.tenant.dto.audit;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_REMARK_LENGTH;
 
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotNull;

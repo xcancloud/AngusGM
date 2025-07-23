@@ -1,6 +1,8 @@
 package cloud.xcan.angus.api.commonlink.app;
 
+import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
+import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantListener;
 import jakarta.persistence.Column;

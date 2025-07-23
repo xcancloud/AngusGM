@@ -2,8 +2,10 @@ package cloud.xcan.angus.api.commonlink.tenant;
 
 import static java.util.Objects.nonNull;
 
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.TenantStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.core.jpa.auditor.AuditingEntity;
 import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;

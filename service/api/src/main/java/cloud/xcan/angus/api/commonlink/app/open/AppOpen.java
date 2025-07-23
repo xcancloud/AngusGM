@@ -2,7 +2,7 @@ package cloud.xcan.angus.api.commonlink.app.open;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
-import cloud.xcan.angus.api.commonlink.app.AppType;
+import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.spec.experimental.EntitySupport;
 import jakarta.persistence.Column;

@@ -3,8 +3,8 @@ package cloud.xcan.angus.core.gm.application.converter;
 import static cloud.xcan.angus.core.gm.application.query.tenant.impl.TenantQueryImpl.genTenantNo;
 
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
-import cloud.xcan.angus.api.commonlink.tenant.TenantRealNameStatus;
-import cloud.xcan.angus.api.commonlink.tenant.TenantType;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.TenantStatus;
 
