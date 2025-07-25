@@ -25,11 +25,17 @@ public class XCanAngusGMApplication {
   public static void main(String[] args) {
     ConfigurableApplicationContext cac = SpringApplication.run(XCanAngusGMApplication.class, args);
 
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      MessageCenterOnlineCmdImpl onlineCmd = cac.getBean(MessageCenterOnlineCmdImpl.class);
-      onlineCmd.shutdown();
-      log.info("Shutdown hook: update current online user to offline");
-    }));
+    Thread shutdownThread = new Thread(() -> {
+      try {
+        MessageCenterOnlineCmdImpl onlineCmd = cac.getBean(MessageCenterOnlineCmdImpl.class);
+        onlineCmd.shutdown();
+        log.info("Shutdown hook: update current online user to offline");
+      } catch (Exception e) {
+        log.error("Error during shutdown hook execution", e);
+      }
+    }, "AngusGM-Shutdown-Hook");
+    
+    Runtime.getRuntime().addShutdownHook(shutdownThread);
   }
 
 }

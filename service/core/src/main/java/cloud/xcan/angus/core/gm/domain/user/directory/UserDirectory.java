@@ -70,6 +70,18 @@ public class UserDirectory extends AuditingEntity<UserDirectory, Long>
 
   @Override
   public int compareTo(UserDirectory o) {
+    if (o == null) {
+      return 1;
+    }
+    if (this.getSequence() == null && o.getSequence() == null) {
+      return 0;
+    }
+    if (this.getSequence() == null) {
+      return -1;
+    }
+    if (o.getSequence() == null) {
+      return 1;
+    }
     return this.getSequence().compareTo(o.getSequence());
   }
 }

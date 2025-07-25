@@ -16,9 +16,9 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +40,7 @@ public class UserEndpoint {
   @Operation(summary = "Revoke access token", operationId = "auth:token:revoke")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Revoke token successfully")})
-  @RequestMapping(method = RequestMethod.DELETE, value = TOKEN_REVOKE_ENDPOINT)
+  @DeleteMapping(TOKEN_REVOKE_ENDPOINT)
   public ResponseEntity<Map<String, ?>> revokeToken(String access_token) {
     OAuth2Authorization authorization = oauth2AuthorizationService.findByToken(access_token, null);
     if (nonNull(authorization)) {

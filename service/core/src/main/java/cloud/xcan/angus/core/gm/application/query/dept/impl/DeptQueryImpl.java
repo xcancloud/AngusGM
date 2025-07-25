@@ -250,7 +250,8 @@ public class DeptQueryImpl implements DeptQuery {
     }
 
     Dept maxLevelParent = parentDeptsDbMap.values().stream()
-        .max(Comparator.comparing(Dept::getLevel)).orElse(null);
+        .max(Comparator.comparing(Dept::getLevel, Comparator.nullsFirst(Integer::compareTo)))
+        .orElse(null);
     if (isNull(maxLevelParent)) {
       return;
     }
@@ -273,7 +274,9 @@ public class DeptQueryImpl implements DeptQuery {
           maxLevelSubDept = dept0;
           newMaxSubDeptLevel = parentDeptsDbMap.get(dept0.getPid()).getLevel() + 1;
         } else {
-          maxLevelSubDept = subDept.stream().max(Comparator.comparing(Dept::getLevel)).orElse(null);
+          maxLevelSubDept = subDept.stream()
+              .max(Comparator.comparing(Dept::getLevel, Comparator.nullsFirst(Integer::compareTo)))
+              .orElse(null);
           if (isNull(maxLevelSubDept)) {
             continue;
           }

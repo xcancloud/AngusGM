@@ -34,9 +34,10 @@ import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectoryUserSchema;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.naming.NamingException;
+import java.util.stream.Collectors;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.NamingException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -202,7 +203,8 @@ public class UserConverter {
           try {
             return new String((byte[]) attribute.get(), DEFAULT_ENCODING);
           } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Error converting byte array to string with encoding {}", DEFAULT_ENCODING, e);
+            return attribute.get().toString(); // fallback to toString
           }
         } else {
           return attribute.get().toString();
@@ -216,9 +218,11 @@ public class UserConverter {
     // Warn:: The format of Spring security MD5 and LDAP MD5 is inconsistent.
     if (password.contains(UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX)
         && password.contains(UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX)) {
-      return UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX + PASSWORD_PROXY_ENCRYP_TYPE
-          + UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX + password
-          .split(UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX)[1];
+      String[] parts = password.split(UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX);
+      if (parts.length > 1) {
+        return UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX + PASSWORD_PROXY_ENCRYP_TYPE
+            + UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX + parts[1];
+      }
     }
     return UCConstant.PASSWORD_ENCRYP_TYPE_PREFIX + PASSWORD_PROXY_ENCRYP_TYPE
         + UCConstant.PASSWORD_ENCRYP_TYPE_SUFFIX + password;

@@ -48,8 +48,18 @@ public class AliYunRecognizeClient {
         .setBody(bodyStream);
     RecognizeBusinessLicenseResponse response = client
         .recognizeBusinessLicenseWithOptions(request, new RuntimeOptions());
+    if (response == null || response.getBody() == null) {
+      throw new IllegalStateException("Business license recognition response or body is null");
+    }
     Map<Object, Object> data = fromJson(response.getBody().data, Map.class);
-    return fromJson(GsonUtils.toJson(data.get("data")), BusinessRecognize.class);
+    if (data == null) {
+      throw new IllegalStateException("Business license recognition response data is null");
+    }
+    Object dataValue = data.get("data");
+    if (dataValue == null) {
+      throw new IllegalStateException("Business license recognition data.data is null");
+    }
+    return fromJson(GsonUtils.toJson(dataValue), BusinessRecognize.class);
   }
 
   public IdCardRecognize recognizeIDCard(String facePicUrl, String backPicUrl)
@@ -61,9 +71,21 @@ public class AliYunRecognizeClient {
     RecognizeIdcardRequest request = new RecognizeIdcardRequest().setBody(bodyStream);
     RecognizeIdcardResponse response = client
         .recognizeIdcardWithOptions(request, new RuntimeOptions());
+    if (response == null || response.getBody() == null) {
+      throw new IllegalStateException("ID card face recognition response or body is null");
+    }
     Map<Object, Object> data = fromJson(response.getBody().data, Map.class);
+    if (data == null) {
+      throw new IllegalStateException("ID card face recognition response data is null");
+    }
     Map<Object, Object> data0 = (Map<Object, Object>) data.get("data");
+    if (data0 == null) {
+      throw new IllegalStateException("ID card face recognition data.data is null");
+    }
     Map<Object, Object> faceData = (Map<Object, Object>) data0.get("face");
+    if (faceData == null) {
+      throw new IllegalStateException("ID card face recognition data.data.face is null");
+    }
     IdCardRecognize faceRecognize = fromJson(GsonUtils.toJson(faceData.get("data")),
         IdCardRecognize.class);
 
@@ -72,9 +94,21 @@ public class AliYunRecognizeClient {
     bodyStream = Client.readFromFilePath(backPicPath);
     request = new RecognizeIdcardRequest().setBody(bodyStream);
     response = client.recognizeIdcardWithOptions(request, new RuntimeOptions());
+    if (response == null || response.getBody() == null) {
+      throw new IllegalStateException("ID card back recognition response or body is null");
+    }
     data = fromJson(response.getBody().data, Map.class);
+    if (data == null) {
+      throw new IllegalStateException("ID card back recognition response data is null");
+    }
     data0 = (Map<Object, Object>) data.get("data");
+    if (data0 == null) {
+      throw new IllegalStateException("ID card back recognition data.data is null");
+    }
     Map<Object, Object> backData = (Map<Object, Object>) data0.get("back");
+    if (backData == null) {
+      throw new IllegalStateException("ID card back recognition data.data.back is null");
+    }
     IdCardRecognize backRecognize = fromJson(GsonUtils.toJson(backData.get("data")),
         IdCardRecognize.class);
 

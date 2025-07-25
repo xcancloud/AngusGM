@@ -58,7 +58,7 @@ public class TudouAIAgentClient implements AIAgentClient {
   @Override
   public Map<String, Object> chat(AIChatType type, String cmd, String sessionId, String aiAgentId) {
     String message = assembleChatMessage(type, cmd);
-    long startTime = System.currentTimeMillis();
+    long startTime = System.nanoTime();
     log.info("User {}-{} chat message: {}", getUserId(), sessionId, message);
 
     Request request = assembleChatRequest(sessionId, aiAgentId, message);
@@ -75,7 +75,7 @@ public class TudouAIAgentClient implements AIAgentClient {
       eventSource.connect(okHttpClient);
       eventLatch.await();
       log.info("User {}-{} chat time taken: {}ms", getUserId(), sessionId,
-          System.currentTimeMillis() - startTime);
+          (System.nanoTime() - startTime) / 1_000_000);
     } catch (InterruptedException e) {
       log.error("" + e);
     }

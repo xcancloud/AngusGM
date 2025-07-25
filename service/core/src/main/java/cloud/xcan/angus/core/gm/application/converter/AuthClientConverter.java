@@ -73,6 +73,9 @@ public class AuthClientConverter {
   public static String getSystemTokenClientId(String tokenName, ClientSource source) {
     Principal principal = PrincipalContext.get();
     if (Objects.requireNonNull(source) == ClientSource.XCAN_SYS_TOKEN) {
+      if (tokenName == null) {
+        throw new IllegalArgumentException("Token name cannot be null");
+      }
       return format(SYS_TOKEN_CLIENT_ID_FMT, principal.getTenantId(), tokenName.trim());
     }
     throw new IllegalStateException(format("Generate the clientId based on %s is not supported",

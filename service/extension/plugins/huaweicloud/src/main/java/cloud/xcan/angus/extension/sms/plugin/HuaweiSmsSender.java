@@ -23,10 +23,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import lombok.extern.slf4j.Slf4j;
 
 //如果JDK版本低于1.8,请使用三方库提供Base64类
 //import org.apache.commons.codec.binary.Base64;
 
+@Slf4j
 public class HuaweiSmsSender {
 
   //无需修改,用于格式化鉴权头域,给"X-WSSE"参数赋值
@@ -70,74 +72,7 @@ public class HuaweiSmsSender {
       throw new IllegalArgumentException("Body is null.");
     }
 
-    //请求Headers中的X-WSSE参数值
-    String wsseHeader = buildWsseHeader(appKey, appSecret);
-    if (null == wsseHeader || wsseHeader.isEmpty()) {
-      throw new IllegalArgumentException("Wsse header is null.");
-    }
-
-    Writer out = null;
-    BufferedReader in = null;
-    StringBuffer result = new StringBuffer();
-    HttpsURLConnection connection;
-    InputStream is = null;
-
-    HostnameVerifier hv = new HostnameVerifier() {
-      @Override
-      public boolean verify(String hostname, SSLSession session) {
-        return true;
-      }
-    };
-    trustAllHttpsCertificates();
-
-    try {
-      URL realUrl = new URL(url);
-      connection = (HttpsURLConnection) realUrl.openConnection();
-
-      connection.setHostnameVerifier(hv);
-      connection.setDoOutput(true);
-      connection.setDoInput(true);
-      connection.setUseCaches(true);
-      //请求方法
-      connection.setRequestMethod("POST");
-      //请求Headers参数
-      connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-      connection.setRequestProperty("Authorization", AUTH_HEADER_VALUE);
-      connection.setRequestProperty("X-WSSE", wsseHeader);
-
-      connection.connect();
-      out = new OutputStreamWriter(connection.getOutputStream());
-      out.write(body); //发送请求Body参数
-      out.flush();
-      out.close();
-
-      int status = connection.getResponseCode();
-      if (200 == status) { //200
-        is = connection.getInputStream();
-      } else { //400/401
-        is = connection.getErrorStream();
-      }
-      in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-      String line;
-      while ((line = in.readLine()) != null) {
-        result.append(line);
-      }
-      return result.toString();
-    } finally {
-      try {
-        if (null != out) {
-          out.close();
-        }
-        if (null != is) {
-          is.close();
-        }
-        if (null != in) {
-          in.close();
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
+    return sendHttps(url, body, appKey, appSecret);
   }
 
   /**
@@ -187,10 +122,11 @@ public class HuaweiSmsSender {
    */
   static String buildWsseHeader(String appKey, String appSecret) {
     if (null == appKey || null == appSecret || appKey.isEmpty() || appSecret.isEmpty()) {
-      System.out.println("buildWsseHeader(): appKey or appSecret is null.");
+      log.error("buildWsseHeader(): appKey or appSecret is null.");
       return null;
     }
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
     String time = sdf.format(new Date()); //Created
     String nonce = UUID.randomUUID().toString().replace("-", ""); //Nonce
 
@@ -239,5 +175,69 @@ public class HuaweiSmsSender {
     SSLContext sc = SSLContext.getInstance("SSL");
     sc.init(null, trustAllCerts, null);
     HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+  }
+
+  static String sendHttps(String url, String body, String appKey, String appSecret)
+      throws Exception {
+
+    //请求Body为空
+    if (null == body || body.isEmpty()) {
+      throw new IllegalArgumentException("Body is null.");
+    }
+    //请求Headers中的X-WSSE参数值
+    String wsseHeader = buildWsseHeader(appKey, appSecret);
+    if (null == wsseHeader || wsseHeader.isEmpty()) {
+      throw new IllegalArgumentException("Wsse header is null.");
+    }
+
+    StringBuffer result = new StringBuffer();
+
+    HostnameVerifier hv = new HostnameVerifier() {
+      @Override
+      public boolean verify(String hostname, SSLSession session) {
+        return true;
+      }
+    };
+    trustAllHttpsCertificates();
+
+    URL realUrl = new URL(url);
+    HttpsURLConnection connection = (HttpsURLConnection) realUrl.openConnection();
+
+    try {
+      connection.setHostnameVerifier(hv);
+      connection.setDoOutput(true);
+      connection.setDoInput(true);
+      connection.setUseCaches(true);
+      //请求方法
+      connection.setRequestMethod("POST");
+      //请求Headers参数
+      connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      connection.setRequestProperty("Authorization", AUTH_HEADER_VALUE);
+      connection.setRequestProperty("X-WSSE", wsseHeader);
+
+      connection.connect();
+      
+      // Use try-with-resources for proper resource management
+      try (OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream())) {
+        out.write(body); //发送请求Body参数
+        out.flush();
+      }
+
+      int status = connection.getResponseCode();
+      InputStream is = (200 == status) ? connection.getInputStream() : connection.getErrorStream();
+      
+      try (BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+        String line;
+        while ((line = in.readLine()) != null) {
+          result.append(line);
+        }
+      }
+      
+      return result.toString();
+    } finally {
+      if (connection != null) {
+        connection.disconnect();
+      }
+    }
   }
 }

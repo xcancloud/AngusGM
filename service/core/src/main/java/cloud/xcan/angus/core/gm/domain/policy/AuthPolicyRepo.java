@@ -36,7 +36,7 @@ public interface AuthPolicyRepo extends BaseRepository<AuthPolicy, Long>,
 
   boolean existsByAppIdAndCode(Long appId, String code);
 
-  @Query(value = "SELECT COUNT(*) FROM auth_policy WHERE app_id = ?1 AND type = ?2 AND code LIKE '%?3'", nativeQuery = true)
+  @Query(value = "SELECT COUNT(*) FROM auth_policy WHERE app_id = ?1 AND type = ?2 AND code LIKE CONCAT('%', ?3)", nativeQuery = true)
   boolean existsByAppIdAndTypeAndCodeSuffix(Long appId, PolicyType type, String suffix);
 
   boolean existsByAppIdAndName(Long appId, String name);
