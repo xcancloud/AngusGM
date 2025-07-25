@@ -41,6 +41,9 @@ public class SettingManagerImpl implements SettingManager {
 
   @Override
   public Setting setting(SettingKey key) {
+    if (settingManager == null) {
+      throw new IllegalStateException("SettingManager is not available - check configuration");
+    }
     Setting setting = settingManager.getCachedSetting(key);
     try {
       return switch (key) {
@@ -75,12 +78,21 @@ public class SettingManagerImpl implements SettingManager {
     } catch (JsonProcessingException e) {
       log.error("Parse setting json exception:", e);
       throw SysException.of("Parse setting json exception:" + e.getMessage());
+    } catch (NumberFormatException e) {
+      log.error("Invalid number format in setting value for key {}: {}", key, setting.getValue(), e);
+      throw SysException.of("Invalid number format in setting: " + e.getMessage());
+    } catch (Exception e) {
+      log.error("Unexpected error processing setting for key {}: {}", key, setting.getValue(), e);
+      throw SysException.of("Error processing setting: " + e.getMessage());
     }
   }
 
   @Override
   @Cacheable(key = "'key_' + #key", value = "setting")
   public Setting getCachedSetting(SettingKey key) {
+    if (settingRepo == null) {
+      throw new IllegalStateException("SettingRepo is not available - check configuration");
+    }
     return settingRepo.findByKey(key)
         .orElseThrow(() -> ResourceNotFound.of(key.getValue(), "Setting"));
   }

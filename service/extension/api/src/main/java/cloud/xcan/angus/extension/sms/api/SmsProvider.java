@@ -10,7 +10,9 @@ import cloud.xcan.angus.spec.utils.IOUtils;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public interface SmsProvider extends ExtensionPersistencePoint {
 
   /**
@@ -29,12 +31,12 @@ public interface SmsProvider extends ExtensionPersistencePoint {
       String sql = String.format("sql/SmsProxyPlugin-install-%s.sql", installVersion);
       InputStream inputStream = getClass().getClassLoader().getResourceAsStream(sql);
       if (isNull(inputStream)) {
-        System.out.printf("Installing SMS plugin, script %s not found%n", sql);
+        log.warn("Installing SMS plugin, script {} not found", sql);
         return null;
       }
       return IOUtils.toString(inputStream, UTF8);
     } catch (Exception e) {
-      System.out.println("Installing SMS plugin, exception: " + e.getMessage());
+      log.error("Installing SMS plugin, exception: {}", e.getMessage());
     }
     return null;
   }
@@ -48,26 +50,26 @@ public interface SmsProvider extends ExtensionPersistencePoint {
       InputStream inputStream = getClass().getClassLoader()
           .getResourceAsStream("plugin.properties");
       if (Objects.isNull(inputStream)) {
-        System.out.printf("Upgrade SMS plugin, plugin.properties not found%n");
+        log.warn("Upgrade SMS plugin, plugin.properties not found");
         return null;
       }
       Properties properties = new Properties();
       properties.load(inputStream);
       String currentVersion = properties.getProperty("plugin.version");
       if (isEmpty(currentVersion)) {
-        System.out.println("Upgrade SMS plugin, current version information is missing");
+        log.warn("Upgrade SMS plugin, current version information is missing");
         return null;
       }
       String sql = String.format("sql/SmsProxyPlugin-upgrade-%s-to-%s.sql", upgradedFromVersion,
           currentVersion);
       inputStream = getClass().getClassLoader().getResourceAsStream(sql);
       if (isNull(inputStream)) {
-        System.out.printf("Upgrade SMS plugin, script %s not found%n", sql);
+        log.warn("Upgrade SMS plugin, script {} not found", sql);
         return null;
       }
       return IOUtils.toString(inputStream, UTF8);
     } catch (Exception e) {
-      System.out.println("Upgrade SMS plugin, exception: " + e.getMessage());
+      log.error("Upgrade SMS plugin, exception: {}", e.getMessage());
     }
     return null;
   }
@@ -81,12 +83,12 @@ public interface SmsProvider extends ExtensionPersistencePoint {
       String sql = String.format("sql/SmsProxyPlugin-uninstall-%s.sql", uninstallVersion);
       InputStream inputStream = getClass().getClassLoader().getResourceAsStream(sql);
       if (Objects.isNull(inputStream)) {
-        System.out.printf("Uninstalling SMS plugin, script %s not found%n", sql);
+        log.warn("Uninstalling SMS plugin, script {} not found", sql);
         return null;
       }
       return IOUtils.toString(inputStream, UTF8);
     } catch (Exception e) {
-      System.out.println("Uninstalling SMS plugin, exception: " + e.getMessage());
+      log.error("Uninstalling SMS plugin, exception: {}", e.getMessage());
     }
     return null;
   }

@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public class MessageChannel implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * SMS service provider name.
    */

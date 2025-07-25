@@ -240,7 +240,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
     }.execute();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void emptyDirectoryGroups(Set<Long> groupIds) {
     groupRepo.updateDirectoryEmptyByGroupIdIn(groupIds);

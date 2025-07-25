@@ -33,7 +33,7 @@ public class EmailSendJob {
   @Resource
   private EmailCmd emailCmd;
 
-  @Scheduled(fixedDelay = 3 * 1000, initialDelay = 1000)
+  @Scheduled(fixedDelay = 10 * 1000, initialDelay = 1000)
   public void sendTenantScopeEmail() {
     jobTemplate.execute(TENANT_EMAIL_LOCK_KEY, 60, TimeUnit.MINUTES, () -> {
       List<Email> emailInPending = null;
@@ -56,7 +56,7 @@ public class EmailSendJob {
     });
   }
 
-  @Scheduled(fixedDelay = 5 * 1000, initialDelay = 5000)
+  @Scheduled(fixedDelay = 15 * 1000, initialDelay = 5000)
   public void sendPlatformScopeEmail() {
     jobTemplate.execute(PLATFORM_EMAIL_LOCK_KEY, 120, TimeUnit.MINUTES, () -> {
       List<Email> emailInPending = null;

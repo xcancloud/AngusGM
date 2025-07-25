@@ -17,6 +17,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import java.util.Optional;
+import java.util.Collections;
 
 /**
  * Listen to all WebSocket events.
@@ -24,7 +26,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Slf4j
 public class MessageConnectionListener implements ApplicationListener<AbstractSubProtocolEvent> {
 
-  public static final Map<String, String> LOCAL_ONLINE_USERS = new ConcurrentHashMap<>();
+  private static final Map<String, String> LOCAL_ONLINE_USERS_INTERNAL = new ConcurrentHashMap<>();
+  public static final Map<String, String> LOCAL_ONLINE_USERS = Collections.unmodifiableMap(LOCAL_ONLINE_USERS_INTERNAL);
 
   @Resource
   private MessageCenterOnlineCmd messageCenterOnlineCmd;
@@ -46,12 +49,22 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
     StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
-    String username = principal.get(INTROSPECTION_CLAIM_NAMES_USERNAME).toString();
-    String userAgent = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT).toString();
-    String deviceId = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID).toString();
-    String remoteAddress = principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR).toString();
+    
+    if (principal == null) {
+      log.warn("Principal is null for session: {}", sessionId);
+      return;
+    }
+    
+    String username = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_USERNAME))
+        .map(Object::toString).orElse("unknown");
+    String userAgent = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT))
+        .map(Object::toString).orElse("unknown");
+    String deviceId = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID))
+        .map(Object::toString).orElse("unknown");
+    String remoteAddress = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR))
+        .map(Object::toString).orElse("unknown");
 
-    LOCAL_ONLINE_USERS.put(sessionId, username);
+    LOCAL_ONLINE_USERS_INTERNAL.put(sessionId, username);
     messageCenterOnlineCmd.updateOnlineStatus(sessionId, username, userAgent, deviceId,
         remoteAddress, true);
     log.info("MessageCenter: {} connected，Session ID: {}", username, sessionId);
@@ -59,7 +72,7 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
 
   private void handleDisconnection(SessionDisconnectEvent event) {
     String sessionId = event.getSessionId();
-    String username = LOCAL_ONLINE_USERS.remove(sessionId);
+    String username = LOCAL_ONLINE_USERS_INTERNAL.remove(sessionId);
     if (username != null) {
       messageCenterOnlineCmd.updateOnlineStatus(sessionId, username, null, null, null, false);
       log.info("MessageCenter: {} disconnected，Session ID: {}", username, sessionId);

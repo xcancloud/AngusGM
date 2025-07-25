@@ -46,8 +46,8 @@ public class EmailSender {
 
   private final ApplicationInfo applicationInfo;
 
-  private JavaMailSender mailSender;
-  private EmailServer emailServer;
+  private volatile JavaMailSender mailSender;
+  private volatile EmailServer emailServer;
 
   public EmailSender(ApplicationInfo applicationInfo) throws IOException {
     this.applicationInfo = applicationInfo;
@@ -96,7 +96,9 @@ public class EmailSender {
       helper.setTo(toAddr);
       if (email.isTemplateEmail()) {
         if (Objects.isNull(bizTemplate) || Objects.isNull(baseTemplate)) {
-          continue;
+          log.error("Failed to send email to {}: template is null (bizTemplate={}, baseTemplate={})", 
+              toAddr, bizTemplate != null, baseTemplate != null);
+          throw new IllegalStateException("Email template is not available for sending");
         }
         Map<String, String> addrParams = email.getTemplateParamData()
             .getOrDefault(toAddr, emptyMap());
@@ -219,10 +221,13 @@ public class EmailSender {
           // override the getPasswordAuthentication
           @Override
           protected PasswordAuthentication getPasswordAuthentication() {
-            return Objects.nonNull(emailServer.getAuthAccountData()) ?
-                new PasswordAuthentication(emailServer.getAuthAccountData().getAccount(),
-                    emailServer.getAuthAccountData().getPassword())
-                : new PasswordAuthentication(null, null);
+            if (Objects.nonNull(emailServer.getAuthAccountData()) && 
+                Objects.nonNull(emailServer.getAuthAccountData().getAccount()) &&
+                Objects.nonNull(emailServer.getAuthAccountData().getPassword())) {
+              return new PasswordAuthentication(emailServer.getAuthAccountData().getAccount(),
+                  emailServer.getAuthAccountData().getPassword());
+            }
+            return null;
           }
         });
   }

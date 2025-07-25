@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class Sms implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * SMS signature.
    */

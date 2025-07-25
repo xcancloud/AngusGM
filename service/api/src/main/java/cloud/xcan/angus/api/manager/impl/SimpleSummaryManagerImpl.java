@@ -25,9 +25,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Biz
 public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
+
+  private static final Logger log = LoggerFactory.getLogger(SimpleSummaryManagerImpl.class);
 
   @Autowired(required = false)
   public SummaryRepository summaryRepository;
@@ -214,14 +218,29 @@ public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
   }
 
   public static BigDecimal convertValue(Object value) {
-    try {
-      String strValue = value.toString();
-      return strValue.contains(".") ? BigDecimal.valueOf(Double.parseDouble(strValue))
-          .setScale(2, RoundingMode.HALF_UP)
-          : BigDecimal.valueOf(Long.parseLong(value.toString())).setScale(0, RoundingMode.HALF_UP);
-    } catch (Exception var3) {
-      var3.printStackTrace();
+    if (value == null) {
+      return BigDecimal.ZERO;
     }
-    return BigDecimal.ZERO;
+    
+    try {
+      String strValue = value.toString().trim();
+      if (strValue.isEmpty()) {
+        return BigDecimal.ZERO;
+      }
+      
+      if (strValue.contains(".")) {
+        return BigDecimal.valueOf(Double.parseDouble(strValue))
+            .setScale(2, RoundingMode.HALF_UP);
+      } else {
+        return BigDecimal.valueOf(Long.parseLong(strValue))
+            .setScale(0, RoundingMode.HALF_UP);
+      }
+    } catch (NumberFormatException e) {
+      log.warn("Failed to convert value to BigDecimal: {}", value, e);
+      return BigDecimal.ZERO;
+    } catch (Exception e) {
+      log.error("Unexpected error converting value to BigDecimal: {}", value, e);
+      return BigDecimal.ZERO;
+    }
   }
 }

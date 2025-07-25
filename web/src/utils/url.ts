@@ -26,7 +26,16 @@ const getRedirectUrl = async (): Promise<string> => {
   }
 
   try {
-    const url = new URL(binary.fromBinary(target));
+    const decodedTarget = binary.fromBinary(target);
+    const url = new URL(decodedTarget);
+    
+    // Validate that the URL is from a trusted domain
+    const allowedHosts = [window.location.hostname, 'localhost', '127.0.0.1'];
+    if (!allowedHosts.includes(url.hostname) && !url.hostname.endsWith('.xcan.company')) {
+      console.warn('Untrusted redirect URL detected:', url.hostname);
+      return host;
+    }
+    
     return url.href;
   } catch (error) {
     return host;

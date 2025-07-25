@@ -152,7 +152,11 @@ public class AppQueryImpl implements AppQuery {
 
   @Override
   public App checkAndFind(Long appId, boolean checkEnabled) {
-    return checkAndFind(List.of(appId), checkEnabled).get(0);
+    List<App> apps = checkAndFind(List.of(appId), checkEnabled);
+    if (apps == null || apps.isEmpty()) {
+      throw ResourceNotFound.of(appId, "App");
+    }
+    return apps.get(0);
   }
 
   @Override
