@@ -1,9 +1,9 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org;
 
 import cloud.xcan.angus.api.enums.TenantRealNameStatus;
-import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.TenantStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

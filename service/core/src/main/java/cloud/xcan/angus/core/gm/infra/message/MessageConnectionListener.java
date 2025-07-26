@@ -8,8 +8,10 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.AuthKey.PRINCIPAL;
 
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import jakarta.annotation.Resource;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -17,8 +19,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-import java.util.Optional;
-import java.util.Collections;
 
 /**
  * Listen to all WebSocket events.
@@ -49,12 +49,12 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
     StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     Map<String, Object> principal = (Map<String, Object>) sessionAttributes.get(PRINCIPAL);
-    
+
     if (principal == null) {
       log.warn("Principal is null for session: {}", sessionId);
       return;
     }
-    
+
     String username = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_USERNAME))
         .map(Object::toString).orElse("unknown");
     String userAgent = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT))

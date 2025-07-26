@@ -10,6 +10,7 @@ import static cloud.xcan.angus.remote.message.http.ResourceExisted.M.RESOURCE_AL
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
+import static java.util.Collections.emptyList;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.math.NumberUtils.isDigits;
 
@@ -152,11 +153,7 @@ public class AppQueryImpl implements AppQuery {
 
   @Override
   public App checkAndFind(Long appId, boolean checkEnabled) {
-    List<App> apps = checkAndFind(List.of(appId), checkEnabled);
-    if (apps == null || apps.isEmpty()) {
-      throw ResourceNotFound.of(appId, "App");
-    }
-    return apps.get(0);
+    return checkAndFind(List.of(appId), checkEnabled).get(0);
   }
 
   @Override
@@ -174,7 +171,7 @@ public class AppQueryImpl implements AppQuery {
   @Override
   public List<App> checkAndFind(Collection<Long> appIds, boolean checkEnabled) {
     if (isEmpty(appIds)) {
-      return null;
+      return emptyList();
     }
     List<App> apps = appRepo.findAllByIdIn(appIds);
     assertResourceNotFound(isNotEmpty(apps), appIds.iterator().next(), "App");

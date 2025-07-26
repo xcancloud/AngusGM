@@ -1,8 +1,8 @@
 package cloud.xcan.angus.api.gm.user.vo;
 
-import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.enums.PasswordStrength;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;

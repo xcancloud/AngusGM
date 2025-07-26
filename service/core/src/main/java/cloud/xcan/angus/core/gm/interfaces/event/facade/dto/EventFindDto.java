@@ -4,7 +4,6 @@ import cloud.xcan.angus.api.enums.EventType;
 import cloud.xcan.angus.core.gm.domain.event.push.EventPushStatus;
 import cloud.xcan.angus.remote.OrderSort;
 import cloud.xcan.angus.remote.PageQuery;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

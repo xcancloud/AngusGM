@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.infra.message;
 
+import cloud.xcan.angus.core.gm.application.cmd.message.impl.MessageCenterOnlineCmdImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -7,6 +10,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
 public class MessageWebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -45,4 +49,17 @@ public class MessageWebSocketConfig implements WebSocketMessageBrokerConfigurer 
         .setHeartbeatTime(15000);
   }
 
+  public static void messageCenterShutdownHook(ConfigurableApplicationContext cac) {
+    Thread shutdownThread = new Thread(() -> {
+      try {
+        MessageCenterOnlineCmdImpl onlineCmd = cac.getBean(MessageCenterOnlineCmdImpl.class);
+        onlineCmd.shutdown();
+        log.info("Shutdown hook: update current online user to offline");
+      } catch (Exception e) {
+        log.error("Error during shutdown hook execution", e);
+      }
+    }, "MessageCenter-Shutdown-Hook");
+
+    Runtime.getRuntime().addShutdownHook(shutdownThread);
+  }
 }

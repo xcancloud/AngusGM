@@ -10,8 +10,8 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_URL_LENGTH;
 
 import cloud.xcan.angus.api.enums.AppType;
-import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.api.enums.EditionType;
+import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.validator.Version;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;

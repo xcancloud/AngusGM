@@ -90,12 +90,8 @@ import java.util.Set;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.typelevel.dcache.DCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ConfigurableGMApplication implements ConfigurableApplication {
-
-  private static final Logger log = LoggerFactory.getLogger(ConfigurableGMApplication.class);
 
   private final Set<String> installApps = new HashSet<>();
 
@@ -110,26 +106,21 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
   public void doConfigureApplication(ConfigurableEnvironment environment, Properties envs)
       throws Exception {
     // Whether to start the installation; skip execution if it is not enabled installation or a private edition.
-    boolean privatizationEnabled = appEdition.isPrivatization();
-    if (privatizationEnabled) {
-      log.info("Privatization enabled and configure application-");
+    if (appEdition.isPrivatization()) {
+      System.out.println("Privatization enabled and configure application-");
+
       productInfo = getProductInfo();
 
-      String installAppsStr = getString(INSTALL_APPS, "").trim();
-      if (!installAppsStr.isEmpty()) {
-        installApps.addAll(Arrays.stream(installAppsStr.split(","))
-            .map(String::trim)
-            .filter(s -> !s.isEmpty())
-            .toList());
-      }
+      installApps.addAll(Arrays.stream(getString(INSTALL_APPS, "").trim().split(","))
+          .map(String::trim).toList());
 
       rewriteEnvByBusiness();
-    }
 
-    if (isNotEmpty(installApps) && installApps.contains(GM_SERVICE)) {
-      log.info("---> Configure application starting <----");
-      installApplication();
-      log.info("---> Configure application completed <----");
+      if (isNotEmpty(installApps) && installApps.contains(GM_SERVICE)) {
+        System.out.println("---> Configure application starting <----");
+        installApplication();
+        System.out.println("---> Configure application completed <----");
+      }
     }
   }
 
@@ -140,11 +131,11 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
 
     String gmApisUrlPrefix = getGMApisUrlPrefix();
     envs.put(GM_APIS_URL_PREFIX, getGMApisUrlPrefix());
-    log.info("Set GM_APIS_URL_PREFIX to " + gmApisUrlPrefix);
+    System.out.println("Set GM_APIS_URL_PREFIX to " + gmApisUrlPrefix);
 
     String gmWebsite = getGMWebsite();
     envs.put(STORAGE_FILES_PROXY_ADDRESS, gmWebsite);
-    log.info("Set GM_WEBSITE to " + gmApisUrlPrefix);
+    System.out.println("Set GM_WEBSITE to " + gmApisUrlPrefix);
   }
 
   private void installApplication() throws Exception {
@@ -172,9 +163,9 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
           getString(GM_DB_NAME, DEFAULT_MYSQL_DB), getString(GM_DB_USER, DEFAULT_MYSQL_USER),
           getString(GM_DB_PASSWORD, DEFAULT_MYSQL_PASSWORD)
       );
-      log.info("---> The AngusGM database configuration is correct.");
+      System.out.println("---> The AngusGM database configuration is correct.");
     } catch (Exception e) {
-      log.error("---> The AngusGM database configuration is incorrect, cause: \n\t{}",
+      System.err.printf("---> The AngusGM database configuration is incorrect, cause: \n\t%s\n.",
           e.getMessage());
       throw new IllegalStateException(e.getMessage());
     }
@@ -187,9 +178,9 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
           getString(REDIS_PASSWORD), getString(REDIS_SENTINEL_MASTER),
           getString(REDIS_NODES)
       );
-      log.info("---> The Redis configuration is correct.");
+      System.out.println("---> The Redis configuration is correct.");
     } catch (Exception e) {
-      log.error("---> The Redis configuration is incorrect, cause: \n\t{}",
+      System.err.printf("---> The Redis configuration is incorrect, cause: \n\t%s\n.",
           e.getMessage());
       throw new IllegalStateException(e.getMessage());
     }
@@ -222,26 +213,26 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
         String.format("installation/common/%s/gm_schema.sql", db));
     Assert.assertHasText(gmCommonSchemaSql, "Common gm_schema.sql is not found");
     JDBCUtils.executeScript(gmConnection, gmCommonSchemaSql, emptyMap());
-    log.info("---> Schema `common/gm_schema.sql` Installation Completed.");
+    System.out.println("---> Schema `common/gm_schema.sql` Installation Completed.");
 
     String gmEditionSchemaSql = getResourceFileContent(
         String.format("installation/%s/%s/gm_schema.sql", edition, db));
     if (ObjectUtils.isNotEmpty(gmEditionSchemaSql)) {
       JDBCUtils.executeScript(gmConnection, gmEditionSchemaSql, emptyMap());
-      log.info("---> Schema `edition/gm_schema.sql` Installation Completed.");
+      System.out.println("---> Schema `edition/gm_schema.sql` Installation Completed.");
     }
 
     String gmCommonDataSql = getResourceFileContent(
         String.format("installation/common/%s/gm_data.sql", db));
     Assert.assertHasText(gmCommonSchemaSql, "Common gm_data.sql is not found");
     JDBCUtils.executeScript(gmConnection, gmCommonDataSql, variables);
-    log.info("---> Data `common/gm_data.sql` Installation Completed.");
+    System.out.println("---> Data `common/gm_data.sql` Installation Completed.");
 
     String gmEditionDataSql = getResourceFileContent(
         String.format("installation/%s/%s/gm_data.sql", edition, db));
     if (ObjectUtils.isNotEmpty(gmEditionDataSql)) {
       JDBCUtils.executeScript(gmConnection, gmEditionDataSql, variables);
-      log.info("---> Data `edition/gm_data.sql` Installation Completed.");
+      System.out.println("---> Data `edition/gm_data.sql` Installation Completed.");
     }
   }
 
@@ -327,11 +318,8 @@ public class ConfigurableGMApplication implements ConfigurableApplication {
     envs.put(GM_ADMIN_USERNAME, getString(GM_ADMIN_USERNAME, DEFAULT_ADMIN_USERNAME));
 
     String adminUserPassword = getString(GM_ADMIN_PASSWORD, DEFAULT_ADMIN_PASSWORD);
-    if (adminUserPassword.length() < 8) {
-      throw new IllegalStateException("Password must be at least 8 characters");
-    }
-    if (!adminUserPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
-      throw new IllegalStateException("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
+    if (adminUserPassword.length() < 6) {
+      throw new IllegalStateException("Password must be at least 6 characters");
     }
     envs.put(GM_ADMIN_ENCRYPTED_PASSWORD,
         createDelegatingPasswordEncoder().encode(adminUserPassword));

@@ -5,7 +5,6 @@ import cloud.xcan.angus.core.gm.domain.SentType;
 import cloud.xcan.angus.core.gm.domain.message.MessageReceiveType;
 import cloud.xcan.angus.core.gm.domain.message.MessageStatus;
 import cloud.xcan.angus.remote.PageQuery;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

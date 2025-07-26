@@ -10,11 +10,11 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_REMARK_LENGTH;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseLegalPersonCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.GovernmentCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.PersonalCert;
+import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.validator.Mobile;
 import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;

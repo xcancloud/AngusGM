@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -23,12 +22,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import lombok.extern.slf4j.Slf4j;
 
 //如果JDK版本低于1.8,请使用三方库提供Base64类
 //import org.apache.commons.codec.binary.Base64;
 
-@Slf4j
 public class HuaweiSmsSender {
 
   //无需修改,用于格式化鉴权头域,给"X-WSSE"参数赋值
@@ -39,29 +36,29 @@ public class HuaweiSmsSender {
   public static String send(String url, String appKey, String appSecret, String sender,
       String templateId, String signature, String receiver, String templateParas) throws Exception {
 
-  //    //必填,请参考"开发准备"获取如下数据,替换为实际值
-  //    String url = "https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1"; //APP接入地址(在控制台"应用管理"页面获取)+接口访问URI
-  //    String appKey = "c8RWg3ggEcyd4D3p94bf3Y7x1Ile"; //APP_Key
-  //    String appSecret = "q4Ii87BhST9vcs8wvrzN80SfD7Al"; //APP_Secret
-  //    String sender = "csms12345678"; //国内短信签名通道号或国际/港澳台短信通道号
-  //    String templateId = "8ff55eac1d0b478ab3c06c3c6a492300"; //模板ID
-  //
-  //    //条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
-  //    //国际/港澳台短信不用关注该参数
-  //    String signature = "华为云短信测试"; //签名名称
-  //
-  //    //必填,全局号码格式(包含国家码),示例:+8615123456789,多个号码之间用英文逗号分隔
-  //    String receiver = "+86151****6789,+86152****7890"; //短信接收人号码
+    //    //必填,请参考"开发准备"获取如下数据,替换为实际值
+    //    String url = "https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1"; //APP接入地址(在控制台"应用管理"页面获取)+接口访问URI
+    //    String appKey = "c8RWg3ggEcyd4D3p94bf3Y7x1Ile"; //APP_Key
+    //    String appSecret = "q4Ii87BhST9vcs8wvrzN80SfD7Al"; //APP_Secret
+    //    String sender = "csms12345678"; //国内短信签名通道号或国际/港澳台短信通道号
+    //    String templateId = "8ff55eac1d0b478ab3c06c3c6a492300"; //模板ID
+    //
+    //    //条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
+    //    //国际/港澳台短信不用关注该参数
+    //    String signature = "华为云短信测试"; //签名名称
+    //
+    //    //必填,全局号码格式(包含国家码),示例:+8615123456789,多个号码之间用英文逗号分隔
+    //    String receiver = "+86151****6789,+86152****7890"; //短信接收人号码
 
     //选填,短信状态报告接收地址,推荐使用域名,为空或者不填表示不接收状态报告
     String statusCallBack = "";
 
-    /**
-     * 选填,使用无变量模板时请赋空值 String templateParas = "";
-     * 单变量模板示例:模板内容为"您的验证码是${1}"时,templateParas可填写为"[\"369751\"]"
-     * 双变量模板示例:模板内容为"您有${1}件快递请到${2}领取"时,templateParas可填写为"[\"3\",\"人民公园正门\"]"
-     * 模板中的每个变量都必须赋值，且取值不能为空
-     * 查看更多模板和变量规范:产品介绍>模板和变量规范
+    /*
+      选填,使用无变量模板时请赋空值 String templateParas = "";
+      单变量模板示例:模板内容为"您的验证码是${1}"时,templateParas可填写为"[\"369751\"]"
+      双变量模板示例:模板内容为"您有${1}件快递请到${2}领取"时,templateParas可填写为"[\"3\",\"人民公园正门\"]"
+      模板中的每个变量都必须赋值，且取值不能为空
+      查看更多模板和变量规范:产品介绍>模板和变量规范
      */
     //String templateParas = "[\"369751\"]"; //模板变量，此处以单变量验证码短信为例，请客户自行生成6位验证码，并定义为字符串类型，以杜绝首位0丢失的问题（例如：002569变成了2569）。
 
@@ -106,11 +103,7 @@ public class HuaweiSmsSender {
     String temp = "";
 
     for (String s : map.keySet()) {
-      try {
-        temp = URLEncoder.encode(map.get(s), "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
+      temp = URLEncoder.encode(map.get(s), StandardCharsets.UTF_8);
       sb.append(s).append("=").append(temp).append("&");
     }
 
@@ -122,7 +115,7 @@ public class HuaweiSmsSender {
    */
   static String buildWsseHeader(String appKey, String appSecret) {
     if (null == appKey || null == appSecret || appKey.isEmpty() || appSecret.isEmpty()) {
-      log.error("buildWsseHeader(): appKey or appSecret is null.");
+      System.out.println("buildWsseHeader(): appKey or appSecret is null.");
       return null;
     }
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -138,7 +131,7 @@ public class HuaweiSmsSender {
       md.update((nonce + time + appSecret).getBytes());
       passwordDigest = md.digest();
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      System.out.println("buildWsseHeader(): NoSuchAlgorithmException" + e.getMessage());
     }
 
     //如果JDK版本是1.8,请加载原生Base64类,并使用如下代码
@@ -190,7 +183,7 @@ public class HuaweiSmsSender {
       throw new IllegalArgumentException("Wsse header is null.");
     }
 
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
 
     HostnameVerifier hv = new HostnameVerifier() {
       @Override
@@ -216,7 +209,7 @@ public class HuaweiSmsSender {
       connection.setRequestProperty("X-WSSE", wsseHeader);
 
       connection.connect();
-      
+
       // Use try-with-resources for proper resource management
       try (OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream())) {
         out.write(body); //发送请求Body参数
@@ -225,14 +218,15 @@ public class HuaweiSmsSender {
 
       int status = connection.getResponseCode();
       InputStream is = (200 == status) ? connection.getInputStream() : connection.getErrorStream();
-      
-      try (BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+
+      try (BufferedReader in = new BufferedReader(
+          new InputStreamReader(is, StandardCharsets.UTF_8))) {
         String line;
         while ((line = in.readLine()) != null) {
           result.append(line);
         }
       }
-      
+
       return result.toString();
     } finally {
       if (connection != null) {

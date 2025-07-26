@@ -4,7 +4,6 @@ import cloud.xcan.angus.api.commonlink.email.EmailType;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.enums.ProcessStatus;
 import cloud.xcan.angus.remote.PageQuery;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

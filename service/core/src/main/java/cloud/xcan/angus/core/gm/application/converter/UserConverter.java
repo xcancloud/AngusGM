@@ -20,7 +20,6 @@ import cloud.xcan.angus.api.commonlink.UCConstant;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
-import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
@@ -28,16 +27,16 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.enums.PasswordEncoderType;
 import cloud.xcan.angus.api.enums.PasswordStrength;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.gm.domain.user.directory.UserDirectory;
 import cloud.xcan.angus.core.gm.domain.user.directory.model.DirectoryUserSchema;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import javax.naming.NamingException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

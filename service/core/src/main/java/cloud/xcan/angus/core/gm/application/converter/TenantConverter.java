@@ -4,9 +4,9 @@ import static cloud.xcan.angus.core.gm.application.query.tenant.impl.TenantQuery
 
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.enums.TenantRealNameStatus;
-import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.TenantStatus;
+import cloud.xcan.angus.api.enums.TenantType;
 
 public class TenantConverter {
 

@@ -4,7 +4,6 @@ import cloud.xcan.angus.api.commonlink.policy.PolicyGrantScope;
 import cloud.xcan.angus.api.commonlink.policy.PolicyGrantStage;
 import cloud.xcan.angus.api.commonlink.policy.PolicyType;
 import cloud.xcan.angus.remote.PageQuery;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

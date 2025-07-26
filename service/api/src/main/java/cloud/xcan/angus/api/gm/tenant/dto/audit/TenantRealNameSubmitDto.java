@@ -1,10 +1,10 @@
 package cloud.xcan.angus.api.gm.tenant.dto.audit;
 
-import cloud.xcan.angus.api.enums.TenantType;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.EnterpriseLegalPersonCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.GovernmentCert;
 import cloud.xcan.angus.api.commonlink.tenant.cert.PersonalCert;
+import cloud.xcan.angus.api.enums.TenantType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;

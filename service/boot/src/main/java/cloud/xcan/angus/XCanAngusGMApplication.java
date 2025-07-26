@@ -1,8 +1,9 @@
 package cloud.xcan.angus;
 
-import cloud.xcan.angus.core.gm.application.cmd.message.impl.MessageCenterOnlineCmdImpl;
+import static cloud.xcan.angus.core.gm.infra.message.MessageWebSocketConfig.messageCenterShutdownHook;
+import static org.springframework.boot.SpringApplication.run;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -23,19 +24,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class XCanAngusGMApplication {
 
   public static void main(String[] args) {
-    ConfigurableApplicationContext cac = SpringApplication.run(XCanAngusGMApplication.class, args);
+    ConfigurableApplicationContext context = run(XCanAngusGMApplication.class, args);
 
-    Thread shutdownThread = new Thread(() -> {
-      try {
-        MessageCenterOnlineCmdImpl onlineCmd = cac.getBean(MessageCenterOnlineCmdImpl.class);
-        onlineCmd.shutdown();
-        log.info("Shutdown hook: update current online user to offline");
-      } catch (Exception e) {
-        log.error("Error during shutdown hook execution", e);
-      }
-    }, "AngusGM-Shutdown-Hook");
-    
-    Runtime.getRuntime().addShutdownHook(shutdownThread);
+    messageCenterShutdownHook(context);
   }
 
 }

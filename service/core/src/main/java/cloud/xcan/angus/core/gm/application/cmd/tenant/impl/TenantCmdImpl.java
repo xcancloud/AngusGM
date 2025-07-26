@@ -19,9 +19,9 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
-import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
+import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.core.biz.Biz;

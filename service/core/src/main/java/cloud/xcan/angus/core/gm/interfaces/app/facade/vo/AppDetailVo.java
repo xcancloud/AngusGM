@@ -3,8 +3,8 @@ package cloud.xcan.angus.core.gm.interfaces.app.facade.vo;
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.api.enums.AppType;
-import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.api.enums.EditionType;
+import cloud.xcan.angus.api.enums.OpenStage;
 import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiInfoVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagVo;
 import cloud.xcan.angus.remote.NameJoinField;

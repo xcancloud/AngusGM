@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Biz
 public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
@@ -221,13 +221,13 @@ public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
     if (value == null) {
       return BigDecimal.ZERO;
     }
-    
+
     try {
       String strValue = value.toString().trim();
       if (strValue.isEmpty()) {
         return BigDecimal.ZERO;
       }
-      
+
       if (strValue.contains(".")) {
         return BigDecimal.valueOf(Double.parseDouble(strValue))
             .setScale(2, RoundingMode.HALF_UP);
