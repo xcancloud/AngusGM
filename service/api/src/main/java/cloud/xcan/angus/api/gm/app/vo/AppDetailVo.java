@@ -67,6 +67,4 @@ public class AppDetailVo {
 
   private List<AppTagVo> tags;
 
-  private List<AuthAppFuncTreeVo> appFuncs;
-
 }

@@ -84,10 +84,14 @@ public class UserCurrentFacadeImpl implements UserCurrentFacade {
   @Override
   public UserCurrentDetailVo currentDetail(InfoScope infoScope, String appCode,
       EditionType editionType, Principal principal) {
-    boolean detailScope = nullSafe(infoScope, InfoScope.BASIC).equals(InfoScope.DETAIL);
-    UserCurrentDetailVo vo = toDetailVo(userCurrentQuery.currentDetail(detailScope));
+    UserCurrentDetailVo vo = toDetailVo(userCurrentQuery.currentDetail(true));
+
+    Preference preference = settingUserCmd.findAndInit(getUserId()).getPreference();
+    vo.setPreference(toPreferenceTo(preference));
+
     vo.setPrincipal(principal);
 
+    boolean detailScope = nullSafe(infoScope, InfoScope.BASIC).equals(InfoScope.DETAIL);
     if (detailScope) {
       assembleUserDetail(vo, appCode, editionType);
     }
@@ -135,17 +139,15 @@ public class UserCurrentFacadeImpl implements UserCurrentFacade {
 
     long currentUserId = getUserId();
 
-    Preference preferenceData = settingUserCmd.findAndInit(currentUserId).getPreference();
-    vo.setPreference(toPreferenceTo(preferenceData));
-
     TenantDetailVo tenantDetail = tenantFacade.detail(getTenantId());
     vo.setTenant(tenantDetail);
 
     AppDetailVo accessApp = appFacade.detail(appCode, editionType);
+    vo.setAccessApp(accessApp);
+
     AuthAppTreeVo appTreeVo = authUserFacade.appFuncTree(currentUserId, accessApp.getCode(),
         false, true);
-    accessApp.setAppFuncs(appTreeVo.getAppFuncs());
-    vo.setAccessApp(accessApp);
+    vo.setAccessAppFuncTree(appTreeVo.getAppFuncs());
 
     List<OrgAppAuthVo> authApps = appOrgAuthFacade.orgAuthApp(USER, currentUserId, false);
     vo.setAuthApps(authApps);

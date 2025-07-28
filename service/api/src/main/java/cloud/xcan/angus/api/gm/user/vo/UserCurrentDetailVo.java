@@ -5,6 +5,7 @@ import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
+import cloud.xcan.angus.api.gm.app.vo.AuthAppFuncTreeVo;
 import cloud.xcan.angus.api.gm.app.vo.OrgAppAuthVo;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
@@ -95,8 +96,6 @@ public class UserCurrentDetailVo implements Serializable {
 
   private LocalDateTime offlineDate;
 
-  private Principal principal;
-
   private List<IdAndName> tags;
 
   private List<UserDeptTo> depts;
@@ -105,9 +104,13 @@ public class UserCurrentDetailVo implements Serializable {
 
   private UserPreferenceVo preference;
 
+  private Principal principal;
+
   private TenantDetailVo tenant;
 
   private AppDetailVo accessApp;
+
+  private List<AuthAppFuncTreeVo> accessAppFuncTree;
 
   private List<OrgAppAuthVo> authApps;
 
