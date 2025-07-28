@@ -3,8 +3,8 @@ package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func;
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFuncType;
-import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiInfoVo;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagInfoVo;
+import cloud.xcan.angus.api.gm.app.vo.ApiInfoVo;
+import cloud.xcan.angus.api.gm.app.vo.AppTagInfoVo;
 import cloud.xcan.angus.remote.NameJoinField;
 import java.time.LocalDateTime;
 import java.util.List;

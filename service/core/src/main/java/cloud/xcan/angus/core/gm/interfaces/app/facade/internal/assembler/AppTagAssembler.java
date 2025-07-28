@@ -5,7 +5,7 @@ import static cloud.xcan.angus.core.utils.BeanFieldUtils.getNullPropertyNames;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.tag.AppTagFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.tag.AppTagUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagVo;
+import cloud.xcan.angus.api.gm.app.vo.AppTagVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;

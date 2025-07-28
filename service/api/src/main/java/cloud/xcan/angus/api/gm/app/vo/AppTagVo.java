@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag;
+package cloud.xcan.angus.api.gm.app.vo;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 

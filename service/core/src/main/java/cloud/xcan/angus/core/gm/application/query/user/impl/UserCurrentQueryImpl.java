@@ -54,12 +54,12 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
   private RedisService<String> stringRedisService;
 
   @Override
-  public User currentDetail() {
+  public User currentDetail(boolean joinAssoc) {
     return new BizTemplate<User>() {
 
       @Override
       protected User process() {
-        return userQuery.detail(getUserId(), true);
+        return userQuery.detail(getUserId(), joinAssoc);
       }
     }.execute();
   }

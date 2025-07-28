@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFuncType;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagInfoVo;
+import cloud.xcan.angus.api.gm.app.vo.AppTagInfoVo;
 import cloud.xcan.angus.remote.NameJoinField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

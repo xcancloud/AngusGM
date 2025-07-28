@@ -1,7 +1,6 @@
-package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func;
+package cloud.xcan.angus.api.gm.app.vo;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFuncType;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagInfoVo;
 import cloud.xcan.angus.spec.utils.TreeUtils.TreeNode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;

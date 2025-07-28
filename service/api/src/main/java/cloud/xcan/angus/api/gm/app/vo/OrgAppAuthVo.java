@@ -1,10 +1,9 @@
-package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org;
+package cloud.xcan.angus.api.gm.app.vo;
 
 import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.OpenStage;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagInfoVo;
-import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyOrgVo;
+import cloud.xcan.angus.api.gm.policy.vo.AuthPolicyOrgVo;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

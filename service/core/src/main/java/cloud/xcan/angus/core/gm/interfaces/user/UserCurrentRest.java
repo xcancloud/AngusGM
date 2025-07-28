@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.user;
 
+import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.user.dto.UserCurrentUpdateDto;
 import cloud.xcan.angus.api.gm.user.vo.UserCurrentDetailVo;
@@ -12,8 +13,10 @@ import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentMobile
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentSmsSendDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.current.CheckSecretVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
+import cloud.xcan.angus.remote.InfoScope;
 import cloud.xcan.angus.spec.annotations.TenantClient;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,9 +27,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,8 +69,11 @@ public class UserCurrentRest {
       @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Resource not found")})
   @GetMapping
-  public ApiLocaleResult<UserCurrentDetailVo> currentDetail() {
-    return ApiLocaleResult.success(userCurrentFacade.currentDetail());
+  public ApiLocaleResult<UserCurrentDetailVo> currentDetail(
+      @Parameter(name = "infoScope", description = "Query information scope, default `BASIC`", required = false) @RequestParam(value = "infoScope", required = false) InfoScope infoScope,
+      @Parameter(name = "appCode", description = "Application code", required = true) @RequestParam(value = "appCode", required = false) String appCode,
+      @Parameter(name = "editionType", description = "Application edition type", required = true) @RequestParam(value = "editionType", required = false) EditionType editionType) {
+    return ApiLocaleResult.success(userCurrentFacade.currentDetail(infoScope, appCode, editionType));
   }
 
   @Operation(summary = "Send sms verification code to current user", operationId = "user:current:sms:send")
@@ -83,7 +91,8 @@ public class UserCurrentRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping(value = "/sms/check")
-  public ApiLocaleResult<CheckSecretVo> checkSms(@Valid @ParameterObject CurrentMobileCheckDto dto) {
+  public ApiLocaleResult<CheckSecretVo> checkSms(
+      @Valid @ParameterObject CurrentMobileCheckDto dto) {
     return ApiLocaleResult.success(userCurrentFacade.checkSms(dto));
   }
 
@@ -112,7 +121,8 @@ public class UserCurrentRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully check")})
   @GetMapping(value = "/email/check")
-  public ApiLocaleResult<CheckSecretVo> checkEmail(@Valid @ParameterObject CurrentEmailCheckDto dto) {
+  public ApiLocaleResult<CheckSecretVo> checkEmail(
+      @Valid @ParameterObject CurrentEmailCheckDto dto) {
     return ApiLocaleResult.success(userCurrentFacade.checkEmail(dto));
   }
 

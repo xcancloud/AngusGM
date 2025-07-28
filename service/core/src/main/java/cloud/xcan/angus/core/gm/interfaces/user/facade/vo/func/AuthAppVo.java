@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func;
 
 import cloud.xcan.angus.api.enums.AppType;
-import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiInfoVo;
+import cloud.xcan.angus.api.gm.app.vo.ApiInfoVo;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

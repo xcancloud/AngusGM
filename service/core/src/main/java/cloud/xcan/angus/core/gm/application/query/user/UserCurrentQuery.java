@@ -8,7 +8,7 @@ import cloud.xcan.angus.core.gm.domain.sms.Sms;
 
 public interface UserCurrentQuery {
 
-  User currentDetail();
+  User currentDetail(boolean joinAssoc);
 
   void sendSms(Sms sms, String country);
 

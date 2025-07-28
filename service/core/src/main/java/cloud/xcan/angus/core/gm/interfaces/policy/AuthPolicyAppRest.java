@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.policy;
 
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppDetailVo;
+import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.AuthPolicyAppFacade;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.app.AppPolicyFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.app.AppPolicyVo;

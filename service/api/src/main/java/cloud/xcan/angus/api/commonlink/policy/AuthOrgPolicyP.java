@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.domain.policy.org;
+package cloud.xcan.angus.api.commonlink.policy;
 
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import jakarta.persistence.EnumType;

@@ -1,6 +1,6 @@
-package cloud.xcan.angus.core.gm.interfaces.policy.facade.vo;
+package cloud.xcan.angus.api.gm.policy.vo;
 
-import cloud.xcan.angus.core.gm.domain.policy.org.AuthOrgPolicyP;
+import cloud.xcan.angus.api.commonlink.policy.AuthOrgPolicyP;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Getter;

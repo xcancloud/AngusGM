@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.domain.policy.org;
 
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
+import cloud.xcan.angus.api.commonlink.policy.AuthOrgPolicyP;
 import cloud.xcan.angus.api.commonlink.policy.PolicyGrantScope;
 import cloud.xcan.angus.core.jpa.entity.projection.IdAndCode;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;

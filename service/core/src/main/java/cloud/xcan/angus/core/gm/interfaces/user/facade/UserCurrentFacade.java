@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.user.facade;
 
+import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.user.dto.UserCurrentUpdateDto;
 import cloud.xcan.angus.api.gm.user.vo.UserCurrentDetailVo;
@@ -10,6 +11,7 @@ import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentMobile
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentMobileUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentSmsSendDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.current.CheckSecretVo;
+import cloud.xcan.angus.remote.InfoScope;
 
 
 public interface UserCurrentFacade {
@@ -18,7 +20,7 @@ public interface UserCurrentFacade {
 
   void currentUpdate(UserCurrentUpdateDto dto);
 
-  UserCurrentDetailVo currentDetail();
+  UserCurrentDetailVo currentDetail(InfoScope infoScope, String appCode, EditionType editionType);
 
   void sendSms(CurrentSmsSendDto dto);
 

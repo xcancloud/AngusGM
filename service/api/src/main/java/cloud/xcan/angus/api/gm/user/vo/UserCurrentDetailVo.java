@@ -4,12 +4,16 @@ import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.UserSource;
+import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
+import cloud.xcan.angus.api.gm.app.vo.OrgAppAuthVo;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
+import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
 import cloud.xcan.angus.api.gm.user.to.UserGroupTo;
 import cloud.xcan.angus.remote.NameJoinField;
 import cloud.xcan.angus.remote.info.IdAndName;
 import java.io.Serializable;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
@@ -91,13 +95,22 @@ public class UserCurrentDetailVo implements Serializable {
 
   private LocalDateTime offlineDate;
 
-  private UserPreferenceVo preference;
-
   private List<IdAndName> tags;
 
   private List<UserDeptTo> depts;
 
   private List<UserGroupTo> groups;
+
+  private UserPreferenceVo preference;
+
+  private TenantDetailVo tenant;
+
+  private Principal principal;
+
+  private AppDetailVo accessApp;
+
+  private List<OrgAppAuthVo> authApps;
+
 }
 
 

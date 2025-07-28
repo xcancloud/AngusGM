@@ -104,8 +104,8 @@ public class UserQueryImpl implements UserQuery {
         AuthUser authUser = commonAuthUserRepo.findById(id)
             .orElseThrow(() -> ResourceNotFound.of(id, "OUser"));
         UserConverter.assembleOauthUserInfo(userDb, authUser);
-        userDb.setTags(orgTagTargetQuery.findAllByTarget(OrgTargetType.USER, id));
         if (joinAssoc) {
+          userDb.setTags(orgTagTargetQuery.findAllByTarget(OrgTargetType.USER, id));
           userDb.setDepts(userDeptQuery.findAllByUserId(id));
           userDb.setGroups(userGroupQuery.findAllByUserId(id));
         }

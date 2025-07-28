@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org;
 
 import cloud.xcan.angus.api.commonlink.group.GroupSource;
-import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AuthPolicyOrgVo;
+import cloud.xcan.angus.api.gm.policy.vo.AuthPolicyOrgVo;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

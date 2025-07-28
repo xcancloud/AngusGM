@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.api.facade.vo;
+package cloud.xcan.angus.api.gm.app.vo;
 
 import lombok.Getter;
 import lombok.Setter;

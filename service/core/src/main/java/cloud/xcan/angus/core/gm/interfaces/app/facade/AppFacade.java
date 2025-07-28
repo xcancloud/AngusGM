@@ -8,7 +8,7 @@ import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSiteInfoUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppDetailVo;
+import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppVo;
 import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;

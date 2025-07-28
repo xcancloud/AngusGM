@@ -1,12 +1,10 @@
-package cloud.xcan.angus.core.gm.interfaces.app.facade.vo;
+package cloud.xcan.angus.api.gm.app.vo;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.OpenStage;
-import cloud.xcan.angus.core.gm.interfaces.api.facade.vo.ApiInfoVo;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.tag.AppTagVo;
 import cloud.xcan.angus.remote.NameJoinField;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,10 +42,6 @@ public class AppDetailVo {
 
   private Integer sequence;
 
-  private List<ApiInfoVo> apis;
-
-  private List<AppTagVo> tags;
-
   private String version;
 
   private OpenStage openStage;
@@ -68,5 +62,11 @@ public class AppDetailVo {
 
   @DateTimeFormat(pattern = DATE_FMT)
   private LocalDateTime createdDate;
+
+  private List<ApiInfoVo> apis;
+
+  private List<AppTagVo> tags;
+
+  private List<AuthAppFuncTreeVo> appFuncs;
 
 }

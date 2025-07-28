@@ -15,7 +15,7 @@ import cloud.xcan.angus.api.commonlink.policy.PolicyGrantStage;
 import cloud.xcan.angus.api.commonlink.policy.PolicyType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.core.gm.domain.policy.func.AuthPolicyFunc;
-import cloud.xcan.angus.core.gm.domain.policy.org.AuthOrgPolicyP;
+import cloud.xcan.angus.api.commonlink.policy.AuthOrgPolicyP;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import cloud.xcan.angus.spec.experimental.Resources;
 import jakarta.persistence.Column;

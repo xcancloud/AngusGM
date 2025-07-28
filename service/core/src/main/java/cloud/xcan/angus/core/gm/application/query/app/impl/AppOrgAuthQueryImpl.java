@@ -31,7 +31,7 @@ import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.domain.app.AppRepo;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicyRepo;
-import cloud.xcan.angus.core.gm.domain.policy.org.AuthOrgPolicyP;
+import cloud.xcan.angus.api.commonlink.policy.AuthOrgPolicyP;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyIdP;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrg;
 import cloud.xcan.angus.core.gm.domain.policy.org.AuthPolicyOrgP;

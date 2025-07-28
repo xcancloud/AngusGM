@@ -20,7 +20,7 @@ import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org.AppUnauthDeptVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org.AppUnauthGroupVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org.AppUnauthTenantVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org.AppUnauthUserVo;
-import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.org.OrgAppAuthVo;
+import cloud.xcan.angus.api.gm.app.vo.OrgAppAuthVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.spec.annotations.OperationClient;
