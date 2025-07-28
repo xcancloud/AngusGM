@@ -41,3 +41,4 @@ build/
 nbbuild/
 nbdist/
 .nb-gradle/
+.vscode/settings.json
