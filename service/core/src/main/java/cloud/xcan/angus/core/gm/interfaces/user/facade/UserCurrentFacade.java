@@ -12,6 +12,7 @@ import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentMobile
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.current.CurrentSmsSendDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.current.CheckSecretVo;
 import cloud.xcan.angus.remote.InfoScope;
+import java.security.Principal;
 
 
 public interface UserCurrentFacade {
@@ -20,7 +21,8 @@ public interface UserCurrentFacade {
 
   void currentUpdate(UserCurrentUpdateDto dto);
 
-  UserCurrentDetailVo currentDetail(InfoScope infoScope, String appCode, EditionType editionType);
+  UserCurrentDetailVo currentDetail(InfoScope infoScope, String appCode,
+      EditionType editionType, Principal principal);
 
   void sendSms(CurrentSmsSendDto dto);
 

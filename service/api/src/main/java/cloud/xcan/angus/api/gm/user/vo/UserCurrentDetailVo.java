@@ -95,6 +95,8 @@ public class UserCurrentDetailVo implements Serializable {
 
   private LocalDateTime offlineDate;
 
+  private Principal principal;
+
   private List<IdAndName> tags;
 
   private List<UserDeptTo> depts;
@@ -104,8 +106,6 @@ public class UserCurrentDetailVo implements Serializable {
   private UserPreferenceVo preference;
 
   private TenantDetailVo tenant;
-
-  private Principal principal;
 
   private AppDetailVo accessApp;
 

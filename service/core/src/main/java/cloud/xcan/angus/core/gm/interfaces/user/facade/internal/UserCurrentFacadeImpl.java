@@ -83,12 +83,13 @@ public class UserCurrentFacadeImpl implements UserCurrentFacade {
 
   @Override
   public UserCurrentDetailVo currentDetail(InfoScope infoScope, String appCode,
-      EditionType editionType) {
+      EditionType editionType, Principal principal) {
     boolean detailScope = nullSafe(infoScope, InfoScope.BASIC).equals(InfoScope.DETAIL);
     UserCurrentDetailVo vo = toDetailVo(userCurrentQuery.currentDetail(detailScope));
+    vo.setPrincipal(principal);
 
     if (detailScope) {
-      assembleUserDetail(appCode, editionType, vo);
+      assembleUserDetail(vo, appCode, editionType);
     }
     return vo;
   }
@@ -128,7 +129,7 @@ public class UserCurrentFacadeImpl implements UserCurrentFacade {
         dto.getLinkSecret(), dto.getBizKey());
   }
 
-  private void assembleUserDetail(String appCode, EditionType editionType, UserCurrentDetailVo vo) {
+  private void assembleUserDetail(UserCurrentDetailVo vo, String appCode, EditionType editionType) {
     assertNotNull(appCode, "appCode is required");
     assertNotNull(editionType, "editionType is required");
 
@@ -139,10 +140,6 @@ public class UserCurrentFacadeImpl implements UserCurrentFacade {
 
     TenantDetailVo tenantDetail = tenantFacade.detail(getTenantId());
     vo.setTenant(tenantDetail);
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    Principal principal = (Principal) authentication.getPrincipal();
-    vo.setPrincipal(principal);
 
     AppDetailVo accessApp = appFacade.detail(appCode, editionType);
     AuthAppTreeVo appTreeVo = authUserFacade.appFuncTree(currentUserId, accessApp.getCode(),

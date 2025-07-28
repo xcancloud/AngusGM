@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -72,8 +73,9 @@ public class UserCurrentRest {
   public ApiLocaleResult<UserCurrentDetailVo> currentDetail(
       @Parameter(name = "infoScope", description = "Query information scope, default `BASIC`", required = false) @RequestParam(value = "infoScope", required = false) InfoScope infoScope,
       @Parameter(name = "appCode", description = "Application code", required = true) @RequestParam(value = "appCode", required = false) String appCode,
-      @Parameter(name = "editionType", description = "Application edition type", required = true) @RequestParam(value = "editionType", required = false) EditionType editionType) {
-    return ApiLocaleResult.success(userCurrentFacade.currentDetail(infoScope, appCode, editionType));
+      @Parameter(name = "editionType", description = "Application edition type", required = true) @RequestParam(value = "editionType", required = false) EditionType editionType,
+      Principal principal) {
+    return ApiLocaleResult.success(userCurrentFacade.currentDetail(infoScope, appCode, editionType, principal));
   }
 
   @Operation(summary = "Send sms verification code to current user", operationId = "user:current:sms:send")
