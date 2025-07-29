@@ -24,10 +24,10 @@ import org.hibernate.validator.constraints.Length;
 public class ApiUpdateDto {
 
   @NotNull
-  @Schema(description = "Api id", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Api id", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
-  //@Schema(description = "Api service id. Note: Modification is not allowed", example = "1")
+  //@Schema(description = "Api service id. Note: Modification is not allowed")
   //private Long serviceId;
 
   @Length(max = MAX_OPENAPI_SUMMARY_LENGTH)

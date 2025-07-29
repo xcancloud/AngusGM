@@ -26,10 +26,10 @@ import org.hibernate.validator.constraints.Length;
 public class ApiReplaceDto {
 
   @Id
-  @Schema(description = "Api id. The ID is required when modifying an existing API, create a new API when the value is empty", example = "1")
+  @Schema(description = "Api id. The ID is required when modifying an existing API, create a new API when the value is empty")
   private Long id;
 
-  @Schema(description = "Api service id. Note: Modification is not allowed", example = "1")
+  @Schema(description = "Api service id. Note: Modification is not allowed")
   private Long serviceId;
 
   @NotEmpty

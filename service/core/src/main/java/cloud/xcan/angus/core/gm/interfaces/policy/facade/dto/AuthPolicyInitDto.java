@@ -12,7 +12,7 @@ import lombok.Setter;
 public class AuthPolicyInitDto {
 
   @NotNull
-  @Schema(description = "Authorization policy identifier to initialize", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorization policy identifier to initialize", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
 }

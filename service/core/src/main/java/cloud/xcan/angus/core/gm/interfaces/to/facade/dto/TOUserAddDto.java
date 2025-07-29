@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 public class TOUserAddDto {
 
   @NotNull
-  @Schema(description = "Operational user account identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Operational user account identifier", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
 }

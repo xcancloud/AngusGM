@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.Length;
 public class ServiceUpdateDto {
 
   @NotNull
-  @Schema(description = "Unique identifier of the service to update", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique identifier of the service to update", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)

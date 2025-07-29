@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class TORoleReplaceDto {
 
-  @Schema(description = "Operational role identifier (required for updates, empty for new role creation)", example = "1")
+  @Schema(description = "Operational role identifier (required for updates, empty for new role creation)")
   private Long id;
 
   @NotBlank
@@ -39,7 +39,7 @@ public class TORoleReplaceDto {
   private String description;
 
   @NotNull
-  @Schema(description = "Associated application identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Associated application identifier", requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 
 }

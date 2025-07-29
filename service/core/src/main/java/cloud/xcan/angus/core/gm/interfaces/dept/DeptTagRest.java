@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "DepartmentTag", description = "Assigns tags to department for resource categorization, or query access control grouping")
+@Tag(name = "Department Tag", description = "REST API endpoints for assigning tags to departments for resource categorization and access control grouping")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")
@@ -44,49 +44,51 @@ public class DeptTagRest {
   @Resource
   private DeptTagFacade deptTagFacade;
 
-  @Operation(summary = "Add the tags of department", operationId = "dept:tag:add")
+  @Operation(summary = "Assign tags to department", operationId = "dept:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "201", description = "Tags assigned to department successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/tag")
   public ApiLocaleResult<List<IdKey<Long, Object>>> tagAdd(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody LinkedHashSet<Long> tagIds) {
     return ApiLocaleResult.success(deptTagFacade.tagAdd(deptId, tagIds));
   }
 
-  @Operation(summary = "Replace the tags of department", operationId = "department:tag:replace")
+  @Operation(summary = "Replace department tags", operationId = "department:tag:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Department tags replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
+  @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{id}/tag")
   public ApiLocaleResult<?> tagReplace(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
       @Valid @Size(max = MAX_RELATION_QUOTA) @RequestBody LinkedHashSet<Long> tagIds) {
     deptTagFacade.tagReplace(deptId, tagIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the tags of department", operationId = "dept:tag:delete")
+  @Operation(summary = "Remove tags from department", operationId = "dept:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Tags removed from department successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/tag")
   public void tagDelete(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("tagIds") HashSet<Long> tagIds) {
     deptTagFacade.tagDelete(deptId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of department", operationId = "dept:tag:list")
+  @Operation(summary = "Retrieve department tag list with filtering and pagination", operationId = "dept:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Department tag list retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<OrgTagTargetVo>> tagList(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
       @Valid @ParameterObject OrgTargetTagFindDto dto) {
     return ApiLocaleResult.success(deptTagFacade.tagList(deptId, dto));
   }

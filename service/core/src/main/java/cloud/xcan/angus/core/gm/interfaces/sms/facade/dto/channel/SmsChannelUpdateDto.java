@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 public class SmsChannelUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "SMS channel unique identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "SMS channel unique identifier", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_CODE_LENGTH_X2)

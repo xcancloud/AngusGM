@@ -54,7 +54,7 @@ public class AuthPolicyAddDto {
   private String description;
 
   @NotNull
-  @Schema(description = "Application identifier that this authorization policy belongs to", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application identifier that this authorization policy belongs to", requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 
   @Size(max = MAX_POLICY_FUNC_NUM)

@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.Length;
 public class GroupUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Group identifier to update", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Group identifier to update", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)

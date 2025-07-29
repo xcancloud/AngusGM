@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class AuthPolicyReplaceDto {
 
-  @Schema(description = "Authorization policy identifier for updating existing policy. Leave empty to create new policy", example = "1")
+  @Schema(description = "Authorization policy identifier for updating existing policy. Leave empty to create new policy")
   private Long id;
 
   @NotBlank
@@ -54,7 +54,7 @@ public class AuthPolicyReplaceDto {
   @Schema(description = "Detailed description of the authorization policy functionality", example = "Comprehensive system administration policy with full access privileges")
   private String description;
 
-  @Schema(description = "Application identifier that this authorization policy belongs to. Cannot be modified after creation", example = "1")
+  @Schema(description = "Application identifier that this authorization policy belongs to. Cannot be modified after creation")
   private Long appId;
 
   @Size(max = MAX_POLICY_FUNC_NUM)

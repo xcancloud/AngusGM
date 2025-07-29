@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.Length;
 public class TORoleUpdateDto {
 
   @NotNull
-  @Schema(description = "Operational role unique identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Operational role unique identifier", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)

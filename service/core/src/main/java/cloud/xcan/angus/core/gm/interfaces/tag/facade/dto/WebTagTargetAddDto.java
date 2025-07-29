@@ -19,7 +19,7 @@ public class WebTagTargetAddDto {
   private WebTagTargetType targetType;
 
   @NotNull
-  @Schema(description = "Web application resource identifier for tag assignment", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application resource identifier for tag assignment", requiredMode = RequiredMode.REQUIRED)
   private Long targetId;
 
   @Override

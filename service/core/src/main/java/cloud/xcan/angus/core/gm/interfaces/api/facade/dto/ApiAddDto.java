@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.Length;
 public class ApiAddDto {
 
   @NotNull
-  @Schema(description = "Api service id. Note: Modification is not allowed", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Api service id. Note: Modification is not allowed", requiredMode = RequiredMode.REQUIRED)
   private Long serviceId;
 
   @NotEmpty

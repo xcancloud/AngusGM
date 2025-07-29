@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.Length;
 public class ServiceApiAddDto {
 
   @NotNull
-  @Schema(description = "ID of the service that this API belongs to", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "ID of the service that this API belongs to", requiredMode = RequiredMode.REQUIRED)
   private Long serviceId;
 
   @NotEmpty

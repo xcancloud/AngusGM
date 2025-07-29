@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.Length;
 public class WebTagUpdateDto {
 
   @NotNull
-  @Schema(description = "Web application tag unique identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application tag unique identifier", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotBlank

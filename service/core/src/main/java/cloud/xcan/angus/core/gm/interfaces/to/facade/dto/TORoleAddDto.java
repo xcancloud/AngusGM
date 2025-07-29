@@ -38,8 +38,7 @@ public class TORoleAddDto {
   private String description;
 
   @NotNull
-  @Schema(description = "Associated application identifier", example = "1",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Associated application identifier", requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 
 }

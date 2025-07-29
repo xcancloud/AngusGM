@@ -24,23 +24,23 @@ import org.hibernate.validator.constraints.Range;
 public class DeptUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Department identifier to update", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Department name", maxLength = MAX_NAME_LENGTH, example = "MarketingDepartment")
+  @Schema(description = "Display name for the department", example = "MarketingDepartment")
   private String name;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Department code", maxLength = MAX_CODE_LENGTH, example = "HR")
+  @Schema(description = "Unique code for the department",  example = "HR")
   private String code;
 
   @Range(min = DEFAULT_ROOT_PID)
-  @Schema(description = "Parent department id", example = "DEFAULT_ROOT_PID")
+  @Schema(description = "Parent department identifier", example = "DEFAULT_ROOT_PID")
   private Long pid;
 
   @Size(max = MAX_RELATION_QUOTA)
-  @Schema(description = "Department association tag ids, the maximum support is `2000`")
+  @Schema(description = "Department association tag identifiers. Maximum 2000 tags supported")
   private List<Long> tagIds;
 
 }

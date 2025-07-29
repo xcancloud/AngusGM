@@ -34,7 +34,7 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class UserReplaceDto implements Serializable {
 
-  @Schema(description = "User identifier (required for updates, empty for new user creation)", example = "1")
+  @Schema(description = "User identifier (required for updates, empty for new user creation)")
   private Long id;
 
   /**

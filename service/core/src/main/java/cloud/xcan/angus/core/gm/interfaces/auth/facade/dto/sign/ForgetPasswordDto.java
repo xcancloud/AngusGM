@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.Length;
 public class ForgetPasswordDto {
 
   @NotNull
-  @Schema(description = "Forget password user id", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Forget password user id", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotEmpty

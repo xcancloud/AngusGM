@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class ServiceReplaceDto {
 
-  @Schema(description = "Service ID for updating existing service. Leave empty to create new service", example = "1")
+  @Schema(description = "Service ID for updating existing service. Leave empty to create new service")
   private Long id;
 
   @NotEmpty

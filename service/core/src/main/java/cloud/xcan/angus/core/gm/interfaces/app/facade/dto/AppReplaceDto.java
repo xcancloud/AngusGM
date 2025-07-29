@@ -33,7 +33,7 @@ public class AppReplaceDto {
 
   @Schema(description =
       "Application id. The ID is required when modifying an existing application, "
-          + "create a new application when the value is empty", example = "1")
+          + "create a new application when the value is empty")
   private Long id;
 
   @NotEmpty

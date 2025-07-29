@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.Length;
 public class AuthPolicyUpdateDto {
 
   @NotNull
-  @Schema(description = "Authorization policy identifier to update", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorization policy identifier to update", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)

@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 public class EventChannelReplaceDto implements Serializable {
 
-  @Schema(description = "Event channel identifier for updating existing channel. Leave empty to create new channel", example = "1")
+  @Schema(description = "Event channel identifier for updating existing channel. Leave empty to create new channel")
   private Long id;
 
   @NotNull

@@ -37,8 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "DepartmentUser", description = "Controls department-to-user membership mappings to regulate "
-    + "user visibility and access privileges based on organizational departments")
+@Tag(name = "Department User", description = "REST API endpoints for managing department-to-user membership mappings to regulate user visibility and access privileges based on organizational departments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/dept")
@@ -47,50 +46,52 @@ public class DeptUserRest {
   @Resource
   private DeptUserFacade deptUserFacade;
 
-  @Operation(summary = "Add users to department", operationId = "dept:user:add")
+  @Operation(summary = "Assign users to department", operationId = "dept:user:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "201", description = "Users assigned to department successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/user")
   public ApiLocaleResult<List<IdKey<Long, Object>>> userAdd(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
-      @Valid @NotEmpty @Size(max = MAX_RELATION_QUOTA) @Parameter(name = "ids", description = "User ids", required = true)
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
+      @Valid @NotEmpty @Size(max = MAX_RELATION_QUOTA) @Parameter(name = "ids", description = "User identifiers", required = true)
       @RequestBody LinkedHashSet<Long> userIds) {
     return ApiLocaleResult.success(deptUserFacade.userAdd(deptId, userIds));
   }
 
   @Operation(summary = "Remove users from department", operationId = "dept:user:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Users removed from department successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/user")
   public void delete(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "ids", description = "User ids", required = true)
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "ids", description = "User identifiers", required = true)
       @RequestParam("ids") HashSet<Long> userIds) {
     deptUserFacade.userDelete(deptId, userIds);
   }
 
   @Operation(summary = "Replace department head", description = "There can only be one department head", operationId = "dept:head:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Department head replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Department not found")})
+  @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{id}/user/head")
   public ApiLocaleResult<?> headReplace(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
       @Valid @RequestBody DeptHeadReplaceDto dto) {
     deptUserFacade.headReplace(deptId, dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the users list of department", operationId = "dept:user:list")
+  @Operation(summary = "Retrieve department user list with filtering and pagination", operationId = "dept:user:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Department user list retrieved successfully")})
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/{id}/user")
   public ApiLocaleResult<PageResult<UserDeptVo>> deptUserList(
-      @Parameter(name = "id", description = "Department id", required = true) @PathVariable("id") Long deptId,
+      @Parameter(name = "id", description = "Department identifier", required = true) @PathVariable("id") Long deptId,
       @Valid @ParameterObject DeptUserFindDto dto) {
     return ApiLocaleResult.success(deptUserFacade.deptUserList(deptId, dto));
   }

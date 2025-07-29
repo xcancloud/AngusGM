@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class UserLockedDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Unique identifier of the user account", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique identifier of the user account", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull

@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class GroupReplaceDto implements Serializable {
 
-  @Schema(description = "Group identifier for updating existing group. Leave empty to create new group", example = "1")
+  @Schema(description = "Group identifier for updating existing group. Leave empty to create new group")
   private Long id;
 
   @NotBlank

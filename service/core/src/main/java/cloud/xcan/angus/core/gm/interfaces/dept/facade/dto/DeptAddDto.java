@@ -24,22 +24,20 @@ public class DeptAddDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Department name", example = "MarketingDepartment",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the department", example = "MarketingDepartment", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Department code", example = "HR",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique code for the department", example = "HR", requiredMode = RequiredMode.REQUIRED)
   private String code;
 
   @Range(min = DEFAULT_ROOT_PID)
-  @Schema(description = "Parent department id", minimum = "-1")
+  @Schema(description = "Parent department identifier", minimum = "-1")
   private Long pid;
 
   @Size(max = MAX_RELATION_QUOTA)
-  @Schema(description = "Department association tag ids, the maximum support is `2000`")
+  @Schema(description = "Department association tag identifiers")
   private List<Long> tagIds;
 
 }

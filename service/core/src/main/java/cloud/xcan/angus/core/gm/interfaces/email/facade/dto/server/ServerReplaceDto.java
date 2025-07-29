@@ -27,7 +27,7 @@ import org.hibernate.validator.constraints.Length;
 public class ServerReplaceDto implements Serializable {
 
   @Schema(description = "Email server id. The ID is required when modifying an existing server, "
-      + "create a new server when the value is empty", example = "1")
+      + "create a new server when the value is empty")
   private Long id;
 
   @NotBlank

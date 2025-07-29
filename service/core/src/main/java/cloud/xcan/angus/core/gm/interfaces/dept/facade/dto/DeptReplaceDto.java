@@ -23,29 +23,26 @@ import org.hibernate.validator.constraints.Range;
 @Accessors(chain = true)
 public class DeptReplaceDto implements Serializable {
 
-  @Schema(description = "Department id. The ID is required when modifying an existing department, "
-      + "create a new department when the value is empty", example = "1")
+  @Schema(description = "Department identifier for updating existing department. Leave empty to create new department")
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Department name", example = "MarketingDepartment",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the department", example = "MarketingDepartment", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Department code", example = "HR", maxLength = MAX_CODE_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique code for the department", example = "HR", requiredMode = RequiredMode.REQUIRED)
   private String code;
 
   @NotNull
   @Range(min = DEFAULT_ROOT_PID)
-  @Schema(description = "Parent department id", example = "-1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Parent department identifier", example = "-1", requiredMode = RequiredMode.REQUIRED)
   private Long pid;
 
   @Size(max = MAX_RELATION_QUOTA)
-  @Schema(description = "Department association tag ids, the maximum support is `2000`")
+  @Schema(description = "Department association tag identifiers. Maximum 2000 tags supported")
   private List<Long> tagIds;
 
 }
