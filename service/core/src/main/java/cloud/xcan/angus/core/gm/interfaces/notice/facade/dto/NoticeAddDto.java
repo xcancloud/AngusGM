@@ -22,35 +22,34 @@ public class NoticeAddDto implements Serializable {
 
   @NotEmpty
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(description = "Notice content", maxLength = MAX_REMARK_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Notification content message", requiredMode = RequiredMode.REQUIRED)
   private String content;
 
   @NotNull
   @Schema(description = """
-      Notice scope, supported scope:
-      - ***GLOBAL***: Notify within all applications.
-      - ***APP***: Notify within the specified application""", requiredMode = RequiredMode.REQUIRED)
+      Notification scope for targeting recipients:
+      - ***GLOBAL***: Send to all applications and users
+      - ***APP***: Send only to specified application users""", requiredMode = RequiredMode.REQUIRED)
   private NoticeScope scope;
 
-  @Schema(description = "Notice application id, it is required when scope=APP")
+  @Schema(description = "Application identifier for APP scope notifications. Required when scope=APP")
   private Long appId;
 
   @NotNull
   @Schema(description = """
-      Send type, supported type:
-      - ***SEND_NOW***: Send the notification immediately after creation.
-      - ***TIMING_SEND***: Schedule the notification to be sent at a specified time""",
+      Notification delivery timing:
+      - ***SEND_NOW***: Deliver notification immediately after creation
+      - ***TIMING_SEND***: Schedule notification for delivery at specified time""",
       requiredMode = RequiredMode.REQUIRED)
   private SentType sendType;
 
   @Future
-  @Schema(description = "Schedule the notification to be sent at a specified time, it is required when sendType=TIMING_SEND")
+  @Schema(description = "Scheduled delivery timestamp. Required when sendType=TIMING_SEND")
   private LocalDateTime sendTimingDate;
 
   @Future
   @NotNull
-  @Schema(description = "The notification content displays the expiration time", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Notification expiration timestamp when content will no longer be displayed", requiredMode = RequiredMode.REQUIRED)
   private LocalDateTime expirationDate;
 
 }

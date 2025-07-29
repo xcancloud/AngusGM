@@ -34,9 +34,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Notice", description =
-    "Application (or system) notice management, used for delivers real-time push and updates across application "
-        + "to inform users of critical events, required actions, or information changes")
+@Tag(name = "Notice", description = "REST API endpoints for application notification management and real-time message delivery")
 @Validated
 @RestController
 @RequestMapping("/api/v1/notice")
@@ -45,16 +43,17 @@ public class NoticeRest {
   @Resource
   private NoticeFacade noticeFacade;
 
-  @Operation(summary = "Add application notice", operationId = "notice:add")
+  @Operation(summary = "Create application notification", operationId = "notice:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Notification created successfully")})
+  @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody NoticeAddDto dto) {
     return ApiLocaleResult.success(noticeFacade.add(dto));
   }
 
-  @Operation(summary = "Delete application notice", operationId = "notice:delete")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
+  @Operation(summary = "Delete multiple application notifications", operationId = "notice:delete")
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Notifications deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -62,36 +61,36 @@ public class NoticeRest {
     noticeFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of application notice", operationId = "notice:detail")
+  @Operation(summary = "Retrieve detailed information about a specific notification", operationId = "notice:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Notification details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Notification not found")})
   @GetMapping("/{id}")
   public ApiLocaleResult<NoticeVo> detail(
-      @Parameter(name = "id", description = "Notice id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Notification identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(noticeFacade.detail(id));
   }
 
-  @Operation(summary = "Query the latest global application notice", operationId = "notice:global:latest")
+  @Operation(summary = "Retrieve the latest global notification", operationId = "notice:global:latest")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Latest global notification retrieved successfully")})
   @GetMapping("/global/latest")
   public ApiLocaleResult<NoticeLatestVo> globalLatest() {
     return ApiLocaleResult.success(noticeFacade.globalLatest());
   }
 
-  @Operation(summary = "Query the latest application notice", operationId = "notice:app:latest")
+  @Operation(summary = "Retrieve the latest notification for a specific application", operationId = "notice:app:latest")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Latest application notification retrieved successfully")})
   @GetMapping("/app/{appId}/latest")
   public ApiLocaleResult<NoticeLatestVo> appLatest(
-      @Parameter(name = "appId", description = "App id", required = true) @PathVariable("appId") Long appId) {
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId) {
     return ApiLocaleResult.success(noticeFacade.appLatest(appId));
   }
 
-  @Operation(summary = "Query the list of application notice", operationId = "notice:list")
+  @Operation(summary = "Search and retrieve application notifications with pagination", operationId = "notice:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Notification list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<NoticeVo>> list(@Valid @ParameterObject NoticeFindDto dto) {
     return ApiLocaleResult.success(noticeFacade.list(dto));
