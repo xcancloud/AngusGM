@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthUserToken", description = "Controls user access token issuance, validation, and revocation")
+@Tag(name = "Auth User Token", description = "Manages user access token lifecycle including creation, validation, and revocation")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/user")
@@ -40,23 +40,23 @@ public class AuthUserTokenRest {
   @Resource
   private AuthUserTokenFacade authUserTokenFacade;
 
-  @Operation(summary = "Add access token of current user",
-      description = "Used for customizing user authorization duration scenarios "
-          + "while maintaining permissions identical to the associated user's access privileges",
+  @Operation(summary = "Create user access token",
+      description = "Create custom access token for current user with identical permissions to the associated user's access privileges. "
+          + "Used for customizing user authorization duration scenarios",
       operationId = "auth:user:token:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "User access token created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping(value = "/token")
   public ApiLocaleResult<UserTokenValueVo> add(@Valid @RequestBody UserTokenAddDto dto) {
     return ApiLocaleResult.success(authUserTokenFacade.add(dto));
   }
 
-  @Operation(summary = "Delete the access tokens of current user",
-      description = "Note: After deletion, the access token will become invalid",
+  @Operation(summary = "Delete user access tokens",
+      description = "Note: After deletion, the access tokens will become invalid",
       operationId = "auth:user:token:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "User access tokens deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping(value = "/token")
   public void delete(
@@ -64,18 +64,18 @@ public class AuthUserTokenRest {
     authUserTokenFacade.delete(ids);
   }
 
-  @Operation(summary = "Retrieve the value of the specified token associated with the current user", operationId = "auth:token:value:detail")
+  @Operation(summary = "Retrieve user access token value", operationId = "auth:token:value:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "User access token value retrieved successfully")})
   @GetMapping("/token/{id}/value")
   public ApiLocaleResult<UserTokenValueVo> value(
-      @Parameter(name = "id", description = "User token id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "User access token identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(authUserTokenFacade.value(id));
   }
 
-  @Operation(summary = "Query the all access tokens of current user", operationId = "auth:user:token:all")
+  @Operation(summary = "Retrieve current user access tokens", operationId = "auth:user:token:all")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Current user access tokens retrieved successfully")})
   @GetMapping(value = "/token")
   public ApiLocaleResult<List<UserTokenInfoVo>> list() {
     return ApiLocaleResult.success(authUserTokenFacade.list());

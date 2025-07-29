@@ -12,8 +12,7 @@ import lombok.Setter;
 public class CurrentAuthUserPasswordInitDto {
 
   @Password(allowNull = false)
-  @Schema(description = "Current user initialization password", example = "876@4321_",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Initial password for current user account", example = "876@4321_", requiredMode = RequiredMode.REQUIRED)
   private String newPassword;
 
 }

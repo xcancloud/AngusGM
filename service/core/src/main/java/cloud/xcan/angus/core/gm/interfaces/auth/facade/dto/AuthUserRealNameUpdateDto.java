@@ -14,11 +14,11 @@ import lombok.experimental.Accessors;
 public class AuthUserRealNameUpdateDto {
 
   @NotNull
-  @Schema(description = "Real name tenant id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant identifier for real name verification", requiredMode = RequiredMode.REQUIRED)
   private Long tenantId;
 
   @NotNull
-  @Schema(description = "Tenant real name status", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant real name verification status", requiredMode = RequiredMode.REQUIRED)
   private TenantRealNameStatus realNameStatus;
 
 }

@@ -15,11 +15,11 @@ import lombok.experimental.Accessors;
 public class AuthUserPasswordCheckDto {
 
   @NotNull
-  @Schema(description = "Check password user id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User identifier for password verification", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Password()
-  @Schema(description = "Check password value", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Password value to verify", example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String password;
 
 }

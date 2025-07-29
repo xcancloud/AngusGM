@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "AuthClient", description = "Manages OAuth2 client registrations. "
-    + "The OAuth2 client acts on behalf of the user to request resource access permissions "
+@Tag(name = "Auth Client", description = "Manages OAuth2 client registrations and configurations. "
+    + "OAuth2 clients act on behalf of users to request resource access permissions "
     + "and securely exchange credentials for access tokens to interact with protected APIs")
 @OperationClient
 @PreAuthorize("@PPS.isOpClient()")
@@ -53,19 +53,19 @@ public class AuthClientRest {
   @Resource
   private AuthClientFacade authClientFacade;
 
-  @Operation(summary = "Add oauth2 registered client", operationId = "client:add")
+  @Operation(summary = "Create new OAuth2 client", operationId = "client:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "OAuth2 client created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<String, Object>> add(@Valid @RequestBody AuthClientAddDto dto) {
     return ApiLocaleResult.success(authClientFacade.add(dto));
   }
 
-  @Operation(summary = "Update oauth2 registered client", operationId = "client:update")
+  @Operation(summary = "Update OAuth2 client configuration", operationId = "client:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Client configuration updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Client not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody AuthClientUpdateDto dto) {
@@ -73,18 +73,18 @@ public class AuthClientRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace oauth2 registered client", operationId = "client:replace")
+  @Operation(summary = "Replace OAuth2 client configuration", operationId = "client:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Client configuration replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Client not found")
   })
   @PutMapping
   public ApiLocaleResult<IdKey<String, Object>> replace(@Valid @RequestBody AuthClientReplaceDto dto) {
     return ApiLocaleResult.success(authClientFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete oauth2 registered clients", operationId = "client:delete")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
+  @Operation(summary = "Delete OAuth2 clients", operationId = "client:delete")
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Clients deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -92,19 +92,19 @@ public class AuthClientRest {
     authClientFacade.delete(clientIds);
   }
 
-  @Operation(summary = "Query the detail of oauth2 registered client", operationId = "client:detail")
+  @Operation(summary = "Retrieve OAuth2 client details", operationId = "client:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Client details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Client not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<AuthClientDetailVo> detail(
-      @Parameter(name = "id", description = "Client id", required = true) @PathVariable("id") String id) {
+      @Parameter(name = "id", description = "OAuth2 client identifier", required = true) @PathVariable("id") String id) {
     return ApiLocaleResult.success(authClientFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of oauth2 registered client", operationId = "client:list")
+  @Operation(summary = "Retrieve OAuth2 client list", operationId = "client:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Client list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<List<AuthClientDetailVo>> list(@Valid AuthClientFindDto dto) {
     return ApiLocaleResult.success(authClientFacade.list(dto));

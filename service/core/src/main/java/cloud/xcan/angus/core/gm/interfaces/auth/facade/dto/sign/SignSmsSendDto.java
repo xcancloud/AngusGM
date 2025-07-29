@@ -20,17 +20,16 @@ import org.hibernate.validator.constraints.Length;
 public class SignSmsSendDto {
 
   @NotNull
-  @Schema(description = "Sign sms business types", example = "SIGNIN", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "SMS verification business type", example = "SIGNIN", requiredMode = RequiredMode.REQUIRED)
   private SmsBizKey bizKey;
 
   @Mobile
   @NotEmpty
-  @Schema(description = "Sms verification code receiving mobile", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Mobile number for SMS verification code delivery", requiredMode = RequiredMode.REQUIRED)
   private String mobile;
 
   @Length(max = MAX_KEY_LENGTH)
-  @Schema(description = "Country code of the region where the phone number is located",
-      example = "CN", maxLength = MAX_KEY_LENGTH)
+  @Schema(description = "Country code for mobile number region", example = "CN")
   private String country;
 
 }

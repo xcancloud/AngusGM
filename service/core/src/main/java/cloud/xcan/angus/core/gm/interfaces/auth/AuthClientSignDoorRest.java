@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "AuthClientSignInner", description = "Used for OAuth2 client registration")
+@Tag(name = "Auth Client Registration - Internal", description = "Internal API for OAuth2 client registration operations")
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Validated
 @RestController
@@ -29,11 +29,11 @@ public class AuthClientSignDoorRest {
   @Resource
   private AuthClientSignFacade authClientSignFacade;
 
-  @Operation(summary = "Authorization client signup",
-      description = "Signup oauth2 client for private application edition or agent", operationId = "client:signup:inner")
+  @Operation(summary = "Register OAuth2 client",
+      description = "Register new OAuth2 client for private application edition or agent", operationId = "client:signup:inner")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Signup successfully")})
+      @ApiResponse(responseCode = "200", description = "OAuth2 client registered successfully")})
   @PostMapping(value = "/signup")
   public ApiLocaleResult<AuthClientSignupVo> signupByDoor(@Valid @RequestBody AuthClientSignupDto dto) {
     return ApiLocaleResult.success(authClientSignFacade.signupByDoor(dto));

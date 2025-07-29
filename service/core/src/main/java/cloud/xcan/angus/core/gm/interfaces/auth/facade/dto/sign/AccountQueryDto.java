@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-
 @Setter
 @Getter
 public class AccountQueryDto {
@@ -21,8 +20,7 @@ public class AccountQueryDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "User login account ( your username, mobile or email)",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User login account (username, mobile number, or email address)", requiredMode = RequiredMode.REQUIRED)
   private String account;
 
 }

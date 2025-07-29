@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CurrentAuthUserPasswordCheckDto {
 
   @Password(allowNull = false)
-  @Schema(description = "Current user password", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Current user password for verification", requiredMode = RequiredMode.REQUIRED)
   private String password;
 
 }

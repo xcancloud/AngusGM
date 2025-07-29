@@ -17,20 +17,17 @@ public class SignoutDto {
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "OAuh2 client id", example = "xcan_tp",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "OAuth2 client identifier", example = "xcan_tp", requiredMode = RequiredMode.REQUIRED)
   private String clientId;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "OAuh2 client secret", example = "6917ae827c964acc8dd7638fe0581b67",
-      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "OAuth2 client secret", example = "6917ae827c964acc8dd7638fe0581b67", requiredMode = RequiredMode.REQUIRED)
   private String clientSecret;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The access token that needs to be invalidated out when logout",
-      maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Access token to invalidate during logout", requiredMode = RequiredMode.REQUIRED)
   private String accessToken;
 
 }

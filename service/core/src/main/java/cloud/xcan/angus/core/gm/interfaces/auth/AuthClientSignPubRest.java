@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "AuthClientSignPub", description = "Used for OAuth2 client login to obtain inter system call access token")
+@Tag(name = "Auth Client Login - Public", description = "Public API for OAuth2 client authentication to obtain inter-system access tokens")
 @Validated
 @RestController
 @RequestMapping("/pubapi/v1/auth/client")
@@ -27,11 +27,11 @@ public class AuthClientSignPubRest {
   @Resource
   private AuthClientSignFacade authClientSignFacade;
 
-  @Operation(summary = "Authorization client sign-in",
-      description = "Client sign-in for private, 3rd authorization or inner application", operationId = "client:signin:pub")
+  @Operation(summary = "Authenticate OAuth2 client",
+      description = "Authenticate client for private, third-party authorization or internal application", operationId = "client:signin:pub")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Sign-in successfully")})
+      @ApiResponse(responseCode = "200", description = "Client authenticated successfully")})
   @PostMapping(value = "/signin")
   public ApiLocaleResult<AuthClientSignVo> signin(@Valid @RequestBody AuthClientSignInDto dto) {
     return ApiLocaleResult.success(authClientSignFacade.signin(dto));
