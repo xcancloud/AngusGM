@@ -24,13 +24,12 @@ public class WebTagUpdateDto {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Web application tag display name for categorization", example = "dev", maxLength = MAX_NAME_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application tag display name for categorization", example = "dev", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Web application tag functional description", maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Web application tag functional description")
   private String description;
 
 }

@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 @OperationClient
 @PreAuthorize("@PPS.isOpClient()")
 @Conditional(value = CloudServiceEditionCondition.class)
-@Tag(name = "TORole", description =
+@Tag(name = "Operational Role", description =
     "Operational role management for tenant operations. Defines responsibilities, coordinates workflows, "
         + "and aligns permissions with business objectives in cloud service environments")
 @Validated

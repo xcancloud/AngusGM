@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "TenantCertRecognize", description = "Tenant document recognition and validation. Automatically validates official identity documents and business licenses through third-party APIs for streamlined authentication processes")
+@Tag(name = "Tenant Certificate Recognize", description = "Tenant document recognition and validation. Automatically validates official identity documents and business licenses through third-party APIs for streamlined authentication processes")
 @Validated
 @RestController
 @RequestMapping("/api/v1/cert")

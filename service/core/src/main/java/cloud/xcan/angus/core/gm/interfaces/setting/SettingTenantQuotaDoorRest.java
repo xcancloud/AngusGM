@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "SettingTenantQuotaInner", description = "Internal tenant quota management gateway. Automatically grants or revokes resource quotas linked to payment verification and order status for automated quota management")
+@Tag(name = "Setting Tenant Quota - Innernal", description = "Internal tenant quota management gateway. Automatically grants or revokes resource quotas linked to payment verification and order status for automated quota management")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/setting/tenant/quota")

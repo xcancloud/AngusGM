@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "SettingTenantQuota", description = "Tenant resource quota management system. Assigns and initializes tenant resource quotas based on predefined policies or payment orders for comprehensive resource control")
+@Tag(name = "Setting Tenant Quota", description = "Tenant resource quota management system. Assigns and initializes tenant resource quotas based on predefined policies or payment orders for comprehensive resource control")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting/tenant/quota")

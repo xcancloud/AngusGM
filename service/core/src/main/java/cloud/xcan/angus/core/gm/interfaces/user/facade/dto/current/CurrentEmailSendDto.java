@@ -25,9 +25,7 @@ public class CurrentEmailSendDto implements Serializable {
       "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
   })
   @Schema(description = "Email verification business type for different operations", example = "BIND_EMAIL",
-      allowableValues = {
-          "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL"
-      }, requiredMode = RequiredMode.REQUIRED)
+      allowableValues = {   "PASSWORD_UPDATE", "MODIFY_EMAIL", "BIND_EMAIL" }, requiredMode = RequiredMode.REQUIRED)
   private EmailBizKey bizKey;
 
   @NotNull

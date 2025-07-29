@@ -18,15 +18,13 @@ import org.hibernate.validator.constraints.Length;
 public class SmsTemplateUpdateDto implements Serializable {
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "SMS template display name for identification", maxLength = MAX_NAME_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "SMS template display name for identification", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @Schema(description = "SMS template content with dynamic variables", example = "content")
   private String content;
 
-  @Schema(description = "Verification code SMS template flag for code-based authentication",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Verification code SMS template flag for code-based authentication", requiredMode = RequiredMode.REQUIRED)
   private Boolean verificationCode;
 
   @Schema(description = "Verification code validity period in seconds", example = "300")
@@ -36,7 +34,7 @@ public class SmsTemplateUpdateDto implements Serializable {
    * Only allow to modify third code, modifying the code will cause system errors.
    */
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Third-party SMS template identifier code (system code modification not allowed)", maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "Third-party SMS template identifier code (system code modification not allowed)")
   private String thirdCode;
 
   @Schema(description = "SMS template language for multi-language support")

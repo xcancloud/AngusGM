@@ -22,13 +22,11 @@ public class TORoleUpdateDto {
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Operational role display name", example = "System administrator",
-      maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Operational role display name", example = "System administrator")
   private String name;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Operational role functional description", example = "System management policy",
-      maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Operational role functional description", example = "System management policy")
   private String description;
 
 }

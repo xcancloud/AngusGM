@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @OperationClient
 @PreAuthorize("@PPS.isOpClient()")
 @Conditional(value = CloudServiceEditionCondition.class)
-@Tag(name = "TOUser", description = "Operational user management for cloud service edition (SaaS). Provides comprehensive user account operations and administrative functions")
+@Tag(name = "Operational User", description = "Operational user management for cloud service edition (SaaS). Provides comprehensive user account operations and administrative functions")
 @Validated
 @RestController
 @RequestMapping("/api/v1/to/user")

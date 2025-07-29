@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "SettingUserInner", description = "Internal user configuration management gateway. Handles internal system access to user configurations for administrative or automated adjustments")
+@Tag(name = "Setting User - Innernal", description = "Internal user configuration management gateway. Handles internal system access to user configurations for administrative or automated adjustments")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/setting/user")

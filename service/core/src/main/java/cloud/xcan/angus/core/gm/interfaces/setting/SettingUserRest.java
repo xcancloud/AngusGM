@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "SettingUser", description = "User-specific configuration management system. Provides user-specific configuration access for personalized settings within authorized limits")
+@Tag(name = "Setting User", description = "User-specific configuration management system. Provides user-specific configuration access for personalized settings within authorized limits")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting/user")

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "TenantSign", description = "Tenant account termination and cleanup management. Processes secure tenant account deletion with comprehensive data cleanup, permission revocation, and verification workflows")
+@Tag(name = "Tenant Sign", description = "Tenant account termination and cleanup management. Processes secure tenant account deletion with comprehensive data cleanup, permission revocation, and verification workflows")
 @TenantClient
 @Validated
 @RestController

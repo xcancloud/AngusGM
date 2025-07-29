@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "UserDirectoryInner", description = "Internal API for system-to-system communication to synchronize user and group data with external directory services (LDAP, Active Directory, etc.)")
+@Tag(name = "User Directory - Internal", description = "Internal API for system-to-system communication to synchronize user and group data with external directory services (LDAP, Active Directory, etc.)")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/user/directory")

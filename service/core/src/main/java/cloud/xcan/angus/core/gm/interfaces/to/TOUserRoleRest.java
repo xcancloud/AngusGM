@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("@PPS.isOpClient()")
 @CloudServiceEdition
 @Conditional(value = CloudServiceEditionCondition.class)
-@Tag(name = "TOUserRole", description = "Operational user-role relationship management. Provides unified operations for querying and authorizing user-role associations in cloud service environments")
+@Tag(name = "Operational Role User", description = "Operational user-role relationship management. Provides unified operations for querying and authorizing user-role associations in cloud service environments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/to")

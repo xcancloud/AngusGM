@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "SmsChannel", description =
+@Tag(name = "Sms Channel", description =
     "SMS channel configuration management. Provides management for third-party SMS channel configuration, "
         + "including API credentials, endpoints, and channel status. If SMS cannot be sent, please verify "
         + "that the corresponding SMS channel plugin is installed and SMS templates are correctly configured")

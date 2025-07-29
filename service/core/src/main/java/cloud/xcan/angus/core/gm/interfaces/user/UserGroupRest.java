@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "UserGroup", description = "Manage user-group relationships to control access privileges and visibility based on organizational group membership")
+@Tag(name = "User Group", description = "Manage user-group relationships to control access privileges and visibility based on organizational group membership")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user")

@@ -26,23 +26,20 @@ public class TORoleReplaceDto {
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description = "Operational role display name", example = "System administrator",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+      requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @Code
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Unique operational role identifier code (cannot be modified)", example = "TOP_TENANT_ADMIN",
-      maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "Unique operational role identifier code (cannot be modified)", example = "TOP_TENANT_ADMIN")
   private String code;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Operational role functional description", maxLength = MAX_CODE_LENGTH,
-      example = "System management policy")
+  @Schema(description = "Operational role functional description", example = "System management policy")
   private String description;
 
   @NotNull
-  @Schema(description = "Associated application identifier", example = "1",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Associated application identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 
 }

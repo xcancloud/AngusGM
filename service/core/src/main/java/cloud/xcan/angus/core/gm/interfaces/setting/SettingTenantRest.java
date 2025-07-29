@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "SettingTenant", description = "Tenant-level configuration management system. Manages tenant-level configurations to customize shared settings across their ecosystem for personalized tenant experiences")
+@Tag(name = "Setting Tenant", description = "Tenant-level configuration management system. Manages tenant-level configurations to customize shared settings across their ecosystem for personalized tenant experiences")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting/tenant")
