@@ -32,8 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "EventTemplate", description = "This category handles event template configurations, "
-    + "including predefined settings for receivers, notification channels")
+@Tag(name = "Event Template", description = "REST API endpoints for managing event template configurations including predefined receiver settings and notification channels")
 @Validated
 @RestController
 @RequestMapping("/api/v1/event/template")
@@ -42,38 +41,38 @@ public class EventTemplateRest {
   @Resource
   private EventTemplateFacade eventTemplateFacade;
 
-  @Operation(summary = "Add event template", operationId = "event:template:add")
+  @Operation(summary = "Create new event template", operationId = "event:template:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Created successfully")})
+      @ApiResponse(responseCode = "200", description = "Event template created successfully")})
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody EventTemplateAddDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.add(dto));
   }
 
-  @Operation(summary = "Replace event template", operationId = "event:template:replace")
+  @Operation(summary = "Replace event template configuration", operationId = "event:template:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Event template replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Event template not found")})
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@RequestBody EventTemplateReplaceDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.replace(dto));
   }
 
-  @Operation(summary = "Replace the receive channel of event template",
+  @Operation(summary = "Replace notification channels for event template",
       operationId = "event:template:channel:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Event template channels replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Event template not found")})
   @PutMapping("/channel")
   public ApiLocaleResult<?> channelReplace(@Valid @RequestBody EventTemplateChannelReplaceDto dto) {
     eventTemplateFacade.channelReplace(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace the receiver of event template",
+  @Operation(summary = "Replace receivers for event template",
       operationId = "event:template:receiver:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "Event template receivers replaced successfully")})
   @PutMapping("/receiver")
   public ApiLocaleResult<?> receiverReplace(@Valid @RequestBody EventTemplateReceiverDto dto) {
     eventTemplateFacade.receiverReplace(dto);
@@ -82,46 +81,46 @@ public class EventTemplateRest {
 
   @Operation(summary = "Delete event template", operationId = "event:template:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Event template deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}")
   public void delete(
-      @Parameter(name = "id", description = "Template id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Event template identifier", required = true) @PathVariable("id") Long id) {
     eventTemplateFacade.delete(id);
   }
 
-  @Operation(summary = "Query the detail of event template", operationId = "event:template:detail")
+  @Operation(summary = "Retrieve detailed information about event template", operationId = "event:template:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Event template details retrieved successfully")})
   @GetMapping("/{id}")
   public ApiLocaleResult<EventTemplateVo> detail(
-      @Parameter(name = "id", description = "Template id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Event template identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(eventTemplateFacade.detail(id));
   }
 
-  @Operation(summary = "Query the detail of current tenant event template and receive setting",
+  @Operation(summary = "Retrieve current tenant event template with receive settings",
       operationId = "event:template:current:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Current tenant event template retrieved successfully")})
   @GetMapping("/{id}/current")
   public ApiLocaleResult<EventTemplateCurrentDetailVo> currentDetail(
-      @Parameter(name = "id", description = "Template id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Event template identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(eventTemplateFacade.currentDetail(id));
   }
 
-  @Operation(summary = "Query the list of event template", operationId = "event:template:list")
+  @Operation(summary = "Search and retrieve event template list with pagination", operationId = "event:template:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Event template list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<EventTemplateVo>> list(
       @Valid @ParameterObject EventTemplateFindDto dto) {
     return ApiLocaleResult.success(eventTemplateFacade.list(dto));
   }
 
-  @Operation(summary = "Query the list of current tenant event template and receive setting",
+  @Operation(summary = "Search and retrieve current tenant event templates with receive settings",
       operationId = "event:template:current:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Current tenant event templates retrieved successfully")})
   @GetMapping("/current")
   public ApiLocaleResult<PageResult<EventTemplateCurrentDetailVo>> currentList(
       @Valid @ParameterObject EventTemplateFindDto dto) {

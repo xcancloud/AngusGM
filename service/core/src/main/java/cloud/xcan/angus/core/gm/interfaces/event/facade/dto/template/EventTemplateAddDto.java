@@ -23,36 +23,32 @@ public class EventTemplateAddDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_KEY_LENGTH)
-  @Schema(description = "Application code of the event", maxLength = MAX_KEY_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application code that owns the event template", requiredMode = RequiredMode.REQUIRED)
   private String appCode;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Template event code", maxLength = MAX_CODE_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique event code for the template", requiredMode = RequiredMode.REQUIRED)
   private String eventCode;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Template event name", maxLength = MAX_NAME_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the event template", requiredMode = RequiredMode.REQUIRED)
   private String eventName;
 
   @NotNull
-  @Schema(description = "Template event type", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Event type classification", requiredMode = RequiredMode.REQUIRED)
   private EventType eventType;
 
   @Length(max = MAX_KEY_LENGTH)
-  @Schema(description = "Resource type of the event", maxLength = MAX_KEY_LENGTH)
+  @Schema(description = "Target resource type for the event")
   private String targetType;
 
   @NotNull
-  @Schema(description = "Whether or not privatized edition template flag",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Whether this is a private edition template", requiredMode = RequiredMode.REQUIRED)
   private Boolean private0;
 
-  @Schema(description = "Receiving channels allowed or supported by the event template")
+  @Schema(description = "Supported notification channels for this event template")
   private Set<ReceiveChannelType> allowedChannelTypes;
 
 }

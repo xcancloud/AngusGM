@@ -18,21 +18,17 @@ import lombok.Setter;
 public class EventTemplateReceiverDto {
 
   @NotNull
-  @Schema(description = "Event template id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Event template identifier", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
-  @Schema(description =
-      "Template event receiver types. At least one of receiverTypes and receiverIds is required, "
-          + "event notification will also be sent when both exist")
+  @Schema(description = "Receiver type categories for event notifications. At least one of receiverTypes or receiverIds required")
   private Set<ReceiverType> receiverTypes;
 
   @Size(max = MAX_BATCH_SIZE)
-  @Schema(description =
-      "Template event receiver ids. At least one of receiverTypes and receiverIds is required, "
-          + "event notification will also be sent when both exist. Supports a maximum of `200` recipients")
+  @Schema(description = "Specific receiver identifiers for event notifications. At least one of receiverTypes or receiverIds required")
   private Set<Long> receiverIds;
 
-  @Schema(description = "Event notification method types")
+  @Schema(description = "Notification delivery method types")
   private Set<NoticeType> noticeTypes;
 
 }

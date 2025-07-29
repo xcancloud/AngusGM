@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "EventChannel", description = "Manage event notification channels such as Webhooks, WeChat robots, and DingTalk robots")
+@Tag(name = "Event Channel", description = "REST API endpoints for managing event notification channels including webhooks, WeChat robots, and DingTalk robots")
 @Validated
 @RestController
 @RequestMapping("/api/v1/event/channel")
@@ -37,45 +37,46 @@ public class EventChannelRest {
   @Resource
   private EventChannelFacade eventChannelFacade;
 
-  @Operation(summary = "Add receive event channel", operationId = "event:channel:add")
+  @Operation(summary = "Create event notification channel", operationId = "event:channel:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "201", description = "Event channel created successfully")})
+  @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody EventChannelAddDto dto) {
     return ApiLocaleResult.success(eventChannelFacade.add(dto));
   }
 
-  @Operation(summary = "Replace receive event channel", operationId = "event:channel:replace")
+  @Operation(summary = "Replace event notification channel", operationId = "event:channel:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Event channel replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Event channel not found")})
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@RequestBody EventChannelReplaceDto dto) {
     return ApiLocaleResult.success(eventChannelFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete receive event channel", operationId = "event:channel:delete")
+  @Operation(summary = "Delete event notification channel", operationId = "event:channel:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Delete successfully")})
+      @ApiResponse(responseCode = "204", description = "Event channel deleted successfully")})
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
-      @Parameter(name = "id", description = "Event channel id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Event channel identifier", required = true) @PathVariable("id") Long id) {
     eventChannelFacade.delete(id);
   }
 
-  @Operation(summary = "Query the list of receive event channel type", operationId = "event:channel:list")
+  @Operation(summary = "Retrieve event channels by channel type", operationId = "event:channel:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Event channels retrieved successfully")})
   @GetMapping("/type/{channelType}")
   public ApiLocaleResult<List<EventChannelVo>> channelList(
-      @Parameter(name = "channelType", description = "Receive channel type", required = true) @PathVariable("channelType") ReceiveChannelType channelType) {
+      @Parameter(name = "channelType", description = "Event notification channel type", required = true) @PathVariable("channelType") ReceiveChannelType channelType) {
     return ApiLocaleResult.success(eventChannelFacade.channelList(channelType));
   }
 
-  @Operation(summary = "Test receive event channel", operationId = "event:channel:test")
+  @Operation(summary = "Test event notification channel connectivity", operationId = "event:channel:test")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Test successfully")})
+      @ApiResponse(responseCode = "200", description = "Event channel test completed successfully")})
   @PostMapping("/test")
   public ApiLocaleResult<?> channelTest(@Valid @RequestBody EventChannelTestDto dto) {
     eventChannelFacade.channelTest(dto);

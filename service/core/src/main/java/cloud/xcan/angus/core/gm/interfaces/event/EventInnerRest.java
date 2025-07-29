@@ -15,14 +15,16 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "EventInner", description = "Used for external systems or services to submit event data programmatically")
+@Tag(name = "Event Internal", description = "Internal REST API endpoints for external systems to programmatically submit event data")
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Validated
 @RestController
@@ -32,9 +34,10 @@ public class EventInnerRest {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(summary = "Add events")
+  @Operation(summary = "Submit multiple events from external systems", operationId = "event:add:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Events submitted successfully")})
+  @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<EventContent> eventContents) {

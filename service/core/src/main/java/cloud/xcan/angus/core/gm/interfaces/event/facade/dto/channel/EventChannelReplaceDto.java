@@ -17,26 +17,25 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 public class EventChannelReplaceDto implements Serializable {
 
-  @Schema(description = "Event channel id. The ID is required when modifying an existing channel, "
-      + "create a new channel when the value is empty", example = "1")
+  @Schema(description = "Event channel identifier for updating existing channel. Leave empty to create new channel", example = "1")
   private Long id;
 
   @NotNull
-  @Schema(description = "Event channel type. ", example = "WECHAT",
+  @Schema(description = "Event notification channel type", example = "WECHAT",
       requiredMode = RequiredMode.REQUIRED)
   private ReceiveChannelType channelType;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Event channel name", example = "WeChat Reboot",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the event channel", example = "WeChat Work Notification",
+      requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_URL_LENGTH_X20)
-  @Schema(description = "Event channel address. When it is `EMAIL` type, multiple addresses are separated by English commas",
+  @Schema(description = "Event channel endpoint URL. For EMAIL type, multiple addresses separated by commas",
       example = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9e3b6ca1-2d3d-4cc2-8314-153871c7ccaf",
-      maxLength = MAX_URL_LENGTH_X20, requiredMode = RequiredMode.REQUIRED)
+      requiredMode = RequiredMode.REQUIRED)
   private String address;
 
 }

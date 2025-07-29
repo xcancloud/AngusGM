@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Event", description =
-    "enable retrieval of historical event records and associated channel configurations. Users can filter, sort, "
-        + "and paginate event logs, while also querying configured event channels to audit event routing and processing workflows")
+@Tag(name = "Event", description = "REST API endpoints for retrieving historical event records and associated channel configurations with filtering, sorting, and pagination")
 @Validated
 @RestController
 @RequestMapping("/api/v1/event")
@@ -34,28 +32,28 @@ public class EventRest {
   @Resource
   private EventFacade eventFacade;
 
-  @Operation(summary = "Query the detail of event", operationId = "event:detail")
+  @Operation(summary = "Retrieve detailed information about a specific event", operationId = "event:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Event details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Event not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<EventDetailVo> detail(
-      @Parameter(name = "id", description = "Event id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Event identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(eventFacade.detail(id));
   }
 
-  @Operation(summary = "Query the receive channels of event", operationId = "event:channel:receive:all")
+  @Operation(summary = "Retrieve notification channels for a specific event", operationId = "event:channel:receive:all")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Event channels retrieved successfully")})
   @GetMapping("/{eventCode}/channel")
   public ApiLocaleResult<List<EventReceiveChannelVo>> receiveChannel(
       @Parameter(name = "eventCode", description = "Event code", required = true) @PathVariable("eventCode") String eventCode) {
     return ApiLocaleResult.success(eventFacade.receiveChannel(eventCode));
   }
 
-  @Operation(summary = "Query the list of event", operationId = "event:list")
+  @Operation(summary = "Search and retrieve event list with pagination", operationId = "event:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Event list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<EventVo>> list(@Valid @ParameterObject EventFindDto dto) {
     return ApiLocaleResult.success(eventFacade.list(dto));
