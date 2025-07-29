@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "ServiceApi", description = "Provides a unified entry for managing Angus series application services and associated apis")
+@Tag(name = "Service Api", description = "REST API endpoints for managing service APIs and their configurations")
 @Validated
 @RestController
 @RequestMapping("/api/v1/service")
@@ -43,8 +43,8 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add the apis to service", operationId = "service:api:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
+  @Operation(summary = "Add multiple API endpoints to a service", operationId = "service:api:add")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "API endpoints created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/api")
   public ApiLocaleResult<List<IdKey<Long, Object>>> apiAdd(
@@ -54,24 +54,22 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Synchronize the swagger apis from AngusDiscovery specified service instance",
-      operationId = "service:api:discovery:sync")
+  @Operation(summary = "Synchronize API endpoints from AngusDiscovery service instance", operationId = "service:api:discovery:sync")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Synchronize successfully")})
+      @ApiResponse(responseCode = "200", description = "API synchronization completed successfully")})
   @ResponseStatus(HttpStatus.OK)
   @PostMapping("/{serviceCode}/api/discovery/sync")
   public ApiLocaleResult<?> syncServiceApi(
-      @Parameter(name = "serviceCode", description = "Service Code", required = true) @PathVariable("serviceCode") String serviceCode) {
+      @Parameter(name = "serviceCode", description = "Service identifier code for synchronization", required = true) @PathVariable("serviceCode") String serviceCode) {
     serviceApiFacade.syncServiceApi(serviceCode);
     return ApiLocaleResult.success();
   }
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Synchronize the all swagger apis from AngusDiscovery service instances",
-      operationId = "service:api:discovery:syncs")
+  @Operation(summary = "Synchronize all API endpoints from all AngusDiscovery service instances", operationId = "service:api:discovery:syncs")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Created successfully")})
+      @ApiResponse(responseCode = "200", description = "Full API synchronization completed successfully")})
   @ResponseStatus(HttpStatus.OK)
   @PostMapping("/api/discovery/sync")
   public ApiLocaleResult<?> discoveryApiSync() {
@@ -81,23 +79,23 @@ public class ServiceApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the apis of service", operationId = "service:api:delete")
+  @Operation(summary = "Remove specific API endpoints from a service", operationId = "service:api:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "API endpoints deleted successfully")})
   @DeleteMapping("/{id}/api")
   public void apiDelete(
-      @Parameter(name = "id", description = "Service id", required = true) @PathVariable("id") Long id,
+      @Parameter(name = "id", description = "Service identifier", required = true) @PathVariable("id") Long id,
       @Valid @RequestParam("ids") @Size(max = MAX_BATCH_SIZE) HashSet<Long> ids) {
     serviceApiFacade.apiDelete(id, ids);
   }
 
-  @Operation(summary = "Query the list of service", operationId = "service:api:list")
+  @Operation(summary = "Retrieve all API endpoints for a specific service", operationId = "service:api:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "API endpoints retrieved successfully")})
   @GetMapping("/{id}/api")
   public ApiLocaleResult<List<ServiceApiVo>> apiList(
-      @Parameter(name = "id", description = "Service id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Service identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(serviceApiFacade.apiList(id));
   }
 

@@ -21,40 +21,34 @@ import org.hibernate.validator.constraints.Length;
 public class ServiceUpdateDto {
 
   @NotNull
-  @Schema(description = "Service id", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique identifier of the service to update", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Service name", example = "User center service", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "The display name of the service", example = "User Management Service")
   private String name;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Service description", example = "User center service, providing complete tenant, organization, and user management service capabilities, etc",
-      maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Detailed description of the service functionality and purpose", example = "Comprehensive user management service providing tenant, organization, and user administration capabilities")
   private String description;
 
-  @Schema(description = "Service source")
+  @Schema(description = "Source of the service (e.g., internal, external, third-party)")
   private ServiceSource source;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "The route path in api gateway of service", example = "/uc",
-      maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "API gateway route path for accessing this service", example = "/user-mgmt")
   private String routePath;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "The access url of service", example = "http://local-api.xcan.cloud:1806",
-      maxLength = MAX_URL_LENGTH_X2)
+  @Schema(description = "Base URL for accessing the service endpoints", example = "https://api.example.com:8080")
   private String url;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "The health checking url of service", example = "http://local-api.xcan.cloud:1806/actuator/health",
-      maxLength = MAX_URL_LENGTH_X2)
+  @Schema(description = "Health check endpoint URL for monitoring service status", example = "https://api.example.com:8080/actuator/health")
   private String healthUrl;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "The OpenAPI doc url of service", example = "http://local-api.xcan.cloud:1806/v3/api-docs?group=Api",
-      maxLength = MAX_URL_LENGTH_X2)
+  @Schema(description = "OpenAPI documentation URL for the service API specification", example = "https://api.example.com:8080/v3/api-docs?group=UserAPI")
   private String apiDocUrl;
-
 
 }

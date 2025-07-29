@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Service", description = "Provides a unified entry for managing Angus series application services")
+@Tag(name = "Service", description = "REST API endpoints for managing Angus application services")
 @Validated
 @RestController
 @RequestMapping("/api/v1/service")
@@ -57,9 +57,9 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add services", operationId = "service:add")
+  @Operation(summary = "Create a new service", operationId = "service:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Service created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody ServiceAddDto dto) {
@@ -68,9 +68,9 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update services", operationId = "service:update")
+  @Operation(summary = "Update an existing service", operationId = "service:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully")})
+      @ApiResponse(responseCode = "200", description = "Service updated successfully")})
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody ServiceUpdateDto dto) {
     serviceFacade.update(dto);
@@ -79,9 +79,9 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace services", operationId = "service:replace")
+  @Operation(summary = "Create or replace a service", operationId = "service:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "Service created or replaced successfully")})
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@Valid @RequestBody ServiceReplaceDto dto) {
     return ApiLocaleResult.success(serviceFacade.replace(dto));
@@ -89,10 +89,10 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete services", operationId = "service:delete")
+  @Operation(summary = "Delete multiple services", operationId = "service:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Services deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("ids") HashSet<Long> ids) {
@@ -101,10 +101,10 @@ public class ServiceRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable services", operationId = "service:enabled")
+  @Operation(summary = "Enable or disable multiple services", operationId = "service:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Services enabled or disabled successfully"),
+      @ApiResponse(responseCode = "404", description = "One or more services not found")
   })
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(
@@ -113,45 +113,45 @@ public class ServiceRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of service", operationId = "service:detail")
+  @Operation(summary = "Retrieve detailed information about a specific service", operationId = "service:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Service details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Service not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<ServiceVo> detail(
-      @Parameter(name = "id", description = "Service id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Service identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(serviceFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of service", operationId = "service:list")
+  @Operation(summary = "Search and retrieve services with pagination", operationId = "service:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Service list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<ServiceVo>> list(@Valid @ParameterObject ServiceFindDto dto) {
     return ApiLocaleResult.success(serviceFacade.list(dto));
   }
 
-  @Operation(summary = "Query the all resources of service", operationId = "service:resource:all")
+  @Operation(summary = "Retrieve all resources for services", operationId = "service:resource:all")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Service resources retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Service not found")
   })
   @GetMapping(value = "/resource")
   public ApiLocaleResult<List<ServiceResourceVo>> resourceList(
-      @Valid @Length(max = MAX_CODE_LENGTH) @Parameter(name = "serviceCode", description = "Service code", required = false)
+      @Valid @Length(max = MAX_CODE_LENGTH) @Parameter(name = "serviceCode", description = "Service identifier code", required = false)
       @RequestParam(value = "serviceCode", required = false) String serviceCode,
       @RequestParam(value = "auth", required = false) Boolean auth) {
     return ApiLocaleResult.success(serviceFacade.resourceList(serviceCode, auth));
   }
 
-  @Operation(summary = "Query the all apis of service or resource", operationId = "service:resource:api:all")
+  @Operation(summary = "Retrieve all APIs for a service or specific resource", operationId = "service:resource:api:all")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Service APIs retrieved successfully")})
   @GetMapping(value = "/resource/api")
   public ApiLocaleResult<List<ResourceApiVo>> resourceApiList(
-      @Valid @Length(max = MAX_CODE_LENGTH) @Parameter(name = "serviceCode", description = "Service code", required = true)
+      @Valid @Length(max = MAX_CODE_LENGTH) @Parameter(name = "serviceCode", description = "Service identifier code", required = true)
       @RequestParam(value = "serviceCode", required = true) String serviceCode,
-      @Valid @Length(max = MAX_NAME_LENGTH) @Parameter(name = "resourceName", description = "Resource name", required = false)
+      @Valid @Length(max = MAX_NAME_LENGTH) @Parameter(name = "resourceName", description = "Resource name for filtering", required = false)
       @RequestParam(value = "resourceName", required = false) String resourceName,
       @RequestParam(value = "auth", required = false) Boolean auth) {
     return ApiLocaleResult.success(serviceFacade.resourceApiList(serviceCode, resourceName, auth));

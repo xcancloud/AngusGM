@@ -20,11 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Request /actuator/systemlog endpoint proxy to solve the CORS problems.
- *
- * @author XiaoLong Liu
- */
 @Tag(name = "System Log", description = "System log management and monitoring. Provides unified access to service instance log files for debugging, monitoring, and troubleshooting purposes")
 @Validated
 @RestController

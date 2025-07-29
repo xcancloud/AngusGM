@@ -20,50 +20,44 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class ServiceReplaceDto {
 
-  @Schema(description = "Service id. The ID is required when modifying an existing "
-      + "service, create a new service when the value is empty", example = "1")
+  @Schema(description = "Service ID for updating existing service. Leave empty to create new service", example = "1")
   private Long id;
 
   @NotEmpty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Service name", example = "User center service",
+  @Schema(description = "The display name of the service", example = "User Management Service",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Service code. Note: Modification not allowed", example = "ANGUSGM",
-      maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "Unique identifier code for the service. Cannot be modified after creation", example = "USER_MGMT")
   private String code;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Service description", example = "User center service, providing complete tenant, organization, and user management service capabilities, etc",
-      maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Detailed description of the service functionality and purpose", 
+    example = "Comprehensive user management service providing tenant, organization, and user administration capabilities")
   private String description;
 
-  @Schema(description = "Service source")
+  @Schema(description = "Source of the service (e.g., internal, external, third-party)")
   private ServiceSource source;
 
-  @Schema(description = "Whether or not enabled service flag. Note: Modification not allowed", defaultValue = "true")
+  @Schema(description = "Whether the service is enabled and available for use. Cannot be modified after creation", defaultValue = "true")
   private Boolean enabled;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "The route path in api gateway of service", example = "/uc",
-      maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "API gateway route path for accessing this service", example = "/user-mgmt")
   private String routePath;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "The access url of service", example = "http://local-api.xcan.cloud:1806",
-      maxLength = MAX_URL_LENGTH_X2)
+  @Schema(description = "Base URL for accessing the service endpoints", example = "https://api.example.com:8080")
   private String url;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "The health checking url of service", example = "http://local-api.xcan.cloud:1806/actuator/health",
-      maxLength = MAX_URL_LENGTH_X2)
+  @Schema(description = "Health check endpoint URL for monitoring service status", example = "https://api.example.com:8080/actuator/health")
   private String healthUrl;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "The OpenAPI doc url of service", example = "http://local-api.xcan.cloud:1806/v3/api-docs?group=Api",
-      maxLength = MAX_URL_LENGTH_X2)
+  @Schema(description = "OpenAPI documentation URL for the service API specification", example = "https://api.example.com:8080/v3/api-docs?group=UserAPI")
   private String apiDocUrl;
 
 }
