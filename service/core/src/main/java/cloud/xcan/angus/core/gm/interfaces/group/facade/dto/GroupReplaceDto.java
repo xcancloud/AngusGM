@@ -22,29 +22,26 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class GroupReplaceDto implements Serializable {
 
-  @Schema(description = "Group id. The ID is required when modifying an existing group, "
-      + "create a new group when the value is empty", example = "1")
+  @Schema(description = "Group identifier for updating existing group. Leave empty to create new group", example = "1")
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Group name", example = "Product Group", maxLength = MAX_NAME_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the group", example = "Product Development Team", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotBlank
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Group code", example = "PRODUCT_001", maxLength = MAX_CODE_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique code identifier for the group", example = "PRODUCT_DEV_001", requiredMode = RequiredMode.REQUIRED)
   private String code;
 
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(description = "Group remark", example = "This a group remark ..",
+  @Schema(description = "Additional description or notes about the group", example = "This group is responsible for product development and innovation",
       maxLength = MAX_REMARK_LENGTH)
   private String remark;
 
   @Size(max = MAX_RELATION_QUOTA)
-  @Schema(description = "Group association tag ids, the maximum support is `2000`")
+  @Schema(description = "Associated tag identifiers for group categorization. Maximum 2000 tags")
   private List<Long> tagIds;
 
 }

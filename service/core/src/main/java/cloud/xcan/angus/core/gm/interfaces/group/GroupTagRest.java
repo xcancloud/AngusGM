@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "GroupTag", description = "Assigns tags to group for resource categorization, or query access control grouping")
+@Tag(name = "Group Tag", description = "REST API endpoints for managing group tag associations and resource categorization")
 @Validated
 @RestController
 @RequestMapping("/api/v1/group")
@@ -44,49 +44,49 @@ public class GroupTagRest {
   @Resource
   private GroupTagFacade groupTagFacade;
 
-  @Operation(summary = "Add the tags of group", operationId = "group:tag:add")
+  @Operation(summary = "Assign tags to a group", operationId = "group:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "201", description = "Tags assigned to group successfully"),
+      @ApiResponse(responseCode = "404", description = "Group not found")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/tag")
   public ApiLocaleResult<List<IdKey<Long, Object>>> tagAdd(
-      @Parameter(name = "id", description = "Group id", required = true) @PathVariable("id") Long groupId,
+      @Parameter(name = "id", description = "Group identifier", required = true) @PathVariable("id") Long groupId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody LinkedHashSet<Long> tagIds) {
     return ApiLocaleResult.success(groupTagFacade.tagAdd(groupId, tagIds));
   }
 
-  @Operation(summary = "Replace the tags of group", operationId = "group:tag:replace")
+  @Operation(summary = "Replace all tags for a group", operationId = "group:tag:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Group tags replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Group not found")})
   @PutMapping("/{id}/tag")
   public ApiLocaleResult<?> tagReplace(
-      @Parameter(name = "id", description = "Group id", required = true) @PathVariable("id") Long groupId,
+      @Parameter(name = "id", description = "Group identifier", required = true) @PathVariable("id") Long groupId,
       @Valid @NotEmpty @Size(max = MAX_RELATION_QUOTA) @RequestBody LinkedHashSet<Long> tagIds) {
     groupTagFacade.tagReplace(groupId, tagIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the tags of group", operationId = "group:tag:delete")
+  @Operation(summary = "Remove tags from a group", operationId = "group:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Tags removed from group successfully"),
+      @ApiResponse(responseCode = "404", description = "Group not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/tag")
   public void tagDelete(
-      @Parameter(name = "id", description = "Group id", required = true) @PathVariable("id") Long groupId,
+      @Parameter(name = "id", description = "Group identifier", required = true) @PathVariable("id") Long groupId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("tagIds") HashSet<Long> tagIds) {
     groupTagFacade.tagDelete(groupId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of group", operationId = "group:tag:list")
+  @Operation(summary = "Retrieve tag list for a group with pagination", operationId = "group:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Group tags retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Group not found")})
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<OrgTagTargetVo>> tagList(
-      @Parameter(name = "id", description = "Group id", required = true) @PathVariable("id") Long groupId,
+      @Parameter(name = "id", description = "Group identifier", required = true) @PathVariable("id") Long groupId,
       @Valid @ParameterObject OrgTargetTagFindDto dto) {
     return ApiLocaleResult.success(groupTagFacade.tagList(groupId, dto));
   }

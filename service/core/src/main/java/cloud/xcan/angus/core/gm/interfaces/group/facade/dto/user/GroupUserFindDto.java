@@ -17,10 +17,13 @@ public class GroupUserFindDto extends PageQuery {
   @Schema(hidden = true)
   private Long groupId;
 
+  @Schema(description = "User identifier for filtering")
   private Long userId;
 
+  @Schema(description = "User full name for filtering")
   private String fullName;
 
+  @Schema(description = "User creation timestamp")
   private LocalDateTime createdDate;
 
 }
