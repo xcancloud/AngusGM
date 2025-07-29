@@ -141,8 +141,8 @@ public class UserCurrentFacadeImpl implements UserCurrentFacade {
     AppDetailVo accessApp = appFacade.detail(appCode, editionType);
     vo.setAccessApp(accessApp);
 
-    AuthAppTreeVo appTreeVo = authUserFacade.appFuncTree(currentUserId, accessApp.getCode(),
-        false, true);
+    AuthAppTreeVo appTreeVo = authUserFacade.appFuncTree(
+        currentUserId, accessApp.getId().toString(), false, true);
     vo.setAccessAppFuncTree(appTreeVo.getAppFuncs());
 
     List<OrgAppAuthVo> authApps = appOrgAuthFacade.orgAuthApp(USER, currentUserId, false);
