@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "TenantSign", description = "Processes secure tenant account termination with data cleanup and permission revocation")
+@Tag(name = "TenantSign", description = "Tenant account termination and cleanup management. Processes secure tenant account deletion with comprehensive data cleanup, permission revocation, and verification workflows")
 @TenantClient
 @Validated
 @RestController
@@ -30,25 +30,25 @@ public class TenantSignRest {
 
   @Operation(summary = "Cancel tenant account deletion request", operationId = "tenant:sign:cancel:revoke")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully cancel signCancel")})
+      @ApiResponse(responseCode = "200", description = "Tenant account deletion request cancelled successfully")})
   @PostMapping("/cancel/revoke")
   public ApiLocaleResult<?> cancelSignInvoke() {
     tenantSignFacade.cancelSignInvoke();
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Send SMS verification for tenant account deletion", operationId = "tenant:sign:cancel:sms:send")
+  @Operation(summary = "Send SMS verification code for tenant account deletion", operationId = "tenant:sign:cancel:sms:send")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully sent signCancelSms")})
+      @ApiResponse(responseCode = "200", description = "SMS verification code sent successfully for account deletion")})
   @GetMapping("/cancel/sms/send")
   public ApiLocaleResult<?> signCancelSmsSend() {
     tenantSignFacade.signCancelSmsSend();
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Confirm SMS code to finalize tenant account deletion", operationId = "tenant:sign:cancel:sms:confirm")
+  @Operation(summary = "Confirm SMS verification code to finalize tenant account deletion", operationId = "tenant:sign:cancel:sms:confirm")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully check")})
+      @ApiResponse(responseCode = "200", description = "SMS verification code confirmed successfully")})
   @GetMapping("/cancel/sms/confirm")
   public ApiLocaleResult<?> signCancelSmsCheck(@Valid SignCancelSmsConfirmDto dto) {
     tenantSignFacade.signCancelSmsConfirm(dto);

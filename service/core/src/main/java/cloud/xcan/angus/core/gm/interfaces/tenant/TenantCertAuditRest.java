@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "TenantCertAudit", description = "Verifies and audits tenant identity documents to ensure compliance and authenticity")
+@Tag(name = "Tenant Certificate Audit", description = "Tenant identity verification and audit management. Validates and audits tenant identity documents to ensure compliance, authenticity, and regulatory requirements")
 @Conditional(CloudServiceEditionCondition.class)
 @OperationClient
 @Validated
@@ -40,9 +40,9 @@ public class TenantCertAuditRest {
   private TenantCertAuditFacade tenantCertAuditFacade;
 
   @TenantClient
-  @Operation(summary = "Submit real-name authentication certificate", operationId = "tenant:certificate:submit")
+  @Operation(summary = "Submit tenant real-name authentication documents", operationId = "tenant:certificate:submit")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Submit successfully")})
+      @ApiResponse(responseCode = "200", description = "Real-name authentication documents submitted successfully")})
   @PostMapping("/audit/submit")
   public ApiLocaleResult<?> authSubmit(@Valid @RequestBody TenantRealNameSubmitDto dto) {
     tenantCertAuditFacade.authSubmit(dto);
@@ -51,27 +51,27 @@ public class TenantCertAuditRest {
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
   @OperationClient
-  @Operation(summary = "Audit tenant certificate information", operationId = "tenant:certificate:audit")
+  @Operation(summary = "Audit tenant identity verification documents", operationId = "tenant:certificate:audit")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Audit succeeded")})
+      @ApiResponse(responseCode = "200", description = "Tenant identity audit completed successfully")})
   @PatchMapping("/audit")
   public ApiLocaleResult<?> audit(@Valid @RequestBody TenantRealNameAuditDto dto) {
     tenantCertAuditFacade.audit(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the real-name audit of tenant", operationId = "tenant:certificate:audit:check")
+  @Operation(summary = "Check tenant real-name authentication status", operationId = "tenant:certificate:audit:check")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully audit")})
+      @ApiResponse(responseCode = "200", description = "Tenant real-name authentication status retrieved successfully")})
   @GetMapping("/audit/check")
   public ApiLocaleResult<?> check() {
     tenantCertAuditFacade.check();
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Quote the detail of tenant real-name audit", operationId = "tenant:certificate:audit:detail")
+  @Operation(summary = "Get detailed tenant real-name audit information", operationId = "tenant:certificate:audit:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully audit")})
+      @ApiResponse(responseCode = "200", description = "Tenant real-name audit details retrieved successfully")})
   @GetMapping("/audit")
   public ApiLocaleResult<TenantAuditDetailVo> auditDetail() {
     return ApiLocaleResult.success(tenantCertAuditFacade.detail());

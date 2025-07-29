@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "TenantCertRecognize", description = "Validates official IDs or business licenses via third-party APIs for automated authentication")
+@Tag(name = "TenantCertRecognize", description = "Tenant document recognition and validation. Automatically validates official identity documents and business licenses through third-party APIs for streamlined authentication processes")
 @Validated
 @RestController
 @RequestMapping("/api/v1/cert")
@@ -26,17 +26,17 @@ public class TenantCertRecognizeRest {
   @Resource
   private TenantCertRecognizeFacade certRecognizeFacade;
 
-  @Operation(summary = "Recognize business license", operationId = "cert:business:recognize")
+  @Operation(summary = "Recognize and validate business license information", operationId = "cert:business:recognize")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully recognize")})
+      @ApiResponse(responseCode = "200", description = "Business license recognition completed successfully")})
   @GetMapping("/business/recognize")
   public ApiLocaleResult<BusinessRecognizeVo> businessRecognize(@Valid BusinessRecognizeDto dto) {
     return ApiLocaleResult.success(certRecognizeFacade.businessRecognize(dto));
   }
 
-  @Operation(summary = "Recognize ID card", operationId = "cert:idcard:recognize")
+  @Operation(summary = "Recognize and validate identity card information", operationId = "cert:idcard:recognize")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully recognize")})
+      @ApiResponse(responseCode = "200", description = "Identity card recognition completed successfully")})
   @GetMapping("/idcard/recognize")
   public ApiLocaleResult<IdCardRecognizeVo> idcardRecognize(@Valid IdCardRecognizeDto dto) {
     return ApiLocaleResult.success(certRecognizeFacade.idcardRecognize(dto));

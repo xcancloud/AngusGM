@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Tenant", description = "Unified tenant management. Centralizes tenant account controls, configurations, and initialize access permissions, etc")
+@Tag(name = "Tenant", description = "Comprehensive tenant account management system. Centralizes tenant account controls, configurations, access permissions, and lifecycle management for cloud service environments")
 @Conditional(CloudServiceEditionCondition.class)
 @Validated
 @RestController
@@ -51,9 +51,9 @@ public class TenantRest {
   private TenantFacade tenantFacade;
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Add tenant", operationId = "tenant:add")
+  @Operation(summary = "Create new tenant account", operationId = "tenant:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Tenant account created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody TenantAddDto dto) {
@@ -61,9 +61,9 @@ public class TenantRest {
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Add tenant through mobile signup", operationId = "tenant:signupByMobile:add")
+  @Operation(summary = "Create tenant account through mobile number registration", operationId = "tenant:signupByMobile:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Tenant account created successfully via mobile registration")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/signupByMobile")
   public ApiLocaleResult<IdKey<Long, Object>> signupByMobile(
@@ -72,10 +72,10 @@ public class TenantRest {
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Update tenant", operationId = "tenant:update")
+  @Operation(summary = "Update existing tenant account information", operationId = "tenant:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Tenant account updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant account not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody TenantUpdateDto dto) {
@@ -84,10 +84,10 @@ public class TenantRest {
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Replace tenant", operationId = "tenant:replace")
+  @Operation(summary = "Replace tenant account with new configuration", operationId = "tenant:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Tenant account replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant account not found")
   })
   @PutMapping
   public ApiLocaleResult<?> replace(@Valid @RequestBody TenantReplaceDto dto) {
@@ -96,10 +96,10 @@ public class TenantRest {
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Enable or disable tenant", operationId = "tenant:enabled")
+  @Operation(summary = "Enable or disable tenant account access", operationId = "tenant:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Tenant account status updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant account not found")
   })
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(@Valid @RequestBody EnabledOrDisabledDto dto) {
@@ -108,10 +108,10 @@ public class TenantRest {
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "DistributedLock or unlock tenant", operationId = "tenant:locked")
+  @Operation(summary = "Lock or unlock tenant account access", operationId = "tenant:locked")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully locked"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Tenant account lock status updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant account not found")
   })
   @PatchMapping("/locked")
   public ApiLocaleResult<?> locked(@Valid @RequestBody TenantLockedDto dto) {
@@ -120,20 +120,20 @@ public class TenantRest {
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Query the detail of tenant", operationId = "tenant:detail")
+  @Operation(summary = "Get detailed tenant account information", operationId = "tenant:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Tenant account details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant account not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<TenantDetailVo> detail(
-      @Parameter(name = "id", description = "Tenant id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Tenant account unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(tenantFacade.detail(id));
   }
 
   @PreAuthorize("@PPS.hasToPolicy('" + TOP_TENANT_ADMIN + "')")
-  @Operation(summary = "Query the list of tenant", operationId = "tenant:list")
+  @Operation(summary = "Get paginated list of tenant accounts", operationId = "tenant:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Tenant account list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<TenantVo>> list(@Valid @ParameterObject TenantFindDto dto) {
     return ApiLocaleResult.success(tenantFacade.list(dto));

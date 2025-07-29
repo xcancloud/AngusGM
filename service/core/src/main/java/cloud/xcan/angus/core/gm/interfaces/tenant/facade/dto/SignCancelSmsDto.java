@@ -19,11 +19,11 @@ public class SignCancelSmsDto implements Serializable {
 
   @NotBlank
   @Mobile
-  @Schema(example = "13877897201", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Mobile phone number for tenant account deletion verification", example = "13877897201", requiredMode = RequiredMode.REQUIRED)
   private String mobile;
 
   @NotNull
-  @Schema(example = "SIGN_CANCEL", allowableValues = {
+  @Schema(description = "SMS verification business type for tenant account deletion", example = "SIGN_CANCEL", allowableValues = {
       "SIGN_CANCEL"}, requiredMode = RequiredMode.REQUIRED)
   private SmsBizKey bizKey;
 
