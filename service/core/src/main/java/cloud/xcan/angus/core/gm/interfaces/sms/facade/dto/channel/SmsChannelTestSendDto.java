@@ -19,12 +19,12 @@ import lombok.experimental.Accessors;
 public class SmsChannelTestSendDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Sms channel id", example = "Test Channel Id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "SMS channel unique identifier for testing", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long channelId;
 
   @NotNull
   @Size(max = MAX_MOBILE_SIZE)
-  @Schema(description = "Receive SMS mobiles", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Mobile phone numbers to receive test SMS messages", requiredMode = RequiredMode.REQUIRED)
   private List<String> mobiles;
 
 }

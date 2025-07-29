@@ -25,8 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Tag(name = "SmsChannel", description =
-    "Provides management for third-party SMS channel configuration. "
-        + "If the SMS cannot be sent, please confirm whether the corresponding plugin for the SMS channel is installed or if the SMS template is correct")
+    "SMS channel configuration management. Provides management for third-party SMS channel configuration, "
+        + "including API credentials, endpoints, and channel status. If SMS cannot be sent, please verify "
+        + "that the corresponding SMS channel plugin is installed and SMS templates are correctly configured")
 @Validated
 @RestController
 @RequestMapping("/api/v1/sms/channel")
@@ -35,10 +36,10 @@ public class SmsChannelRest {
   @Resource
   private SmsChannelFacade smsChannelFacade;
 
-  @Operation(summary = "Update sms channel", operationId = "sms:channel:update")
+  @Operation(summary = "Update SMS channel configuration", operationId = "sms:channel:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Update successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")
+      @ApiResponse(responseCode = "200", description = "SMS channel configuration updated successfully"),
+      @ApiResponse(responseCode = "404", description = "SMS channel not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody SmsChannelUpdateDto dto) {
@@ -46,28 +47,28 @@ public class SmsChannelRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Enabled or disable sms channel", operationId = "sms:channel:enabled")
+  @Operation(summary = "Enable or disable SMS channel", operationId = "sms:channel:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")})
+      @ApiResponse(responseCode = "200", description = "SMS channel status updated successfully")})
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(@Valid @RequestBody EnabledOrDisabledDto dto) {
     smsChannelFacade.enabled(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of sms channel", operationId = "sms:channel:detail")
+  @Operation(summary = "Get detailed SMS channel information", operationId = "sms:channel:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "SMS channel details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "SMS channel not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<SmsChannelVo> detail(
-      @Parameter(name = "id", description = "SMS channel id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "SMS channel unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(smsChannelFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of sms channel", operationId = "sms:channel:list")
+  @Operation(summary = "Get paginated list of SMS channels", operationId = "sms:channel:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "SMS channel list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<SmsChannelVo>> list(@Valid @ParameterObject SmsChannelFindDto dto) {
     return ApiLocaleResult.success(smsChannelFacade.list(dto));

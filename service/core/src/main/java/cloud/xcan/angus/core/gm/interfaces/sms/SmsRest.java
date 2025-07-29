@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Sms", description = "Handles sms message delivery operations, and audit logging for tracking sent communications")
+@Tag(name = "Sms", description = "SMS message delivery and management system. Handles SMS message delivery operations, verification code validation, and comprehensive audit logging for tracking sent communications")
 @Validated
 @RestController
 @RequestMapping("/api/v1/sms")
@@ -41,36 +41,36 @@ public class SmsRest {
   @Resource
   private SmsFacade smsFacade;
 
-  @Operation(summary = "Send sms", operationId = "sms:send")
+  @Operation(summary = "Send SMS message", operationId = "sms:send")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Sent successfully")})
+      @ApiResponse(responseCode = "200", description = "SMS message sent successfully")})
   @PostMapping("/send")
   public ApiLocaleResult<?> send(@Valid @RequestBody SmsSendDto dto) {
     smsFacade.send(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Send the test sms to channel", operationId = "sms:channel:test:send")
+  @Operation(summary = "Send test SMS message to channel", operationId = "sms:channel:test:send")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Test successfully")})
+      @ApiResponse(responseCode = "200", description = "Test SMS message sent successfully")})
   @PostMapping("/channel/test")
   public ApiLocaleResult<?> channelTest(@Valid @RequestBody SmsChannelTestSendDto dto) {
     smsFacade.channelTest(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check sms verification code", operationId = "sms:verificationCode:check")
+  @Operation(summary = "Validate SMS verification code", operationId = "sms:verificationCode:check")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully check")})
+      @ApiResponse(responseCode = "200", description = "SMS verification code validated successfully")})
   @GetMapping("/verificationCode/check")
   public ApiLocaleResult<?> verificationCodeCheck(@Valid @ParameterObject SmsVerificationCodeCheckDto dto) {
     smsFacade.verificationCodeCheck(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete sms", operationId = "sms:delete")
+  @Operation(summary = "Delete SMS messages", operationId = "sms:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "SMS messages deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -78,19 +78,19 @@ public class SmsRest {
     smsFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of sms", operationId = "sms:detail")
+  @Operation(summary = "Get detailed SMS message information", operationId = "sms:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "SMS message details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "SMS message not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<SmsDetailVo> detail(
-      @Parameter(name = "id", description = "Sms id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "SMS message unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(smsFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of sms", operationId = "sms:list")
+  @Operation(summary = "Get paginated list of SMS messages", operationId = "sms:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "SMS message list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<SmsDetailVo>> list(@Valid SmsFindDto dto) {
     return ApiLocaleResult.success(smsFacade.list(dto));

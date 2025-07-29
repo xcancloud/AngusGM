@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "SmsTemplate", description = "Standardizes sms content creation through reusable "
+@Tag(name = "Sms Template", description = "SMS template management system. Standardizes SMS content creation through reusable "
     + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency")
 @Validated
 @RestController
@@ -33,31 +33,31 @@ public class SmsTemplateRest {
   @Resource
   private SmsTemplateFacade smsTemplateFacade;
 
-  @Operation(summary = "Update sms template", operationId = "sms:template:update")
+  @Operation(summary = "Update SMS template configuration", operationId = "sms:template:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Update successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "SMS template configuration updated successfully"),
+      @ApiResponse(responseCode = "404", description = "SMS template not found")})
   @PatchMapping("/{id}")
   public ApiLocaleResult<?> update(
-      @Parameter(name = "id", description = "Sms template id", required = true) @PathVariable("id") Long id,
+      @Parameter(name = "id", description = "SMS template unique identifier", required = true) @PathVariable("id") Long id,
       @RequestBody SmsTemplateUpdateDto dto) {
     smsTemplateFacade.update(id, dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of sms template", operationId = "sms:template:detail")
+  @Operation(summary = "Get detailed SMS template information", operationId = "sms:template:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "SMS template details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "SMS template not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<SmsTemplateDetailVo> detail(
-      @Parameter(name = "id", description = "Sms template id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "SMS template unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(smsTemplateFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of sms template", operationId = "sms:template:list")
+  @Operation(summary = "Get paginated list of SMS templates", operationId = "sms:template:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "SMS template list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<SmsTemplateDetailVo>> list(@Valid @ParameterObject SmsTemplateFindDto dto) {
     return ApiLocaleResult.success(smsTemplateFacade.list(dto));

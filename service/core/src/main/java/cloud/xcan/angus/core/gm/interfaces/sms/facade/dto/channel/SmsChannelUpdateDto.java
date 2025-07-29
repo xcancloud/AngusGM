@@ -20,23 +20,23 @@ import org.hibernate.validator.constraints.Length;
 public class SmsChannelUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Sms channel id", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "SMS channel unique identifier", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The Api accessKey secret of sms channel", maxLength = MAX_CODE_LENGTH_X2)
+  @Schema(description = "SMS channel API access key secret for authentication")
   private String accessKeySecret;
 
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(description = "The Api accessKey id of sms channel", maxLength = MAX_CODE_LENGTH_X2)
+  @Schema(description = "SMS channel API access key identifier for authentication")
   private String accessKeyId;
 
   @Length(max = MAX_URL_LENGTH)
-  @Schema(description = "The Api endpoint of sms channel", maxLength = MAX_URL_LENGTH)
+  @Schema(description = "SMS channel API endpoint URL for service communication")
   private String endpoint;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Third sms channel no", maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "Third-party SMS channel identifier code")
   private String thirdChannelNo;
 
 }
