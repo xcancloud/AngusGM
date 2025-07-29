@@ -16,34 +16,44 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AppFuncFindDto extends AbstractQuery {
 
+  @Schema(description = "Application function identifier")
   private Long id;
 
+  @Schema(description = "Application function code for filtering")
   private String code;
 
+  @Schema(description = "Application function display name for filtering")
   private String name;
 
+  @Schema(description = "Application function short display name for filtering")
   private String showName;
 
+  @Schema(description = "Parent function identifier for hierarchical filtering")
   private Long pid;
 
+  @Schema(description = "Application function type for filtering")
   private AppFuncType type;
 
+  @Schema(description = "Authorization control status for filtering")
   private Boolean authCtrl;
 
+  @Schema(description = "Function enabled status for filtering")
   private Boolean enabled;
 
+  @Schema(description = "Function display sequence order for filtering")
   private Integer sequence;
 
   @JsonIgnore
   @Schema(hidden = true)
   private Long appId;
 
-  @Schema(description = "Function associated api id")
+  @Schema(description = "Associated API identifier for filtering")
   private Long apiId;
 
-  @Schema(description = "Function tag id")
+  @Schema(description = "Function tag identifier for filtering")
   private Long tagId;
 
+  @Schema(description = "Function creation date for filtering")
   private LocalDateTime createdDate;
 
   @Override

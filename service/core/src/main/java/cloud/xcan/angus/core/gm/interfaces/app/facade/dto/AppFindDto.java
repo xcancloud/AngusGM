@@ -21,43 +21,62 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Accessors(chain = true)
 public class AppFindDto extends PageQuery {
 
+  @Schema(description = "Application identifier for filtering")
   private Long id;
 
+  @Schema(description = "Application code for filtering")
   private String code;
 
+  @Schema(description = "Application display name for filtering")
   private String name;
 
+  @Schema(description = "Application short display name for filtering")
   private String showName;
 
+  @Schema(description = "Application icon URL for filtering")
   private String icon;
 
+  @Schema(description = "Application type for filtering")
   private AppType type;
 
+  @Schema(description = "Application edition type for filtering")
   private EditionType editionType;
 
+  @Schema(description = "Authorization control status for filtering")
   private Boolean authCtrl;
 
+  @Schema(description = "Application enabled status for filtering")
   private Boolean enabled;
 
+  @Schema(description = "Application access URL for filtering")
   private String url;
 
+  @Schema(description = "Application display sequence order for filtering")
   private Integer sequence;
 
+  @Schema(description = "Application software version for filtering")
   private String version;
 
+  @Schema(description = "Application activation stage for filtering")
   private OpenStage openStage;
 
+  @Schema(description = "OAuth2 client identifier for filtering")
   private String clientId;
 
+  @Schema(description = "Associated API identifier for filtering")
   private Long apiId;
 
+  @Schema(description = "Application tag identifier for filtering")
   private Long tagId;
 
+  @Schema(description = "Application creator identifier for filtering")
   private Long createdBy;
 
+  @Schema(description = "Tenant identifier for filtering")
   private Long tenantId;
 
   @DateTimeFormat(pattern = DATE_FMT)
+  @Schema(description = "Application creation date for filtering")
   private LocalDateTime createdDate;
 
   @Override

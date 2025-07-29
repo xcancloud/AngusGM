@@ -12,10 +12,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UnAuthUserFindDto extends PageQuery {
 
-  @Schema(description = "Unauthorized user id")
+  @Schema(description = "Unauthorized user identifier for filtering")
   private Long id;
 
-  @Schema(description = "Unauthorized user full name")
+  @Schema(description = "Unauthorized user full name for filtering")
   private String fullName;
 
 }

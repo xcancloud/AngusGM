@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppTag", description = "Assigns and categorizes applications using metadata tags")
+@Tag(name = "App Tag", description = "Manages application categorization and metadata using tags")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app")
@@ -49,26 +49,26 @@ public class AppTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add the tags of application", operationId = "app:tag:add")
+  @Operation(summary = "Assign tags to application", operationId = "app:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Tags assigned to application successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/tag")
   public ApiLocaleResult<List<IdKey<Long, Object>>> appTagAdd(
-      @Parameter(name = "id", description = "Application id", required = true) @PathVariable("id") Long appId,
+      @Parameter(name = "id", description = "Application identifier", required = true) @PathVariable("id") Long appId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody LinkedHashSet<Long> tagIds) {
     return ApiLocaleResult.success(appTagFacade.appTagAdd(appId, tagIds));
   }
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace the tags of application", operationId = "app:tag:replace")
+  @Operation(summary = "Replace tags for application", operationId = "app:tag:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Tags replaced for application successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @PutMapping("/{id}/tag")
   public ApiLocaleResult<?> appTagReplace(
-      @Parameter(name = "id", description = "Application id", required = true) @PathVariable("id") Long appId,
+      @Parameter(name = "id", description = "Application identifier", required = true) @PathVariable("id") Long appId,
       @Valid @Size(max = MAX_RELATION_QUOTA) @RequestBody LinkedHashSet<Long> tagIds) {
     appTagFacade.appTagReplace(appId, tagIds);
     return ApiLocaleResult.success();
@@ -76,25 +76,25 @@ public class AppTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the tags of application", operationId = "app:tag:delete")
+  @Operation(summary = "Remove tags from application", operationId = "app:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Tags removed from application successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/tag")
   public void appTagDelete(
-      @Parameter(name = "id", description = "Application id", required = true) @PathVariable("id") Long appId,
+      @Parameter(name = "id", description = "Application identifier", required = true) @PathVariable("id") Long appId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("tagIds") HashSet<Long> tagIds) {
     appTagFacade.appTagDelete(appId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of application", operationId = "app:tag:list")
+  @Operation(summary = "Retrieve tags list for application", operationId = "app:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application tags list retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<AppTagTargetVo>> appTagList(
-      @Parameter(name = "id", description = "Application id", required = true) @PathVariable("id") Long appId,
+      @Parameter(name = "id", description = "Application identifier", required = true) @PathVariable("id") Long appId,
       @Valid @ParameterObject AppTargetTagFindDto dto) {
     return ApiLocaleResult.success(appTagFacade.appTagList(appId, dto));
   }

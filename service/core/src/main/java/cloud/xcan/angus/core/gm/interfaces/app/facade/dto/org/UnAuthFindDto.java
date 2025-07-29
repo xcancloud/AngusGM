@@ -12,10 +12,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UnAuthFindDto extends PageQuery {
 
-  @Schema(description = "Organization id")
+  @Schema(description = "Organization identifier for filtering")
   private Long id;
 
-  @Schema(description = "Organization name")
+  @Schema(description = "Organization display name for filtering")
   private String name;
 
 }

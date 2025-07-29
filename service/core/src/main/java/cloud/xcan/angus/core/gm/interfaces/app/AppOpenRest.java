@@ -30,8 +30,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppOpen", description =
-    "Enable automated onboarding and configuration of applications, "
+@Tag(name = "App Open", description =
+    "Manages application onboarding operations. "
+        + "Enables automated onboarding and configuration of applications, "
         + "granting authorized access to resources based on organizational/user permissions while enforcing security policies")
 @OperationClient
 @Validated
@@ -44,9 +45,9 @@ public class AppOpenRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Open application", operationId = "app:open")
+  @Operation(summary = "Onboard application", operationId = "app:open")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Open successfully")})
+      @ApiResponse(responseCode = "201", description = "Application onboarded successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> open(@Valid @RequestBody AppOpenDto dto) {
@@ -55,10 +56,10 @@ public class AppOpenRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Renewal the opened application", operationId = "app:open:renew")
+  @Operation(summary = "Renew application onboarding", operationId = "app:open:renew")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Renew successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Application onboarding renewed successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")
   })
   @ResponseStatus(HttpStatus.CREATED)
   @PatchMapping("/renew")
@@ -69,9 +70,9 @@ public class AppOpenRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Cancel the opened application", operationId = "app:open:cancel")
+  @Operation(summary = "Cancel application onboarding", operationId = "app:open:cancel")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Cancel successfully")})
+      @ApiResponse(responseCode = "204", description = "Application onboarding cancelled successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @DeleteMapping("/cancel")
   public ApiLocaleResult<?> cancel(@Valid @RequestBody AppOpenCancelDto dto) {
@@ -79,9 +80,9 @@ public class AppOpenRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the list of opened application", operationId = "app:open:list")
+  @Operation(summary = "Retrieve onboarded applications list", operationId = "app:open:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Onboarded applications list retrieved successfully")})
   @GetMapping("/list")
   public ApiLocaleResult<PageResult<AppOpenVo>> list(@Valid @ParameterObject AppOpenFindDto dto) {
     return ApiLocaleResult.success(appOpenFacade.list(dto));

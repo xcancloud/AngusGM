@@ -17,11 +17,11 @@ public class AuthOrgPolicyAuthDeleteDto {
 
   @NotEmpty
   @Size(max = MAX_BATCH_SIZE)
-  @Schema(description = "Need to delete authorized organization ids", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Organization identifiers to remove authorization from", requiredMode = RequiredMode.REQUIRED)
   private HashSet<Long> orgIds;
 
   @Size(max = MAX_BATCH_SIZE)
-  @Schema(description = "Delete policy ids. When it is empty, all associated authorizations will be deleted, excluding those of other organizations")
+  @Schema(description = "Policy identifiers to remove. When empty, all associated authorizations will be deleted, excluding those of other organizations")
   private HashSet<Long> policyIds;
 
 }

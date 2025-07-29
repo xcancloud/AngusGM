@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@Tag(name = "App", description = "Manages application configurations and lifecycle processes")
+@Tag(name = "App", description = "Manages application configurations and lifecycle operations")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app")
@@ -60,9 +60,9 @@ public class AppRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add application", operationId = "app:add")
+  @Operation(summary = "Create application", operationId = "app:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Application created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody AppAddDto dto) {
@@ -73,8 +73,8 @@ public class AppRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Update application", operationId = "app:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Application updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody AppUpdateDto dto) {
@@ -86,7 +86,7 @@ public class AppRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Replace application", operationId = "app:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully")})
+      @ApiResponse(responseCode = "200", description = "Application replaced successfully")})
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@Valid AppReplaceDto dto) {
     return ApiLocaleResult.success(appFacade.replace(dto));
@@ -94,8 +94,8 @@ public class AppRest {
 
   @Operation(summary = "Update application site information", operationId = "app:site:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application site information updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @PatchMapping("/site")
   public ApiLocaleResult<?> siteUpdate(@Valid @RequestBody AppSiteInfoUpdateDto dto) {
     appFacade.siteUpdate(dto);
@@ -106,7 +106,7 @@ public class AppRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Delete applications", operationId = "app:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Applications deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -118,7 +118,7 @@ public class AppRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Enable or disable applications", operationId = "app:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")
+      @ApiResponse(responseCode = "200", description = "Applications enabled or disabled successfully")
   })
   @PatchMapping(value = "/enabled")
   public ApiLocaleResult<?> enabled(@Valid @RequestBody List<EnabledOrDisabledDto> dto) {
@@ -130,7 +130,7 @@ public class AppRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Import application", operationId = "app:import")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Import successfully")
+      @ApiResponse(responseCode = "200", description = "Application imported successfully")
   })
   @PostMapping(value = "/import")
   public ApiLocaleResult<?> importApp(@Valid AppImportDto dto,
@@ -143,27 +143,27 @@ public class AppRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Export application", operationId = "app:export")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Export successfully")
+      @ApiResponse(responseCode = "200", description = "Application exported successfully")
   })
   @GetMapping(value = "/export")
   public void export(@Valid @ParameterObject AppExportDto dto, HttpServletResponse response) {
     appFacade.export(dto, response);
   }
 
-  @Operation(summary = "Query the detail of application", operationId = "app:detail")
+  @Operation(summary = "Retrieve application details", operationId = "app:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<AppDetailVo> detail(
-      @Parameter(name = "id", description = "Application id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Application identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(appFacade.detail(id));
   }
 
-  @Operation(summary = "Query the detail of application", operationId = "app:detail:bycode")
+  @Operation(summary = "Retrieve application details by code", operationId = "app:detail:bycode")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @GetMapping(value = "/{code}/{editionType}")
   public ApiLocaleResult<AppDetailVo> detailByCode(
       @Parameter(name = "code", description = "Application code", required = true) @PathVariable("code") String code,
@@ -171,9 +171,9 @@ public class AppRest {
     return ApiLocaleResult.success(appFacade.detail(code, editionType));
   }
 
-  @Operation(summary = "Query the list of application", operationId = "app:list")
+  @Operation(summary = "Retrieve applications list", operationId = "app:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Applications list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<AppVo>> list(@Valid @ParameterObject AppFindDto dto) {
     return ApiLocaleResult.success(appFacade.list(dto));

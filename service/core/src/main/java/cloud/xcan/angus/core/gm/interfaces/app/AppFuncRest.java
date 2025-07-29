@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppFunction", description = "Organizes system functions (including menu, button, and panel) and permission assignments")
+@Tag(name = "App Function", description = "Manages application functions including menus, buttons, panels and permission assignments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app")
@@ -52,12 +52,12 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add application functions", operationId = "app:func:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
+  @Operation(summary = "Create application functions", operationId = "app:func:add")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Application functions created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{appId}/func")
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<AppFuncAddDto> dto) {
     return ApiLocaleResult.success(appFuncFacade.add(appId, dto));
   }
@@ -66,11 +66,11 @@ public class AppFuncRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Update application functions", operationId = "app:func:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "App function does not existed")})
+      @ApiResponse(responseCode = "200", description = "Application functions updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Application function not found")})
   @PatchMapping("/{appId}/func")
   public ApiLocaleResult<?> update(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<AppFuncUpdateDto> dto) {
     appFuncFacade.update(appId, dto);
     return ApiLocaleResult.success();
@@ -79,10 +79,10 @@ public class AppFuncRest {
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Replace application functions", operationId = "app:func:replace")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Replaced successfully")})
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Application functions replaced successfully")})
   @PutMapping("/{appId}/func")
   public ApiLocaleResult<?> replace(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<AppFuncReplaceDto> dto) {
     appFuncFacade.replace(appId, dto);
     return ApiLocaleResult.success();
@@ -90,55 +90,55 @@ public class AppFuncRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the functions of application", operationId = "app:func:delete")
+  @Operation(summary = "Delete application functions", operationId = "app:func:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Application functions deleted successfully")})
   @DeleteMapping(value = "/{appId}/func")
   public void delete(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @RequestParam("ids") @Size(max = MAX_BATCH_SIZE) HashSet<Long> ids) {
     appFuncFacade.delete(appId, ids);
   }
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable the functions of application", operationId = "app:func:enabled")
+  @Operation(summary = "Enable or disable application functions", operationId = "app:func:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")})
+      @ApiResponse(responseCode = "200", description = "Application functions enabled or disabled successfully")})
   @PatchMapping("/{appId}/func/enabled")
   public ApiLocaleResult<?> enabled(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<EnabledOrDisabledDto> dto) {
     appFuncFacade.enabled(appId, dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the function detail of application", operationId = "app:func:detail")
+  @Operation(summary = "Retrieve application function details", operationId = "app:func:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "App function does not existed")})
+      @ApiResponse(responseCode = "200", description = "Application function details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application function not found")})
   @GetMapping(value = "/func/{id}")
   public ApiLocaleResult<AppFuncDetailVo> detail(
-      @Parameter(name = "id", description = "Function id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Function identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(appFuncFacade.detail(id));
   }
 
-  @Operation(summary = "Query the functions list of application", operationId = "app:func:list")
+  @Operation(summary = "Retrieve application functions list", operationId = "app:func:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Application functions list retrieved successfully")})
   @GetMapping("/{appId}/func")
   public ApiLocaleResult<List<AppFuncVo>> list(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @ParameterObject AppFuncFindDto dto) {
     return ApiLocaleResult.success(appFuncFacade.list(appId, dto));
   }
 
-  @Operation(summary = "Query the function tree of application", operationId = "app:func:tree")
+  @Operation(summary = "Retrieve application function tree", operationId = "app:func:tree")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Application function tree retrieved successfully")})
   @GetMapping("/{appId}/func/tree")
   public ApiLocaleResult<List<AppFuncTreeVo>> tree(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @ParameterObject AppFuncFindDto dto) {
     return ApiLocaleResult.success(appFuncFacade.tree(appId, dto));
   }

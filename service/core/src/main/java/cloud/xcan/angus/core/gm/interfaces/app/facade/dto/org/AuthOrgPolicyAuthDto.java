@@ -17,14 +17,12 @@ public class AuthOrgPolicyAuthDto {
 
   @NotEmpty
   @Size(max = MAX_BATCH_SIZE)
-  @Schema(description = "Need to authorize organization ids, supports a maximum of `500`",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Organization identifiers to authorize, supports maximum of 500", requiredMode = RequiredMode.REQUIRED)
   private HashSet<Long> orgIds;
 
   @NotEmpty
   @Size(max = MAX_BATCH_SIZE)
-  @Schema(description = "Authorize policy ids, supports a maximum of `500`",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Policy identifiers to authorize, supports maximum of 500", requiredMode = RequiredMode.REQUIRED)
   private HashSet<Long> policyIds;
 
 }

@@ -29,51 +29,53 @@ import org.hibernate.validator.constraints.Length;
 public class AppFuncUpdateDto {
 
   @NotNull
-  @Schema(example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application function identifier to update", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(example = "script:add")
+  @Schema(description = "Application function unique code identifier", example = "script:add")
   private String code;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(example = "Add angus script")
+  @Schema(description = "Application function display name", example = "Add angus script")
   private String name;
 
   @Length(max = MAX_APP_FUNC_SHORT_NAME_LENGTH)
-  @Schema(example = "Add script")
+  @Schema(description = "Application function short display name for UI", example = "Add script")
   private String showName;
 
   @Min(DEFAULT_ROOT_PID)
+  @Schema(description = "Parent function identifier for hierarchical structure")
   private Long pid;
 
   @Length(max = MAX_URL_LENGTH)
-  @Schema(example = "http://dev-files.xcan.cloud/storage/api/v1/file/Menu01.icon")
+  @Schema(description = "Function icon URL for UI display", example = "http://dev-files.xcan.cloud/storage/api/v1/file/Menu01.icon")
   private String icon;
 
   //Modification not allowed
   //private AppFuncType type;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(example = "Add angus script")
+  @Schema(description = "Application function description", example = "Add angus script")
   private String description;
 
+  @Schema(description = "Enable authorization control for this function")
   private Boolean authCtrl;
 
   @Length(max = MAX_URL_LENGTH)
-  @Schema(example = "http://dev-tester.xcan.cloud/scripts")
+  @Schema(description = "Function access URL", example = "http://dev-tester.xcan.cloud/scripts")
   private String url;
 
   @Positive
-  @Schema(example = DEFAULT_SEQUENCE + "")
+  @Schema(description = "Function display sequence order", example = DEFAULT_SEQUENCE + "")
   private Integer sequence;
 
   @Size(max = MAX_APP_FUNC_API_NUM_AP)
-  @Schema(description = "Application homepage associated api ids")
+  @Schema(description = "Associated API identifiers for function access control")
   private LinkedHashSet<Long> apiIds;
 
   @Size(max = APP_MAX_TAG)
-  @Schema(description = "Application tag ids")
+  @Schema(description = "Function tag identifiers for categorization")
   private LinkedHashSet<Long> tagIds;
 
 }

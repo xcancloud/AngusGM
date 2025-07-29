@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppFunctionTag", description = "Provides tags management operation of application function (including application, menus, button and panel)")
+@Tag(name = "App Function Tag", description = "Manages tags for application functions including applications, menus, buttons and panels")
 @Validated
 @RestController
 @RequestMapping("/api/v1/app/func")
@@ -49,26 +49,26 @@ public class AppFuncTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add the tags of application function", operationId = "app:func:tag:add")
+  @Operation(summary = "Assign tags to application function", operationId = "app:func:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Tags assigned to application function successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/tag")
   public ApiLocaleResult<List<IdKey<Long, Object>>> funcTagAdd(
-      @Parameter(name = "id", description = "Function id", required = true) @PathVariable("id") Long funcId,
+      @Parameter(name = "id", description = "Function identifier", required = true) @PathVariable("id") Long funcId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody LinkedHashSet<Long> tagIds) {
     return ApiLocaleResult.success(appFuncTagFacade.funcTagAdd(funcId, tagIds));
   }
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace the tags of application function", operationId = "app:func:tag:replace")
+  @Operation(summary = "Replace tags for application function", operationId = "app:func:tag:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Tags replaced for application function successfully"),
+      @ApiResponse(responseCode = "404", description = "Application function not found")})
   @PutMapping("/{id}/tag")
   public ApiLocaleResult<?> funcTagReplace(
-      @Parameter(name = "id", description = "Function id", required = true) @PathVariable("id") Long funcId,
+      @Parameter(name = "id", description = "Function identifier", required = true) @PathVariable("id") Long funcId,
       @Valid @Size(max = MAX_RELATION_QUOTA) @RequestBody LinkedHashSet<Long> tagIds) {
     appFuncTagFacade.funcTagReplace(funcId, tagIds);
     return ApiLocaleResult.success();
@@ -76,25 +76,25 @@ public class AppFuncTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the tags of application function", operationId = "app:func:tag:delete")
+  @Operation(summary = "Remove tags from application function", operationId = "app:func:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Tags removed from application function successfully"),
+      @ApiResponse(responseCode = "404", description = "Application function not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/tag")
   public void funcTagDelete(
-      @Parameter(name = "id", description = "Function id", required = true) @PathVariable("id") Long funcId,
+      @Parameter(name = "id", description = "Function identifier", required = true) @PathVariable("id") Long funcId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("tagIds") HashSet<Long> tagIds) {
     appFuncTagFacade.funcTagDelete(funcId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of application function", operationId = "app:func:tag:list")
+  @Operation(summary = "Retrieve tags list for application function", operationId = "app:func:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application function tags list retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application function not found")})
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<AppTagTargetVo>> funcTagList(
-      @Parameter(name = "id", description = "Function id", required = true) @PathVariable("id") Long funcId,
+      @Parameter(name = "id", description = "Function identifier", required = true) @PathVariable("id") Long funcId,
       @Valid @ParameterObject AppTargetTagFindDto dto) {
     return ApiLocaleResult.success(appFuncTagFacade.funcTagList(funcId, dto));
   }

@@ -12,10 +12,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UnAuthDeptFindDto extends PageQuery {
 
-  @Schema(description = "Unauthorized department id")
+  @Schema(description = "Unauthorized department identifier for filtering")
   private Long id;
 
-  @Schema(description = "Unauthorized department name")
+  @Schema(description = "Unauthorized department display name for filtering")
   private String name;
 
 }

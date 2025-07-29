@@ -12,10 +12,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UnAuthGroupFindDto extends PageQuery {
 
-  @Schema(description = "Unauthorized group id")
+  @Schema(description = "Unauthorized group identifier for filtering")
   private Long id;
 
-  @Schema(description = "Unauthorized group name")
+  @Schema(description = "Unauthorized group display name for filtering")
   private String name;
 
 }

@@ -15,11 +15,11 @@ import lombok.experimental.Accessors;
 public class AppExportDto {
 
   @NotNull
-  @Schema(description = "Export application id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application identifier to export", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull
-  @Schema(description = "Export application file format type", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Export file format type", requiredMode = RequiredMode.REQUIRED)
   private ExportFileType exportType;
 
 }

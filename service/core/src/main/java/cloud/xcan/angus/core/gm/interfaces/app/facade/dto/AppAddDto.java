@@ -33,26 +33,23 @@ public class AppAddDto {
 
   @NotEmpty
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Application code", example = "AngusTester",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application unique code identifier", example = "AngusTester", requiredMode = RequiredMode.REQUIRED)
   private String code;
 
   @NotEmpty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Application name", example = "AngusTester",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application display name", example = "AngusTester", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotEmpty
   @Length(max = MAX_APP_FUNC_SHORT_NAME_LENGTH)
-  @Schema(description = "Application short name for web display", example = "AngusTester",
-      maxLength = MAX_APP_FUNC_SHORT_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application short display name for web interface", example = "AngusTester", requiredMode = RequiredMode.REQUIRED)
   private String showName;
 
   @NotEmpty
   @Length(max = MAX_URL_LENGTH)
-  @Schema(description = "Application icon", example = "http://dev-files.xcan.cloud/storage/api/v1/file/AngusTester.icon",
-      maxLength = MAX_URL_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Application icon URL for UI display", example = "http://dev-files.xcan.cloud/storage/api/v1/file/AngusTester.icon",
+      requiredMode = RequiredMode.REQUIRED)
   private String icon;
 
   @NotNull
@@ -60,7 +57,8 @@ public class AppAddDto {
       Application type.\s
       ***CLOUD_APP (Cloud Applications)***: Deliver scalable, on-demand services via cloud infrastructure, enabling remote access and elastic resource allocation.
       ***BASE_APP (Core Base Applications)***: Provide essential system functionalities and foundational services (e.g., authentication, data storage, system management) critical for platform operations.
-      ***OP_APP (Operational Applications)***: The operations platform centralizes and orchestrates business processes, real-time analytics, and system monitoring to enhance operational efficiency""", requiredMode = RequiredMode.REQUIRED)
+      ***OP_APP (Operational Applications)***: The operations platform centralizes and orchestrates business processes, real-time analytics, and system monitoring to enhance operational efficiency""", 
+      requiredMode = RequiredMode.REQUIRED)
   private AppType type;
 
   @NotNull
@@ -68,29 +66,29 @@ public class AppAddDto {
   private EditionType editionType;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Application detailed introduction", maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Application detailed description")
   private String description;
 
   @NotNull
-  @Schema(description = "Authorization control for applications. If enabled, users must be granted "
+  @Schema(description = "Enable authorization control for applications. If enabled, users must be granted "
       + "corresponding access policies to use the application", requiredMode = RequiredMode.REQUIRED)
   private Boolean authCtrl;
 
   @NotEmpty
   @Length(max = MAX_URL_LENGTH)
-  @Schema(description = "Application access url. The URL used to access the application",
+  @Schema(description = "Application access URL for user navigation",
       example = "http://dev-tester.xcan.cloud/", requiredMode = RequiredMode.REQUIRED)
   private String url;
 
   @Positive
-  @Schema(description = "Application sorting sequence value. Supports positive integers, "
+  @Schema(description = "Application display sequence order. Supports positive integers, "
       + "smaller numbers appear earlier in the list", defaultValue = "1000",
       minimum = "1", example = "1000")
   private Integer sequence = DEFAULT_SEQUENCE;
 
   @Size(max = MAX_APP_FUNC_API_NUM_AP)
-  @Schema(description = "Authorization apis for application homepage access. The API endpoint "
-      + "invoked when accessing the application to validate permissions. Supports a maximum quantity of `50`")
+  @Schema(description = "Authorization API identifiers for application homepage access. The API endpoints "
+      + "invoked when accessing the application to validate permissions")
   private LinkedHashSet<Long> apiIds;
 
   @NotNull
@@ -100,7 +98,7 @@ public class AppAddDto {
 
   @NotNull
   @Schema(description = """
-      Application open or activation stage:
+      Application activation stage:
 
       ***SIGNUP***: Automatically activates the application upon successful user registration.
       ***AUTH_PASSED***: Activates the application after real-name authentication is verified.
@@ -109,12 +107,11 @@ public class AppAddDto {
 
   @NotEmpty
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "OAuh2 client id", example = "xcan_tp",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "OAuth2 client identifier", example = "xcan_tp", requiredMode = RequiredMode.REQUIRED)
   private String clientId;
 
   @Size(max = APP_MAX_TAG)
-  @Schema(description = "Application tag ids. Use tags to organize applications and functions. Supports a maximum quantity of `10`")
+  @Schema(description = "Application tag identifiers for categorization. Use tags to organize applications and functions")
   private LinkedHashSet<Long> tagIds;
 
 }

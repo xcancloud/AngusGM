@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AppOpenInner", description =
-    "Used for opening applications through system calls in the background (/innerapi). "
-        + "Enable automated onboarding and configuration of applications, granting authorized access to resources "
+@Tag(name = "App Open - Internal", description =
+    "Internal API for application onboarding operations. "
+        + "Enables automated onboarding and configuration of applications, granting authorized access to resources "
         + "based on organizational/user permissions while enforcing security policies")
 @Conditional(CloudServiceEditionCondition.class)
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
@@ -40,19 +40,19 @@ public class AppOpenDoorRest {
   @Resource
   private AppOpenFacade appOpenFacade;
 
-  @Operation(summary = "Open application", operationId = "app:open:inner")
+  @Operation(summary = "Onboard application", operationId = "app:open:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Open successfully")})
+      @ApiResponse(responseCode = "201", description = "Application onboarded successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> open(@Valid @RequestBody AppOpenDto dto) {
     return ApiLocaleResult.success(appOpenFacade.open(dto));
   }
 
-  @Operation(summary = "Renewal the opened application", operationId = "app:open:renew:inner")
+  @Operation(summary = "Renew application onboarding", operationId = "app:open:renew:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Renew successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Application onboarding renewed successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")
   })
   @ResponseStatus(HttpStatus.CREATED)
   @PatchMapping("/renew")
@@ -61,9 +61,9 @@ public class AppOpenDoorRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Cancel the opened application", operationId = "app:open:cancel:inner")
+  @Operation(summary = "Cancel application onboarding", operationId = "app:open:cancel:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Cancel successfully")})
+      @ApiResponse(responseCode = "204", description = "Application onboarding cancelled successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @DeleteMapping("/cancel")
   public ApiLocaleResult<?> cancel(@Valid @RequestBody AppOpenCancelDto dto) {
