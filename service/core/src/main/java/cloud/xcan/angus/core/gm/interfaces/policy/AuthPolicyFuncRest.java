@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicyFunc", description = "Provides a unified entry for querying the relationship between functions (button,  menus, panel) and authorization policies")
+@Tag(name = "Auth Policy Function", description = "REST API endpoints for managing authorization policy and application function relationships")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/policy")
@@ -39,13 +39,13 @@ public class AuthPolicyFuncRest {
   @Resource
   private AuthPolicyFuncFacade authPolicyFuncFacade;
 
-  @Operation(summary = "Add application functions to authorization policy", operationId = "auth:policy:func:delete")
+  @Operation(summary = "Add application functions to authorization policy", operationId = "auth:policy:func:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "Functions added to policy successfully")})
   @ResponseStatus(HttpStatus.OK)
   @PostMapping("/{id}/func")
   public ApiLocaleResult<?> add(
-      @Parameter(name = "id", description = "Policy id", required = true) @PathVariable("id") Long policyId,
+      @Parameter(name = "id", description = "Authorization policy identifier", required = true) @PathVariable("id") Long policyId,
       @Valid @NotEmpty @Size(max = MAX_POLICY_FUNC_NUM) @RequestBody Set<Long> appFuncIds) {
     authPolicyFuncFacade.add(policyId, appFuncIds);
     return ApiLocaleResult.success();
@@ -53,45 +53,45 @@ public class AuthPolicyFuncRest {
 
   @Operation(summary = "Replace application functions of authorization policy", operationId = "auth:policy:func:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "Functions replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{id}/func")
   public ApiLocaleResult<?> replace(
-      @Parameter(name = "id", description = "Policy id", required = true) @PathVariable("id") Long policyId,
+      @Parameter(name = "id", description = "Authorization policy identifier", required = true) @PathVariable("id") Long policyId,
       @Valid @NotEmpty @Size(max = MAX_POLICY_FUNC_NUM) @RequestBody Set<Long> appFuncIds) {
     authPolicyFuncFacade.replace(policyId, appFuncIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete application functions of authorization policy", operationId = "auth:policy:func:delete")
+  @Operation(summary = "Remove application functions from authorization policy", operationId = "auth:policy:func:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "Functions removed successfully")})
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/{id}/func")
   public ApiLocaleResult<?> delete(
-      @Parameter(name = "id", description = "Policy id", required = true) @PathVariable("id") Long policyId,
+      @Parameter(name = "id", description = "Authorization policy identifier", required = true) @PathVariable("id") Long policyId,
       @Valid @NotEmpty @Size(max = MAX_POLICY_FUNC_NUM) @RequestBody Set<Long> appFuncIds) {
     authPolicyFuncFacade.delete(policyId, appFuncIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the application functions list of authorization policy", operationId = "auth:policy:func:list")
+  @Operation(summary = "Retrieve application functions assigned to authorization policy", operationId = "auth:policy:func:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Policy functions retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Policy not found")})
   @GetMapping("/{id}/func")
   public ApiLocaleResult<List<AuthPolicyFuncVo>> list(
-      @Parameter(name = "id", description = "Policy id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Authorization policy identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(authPolicyFuncFacade.list(id));
   }
 
-  @Operation(summary = "Query the application functions tree of authorization policy", operationId = "auth:policy:func:tree")
+  @Operation(summary = "Retrieve application functions tree for authorization policy", operationId = "auth:policy:func:tree")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Policy function tree retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Policy not found")})
   @GetMapping("/{id}/func/tree")
   public ApiLocaleResult<List<AuthPolicyFuncTreeVo>> tree(
-      @Parameter(name = "id", description = "Policy id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Authorization policy identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(authPolicyFuncFacade.tree(id));
   }
 

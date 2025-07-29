@@ -16,16 +16,22 @@ public class AuthPolicyGroupFindDto extends PageQuery {
   @Schema(hidden = true)
   private Long policyId;
 
+  @Schema(description = "Group identifier")
   private Long id;
 
+  @Schema(description = "Group display name")
   private String name;
 
+  @Schema(description = "Group unique code")
   private String code;
 
+  @Schema(description = "Whether the group is enabled and active")
   private Boolean enabled;
 
+  @Schema(description = "Group creator identifier")
   private Long createdBy;
 
+  @Schema(description = "Group creation timestamp")
   private LocalDateTime createdDate;
 
 }

@@ -26,28 +26,24 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class AuthPolicyReplaceDto {
 
-  @Schema(description = "Authorization policy id. The ID is required when modifying an existing "
-      + "policy, create a new policy when the value is empty", example = "1")
+  @Schema(description = "Authorization policy identifier for updating existing policy. Leave empty to create new policy", example = "1")
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Authorization policy name", example = "System administrator",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the authorization policy", example = "System Administrator Policy", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @Code
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Authorization policy code. Note: Modification not allowed",
-      example = "admin", maxLength = MAX_CODE_LENGTH)
+  @Schema(description = "Unique identifier code for the authorization policy. Cannot be modified after creation", example = "SYS_ADMIN")
   private String code;
 
-  @Schema(description = "Authorization policy type. Note: Modification not allowed")
+  @Schema(description = "Classification type of the authorization policy. Cannot be modified after creation")
   private PolicyType type;
 
   @NotNull
-  @Schema(description = "Default policy flag", defaultValue = "false", example = "false",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Whether this policy is the default authorization policy", defaultValue = "false", example = "false", requiredMode = RequiredMode.REQUIRED)
   private Boolean default0;
 
   //Modification not allowed
@@ -55,15 +51,14 @@ public class AuthPolicyReplaceDto {
   //private PolicyGrantStage grantStage;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Authorization policy description", example = "System management policy",
-      maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "Detailed description of the authorization policy functionality", example = "Comprehensive system administration policy with full access privileges")
   private String description;
 
-  @Schema(description = "The application id of authorization policy. Note: Modification not allowed", example = "1")
+  @Schema(description = "Application identifier that this authorization policy belongs to. Cannot be modified after creation", example = "1")
   private Long appId;
 
   @Size(max = MAX_POLICY_FUNC_NUM)
-  @Schema(description = "The application function ids of authorization policy, the maximum support is `2000`")
+  @Schema(description = "Application function identifiers associated with this authorization policy")
   private Set<Long> funcIds;
 
   @JsonIgnore

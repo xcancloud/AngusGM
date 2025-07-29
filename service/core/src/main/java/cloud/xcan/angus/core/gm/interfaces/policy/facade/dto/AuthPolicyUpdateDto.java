@@ -21,30 +21,30 @@ import org.hibernate.validator.constraints.Length;
 public class AuthPolicyUpdateDto {
 
   @NotNull
-  @Schema(description = "Authorization policy id", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorization policy identifier to update", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Authorization policy name", example = "System administrator", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Display name for the authorization policy", example = "System Administrator Policy")
   private String name;
 
   //private String code;
 
   //private PolicyType type;
 
-  @Schema(description = "Default authorization policy flag", defaultValue = "false", example = "false")
+  @Schema(description = "Whether this policy is the default authorization policy", defaultValue = "false", example = "false")
   private Boolean default0;
 
   //private PolicyGrantStage grantStage;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Authorization policy description", example = "System management policy")
+  @Schema(description = "Detailed description of the authorization policy functionality", example = "Comprehensive system administration policy with full access privileges")
   private String description;
 
   //private Long appId;
 
   @Size(max = MAX_POLICY_FUNC_NUM)
-  @Schema(description = "The application function ids of authorization policy, the maximum support is `2000`")
+  @Schema(description = "Application function identifiers associated with this authorization policy")
   private Set<Long> funcIds;
 
 }

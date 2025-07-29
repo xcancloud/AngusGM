@@ -17,30 +17,41 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UnAuthPolicyFindDto extends PageQuery {
 
+  @Schema(description = "Authorization policy identifier")
   private Long id;
 
+  @Schema(description = "Authorization policy display name")
   private String name;
 
+  @Schema(description = "Authorization policy unique code")
   private String code;
 
+  @Schema(description = "Authorization policy type classification")
   private PolicyType type;
 
+  @Schema(description = "Whether this is the default authorization policy")
   private Boolean default0;
 
+  @Schema(description = "Whether the authorization policy is enabled and active")
   private Boolean enabled;
 
   @JsonIgnore
-  @Schema(description = "Whether or not ignore the authorization organization information flag", defaultValue = "false", hidden = true)
+  @Schema(description = "Whether to ignore authorization organization information", defaultValue = "false", hidden = true)
   private transient Boolean ignoreAuthOrg = true;
 
+  @Schema(description = "Authorization policy grant stage")
   private PolicyGrantStage grantStage;
 
+  @Schema(description = "Authorization policy detailed description")
   private String description;
 
+  @Schema(description = "Application identifier that this policy belongs to")
   private Long appId;
 
+  @Schema(description = "Client application identifier")
   private String clientId;
 
+  @Schema(description = "Policy creation timestamp")
   private LocalDateTime createdDate;
 
   @JsonIgnore

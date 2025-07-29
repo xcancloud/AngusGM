@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicyApp", description = "Provides a unified entry for querying the relationship between applications and authorization policies")
+@Tag(name = "Auth Policy Application", description = "REST API endpoints for managing authorization policy and application relationships")
 @Validated
 @RestController
 @RequestMapping("/api/v1")
@@ -30,22 +30,22 @@ public class AuthPolicyAppRest {
   @Resource
   private AuthPolicyAppFacade authPolicyAppFacade;
 
-  @Operation(summary = "Query the authorization policy list of application", operationId = "app:policy:list")
+  @Operation(summary = "Retrieve authorization policies associated with an application", operationId = "app:policy:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Application policies retrieved successfully")})
   @GetMapping("/app/{appId}/policy")
   public ApiLocaleResult<PageResult<AppPolicyVo>> appPolicyList(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
       @Valid @ParameterObject AppPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyAppFacade.appPolicyList(appId, dto));
   }
 
-  @Operation(summary = "Query the application detail of authorization policy", operationId = "policy:app:detail")
+  @Operation(summary = "Retrieve application details for a specific authorization policy", operationId = "policy:app:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Application details retrieved successfully")})
   @GetMapping("/policy/{policyId}/app")
   public ApiLocaleResult<AppDetailVo> policyAppDetail(
-      @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId) {
+      @Parameter(name = "policyId", description = "Authorization policy identifier", required = true) @PathVariable("policyId") Long policyId) {
     return ApiLocaleResult.success(authPolicyAppFacade.policyAppDetail(policyId));
   }
 

@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicyUser", description = "Provides a unified entry for querying the relationship between users and authorization policies")
+@Tag(name = "Auth Policy User", description = "REST API endpoints for managing authorization policy and user relationships")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -49,113 +49,113 @@ public class AuthPolicyUserRest {
   @Resource
   private AuthPolicyUserFacade authPolicyUserFacade;
 
-  @Operation(summary = "Authorize the policy to users", operationId = "auth:policy:user:add")
+  @Operation(summary = "Assign authorization policy to multiple users", operationId = "auth:policy:user:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Policy assigned to users successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/policy/{policyId}/user")
   public ApiLocaleResult<List<IdKey<Long, Object>>> policyUserAdd(
-      @Parameter(name = "policyId", description = "Authorization policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "userIds", description = "User ids", required = true)
+      @Parameter(name = "policyId", description = "Authorization policy identifier", required = true) @PathVariable("policyId") Long policyId,
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "userIds", description = "User identifiers to assign policy to", required = true)
       @RequestBody LinkedHashSet<Long> userIds) {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUserAdd(policyId, userIds));
   }
 
-  @Operation(summary = "Delete the associated users of authorization policy", operationId = "auth:policy:user:delete")
+  @Operation(summary = "Remove authorization policy from users", operationId = "auth:policy:user:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Policy removed from users successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/policy/{policyId}/user")
   public void policyUserDelete(
-      @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "userIds", description = "User ids", required = true)
+      @Parameter(name = "policyId", description = "Authorization policy identifier", required = true) @PathVariable("policyId") Long policyId,
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "userIds", description = "User identifiers to remove policy from", required = true)
       @RequestParam("userIds") HashSet<Long> userIds) {
     authPolicyUserFacade.policyUserDelete(policyId, userIds);
   }
 
-  @Operation(summary = "Query the user list of authorization policy", operationId = "auth:policy:user:list")
+  @Operation(summary = "Retrieve users assigned to an authorization policy", operationId = "auth:policy:user:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "User list retrieved successfully")})
   @GetMapping("/policy/{policyId}/user")
   public ApiLocaleResult<PageResult<UserListVo>> policyUserList(
-      @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
+      @Parameter(name = "policyId", description = "Authorization policy identifier", required = true) @PathVariable("policyId") Long policyId,
       @Valid @ParameterObject AuthPolicyUserFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUserList(policyId, dto));
   }
 
-  @Operation(summary = "Query the unauthorized user list of policy", operationId = "auth:policy:unauth:user:list")
+  @Operation(summary = "Retrieve users not assigned to an authorization policy", operationId = "auth:policy:unauth:user:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Unauthorized user list retrieved successfully")})
   @GetMapping("/policy/{policyId}/unauth/user")
   public ApiLocaleResult<PageResult<UserListVo>> policyUnauthUserList(
-      @Parameter(name = "policyId", description = "Policy id", required = true) @PathVariable("policyId") Long policyId,
+      @Parameter(name = "policyId", description = "Authorization policy identifier", required = true) @PathVariable("policyId") Long policyId,
       @Valid AuthPolicyUserFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.policyUnauthUserList(policyId, dto));
   }
 
-  @Operation(summary = "Authorize the policies to user", operationId = "auth:user:policy:add")
+  @Operation(summary = "Assign multiple authorization policies to a user", operationId = "auth:user:policy:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Policies assigned to user successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/user/{userId}/policy")
   public ApiLocaleResult<List<IdKey<Long, Object>>> userPolicyAdd(
-      @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "policyIds", description = "Policy ids", required = true)
+      @Parameter(name = "userId", description = "User identifier", required = true) @PathVariable("userId") Long userId,
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "policyIds", description = "Authorization policy identifiers to assign", required = true)
       @RequestBody LinkedHashSet<Long> policyIds) {
     return ApiLocaleResult.success(authPolicyUserFacade.userPolicyAdd(userId, policyIds));
   }
 
-  @Operation(summary = "Delete the authorization policies of user", operationId = "auth:user:policy:delete")
+  @Operation(summary = "Remove authorization policies from a user", operationId = "auth:user:policy:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Policies removed from user successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/user/{userId}/policy")
   public void userPolicyDelete(
-      @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "policyIds", description = "Policy ids", required = true)
+      @Parameter(name = "userId", description = "User identifier", required = true) @PathVariable("userId") Long userId,
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "policyIds", description = "Authorization policy identifiers to remove", required = true)
       @RequestParam("policyIds") HashSet<Long> policyIds) {
     authPolicyUserFacade.userPolicyDelete(userId, policyIds);
   }
 
-  @Operation(summary = "Delete the authorization policies of users", operationId = "auth:user:policy:delete:batch")
+  @Operation(summary = "Remove authorization policies from multiple users", operationId = "auth:user:policy:delete:batch")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Policies removed from users successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/user/policy")
   public void userPolicyDeleteBatch(
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "userIds", description = "User ids", required = true)
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "userIds", description = "User identifiers", required = true)
       @RequestParam("userIds") HashSet<Long> userIds,
-      @Valid @Size(max = MAX_BATCH_SIZE) @Parameter(name = "policyIds", description = "Policy ids", required = false)
+      @Valid @Size(max = MAX_BATCH_SIZE) @Parameter(name = "policyIds", description = "Authorization policy identifiers to remove (optional)", required = false)
       @RequestParam(value = "policyIds", required = false) HashSet<Long> policyIds) {
     authPolicyUserFacade.userPolicyDeleteBatch(userIds, policyIds);
   }
 
-  @Operation(summary = "Query the authorized policy list of user", operationId = "auth:user:policy:list")
+  @Operation(summary = "Retrieve authorization policies assigned to a user", operationId = "auth:user:policy:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "User policies retrieved successfully")})
   @GetMapping("/user/{userId}/policy")
   public ApiLocaleResult<PageResult<AuthPolicyVo>> userPolicyList(
-      @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
+      @Parameter(name = "userId", description = "User identifier", required = true) @PathVariable("userId") Long userId,
       @Valid AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.userPolicyList(userId, dto));
   }
 
-  @Operation(summary = "Query the all associated authorization policies of user", operationId = "auth:user:policy:association:all")
+  @Operation(summary = "Retrieve all associated authorization policies for a user", operationId = "auth:user:policy:association:all")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "User associated policies retrieved successfully")})
   @GetMapping("/user/{userId}/policy/associated")
   public ApiLocaleResult<PageResult<AuthPolicyAssociatedVo>> userAssociatedPolicyList(
-      @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
+      @Parameter(name = "userId", description = "User identifier", required = true) @PathVariable("userId") Long userId,
       @Valid @ParameterObject AuthPolicyAssociatedFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.userAssociatedPolicyList(userId, dto));
   }
 
-  @Operation(summary = "Query the unauthorized policy list of user", operationId = "auth:user:unauth:policy:list")
+  @Operation(summary = "Retrieve authorization policies not assigned to a user", operationId = "auth:user:unauth:policy:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Unauthorized policies retrieved successfully")})
   @GetMapping("/user/{userId}/unauth/policy")
   public ApiLocaleResult<PageResult<PolicyUnauthVo>> userUnauthPolicyList(
-      @Parameter(name = "userId", description = "User id", required = true) @PathVariable("userId") Long userId,
+      @Parameter(name = "userId", description = "User identifier", required = true) @PathVariable("userId") Long userId,
       @Valid @ParameterObject UnAuthPolicyAssociatedFindDto dto) {
     return ApiLocaleResult.success(authPolicyUserFacade.userUnauthPolicyList(userId, dto));
   }

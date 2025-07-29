@@ -16,18 +16,25 @@ public class AuthPolicyDeptFindDto extends PageQuery {
   @Schema(hidden = true)
   private Long policyId;
 
+  @Schema(description = "Department identifier")
   private Long id;
 
+  @Schema(description = "Department unique code")
   private String code;
 
+  @Schema(description = "Department display name")
   private String name;
 
+  @Schema(description = "Parent department identifier")
   private Long pid;
 
+  @Schema(description = "Department hierarchy level")
   private Integer level;
 
+  @Schema(description = "Department creator identifier")
   private Long createdBy;
 
+  @Schema(description = "Department creation timestamp")
   private LocalDateTime createdDate;
 
 }

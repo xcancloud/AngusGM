@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicyTenant", description = "Provides a unified entry for querying the relationship between tenant, application and authorization policies")
+@Tag(name = "Auth Policy Tenant", description = "REST API endpoints for managing authorization policy and tenant relationships")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/tenant")
@@ -34,64 +34,67 @@ public class AuthPolicyTenantRest {
   @Resource
   private AuthPolicyTenantFacade authPolicyTenantFacade;
 
-  @Operation(summary = "Set the default policy of user access application", operationId = "auth:tenant:app:policy:default:replace")
+  @Operation(summary = "Set default authorization policy for user access to application", operationId = "auth:tenant:app:policy:default:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Set successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Default policy set successfully"),
+      @ApiResponse(responseCode = "404", description = "Application or policy not found")
   })
   @PutMapping("/app/{appId}/policy/default/{policyId}")
   public ApiLocaleResult<?> defaultPolicySet(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId,
-      @Parameter(name = "policyId", description = "Authorization policy id", required = true) @PathVariable("policyId") Long policyId) {
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
+      @Parameter(name = "policyId", description = "Authorization policy identifier", required = true) @PathVariable("policyId") Long policyId) {
     authPolicyTenantFacade.defaultPolicySet(appId, policyId);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete user access application default policy, prevent new users to access the application", operationId = "auth:tenant:app:policy:default:delete")
+  @Operation(summary = "Remove default authorization policy for user access to application", operationId = "auth:tenant:app:policy:default:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Default policy removed successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/app/{appId}/policy/default")
   public void defaultPolicyDelete(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId) {
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId) {
     authPolicyTenantFacade.defaultPolicyDelete(appId);
   }
 
-  @Operation(summary = "Query the default policies of all authorized applications", operationId = "auth:tenant:app:policy:default:list")
+  @Operation(summary = "Retrieve default authorization policies for all authorized applications", operationId = "auth:tenant:app:policy:default:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Default policies retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "No applications found")
+  })
   @GetMapping(value = "/app/default")
   public ApiLocaleResult<List<AuthAppDefaultPolicyVo>> defaultPolicy() {
     return ApiLocaleResult.success(authPolicyTenantFacade.defaultPolicy());
   }
 
-  @Operation(summary = "Query all authorized applications of tenant", operationId = "auth:tenant:app:list")
+  @Operation(summary = "Retrieve all applications authorized for the tenant", operationId = "auth:tenant:app:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Authorized applications retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "No applications found")
+  })
   @GetMapping(value = "/app")
   public ApiLocaleResult<List<AppVo>> tenantAppList() {
     return ApiLocaleResult.success(authPolicyTenantFacade.tenantAppList());
   }
 
-  @Operation(summary = "Query all functions list of authorized application", operationId = "auth:tenant:app:func:list")
+  @Operation(summary = "Retrieve all functions for an authorized application", operationId = "auth:tenant:app:func:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application functions retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")
+  })
   @GetMapping(value = "/app/{appId}/func")
   public ApiLocaleResult<List<AuthPolicyFuncVo>> tenantAppFuncList(
-      @Parameter(name = "appId", description = "Application id", required = true) @PathVariable("appId") Long appId) {
+      @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId) {
     return ApiLocaleResult.success(authPolicyTenantFacade.tenantAppFuncList(appId));
   }
 
-  @Operation(summary = "Query all functions tree of authorized application", operationId = "auth:tenant:app:func:tree")
+  @Operation(summary = "Retrieve function tree for an authorized application", operationId = "auth:tenant:app:func:tree")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Application function tree retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Application not found")})
   @GetMapping(value = "/app/{appId}/func/tree")
   public ApiLocaleResult<List<AuthPolicyFuncTreeVo>> tenantAppFuncTree(
-      @Valid @PathVariable("appId") @Parameter(name = "appId", description = "Application id", required = true) Long appId) {
+      @Valid @PathVariable("appId") @Parameter(name = "appId", description = "Application identifier", required = true) Long appId) {
     return ApiLocaleResult.success(authPolicyTenantFacade.tenantAppFuncTree(appId));
   }
 

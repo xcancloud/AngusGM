@@ -17,24 +17,34 @@ public class AuthPolicyUserFindDto extends PageQuery {
   @Schema(hidden = true)
   private Long policyId;
 
+  @Schema(description = "User identifier")
   private Long id;
 
+  @Schema(description = "User login username")
   private String username;
 
+  @Schema(description = "User full name")
   private String fullName;
 
+  @Schema(description = "User mobile phone number")
   private String mobile;
 
+  @Schema(description = "User email address")
   private String email;
 
+  @Schema(description = "User source or origin")
   private UserSource source;
 
+  @Schema(description = "Whether the user account is enabled and active")
   private Boolean enabled;
 
+  @Schema(description = "Whether the user has system administrator privileges")
   private Boolean sysAdmin;
 
+  @Schema(description = "User creator identifier")
   private Long createdBy;
 
+  @Schema(description = "User creation timestamp")
   private LocalDateTime createdDate;
 
 }

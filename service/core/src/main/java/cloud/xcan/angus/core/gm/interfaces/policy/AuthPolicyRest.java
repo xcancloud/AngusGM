@@ -43,9 +43,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "AuthPolicy", description =
-    "Provides a unified entry for authorization policies management. "
-        + "Authorization policies control access to resources and define permissions for users and applications")
+@Tag(name = "Auth Policy", description = "REST API endpoints for managing authorization policies and their configurations")
 @Validated
 @RestController
 @RequestMapping("/api/v1/auth/policy")
@@ -54,8 +52,8 @@ public class AuthPolicyRest {
   @Resource
   private AuthPolicyFacade authPolicyFacade;
 
-  @Operation(summary = "Add authorization policies", operationId = "auth:policy:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
+  @Operation(summary = "Create multiple authorization policies", operationId = "auth:policy:add")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Authorization policies created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -63,10 +61,10 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success(authPolicyFacade.add(dto));
   }
 
-  @Operation(summary = "Update authorization policies", operationId = "auth:policy:update")
+  @Operation(summary = "Update existing authorization policies", operationId = "auth:policy:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Authorization policies updated successfully"),
+      @ApiResponse(responseCode = "404", description = "One or more policies not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(
@@ -75,10 +73,10 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace authorization policies", operationId = "auth:policy:update")
+  @Operation(summary = "Create or replace authorization policies", operationId = "auth:policy:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Authorization policies created or replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "One or more policies not found")
   })
   @PutMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> replace(
@@ -88,9 +86,9 @@ public class AuthPolicyRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Initialize the authorization policy for tenant or platform users", operationId = "auth:policy:init")
+  @Operation(summary = "Initialize authorization policies for tenant or platform users", operationId = "auth:policy:init")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Initialized successfully")})
+      @ApiResponse(responseCode = "201", description = "Authorization policies initialized successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/init")
   public ApiLocaleResult<?> init(@Valid @RequestBody AuthPolicyInitDto dto) {
@@ -98,10 +96,10 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Enabled or disabled the authorization policies", operationId = "auth:policy:enabled")
+  @Operation(summary = "Enable or disable authorization policies", operationId = "auth:policy:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Authorization policies enabled or disabled successfully"),
+      @ApiResponse(responseCode = "404", description = "One or more policies not found")
   })
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(
@@ -110,9 +108,9 @@ public class AuthPolicyRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete authorization policies", operationId = "auth:policy:delete")
+  @Operation(summary = "Delete multiple authorization policies", operationId = "auth:policy:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Authorization policies deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -120,20 +118,20 @@ public class AuthPolicyRest {
     authPolicyFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of authorization policy", operationId = "auth:policy:detail")
+  @Operation(summary = "Retrieve detailed information about an authorization policy", operationId = "auth:policy:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Authorization policy details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Policy not found")})
   @GetMapping(value = "/{idOrCode}")
   public ApiLocaleResult<AuthPolicyDetailVo> detail(
-      @Parameter(name = "idOrCode", description = "Authorization policy id or code", required = true)
+      @Parameter(name = "idOrCode", description = "Authorization policy identifier or code", required = true)
       @PathVariable("idOrCode") String idOrCode) {
     return ApiLocaleResult.success(authPolicyFacade.detail(idOrCode));
   }
 
-  @Operation(summary = "Query the list of authorization policy", operationId = "auth:policy:list")
+  @Operation(summary = "Search and retrieve authorization policies with pagination", operationId = "auth:policy:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Authorization policy list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<AuthPolicyVo>> list(@Valid @ParameterObject AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyFacade.list(dto));
