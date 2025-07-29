@@ -19,24 +19,24 @@ import org.hibernate.validator.constraints.Length;
 public class EmailTemplateUpdateDto implements Serializable {
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Template name", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Display name for the email template")
   private String name;
 
   @Length(max = MAX_EMAIL_CONTEXT_SIZE)
-  @Schema(description = "Template content", maxLength = MAX_EMAIL_CONTEXT_SIZE)
+  @Schema(description = "Email template content body")
   private String content;
 
-  @Schema(description = "Whether or not verification code email flag")
+  @Schema(description = "Whether this is a verification code email template")
   private Boolean verificationCode;
 
-  @Schema(description = "Validity of verification code, in seconds")
+  @Schema(description = "Verification code validity period in seconds")
   private Integer verificationCodeValidSecond;
 
   @Length(max = MAX_SUBJECT_PREFIX_LENGTH)
-  @Schema(description = "Template email subject prefix", maxLength = MAX_SUBJECT_PREFIX_LENGTH)
+  @Schema(description = "Prefix to be added to email subject lines")
   private String subjectPrefix;
 
-  @Schema(description = "Template email language")
+  @Schema(description = "Email template language setting")
   private SupportedLanguage language;
 
 }

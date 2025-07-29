@@ -19,19 +19,19 @@ import lombok.experimental.Accessors;
 public class EmailTestDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Test email server id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email server identifier for testing", requiredMode = RequiredMode.REQUIRED)
   private Long serverId;
 
   @NotNull
   @Size(max = MAX_EMAIL_ADDRESS)
-  @Schema(description = "List of email receiving addresses, supporting up to `500` addresses. ",
+  @Schema(description = "List of recipient email addresses for testing. Maximum 500 addresses",
       type = "array", example = "[\"james@xcan.cloud\"]", requiredMode = RequiredMode.REQUIRED)
   private Set<String> toAddress;
 
-  @Schema(description = "Send tenant id. Non user operation (job or innerapi) is required")
+  @Schema(description = "Sender tenant identifier. Required for non-user operations (job or innerapi)")
   private Long sendTenantId;
 
-  @Schema(description = "Send user id. Non user operation (job or innerapi) is required")
+  @Schema(description = "Sender user identifier. Required for non-user operations (job or innerapi)")
   private Long sendUserId;
 
 }

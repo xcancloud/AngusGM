@@ -28,48 +28,45 @@ public class ServerAddDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Mail server name", example = "XCan Email Server",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Display name for the email server", example = "XCan Email Server", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @DoInFuture("Support the receiving protocol: POP3, IMAP")
   @NotNull
   @EnumPart(enumClass = EmailProtocol.class, allowableValues = {"SMTP"})
-  @Schema(description = "Mail server protocol, only `SMTP` is supported",
+  @Schema(description = "Email server protocol type. Currently only SMTP is supported",
       allowableValues = {"SMTP"}, requiredMode = RequiredMode.REQUIRED)
   private EmailProtocol protocol;
 
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(description = "Email server remark", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Additional description or notes about the email server")
   private String remark;
 
   @NotBlank
   @Length(max = MAX_HOST_LENGTH)
-  @Schema(description = "Email server hostname, ip or domain", example = "smtp.xcancloud.com",
-      maxLength = MAX_HOST_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email server hostname, IP address, or domain name", example = "smtp.xcancloud.com", requiredMode = RequiredMode.REQUIRED)
   private String host;
 
   @NotNull
   @Port
-  @Schema(description = "Email server port", example = "465",
-      minimum = "1", maximum = "65535", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email server port number", example = "465", minimum = "1", maximum = "65535", requiredMode = RequiredMode.REQUIRED)
   private Integer port;
 
-  @Schema(description = "Whether to enable starttls when connecting to the mail server", defaultValue = "true")
+  @Schema(description = "Whether to enable STARTTLS when connecting to the mail server", defaultValue = "true")
   private Boolean startTlsEnabled = true;
 
-  @Schema(description = "Whether to enable socket when communicating with the mail server", defaultValue = "true")
+  @Schema(description = "Whether to enable SSL/TLS when communicating with the mail server", defaultValue = "true")
   private Boolean sslEnabled = true;
 
-  @Schema(description = "Whether mail server authentication is required", defaultValue = "true")
+  @Schema(description = "Whether email server authentication is required", defaultValue = "true")
   private Boolean authEnabled = true;
 
   @Valid
-  @Schema(description = "Email server authentication account information")
+  @Schema(description = "Email server authentication account credentials")
   private AuthAccountTo authAccount;
 
   @Length(max = MAX_SUBJECT_PREFIX_LENGTH)
-  @Schema(description = "Email subject prefix", maxLength = MAX_SUBJECT_PREFIX_LENGTH)
+  @Schema(description = "Prefix to be added to email subject lines")
   private String subjectPrefix;
 
 }

@@ -39,9 +39,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "EmailServer", description =
-    "Email server configuration management, authentication protocols, "
-        + "and delivery policies to ensure reliable, compliant email communication across systems")
+@Tag(name = "Email Server", description = "REST API endpoints for email server configuration management including authentication protocols and delivery policies to ensure reliable, compliant email communication")
 @Validated
 @RestController
 @RequestMapping("/api/v1/email/server")
@@ -50,32 +48,34 @@ public class EmailServerRest {
   @Resource
   private EmailServerFacade emailServerFacade;
 
-  @Operation(summary = "Add email server", operationId = "email:server:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created successfully")})
+  @Operation(summary = "Create new email server", operationId = "email:server:add")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Email server created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody ServerAddDto dto) {
     return ApiLocaleResult.success(emailServerFacade.add(dto));
   }
 
-  @Operation(summary = "Update email server", operationId = "email:server:update")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Updated successfully")})
+  @Operation(summary = "Update email server configuration", operationId = "email:server:update")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Email server updated successfully")})
+  @ResponseStatus(HttpStatus.OK)
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody ServerUpdateDto dto) {
     emailServerFacade.update(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace email server", operationId = "email:server:replace")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Replaced successfully")})
+  @Operation(summary = "Replace email server configuration", operationId = "email:server:replace")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Email server replaced successfully")})
+  @ResponseStatus(HttpStatus.OK)
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@Valid @RequestBody ServerReplaceDto dto) {
     return ApiLocaleResult.success(emailServerFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete email server", operationId = "email:server:delete")
+  @Operation(summary = "Delete multiple email servers", operationId = "email:server:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Email servers deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @NotEmpty @Size(max = MAX_MAIL_SERVER_QUOTA) @RequestParam("ids") HashSet<Long> ids) {
@@ -84,37 +84,41 @@ public class EmailServerRest {
 
   @Operation(summary = "Enable or disable email server", operationId = "email:server:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Email server status updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Email server not found")
   })
+  @ResponseStatus(HttpStatus.OK)
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enable(@Valid @RequestBody EnabledOrDisabledDto dto) {
     emailServerFacade.enabled(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check the enabled email server", operationId = "email:server:check")
+  @Operation(summary = "Check email server availability", operationId = "email:server:check")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Email server status checked successfully")})
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/check")
   public ApiLocaleResult<?> checkEnable(@ParameterObject ServerEnabledCheckDto dto) {
     emailServerFacade.checkEnable(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of email server", operationId = "email:server:detail")
+  @Operation(summary = "Retrieve detailed email server information", operationId = "email:server:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Email server does not exist")})
+      @ApiResponse(responseCode = "200", description = "Email server details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Email server not found")})
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<ServerDetailVo> detail(
-      @Parameter(name = "id", description = "Email server ID", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Email server identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(emailServerFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of email server", operationId = "email:server:list")
+  @Operation(summary = "Retrieve email server list with filtering and pagination", operationId = "email:server:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Email server list retrieved successfully")})
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping
   public ApiLocaleResult<PageResult<ServerDetailVo>> list(@Valid @ParameterObject ServerFindDto dto) {
     return ApiLocaleResult.success(emailServerFacade.list(dto));
