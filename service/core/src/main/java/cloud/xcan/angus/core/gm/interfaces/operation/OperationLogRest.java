@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "OperationLog", description = "Provides a unified api for query user operation logs")
+@Tag(name = "Operation Log", description = "REST API endpoints for querying user operation logs")
 @Validated
 @RestController
 @RequestMapping("/api/v1/log/operation")
@@ -27,9 +27,9 @@ public class OperationLogRest {
   @Resource
   private OperationLogFacade optionFacade;
 
-  @Operation(summary = "Query the operation logs list of user", operationId = "log:operation:list")
+  @Operation(summary = "Search and retrieve user operation logs with pagination", operationId = "log:operation:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Operation logs retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<OperationLogVo>> list(@Valid @ParameterObject OperationLogFindDto dto) {
     return ApiLocaleResult.success(optionFacade.list(dto));
