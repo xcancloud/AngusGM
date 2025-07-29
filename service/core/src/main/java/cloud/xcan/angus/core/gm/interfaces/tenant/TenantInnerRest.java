@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/tenant")
-public class TenantDoorRest {
+public class TenantInnerRest {
 
   @Resource
   private TenantFacade tenantFacade;

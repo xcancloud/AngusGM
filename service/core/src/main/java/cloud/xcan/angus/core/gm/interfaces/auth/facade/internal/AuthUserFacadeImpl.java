@@ -4,6 +4,7 @@ import static cloud.xcan.angus.core.gm.interfaces.auth.facade.internal.assembler
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 
+import cloud.xcan.angus.api.gm.app.vo.AuthAppFuncTreeVo;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCurrentCmd;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserQuery;
@@ -19,7 +20,6 @@ import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.CurrentAuthUserPasswo
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.CurrentAuthUserPasswordInitDto;
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.CurrentAuthUserPasswordUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.internal.assembler.AuthUserAssembler;
-import cloud.xcan.angus.api.gm.app.vo.AuthAppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppFuncVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppVo;

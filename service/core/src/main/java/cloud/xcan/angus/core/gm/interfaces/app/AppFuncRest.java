@@ -2,13 +2,13 @@ package cloud.xcan.angus.core.gm.interfaces.app;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 
+import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.AppFuncFacade;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncAddDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func.AppFuncDetailVo;
-import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func.AppFuncVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;

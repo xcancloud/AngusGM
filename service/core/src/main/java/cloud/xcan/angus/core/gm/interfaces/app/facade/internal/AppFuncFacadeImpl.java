@@ -9,6 +9,7 @@ import static cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
+import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.biz.JoinSupplier;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppFuncCmd;
@@ -20,7 +21,6 @@ import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncReplaceDto
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func.AppFuncDetailVo;
-import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func.AppFuncVo;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;
 import cloud.xcan.angus.spec.experimental.IdKey;

@@ -5,11 +5,11 @@ import static cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembl
 import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchSearchFields;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
+import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyQuery;
 import cloud.xcan.angus.core.gm.domain.policy.AuthPolicy;
-import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.AuthPolicyAppFacade;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.app.AppPolicyFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.AuthPolicyAppAssembler;

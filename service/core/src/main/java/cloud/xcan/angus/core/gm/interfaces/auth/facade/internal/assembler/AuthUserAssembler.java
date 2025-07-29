@@ -2,9 +2,9 @@ package cloud.xcan.angus.core.gm.interfaces.auth.facade.internal.assembler;
 
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
+import cloud.xcan.angus.api.gm.app.vo.AuthAppFuncTreeVo;
 import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppFuncAssembler;
-import cloud.xcan.angus.api.gm.app.vo.AuthAppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppFuncVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppVo;

@@ -12,7 +12,6 @@ import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.emptySafe;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 
-import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.setting.user.preference.Preference;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
@@ -20,7 +19,6 @@ import cloud.xcan.angus.api.gm.app.vo.OrgAppAuthVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.user.dto.UserCurrentUpdateDto;
 import cloud.xcan.angus.api.gm.user.vo.UserCurrentDetailVo;
-import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCurrentCmd;
 import cloud.xcan.angus.core.gm.application.query.user.UserCurrentQuery;
@@ -42,8 +40,6 @@ import cloud.xcan.angus.remote.InfoScope;
 import jakarta.annotation.Resource;
 import java.security.Principal;
 import java.util.List;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 

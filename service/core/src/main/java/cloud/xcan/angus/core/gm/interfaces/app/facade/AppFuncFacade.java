@@ -1,11 +1,11 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade;
 
+import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncAddDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncFindDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.func.AppFuncUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func.AppFuncDetailVo;
-import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.func.AppFuncVo;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;
 import cloud.xcan.angus.spec.experimental.IdKey;

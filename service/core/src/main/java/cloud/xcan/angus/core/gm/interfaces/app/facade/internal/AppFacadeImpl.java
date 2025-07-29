@@ -11,6 +11,7 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.ExportFileType;
+import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
@@ -23,7 +24,6 @@ import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppSiteInfoUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.dto.AppUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.internal.assembler.AppAssembler;
-import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppVo;
 import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.remote.dto.EnabledOrDisabledDto;

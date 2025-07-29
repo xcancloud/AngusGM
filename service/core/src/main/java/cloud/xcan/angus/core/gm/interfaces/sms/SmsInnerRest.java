@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "Sms - Innernal", description = "Internal SMS service gateway. Provides programmatic SMS sending and verification code validation for cross-system service communication")
+@Tag(name = "Sms - Internal", description = "Internal SMS service gateway. Provides programmatic SMS sending and verification code validation for cross-system service communication")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/sms")
-public class SmsDoorRest {
+public class SmsInnerRest {
 
   @Resource
   private SmsDoorFacade smsDoorFacade;
