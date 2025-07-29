@@ -18,14 +18,14 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class TenantHealthCheckDto implements Serializable {
 
-  @Schema(description = "Enable health check flag", defaultValue = "false", example = "true")
+  @Schema(description = "Enable tenant health monitoring and alerting system", defaultValue = "false", example = "true")
   private Boolean enabled = false;
 
-  @Schema(description = "Alarm way when abnormal", allowableValues = {"SMS", "EMAIL"})
+  @Schema(description = "Alert notification methods for health check abnormalities", allowableValues = {"SMS", "EMAIL"})
   private List<AlarmWay> alarmWay;
 
   @Size(max = MAX_HEALTH_ALARM_RECIPIENT)
-  @Schema(description = "Abnormal alarm recipient. supports up to `50` users")
+  @Schema(description = "Health check alert recipients. Supports up to 50 users for notification delivery")
   private List<UserName> receiveUser;
 
 }

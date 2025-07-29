@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "SettingTenantQuotaInner", description = "Automatically grants or revokes resource quotas linked to payment verification and order status")
+@Tag(name = "SettingTenantQuotaInner", description = "Internal tenant quota management gateway. Automatically grants or revokes resource quotas linked to payment verification and order status for automated quota management")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/setting/tenant/quota")
@@ -26,10 +26,10 @@ public class SettingTenantQuotaDoorRest {
   @Resource
   private SettingTenantQuotaFacade settingTenantQuotaFacade;
 
-  @Operation(summary = "Authorize or de-authorize tenant quotas by order", operationId = "setting:tenant:quota:byorder:replace:inner")
+  @Operation(summary = "Automatically manage tenant quotas based on order status", operationId = "setting:tenant:quota:byorder:replace:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Tenant quota management completed successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PatchMapping(value = "/byorder")
   public ApiLocaleResult<?> quotaReplaceByOrder(@Valid @RequestBody QuotaReplaceByOrderDto dto) {
     settingTenantQuotaFacade.quotaReplaceByOrder(dto);

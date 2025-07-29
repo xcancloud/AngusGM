@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class UserApiProxyEnabledDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Enable apis proxy name", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "API proxy service type to enable for user access", requiredMode = RequiredMode.REQUIRED)
   private ApiProxyType name;
 
 }

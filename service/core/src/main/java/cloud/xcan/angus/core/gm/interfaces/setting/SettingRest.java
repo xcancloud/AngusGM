@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Setting", description = "Centralizes system-wide settings for unified control and consistency")
+@Tag(name = "Setting", description = "System-wide configuration management. Centralizes system-wide settings for unified control and consistency across all system components")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting")
@@ -29,23 +29,23 @@ public class SettingRest {
   @Resource
   private SettingFacade settingFacade;
 
-  @Operation(summary = "Replace setting value", operationId = "setting:value:replace")
+  @Operation(summary = "Update system-wide setting configuration", operationId = "setting:value:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "System setting configuration updated successfully"),
+      @ApiResponse(responseCode = "404", description = "System setting not found")})
   @PutMapping
   public ApiLocaleResult<?> replace(@Valid @RequestBody SettingValueReplaceDto dto) {
     settingFacade.replace(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of setting value", operationId = "setting:value:detail")
+  @Operation(summary = "Get detailed system setting configuration", operationId = "setting:value:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "System setting configuration retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "System setting not found")})
   @GetMapping(value = "/{key}")
   public ApiLocaleResult<SettingValueVo> detail(
-      @Parameter(name = "key", description = "Setting key", required = true) @PathVariable("key") SettingKey key) {
+      @Parameter(name = "key", description = "System setting key identifier", required = true) @PathVariable("key") SettingKey key) {
     return ApiLocaleResult.success(settingFacade.detail(key));
   }
 

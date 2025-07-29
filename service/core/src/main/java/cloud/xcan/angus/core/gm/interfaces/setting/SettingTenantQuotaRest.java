@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "SettingTenantQuota", description = "Assigns and initializes tenant resource quotas based on predefined policies or payment order")
+@Tag(name = "SettingTenantQuota", description = "Tenant resource quota management system. Assigns and initializes tenant resource quotas based on predefined policies or payment orders for comprehensive resource control")
 @Validated
 @RestController
 @RequestMapping("/api/v1/setting/tenant/quota")
@@ -36,90 +36,89 @@ public class SettingTenantQuotaRest {
   @Resource
   private SettingTenantQuotaFacade settingTenantQuotaFacade;
 
-  @Operation(summary = "Replace the quota of tenant", operationId = "setting:tenant:quota:replace")
+  @Operation(summary = "Update tenant resource quota allocation", operationId = "setting:tenant:quota:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Tenant quota allocation updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PutMapping(value = "/{name}/{quota}")
   public ApiLocaleResult<?> quotaReplace(
-      @Parameter(name = "name", description = "Tenant quota resource name", required = true) @PathVariable("name") String name,
-      @Parameter(name = "quota", description = "Tenant quota value", required = true) @PathVariable("quota") Long quota) {
+      @Parameter(name = "name", description = "Tenant quota resource identifier", required = true) @PathVariable("name") String name,
+      @Parameter(name = "quota", description = "Tenant quota allocation value", required = true) @PathVariable("quota") Long quota) {
     settingTenantQuotaFacade.quotaReplace(name, quota);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace the quotas of tenant", operationId = "setting:tenant:quota:replace:batch")
+  @Operation(summary = "Update multiple tenant resource quotas in batch", operationId = "setting:tenant:quota:replace:batch")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Tenant quota batch update completed successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PutMapping
   public ApiLocaleResult<?> quotaReplaceBatch(@Valid @RequestBody HashSet<QuotaReplaceDto> dto) {
     settingTenantQuotaFacade.quotaReplaceBatch(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Authorize or de-authorize tenant quotas by order", operationId = "setting:tenant:quota:byorder:replace")
+  @Operation(summary = "Manage tenant quotas based on order status", operationId = "setting:tenant:quota:byorder:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Tenant quota order management completed successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PatchMapping(value = "/byorder")
   public ApiLocaleResult<?> quotaReplaceByOrder(@Valid @RequestBody QuotaReplaceByOrderDto dto) {
     settingTenantQuotaFacade.quotaReplaceByOrder(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Initialize new quotas for all tenants", operationId = "setting:tenant:quota:new:init")
+  @Operation(summary = "Initialize new quota configurations for all tenants", operationId = "setting:tenant:quota:new:init")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "New quota initialization completed successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PutMapping(value = "/{name}/new/init")
   public ApiLocaleResult<Long> newQuotaInit(
-      @Parameter(name = "name", description = "Tenant quota resource name", required = true) @PathVariable("name") String name) {
+      @Parameter(name = "name", description = "Tenant quota resource identifier", required = true) @PathVariable("name") String name) {
     return ApiLocaleResult.success(settingTenantQuotaFacade.newQuotaInit(name));
   }
 
-  @Operation(summary = "Check whether the purchase quota exceeds the upper limit", operationId = "setting:tenant:quota:check")
+  @Operation(summary = "Validate quota purchase against upper limits", operationId = "setting:tenant:quota:check")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Quota validation completed successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PatchMapping(value = "/check")
   public ApiLocaleResult<?> quotaCheck(@Valid @RequestBody HashSet<QuotaCheckDto> dto) {
     settingTenantQuotaFacade.quotaCheck(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check whether the new purchase quota plus the cumulative purchase quota exceeds the upper limit",
-      operationId = "setting:tenant:quota:expansion:check")
+  @Operation(summary = "Validate expanded quota against cumulative limits", operationId = "setting:tenant:quota:expansion:check")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Quota expansion validation completed successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @PatchMapping(value = "/expansion/check")
   public ApiLocaleResult<?> quotaExpansionCheck(@Valid @RequestBody HashSet<QuotaCheckDto> dto) {
     settingTenantQuotaFacade.quotaExpansionCheck(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the quota detail of tenant", operationId = "setting:tenant:quota:detail")
+  @Operation(summary = "Get detailed tenant quota configuration", operationId = "setting:tenant:quota:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "Tenant quota details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant quota configuration not found")})
   @GetMapping(value = "/{name}")
   public ApiLocaleResult<TenantQuotaDetailVo> detail(
-      @Parameter(name = "name", description = "Tenant quota resource name", required = true) @PathVariable("name") String name) {
+      @Parameter(name = "name", description = "Tenant quota resource identifier", required = true) @PathVariable("name") String name) {
     return ApiLocaleResult.success(settingTenantQuotaFacade.detail(name));
   }
 
-  @Operation(summary = "Query the quota application list of tenant", operationId = "setting:tenant:quota:app:list")
+  @Operation(summary = "Get available quota application list", operationId = "setting:tenant:quota:app:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Quota application list retrieved successfully")})
   @GetMapping("/app")
   public ApiLocaleResult<List<String>> appList() {
     return ApiLocaleResult.success(settingTenantQuotaFacade.appList());
   }
 
-  @Operation(summary = "Query the quota list of tenant", operationId = "setting:tenant:quota:list")
+  @Operation(summary = "Get paginated list of tenant quotas", operationId = "setting:tenant:quota:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Tenant quota list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> list(@Valid @ParameterObject TenantQuotaFindDto dto) {
     return ApiLocaleResult.success(settingTenantQuotaFacade.list(dto));

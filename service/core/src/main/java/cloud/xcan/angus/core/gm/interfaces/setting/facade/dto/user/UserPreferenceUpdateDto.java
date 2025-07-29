@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserPreferenceUpdateDto implements Serializable {
 
-  @Schema(description = "Language set by user", example = "zh_CN")
+  @Schema(description = "User interface language preference for personalized experience", example = "zh_CN")
   private SupportedLanguage language;
 
 }

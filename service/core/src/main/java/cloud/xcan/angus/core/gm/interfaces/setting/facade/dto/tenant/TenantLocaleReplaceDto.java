@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 public class TenantLocaleReplaceDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Default language", defaultValue = "zh_CN", example = "zh_CN", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Default language for tenant user interface and communications", defaultValue = "zh_CN", example = "zh_CN", requiredMode = RequiredMode.REQUIRED)
   private SupportedLanguage defaultLanguage;
 
 }
