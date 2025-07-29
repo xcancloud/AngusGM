@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "MessageCenterOnline", description = "Monitors real-time user online statuses, such as querying online users or forced logouts")
+@Tag(name = "Message Center Online", description = "REST API endpoints for real-time user online status monitoring and forced logout management")
 @Validated
 @RestController
 @RequestMapping("/api/v1/message/center/online")
@@ -33,8 +33,8 @@ public class MessageCenterOnlineRest {
   @Resource
   private MessageCenterOnlineFacade messageCenterOnlineFacade;
 
-  @Operation(summary = "Forced offline and logout users", operationId = "message:center:offline")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Successfully offline")})
+  @Operation(summary = "Force users offline and logout", operationId = "message:center:offline")
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Users forced offline successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PostMapping("/off")
   public ApiLocaleResult<?> offline(@Valid @RequestBody MessageCenterOfflineDto dto) {
@@ -42,19 +42,19 @@ public class MessageCenterOnlineRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the online user information of the message center", operationId = "message:center:online:detail")
+  @Operation(summary = "Retrieve detailed online status information for a specific user", operationId = "message:center:online:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Not found resource")})
+      @ApiResponse(responseCode = "200", description = "User online status retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @GetMapping(value = "/{userId}")
   public ApiLocaleResult<MessageCenterOnlineVo> detail(
-      @Parameter(name = "userId", description = "User ID", required = true) @PathVariable("userId") Long userId) {
+      @Parameter(name = "userId", description = "User identifier", required = true) @PathVariable("userId") Long userId) {
     return ApiLocaleResult.success(messageCenterOnlineFacade.detail(userId));
   }
 
-  @Operation(summary = "Query the online user information of the message center", operationId = "message:center:online:list")
+  @Operation(summary = "Search and retrieve online user information with pagination", operationId = "message:center:online:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Online user list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<MessageCenterOnlineVo>> list(
       @Valid @ParameterObject MessageCenterOnlineFindDto dto) {

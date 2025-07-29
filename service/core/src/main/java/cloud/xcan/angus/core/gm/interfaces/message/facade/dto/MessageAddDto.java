@@ -31,42 +31,40 @@ public class MessageAddDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Message title", maxLength = MAX_NAME_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Message title for display", requiredMode = RequiredMode.REQUIRED)
   private String title;
 
   @DoInFuture("Support rich text and editor")
   @NotBlank
   @Length(max = MAX_MESSAGE_LENGTH)
-  @Schema(description = "Message content", maxLength = MAX_MESSAGE_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Message content body", requiredMode = RequiredMode.REQUIRED)
   private String content;
 
   @NotNull
-  @Schema(description = "Message receive type", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Message reception type for delivery method", requiredMode = RequiredMode.REQUIRED)
   private MessageReceiveType receiveType;
 
   @NotNull
-  @Schema(description = "Message send type", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Message delivery timing configuration", requiredMode = RequiredMode.REQUIRED)
   private SentType sendType;
 
   @Future
-  @Schema(description = "Scheduled send message date")
+  @Schema(description = "Scheduled delivery timestamp for timed messages")
   private LocalDateTime timingDate;
 
-  @Schema(description = "Receive message tenant id")
+  @Schema(description = "Target tenant identifier for message delivery")
   private Long receiveTenantId;
 
   @NotNull
   @EnumPart(enumClass = ReceiveObjectType.class, allowableValues = {"TENANT", "DEPT", "GROUP",
       "USER", "ALL"})
-  @Schema(description = "Receive message object type", allowableValues = {"TENANT", "DEPT",
+  @Schema(description = "Recipient object type for message targeting", allowableValues = {"TENANT", "DEPT",
       "GROUP", "USER", "ALL"}, requiredMode = RequiredMode.REQUIRED)
   private ReceiveObjectType receiveObjectType;
 
   @Valid
   @Size(max = MAX_RECEIVE_ORG_NUM)
-  @Schema(description = "Receive message objects, the maximum support is `2000`. Note: The value is empty when receiveObjectType=ALL")
+  @Schema(description = "Recipient object list for targeted delivery. Empty when receiveObjectType=ALL")
   private List<ReceiveObject> receiveObjects;
 
 }

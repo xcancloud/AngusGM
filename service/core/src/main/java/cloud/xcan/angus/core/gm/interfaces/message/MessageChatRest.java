@@ -16,7 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Tag(name = "MessageCenterChat", description = "Message center WebSocket sending and receiving endpoint")
+@Tag(name = "Message Center Chat", description = "WebSocket endpoints for real-time message communication and chat functionality")
 @RestController
 public class MessageChatRest {
 

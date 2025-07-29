@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "MessageCenterInner", description = "Supports a unified inter-system calling method to send messages")
+@Tag(name = "Message Center Internal", description = "Internal REST API endpoints for inter-system message delivery and distribution")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/message/center")
@@ -27,9 +27,9 @@ public class MessageCenterDoorRest {
   @Resource
   private MessageCenterFacade messageCenterFacade;
 
-  @Operation(summary = "Send messages", operationId = "message:center:push:inner")
+  @Operation(summary = "Deliver messages to message center", operationId = "message:center:push:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Successfully sent")})
+      @ApiResponse(responseCode = "201", description = "Messages delivered successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/push")
   public ApiLocaleResult<?> push(@RequestBody MessageCenterPushDto dto) {

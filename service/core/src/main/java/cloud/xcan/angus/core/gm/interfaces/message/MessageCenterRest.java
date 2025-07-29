@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "MessageCenter", description = "Message center unified message dispatch. "
-    + "Enables centralized message distribution across multiple users from a single api")
+@Tag(name = "Message Center", description = "REST API endpoints for centralized message distribution and delivery to multiple users")
 @Validated
 @RestController
 @RequestMapping("/api/v1/message/center")
@@ -27,9 +26,9 @@ public class MessageCenterRest {
   @Resource
   private MessageCenterFacade messageCenterFacade;
 
-  @Operation(summary = "Send the messages of message center", operationId = "message:center:push")
+  @Operation(summary = "Deliver messages through message center", operationId = "message:center:push")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Successfully sent")})
+      @ApiResponse(responseCode = "201", description = "Messages delivered successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/push")
   public ApiLocaleResult<?> push(@Valid @RequestBody MessageCenterPushDto dto) {
