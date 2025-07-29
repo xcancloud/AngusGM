@@ -33,11 +33,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "SystemToken", description =
-    "System access tokens are digital \"ID cards\" that temporarily "
-        + "grant users or apps specific permissions to access systems or data. They act like a secure, "
-        + "time-limited passcode—unlike traditional passwords, tokens verify identity AND control exactly "
-        + "what actions are allowed (e.g. \"read-only access for 1 hour\")")
+@Tag(name = "System Access Token", description =
+    "System access token management. Digital \"ID cards\" that temporarily grant users or applications "
+        + "specific permissions to access systems or data. They act like secure, time-limited passcodes—"
+        + "unlike traditional passwords, tokens verify identity AND control exactly what actions are allowed "
+        + "(e.g. \"read-only access for 1 hour\")")
 @Validated
 @RestController
 @RequestMapping("/api/v1/system/token")
@@ -46,45 +46,45 @@ public class SystemTokenRest {
   @Resource
   private SystemTokenFacade systemTokenFacade;
 
-  @Operation(summary = "Add system token", operationId = "system:token:add")
+  @Operation(summary = "Create new system access token", operationId = "system:token:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "System access token created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<SystemTokenValueVo> add(@Valid @RequestBody SystemTokenAddDto dto) {
     return ApiLocaleResult.success(systemTokenFacade.add(dto));
   }
 
-  @Operation(summary = "Delete system tokens", operationId = "system:token:delete")
+  @Operation(summary = "Delete system access tokens", operationId = "system:token:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "System access tokens deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("ids") HashSet<Long> ids) {
     systemTokenFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the authorization of system token", operationId = "system:token:auth:detail")
+  @Operation(summary = "Get system token authorization details", operationId = "system:token:auth:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "System token authorization details retrieved successfully")})
   @GetMapping("/{id}/auth")
   public ApiLocaleResult<SystemTokenDetailVo> auth(
-      @Parameter(name = "id", description = "System token id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "System token unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(systemTokenFacade.auth(id));
   }
 
-  @Operation(summary = "Query the value of system token", operationId = "system:token:value:detail")
+  @Operation(summary = "Get system token value", operationId = "system:token:value:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "System token value retrieved successfully")})
   @GetMapping("/{id}/value")
   public ApiLocaleResult<SystemTokenValueVo> value(
-      @Parameter(name = "id", description = "System token id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "System token unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(systemTokenFacade.value(id));
   }
 
-  @Operation(summary = "Query all system tokens", operationId = "system:token:all")
+  @Operation(summary = "Get all system access tokens", operationId = "system:token:all")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "All system access tokens retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<List<SystemTokenInfoVo>> list() {
     return ApiLocaleResult.success(systemTokenFacade.list());

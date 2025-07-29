@@ -21,13 +21,13 @@ public class AuthorizedResourceDto {
 
   @NotEmpty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Authorized resource name", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Authorized resource identifier name", requiredMode = RequiredMode.REQUIRED)
   private String resource;
 
-  @Schema(description = "Api ids of authorized resources, when authType=API is required")
+  @Schema(description = "API identifiers for authorized resources (required when authType=API)")
   private LinkedHashSet<Long> apiIds;
 
-  @Schema(description = "ACL types of authorized resources, when authType=ACL is required")
+  @Schema(description = "Access control list types for authorized resources (required when authType=ACL)")
   private List<ResourceAclType> acls;
 
 }
