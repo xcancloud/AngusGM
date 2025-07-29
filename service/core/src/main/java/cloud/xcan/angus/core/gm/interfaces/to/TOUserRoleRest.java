@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("@PPS.isOpClient()")
 @CloudServiceEdition
 @Conditional(value = CloudServiceEditionCondition.class)
-@Tag(name = "TOUserRole", description = "Provides a unified entry for querying or authorizing the relationship between users and operational roles")
+@Tag(name = "TOUserRole", description = "Operational user-role relationship management. Provides unified operations for querying and authorizing user-role associations in cloud service environments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/to")
@@ -44,51 +44,51 @@ public class TOUserRoleRest {
   @Resource
   private TOUserRoleFacade toUserRoleFacade;
 
-  @Operation(summary = "Authorized the operation roles to user", operationId = "to:user:role:auth")
+  @Operation(summary = "Assign operational roles to user", operationId = "to:user:role:auth")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Authorize successful"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Operational roles assigned successfully"),
+      @ApiResponse(responseCode = "404", description = "User or role not found")
   })
   @PatchMapping("/user/{id}/role/auth")
   public ApiLocaleResult<?> userRoleAuth(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Operational user account identifier", required = true) @PathVariable("id") Long userId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody HashSet<Long> roleIds) {
     toUserRoleFacade.userRoleAuth(userId, roleIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the operation roles of user", operationId = "to:user:role:delete")
+  @Operation(summary = "Remove operational roles from user", operationId = "to:user:role:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Operational roles removed successfully")})
   @DeleteMapping("/user/{id}/role")
   public ApiLocaleResult<?> userRoleDelete(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Operational user account identifier", required = true) @PathVariable("id") Long userId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("roleIds") HashSet<Long> roleIds) {
     toUserRoleFacade.userRoleDelete(userId, roleIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Authorized to operation role to users", operationId = "to:role:user:auth")
+  @Operation(summary = "Assign operational role to multiple users", operationId = "to:role:user:auth")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Authorize successful"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Operational role assigned to users successfully"),
+      @ApiResponse(responseCode = "404", description = "Role or user not found")
   })
   @PatchMapping("/role/{id}/auth")
   public ApiLocaleResult<?> roleUserAuth(
-      @Parameter(name = "id", description = "Role id", required = true) @PathVariable("id") Long roleId,
+      @Parameter(name = "id", description = "Operational role identifier", required = true) @PathVariable("id") Long roleId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("userIds") HashSet<Long> userIds) {
     toUserRoleFacade.roleUserAuth(roleId, userIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the user operation roles", operationId = "to:role:user:delete")
+  @Operation(summary = "Remove operational role from multiple users", operationId = "to:role:user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Operational role removed from users successfully")})
   @DeleteMapping("/role/{id}/user")
   public ApiLocaleResult<?> roleUserDelete(
-      @Parameter(name = "id", description = "Role id", required = true) @PathVariable("id") Long roleId,
+      @Parameter(name = "id", description = "Operational role identifier", required = true) @PathVariable("id") Long roleId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("userIds") HashSet<Long> userIds) {
     toUserRoleFacade.roleUserDelete(roleId, userIds);
     return ApiLocaleResult.success();

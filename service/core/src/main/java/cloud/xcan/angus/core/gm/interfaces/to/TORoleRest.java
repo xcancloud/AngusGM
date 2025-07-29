@@ -47,8 +47,8 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("@PPS.isOpClient()")
 @Conditional(value = CloudServiceEditionCondition.class)
 @Tag(name = "TORole", description =
-    "Operational role management. Streamlines organizational efficiency by defining responsibilities, "
-        + "coordinating workflows, and aligning permissions with business objectives")
+    "Operational role management for tenant operations. Defines responsibilities, coordinates workflows, "
+        + "and aligns permissions with business objectives in cloud service environments")
 @Validated
 @RestController
 @RequestMapping("/api/v1/to/role")
@@ -57,9 +57,9 @@ public class TORoleRest {
   @Resource
   private TORoleFacade toRoleFacade;
 
-  @Operation(summary = "Add operation roles", operationId = "to:role:add")
+  @Operation(summary = "Create new operational roles", operationId = "to:role:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Operational roles created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -67,10 +67,10 @@ public class TORoleRest {
     return ApiLocaleResult.success(toRoleFacade.add(dto));
   }
 
-  @Operation(summary = "Update operation roles", operationId = "to:role:update")
+  @Operation(summary = "Update existing operational roles", operationId = "to:role:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Operational roles updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Operational role not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(
@@ -79,18 +79,18 @@ public class TORoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace operation roles", operationId = "to:role:replace")
+  @Operation(summary = "Replace operational roles with new configurations", operationId = "to:role:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "Operational roles replaced successfully")})
   @PutMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> replace(
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<TORoleReplaceDto> dto) {
     return ApiLocaleResult.success(toRoleFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete operation roles", operationId = "to:role:delete")
+  @Operation(summary = "Delete operational roles", operationId = "to:role:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Operational roles deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -98,10 +98,10 @@ public class TORoleRest {
     toRoleFacade.delete(ids);
   }
 
-  @Operation(summary = "Enable or disable the operation roles", operationId = "to:role:enabled")
+  @Operation(summary = "Enable or disable operational roles", operationId = "to:role:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Operational role status updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Operational role not found")
   })
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(
@@ -110,19 +110,19 @@ public class TORoleRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of operation role", operationId = "to:role:detail")
+  @Operation(summary = "Get detailed operational role information", operationId = "to:role:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Operational role details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Operational role not found")})
   @GetMapping(value = "/{idOrCode}")
   public ApiLocaleResult<TORoleDetailVo> detail(
-      @Parameter(name = "idOrCode", description = "Role code or id", required = true) @PathVariable("idOrCode") String idOrCode) {
+      @Parameter(name = "idOrCode", description = "Operational role identifier or code", required = true) @PathVariable("idOrCode") String idOrCode) {
     return ApiLocaleResult.success(toRoleFacade.detail(idOrCode));
   }
 
-  @Operation(summary = "Query the list of operation role", operationId = "to:role:list")
+  @Operation(summary = "Get paginated list of operational roles", operationId = "to:role:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Operational role list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<TORoleVo>> list(@Valid @ParameterObject TORoleFindDto dto) {
     return ApiLocaleResult.success(toRoleFacade.list(dto));
