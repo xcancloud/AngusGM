@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "OrgTag", description = "Identify and categorize organization for quick recognition and management")
+@Tag(name = "Organizational Tag", description = "Organizational tag management system. Identifies and categorizes organizational resources for quick recognition, classification, and efficient management")
 @Validated
 @RestController
 @RequestMapping("/api/v1/org/tag")
@@ -44,9 +44,9 @@ public class OrgTagRest {
   @Resource
   private OrgTagFacade orgTagFacade;
 
-  @Operation(summary = "Add organization tags", operationId = "org:tag:add")
+  @Operation(summary = "Create new organizational tags", operationId = "org:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Organizational tags created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -54,10 +54,10 @@ public class OrgTagRest {
     return ApiLocaleResult.success(orgTagFacade.add(dto));
   }
 
-  @Operation(summary = "Update organization tags", operationId = "org:tag:update")
+  @Operation(summary = "Update existing organizational tags", operationId = "org:tag:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Organizational tags updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Organizational tag not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(
@@ -66,9 +66,9 @@ public class OrgTagRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete organization tags", operationId = "org:tag:delete")
+  @Operation(summary = "Delete organizational tags", operationId = "org:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Organizational tags deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -76,19 +76,19 @@ public class OrgTagRest {
     orgTagFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of organization tag", operationId = "org:tag:detail")
+  @Operation(summary = "Get detailed organizational tag information", operationId = "org:tag:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Organizational tag details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Organizational tag not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<OrgTagDetailVo> detail(
-      @Parameter(name = "id", description = "Org tag id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Organizational tag unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(orgTagFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of organization tags", operationId = "org:tag:list")
+  @Operation(summary = "Get paginated list of organizational tags", operationId = "org:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Organizational tag list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<OrgTagDetailVo>> list(@Valid @ParameterObject OrgTagFindDto dto) {
     return ApiLocaleResult.success(orgTagFacade.list(dto));

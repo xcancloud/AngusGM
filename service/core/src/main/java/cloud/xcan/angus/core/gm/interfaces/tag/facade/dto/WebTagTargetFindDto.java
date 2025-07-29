@@ -17,21 +17,23 @@ import lombok.experimental.Accessors;
 public class WebTagTargetFindDto extends PageQuery {
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Web application tag id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application tag identifier for filtering relationships", requiredMode = RequiredMode.REQUIRED)
   private Long tagId;
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Web application resource type", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Web application resource type for filtering", requiredMode = RequiredMode.REQUIRED)
   private OrgTargetType targetType;
 
-  @Schema(description = "Web application resource id")
+  @Schema(description = "Web application resource identifier for filtering")
   private Long targetId;
 
-  @Schema(description = "Web application resource name")
+  @Schema(description = "Web application resource display name for searching")
   private String targetName;
 
+  @Schema(description = "User identifier who created the tag relationship")
   private Long createdBy;
 
+  @Schema(description = "Tag relationship creation date for filtering")
   private LocalDateTime createdDate;
 
 }

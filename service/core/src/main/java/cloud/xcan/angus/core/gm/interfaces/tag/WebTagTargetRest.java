@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Validated
-@Tag(name = "WebTagTarget", description = "Web tags and associated resource relationship maintenance and management")
+@Tag(name = "Web Tag Target", description = "Web application tag-target relationship management. Maintains and manages associations between web application tags and their target resources for effective categorization")
 @RestController
 @RequestMapping("/api/v1/web/tag")
 public class WebTagTargetRest {
@@ -49,35 +49,35 @@ public class WebTagTargetRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add the tag to targets", operationId = "web:tag:target:add")
+  @Operation(summary = "Assign web application tags to target resources", operationId = "web:tag:target:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "201", description = "Web application tags assigned to targets successfully"),
+      @ApiResponse(responseCode = "404", description = "Web application tag or target not found")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/target")
   public ApiLocaleResult<List<IdKey<Long, Object>>> targetAdd(
-      @Parameter(name = "id", description = "Tag id", required = true) @PathVariable("id") Long tagId,
+      @Parameter(name = "id", description = "Web application tag unique identifier", required = true) @PathVariable("id") Long tagId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody LinkedHashSet<WebTagTargetAddDto> dto) {
     return ApiLocaleResult.success(webTagTargetFacade.targetAdd(tagId, dto));
   }
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete the targets of tag ", operationId = "web:tag:target:delete")
+  @Operation(summary = "Remove web application tags from target resources", operationId = "web:tag:target:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Web application tags removed from targets successfully"),
+      @ApiResponse(responseCode = "404", description = "Web application tag or target not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/target")
   public void targetDelete(
-      @Parameter(name = "id", description = "Tag id", required = true) @PathVariable("id") Long tagId,
+      @Parameter(name = "id", description = "Web application tag unique identifier", required = true) @PathVariable("id") Long tagId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("targetIds") HashSet<@Min(1) Long> targetIds) {
     webTagTargetFacade.targetDelete(tagId, targetIds);
   }
 
-  @Operation(summary = "Query the targets list of tag", operationId = "web:tag:target:list")
+  @Operation(summary = "Get paginated list of web application tag-target relationships", operationId = "web:tag:target:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Web application tag-target relationships retrieved successfully")})
   @GetMapping("/{id}/target")
   public ApiLocaleResult<PageResult<WebTagTargetDetailVo>> targetList(
       @Valid @ParameterObject WebTagTargetFindDto dto) {

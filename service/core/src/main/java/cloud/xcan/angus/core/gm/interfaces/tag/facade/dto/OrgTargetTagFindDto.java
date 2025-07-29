@@ -18,20 +18,24 @@ public class OrgTargetTagFindDto extends PageQuery {
 
   @JsonIgnore
   //Required -> Internal parameters
-  @Schema(description = "Tag organization id", requiredMode = RequiredMode.REQUIRED, hidden = true)
+  @Schema(description = "Organizational resource identifier (internal parameter)", requiredMode = RequiredMode.REQUIRED, hidden = true)
   private Long targetId;
 
   @JsonIgnore
   //Required -> Internal parameters
-  @Schema(description = "Tag organization type", requiredMode = RequiredMode.REQUIRED, hidden = true)
+  @Schema(description = "Organizational resource type (internal parameter)", requiredMode = RequiredMode.REQUIRED, hidden = true)
   private OrgTargetType targetType;
 
+  @Schema(description = "Organizational tag identifier for filtering")
   private Long tagId;
 
+  @Schema(description = "Organizational tag display name for searching")
   private String tagName;
 
+  @Schema(description = "User identifier who created the tag relationship")
   private Long createdBy;
 
+  @Schema(description = "Tag relationship creation date for filtering")
   private LocalDateTime createdDate;
 
 }

@@ -17,21 +17,23 @@ import lombok.experimental.Accessors;
 public class OrgTagTargetFindDto extends PageQuery {
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Tag id", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Organizational tag identifier for filtering relationships", requiredMode = RequiredMode.REQUIRED)
   private Long tagId;
 
   //@NotNull -> Required -> The value may be in the filter
-  @Schema(description = "Tag organization type: USER/DEPT/GROUP", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Organizational resource type for filtering (USER/DEPT/GROUP)", requiredMode = RequiredMode.REQUIRED)
   private OrgTargetType targetType;
 
-  @Schema(description = "Tag organization id")
+  @Schema(description = "Organizational resource identifier for filtering")
   private Long targetId;
 
-  @Schema(description = "Tag organization name")
+  @Schema(description = "Organizational resource display name for searching")
   private String targetName;
 
+  @Schema(description = "User identifier who created the tag relationship")
   private Long createdBy;
 
+  @Schema(description = "Tag relationship creation date for filtering")
   private LocalDateTime createdDate;
 
 }

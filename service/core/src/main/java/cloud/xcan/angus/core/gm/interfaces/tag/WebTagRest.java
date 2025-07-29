@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "WebTag", description = "Identify and categorize software applications and functions for quick recognition and management")
+@Tag(name = "Web Tag", description = "Web application tag management system. Identifies and categorizes software applications and functions for quick recognition, classification, and efficient management")
 @Validated
 @RestController
 @RequestMapping("/api/v1/web/tag")
@@ -48,9 +48,9 @@ public class WebTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add web tags", operationId = "web:tag:add")
+  @Operation(summary = "Create new web application tags", operationId = "web:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "Web application tags created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -60,10 +60,10 @@ public class WebTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update web tags", operationId = "web:tag:update")
+  @Operation(summary = "Update existing web application tags", operationId = "web:tag:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "Web application tags updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Web application tag not found")
   })
   @PatchMapping
   public ApiLocaleResult<?> update(
@@ -74,9 +74,9 @@ public class WebTagRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete web tags", operationId = "web:tag:delete")
+  @Operation(summary = "Delete web application tags", operationId = "web:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "Web application tags deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(
@@ -84,19 +84,19 @@ public class WebTagRest {
     webTagFacade.delete(ids);
   }
 
-  @Operation(summary = "Query the detail of web tag", operationId = "web:tag:detail")
+  @Operation(summary = "Get detailed web application tag information", operationId = "web:tag:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Web application tag details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Web application tag not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<WebTagDetailVo> detail(
-      @Parameter(name = "id", description = "Org tag id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Web application tag unique identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(webTagFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of web tags", operationId = "web:tag:list")
+  @Operation(summary = "Get paginated list of web application tags", operationId = "web:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "Web application tag list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<WebTagDetailVo>> list(@Valid @ParameterObject WebTagFindDto dto) {
     return ApiLocaleResult.success(webTagFacade.list(dto));
