@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Operation Log Internal", description = "Internal REST API endpoints for collecting and recording user operation logs")
 @RestController
 @RequestMapping("/innerapi/v1/log/operation")
-public class OperationLogDoorRest {
+public class OperationLogInnerRest {
 
   @Resource
   private OperationLogFacade optionFacade;

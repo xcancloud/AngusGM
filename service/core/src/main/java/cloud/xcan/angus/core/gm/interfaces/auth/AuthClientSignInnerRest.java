@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/auth/client")
-public class AuthClientSignDoorRest {
+public class AuthClientSignInnerRest {
 
   @Resource
   private AuthClientSignFacade authClientSignFacade;

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/auth/client")
-public class AuthClientDoorRest {
+public class AuthClientInnerRest {
 
   @Resource
   private AuthClientFacade authClientFacade;

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "ApiLogInner", description = "Aggregates and stores API interaction data for analysis")
+@Tag(name = "Api Log - Internal", description = "Internal API for aggregating and storing API interaction data for analysis and monitoring")
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLogInner"))
 @RestController
@@ -32,9 +32,9 @@ public class ApiLogInnerRest {
   @Resource
   private ApiLogFacade apiLogFacade;
 
-  @Operation(summary = "Receives and save api request logs", operationId = "log:api:add:inner")
+  @Operation(summary = "Receive and store API request logs for internal processing", operationId = "log:api:add:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Successfully created")})
+      @ApiResponse(responseCode = "201", description = "API logs successfully stored")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(@RequestBody List<ApiLog> apiLogs) {

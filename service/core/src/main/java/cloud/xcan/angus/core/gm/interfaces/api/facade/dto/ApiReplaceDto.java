@@ -26,47 +26,44 @@ import org.hibernate.validator.constraints.Length;
 public class ApiReplaceDto {
 
   @Id
-  @Schema(description = "Api id. The ID is required when modifying an existing API, create a new API when the value is empty")
+  @Schema(description = "API identifier to replace. Required when modifying existing API, creates new API when empty")
   private Long id;
 
-  @Schema(description = "Api service id. Note: Modification is not allowed")
+  @Schema(description = "API service identifier. Note: Modification is not allowed after creation")
   private Long serviceId;
 
   @NotEmpty
   @Length(max = MAX_OPENAPI_SUMMARY_LENGTH)
-  @Schema(description = "Api summary or name", example = "Add user api",
-      maxLength = MAX_OPENAPI_SUMMARY_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "API summary or display name", example = "Add user api", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @NotEmpty
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Api code or OAS operation id", example = "user:add",
-      maxLength = MAX_CODE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "API unique code or OpenAPI operation identifier", example = "user:add", requiredMode = RequiredMode.REQUIRED)
   private String operationId;
 
   @NotEmpty
   @Length(max = MAX_URI_LENGTH)
-  @Schema(description = "Api http URI", example = "/api/v1/user",
-      maxLength = MAX_URI_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "API HTTP endpoint URI", example = "/api/v1/user", requiredMode = RequiredMode.REQUIRED)
   private String uri;
 
   @NotNull
-  @Schema(description = "Api http request method", example = "POST", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "API HTTP request method", example = "POST", requiredMode = RequiredMode.REQUIRED)
   private HttpMethod method;
 
-  @Schema(description = "Angus platform API type. If the value is empty, automatically determine based on URI", example = "API")
+  @Schema(description = "Angus platform API type. If empty, automatically determined based on URI", example = "API")
   private ApiType type;
 
   @Length(max = MAX_OPENAPI_DOC_DESC_LENGTH)
-  @Schema(description = "API detailed description", maxLength = MAX_OPENAPI_DOC_DESC_LENGTH)
+  @Schema(description = "API detailed description for documentation")
   private String description;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Api resource name or OAS tag name. If the value is empty, automatically determine based on URI", example = "user")
+  @Schema(description = "API resource name or OpenAPI tag name. If empty, automatically determined based on URI", example = "user")
   private String resourceName;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Api resource description", example = "User", maxLength = MAX_DESC_LENGTH)
+  @Schema(description = "API resource description", example = "User")
   private String resourceDescription;
 
 }

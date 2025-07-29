@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Api", description = "Controls API endpoint definitions and access policies")
+@Tag(name = "Api", description = "API for managing API endpoint definitions and access policies")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "Api"))
 @Conditional(CloudServiceEditionCondition.class)
 @OperationClient
@@ -60,9 +60,9 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Add apis", operationId = "api:add")
+  @Operation(summary = "Create new API endpoints", operationId = "api:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "API endpoints successfully created")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -72,10 +72,10 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Update apis", operationId = "api:update")
+  @Operation(summary = "Update existing API endpoints", operationId = "api:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "API endpoints successfully updated"),
+      @ApiResponse(responseCode = "404", description = "API endpoint not found")})
   @PatchMapping
   public ApiLocaleResult<?> update(
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<ApiUpdateDto> dto) {
@@ -85,9 +85,9 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Replace apis", operationId = "api:replace")
+  @Operation(summary = "Replace API endpoints (create new or update existing)", operationId = "api:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully")})
+      @ApiResponse(responseCode = "200", description = "API endpoints successfully replaced")})
   @PutMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> replace(
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<ApiReplaceDto> dto) {
@@ -96,22 +96,22 @@ public class ApiRest {
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Delete apis", operationId = "api:delete")
+  @Operation(summary = "Delete API endpoints", operationId = "api:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully")})
+      @ApiResponse(responseCode = "204", description = "API endpoints successfully deleted")})
   @DeleteMapping
   public void delete(
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "ids", description = "Api ids", required = true)
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "ids", description = "API endpoint identifiers to delete", required = true)
       @RequestParam("ids") HashSet<Long> ids) {
     apiFacade.delete(ids);
   }
 
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
-  @Operation(summary = "Enable or disable apis", operationId = "api:enabled")
+  @Operation(summary = "Enable or disable API endpoints", operationId = "api:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully")})
+      @ApiResponse(responseCode = "200", description = "API endpoints successfully enabled or disabled")})
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody List<EnabledOrDisabledDto> dtos) {
@@ -119,19 +119,19 @@ public class ApiRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of api", operationId = "api:detail")
+  @Operation(summary = "Retrieve detailed information of a specific API endpoint", operationId = "api:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "API endpoint details successfully retrieved"),
+      @ApiResponse(responseCode = "404", description = "API endpoint not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<ApiDetailVo> detail(
-      @Parameter(name = "id", description = "Api id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "API endpoint identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(apiFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of api", operationId = "api:list")
+  @Operation(summary = "Query and retrieve paginated list of API endpoints", operationId = "api:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "API endpoint list successfully retrieved")})
   @GetMapping
   public ApiLocaleResult<PageResult<ApiDetailVo>> list(@Valid @ParameterObject ApiFindDto dto) {
     return ApiLocaleResult.success(apiFacade.list(dto));

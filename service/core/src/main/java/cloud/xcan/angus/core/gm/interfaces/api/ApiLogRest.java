@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "ApiLog", description = "Inspects recorded API transaction details for auditing or debugging")
+@Tag(name = "Api Log", description = "API for inspecting recorded API transaction details for auditing, debugging, and monitoring")
 @Extension(properties = @ExtensionProperty(name = RESOURCE_NAME_KEY, value = "ApiLog"))
 @Validated
 @RestController
@@ -35,19 +35,19 @@ public class ApiLogRest {
   @Resource
   private ApiLogFacade apiLogFacade;
 
-  @Operation(summary = "Query the detail of api request log", operationId = "log:api:detail")
+  @Operation(summary = "Retrieve detailed information of a specific API request log", operationId = "log:api:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "API log details successfully retrieved"),
+      @ApiResponse(responseCode = "404", description = "API log record not found")})
   @GetMapping("/{id}")
   public ApiLocaleResult<ApiLogDetailVo> detail(
-      @Parameter(name = "id", description = "Api log id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "API log record identifier", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(apiLogFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of api request log", operationId = "log:api:list")
+  @Operation(summary = "Query and retrieve paginated list of API request logs", operationId = "log:api:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "API log list successfully retrieved")})
   @GetMapping
   public ApiLocaleResult<PageResult<ApiLogInfoVo>> list(@Valid @ParameterObject ApiLogFindDto dto) {
     return ApiLocaleResult.success(apiLogFacade.list(dto));

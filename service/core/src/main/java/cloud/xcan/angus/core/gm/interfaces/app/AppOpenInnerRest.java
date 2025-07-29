@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/appopen")
-public class AppOpenDoorRest {
+public class AppOpenInnerRest {
 
   @Resource
   private AppOpenFacade appOpenFacade;

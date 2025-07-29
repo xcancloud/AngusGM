@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/message/center")
-public class MessageCenterDoorRest {
+public class MessageCenterInnerRest {
 
   @Resource
   private MessageCenterFacade messageCenterFacade;
