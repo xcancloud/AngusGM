@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "UserCurrent", description = "Personal center current user operation api entry")
+@Tag(name = "UserCurrent", description = "Personal center operations for current authenticated user, including profile management, contact information updates, and verification services")
 @TenantClient
 @Validated
 @RestController
@@ -46,92 +46,92 @@ public class UserCurrentRest {
   @Resource
   private UserCurrentFacade userCurrentFacade;
 
-  @Operation(summary = "Query tenant of current user", operationId = "user:current:tenant:detail")
+  @Operation(summary = "Get current user's tenant information", operationId = "user:current:tenant:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Tenant information retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Tenant not found")})
   @GetMapping(value = "/tenant")
   public ApiLocaleResult<TenantDetailVo> tenantDetail() {
     return ApiLocaleResult.success(userCurrentFacade.tenantDetail());
   }
 
-  @Operation(summary = "Update the current user", operationId = "user:current:update")
+  @Operation(summary = "Update current user's profile information", operationId = "user:current:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Profile updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @PatchMapping
   public ApiLocaleResult<?> currentUpdate(@Valid @RequestBody UserCurrentUpdateDto dto) {
     userCurrentFacade.currentUpdate(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the detail of current user", operationId = "user:current:detail")
+  @Operation(summary = "Get current user's detailed profile information", operationId = "user:current:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @GetMapping
   public ApiLocaleResult<UserCurrentDetailVo> currentDetail(
-      @Parameter(name = "infoScope", description = "Query information scope, default `BASIC`", required = false) @RequestParam(value = "infoScope", required = false) InfoScope infoScope,
-      @Parameter(name = "appCode", description = "Application code", required = true) @RequestParam(value = "appCode", required = false) String appCode,
-      @Parameter(name = "editionType", description = "Application edition type", required = true) @RequestParam(value = "editionType", required = false) EditionType editionType,
+      @Parameter(name = "infoScope", description = "Scope of information to retrieve (BASIC, DETAILED, FULL). Defaults to BASIC", required = false) @RequestParam(value = "infoScope", required = false) InfoScope infoScope,
+      @Parameter(name = "appCode", description = "Application identifier code for context-specific data", required = false) @RequestParam(value = "appCode", required = false) String appCode,
+      @Parameter(name = "editionType", description = "Application edition type (COMMUNITY, ENTERPRISE, etc.)", required = false) @RequestParam(value = "editionType", required = false) EditionType editionType,
       Principal principal) {
     return ApiLocaleResult.success(userCurrentFacade.currentDetail(infoScope, appCode, editionType, principal));
   }
 
-  @Operation(summary = "Send sms verification code to current user", operationId = "user:current:sms:send")
+  @Operation(summary = "Send SMS verification code to current user's mobile number", operationId = "user:current:sms:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully sent")})
+      @ApiResponse(responseCode = "200", description = "SMS verification code sent successfully")})
   @PostMapping(value = "/sms/send")
   public ApiLocaleResult<?> sendSms(@Valid @RequestBody CurrentSmsSendDto dto) {
     userCurrentFacade.sendSms(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check sms verification code of current user", operationId = "user:current:sms:check")
+  @Operation(summary = "Verify SMS code for current user's mobile number", operationId = "user:current:sms:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully check")})
+      @ApiResponse(responseCode = "200", description = "SMS verification completed successfully")})
   @GetMapping(value = "/sms/check")
   public ApiLocaleResult<CheckSecretVo> checkSms(
       @Valid @ParameterObject CurrentMobileCheckDto dto) {
     return ApiLocaleResult.success(userCurrentFacade.checkSms(dto));
   }
 
-  @Operation(summary = "Update the mobile of current user", operationId = "user:current:mobile:update")
+  @Operation(summary = "Update current user's mobile phone number", operationId = "user:current:mobile:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Mobile number updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @PatchMapping(value = "/mobile")
   public ApiLocaleResult<?> updateMobile(@Valid @RequestBody CurrentMobileUpdateDto dto) {
     userCurrentFacade.updateMobile(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Send email verification code to current user", operationId = "user:current:email:send")
+  @Operation(summary = "Send email verification code to current user's email address", operationId = "user:current:email:send")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully sent")})
+      @ApiResponse(responseCode = "200", description = "Email verification code sent successfully")})
   @PostMapping(value = "/email/send")
   public ApiLocaleResult<?> sendEmail(@Valid @RequestBody CurrentEmailSendDto dto) {
     userCurrentFacade.sendEmail(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Check email verification code of current user", operationId = "user:current:email:check")
+  @Operation(summary = "Verify email code for current user's email address", operationId = "user:current:email:check")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully check")})
+      @ApiResponse(responseCode = "200", description = "Email verification completed successfully")})
   @GetMapping(value = "/email/check")
   public ApiLocaleResult<CheckSecretVo> checkEmail(
       @Valid @ParameterObject CurrentEmailCheckDto dto) {
     return ApiLocaleResult.success(userCurrentFacade.checkEmail(dto));
   }
 
-  @Operation(summary = "Update the email of current user", operationId = "user:current:email:update")
+  @Operation(summary = "Update current user's email address", operationId = "user:current:email:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "Email address updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @PatchMapping(value = "/email")
   public ApiLocaleResult<?> updateEmail(@Valid @RequestBody CurrentEmailUpdateDto dto) {
     userCurrentFacade.updateEmail(dto);

@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "UserTag", description = "Assigns tags to user for resource categorization, or query access control grouping")
+@Tag(name = "User Tag", description = "Manage user-tag relationships for resource categorization, access control grouping, and organizational classification")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user")
@@ -45,49 +45,49 @@ public class UserTagRest {
   @Resource
   private UserTagFacade userTagFacade;
 
-  @Operation(summary = "Add the tags to user", operationId = "user:tag:add")
+  @Operation(summary = "Assign tags to user for categorization", operationId = "user:tag:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "201", description = "Tags successfully assigned to user"),
+      @ApiResponse(responseCode = "404", description = "User or tag not found")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/tag")
   public ApiLocaleResult<List<IdKey<Long, Object>>> tagAdd(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestBody LinkedHashSet<Long> tagIds) {
     return ApiLocaleResult.success(userTagFacade.tagAdd(userId, tagIds));
   }
 
-  @Operation(summary = "Replace the tags of user", operationId = "user:tag:replace")
+  @Operation(summary = "Replace user's tag assignments with new set", operationId = "user:tag:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User tag assignments replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "User or tag not found")})
   @PutMapping("/{id}/tag")
   public ApiLocaleResult<?> tagReplace(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
       @Valid @Size(max = MAX_RELATION_QUOTA) @RequestBody LinkedHashSet<Long> tagIds) {
     userTagFacade.tagReplace(userId, tagIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Delete the tags of user", operationId = "user:tag:delete")
+  @Operation(summary = "Remove tags from user", operationId = "user:tag:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "Tags successfully removed from user"),
+      @ApiResponse(responseCode = "404", description = "User or tag not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/tag")
   public void tagDelete(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("tagIds") HashSet<Long> tagIds) {
     userTagFacade.tagDelete(userId, tagIds);
   }
 
-  @Operation(summary = "Query the tags list of user", operationId = "user:tag:list")
+  @Operation(summary = "Get paginated list of user's assigned tags", operationId = "user:tag:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User tag list retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @GetMapping(value = "/{id}/tag")
   public ApiLocaleResult<PageResult<OrgTagTargetVo>> tagList(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
       @Valid @ParameterObject OrgTargetTagFindDto dto) {
     return ApiLocaleResult.success(userTagFacade.tagList(userId, dto));
   }

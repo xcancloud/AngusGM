@@ -22,12 +22,12 @@ public class UserDirectoryTestDto implements Serializable {
 
   @Valid
   @NotNull
-  @Schema(description = "Server Settings", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Directory server connection configuration for testing", requiredMode = RequiredMode.REQUIRED)
   private DirectoryServer server;
 
   @Valid
   @NotNull
-  @Schema(description = "LDAP Schema", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "LDAP directory schema configuration for testing", requiredMode = RequiredMode.REQUIRED)
   private DirectorySchema schema;
 
   // LDAP Permissions: @DoInFuture
@@ -46,13 +46,15 @@ public class UserDirectoryTestDto implements Serializable {
 
   @Valid
   @NotNull
-  @Schema(requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "LDAP user attribute mapping configuration for testing", requiredMode = RequiredMode.REQUIRED)
   private DirectoryUserSchema userSchema;
 
   @Valid
+  @Schema(description = "LDAP group attribute mapping configuration for testing (optional)")
   private DirectoryGroupSchema groupSchema;
 
   @Valid
+  @Schema(description = "LDAP membership attribute mapping configuration for testing (optional)")
   private DirectoryMembershipSchema membershipSchema;
 
 }

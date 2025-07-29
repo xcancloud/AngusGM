@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasAuthority('SCOPE_inner_api_trust')")
-@Tag(name = "UserInner")
+@Tag(name = "User - Internal", description = "Internal API for system-to-system user creation operations with specified source tracking")
 @Validated
 @RestController
 @RequestMapping("/innerapi/v1/user")
@@ -33,13 +33,13 @@ public class UserInnerRest {
   @Resource
   private UserFacade userFacade;
 
-  @Operation(summary = "Add user by inner api", operationId = "user:add:inner")
+  @Operation(summary = "Create user through internal API with source specification", operationId = "user:add:inner")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "User created successfully through internal API")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{source}")
   public ApiLocaleResult<IdKey<Long, Object>> add(
-      @Parameter(name = "source", description = "User source", required = true) @PathVariable("source") String source,
+      @Parameter(name = "source", description = "User creation source (DIRECTORY_SYNC, OAUTH_LOGIN, etc.)", required = true) @PathVariable("source") String source,
       @Valid @RequestBody UserAddDto dto) {
     return ApiLocaleResult.success(userFacade.add(dto, UserSource.valueOf(source)));
   }

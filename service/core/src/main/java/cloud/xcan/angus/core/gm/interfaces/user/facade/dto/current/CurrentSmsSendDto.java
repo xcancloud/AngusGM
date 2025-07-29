@@ -24,19 +24,19 @@ public class CurrentSmsSendDto implements Serializable {
   @NotNull
   @EnumPart(enumClass = SmsBizKey.class, allowableValues = {
       "MODIFY_MOBILE", "BIND_MOBILE", "PASSWORD_UPDATE"})
-  @Schema(description = "Sms business type key", example = "MODIFY_MOBILE",
+  @Schema(description = "SMS verification business type for different operations", example = "MODIFY_MOBILE",
       allowableValues = {"MODIFY_MOBILE", "BIND_MOBILE",
           "PASSWORD_UPDATE"}, requiredMode = RequiredMode.REQUIRED)
   private SmsBizKey bizKey;
 
   @NotBlank
   @Mobile
-  @Schema(description = "User mobile", example = "13813000000", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Mobile phone number to send verification code to", example = "13813000000", requiredMode = RequiredMode.REQUIRED)
   private String mobile;
 
   @NotBlank
   @Length(max = MAX_COUNTRY_LENGTH)
-  @Schema(description = "User country code", example = "CN", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Country code for the mobile number", example = "CN", requiredMode = RequiredMode.REQUIRED)
   private String country;
 
 }

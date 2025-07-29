@@ -19,12 +19,16 @@ public class UserDeptFindDto extends PageQuery {
   @Schema(hidden = true)
   private Long userId;
 
+  @Schema(description = "Department identifier for filtering user-department relationships")
   private Long deptId;
 
+  @Schema(description = "Department name for searching user-department relationships")
   private String deptName;
 
+  @Schema(description = "User ID who created the department relationship")
   private Long createdBy;
 
+  @Schema(description = "Creation date of the department relationship")
   private LocalDateTime createdDate;
 
   @Override

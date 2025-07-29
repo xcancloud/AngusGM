@@ -20,17 +20,17 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserDirectoryAddDto implements Serializable {
 
-  @Schema(description = "Sorting value, the synchronization priority is high if the value is small")
+  @Schema(description = "Synchronization priority order (lower values have higher priority)")
   private Integer sequence;
 
   @Valid
   @NotNull
-  @Schema(description = "Server Settings", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Directory server connection configuration", requiredMode = RequiredMode.REQUIRED)
   private DirectoryServer server;
 
   @Valid
   @NotNull
-  @Schema(description = "LDAP Schema", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "LDAP directory schema configuration", requiredMode = RequiredMode.REQUIRED)
   private DirectorySchema schema;
 
   // LDAP Permissions: @DoInFuture
@@ -49,15 +49,15 @@ public class UserDirectoryAddDto implements Serializable {
 
   @Valid
   @NotNull
-  @Schema(description = "LDAP user schema", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "LDAP user attribute mapping configuration", requiredMode = RequiredMode.REQUIRED)
   private DirectoryUserSchema userSchema;
 
   @Valid
-  @Schema(description = "LDAP group schema")
+  @Schema(description = "LDAP group attribute mapping configuration (optional)")
   private DirectoryGroupSchema groupSchema;
 
   @Valid
-  @Schema(description = "LDAP membership schema")
+  @Schema(description = "LDAP membership attribute mapping configuration (optional)")
   private DirectoryMembershipSchema membershipSchema;
 
 }

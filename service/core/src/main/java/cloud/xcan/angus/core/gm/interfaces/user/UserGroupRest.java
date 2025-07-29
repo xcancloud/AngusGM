@@ -36,8 +36,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "UserGroup", description = "Controls user-to-group membership mappings to regulate "
-    + "user visibility and access privileges based on organizational groups")
+@Tag(name = "UserGroup", description = "Manage user-group relationships to control access privileges and visibility based on organizational group membership")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user")
@@ -46,51 +45,51 @@ public class UserGroupRest {
   @Resource
   private UserGroupFacade userGroupFacade;
 
-  @Operation(summary = "Add the user to groups", operationId = "user:group:add")
+  @Operation(summary = "Assign user to multiple groups", operationId = "user:group:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "201", description = "User successfully assigned to groups"),
+      @ApiResponse(responseCode = "404", description = "User or group not found")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{id}/group")
   public ApiLocaleResult<List<IdKey<Long, Object>>> groupAppend(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
-      @Valid @NotEmpty @Size(max = MAX_RELATION_QUOTA) @Parameter(name = "ids", description = "Group ids")
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
+      @Valid @NotEmpty @Size(max = MAX_RELATION_QUOTA) @Parameter(name = "ids", description = "List of group identifiers to assign user to")
       @RequestBody LinkedHashSet<Long> groupIds) {
     return ApiLocaleResult.success(userGroupFacade.groupAdd(userId, groupIds));
   }
 
-  @Operation(summary = "Replace the groups of user", operationId = "user:group:replace")
+  @Operation(summary = "Replace user's group assignments with new set", operationId = "user:group:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User group assignments replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "User or group not found")})
   @PutMapping("/{id}/group")
   public ApiLocaleResult<?> groupReplace(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
-      @Valid @Size(max = MAX_RELATION_QUOTA) @Parameter(name = "ids", description = "Group ids")
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
+      @Valid @Size(max = MAX_RELATION_QUOTA) @Parameter(name = "ids", description = "List of group identifiers to assign user to")
       @RequestBody LinkedHashSet<Long> groupIds) {
     userGroupFacade.groupReplace(userId, groupIds);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Remove the user from groups", operationId = "user:group:delete")
+  @Operation(summary = "Remove user from specified groups", operationId = "user:group:delete")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "204", description = "User successfully removed from groups"),
+      @ApiResponse(responseCode = "404", description = "User or group not found")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}/group")
   public void groupDelete(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
-      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "groupIds", description = "Group ids", required = true)
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
+      @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @Parameter(name = "groupIds", description = "List of group identifiers to remove user from", required = true)
       @RequestParam("groupIds") HashSet<Long> groupIds) {
     userGroupFacade.groupDelete(userId, groupIds);
   }
 
-  @Operation(summary = "Query the groups list of user", operationId = "user:group:list")
+  @Operation(summary = "Get paginated list of user's group assignments", operationId = "user:group:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "User group list retrieved successfully")})
   @GetMapping(value = "/{id}/group")
   public ApiLocaleResult<PageResult<UserGroupVo>> groupList(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long userId,
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long userId,
       @Valid @ParameterObject UserGroupFindDto dto) {
     return ApiLocaleResult.success(userGroupFacade.groupList(userId, dto));
   }

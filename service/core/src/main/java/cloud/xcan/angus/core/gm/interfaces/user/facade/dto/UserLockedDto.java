@@ -15,17 +15,17 @@ import lombok.experimental.Accessors;
 public class UserLockedDto implements Serializable {
 
   @NotNull
-  @Schema(description = "User id", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique identifier of the user account", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull
-  @Schema(description = "Whether or not lock user flag", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Account lock status (true to lock, false to unlock)", requiredMode = RequiredMode.REQUIRED)
   private Boolean locked;
 
-  @Schema(description = "Start lock time")
+  @Schema(description = "Account lock start time")
   private LocalDateTime lockStartDate;
 
-  @Schema(description = "DistributedLock end time, permanently locked when value is empty")
+  @Schema(description = "Account lock end time (permanent lock if empty)")
   private LocalDateTime lockEndDate;
 
 }

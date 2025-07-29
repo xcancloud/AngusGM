@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "User", description = "Unified user management entry for the system")
+@Tag(name = "User", description = "Comprehensive user management operations including creation, updates, status management, and administrative functions")
 @Validated
 @RestController
 @RequestMapping("/api/v1/user")
@@ -57,47 +57,47 @@ public class UserRest {
   @Resource
   private UserFacade userFacade;
 
-  @Operation(summary = "Add user", operationId = "user:add")
+  @Operation(summary = "Create new user account", operationId = "user:add")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created successfully")})
+      @ApiResponse(responseCode = "201", description = "User account created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody UserAddDto dto) {
     return ApiLocaleResult.success(userFacade.add(dto, UserSource.BACKGROUND_ADDED));
   }
 
-  @Operation(summary = "Update user", operationId = "user:update")
+  @Operation(summary = "Update existing user profile information", operationId = "user:update")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User profile updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody UserUpdateDto dto) {
     userFacade.update(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Replace user", operationId = "user:replace")
+  @Operation(summary = "Replace user profile with complete new information", operationId = "user:replace")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Replaced successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User profile replaced successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@Valid @RequestBody UserReplaceDto dto) {
     return ApiLocaleResult.success(userFacade.replace(dto));
   }
 
-  @Operation(summary = "Delete users", operationId = "user:delete")
+  @Operation(summary = "Delete multiple user accounts", operationId = "user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Deleted successfully")})
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User accounts deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @RequestParam("ids") @Size(max = MAX_BATCH_SIZE) HashSet<Long> ids) {
     userFacade.delete(ids);
   }
 
-  @Operation(summary = "Enable or disable users", operationId = "user:enabled")
+  @Operation(summary = "Enable or disable multiple user accounts", operationId = "user:enabled")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Enabled or disabled successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "User account status updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")
   })
   @PatchMapping("/enabled")
   public ApiLocaleResult<?> enabled(
@@ -106,10 +106,10 @@ public class UserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "DistributedLock or unlock  user", operationId = "user:lock")
+  @Operation(summary = "Lock or unlock user account access", operationId = "user:lock")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Locked or unlocked successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")
+      @ApiResponse(responseCode = "200", description = "User account lock status updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")
   })
   @PatchMapping("/locked")
   public ApiLocaleResult<?> locked(@Valid @RequestBody UserLockedDto dto) {
@@ -117,47 +117,47 @@ public class UserRest {
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Set user as system administrator", operationId = "user:admin")
+  @Operation(summary = "Assign or remove system administrator privileges", operationId = "user:admin")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Set successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "System administrator privileges updated successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @PatchMapping(value = "/sysadmin")
   public ApiLocaleResult<?> sysAdminSet(@Valid @RequestBody UserSysAdminSetDto dto) {
     userFacade.sysAdminSet(dto);
     return ApiLocaleResult.success();
   }
 
-  @Operation(summary = "Query the system administrators of tenant", operationId = "user:admin:list")
+  @Operation(summary = "Get list of system administrators for current tenant", operationId = "user:admin:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "System administrator list retrieved successfully")})
   @GetMapping(value = "/sysadmin")
   public ApiLocaleResult<List<UserSysAdminVo>> sysAdminList() {
     return ApiLocaleResult.success(userFacade.sysAdminList());
   }
 
-  @Operation(summary = "Check whether or not username existed", operationId = "user:username:check")
+  @Operation(summary = "Check username availability for new user registration", operationId = "user:username:check")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Checked successfully")})
+      @ApiResponse(responseCode = "200", description = "Username availability check completed successfully")})
   @GetMapping(value = "/username/check")
   public ApiLocaleResult<UsernameCheckVo> checkUsername(
-      @Valid @NotEmpty @Length(max = MAX_NAME_LENGTH) @Parameter(name = "username", description = "username", required = true)
+      @Valid @NotEmpty @Length(max = MAX_NAME_LENGTH) @Parameter(name = "username", description = "Username to check for availability", required = true)
       @RequestParam("username") String username) {
     return ApiLocaleResult.success(userFacade.checkUsername(username));
   }
 
-  @Operation(summary = "Query the detail of user", operationId = "user:detail")
+  @Operation(summary = "Get detailed user profile information", operationId = "user:detail")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "Resource not found")})
+      @ApiResponse(responseCode = "200", description = "User details retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "User not found")})
   @GetMapping(value = "/{id}")
   public ApiLocaleResult<UserDetailVo> detail(
-      @Parameter(name = "id", description = "User id", required = true) @PathVariable("id") Long id) {
+      @Parameter(name = "id", description = "Unique identifier of the user", required = true) @PathVariable("id") Long id) {
     return ApiLocaleResult.success(userFacade.detail(id));
   }
 
-  @Operation(summary = "Query the list of user", operationId = "user:list")
+  @Operation(summary = "Get paginated list of users with filtering options", operationId = "user:list")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Retrieved successfully")})
+      @ApiResponse(responseCode = "200", description = "User list retrieved successfully")})
   @GetMapping
   public ApiLocaleResult<PageResult<UserListVo>> list(@Valid @ParameterObject UserFindDto dto) {
     return ApiLocaleResult.success(userFacade.list(dto));

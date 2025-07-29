@@ -19,12 +19,16 @@ public class UserGroupFindDto extends PageQuery {
   @Schema(hidden = true)
   private Long userId;
 
+  @Schema(description = "Group identifier for filtering user-group relationships")
   private Long groupId;
 
+  @Schema(description = "Group name for searching user-group relationships")
   private String groupName;
 
+  @Schema(description = "User ID who created the group relationship")
   private Long createdBy;
 
+  @Schema(description = "Creation date of the group relationship")
   private LocalDateTime createdDate;
 
   @Override
