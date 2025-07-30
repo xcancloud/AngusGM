@@ -256,7 +256,6 @@ watch([() => accountForm.account, () => mobileForm.account], () => {
 
 const editionType = ref<string>();
 onMounted(async () => {
-  // const envContent = await site.getEnvContent();
   editionType.value = appContext.getEditionType();
 });
 </script>

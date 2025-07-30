@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { inject, ref, watch, onMounted } from 'vue';
-import { cookie } from '@xcan-angus/tools';
+import {appContext, cookieUtils, type TokenInfo} from '@xcan-angus/infra';
 import { Modal, Hints, Input } from '@xcan-angus/vue-ui';
 import { login } from '@/api';
 
@@ -37,8 +37,8 @@ const ok = async () => {
   }
 
   // 验证密码是否正确
-  const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID || '';
-  const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET || '';
+  const clientId = appContext.getEnv().oauthClientId || '';
+  const clientSecret = appContext.getEnv().oauthClientSecret || '';
   const params = {
     account: tenantInfo.value.mobile,
     password: inputValue.value,
@@ -60,9 +60,12 @@ const ok = async () => {
     return;
   }
 
-  // 同步更新token
-  cookie.set('access_token', res.data.access_token);
-  cookie.set('refresh_token', res.data.refresh_token);
+  const tokenInfo: TokenInfo = {
+    request_auth_time: new Date().toISOString(),
+    ...res?.data
+  };
+  cookieUtils.setTokenInfo(tokenInfo);
+
   cancel();
   emit('ok');
 };

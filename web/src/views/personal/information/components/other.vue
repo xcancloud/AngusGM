@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Spin } from 'ant-design-vue';
-import { modal, notification, Icon, PureCard, Colon } from '@xcan-angus/vue-ui';
+import { Colon, Icon, modal, PureCard } from '@xcan-angus/vue-ui';
 
-import { social, user } from '@/api';
+import { user } from '@/api';
 
-const wechatStyle = new URL('../assets/reset-wechat.css', import.meta.url).href;
+// const wechatStyle = new URL('../assets/reset-wechat.css', import.meta.url).href;
 
 const { t } = useI18n();
 const loading = ref(true);
@@ -51,45 +51,6 @@ const loadUser = async () => {
 const bindAccount = async (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): Promise<void> => {
   if (type === 'GOOGLE') {
     // TODO
-    return;
-  }
-
-  const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID || '';
-  const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET || '';
-  if (type === 'WECHAT') {
-    showWechatContainer.value = true;
-    spinning.value = true;
-  }
-
-  const [error, res] = await social.bindOtherAccount({ type, clientId, clientSecret });
-  if (error) {
-    notification.error({
-      message: t('personalCenter.make-mistake'),
-      description: error.message
-    });
-    return;
-  }
-
-  if (type === 'WECHAT') {
-    const { state, appId, callBack } = res.data;
-    // eslint-disable-next-line no-undef, no-new
-    new WxLogin({
-      state,
-      appid: appId,
-      redirect_uri: callBack,
-      self_redirect: false,
-      id: 'wechat-container',
-      scope: 'snsapi_login',
-      style: 'black',
-      href: wechatStyle
-    });
-    setTimeout(() => {
-      spinning.value = false;
-    }, 500);
-  }
-
-  if (type === 'GITHUB') {
-    window.location.href = res.data.codeUrl;
   }
 };
 
