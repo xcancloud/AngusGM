@@ -12,8 +12,8 @@ import {
 import { BarChart, LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import { computed } from '@vue/reactivity';
-import DarkTheme from '../Statistics/echartsDark.json';
-import GrayTheme from '../Statistics/echartsGray.json';
+// import DarkTheme from '../Statistics/echartsDark.json';
+// import GrayTheme from '../Statistics/echartsGray.json';
 
 interface Props {
   title: string
@@ -38,7 +38,6 @@ echarts.use([
   LineChart
 ]);
 
-const tenantInfo: Ref = inject('tenantInfo', ref());
 const chartsRef = ref();
 let myChart: echarts.ECharts;
 
@@ -46,8 +45,8 @@ const initCharts = () => {
   if (!chartsRef.value) {
     return;
   }
-  echarts.registerTheme(tenantInfo.value.preference.themeCode, tenantInfo.value.preference.themeCode === 'dark' ? DarkTheme : GrayTheme);
-  myChart = echarts.init(chartsRef.value, tenantInfo.value.preference.themeCode, { renderer: 'canvas' });
+  // echarts.registerTheme(tenantInfo.value.preference.themeCode, GrayTheme);
+  myChart = echarts.init(chartsRef.value);
   myChart.setOption(chartsOption);
   window.addEventListener('resize', () => {
     myChart.resize();

@@ -2,8 +2,7 @@
 import { computed, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { VuexHelper, Breadcrumb, Header, Sidebar } from '@xcan-angus/vue-ui';
-import { app } from '@xcan-angus/tools';
-
+import { appContext } from '@xcan-angus/infra';
 const { useMutations } = VuexHelper;
 
 const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
@@ -11,7 +10,8 @@ const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 const route = useRoute();
 const logoDefaultImg = new URL('./assets/angus-gm.png', import.meta.url).href;
 const sidebarMenus = ref<Array<unknown>>([]);
-
+const menuList = appContext.getAccessAppFuncTree() || [];
+const menuCodeMap = appContext.getAccessAppFuncCodeMap();
 onMounted(() => {
   setLayoutCodeCode('gm');
 });
@@ -24,8 +24,8 @@ const hasBreadcrumb = computed(() => {
 <template>
   <Header
     v-model:subMenus="sidebarMenus"
-    :menus="app.menuList"
-    :codeMap="app.codeMap"
+    :menus="menuList"
+    :codeMap="menuCodeMap"
     :logoDefaultImg="logoDefaultImg" />
   <div class="main-container">
     <Sidebar

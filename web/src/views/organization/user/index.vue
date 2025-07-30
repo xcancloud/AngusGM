@@ -17,6 +17,7 @@ import {
   IconCount
 } from '@xcan-angus/vue-ui';
 import { app, utils, GM } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra'
 
 import { User, SearchParams, FilterOp } from './PropsType';
 import { user } from '@/api';
@@ -26,8 +27,6 @@ const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/use
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 
 const { t } = useI18n();
-const tenantInfo: Ref = inject('tenantInfo', ref());
-
 const showCount = ref(true);
 const loading = ref(false);
 const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
@@ -436,11 +435,11 @@ const columns = [
 ];
 
 const _tenantInfo = computed(() => {
-  return tenantInfo.value;
+  return appContext.getContext()?.user;
 });
 
 const getOperatPermissions = (sysAdmin: boolean): boolean => {
-  return !_tenantInfo.value.sysAdmin && sysAdmin;
+  return !_tenantInfo.value?.sysAdmin && sysAdmin;
 };
 </script>
 <template>

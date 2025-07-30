@@ -11,6 +11,7 @@ import {
 import { PieChart } from 'echarts/charts';
 import { LabelLayout } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
+import { appContext} from '@xcan-angus/infra'
 
 interface Props {
   source: string;
@@ -42,7 +43,7 @@ echarts.use([
   LabelLayout
 ]);
 
-const tenantInfo: Ref = inject('tenantInfo', ref());
+const tenantInfo: Ref = ref(appContext.getContext().user || {});
 const chartsRef = ref();
 let myChart: echarts.ECharts;
 
@@ -50,7 +51,7 @@ const initCharts = () => {
   if (!chartsRef.value) {
     return;
   }
-  myChart = echarts.init(chartsRef.value, tenantInfo.value.preference.themeCode, { renderer: 'canvas' });
+  myChart = echarts.init(chartsRef.value);
   myChart.setOption(chartsOption, true, false);
   window.addEventListener('resize', () => {
     myChart.resize();
@@ -170,7 +171,7 @@ const chartsOption = {
         }
       },
       emptyCircleStyle: {
-        color: tenantInfo.value.preference.themeCode === 'dark' ? '#666874' : '#f5f5f5'
+        color: '#f5f5f5'
       }
     }
   ]
