@@ -31,6 +31,7 @@
         "fix": "npm run fix:js && npm run fix:style"
     },
     "dependencies": {
+        "@xcan-angus/infra": "^1.0.0",
         "@xcan-angus/quill": "^2.0.3",
         "@xcan-angus/tools": "^1.0.0",
         "@xcan-angus/vue-ui": "^1.0.0",

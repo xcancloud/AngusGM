@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { guard, app } from '@xcan-angus/tools';
+import { appContext, guard } from '@xcan-angus/infra';
 
 import routes from './routes';
 import store from '@/store';
@@ -14,7 +14,7 @@ function setCode (code: number): void {
 }
 
 const startupGuard = (): void => {
-  guard.navigationGuard(router, app.menuList, setCode);
+  guard.navigationGuard(router, appContext.getAccessAppFuncTree() || [], setCode);
 };
 
 export { startupGuard };
