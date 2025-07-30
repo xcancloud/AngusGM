@@ -3,7 +3,7 @@ import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Hints, Table, Input, Icon, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, utils } from '@xcan-angus/tools';
+import { duration, utils } from '@xcan-angus/infra';
 
 import { UserGroup, SearchParams } from './PropsType';
 import { user } from '@/api';

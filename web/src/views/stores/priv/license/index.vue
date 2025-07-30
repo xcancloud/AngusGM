@@ -72,7 +72,7 @@ const handleRefresh = () => {
 
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const host = await site.getUrl('apis');
-  const token = cookie.get('access_token');
+  const token = cookieUtils.get('access_token');
   download(`${host}${GM}/store/license/${licenseNo}/download?access_token=${token}`);
 };
 

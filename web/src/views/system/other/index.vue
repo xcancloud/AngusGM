@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { Card, Input, Colon, Spin, notification } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan-angus/tools';
+import { duration } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
 

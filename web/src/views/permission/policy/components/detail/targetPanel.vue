@@ -14,7 +14,7 @@ import {
   Image,
   ButtonAuth
 } from '@xcan-angus/vue-ui';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
 
@@ -127,7 +127,7 @@ const load = async () => {
   pagination.total = +data.total;
   if (props.type === 'USER') {
     state.dataSource.forEach(item => {
-      item.avatar = item.avatar ? `${item.avatar}&access_token=${cookie.get('access_token')}` : '';
+      item.avatar = item.avatar ? `${item.avatar}&access_token=${cookieUtils.get('access_token')}` : '';
     });
   }
 };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { http, PUB_GM } from '@xcan-angus/tools';
+import { http, PUB_GM } from '@xcan-angus/infra';
 import { Input } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 

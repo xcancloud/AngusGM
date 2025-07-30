@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { InputPassword } from 'ant-design-vue';
 
@@ -57,7 +57,7 @@ const tipMap = {
 };
 let errorMessageMap = errorMap.zh_CN;
 let strengthMap = tipMap.zh_CN;
-const localeCookie = cookie.get('localeCookie') as string;
+const localeCookie = cookieUtils.get('localeCookie') as string;
 if (['en', 'zh_CN'].includes(localeCookie)) {
   errorMessageMap = errorMap[localeCookie];
   strengthMap = tipMap[localeCookie];

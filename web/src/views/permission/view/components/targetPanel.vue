@@ -3,7 +3,7 @@ import { reactive, watch, computed, ref, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Image, Input, Icon, Scroll, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, GM } from '@xcan-angus/tools';
+import { duration, GM } from '@xcan-angus/infra';
 
 const AddMembers = defineAsyncComponent(() => import('./addMembers.vue'));
 

@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { Card, Colon } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan-angus/tools';
+import { duration } from '@xcan-angus/infra';
 import { Button, Switch } from 'ant-design-vue';
 
 import { SignupAllow, Operation } from '../PropsType';

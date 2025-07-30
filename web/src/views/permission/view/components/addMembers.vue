@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, Ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 import { Modal, Grid, Select, SelectUser } from '@xcan-angus/vue-ui';
 
 import { app } from '@/api';

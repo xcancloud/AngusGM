@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { cookie, utils } from '@xcan-angus/tools';
+import { cookieUtils, utils } from '@xcan-angus/infra';
 import { Upload, Modal, RadioGroup } from 'ant-design-vue';
 import { Hints, Icon, notification } from '@xcan-angus/vue-ui';
 
@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'update:visible', value: boolean): void, (e: 'refresh', value: boolean): void }>();
 
-const token = cookie.get('access_token');
+const token = cookieUtils.get('access_token');
 const { t } = useI18n();
 const headers = {
   Authorization: `Bearer ${token}`

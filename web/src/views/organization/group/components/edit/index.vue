@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, Textarea } from 'ant-design-vue';
 import { Hints, PureCard, Input, IconRequired, Select, notification, Colon } from '@xcan-angus/vue-ui';
-import { utils, GM } from '@xcan-angus/tools';
+import { utils, GM } from '@xcan-angus/infra';
 
 import { FormState, Detail } from '../../PropsType';
 import { group } from '@/api';

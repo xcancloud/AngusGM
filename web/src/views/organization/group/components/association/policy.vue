@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Popover } from 'ant-design-vue';
 import { Input, Hints, Icon, Table, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, utils } from '@xcan-angus/tools';
+import { duration, utils } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
 import { SearchParams } from './PropsType';

@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { notification, PureCard, Scroll, Icon, SearchPanel, NoData, Colon, IconRefresh } from '@xcan-angus/vue-ui';
 import { Button, Dropdown, Menu, MenuItem } from 'ant-design-vue';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 
 import { privStore } from '@/api';
 import UploadPlugin from '@/views/stores/priv/goods/components/uploadPlugin/index.vue';

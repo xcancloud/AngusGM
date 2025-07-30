@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 import { Icon, Modal } from '@xcan-angus/vue-ui';
 import 'vue3-video-play/dist/style.css';
 import { videoPlay } from 'vue3-video-play';
@@ -24,7 +24,7 @@ const videoSrc = computed(() => {
 
   try {
     const url = new URL(props.src);
-    url.searchParams.set('access_token', cookie.get('access_token') as string);
+    url.searchParams.set('access_token', cookieUtils.get('access_token') as string);
     return url.href;
   } catch (error) {
     return props.src;

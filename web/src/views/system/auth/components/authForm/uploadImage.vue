@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Viewer from 'viewerjs';
 import 'viewerjs/dist/viewer.css';
-import { upload, cookie } from '@xcan-angus/tools';
+import { upload, cookieUtils } from '@xcan-angus/infra';
 import { Icon } from '@xcan-angus/vue-ui';
 
 import { defineEmits, defineProps, ref, watch, withDefaults } from 'vue';
@@ -61,7 +61,7 @@ const fileChange = async function (el: any) {
 
       try {
         const _url = new URL(item.url);
-        const token = cookie.get('access_token');
+        const token = cookieUtils.get('access_token');
         _url.searchParams.set('access_token', token as string);
         imageUrl.value = _url.toString();
       } catch {

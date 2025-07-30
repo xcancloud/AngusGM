@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Badge, Skeleton } from 'ant-design-vue';
 import { Card, Grid } from '@xcan-angus/vue-ui';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 
 import { sms } from '@/api';
 import { SmsRecord } from '../../PropsType';
@@ -128,7 +128,7 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
             v-for="(item,index) in text"
             :key="index"
             class="mr-4 text-theme-special"
-            :href="`${item.url}&access_token=${cookie.get('access_token')}`">{{ item.name }}</a>
+            :href="`${item.url}&access_token=${cookieUtils.get('access_token')}`">{{ item.name }}</a>
         </template>
       </Grid>
     </Skeleton>

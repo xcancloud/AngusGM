@@ -6,7 +6,7 @@ import { Badge, Skeleton, Tabs } from 'ant-design-vue';
 import { ButtonAuth, modal, Grid, PureCard, Image, notification, AsyncComponent } from '@xcan-angus/vue-ui';
 import { Detail } from './PropsType';
 import router from '@/router';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 import { user } from '@/api';
 
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));

@@ -1,4 +1,4 @@
-import { binary, site } from '@xcan-angus/tools';
+import { codeUtils, site } from '@xcan-angus/infra';
 
 // Redirect URL after successful login
 const redirectTo = async (data?: { accessToken: string; refreshToken: string; clientId: string; }): Promise<void> => {
@@ -26,16 +26,16 @@ const getRedirectUrl = async (): Promise<string> => {
   }
 
   try {
-    const decodedTarget = binary.fromBinary(target);
+    const decodedTarget = codeUtils.fromBinary(target);
     const url = new URL(decodedTarget);
-    
+
     // Validate that the URL is from a trusted domain
     const allowedHosts = [window.location.hostname, 'localhost', '127.0.0.1'];
     if (!allowedHosts.includes(url.hostname) && !url.hostname.endsWith('.xcan.company')) {
       console.warn('Untrusted redirect URL detected:', url.hostname);
       return host;
     }
-    
+
     return url.href;
   } catch (error) {
     return host;

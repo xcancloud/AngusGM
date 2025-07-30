@@ -15,7 +15,7 @@ import {
   NoData
 } from '@xcan-angus/vue-ui';
 import {debounce} from 'throttle-debounce';
-import {duration} from '@xcan-angus/tools';
+import {duration} from '@xcan-angus/infra';
 import {Divider, CheckboxGroup, Checkbox, Tooltip, Popover, Pagination, Tree} from 'ant-design-vue';
 import {dept, user, group} from '@/api';
 

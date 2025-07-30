@@ -2,7 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { debounce } from 'throttle-debounce';
-import { duration, GM } from '@xcan-angus/tools';
+import { duration, GM } from '@xcan-angus/infra';
 import { CheckboxGroup, Checkbox, Divider } from 'ant-design-vue';
 import { Modal, Input, Icon, Scroll } from '@xcan-angus/vue-ui';
 

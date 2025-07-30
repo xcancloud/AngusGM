@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { store } from '@/api';
-import { cookie, http, API, VERSION } from '@xcan-angus/tools';
+import { cookieUtils, http, API, VERSION } from '@xcan-angus/infra';
 import { Carousel, StoreComment, Image, PureCard, Icon, Colon } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
 
@@ -16,7 +16,7 @@ import { goodsTypeColor, getEnumMessages } from '../PropsType';
 const route = useRoute();
 
 const id = route.params.id;
-const userId = cookie.get('uid');
+const userId = cookieUtils.get('uid');
 
 const loading = ref(true);
 const goods = ref<Goods>({

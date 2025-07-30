@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { CheckboxGroup, Checkbox, Divider } from 'ant-design-vue';
 import { Modal, Input, Icon, Scroll, Select } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, GM } from '@xcan-angus/tools';
+import { duration, GM } from '@xcan-angus/infra';
 
 import { orgTag, user } from '@/api';
 

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Form, FormItem } from 'ant-design-vue';
 import { notification, Modal, Input, Select } from '@xcan-angus/vue-ui';
 
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 import { dept } from '@/api';
 
 interface FormType {

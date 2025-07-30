@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 
 const options = [
   { label: '简体中文', value: 'zh_CN' },
   { label: 'English', value: 'en' }
 ];
 
-const language = (cookie.get('localeCookie') || navigator.language);
+const language = (cookieUtils.get('localeCookie') || navigator.language);
 const currentLanguage = options.find(item => item.value === language) || options[0];
 const activeValue = ref(currentLanguage.value);
 const activeLabel = ref(currentLanguage.label);
@@ -37,7 +37,7 @@ const change = (data) => {
   activeLabel.value = data.label;
   activeValue.value = data.value;
   hide.value = true;
-  cookie.set('localeCookie', data.value);
+  cookieUtils.set('localeCookie', data.value);
   window.location.reload();
 };
 </script>

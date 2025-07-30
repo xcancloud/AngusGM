@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { store } from '@/api';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 import { Carousel, Colon, Icon, Image, PureCard, Spin, StoreComment } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
 import VideoLink from '@/views/stores/open2Priv/info/videoLink/index.vue';
@@ -15,7 +15,7 @@ import { goodsTypeColor } from '../PropsType';
 const route = useRoute();
 
 const id = route.params.id;
-const userId = cookie.get('uid');
+const userId = cookieUtils.get('uid');
 
 const loading = ref(true);
 const downLoading = ref(false);

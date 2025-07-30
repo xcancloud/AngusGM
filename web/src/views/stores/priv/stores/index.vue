@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { onMounted, watch, ref, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { cookie } from '@xcan-angus/tools';
+import { cookieUtils } from '@xcan-angus/infra';
 
 const router = useRouter();
 const route = useRoute();
 
-const accessToken = cookie.get('access_token') || '';
-const refreshToken = cookie.get('refresh_token') || '';
-const localeCookie = cookie.get('localeCookie') || '';
-const timezone = cookie.get('timezone') || '';
+const accessToken = cookieUtils.get('access_token') || '';
+const refreshToken = cookieUtils.get('refresh_token') || '';
+const localeCookie = cookieUtils.get('localeCookie') || '';
+const timezone = cookieUtils.get('timezone') || '';
 const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET || '';
 
 const id = route.params.id || '';

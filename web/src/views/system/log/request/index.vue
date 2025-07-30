@@ -3,7 +3,7 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { Pagination, TabPane, Tabs, Tooltip } from 'ant-design-vue';
 import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 import elementResizeDetector from 'element-resize-detector';
 
 import { setting, userLog } from '@/api';

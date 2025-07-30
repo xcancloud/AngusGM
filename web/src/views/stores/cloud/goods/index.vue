@@ -3,7 +3,7 @@ import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, PureCard, Scroll, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 // import { Button } from 'ant-design-vue';
-import { ESS } from '@xcan-angus/tools';
+import { ESS } from '@xcan-angus/infra';
 import { app } from '@xcan-angus/tools';
 
 import UploadPlugin from './components/UploadPlugin/index.vue';

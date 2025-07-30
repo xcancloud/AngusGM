@@ -3,7 +3,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Divider } from 'ant-design-vue';
 import { ButtonAuth, IconRefresh, Input, notification, PureCard, Select, SelectEnum, Table } from '@xcan-angus/vue-ui';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 
 import { sms } from '@/api';
 import { _columns, Options, Template } from './PropsType';

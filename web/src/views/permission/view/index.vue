@@ -5,7 +5,7 @@ import { Tabs, TabPane } from 'ant-design-vue';
 import { modal, notification, PureCard, Table, Select, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 
 const TargetPanel = defineAsyncComponent(() => import('./components/targetPanel.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));

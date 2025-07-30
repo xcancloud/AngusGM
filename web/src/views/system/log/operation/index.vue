@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { Hints, PureCard, Table, Image } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan-angus/tools';
+import { GM } from '@xcan-angus/infra';
 
 import { setting, userLog } from '@/api';
 
