@@ -62,7 +62,7 @@ const ok = async () => {
 
   const tokenInfo: TokenInfo = {
     request_auth_time: new Date().toISOString(),
-    ...res.data
+    ...res?.data
   };
   cookieUtils.setTokenInfo(tokenInfo);
 
