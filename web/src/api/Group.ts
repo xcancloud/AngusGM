@@ -1,4 +1,4 @@
-import { http } from '@xcan-angus/tools';
+import { http } from '@xcan-angus/infra';
 
 let baseUrl: string;
 export default class Group {

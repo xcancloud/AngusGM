@@ -93,7 +93,9 @@ const toSignin = async () => {
   const params = { account, password, scope, signinType, userId };
   const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET;
+  debugger;
   const [err, res] = await login.signin({ ...params, clientSecret, clientId });
+
   if (err) {
     loading.value = false;
     error.value = true;
