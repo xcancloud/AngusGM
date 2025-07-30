@@ -2,7 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const compressing = require("compressing");
 
 /**
  * Parse command line arguments
@@ -134,7 +133,6 @@ function start() {
   const params = parseArgs();
   const deployEnv = params.env;
   const editionType = params.edition_type || 'COMMUNITY';
-  const zipDist = params.zip_dist || false;
 
   if (!deployEnv) {
     console.error('❌ Missing required environment parameter --env');
@@ -170,13 +168,6 @@ function start() {
 
     console.log('> Execute Vite build command');
     execSync(`npm run vite:build:${deployEnv}`, { stdio: 'inherit' });
-
-    // Package compiled static resources and modified configurations
-    if (zipDist) {
-      const source = './dist';
-      const dest = 'dist.zip';
-      compressing.zip.compressDir(source, dest);
-    }
 
     console.log('✅ Build completed');
   } catch (error) {
