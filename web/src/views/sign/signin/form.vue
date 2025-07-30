@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from 'vue';
-import { cookie, site } from '@xcan-angus/tools';
+import { cookieUtils, appContext, type TokenInfo } from '@xcan-angus/infra';
 import { redirectTo } from '@/utils/url';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
@@ -91,8 +91,8 @@ const accountChange = (id) => {
 const toSignin = async () => {
   const { account, password, scope, signinType, userId, hasPassword } = isMobile.value ? mobileForm : accountForm;
   const params = { account, password, scope, signinType, userId };
-  const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID;
-  const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET;
+  const clientId = appContext.getContext().env.oauthClientId || '';
+  const clientSecret = appContext.getContext().env.oauthClientSecret || '';
   debugger;
   const [err, res] = await login.signin({ ...params, clientSecret, clientId });
 
@@ -104,13 +104,17 @@ const toSignin = async () => {
     return;
   }
   // eslint-disable-next-line camelcase
-  const { access_token, refresh_token } = res.data;
-  const private0 = await site.isPrivate();
-  let queryParams: { accessToken: string; refreshToken: string; clientId: string };
-  if (!private0) {
-    cookie.set('access_token', access_token);
-    cookie.set('refresh_token', refresh_token);
-    cookie.set('clientId', clientId);
+  const { access_token, refresh_token, expires_in } = res.data;
+  const isCloudServiceEdition = appContext.isCloudServiceEdition();
+  let queryParams: { accessToken: string; refreshToken: string; clientId: string } | undefined;
+  if (isCloudServiceEdition) {
+    const tokenInfo: TokenInfo = {
+      access_token,
+      refresh_token,
+      expires_in,
+      request_auth_time: new Date().toISOString()
+    };
+    cookieUtils.setTokenInfo(tokenInfo);
   } else {
     queryParams = { accessToken: access_token, refreshToken: refresh_token, clientId };
   }
