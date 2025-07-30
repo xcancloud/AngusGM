@@ -39,30 +39,56 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of department user command operations for managing user-department relationships.
+ * 
+ * <p>This class provides comprehensive functionality for department-user management including:</p>
+ * <ul>
+ *   <li>Adding users to departments and departments to users</li>
+ *   <li>Managing user main department assignments</li>
+ *   <li>Handling department head assignments</li>
+ *   <li>Managing department-user quotas and validations</li>
+ *   <li>Recording operation logs for audit trails</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures proper user-department relationship management
+ * with quota controls and audit trail maintenance.</p>
+ */
 @Biz
 public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUserCmd {
 
   @Resource
   private DeptUserRepo deptUserRepo;
-
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private DeptQuery deptQuery;
-
   @Resource
   private UserCmd userCmd;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private DeptUserQuery userDeptQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * Adds departments to a user with comprehensive validation.
+   * 
+   * <p>This method performs department assignment including:</p>
+   * <ul>
+   *   <li>Validating user existence</li>
+   *   <li>Checking user department quota limits</li>
+   *   <li>Validating department existence</li>
+   *   <li>Checking department user quota limits</li>
+   *   <li>Creating department-user associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param deptUsers List of department-user associations to create
+   * @return List of created association identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> deptAdd(Long userId, List<DeptUser> deptUsers) {
@@ -73,15 +99,15 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Validate user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check the user department quota
+        // Validate user department quota
         userDeptQuery.checkUserDeptAppendQuota(getOptTenantId(), deptUsers.size(), userId);
 
-        // Check the departments existed
+        // Validate departments exist
         deptIds = deptUsers.stream().map(DeptUser::getDeptId).collect(Collectors.toSet());
         deptDb = deptQuery.checkAndFind(deptIds);
-        // Check the department user quota
+        // Validate department user quota
         for (Long deptId : deptIds) {
           userDeptQuery.checkDeptUserAppendQuota(getOptTenantId(), 1, deptId);
         }
@@ -89,11 +115,13 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // @DoInFuture("Set user mainDeptId")
+        // Note: Future enhancement to set user mainDeptId
 
+        // Remove existing associations and create new ones
         deptUserRepo.deleteByUserIdAndDeptIdIn(userId, deptIds);
         List<IdKey<Long, Object>> idKeys = batchInsert(deptUsers);
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, ADD_USER_DEPT,
             String.join(",", deptDb.stream().map(Dept::getName).toList()));
         return idKeys;
@@ -101,6 +129,22 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
     }.execute();
   }
 
+  /**
+   * Replaces user's department associations with new ones.
+   * 
+   * <p>This method performs comprehensive department replacement including:</p>
+   * <ul>
+   *   <li>Validating user and department existence</li>
+   *   <li>Checking quota limits for replacement</li>
+   *   <li>Setting user's main department</li>
+   *   <li>Clearing existing associations</li>
+   *   <li>Creating new associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param deptUsers List of new department-user associations
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deptReplace(Long userId, List<DeptUser> deptUsers) {
@@ -110,36 +154,37 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Validate user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check the departments existed
+        // Validate departments exist
         Set<Long> deptIds = deptUsers.stream().map(DeptUser::getDeptId).collect(Collectors.toSet());
         deptDb = deptQuery.checkAndFind(deptIds);
 
-        // Check the user department quota
+        // Validate user department quota
         userDeptQuery.checkUserDeptReplaceQuota(getOptTenantId(), deptUsers.size(), userId);
         for (DeptUser userDept : deptUsers) {
-          // Check the department user quota
+          // Validate department user quota
           userDeptQuery.checkDeptUserAppendQuota(getOptTenantId(), 1, userDept.getDeptId());
         }
       }
 
       @Override
       protected Void process() {
-        // Update user main department
+        // Set user's main department
         DeptUser mainDept = deptUsers.stream().filter(DeptUser::getMainDept).findFirst()
             .orElse(deptUsers.get(0));
         userDb.setMainDeptId(mainDept.getDeptId());
         userRepo.save(userDb);
 
-        // Clear empty
+        // Clear existing associations
         deleteByUserId(Collections.singleton(userId));
-        // Save new association
+        // Create new associations
         if (isNotEmpty(deptUsers)) {
           add0(deptUsers.stream().peek(deptUser -> deptUser.setTenantId(userDb.getTenantId()))
               .collect(Collectors.toList()));
         }
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, UPDATE_USER_DEPT,
             String.join(",", deptDb.stream().map(Dept::getName).toList()));
         return null;
@@ -147,6 +192,20 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
     }.execute();
   }
 
+  /**
+   * Removes departments from a user.
+   * 
+   * <p>This method performs department removal including:</p>
+   * <ul>
+   *   <li>Validating user and department existence</li>
+   *   <li>Removing department-user associations</li>
+   *   <li>Clearing user main department references</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param deptIds Set of department identifiers to remove
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deptDelete(Long userId, HashSet<Long> deptIds) {
@@ -156,17 +215,20 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Validate user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check the departments existed
+        // Validate departments exist
         deptDb = deptQuery.checkAndFind(deptIds);
       }
 
       @Override
       protected Void process() {
+        // Remove department-user associations
         deptUserRepo.deleteByUserIdAndDeptIdIn(userId, deptIds);
+        // Clear user main department references
         userCmd.clearMainDeptByUserIdAndDeptIdIn(userId, deptIds);
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, DELETE_USER_DEPT,
             String.join(",", deptDb.stream().map(Dept::getName).toList()));
         return null;
@@ -174,6 +236,23 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
     }.execute();
   }
 
+  /**
+   * Adds users to a department with comprehensive validation.
+   * 
+   * <p>This method performs user assignment including:</p>
+   * <ul>
+   *   <li>Validating department existence</li>
+   *   <li>Checking department user quota limits</li>
+   *   <li>Validating user existence</li>
+   *   <li>Checking user department quota limits</li>
+   *   <li>Creating user-department associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param deptId Department identifier
+   * @param deptUsers List of user-department associations to create
+   * @return List of created association identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> userAdd(Long deptId, List<DeptUser> deptUsers) {
@@ -184,15 +263,15 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected void checkParams() {
-        // Check the department existed
+        // Validate department exists
         deptDb = deptQuery.checkAndFind(deptId);
-        // Check the department user quota
+        // Validate department user quota
         userDeptQuery.checkDeptUserAppendQuota(getOptTenantId(), deptUsers.size(), deptId);
 
-        // Check the users existed
+        // Validate users exist
         userIds = deptUsers.stream().map(DeptUser::getUserId).collect(Collectors.toSet());
         users = userQuery.checkAndFind(userIds);
-        // Check the user department quota
+        // Validate user department quota
         for (Long userId : userIds) {
           userDeptQuery.checkUserDeptAppendQuota(getOptTenantId(), 1, userId);
         }
@@ -200,12 +279,14 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // @DoInFuture("Set user mainDeptId")
+        // Note: Future enhancement to set user mainDeptId
 
+        // Remove existing associations and create new ones
         deptUserRepo.deleteByDeptIdInAndUserIdIn(Collections.singleton(deptId), userIds);
 
         List<IdKey<Long, Object>> idKeys = batchInsert(deptUsers);
 
+        // Record operation audit log
         operationLogCmd.add(DEPT, deptDb, ADD_DEPT_USER,
             users.stream().map(User::getName).collect(Collectors.joining(",")));
         return idKeys;
@@ -213,6 +294,20 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
     }.execute();
   }
 
+  /**
+   * Removes users from a department.
+   * 
+   * <p>This method performs user removal including:</p>
+   * <ul>
+   *   <li>Validating department and user existence</li>
+   *   <li>Removing user-department associations</li>
+   *   <li>Clearing user main department references</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param deptId Department identifier
+   * @param userIds Set of user identifiers to remove
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void userDelete(Long deptId, HashSet<Long> userIds) {
@@ -228,9 +323,12 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected Void process() {
+        // Remove user-department associations
         deptUserRepo.deleteByDeptIdAndUserIdIn(deptId, userIds);
+        // Clear user main department references
         userCmd.clearMainDeptByDeptIdAndUserIdIn(deptId, userIds);
 
+        // Record operation audit log
         operationLogCmd.add(DEPT, deptDb, DELETE_DEPT_USER,
             usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return null;
@@ -238,6 +336,21 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
     }.execute();
   }
 
+  /**
+   * Replaces department head assignment.
+   * 
+   * <p>This method manages department head assignments including:</p>
+   * <ul>
+   *   <li>Validating department and user existence</li>
+   *   <li>Managing department head status</li>
+   *   <li>Updating user department head status</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param deptId Department identifier
+   * @param userId User identifier
+   * @param head Whether user should be department head
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void headReplace(Long deptId, Long userId, Boolean head) {
@@ -253,7 +366,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
       @Override
       protected Void process() {
-        // Cancel other department head
+        // Cancel other department heads if setting new head
         if (head) {
           deptUserRepo.updateDeptHead(deptId, head);
         }
@@ -262,6 +375,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
         deptUserRepo.updateDeptHead(deptId, userId, head);
         userRepo.updateDeptHead(userId, head);
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, head ? SET_USER_MAIN_DEPT
             : CANCEL_USER_MAIN_DEPT, deptDb.getName());
         return null;
@@ -269,27 +383,51 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
     }.execute();
   }
 
+  /**
+   * Adds department-user associations with validation.
+   * 
+   * <p>This method ensures users can only have one primary department
+   * and validates department existence.</p>
+   * 
+   * @param deptUsers List of department-user associations to create
+   * @return List of created association identifiers
+   */
   @Override
   public List<IdKey<Long, Object>> add0(List<DeptUser> deptUsers) {
-    // The user must and can only have one primary department
+    // Validate user can only have one primary department
     assertTrue(deptUsers.stream()
         .filter(DeptUser::getMainDept).count() == 1, USER_MAIN_DEPT_NUM_ERROR);
-    // Check departments existed
+    // Validate departments exist
     deptQuery.checkAndFind(deptUsers.stream().map(DeptUser::getDeptId)
         .collect(Collectors.toList()));
     return batchInsert(new HashSet<>(deptUsers));
   }
 
+  /**
+   * Deletes department-user associations by user identifiers.
+   * 
+   * @param userIds Set of user identifiers
+   */
   @Override
   public void deleteByUserId(Set<Long> userIds) {
     deptUserRepo.deleteAllByUserIdIn(userIds);
   }
 
+  /**
+   * Deletes department-user associations by tenant identifiers.
+   * 
+   * @param tenantIds Set of tenant identifiers
+   */
   @Override
   public void deleteByTenantId(Set<Long> tenantIds) {
     deptUserRepo.deleteAllByTenantIdIn(tenantIds);
   }
 
+  /**
+   * Deletes department-user associations by department identifiers.
+   * 
+   * @param deptIds Collection of department identifiers
+   */
   @Override
   public void deleteAllByDeptId(Collection<Long> deptIds) {
     deptUserRepo.deleteAllByDeptIdIn(deptIds);

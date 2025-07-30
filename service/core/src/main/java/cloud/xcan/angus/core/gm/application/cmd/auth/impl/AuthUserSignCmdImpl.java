@@ -104,50 +104,66 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * Implementation of user sign-in command operations for managing user authentication.
+ * 
+ * <p>This class provides comprehensive functionality for user authentication including:</p>
+ * <ul>
+ *   <li>User registration with verification codes</li>
+ *   <li>User sign-in with multiple authentication types</li>
+ *   <li>Token refresh and sign-out operations</li>
+ *   <li>Password reset and forget password functionality</li>
+ *   <li>Directory authentication integration</li>
+ *   <li>Sign-in attempt limiting and security</li>
+ * </ul>
+ * 
+ * <p>The implementation supports various authentication methods including
+ * mobile, email, and directory authentication with comprehensive security features.</p>
+ */
 @Biz
 @Slf4j
 public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements AuthUserSignCmd {
 
   @Resource
   private AuthUserRepo authUserRepo;
-
   @Resource
   private AuthUserSignQuery authUserSignQuery;
-
   @Resource
   private SmsCmd smsCmd;
-
   @Resource
   private EmailCmd emailCmd;
-
   @Resource
   private AuthUserQuery authUserQuery;
-
   @Resource
   private UserDirectoryRepo userDirectoryRepo;
-
   @Resource
   private AuthClientQuery clientQuery;
-
   @Resource
   private UserCmd userCmd;
-
   @Resource
   private OperationLogCmd operationLogCmd;
-
   @Resource
   private RedisService<String> stringRedisService;
-
   @Resource
   private PasswordEncoder passwordEncoder;
-
   @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
-
   @Resource
   private DaoAuthenticationProvider daoAuthenticationProvider;
 
+  /**
+   * Registers a new user with verification code validation.
+   * 
+   * <p>This method performs user registration including:</p>
+   * <ul>
+   *   <li>Validating required parameters and verification codes</li>
+   *   <li>Converting signup data to user format</li>
+   *   <li>Creating user with appropriate source tracking</li>
+   * </ul>
+   * 
+   * @param user Authentication user entity with registration data
+   * @return User identifier with associated data
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> signup(AuthUser user) {
@@ -159,6 +175,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
       @Override
       protected IdKey<Long, Object> process() {
+        // Determine user source based on invitation code
         UserSource userSource = isBlank(user.getInvitationCode()) ?
             UserSource.PLATFORM_SIGNUP : UserSource.INVITATION_CODE_SIGNUP;
         return userCmd.add(signupToAddUser(user, user.getInvitationCode()),
@@ -167,56 +184,77 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * Authenticates user with OAuth2 token generation.
+   * 
+   * <p>This method performs comprehensive user authentication including:</p>
+   * <ul>
+   *   <li>Validating required parameters and client credentials</li>
+   *   <li>Checking sign-in attempt limits and security</li>
+   *   <li>Handling directory authentication integration</li>
+   *   <li>Generating OAuth2 tokens</li>
+   *   <li>Recording authentication audit logs</li>
+   * </ul>
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param signinType Type of sign-in (mobile, email, etc.)
+   * @param userId User identifier (optional)
+   * @param account User account (username, mobile, email)
+   * @param password User password
+   * @param scope Requested OAuth2 scope
+   * @param deviceId Device identifier for tracking
+   * @return Map containing OAuth2 tokens and response data
+   */
   @Override
   public Map<String, String> signin(String clientId, String clientSecret, SignInType signinType,
       @Nullable Long userId, String account, String password, String scope, String deviceId) {
     return new BizTemplate<Map<String, String>>(false) {
-      CustomOAuth2RegisteredClient clientDb;
       AuthUser userDb;
 
       @Override
       protected void checkParams() {
-        // Check the required account parameters
+        // Validate required account parameters
         checkRequiredParameters(userId, account, deviceId);
-        // Check the clientId, clientSecret and scopes are correct
-        clientDb = clientQuery.checkAndFind(clientId, clientSecret, scope);
-        // Check the existed account
+        // Validate client credentials and scope
+        clientQuery.checkAndFind(clientId, clientSecret, scope);
+        // Validate user account exists and credentials are correct
         userDb = authUserQuery.checkAndFindByAccount(userId, signinType, account, password);
       }
 
       @Override
       protected Map<String, String> process() {
         try {
-          // Set login user principal
+          // Set login user principal context
           PrincipalContext.get().setClientId(clientId)
               .setUserId(valueOf(userDb.getId())).setFullName(userDb.getFullName())
               .setTenantId(valueOf(userDb.getTenantId()))
               .setTenantName(userDb.getTenantName());
 
-          // Check the number of password errors
+          // Check sign-in attempt limits and security
           checkSignInPasswordErrorNum(userDb.getTenantId(), userDb.getUsername());
 
-          // Cached to context for LdapPasswordConnection login
+          // Cache user directory for LDAP authentication
           cacheUserDirectory(userDb);
 
-          // Cached to context for load UserDetail
+          // Cache user details for authentication provider
           daoAuthenticationProvider.getUserCache().putUserInCache(userDb.getId(),
               userDb.getUsername(), AuthUser.with(userDb));
 
-          // Submit OAuth2 login authentication
+          // Submit OAuth2 authentication request
           Map<String, String> result = submitOauth2UserSignInRequest(clientId, clientSecret,
               signinType, userDb.getId(), account, password, scope);
 
-          // Save new bcrypt password after login directory success
+          // Update directory password after successful authentication
           updateNewDirectoryPassword(userDb, password);
 
-          // Save sign-in log
+          // Record successful sign-in audit log
           operationLogCmd.add(USER, userDb, SIGN_IN_SUCCESS);
           return result;
         } catch (Throwable e) {
-          // Record the number of account or password errors
+          // Record failed sign-in attempt
           recordSignInPasswordErrorNum(valueOf(userDb.getTenantId()), userDb.getUsername());
-          // Save sign-in log
+          // Record failed sign-in audit log
           operationLogCmd.add(USER, userDb, SIGN_IN_FAIL, e.getMessage());
 
           if (e instanceof AbstractResultMessageException) {
@@ -228,20 +266,33 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * Refreshes OAuth2 access token using refresh token.
+   * 
+   * <p>This method handles token refresh including:</p>
+   * <ul>
+   *   <li>Validating client credentials</li>
+   *   <li>Submitting refresh token request</li>
+   *   <li>Returning new access token</li>
+   * </ul>
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param refreshToken Refresh token for token renewal
+   * @return Map containing new OAuth2 tokens
+   */
   @Override
   public Map<String, String> renew(String clientId, String clientSecret, String refreshToken) {
     return new BizTemplate<Map<String, String>>(false) {
-      CustomOAuth2RegisteredClient clientDb;
-
       @Override
       protected void checkParams() {
-        // Check the clientId, clientSecret and scopes are correct
-        clientDb = clientQuery.checkAndFind(clientId, clientSecret);
+        // Validate client credentials
+        clientQuery.checkAndFind(clientId, clientSecret);
       }
 
       @Override
       protected Map<String, String> process() {
-        // Submit OAuth2 refresh token authentication
+        // Submit OAuth2 refresh token request
         try {
           return submitOauth2RenewRequest(clientId, clientSecret, refreshToken);
         } catch (Throwable e) {
@@ -251,6 +302,20 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * Signs out user by invalidating OAuth2 authorization.
+   * 
+   * <p>This method handles user sign-out including:</p>
+   * <ul>
+   *   <li>Validating client credentials</li>
+   *   <li>Finding and removing OAuth2 authorization</li>
+   *   <li>Recording sign-out audit logs</li>
+   * </ul>
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param accessToken Access token to invalidate
+   */
   @Override
   public void signout(String clientId, String clientSecret, String accessToken) {
     new BizTemplate<Void>() {
@@ -258,18 +323,18 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check the clientId and clientSecret are correct
+        // Validate client credentials
         CustomOAuth2RegisteredClient clientDb = clientQuery.checkAndFind(clientId, clientSecret);
 
-        // Find the existed authorization
+        // Find existing authorization by token
         authorizationDb = oauth2AuthorizationService.findByToken(accessToken, null);
 
         if (nonNull(authorizationDb)) {
-          // Check the clientId is consistent
+          // Validate client ID consistency
           assertTrue(clientDb.getId().equals(authorizationDb.getRegisteredClientId()),
               CLIENT_NOT_FOUND, CLIENT_NOT_FOUND_KEY, null);
 
-          // Check cannot log out the user created token, and can only delete it manually
+          // Ensure only user sign-in tokens can be logged out
           assertTrue(isUserSignIn(clientDb.getSource()),
               TOKEN_NOT_SING_IN_LOGOUT_CODE, TOKEN_NOT_SING_IN_LOGOUT, null);
         }
@@ -280,9 +345,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
         if (isNull(authorizationDb)) {
           return null;
         }
+        // Remove OAuth2 authorization
         oauth2AuthorizationService.remove(authorizationDb);
 
-        // Save sign out log
+        // Record sign-out audit log
         AuthUser userDb = authUserQuery.findByUsername(authorizationDb.getPrincipalName());
         PrincipalContext.get().setClientId(clientId)
             .setUserId(valueOf(userDb.getId())).setFullName(userDb.getFullName())
@@ -293,6 +359,21 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * Resets user password using verification link secret.
+   * 
+   * <p>This method handles password reset including:</p>
+   * <ul>
+   *   <li>Validating user existence and status</li>
+   *   <li>Verifying link secret from email/SMS</li>
+   *   <li>Updating password with security settings</li>
+   *   <li>Recording password update audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param newPassword New password to set
+   * @param linkSecret Verification link secret from email/SMS
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void forgetPassword(Long userId, String newPassword, String linkSecret) {
@@ -301,28 +382,29 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check and find existed user
+        // Validate user exists
         userDb = authUserQuery.checkAndFind(userId);
 
-        // Check the verification code LinkSecret is valid
+        // Validate verification link secret
         checkForgetPasswordLinkSecret(userId, linkSecret);
 
-        // Check the user status
+        // Validate user status
         authUserQuery.checkUserValid(userDb);
 
-        // Check the password length
+        // Validate password length requirements
         authUserSignQuery.checkMinPasswordLengthByTenantSetting(
             valueOf(userDb.getTenantId()), newPassword);
       }
 
       @Override
       protected Void process() {
+        // Update password with security settings
         userDb.setPasswordStrength(calcPasswordStrength(newPassword).getValue());
         userDb.setPassword(passwordEncoder.encode(newPassword));
         userDb.setLastModifiedPasswordDate(Instant.now());
         authUserRepo.save(userDb);
 
-        // Save sign out log
+        // Record password update audit log
         PrincipalContext.get().setUserId(valueOf(userDb.getId()))
             .setFullName(userDb.getFullName()).setTenantId(valueOf(userDb.getTenantId()))
             .setTenantName(userDb.getTenantName());
@@ -333,9 +415,13 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   /**
-   * Save new bcrypt password after login directory success
-   *
-   * @see AuthUserSignCmdImpl#cancelDirectoryAuth(AuthUser)
+   * Updates directory password after successful directory authentication.
+   * 
+   * <p>This method handles directory password updates when users successfully
+   * authenticate through directory services like LDAP.</p>
+   * 
+   * @param user Authentication user entity
+   * @param password New password from directory authentication
    */
   private void updateNewDirectoryPassword(AuthUser user, String password) {
     Object ldapProxyPassword = PrincipalContext.getExtension("ldapProxyPassword");
@@ -349,7 +435,12 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
   }
 
   /**
-   * Cached to context for {@link `LdapPasswordConnection`}.
+   * Caches user directory information for LDAP authentication.
+   * 
+   * <p>This method prepares user directory information for use by
+   * LDAP authentication providers.</p>
+   * 
+   * @param user Authentication user entity
    */
   private void cacheUserDirectory(@Nullable AuthUser user) {
     if (nonNull(user) && user.supportDirectoryAuth()) {
@@ -364,6 +455,14 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
   }
 
+  /**
+   * Cancels directory authentication when directory is deleted.
+   * 
+   * <p>Note: This method will be enhanced to replace bcrypt password after
+   * directory deletion and cancel authentication from directory.</p>
+   * 
+   * @param user Authentication user entity
+   */
   @DoInFuture("Replace bcrypt password after directory be deleted and cancel auth from the directory.")
   public void cancelDirectoryAuth(AuthUser user) {
     if (nonNull(user.getPassword()) && user.getPassword().startsWith(PASSWORD_PROXY_ENCRYP)
@@ -374,9 +473,26 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
   }
 
+  /**
+   * Submits OAuth2 user sign-in request to authorization server.
+   * 
+   * <p>This method constructs and sends OAuth2 password grant request
+   * to the authorization server for token generation.</p>
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param signinType Type of sign-in authentication
+   * @param userId User identifier
+   * @param account User account
+   * @param password User password
+   * @param scope Requested OAuth2 scope
+   * @return Map containing OAuth2 response data
+   * @throws Throwable if authentication request fails
+   */
   public static Map<String, String> submitOauth2UserSignInRequest(String clientId,
       String clientSecret, SignInType signinType, String userId, String account, String password,
       String scope) throws Throwable {
+    // Construct OAuth2 password grant request
     String authContent = format(
         "client_id=%s&client_secret=%s&grant_type=%s&user_id=%s&account=%s&password=%s",
         clientId, clientSecret, signinType.toOAuth2GrantType(), userId, account, password);
@@ -386,13 +502,33 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     return sendOauth2Request(authContent);
   }
 
+  /**
+   * Submits OAuth2 refresh token request to authorization server.
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param refreshToken Refresh token for renewal
+   * @return Map containing OAuth2 response data
+   * @throws Throwable if refresh request fails
+   */
   private Map<String, String> submitOauth2RenewRequest(String clientId, String clientSecret,
       String refreshToken) throws Throwable {
+    // Construct OAuth2 refresh token request
     String authContent = format("client_id=%s&client_secret=%s&grant_type=%s&refresh_token=%s",
         clientId, clientSecret, AuthorizationGrantType.REFRESH_TOKEN.getValue(), refreshToken);
     return sendOauth2Request(authContent);
   }
 
+  /**
+   * Sends OAuth2 request to authorization server.
+   * 
+   * <p>This method handles HTTP communication with the OAuth2 authorization server
+   * and processes the response for token generation.</p>
+   * 
+   * @param authContent OAuth2 request content
+   * @return Map containing OAuth2 response data
+   * @throws Throwable if request fails
+   */
   public static Map<String, String> sendOauth2Request(String authContent) throws Throwable {
     HttpSender sender = new HttpUrlConnectionSender();
     ApplicationInfo applicationInfo = SpringContextHolder.getBean(ApplicationInfo.class);
@@ -413,11 +549,23 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     return result;
   }
 
+  /**
+   * Validates required parameters for sign-in operation.
+   * 
+   * @param userId User identifier (optional)
+   * @param account User account
+   * @param deviceId Device identifier
+   */
   private void checkRequiredParameters(Long userId, String account, String deviceId) {
     assertTrue(nonNull(userId) || nonNull(account), SIGN_IN_ACCOUNT_EMPTY, PARAM_MISSING_KEY);
     assertTrue(isNotEmpty(deviceId), SIGN_IN_DEVICE_ID_EMPTY, PARAM_MISSING_KEY);
   }
 
+  /**
+   * Validates required parameters and verification codes for signup.
+   * 
+   * @param user Authentication user entity with signup data
+   */
   private void checkRequiredParamAndVerifyCode(AuthUser user) {
     String mobile = user.getMobile(), email = user.getEmail(), country = user.getCountry();
     if (user.getSignupType().equals(SignupType.MOBILE.getValue())) {
@@ -436,6 +584,12 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
   }
 
+  /**
+   * Validates forget password link secret from email/SMS.
+   * 
+   * @param userId User identifier
+   * @param linkSecret Link secret to validate
+   */
   private void checkForgetPasswordLinkSecret(Long userId, String linkSecret) {
     String emailCacheKey = format(AuthConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX,
         EmailBizKey.PASSWORD_FORGET, userId);
@@ -450,6 +604,12 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     stringRedisService.delete(smsCacheKey);
   }
 
+  /**
+   * Checks sign-in password error limits and security settings.
+   * 
+   * @param tenantId Tenant identifier
+   * @param finalAccount User account for error tracking
+   */
   private void checkSignInPasswordErrorNum(String tenantId, String finalAccount) {
     String passwordLockedCacheKey = format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, finalAccount);
     String passwordLockedMinutes = stringRedisService.get(passwordLockedCacheKey);
@@ -462,13 +622,13 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
       return;
     }
 
-    // When sign-in limit is configured
+    // Check tenant sign-in limit configuration
     SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(valueOf(tenantId));
     if (isNull(settingTenant) || isNull(settingTenant.getSecurityData())) {
       return;
     }
 
-    // When sign-in limit is enabled
+    // Check if sign-in limit is enabled
     SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
     if (nonNull(signinLimit) && signinLimit.getEnabled()) {
       int errorCount = Integer.parseInt(passwordErrorNum);
@@ -483,11 +643,17 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
   }
 
+  /**
+   * Records sign-in password error attempts for security tracking.
+   * 
+   * @param tenantId Tenant identifier
+   * @param innerAccount User account for error tracking
+   */
   public void recordSignInPasswordErrorNum(Long tenantId, String innerAccount) {
     String passwordLockedCacheKey = format(CACHE_PASSWORD_ERROR_LOCKED_PREFIX, innerAccount);
     String passwordLockedMinutes = stringRedisService.get(passwordLockedCacheKey);
     if (Objects.nonNull(passwordLockedMinutes)) {
-      // Do not record the number of errors after locking
+      // Do not record errors after account is locked
       return;
     }
     String passwordErrorNumCacheKey = format(CACHE_PASSWORD_ERROR_NUM_PREFIX, innerAccount);
@@ -499,13 +665,13 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
     }
     stringRedisService.set(passwordErrorNumCacheKey, passwordErrorNum);
 
-    // When sign-in limit is configured
+    // Check tenant sign-in limit configuration
     SettingTenant settingTenant = authUserSignQuery.checkAndFindSettingTenant(tenantId);
     if (isNull(settingTenant) || isNull(settingTenant.getSecurityData())) {
       return;
     }
 
-    // When sign-in limit is enabled
+    // Check if sign-in limit is enabled and lock account if needed
     SigninLimit signinLimit = settingTenant.getSecurityData().getSigninLimit();
     if (nonNull(signinLimit) && signinLimit.getEnabled()
         && Integer.parseInt(passwordErrorNum) >= signinLimit.getLockedPasswordErrorNum()) {

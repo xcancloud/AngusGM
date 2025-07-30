@@ -43,43 +43,64 @@ import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of user token command operations for managing user access tokens.
+ * 
+ * <p>This class provides comprehensive functionality for user token management including:</p>
+ * <ul>
+ *   <li>Creating user access tokens with password verification</li>
+ *   <li>Managing token quotas and security settings</li>
+ *   <li>Deleting tokens and cleaning up authorizations</li>
+ *   <li>Integrating with OAuth2 authorization service</li>
+ *   <li>Recording token operation audit logs</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures secure token management with proper validation
+ * and integration with OAuth2 authorization framework.</p>
+ */
 @Biz
 public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implements AuthUserTokenCmd {
 
   @Resource
   private AuthUserTokenRepo authUserTokenRepo;
-
   @Resource
   private AuthUserTokenQuery authUserTokenQuery;
-
   @Resource
   private AuthUserQuery authUserQuery;
-
   @Resource
   private AuthClientQuery clientQuery;
-
   @Resource
   private PasswordEncoder passwordEncoder;
-
   @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
-
   @Resource
   private DaoAuthenticationProvider daoAuthenticationProvider;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
   /**
-   * @see OAuth2PasswordAuthenticationProvider#authenticate(Authentication)
-   * @see OAuth2AccessTokenGenerator#generate(OAuth2TokenContext)
+   * Creates user access token with comprehensive validation and security.
+   * 
+   * <p>This method performs token creation including:</p>
+   * <ul>
+   *   <li>Validating current user password</li>
+   *   <li>Checking client credentials and permissions</li>
+   *   <li>Verifying token name uniqueness</li>
+   *   <li>Checking user token quota limits</li>
+   *   <li>Generating OAuth2 access token</li>
+   *   <li>Storing encrypted token data</li>
+   * </ul>
+   * 
+   * <p>This method integrates with OAuth2PasswordAuthenticationProvider and
+   * OAuth2AccessTokenGenerator for token generation.</p>
+   * 
+   * @param userToken User token entity to create
+   * @return Created user token entity
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -91,37 +112,37 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
 
       @Override
       protected void checkParams() {
-        // Check the current user password
+        // Validate current user password
         userDb = authUserQuery.checkAndFind(currentUserId);
-        // Fix:: There is no PasswordEncoder mapped for the id \"null\" when password not set
+        // Note: Handle case when password is not set to avoid encoding issues
         assertTrue(isNotEmpty(userToken.getPassword())
                 && passwordEncoder.matches(userToken.getPassword(), userDb.getPassword()),
             SIGN_IN_PASSWORD_ERROR);
-        // Check the client existed
+        // Validate client exists and supports user sign-in
         clientDb = clientQuery.checkAndFind(getClientId());
         assertTrue(isUserSignIn(clientDb.getSource()),
             "Unsupported generate token from client: " + clientDb.getSource());
-        // Check the token name existed
+        // Validate token name uniqueness
         authUserTokenQuery.checkNameNotExisted(userToken);
-        // Check the user token quota
+        // Validate user token quota
         authUserTokenQuery.checkTokenQuota(currentUserId, 1);
       }
 
       @Override
       protected AuthUserToken process() {
-        // Cached to context for load UserDetail
+        // Cache user details for authentication provider
         daoAuthenticationProvider.getUserCache().putUserInCache(userDb.getId(),
             userDb.getUsername(), AuthUser.with(userDb));
 
-        // Set expired date for cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator#generate(OAuth2TokenContext context)
+        // Set custom access token attributes for OAuth2AccessTokenGenerator
         setRequestAttribute(CUSTOM_ACCESS_TOKEN, true);
         setRequestAttribute(CUSTOM_ACCESS_TOKEN_NAME, userToken.getName());
-        // The token is permanently valid when the value is null.
+        // Set token expiration date if specified (null means permanent validity)
         if (nonNull(userToken.getExpiredDate())) {
           setRequestAttribute(ACCESS_TOKEN_EXPIRED_DATE, asInstant(userToken.getExpiredDate()));
         }
 
-        // Submit OAuth2 login authentication
+        // Submit OAuth2 authentication request for token generation
         Map<String, String> result;
         try {
           result = submitOauth2UserSignInRequest(clientDb.getClientId(),
@@ -134,14 +155,14 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
           throw new SysException(e.getMessage());
         }
 
-        // Save user token
+        // Save user token with encrypted access token
         String userAccessToken = result.get(AuthKey.ACCESS_TOKEN);
         userToken.setDecryptedValue(userAccessToken);
         userToken.setValue(authUserTokenQuery.encryptValue(userAccessToken));
         userToken.setId(uidGenerator.getUID());
         insert0(userToken);
 
-        // Save operation log
+        // Record token creation audit log
         operationLogCmd.add(USER_TOKEN, userToken, CREATED);
         return userToken;
       }
@@ -149,8 +170,20 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
   }
 
   /**
-   * Note: The access_token will automatically expire in auth2. After expiration, the configuration
-   * needs to be manually deleted by the user.
+   * Deletes user tokens and cleans up OAuth2 authorizations.
+   * 
+   * <p>Note: Access tokens will automatically expire in OAuth2. After expiration,
+   * the configuration needs to be manually deleted by the user.</p>
+   * 
+   * <p>This method performs comprehensive cleanup including:</p>
+   * <ul>
+   *   <li>Finding user tokens by identifiers</li>
+   *   <li>Removing OAuth2 authorizations</li>
+   *   <li>Deleting token records</li>
+   *   <li>Recording deletion audit logs</li>
+   * </ul>
+   * 
+   * @param ids Set of token identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -158,11 +191,13 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
     new BizTemplate<Void>() {
       @Override
       protected Void process() {
+        // Find user tokens for deletion
         List<AuthUserToken> userTokensDb = authUserTokenQuery.find0(ids);
         if (isEmpty(userTokensDb)) {
           return null;
         }
 
+        // Remove OAuth2 authorizations for each token
         for (AuthUserToken userToken : userTokensDb) {
           String accessToken = authUserTokenQuery.decryptValue(userToken.getValue());
           OAuth2Authorization authorizationDb = oauth2AuthorizationService.findByToken(
@@ -172,8 +207,10 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
           }
         }
 
+        // Delete token records from repository
         authUserTokenRepo.deleteByIdIn(ids);
 
+        // Record token deletion audit logs
         operationLogCmd.addAll(USER_TOKEN, userTokensDb, DELETED);
         return null;
       }

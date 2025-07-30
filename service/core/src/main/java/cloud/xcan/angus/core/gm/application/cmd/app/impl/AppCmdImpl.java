@@ -43,107 +43,151 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * Implementation of application command operations for managing application lifecycle.
+ * 
+ * <p>This class provides comprehensive functionality for application management including:</p>
+ * <ul>
+ *   <li>Creating, updating, and deleting applications</li>
+ *   <li>Managing application tags and authorities</li>
+ *   <li>Enabling/disabling applications with authorization synchronization</li>
+ *   <li>Handling site-specific application updates</li>
+ *   <li>Recording operation logs for audit trails</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures data consistency across related entities such as functions,
+ * policies, and authorization records when applications are modified or deleted.</p>
+ */
 @Biz
 public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   @Resource
   private AppRepo appRepo;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private AppFuncRepo appFuncRepo;
-
   @Resource
   private AppOpenRepo appOpenRepo;
-
   @Resource
   private AuthClientQuery clientQuery;
-
   @Resource
   private AuthPolicyCmd authPolicyCmd;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private ApiQuery apiQuery;
-
   @Resource
   private WebTagTargetCmd webTagTargetCmd;
-
   @Resource
   private ApiAuthorityCmd apiAuthorityCmd;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * Creates a new application with associated tags and authorities.
+   * 
+   * <p>This method performs comprehensive application creation including:</p>
+   * <ul>
+   *   <li>Validating application uniqueness and dependencies</li>
+   *   <li>Creating application tags for categorization</li>
+   *   <li>Setting up API authorities for access control</li>
+   *   <li>Recording creation audit logs</li>
+   * </ul>
+   * 
+   * @param app Application entity to create
+   * @return Application identifier with associated data
+   */
   @Override
   @Transactional(rollbackFor = {Exception.class})
   public IdKey<Long, Object> add(App app) {
     return new BizTemplate<IdKey<Long, Object>>() {
       @Override
       protected void checkParams() {
-        // Check the code and version is unique
+        // Validate application code and version uniqueness
         appQuery.checkUniqueCodeAndVersion(app);
-        // Check the client existed
+        // Validate that associated OAuth2 client exists
         clientQuery.checkAndFind(app.getClientId());
-        // Check the api existed
+        // Validate that associated APIs exist
         apiQuery.checkAndFind(app.getApiIds(), true);
       }
 
       @Override
       protected IdKey<Long, Object> process() {
-        // Save application
+        // Save application to database
         IdKey<Long, Object> idKeys = insert(app);
 
-        // Save application tags
+        // Create application tags for categorization
         webTagTargetCmd.tag(WebTagTargetType.APP, app.getId(), app.getTagIds());
 
-        // Save application authorities
+        // Set up API authorities for access control
         apiAuthorityCmd.saveAppApiAuthority(app);
 
-        // Save operation log
+        // Record creation audit log
         operationLogCmd.add(APP, app, CREATED);
         return idKeys;
       }
     }.execute();
   }
 
+  /**
+   * Updates an existing application with new information.
+   * 
+   * <p>This method ensures data consistency by:</p>
+   * <ul>
+   *   <li>Validating application uniqueness and dependencies</li>
+   *   <li>Updating application tags</li>
+   *   <li>Replacing API authorities</li>
+   *   <li>Recording update audit logs</li>
+   * </ul>
+   * 
+   * @param app Application entity with updated information
+   */
   @Override
   @Transactional(rollbackFor = {Exception.class})
   public void update(App app) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Check the code and version is unique
+        // Validate application code and version uniqueness
         appQuery.checkUniqueCodeAndVersion(app);
-        // Check the client existed
+        // Validate that associated OAuth2 client exists
         clientQuery.checkAndFind(app.getClientId(), true);
-        // Check the api existed
+        // Validate that associated APIs exist
         apiQuery.checkAndFind(app.getApiIds(), true);
       }
 
       @Override
       protected Void process() {
-        // Update the application
+        // Update application in database
         App appDb = updateOrNotFound(app);
 
-        // Update the application tags
+        // Update application tags
         webTagTargetCmd.tag(WebTagTargetType.APP, app.getId(), app.getTagIds());
 
-        // Replace the application authorities
+        // Replace application API authorities
         apiAuthorityCmd.replaceAppApiAuthority(appDb);
 
-        // Save operation log
+        // Record update audit log
         operationLogCmd.add(APP, app, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * Replaces an application by creating new or updating existing.
+   * 
+   * <p>This method handles both creation and update scenarios:</p>
+   * <ul>
+   *   <li>Creates new application if no ID is provided</li>
+   *   <li>Updates existing application if ID is provided</li>
+   *   <li>Maintains audit trails for all operations</li>
+   * </ul>
+   * 
+   * @param app Application entity to replace
+   * @return Application identifier with associated data
+   */
   @Override
   @Transactional(rollbackFor = {Exception.class})
   public IdKey<Long, Object> replace(App app) {
@@ -152,7 +196,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
       @Override
       protected void checkParams() {
-        // Check the updated apis existed
+        // Validate that application exists if updating
         if (nonNull(app.getId())) {
           replaceAppDb = appQuery.checkAndFind(app.getId(), false);
         }
@@ -164,10 +208,10 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
           return add(app);
         }
 
-        // Update application
+        // Update existing application
         update(copyPropertiesIgnoreTenantAuditing(app, replaceAppDb, "enabled"));
 
-        // Save operation log
+        // Record update audit log
         operationLogCmd.add(APP, app, UPDATED);
 
         return IdKey.of(replaceAppDb.getId(), replaceAppDb.getName());
@@ -175,6 +219,18 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
     }.execute();
   }
 
+  /**
+   * Updates application site-specific information.
+   * 
+   * <p>This method handles site-specific updates with additional security checks:</p>
+   * <ul>
+   *   <li>Validates user permissions for cloud service editions</li>
+   *   <li>Updates only site-specific fields (name, icon, URL)</li>
+   *   <li>Maintains audit trails for site changes</li>
+   * </ul>
+   * 
+   * @param app Application entity with site-specific updates
+   */
   @Override
   @Transactional(rollbackFor = {Exception.class})
   public void siteUpdate(App app) {
@@ -187,22 +243,36 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         if (isCloudServiceEdition()) {
           checkToUserRequired();
         }
-        // Check the application existed
+        // Validate that application exists
         appDb = appQuery.checkAndFind(app.getId(), false);
       }
 
       @Override
       protected Void process() {
-        // Update application site information
+        // Update application site information (name, icon, URL)
         appRepo.save(copyPropertiesIgnoreNull(app, appDb));
 
-        // Save operation log
+        // Record site update audit log
         operationLogCmd.add(APP, app, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * Deletes applications and cleans up related data.
+   * 
+   * <p>This method performs comprehensive cleanup including:</p>
+   * <ul>
+   *   <li>Removing application functions</li>
+   *   <li>Deleting associated authorization policies</li>
+   *   <li>Cleaning up application open records</li>
+   *   <li>Removing tags and API authorities</li>
+   *   <li>Recording deletion audit logs</li>
+   * </ul>
+   * 
+   * @param ids Set of application identifiers to delete
+   */
   @Override
   @Transactional(rollbackFor = {Exception.class})
   public void delete(HashSet<Long> ids) {
@@ -216,24 +286,44 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
       @Override
       protected Void process() {
+        // Delete applications from repository
         appRepo.deleteByIdIn(ids);
+        // Remove associated application functions
         appFuncRepo.deleteByAppIdIn(ids);
+        
+        // Delete associated authorization policies
         Set<Long> appPolicyIds = authPolicyQuery.findByAppIdIn(ids).stream()
             .map(AuthPolicy::getAppId).collect(Collectors.toSet());
         if (isNotEmpty(appPolicyIds)) {
           authPolicyCmd.delete(appPolicyIds);
         }
+        
+        // Clean up application open records
         appOpenRepo.deleteByAppIdIn(ids);
+        // Remove application tags
         webTagTargetCmd.delete(ids);
+        // Delete API authorities associated with applications
         apiAuthorityCmd.deleteBySource(ids, ApiAuthoritySource.APP);
 
-        // Save operation log
+        // Record deletion audit logs
         operationLogCmd.addAll(APP, appsDb, DELETED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * Enables or disables applications and synchronizes authorization status.
+   * 
+   * <p>This method ensures authorization consistency by:</p>
+   * <ul>
+   *   <li>Updating application enabled status</li>
+   *   <li>Synchronizing API authority status</li>
+   *   <li>Recording status change audit logs</li>
+   * </ul>
+   * 
+   * @param apps List of applications with updated enabled status
+   */
   @Override
   public void enabled(List<App> apps) {
     new BizTemplate<Void>() {
@@ -242,10 +332,10 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
       @Override
       protected void checkParams() {
-        // Check the applications existed
+        // Validate that applications exist
         ids = apps.stream().map(App::getId).collect(Collectors.toSet());
         appsDb = appQuery.checkAndFind(ids, false);
-        // Check for unused apps in store
+        // Update enabled status for applications in database
         Map<Long, App> appsMap = apps.stream().collect(Collectors.toMap(App::getId, x -> x));
         for (App appDb : appsDb) {
           appDb.setEnabled(appsMap.get(appDb.getId()).getEnabled());
@@ -254,13 +344,13 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
       @Override
       protected Void process() {
-        // Update apps enabled status
+        // Update application enabled status
         appRepo.saveAll(appsDb);
 
-        // Sync update authority status
+        // Synchronize API authority status
         apiAuthorityCmd.updateAppAuthorityStatus(apps, ids);
 
-        // Save operation log
+        // Record status change audit logs
         operationLogCmd.addAll(APP, appsDb.stream().filter(App::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(APP, appsDb.stream().filter(x -> !x.getEnabled()).toList(),
             DISABLED);
@@ -268,7 +358,6 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
       }
     }.execute();
   }
-
 
   @Override
   protected BaseRepository<App, Long> getRepository() {

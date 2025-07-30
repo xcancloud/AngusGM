@@ -24,19 +24,47 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Implementation of OAuth2 client sign-in command operations.
+ * 
+ * <p>This class provides comprehensive functionality for OAuth2 client authentication including:</p>
+ * <ul>
+ *   <li>Client credentials authentication for OAuth2 clients</li>
+ *   <li>Private client registration for business operations</li>
+ *   <li>Client secret management and renewal</li>
+ *   <li>OAuth2 token generation for client authentication</li>
+ * </ul>
+ * 
+ * <p>The implementation supports both standard OAuth2 client authentication
+ * and private client registration for internal business operations.</p>
+ */
 @Slf4j
 @Biz
 public class AuthClientSignCmdImpl implements AuthClientSignCmd {
 
   @Resource
   private AuthClientQuery authClientQuery;
-
   @Resource
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
-
   @Resource
   private PasswordEncoder passwordEncoder;
 
+  /**
+   * Authenticates OAuth2 client using client credentials grant type.
+   * 
+   * <p>This method performs client authentication including:</p>
+   * <ul>
+   *   <li>Validating client credentials and scope</li>
+   *   <li>Checking client credentials grant type support</li>
+   *   <li>Submitting OAuth2 authentication request</li>
+   *   <li>Returning access token and related information</li>
+   * </ul>
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param scope Requested OAuth2 scope
+   * @return Map containing access token and related OAuth2 response data
+   */
   @Override
   public Map<String, String> signin(String clientId, String clientSecret, String scope) {
     return new BizTemplate<Map<String, String>>(false) {
@@ -44,14 +72,16 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
 
       @Override
       protected void checkParams() {
+        // Validate client credentials and scope
         clientDb = authClientQuery.checkAndFind(clientId, clientSecret, scope);
+        // Ensure client supports client credentials grant type
         assertTrue(clientDb.getAuthorizationGrantTypes().contains(CLIENT_CREDENTIALS),
             "Unsupported client credentials grant type");
       }
 
       @Override
       protected Map<String, String> process() {
-        // Submit OAuth2 login authentication
+        // Submit OAuth2 client authentication request
         try {
           return submitOauth2ClientSignInRequest(clientId, clientSecret, scope);
         } catch (Throwable e) {
@@ -63,17 +93,36 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
     }.execute();
   }
 
+  /**
+   * Registers private OAuth2 client for business operations.
+   * 
+   * <p>This method handles private client registration including:</p>
+   * <ul>
+   *   <li>Generating client ID based on tenant and business parameters</li>
+   *   <li>Creating or updating client with new credentials</li>
+   *   <li>Managing client secret renewal for existing clients</li>
+   *   <li>Returning client authentication information</li>
+   * </ul>
+   * 
+   * @param signupBiz Business operation type for client registration
+   * @param tenantId Tenant identifier
+   * @param tenantName Tenant name
+   * @param resourceId Resource identifier
+   * @return Client authentication information with credentials
+   */
   @Override
   public ClientAuth signupByDoor(Client2pSignupBiz signupBiz, Long tenantId, String tenantName,
       Long resourceId) {
     return new BizTemplate<ClientAuth>() {
       @Override
       protected ClientAuth process() {
+        // Generate client ID based on business parameters
         String clientId = String.format(AuthConstant.SIGN2P_CLIENT_ID_FMT, tenantId,
             signupBiz.name().toLowerCase(), resourceId);
         CustomOAuth2RegisteredClient clientDb = authClientQuery.findValidByClientId0(clientId);
+        
         if (clientDb != null) {
-          // Re-acquire access authorization and update client authentication information
+          // Renew access authorization and update client authentication information
           String clientSecret = UUID.randomUUID().toString();
           clientDb.setClientSecret(passwordEncoder.encode(clientSecret));
           customOAuth2ClientRepository.save(clientDb);
@@ -82,6 +131,7 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
           return new ClientAuth().setClientId(clientId).setClientSecret(clientSecret);
         }
 
+        // Create new private client
         CustomOAuth2RegisteredClient client = privateSignupToDomain(
             clientId, signupBiz, tenantId, tenantName, resourceId);
         client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
@@ -91,8 +141,21 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
     }.execute();
   }
 
+  /**
+   * Submits OAuth2 client sign-in request to authorization server.
+   * 
+   * <p>This method constructs and sends OAuth2 client credentials request
+   * to the authorization server for token generation.</p>
+   * 
+   * @param clientId OAuth2 client identifier
+   * @param clientSecret OAuth2 client secret
+   * @param scope Requested OAuth2 scope
+   * @return Map containing OAuth2 response data
+   * @throws Throwable if authentication request fails
+   */
   public static Map<String, String> submitOauth2ClientSignInRequest(String clientId,
       String clientSecret, String scope) throws Throwable {
+    // Construct OAuth2 client credentials request
     String authContent = format("client_id=%s&client_secret=%s&grant_type=%s", clientId,
         clientSecret, CLIENT_CREDENTIALS.getValue());
     if (isNotEmpty(scope)) {

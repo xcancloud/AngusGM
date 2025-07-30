@@ -52,48 +52,69 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * Implementation of API command operations for managing API endpoints and their lifecycle.
+ * 
+ * <p>This class provides comprehensive functionality for API management including:</p>
+ * <ul>
+ *   <li>Creating, updating, and deleting API endpoints</li>
+ *   <li>Synchronizing APIs from service discovery and Swagger documentation</li>
+ *   <li>Managing API enable/disable states</li>
+ *   <li>Handling API authority and authorization</li>
+ *   <li>Recording operation logs for audit trails</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures data consistency across related entities such as applications, 
+ * functions, and authorization policies when APIs are modified or deleted.</p>
+ */
 @Slf4j
 @Biz
 public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   @Resource
   private ApiRepo apiRepo;
-
   @Resource
   private ApiQuery apiQuery;
-
   @Resource
   private ServiceQuery serviceQuery;
-
   @Resource
   private ApiAuthorityRepo apiAuthorityRepo;
-
   @Resource
   private SystemTokenCmd systemTokenCmd;
-
   @Resource
   private AppRepo appRepo;
-
   @Resource
   private AppFuncRepo appFuncRepo;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * Creates new API endpoints and associates them with services.
+   * 
+   * <p>This method performs the following operations:</p>
+   * <ul>
+   *   <li>Sets service information for each API</li>
+   *   <li>Batch inserts APIs with validation</li>
+   *   <li>Records operation logs for audit purposes</li>
+   * </ul>
+   * 
+   * @param apis List of API entities to create
+   * @param saveOperationLog Whether to record operation logs
+   * @return List of created API identifiers with names
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add(List<Api> apis, boolean saveOperationLog) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // Set service information
+        // Set service information for each API
         apiQuery.setServiceInfo(apis);
 
-        // Save apis
+        // Save APIs with batch insertion
         List<IdKey<Long, Object>> idKeys = batchInsert(apis, "name");
 
-        // Save operation logs
+        // Record operation logs if requested
         if (saveOperationLog) {
           operationLogCmd.addAll(API, apis, CREATED);
         }
@@ -102,6 +123,19 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }.execute();
   }
 
+  /**
+   * Updates existing API endpoints with new information.
+   * 
+   * <p>This method ensures data consistency by:</p>
+   * <ul>
+   *   <li>Validating that APIs exist before update</li>
+   *   <li>Updating service information when service associations change</li>
+   *   <li>Maintaining audit trails through operation logs</li>
+   * </ul>
+   * 
+   * @param apis List of API entities to update
+   * @param saveOperationLog Whether to record operation logs
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(List<Api> apis, boolean saveOperationLog) {
@@ -111,10 +145,11 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
       @Override
       protected void checkParams() {
-        // Check the apis existed
+        // Validate that APIs exist before update
         Set<Long> apiIds = apis.stream().map(Api::getId).collect(Collectors.toSet());
         apisDb = apiQuery.checkAndFind(apiIds, false);
-        // Check the associated service existed
+        
+        // Validate associated services exist
         Set<Long> serviceIds = apis.stream().filter(Objects::nonNull)
             .map(Api::getServiceId).collect(Collectors.toSet());
         if (isNotEmpty(serviceIds)) {
@@ -124,13 +159,13 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
       @Override
       protected Void process() {
-        // Update services information
+        // Update service information when service associations change
         updateServiceWhenChanged(apis, apisDb, servicesDb);
 
-        // Save updated apis
+        // Save updated APIs with validation
         batchUpdateOrNotFound(apis);
 
-        // Save operation logs
+        // Record operation logs if requested
         if (saveOperationLog) {
           operationLogCmd.addAll(API, apis, CREATED);
         }
@@ -139,6 +174,19 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }.execute();
   }
 
+  /**
+   * Replaces APIs by creating new ones or updating existing ones.
+   * 
+   * <p>This method handles both creation and update scenarios:</p>
+   * <ul>
+   *   <li>Creates new APIs for entities without IDs</li>
+   *   <li>Updates existing APIs for entities with IDs</li>
+   *   <li>Maintains data consistency across related entities</li>
+   * </ul>
+   * 
+   * @param apis List of API entities to replace
+   * @return List of API identifiers with names
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> replace(List<Api> apis) {
@@ -148,7 +196,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
       @Override
       protected void checkParams() {
-        // Check the apis existed
+        // Identify APIs that need to be updated (have existing IDs)
         replaceApis = apis.stream().filter(api -> nonNull(api.getId()))
             .collect(Collectors.toList());
         replaceApisDb = apiQuery.checkAndFind(replaceApis.stream().map(Api::getId)
@@ -159,12 +207,14 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
       protected List<IdKey<Long, Object>> process() {
         List<IdKey<Long, Object>> idKeys = new ArrayList<>();
 
+        // Create new APIs for entities without IDs
         List<Api> addApis = apis.stream().filter(api -> isNull(api.getId()))
             .collect(Collectors.toList());
         if (isNotEmpty(addApis)) {
           idKeys.addAll(add(addApis, true));
         }
 
+        // Update existing APIs
         if (isNotEmpty(replaceApis)) {
           Map<Long, Api> groupDbMap = replaceApisDb.stream()
               .collect(Collectors.toMap(Api::getId, x -> x));
@@ -180,6 +230,19 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }.execute();
   }
 
+  /**
+   * Deletes API endpoints and cleans up related data.
+   * 
+   * <p>This method performs comprehensive cleanup including:</p>
+   * <ul>
+   *   <li>Removing API associations from applications and functions</li>
+   *   <li>Deleting API authority records</li>
+   *   <li>Removing system token authorizations</li>
+   *   <li>Recording deletion audit logs</li>
+   * </ul>
+   * 
+   * @param apiIds Collection of API identifiers to delete
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(Collection<Long> apiIds) {
@@ -197,19 +260,19 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
           return null;
         }
 
-        // Delete apis
+        // Delete APIs from repository
         apiRepo.deleteByIdIn(apiIds);
 
-        // Delete the associated apis with the applications and functions
+        // Remove API associations from applications and functions
         deleteAppAndFuncApis(apiIds);
 
-        // Delete api authority
+        // Delete API authority records
         apiAuthorityRepo.deleteByApiIdIn(apiIds);
 
-        // Delete system token authorization
+        // Remove system token authorizations
         systemTokenCmd.deleteByApiIdIn(apiIds);
 
-        // Save operation logs
+        // Record deletion audit logs
         operationLogCmd.addAll(API, apisDb, DELETED);
         return null;
       }
@@ -217,9 +280,13 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
   }
 
   /**
-   * Disabling/disabling will lead to the consistency problem of authorization data, which is
-   * complex to handle. It is a good choice to only consider saving valid data for publishing
-   * environment data, and consider discarding the api later.
+   * Enables or disables API endpoints and updates related authorization data.
+   * 
+   * <p>Note: Enabling/disabling APIs can lead to authorization data consistency issues.
+   * This implementation focuses on maintaining valid data for production environments
+   * and considers API removal for later cleanup.</p>
+   * 
+   * @param apis List of APIs with updated enabled status
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -230,17 +297,17 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
       @Override
       protected void checkParams() {
-        // Check the apis existed
+        // Validate that APIs exist before status update
         apiIds = apis.stream().map(Api::getId).collect(Collectors.toSet());
         apisDb = apiQuery.checkAndFind(apiIds, false);
       }
 
       @Override
       protected Void process() {
-        // Update enabled or disabled status
+        // Update enabled/disabled status
         batchUpdate0(batchCopyPropertiesIgnoreNull(apis, apisDb));
 
-        // Sync the api enabled or disabled status to authority
+        // Synchronize API enabled/disabled status to authority records
         List<ApiAuthority> authorities = apiAuthorityRepo.findByApiIdIn(apiIds);
         if (isNotEmpty(authorities)) {
           Map<Long, Api> apiMap = apis.stream().collect(Collectors.toMap(Api::getId, x -> x));
@@ -250,9 +317,10 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
           apiAuthorityRepo.saveAll(authorities);
         }
 
-        // NOOP:: Synchronously update the system token authorization resource status, alternative manual deletion of disabled apis.
+        // Note: System token authorization resource status update is handled separately
+        // Alternative: Manual deletion of disabled APIs
 
-        // Save operation logs
+        // Record status change audit logs
         operationLogCmd.addAll(
             API, apisDb.stream().filter(Api::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(
@@ -262,15 +330,34 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }.execute();
   }
 
+  /**
+   * Synchronizes APIs from a specific service instance.
+   * 
+   * <p>This method parses Swagger documentation from the service instance
+   * and saves the discovered APIs to the database.</p>
+   * 
+   * @param instance Service instance containing API information
+   * @param serviceDb Service entity to associate with APIs
+   */
   @Override
   public void syncServiceApi(ServiceInstance instance, Service serviceDb) {
-    // Parse the apis of services in the db from eureka
+    // Parse APIs from Swagger documentation
     List<Api> apis = parseApisFromSwagger(instance, serviceDb);
 
-    // Save apis to database
+    // Save synchronized APIs to database
     saveSyncApis(serviceDb.getCode(), apis);
   }
 
+  /**
+   * Synchronizes APIs from multiple service instances discovered through service discovery.
+   * 
+   * <p>This method processes multiple services and their instances to discover
+   * and synchronize API endpoints from Swagger documentation.</p>
+   * 
+   * @param instances List of discovered service instances
+   * @param servicesDb List of service entities in database
+   * @param discoveryServices List of service codes to process
+   */
   @Override
   public void discoveryApiSync(List<ServiceInstance> instances, List<Service> servicesDb,
       List<String> discoveryServices) {
@@ -279,18 +366,27 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         .collect(Collectors.toMap(service -> service.getCode().toLowerCase(), service -> service));
     Map<String, ServiceInstance> instancesMap = instances.stream()
         .collect(Collectors.toMap(ServiceInstance::getServiceId, si -> si));
+    
     for (Service serviceDb : serviceDbMap.values()) {
-      // Parse the apis of services in the db from discovery
+      // Parse APIs from Swagger documentation for each service
       List<Api> apis = parseApisFromSwagger(instancesMap.get(serviceDb.getCode()), serviceDb);
       ServiceInstance serviceInstance = instancesMap.get(serviceDb.getCode());
       if (isEmpty(apis) || isNull(serviceInstance)) {
         continue;
       }
-      // Save apis to database
+      // Save synchronized APIs to database
       saveSyncApis(serviceDb.getCode(), apis);
     }
   }
 
+  /**
+   * Updates API service status based on service enable/disable state.
+   * 
+   * <p>This method propagates service status changes to associated APIs
+   * to maintain consistency between services and their APIs.</p>
+   * 
+   * @param services List of services with updated status
+   */
   @Override
   public void updateApiServiceStatus(List<Service> services) {
     Set<Long> enabledServiceIds = services.stream().filter(Service::getEnabled)
@@ -306,6 +402,19 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }
   }
 
+  /**
+   * Saves synchronized APIs with intelligent update logic.
+   * 
+   * <p>This method implements a sophisticated synchronization strategy:</p>
+   * <ul>
+   *   <li>Adds new APIs that don't exist in database</li>
+   *   <li>Updates existing APIs with new information</li>
+   *   <li>Marks APIs as deleted if they no longer exist in Swagger</li>
+   * </ul>
+   * 
+   * @param serviceCode Service code for API association
+   * @param apis List of APIs from Swagger documentation
+   */
   @Override
   public void saveSyncApis(String serviceCode, List<Api> apis) {
     if (isEmpty(apis)) {
@@ -315,15 +424,14 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     List<Api> updateApisCopy = new ArrayList<>(apis);
     List<Api> deletedApisCopy = new ArrayList<>(apis);
     List<Api> deletedApisDbCopy = new ArrayList<>(apisDb);
-    //System.out.println(GsonUtils.toJson(apis));
 
-    // If the database is empty, add it directly
+    // If database is empty, add all APIs directly
     if (isEmpty(apisDb)) {
       add(apis, false);
       return;
     }
 
-    // Update existed apis in database
+    // Update existing APIs in database
     CoreUtils.retainAll(updateApisCopy, apisDb);
     if (isNotEmpty(updateApisCopy)) {
       for (Api apiDb : apisDb) {
@@ -336,13 +444,13 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
       update(updateApisCopy, false);
     }
 
-    // Add new apis from swagger
+    // Add new APIs from Swagger documentation
     CoreUtils.removeAll(apis, updateApisCopy);
     if (isNotEmpty(apis)) {
       add(apis, false);
     }
 
-    // Update the apis has deleted from swagger
+    // Mark APIs as deleted if they no longer exist in Swagger
     CoreUtils.removeAll(deletedApisDbCopy, deletedApisCopy);
     if (isNotEmpty(deletedApisDbCopy)) {
       update(deletedApisDbCopy.stream().map(api -> api.setSwaggerDeleted(true))
@@ -350,6 +458,14 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }
   }
 
+  /**
+   * Removes API associations from applications and functions.
+   * 
+   * <p>This method ensures that when APIs are deleted, all references
+   * to those APIs are properly cleaned up from applications and functions.</p>
+   * 
+   * @param apiIds Collection of API identifiers to remove
+   */
   private void deleteAppAndFuncApis(Collection<Long> apiIds) {
     List<App> apps = appRepo.findAll();
     if (isNotEmpty(apps)) {
@@ -358,7 +474,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         if (isNotEmpty(app.getApiIds()) && app.getApiIds().removeAll(apiIds)) {
           updateApiApps.add(app);
         }
-        // Delete the api associated with the function
+        // Remove API associations from functions
         updateFuncApis(app, apiIds);
       }
       if (isNotEmpty(updateApiApps)) {
@@ -367,6 +483,15 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }
   }
 
+  /**
+   * Updates function API associations when APIs are deleted.
+   * 
+   * <p>This method removes deleted API references from application functions
+   * to maintain data consistency.</p>
+   * 
+   * @param app Application entity
+   * @param apiIds Collection of API identifiers to remove
+   */
   private void updateFuncApis(App app, Collection<Long> apiIds) {
     List<AppFunc> updateApiFuncs = new ArrayList<>();
     List<AppFunc> appFuncs = appFuncRepo.findAllByAppId(app.getId());
@@ -384,6 +509,17 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     }
   }
 
+  /**
+   * Parses APIs from Swagger documentation of a service instance.
+   * 
+   * <p>This method fetches Swagger documentation from multiple endpoints
+   * and parses API information for different API types (API, PUB_API, OPEN_API_2P).</p>
+   * 
+   * @param serviceInstance Service instance to parse APIs from
+   * @param serviceDb Service entity for API association
+   * @return List of parsed API entities
+   * @throws BizException if Swagger parsing fails
+   */
   @Override
   public List<Api> parseApisFromSwagger(ServiceInstance serviceInstance, Service serviceDb) {
     List<Api> apis = new ArrayList<>();
@@ -393,8 +529,9 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
           ApiType.API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
           AuthConstant.SWAGGER_PUB_API_URL, ApiType.PUB_API);
-      //      parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
-      //          AuthConstant.SWAGGER_INNER_API_URL, ApiType.DOOR_API);
+      // Note: Inner API parsing is commented out
+      // parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
+      //     AuthConstant.SWAGGER_INNER_API_URL, ApiType.DOOR_API);
       parseSwaggerDocs(apis, serviceDb, serviceInstance, httpSender,
           AuthConstant.SWAGGER_OPEN_API_TO_PRIVATE_URL, ApiType.OPEN_API_2P);
     } catch (Throwable e) {
@@ -405,6 +542,16 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
     return apis;
   }
 
+  /**
+   * Updates service information when service associations change.
+   * 
+   * <p>This method ensures that when an API's service association changes,
+   * the service code and name are properly updated.</p>
+   * 
+   * @param apis List of APIs to update
+   * @param apisDb Existing APIs from database
+   * @param servicesDb Services from database
+   */
   private void updateServiceWhenChanged(List<Api> apis, List<Api> apisDb,
       List<Service> servicesDb) {
     Map<Long, Api> apiDbMap = apisDb.stream().collect(Collectors.toMap(Api::getId, x -> x));

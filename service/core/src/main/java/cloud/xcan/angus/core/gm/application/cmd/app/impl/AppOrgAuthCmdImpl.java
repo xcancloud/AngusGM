@@ -25,18 +25,42 @@ import java.util.HashSet;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of application organization authorization command operations.
+ * 
+ * <p>This class provides comprehensive functionality for managing organization-based
+ * authorization policies including:</p>
+ * <ul>
+ *   <li>Assigning authorization policies to users, departments, and groups</li>
+ *   <li>Removing authorization policies from organizations</li>
+ *   <li>Validating organization and policy existence</li>
+ *   <li>Handling policy authorization permissions</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures proper authorization management across different
+ * organization types (users, departments, groups) within applications.</p>
+ */
 @Biz
 public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements AppOrgAuthCmd {
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private UserManager userManager;
 
+  /**
+   * Assigns authorization policies to users.
+   * 
+   * <p>This method creates authorization associations between users and policies,
+   * ignoring existing associations to avoid duplicates.</p>
+   * 
+   * @param appId Application identifier
+   * @param userIds Set of user identifiers
+   * @param policyIds Set of policy identifiers
+   * @return List of created authorization identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> authUserPolicy(Long appId, HashSet<Long> userIds,
@@ -44,16 +68,16 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate that users exist
         userManager.checkOrgExists(OrgTargetType.USER, userIds);
 
-        // Check the policy authorization permissions
+        // Validate policy authorization permissions
         authPolicyQuery.checkAuthPolicyPermission(appId, policyIds);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // Ignore existed policies authorization
+        // Ignore existing policy authorizations to avoid duplicates
         List<AuthPolicy> authPoliciesDb = authPolicyQuery
             .checkAndFindTenantPolicy(policyIds, true, true);
         List<AuthPolicyOrg> authPolicyOrg = AuthPolicyOrgConverter
@@ -63,12 +87,23 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
                 policyIds);
         CoreUtils.removeAll(authPolicyOrg, authPolicyOrgDb);
 
-        // Save new policies authorization
+        // Save new policy authorizations
         return isEmpty(authPolicyOrg) ? null : batchInsert(authPolicyOrg);
       }
     }.execute();
   }
 
+  /**
+   * Assigns authorization policies to departments.
+   * 
+   * <p>This method creates authorization associations between departments and policies,
+   * ignoring existing associations to avoid duplicates.</p>
+   * 
+   * @param appId Application identifier
+   * @param deptIds Set of department identifiers
+   * @param policyIds Set of policy identifiers
+   * @return List of created authorization identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> authDeptPolicy(Long appId, HashSet<Long> deptIds,
@@ -76,16 +111,16 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate that departments exist
         userManager.checkOrgExists(OrgTargetType.DEPT, deptIds);
 
-        // Check the policy authorization permissions
+        // Validate policy authorization permissions
         authPolicyQuery.checkAuthPolicyPermission(appId, policyIds);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // Ignore existed policies authorization
+        // Ignore existing policy authorizations to avoid duplicates
         List<AuthPolicy> authPoliciesDb = authPolicyQuery
             .checkAndFindTenantPolicy(policyIds, true, true);
         List<AuthPolicyOrg> authPolicyOrg = addToPolicyDept(appId, authPoliciesDb, deptIds);
@@ -94,12 +129,23 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
             appId, deptIds, AuthOrgType.DEPT, policyIds);
         CoreUtils.removeAll(authPolicyOrg, authPolicyOrgDb);
 
-        // Save new policies authorization
+        // Save new policy authorizations
         return isEmpty(authPolicyOrg) ? null : batchInsert(authPolicyOrg);
       }
     }.execute();
   }
 
+  /**
+   * Assigns authorization policies to groups.
+   * 
+   * <p>This method creates authorization associations between groups and policies,
+   * ignoring existing associations to avoid duplicates.</p>
+   * 
+   * @param appId Application identifier
+   * @param groupIds Set of group identifiers
+   * @param policyIds Set of policy identifiers
+   * @return List of created authorization identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> authGroupPolicy(Long appId, HashSet<Long> groupIds,
@@ -107,16 +153,16 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate that groups exist
         userManager.checkOrgExists(OrgTargetType.GROUP, groupIds);
 
-        // Check the policy authorization permissions
+        // Validate policy authorization permissions
         authPolicyQuery.checkAuthPolicyPermission(appId, policyIds);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // Ignore existed policies authorization
+        // Ignore existing policy authorizations to avoid duplicates
         List<AuthPolicy> authPoliciesDb = authPolicyQuery
             .checkAndFindTenantPolicy(policyIds, true, true);
         List<AuthPolicyOrg> authPolicyOrg = addToPolicyGroup(appId, authPoliciesDb, groupIds);
@@ -125,17 +171,23 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
                 appId, groupIds, AuthOrgType.GROUP, policyIds);
         CoreUtils.removeAll(authPolicyOrg, authPolicyOrgDb);
 
-        // Save new policies authorization
+        // Save new policy authorizations
         return isEmpty(authPolicyOrg) ? null : batchInsert(authPolicyOrg);
       }
     }.execute();
   }
 
   /**
-   * @param policyIds When it is empty, only users all authorizations will be deleted, excluding
-   *                  those of other associated organizations authorizations. If you want to cancel
-   *                  all authorization completely, you also need to cancel the global default
-   *                  authorization
+   * Removes authorization policies from users.
+   * 
+   * <p>This method removes authorization associations between users and policies.
+   * When policyIds is empty, all user authorizations are deleted, excluding
+   * those of other associated organizations. To cancel all authorization completely,
+   * the global default authorization must also be canceled.</p>
+   * 
+   * @param appId Application identifier
+   * @param userIds Set of user identifiers
+   * @param policyIds Set of policy identifiers (optional)
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -143,19 +195,21 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate that users exist
         userManager.checkOrgExists(OrgTargetType.DEPT, userIds);
 
-        // Check the policy authorization permissions
+        // Validate policy authorization permissions
         authPolicyQuery.checkAuthPolicyPermission(appId, policyIds);
       }
 
       @Override
       protected Void process() {
         if (isNotEmpty(policyIds)) {
+          // Remove specific policy authorizations for users
           authPolicyOrgRepo.deleteByAppIdAndOrgTypeAndOrgIdInAndPolicyIdIn(appId,
               OrgTargetType.GROUP.getValue(), userIds, policyIds);
         } else {
+          // Remove all policy authorizations for users
           authPolicyOrgRepo.deleteByAppIdAndOrgTypeAndOrgIdIn(appId,
               OrgTargetType.GROUP.getValue(), userIds);
         }
@@ -165,9 +219,15 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
   }
 
   /**
-   * @param policyIds When it is empty, only departments all authorizations will be deleted. If you
-   *                  want to cancel all authorization completely, you also need to cancel the
-   *                  global default authorization
+   * Removes authorization policies from departments.
+   * 
+   * <p>This method removes authorization associations between departments and policies.
+   * When policyIds is empty, all department authorizations are deleted. To cancel
+   * all authorization completely, the global default authorization must also be canceled.</p>
+   * 
+   * @param appId Application identifier
+   * @param deptIds Set of department identifiers
+   * @param policyIds Set of policy identifiers (optional)
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -175,19 +235,21 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate that departments exist
         userManager.checkOrgExists(OrgTargetType.DEPT, deptIds);
 
-        // Check the policy authorization permissions
+        // Validate policy authorization permissions
         authPolicyQuery.checkAuthPolicyPermission(appId, policyIds);
       }
 
       @Override
       protected Void process() {
         if (isNotEmpty(policyIds)) {
+          // Remove specific policy authorizations for departments
           authPolicyOrgRepo.deleteByAppIdAndOrgTypeAndOrgIdInAndPolicyIdIn(appId,
               OrgTargetType.DEPT.getValue(), deptIds, policyIds);
         } else {
+          // Remove all policy authorizations for departments
           authPolicyOrgRepo.deleteByAppIdAndOrgTypeAndOrgIdIn(appId,
               OrgTargetType.DEPT.getValue(), deptIds);
         }
@@ -197,9 +259,15 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
   }
 
   /**
-   * @param policyIds When it is empty, only groups all authorizations will be deleted. If you want
-   *                  to cancel all authorization completely, you also need to cancel the global
-   *                  default authorization
+   * Removes authorization policies from groups.
+   * 
+   * <p>This method removes authorization associations between groups and policies.
+   * When policyIds is empty, all group authorizations are deleted. To cancel
+   * all authorization completely, the global default authorization must also be canceled.</p>
+   * 
+   * @param appId Application identifier
+   * @param groupIds Set of group identifiers
+   * @param policyIds Set of policy identifiers (optional)
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -207,19 +275,21 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate that groups exist
         userManager.checkOrgExists(OrgTargetType.GROUP, groupIds);
 
-        // Check the policy authorization permissions
+        // Validate policy authorization permissions
         authPolicyQuery.checkAuthPolicyPermission(appId, policyIds);
       }
 
       @Override
       protected Void process() {
         if (isNotEmpty(policyIds)) {
+          // Remove specific policy authorizations for groups
           authPolicyOrgRepo.deleteByAppIdAndOrgTypeAndOrgIdInAndPolicyIdIn(appId,
               OrgTargetType.GROUP.getValue(), groupIds, policyIds);
         } else {
+          // Remove all policy authorizations for groups
           authPolicyOrgRepo.deleteByAppIdAndOrgTypeAndOrgIdIn(appId,
               OrgTargetType.GROUP.getValue(), groupIds);
         }

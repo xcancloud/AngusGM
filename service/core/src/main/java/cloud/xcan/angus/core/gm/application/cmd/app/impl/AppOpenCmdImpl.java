@@ -37,11 +37,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Internal non multi-tenant table and privatization is also needed.
- * <p>
- * Base applications and operation applications should not be included, and the base application
- * will be initialized when the tenant signup.
- *
+ * Implementation of application open command operations for managing application access.
+ * 
+ * <p>This class provides comprehensive functionality for application access management including:</p>
+ * <ul>
+ *   <li>Opening applications for tenants with authorization setup</li>
+ *   <li>Renewing application access after expiration</li>
+ *   <li>Canceling application access and cleaning up authorizations</li>
+ *   <li>Managing application expiration and cleanup</li>
+ *   <li>Recording operation logs for audit trails</li>
+ * </ul>
+ * 
+ * <p>Note: This implementation handles internal non-multi-tenant tables and privatization.
+ * Base applications and operation applications are excluded, and base applications
+ * are initialized during tenant signup.</p>
+ * 
  * @author XiaoLong Liu
  */
 @Slf4j
@@ -50,25 +60,34 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   @Resource
   private AppOpenRepo appOpenRepo;
-
   @Resource
   private AppOpenQuery appOpenQuery;
-
   @Resource
   private AuthPolicyTenantCmd authPolicyTenantCmd;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private TenantQuery tenantQuery;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * Opens an application for a tenant with authorization setup.
+   * 
+   * <p>This method performs comprehensive application opening including:</p>
+   * <ul>
+   *   <li>Validating application, tenant, and user existence</li>
+   *   <li>Setting up application access records</li>
+   *   <li>Initializing tenant authorization policies</li>
+   *   <li>Recording opening audit logs</li>
+   * </ul>
+   * 
+   * @param appOpen Application open entity with access details
+   * @param saveOperationLog Whether to record operation logs
+   * @return Application open identifier with associated data
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> open(AppOpen appOpen, boolean saveOperationLog) {
@@ -79,23 +98,23 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
       @Override
       protected void checkParams() {
-        // Check the application existed and enabled
+        // Validate that application exists and is enabled
         appDb = appQuery.checkAndFind(appOpen.getEditionType(), appOpen.getAppCode(),
             appOpen.getVersion(), true);
         appOpen.setAppId(appDb.getId());
 
-        // Check the open tenant existed
+        // Validate that tenant exists
         tenantDb = tenantQuery.checkAndFind(appOpen.getTenantId());
 
-        // Check the open user existed
+        // Validate that user exists if specified
         if (nonNull(appOpen.getUserId())) {
           userDb = userQuery.checkAndFind(appOpen.getUserId());
         }
 
-        // Check only cloud applications are allowed, but base applications and operation applications are not.
+        // Note: Only cloud applications are allowed, but base applications and operation applications are not
         // ProtocolAssert.assertTrue(appDb.isCloudApp(), "Only cloud applications are allowed");
 
-        // Check appId,code,version is consistent
+        // Validate application ID, code, and version consistency
         assertTrue(appOpen.getAppId().equals(appDb.getId())
             && appOpen.getEditionType().equals(appDb.getEditionType())
             && appOpen.getAppCode().equals(appDb.getCode())
@@ -103,12 +122,12 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
             .format("appId[%s],code[%s],version[%s] is inconsistent", appOpen.getAppId(),
                 appOpen.getAppCode(), appOpen.getVersion()));
 
-        // NOOP:: Check for repeated application opened and exclude expired -> Allow repeated calls by out job
+        // Note: Repeated application opening is allowed by external jobs
       }
 
       @Override
       protected IdKey<Long, Object> process() {
-        // If the modification expiration time already existed when reopen
+        // Handle reopening when modification expiration time already exists
         AppOpen appOpenDb = appOpenRepo.findByTenantIdAndEditionTypeAndAppCodeAndVersion(
             appOpen.getTenantId(), appOpen.getEditionType(), appOpen.getAppCode(),
             appOpen.getVersion());
@@ -118,16 +137,16 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
           return new IdKey<>(appOpenDb.getId(), null);
         }
 
-        // Save application open when first time
+        // Save application open record for first-time access
         appOpen.setOpClientOpen(isOpClient()).setClientId(appDb.getClientId());
         appOpen.setAppType(appDb.getType()).setExpirationDeleted(false);
         appOpen.setCreatedDate(LocalDateTime.now());
         IdKey<Long, Object> idKey = insert(appOpen);
 
-        // Initialize tenant default(_GUEST or _USER) and administrator(_ADMIN) authorization policies
+        // Initialize tenant default (_GUEST or _USER) and administrator (_ADMIN) authorization policies
         authPolicyTenantCmd.intAppAndPolicyByTenantAndApp(appOpen.getTenantId(), appDb);
 
-        // Save operation log
+        // Record opening audit log if requested
         if (saveOperationLog){
           if (!isUserAction()) {
             PrincipalContext.get().setClientId(appDb.getClientId())
@@ -143,7 +162,12 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
   }
 
   /**
-   * Reopen after expiration.
+   * Renews application access after expiration.
+   * 
+   * <p>This method handles application renewal by updating expiration dates
+   * and maintaining authorization policies.</p>
+   * 
+   * @param appOpen Application open entity with renewal details
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -151,28 +175,25 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
     new BizTemplate<Void>(false) {
       App appDb;
       Tenant tenantDb;
-      User userDb;
 
       @Override
       protected void checkParams() {
-        // Check the application existed
+        // Validate that application exists
         appDb = appQuery.checkAndFind(appOpen.getEditionType(), appOpen.getAppCode(),
             appOpen.getVersion(), true);
         appOpen.setAppId(appDb.getId());
 
-        // Check the open tenant existed
+        // Validate that tenant exists
         tenantDb = tenantQuery.checkAndFind(appOpen.getTenantId());
 
-        // Check the open user existed
+        // Validate that user exists if specified
         if (nonNull(appOpen.getUserId())) {
-          userDb = userQuery.checkAndFind(appOpen.getUserId());
+          userQuery.checkAndFind(appOpen.getUserId());
         }
 
-        // Check the open expired
+        // Note: Expiration validation is commented out to allow flexible renewal dates
         // ProtocolAssert.assertResourceNotFound(!appOpensDb.getExpirationDeleted(), String
         //    .format("Tenant %s open app %s is expired", getOriginalOptTenantId(), appOpen.getAppId()));
-
-        // NOOP:: Check renewal time <- Allow lengthening and reducing renewal date
       }
 
       @Override
@@ -183,7 +204,7 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
           appOpensDb.setExpirationDate(appOpen.getExpirationDate());
           appOpenRepo.save(appOpensDb);
 
-          // Save operation log
+          // Record renewal audit log
           if (!isUserAction()) {
             PrincipalContext.get().setClientId(appDb.getClientId())
                 .setTenantId(tenantDb.getId()).setTenantName(tenantDb.getName())
@@ -192,6 +213,7 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
           }
         } catch (Exception e) {
           if (e instanceof ResourceNotFound) {
+            // If application open record doesn't exist, create new one
             open(appOpen, false);
           } else {
             throw e;
@@ -202,6 +224,18 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
     }.execute();
   }
 
+  /**
+   * Cancels application access and cleans up authorization policies.
+   * 
+   * <p>This method performs comprehensive cleanup including:</p>
+   * <ul>
+   *   <li>Removing application open records</li>
+   *   <li>Canceling tenant authorization policies</li>
+   *   <li>Recording cancellation audit logs</li>
+   * </ul>
+   * 
+   * @param appId Application identifier to cancel
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void cancel(Long appId) {
@@ -211,27 +245,28 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
       @Override
       protected void checkParams() {
-        // Check the application existed
+        // Validate that application exists
         appDb = appQuery.checkAndFind(appId, false);
-        // Check the open tenantId is required
+        // Validate that tenant ID is required for cancellation
         assertTrue(hasOriginalOptTenantId(),
             "Open parameter optTenantId is required");
-        // Check the application existed
+        // Validate that application open record exists
         appOpensDb = appOpenQuery.checkAndFind(appId, getOriginalOptTenantId(), true);
       }
 
       @Override
       protected Void process() {
-        // After deleting the application open record, @CheckAppNotExpired will trigger the verification of non opened applications
+        // Delete application open record
+        // Note: @CheckAppNotExpired will trigger verification of non-opened applications
         appOpenRepo.delete(appOpensDb);
 
-        // Cancel the opened authorization policies of tenant' users and administrator
-        // NOOP:: Retention authorization policies
+        // Cancel opened authorization policies of tenant users and administrator
+        // Note: Authorization policies are retained
         authPolicyTenantCmd.appOpenPolicyCancel(getOriginalOptTenantId(), appId);
 
         log.info("Cancel tenant {} open application {} ", appId, appId);
 
-        // Save operation log
+        // Record cancellation audit log
         if (!isUserAction()) {
           Tenant tenantDb = tenantQuery.checkAndFind(appOpensDb.getTenantId());
           PrincipalContext.get().setClientId(appDb.getClientId())
@@ -244,6 +279,12 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
     }.execute();
   }
 
+  /**
+   * Updates expired application records.
+   * 
+   * <p>This method marks application open records as expired based on
+   * current date for cleanup purposes.</p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void expiredUpdate() {
@@ -256,18 +297,36 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
     }.execute();
   }
 
+  /**
+   * Opens an application without validation checks.
+   * 
+   * <p>This method provides a simplified application opening process
+   * for internal use without comprehensive validation.</p>
+   * 
+   * @param appOpen Application open entity
+   * @param appDb Application entity
+   */
   @Override
   public void open0(AppOpen appOpen, App appDb) {
-    // Save app open
+    // Save application open record with basic information
     appOpen.setOpClientOpen(isOpClient()).setClientId(appDb.getClientId());
     appOpen.setAppType(appDb.getType()).setExpirationDeleted(false);
     appOpen.setCreatedDate(LocalDateTime.now());
     insert0(appOpen);
   }
 
+  /**
+   * Opens multiple applications without validation checks.
+   * 
+   * <p>This method provides batch application opening for internal use
+   * without comprehensive validation.</p>
+   * 
+   * @param appOpens List of application open entities
+   * @param appDb Application entity
+   */
   @Override
   public void open0(List<AppOpen> appOpens, App appDb) {
-    // Save app open
+    // Save multiple application open records with basic information
     for (AppOpen appOpen : appOpens) {
       appOpen.setOpClientOpen(isOpClient()).setClientId(appDb.getClientId());
       appOpen.setAppType(appDb.getType()).setExpirationDeleted(false);
