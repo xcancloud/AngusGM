@@ -17,7 +17,6 @@ const bootstrap = async () => {
   await http.create();
   app.initAfterAuthentication({ code: AppOrServiceRoute.gm }).then(async () => {
     startupGuard();
-
     const locale = getPreferredLocale();
     const messages = (await import(`./locales/${locale}/index.js`)).default;
     const i18n = createI18n({
