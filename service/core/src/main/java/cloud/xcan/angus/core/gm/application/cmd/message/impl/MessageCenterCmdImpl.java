@@ -29,34 +29,54 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of message center command operations for managing message notifications.
+ * 
+ * <p>This class provides comprehensive functionality for message center management including:</p>
+ * <ul>
+ *   <li>Sending push notifications via WebSocket</li>
+ *   <li>Managing offline user notifications</li>
+ *   <li>Handling broadcast messages across instances</li>
+ *   <li>Routing messages to appropriate recipients</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures proper message delivery with broadcast support
+ * and recipient filtering based on object types.</p>
+ */
 @Slf4j
 @Biz
 public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private DeptUserRepo deptUserRepo;
-
   @Resource
   private GroupUserRepo groupUserRepo;
-
   @Resource
   private TORoleUserRepo toRoleUserRepo;
-
   @Resource
   private MessageCenterOnlineCmd messageCenterOnlineCmd;
-
   @Resource
   private MessageNoticeService messageNoticeService;
-
   @Resource
   private HttpBroadcastInvoker feignBroadcastInvoker;
-
   @Resource
   private ApplicationInfo applicationInfo;
 
+  /**
+   * Pushes message notifications to recipients.
+   * 
+   * <p>This method performs message pushing including:</p>
+   * <ul>
+   *   <li>Validating broadcast parameters</li>
+   *   <li>Broadcasting messages across instances</li>
+   *   <li>Sending local WebSocket messages</li>
+   *   <li>Handling broadcast exceptions</li>
+   * </ul>
+   * 
+   * @param dto Message center push data
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void push(MessageCenterPushDto dto) {
@@ -64,6 +84,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
       @Override
       protected void checkParams() {
         if (dto.isBroadcast()) {
+          // Validate required parameters for broadcast
           checkRequiredParam(dto.getReceiveObjectType(), dto.getReceiveObjectIds());
         }
       }
@@ -71,6 +92,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
       @Override
       protected Void process() {
         if (dto.isBroadcast()) {
+          // Broadcast message to all instances
           dto.setBroadcast(false);
           String offlineEndpoint = "/api/v1/message/center/push";
           try {
@@ -79,6 +101,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
             log.error("Broadcast notice messages to all instances exception: ", e);
           }
         } else {
+          // Send local WebSocket message
           sendLocalWebSocketMessage(pushToNoticeDomain(dto));
         }
         return null;
@@ -86,6 +109,19 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
     }.execute();
   }
 
+  /**
+   * Sends offline notifications to users.
+   * 
+   * <p>This method performs offline notification including:</p>
+   * <ul>
+   *   <li>Validating broadcast parameters</li>
+   *   <li>Broadcasting offline messages across instances</li>
+   *   <li>Processing local offline notifications</li>
+   *   <li>Handling broadcast exceptions</li>
+   * </ul>
+   * 
+   * @param dto Message center offline data
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void offline(MessageCenterOfflineDto dto) {
@@ -93,6 +129,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
       @Override
       protected void checkParams() {
         if (dto.isBroadcast()) {
+          // Validate required parameters for broadcast
           checkRequiredParam(dto.getReceiveObjectType(), dto.getReceiveObjectIds());
         }
       }
@@ -100,6 +137,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
       @Override
       protected Void process() {
         if (dto.isBroadcast()) {
+          // Broadcast offline message to all instances
           dto.setBroadcast(false);
           String offlineEndpoint = "/api/v1/message/center/online/off";
           try {
@@ -108,6 +146,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
             log.error("Broadcast offline messages to all instances exception: ", e);
           }
         } else {
+          // Process local offline notification
           messageCenterOnlineCmd.offline(dto.getReceiveObjectType(), dto.getReceiveObjectIds());
         }
         return null;
@@ -115,36 +154,57 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
     }.execute();
   }
 
+  /**
+   * Sends local WebSocket messages based on receive object type.
+   * 
+   * <p>This method routes messages to appropriate recipients including:</p>
+   * <ul>
+   *   <li>All users in the system</li>
+   *   <li>Users within specific tenants</li>
+   *   <li>Users within specific departments</li>
+   *   <li>Users within specific groups</li>
+   *   <li>Specific users by ID</li>
+   *   <li>Users with specific policy roles</li>
+   * </ul>
+   * 
+   * @param message Message to send
+   */
   public void sendLocalWebSocketMessage(Message message) {
     ReceiveObjectType receiveObject = message.getReceiveObjectType();
 
     switch (receiveObject) {
       case ALL: {
+        // Send to all online users
         List<String> onlineUsernames = userRepo.findUsernamesByOnline(true);
         messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case TENANT: {
+        // Send to online users within specific tenants
         List<Long> tenantIds = message.getReceiveObjectIds();
         List<String> onlineUsernames = userRepo.findUsernamesByTenantIdAndOnline(tenantIds, true);
         messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case DEPT: {
+        // Send to online users within specific departments
         List<Long> deptIds = message.getReceiveObjectIds();
         Set<String> onlineUsernames = deptUserRepo.findUsernamesByDeptIdInAndOnline(deptIds, true);
         messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case GROUP: {
+        // Send to online users within specific groups
         List<Long> groupIds = message.getReceiveObjectIds();
         Set<String> onlineUsernames = groupUserRepo.findUsernamesByGroupIdInAndOnline(groupIds,
             true);
         messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case USER: {
+        // Send to specific online users
         List<Long> userIds = message.getReceiveObjectIds();
         List<String> onlineUsernames = userRepo.findUsernamesByIdAndOnline(userIds, true);
         messageNoticeService.sendUserMessage(onlineUsernames, message);
       }
       case TO_POLICY: {
+        // Send to users with specific policy roles
         List<Long> topRoleIds = message.getReceiveObjectIds();
         Set<Long> roleUserIds = toRoleUserRepo.findAllByToRoleIdIn(topRoleIds)
             .stream().map(TORoleUser::getUserId).collect(Collectors.toSet());
@@ -154,15 +214,20 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
         }
       }
       default: {
-        // None
+        // No action for unsupported object types
       }
     }
   }
 
+  /**
+   * Validates required parameters for broadcast operations.
+   * 
+   * @param objectType Receive object type
+   * @param objectIds Receive object identifiers
+   */
   private void checkRequiredParam(ReceiveObjectType objectType, List<Long> objectIds) {
     if (!objectType.equals(ReceiveObjectType.ALL) && isEmpty(objectIds)) {
       throw ProtocolException.of(QUERY_FIELD_EMPTY_T, new Object[]{"objectIds"});
     }
   }
-
 }

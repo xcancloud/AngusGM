@@ -40,8 +40,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Note: Allow the tenant system administrator to canceled the tenant. Allow the operation tenant
- * administrator to canceled the tenant.
+ * <p>
+ * Implementation of tenant sign command operations.
+ * </p>
+ * <p>
+ * Manages tenant cancellation process including SMS verification,
+ * cancellation confirmation, and scheduled cancellation processing.
+ * </p>
+ * <p>
+ * Supports tenant system administrator and TOP administrator permissions
+ * for tenant cancellation operations.
+ * </p>
  */
 @Biz
 @Slf4j
@@ -49,22 +58,26 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private UserCmd userCmd;
-
   @Resource
   private SmsCmd smsCmd;
-
   @Resource
   private TenantRepo tenantRepo;
-
   @Resource
   private TenantQuery tenantQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Cancels tenant sign cancellation request.
+   * </p>
+   * <p>
+   * Reverts tenant status from CANCELLING to ENABLED when cancellation
+   * is revoked by authorized administrators.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void cancelSignInvoke() {
@@ -74,11 +87,11 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
       @Override
       protected void checkParams() {
-        // Check the tenant system administrator(Not op sysadmin) or TOP permission
+        // Verify tenant system administrator (not op sysadmin) or TOP permission
         assertForbidden(isTenantSysAdmin() || hasToRole(TOP_TENANT_ADMIN),
             NO_TENANT_SYS_ADMIN_PERMISSION, FORBIDDEN_KEY);
 
-        // Check the status is cancelling
+        // Verify status is currently cancelling
         tenantDb = tenantQuery.checkAndFind(tenantId);
         assertTrue(tenantDb.getStatus().equals(TenantStatus.CANCELLING), "Account not cancelled");
       }
@@ -95,7 +108,13 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
   }
 
   /**
-   * User by {@link TenantSignCancelExpireJob}
+   * <p>
+   * Processes expired tenant cancellations.
+   * </p>
+   * <p>
+   * Used by TenantSignCancelExpireJob to automatically cancel tenants
+   * when cancellation period expires.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -113,6 +132,15 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
     }.execute();
   }
 
+  /**
+   * <p>
+   * Sends SMS verification code for tenant cancellation.
+   * </p>
+   * <p>
+   * Validates administrator permissions and mobile number binding,
+   * then sends SMS verification code for cancellation confirmation.
+   * </p>
+   */
   @Override
   public void signCancelSmsSend() {
     new BizTemplate<Void>() {
@@ -120,11 +148,11 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
       @Override
       protected void checkParams() {
-        // Check the tenant system administrator(Not op sysadmin) or TOP permissions
+        // Verify tenant system administrator (not op sysadmin) or TOP permissions
         assertForbidden(isTenantSysAdmin()
             || hasToRole(TOP_TENANT_ADMIN), NO_TENANT_SYS_ADMIN_PERMISSION, FORBIDDEN_KEY);
 
-        // Check the mobile is required
+        // Verify mobile number is bound
         setMultiTenantCtrl(false);
         userDb = userRepo.findByUserId(getUserId());
         assertForbidden(nonNull(userDb) && isNotEmpty(userDb.getMobile()), MOBILE_IS_UNBIND);
@@ -138,6 +166,15 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
     }.execute();
   }
 
+  /**
+   * <p>
+   * Confirms tenant cancellation with SMS verification code.
+   * </p>
+   * <p>
+   * Validates SMS verification code and initiates tenant cancellation process.
+   * Sets tenant status to CANCELLING and records cancellation application date.
+   * </p>
+   */
   @Override
   public void signCancelSmsConfirm(String verificationCode) {
     new BizTemplate<Void>() {
@@ -146,19 +183,19 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
 
       @Override
       protected void checkParams() {
-        // Check the tenant system administrator(Not op sysadmin) or TOP permissions
+        // Verify tenant system administrator (not op sysadmin) or TOP permissions
         assertForbidden(isTenantSysAdmin()
             || hasToRole(TOP_TENANT_ADMIN), NO_TENANT_SYS_ADMIN_PERMISSION, FORBIDDEN_KEY);
 
-        // Check the mobile is required
+        // Verify mobile number is bound
         setMultiTenantCtrl(false);
         userDb = userRepo.findByUserId(getUserId());
         assertForbidden(isNotEmpty(userDb.getMobile()), MOBILE_IS_UNBIND);
 
-        // Check the cancel sms is valid
+        // Verify SMS verification code is valid
         smsCmd.checkVerificationCode(SmsBizKey.SIGN_CANCEL, userDb.getMobile(), verificationCode);
 
-        // Check and find tenant
+        // Verify tenant exists
         tenantDb = tenantQuery.checkAndFind(getOptTenantId());
       }
 
@@ -168,7 +205,7 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
         tenantDb.setApplyCancelDate(LocalDateTime.now());
         tenantRepo.save(tenantDb);
 
-        // Save operation activity
+        // Log operation for audit
         operationLogCmd.add(TENANT, tenantDb, TENANT_CANCEL);
         return null;
       }

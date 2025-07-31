@@ -34,7 +34,19 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of user authorization policy command operations.
+ * </p>
+ * <p>
+ * Manages the association between users and authorization policies,
+ * providing bidirectional operations for adding and removing policy-user relationships.
+ * </p>
+ * <p>
+ * Supports both policy-centric and user-centric operations with proper
+ * validation and audit logging.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
@@ -42,16 +54,26 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Associates users with a specific authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and users exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * Only creates new associations for users that aren't already
+   * associated with the policy.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> policyUserAdd(Long policyId, List<AuthPolicyOrg> policyUsers) {
@@ -62,18 +84,18 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
-        // Check the users existed
+        // Verify users exist
         userIds = policyUsers.stream().map(AuthPolicyOrg::getOrgId).collect(Collectors.toSet());
         usersDb = userQuery.checkAndFind(userIds);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // De-duplication of authorized users
+        // Remove already authorized users to prevent duplicates
         List<Long> existedUserIds = authPolicyOrgRepo.findOrgIdsByPolicyIdAndOrgTypeAndOrgIdIn(
             policyId, OrgTargetType.USER.getValue(), userIds);
         userIds.removeAll(existedUserIds);
@@ -82,7 +104,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           // Complete authorization information
           assembleOrgAuthInfo(policyUsers, policyDb);
 
-          // Save nonexistent authorization
+          // Save new user authorizations
           List<AuthPolicyOrg> addPolicyUsers = policyUsers.stream()
               .filter(x -> userIds.contains(x.getOrgId())).collect(Collectors.toList());
           if (isNotEmpty(addPolicyUsers)) {
@@ -98,6 +120,15 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes user associations from a specific authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and users exist, checks permissions,
+   * and removes the specified user-policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void policyUserDelete(Long policyId, Set<Long> userIds) {
@@ -107,11 +138,11 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
-        // Check the users existed
+        // Verify users exist
         usersDb = userQuery.checkAndFind(userIds);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
@@ -127,6 +158,19 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Associates authorization policies with a specific user.
+   * </p>
+   * <p>
+   * Validates that the user and policies exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * Only creates new associations for policies that aren't already
+   * associated with the user.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> userPolicyAdd(Long userId, List<AuthPolicyOrg> userPolicies) {
@@ -137,19 +181,19 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Verify user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check the policies existed
+        // Verify policies exist
         policyIds = userPolicies.stream().map(AuthPolicyOrg::getPolicyId)
             .collect(Collectors.toSet());
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policiesDb);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // De-duplication of authorized polices
+        // Remove already authorized policies to prevent duplicates
         List<Long> existedPolicyIds = authPolicyOrgRepo.findPolicyIdsByUserIdAndOrgTypeAndPolicyIdIn(
             userId, OrgTargetType.USER.getValue(), policyIds);
         policyIds.removeAll(existedPolicyIds);
@@ -158,7 +202,7 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           // Complete authorization information
           assemblePolicyAuthInfo(userPolicies, policiesDb);
 
-          // Save nonexistent authorization
+          // Save new policy authorizations
           List<AuthPolicyOrg> newUserPolicies = userPolicies.stream()
               .filter(x -> policyIds.contains(x.getPolicyId())).collect(Collectors.toList());
           if (isNotEmpty(newUserPolicies)) {
@@ -174,6 +218,15 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes authorization policy associations from a specific user.
+   * </p>
+   * <p>
+   * Validates that the user and policies exist, checks permissions,
+   * and removes the specified policy-user associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void userPolicyDelete(Long userId, Set<Long> policyIds) {
@@ -183,11 +236,11 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Verify user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check the policies existed
+        // Verify policies exist
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyIds);
       }
 
@@ -203,20 +256,36 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Batch removes user-policy associations.
+   * </p>
+   * <p>
+   * Used when deleting users or policies to clean up all related associations.
+   * Skips permission checks as this is typically called during cleanup operations.
+   * </p>
+   * <p>
+   * If policyIds is empty, removes all policy associations for the specified users.
+   * Otherwise, removes only the specified policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void userPolicyDeleteBatch(HashSet<Long> userIds, HashSet<Long> policyIds) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // NOOP:: Check the policy permission <- UC deletes policies when deleting users, and does not check permissions.
+        // NOOP:: Skip permission checks for cleanup operations
+        // UC deletes policies when deleting users, and does not check permissions.
       }
 
       @Override
       protected Void process() {
         if (isEmpty(policyIds)) {
+          // Remove all policy associations for the specified users
           authPolicyOrgRepo.deleteByOrgIdInAndOrgType(userIds, AuthOrgType.USER.getValue());
         } else {
+          // Remove specific policy associations for the specified users
           authPolicyOrgRepo.deleteByOrgIdInAndOrgTypeAndPolicyIdIn(userIds,
               AuthOrgType.USER.getValue(), policyIds);
         }
@@ -225,12 +294,30 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Completes authorization information for organization-based policy associations.
+   * </p>
+   * <p>
+   * Sets the policy type and application ID for each organization-policy association
+   * based on the provided policy information.
+   * </p>
+   */
   public static void assembleOrgAuthInfo(List<AuthPolicyOrg> policyOrg, AuthPolicy authPolicyDb) {
     for (AuthPolicyOrg policyOrg0 : policyOrg) {
       policyOrg0.setPolicyType(authPolicyDb.getType()).setAppId(authPolicyDb.getAppId());
     }
   }
 
+  /**
+   * <p>
+   * Completes authorization information for policy-based organization associations.
+   * </p>
+   * <p>
+   * Sets the policy type and application ID for each policy-organization association
+   * based on the provided policy information.
+   * </p>
+   */
   public static void assemblePolicyAuthInfo(List<AuthPolicyOrg> policyOrg,
       List<AuthPolicy> authPoliciesDb) {
     Map<Long, AuthPolicy> authPolicyMap = authPoliciesDb.stream()

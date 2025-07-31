@@ -34,24 +34,51 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of group user command operations for managing group-user relationships.
+ * 
+ * <p>This class provides comprehensive functionality for group-user management including:</p>
+ * <ul>
+ *   <li>Adding users to groups and groups to users</li>
+ *   <li>Managing group-user associations</li>
+ *   <li>Handling group-user quotas and validations</li>
+ *   <li>Recording operation logs for audit trails</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures proper group-user relationship management
+ * with quota controls and audit trail maintenance.</p>
+ */
 @Biz
 public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupUserCmd {
 
   @Resource
   private GroupUserRepo groupUserRepo;
-
   @Resource
   private GroupQuery groupQuery;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private GroupUserQuery userGroupQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * Adds groups to a user with comprehensive validation.
+   * 
+   * <p>This method performs group assignment including:</p>
+   * <ul>
+   *   <li>Validating user existence</li>
+   *   <li>Checking user group quota limits</li>
+   *   <li>Validating group existence</li>
+   *   <li>Checking group user quota limits</li>
+   *   <li>Creating group-user associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param groupIds Set of group identifiers to assign
+   * @return List of created association identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> groupAdd(Long userId, LinkedHashSet<Long> groupIds) {
@@ -61,14 +88,14 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected void checkParams() {
-        // Check the users existed
+        // Validate user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check the user group quota
+        // Validate user group quota
         userGroupQuery.checkUserGroupAppendQuota(getOptTenantId(), groupIds.size(), userId);
 
-        // Check the group existed
+        // Validate groups exist
         groupsDb = groupQuery.checkValidAndFind(groupIds);
-        // Check the group user quota
+        // Validate group user quota
         for (Long groupId : groupIds) {
           userGroupQuery.checkGroupUserAppendQuota(getOptTenantId(), 1, groupId);
         }
@@ -76,14 +103,16 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // Delete repeated in db
+        // Remove existing associations to prevent duplicates
         groupUserRepo.deleteByGroupIdInAndUserId(groupIds, userId);
 
+        // Create new group-user associations
         List<GroupUser> groupUsers = groupIds.stream()
             .map(x -> new GroupUser().setGroupId(x).setUserId(userId))
             .collect(Collectors.toList());
         List<IdKey<Long, Object>> idKeys = batchInsert(groupUsers);
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, ADD_USER_GROUP,
             groupsDb.stream().map(Group::getName).collect(Collectors.joining(",")));
         return idKeys;
@@ -91,6 +120,21 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     }.execute();
   }
 
+  /**
+   * Replaces user's group associations with new ones.
+   * 
+   * <p>This method performs group replacement including:</p>
+   * <ul>
+   *   <li>Validating user and group existence</li>
+   *   <li>Checking quota limits for replacement</li>
+   *   <li>Clearing existing associations</li>
+   *   <li>Creating new associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param groupIds Set of new group identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void groupReplace(Long userId, LinkedHashSet<Long> groupIds) {
@@ -104,9 +148,9 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         groupsDb = groupQuery.checkAndFind(groupIds);
 
         if (isNotEmpty(groupIds)) {
-          // Check the user group quota
+          // Validate user group quota
           userGroupQuery.checkUserGroupReplaceQuota(getOptTenantId(), groupIds.size(), userId);
-          // Check the group user quota
+          // Validate group user quota
           for (Long groupId : groupIds) {
             userGroupQuery.checkGroupUserAppendQuota(getOptTenantId(), 1, groupId);
           }
@@ -115,15 +159,16 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected Void process() {
-        // Clear empty
+        // Clear existing associations
         deleteByUserId(Collections.singleton(userId));
-        // Save new association
+        // Create new associations
         if (isNotEmpty(groupIds)) {
           List<GroupUser> groupUsers = groupIds.stream()
               .map(groupId -> toGroupUser(groupId, userDb)).collect(Collectors.toList());
           add0(groupUsers);
         }
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, UPDATE_USER_GROUP,
             groupsDb.stream().map(Group::getName).collect(Collectors.joining(",")));
         return null;
@@ -131,6 +176,19 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     }.execute();
   }
 
+  /**
+   * Removes groups from a user.
+   * 
+   * <p>This method performs group removal including:</p>
+   * <ul>
+   *   <li>Validating user and group existence</li>
+   *   <li>Removing group-user associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param userId User identifier
+   * @param groupIds Set of group identifiers to remove
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void groupDelete(Long userId, HashSet<Long> groupIds) {
@@ -146,8 +204,10 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected Void process() {
+        // Remove group-user associations
         groupUserRepo.deleteByGroupIdInAndUserId(groupIds, userId);
 
+        // Record operation audit log
         operationLogCmd.add(USER, userDb, DELETE_USER_GROUP,
             groupsDb.stream().map(Group::getName).collect(Collectors.joining(",")));
         return null;
@@ -155,6 +215,23 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     }.execute();
   }
 
+  /**
+   * Adds users to a group with comprehensive validation.
+   * 
+   * <p>This method performs user assignment including:</p>
+   * <ul>
+   *   <li>Validating group existence</li>
+   *   <li>Checking group user quota limits</li>
+   *   <li>Validating user existence</li>
+   *   <li>Checking user group quota limits</li>
+   *   <li>Creating user-group associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param groupId Group identifier
+   * @param groupUsers List of user-group associations to create
+   * @return List of created association identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> userAdd(Long groupId, List<GroupUser> groupUsers) {
@@ -165,15 +242,15 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected void checkParams() {
-        // Check the groups existed
+        // Validate group exists
         groupDb = groupQuery.checkValidAndFind(groupId);
-        // Check the group user quota
+        // Validate group user quota
         userGroupQuery.checkGroupUserAppendQuota(getOptTenantId(), groupUsers.size(), groupId);
 
-        // Check the users existed
+        // Validate users exist
         userIds = groupUsers.stream().map(GroupUser::getUserId).collect(Collectors.toSet());
         usersDb = userQuery.checkAndFind(userIds);
-        // Check the user group quota
+        // Validate user group quota
         for (Long userId : userIds) {
           userGroupQuery.checkUserGroupAppendQuota(getOptTenantId(), 1, userId);
         }
@@ -181,11 +258,13 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // Delete repeated in db
+        // Remove existing associations to prevent duplicates
         groupUserRepo.deleteByGroupIdAndUserIdIn(groupId, userIds);
 
+        // Create new user-group associations
         List<IdKey<Long, Object>> idKeys = batchInsert(new HashSet<>(groupUsers));
 
+        // Record operation audit log
         operationLogCmd.add(GROUP, groupDb, ADD_GROUP_USER,
             usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return idKeys;
@@ -193,6 +272,19 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     }.execute();
   }
 
+  /**
+   * Removes users from a group.
+   * 
+   * <p>This method performs user removal including:</p>
+   * <ul>
+   *   <li>Validating group and user existence</li>
+   *   <li>Removing user-group associations</li>
+   *   <li>Recording operation audit logs</li>
+   * </ul>
+   * 
+   * @param groupId Group identifier
+   * @param userIds Set of user identifiers to remove
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void userDelete(Long groupId, Set<Long> userIds) {
@@ -208,8 +300,10 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
       @Override
       protected Void process() {
+        // Remove user-group associations
         groupUserRepo.deleteByGroupIdAndUserId(groupId, userIds);
 
+        // Record operation audit log
         operationLogCmd.add(GROUP, groupDb, DELETE_GROUP_USER,
             usersDb.stream().map(User::getName).collect(Collectors.joining(",")));
         return null;
@@ -217,18 +311,32 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     }.execute();
   }
 
+  /**
+   * Adds group-user associations with validation.
+   * 
+   * <p>This method ensures groups exist and creates associations.</p>
+   * 
+   * @param groupUsers List of group-user associations to create
+   * @return List of created association identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add(List<GroupUser> groupUsers) {
     if (isEmpty(groupUsers)) {
       return null;
     }
-    // Check the groups existed
+    // Validate groups exist
     groupQuery.checkValidAndFind(groupUsers.stream().map(GroupUser::getGroupId)
         .collect(Collectors.toList()));
     return batchInsert(groupUsers);
   }
 
+  /**
+   * Adds group-user associations without validation.
+   * 
+   * @param groupUsers List of group-user associations to create
+   * @return List of created association identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add0(List<GroupUser> groupUsers) {
@@ -238,6 +346,12 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
     return batchInsert(groupUsers);
   }
 
+  /**
+   * Deletes LDAP garbage relationships by directory.
+   * 
+   * @param directoryId Directory identifier
+   * @param groupUsers List of group-user associations to clean
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete0(Long directoryId, List<GroupUser> groupUsers) {
@@ -247,18 +361,33 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
         groupUsers.stream().map(GroupUser::getUserId).collect(Collectors.toSet()));
   }
 
+  /**
+   * Deletes all group-user associations by group identifiers.
+   * 
+   * @param groupIds Set of group identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteAllByGroupId(Set<Long> groupIds) {
     groupUserRepo.deleteAllByGroupIdIn(groupIds);
   }
 
+  /**
+   * Deletes all group-user associations by user identifiers.
+   * 
+   * @param userIds Set of user identifiers
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteByUserId(Set<Long> userIds) {
     groupUserRepo.deleteAllByUserIdIn(userIds);
   }
 
+  /**
+   * Deletes all group-user associations by tenant identifiers.
+   * 
+   * @param tenantIds Set of tenant identifiers
+   */
   @Override
   public void deleteByTenantId(Set<Long> tenantIds) {
     groupUserRepo.deleteByTenantId(tenantIds);

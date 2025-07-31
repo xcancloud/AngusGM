@@ -78,6 +78,32 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.HardcodedFilter;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>
+ * Implementation of user directory command operations.
+ * </p>
+ * <p>
+ * Manages LDAP directory configuration, synchronization, and user/group management.
+ * Provides comprehensive directory integration with secure password encryption.
+ * </p>
+ * <p>
+ * Supports directory testing, synchronization scheduling, and membership management
+ * with proper quota validation and audit logging.
+ * </p>
+ */
+/**
+ * <p>
+ * Implementation of user directory command operations.
+ * </p>
+ * <p>
+ * Manages LDAP directory configuration, synchronization, and user/group management.
+ * Provides comprehensive directory integration with secure password encryption.
+ * </p>
+ * <p>
+ * Supports directory testing, synchronization scheduling, and membership management
+ * with proper quota validation and audit logging.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implements
@@ -85,34 +111,49 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
   @Resource
   private UserDirectoryRepo userDirectoryRepo;
-
   @Resource
   private UserDirectoryQuery userDirectoryQuery;
-
   @Resource
   private AuthUserRepo authUserRepo;
-
   @Resource
   private UserCmd userCmd;
-
   @Resource
   private GroupCmd groupCmd;
-
   @Resource
   private GroupUserCmd userGroupCmd;
-
   @Resource
   private TenantManager tenantManager;
-
   @Resource
   private UserManager userManager;
-
   @Resource
   private GroupManager groupManager;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Creates a new user directory with validation and synchronization.
+   * </p>
+   * <p>
+   * Validates directory configuration, encrypts server password, and optionally
+   * synchronizes users and groups from the directory.
+   * </p>
+   * <p>
+   * Supports test mode for directory validation without permanent storage.
+   * </p>
+   */
+  /**
+   * <p>
+   * Creates a new user directory with validation and synchronization.
+   * </p>
+   * <p>
+   * Validates directory configuration, encrypts server password, and optionally
+   * synchronizes users and groups from the directory.
+   * </p>
+   * <p>
+   * Supports test mode for directory validation without permanent storage.
+   * </p>
+   */
   // @Transactional(rollbackFor = Exception.class)
   // Synchronization can be unsuccessful when saving successfully
   @Override
@@ -120,27 +161,27 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return new BizTemplate<IdKey<Long, Object>>() {
       @Override
       protected void checkParams() {
-        // Ignore check when test directory
+        // Skip validation for test mode
         if (!onlyTest) {
-          // Check the name existed
+          // Verify directory name uniqueness
           userDirectoryQuery.checkNameExisted(directory);
 
-          // Check the server quota
+          // Verify server quota
           userDirectoryQuery.checkQuota(1);
         }
       }
 
       @Override
       protected IdKey<Long, Object> process() {
-        // Calculation sequence, increasing by default
+        // Calculate sequence number, increasing by default
         if (!onlyTest) {
           if (Objects.isNull(directory.getSequence()) || directory.getSequence() <= 0) {
             calcDefaultSequence(directory);
           }
         }
 
-        // LDAP server password encryption storage
-        if (!onlyTest) { // Fix:: Test server password encrypt is repeated
+        // Encrypt LDAP server password for storage
+        if (!onlyTest) { // Fix: Test server password encryption is repeated
           directory.getServerData().setPassword(
               encryptServerPassword(directory.getServerData().getPassword()));
         }
@@ -148,19 +189,28 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         // Save directory and use inner @Transactional
         IdKey<Long, Object> idKey = insert(directory, "name");
 
-        // Synchronize users and groups from the directory
-        // No rollback when an exception occurs
+        // Synchronize users and groups from directory
+        // No rollback when exception occurs
         if (directory.getEnabled()) {
           sync(directory.getId(), onlyTest);
         }
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER_DIRECTORY, directory, CREATED);
         return idKey;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces user directory configuration.
+   * </p>
+   * <p>
+   * Updates directory settings, re-encrypts password if changed, and optionally
+   * synchronizes users and groups from the directory.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void replace(UserDirectory directory) {
@@ -169,9 +219,9 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
       @Override
       protected void checkParams() {
-        // Check the name existed
+        // Verify directory name uniqueness
         userDirectoryQuery.checkNameExisted(directory);
-        // Check the directory existed
+        // Verify directory exists
         if (nonNull(directory.getId())) {
           directoryDb = userDirectoryQuery.checkAndFind(directory.getId());
         }
@@ -184,8 +234,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
           return null;
         }
 
-        // LDAP server password encryption storage
-        // Password has been modified
+        // Re-encrypt LDAP server password if modified
         if (!directory.getServerData().getPassword()
             .equals(directoryDb.getServerData().getPassword())) {
           directory.getServerData()
@@ -195,19 +244,27 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         // Save directory
         userDirectoryRepo.save(copyPropertiesIgnoreAuditing(directory, directoryDb, "enabled"));
 
-        // Synchronize users and groups from the directory
-        // No rollback when an exception occurs
+        // Synchronize users and groups from directory
+        // No rollback when exception occurs
         if (directoryDb.getEnabled()) {
           sync(directory.getId(), false);
         }
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER_DIRECTORY, directoryDb, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Reorders user directory sequence.
+   * </p>
+   * <p>
+   * Updates directory sequence number for ordering purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void reorder(Long id, Integer sequence) {
@@ -216,7 +273,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
       @Override
       protected void checkParams() {
-        // Check the user directory existed
+        // Verify directory exists
         directoryDb = userDirectoryQuery.checkAndFind(id);
       }
 
@@ -229,6 +286,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Enables or disables user directory.
+   * </p>
+   * <p>
+   * Updates directory enabled status and logs the operation for audit.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void enabled(Long id, boolean enabled) {
@@ -237,7 +302,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
       @Override
       protected void checkParams() {
-        // Check the user directory existed
+        // Verify directory exists
         directoryDb = userDirectoryQuery.checkAndFind(id);
       }
 
@@ -246,7 +311,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         directoryDb.setEnabled(enabled);
         userDirectoryRepo.save(directoryDb);
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER_DIRECTORY, directoryDb, enabled ? ENABLED : DISABLED);
         return null;
       }
@@ -254,16 +319,23 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
   }
 
   /**
-   * ***Important:: The number of synchronization users cannot exceed the quota limit.***
+   * <p>
+   * Synchronizes users and groups from LDAP directory.
+   * </p>
+   * <p>
+   * Important: The number of synchronization users cannot exceed the quota limit.
+   * </p>
    * <p>
    * Duplicate judgment:
+   * </p>
    * <p>
    * - Group Sync: When synchronizing a group, the code must not be repeated. When the code is not
    * repeated, judge whether the name needs to be removed duplicates according to
    * ignoreSameNameGroup flag.
+   * </p>
    * <p>
    * - User Sync: Force ignore the same identity(unique name, email, mobile) user.
-   * <p>
+   * </p>
    */
   @Override
   public DirectorySyncResult sync(Long id, boolean onlyTest) {
@@ -288,7 +360,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
 
         DirectorySyncResult result = new DirectorySyncResult();
 
-        // 1. Verify Host and auth information
+        // 1. Verify host and authentication information
         tryConnectLdapServer(result, directoryDb, onlyTest);
         if (!result.getConnectSuccess()) {
           result.setSuccess(false);
@@ -298,19 +370,19 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         try {
           LdapTemplate ldapTemplate = getLdapTemplate(directoryDb, onlyTest);
 
-          // 2. Sync groups
-          // 2.1. Find the latest groups in the directory
+          // 2. Synchronize groups
+          // 2.1. Find latest groups in directory
           List<Group> ldapGroups = searchGroup(directoryDb, ldapTemplate);
           result.setTotalGroupNum(ldapGroups.size());
-          // Find the latest groups in the DB
+          // Find latest groups in database
           List<Group> groupsDb = groupManager.findByTenantId(tenantDb.getId());
           Map<String, List<Group>> nameGroupDbMap = groupsDb.stream()
               .collect(Collectors.groupingBy(Group::getName));
           Map<String, Group> codeGroupDbMap = groupsDb.stream()
               .collect(Collectors.toMap(Group::getCode, x -> x));
 
-          // 2.2. Calculate group sync results
-          // 1).New groups in the directory
+          // 2.2. Calculate group synchronization results
+          // 1). New groups in directory
           List<Group> addGroups = findNewGroupsInDirectory(ldapGroups, nameGroupDbMap,
               codeGroupDbMap, directoryDb);
           if (isNotEmpty(addGroups)) {
@@ -319,7 +391,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             }
             result.setAddGroupNum(addGroups.size());
           }
-          // 2).Update groups in the directory
+          // 2). Update groups in directory
           List<Group> updateGroups = findUpdateGroupsInDirectory(ldapGroups, nameGroupDbMap,
               codeGroupDbMap, directoryDb);
           if (isNotEmpty(updateGroups)) {
@@ -328,7 +400,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             }
             result.setUpdateGroupNum(updateGroups.size());
           }
-          // 3).Delete groups in the directory
+          // 3). Delete groups in directory
           List<Group> deleteGroups = findDeleteGroupsInDirectory(ldapGroups,
               codeGroupDbMap, directoryDb);
           Set<Long> deleteGroupIds = deleteGroups.stream().map(Group::getId)
@@ -341,15 +413,15 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             }
             result.setDeleteGroupNum(deleteGroups.size());
           }
-          // 4).Ignore groups number in the directory
+          // 4). Ignore groups number in directory
           result.setIgnoreGroupNum(ldapGroups.size() - addGroups.size() - updateGroups.size());
           result.setGroupSuccess(true);
 
-          // 3. Sync users
-          // 3.1. Find the latest users in the directory
+          // 3. Synchronize users
+          // 3.1. Find latest users in directory
           List<User> ldapUsers = searchUser(directoryDb, ldapTemplate);
           result.setTotalUserNum(ldapUsers.size());
-          // Find the latest users in the DB
+          // Find latest users in database
           List<User> usersDb = userManager.findByTenantId(tenantDb.getId());
           if (isNotEmpty(usersDb)) {
             Map<Long, AuthUser> authUserMap = authUserRepo.findAllByTenantId(
@@ -374,8 +446,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
               .filter(x -> isNotEmpty(x.getMobile()))
               .collect(Collectors.toMap(User::getMobile, x -> x));
 
-          // 3.2. Calculate user sync results
-          // 1).New users in the directory
+          // 3.2. Calculate user synchronization results
+          // 1). New users in directory
           List<User> addUsers = findNewUsersInDirectory(ldapUsers, usernameUserDbMap,
               emailUserDbMap, mobileUserDbMap);
           if (isNotEmpty(addUsers)) {
@@ -386,7 +458,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
               result.setAddUserNum(result.getAddUserNum() + 1);
             }
           }
-          // 2).Update users in the directory
+          // 2). Update users in directory
           List<User> updateUsers = findUpdateUsersInDirectory(ldapUsers, usernameUserDbMap,
               directoryDb, tenantDb);
           if (isNotEmpty(updateUsers)) {
@@ -397,7 +469,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
               result.setUpdateUserNum(result.getUpdateUserNum() + 1);
             }
           }
-          // 3).Delete users in the directory
+          // 3). Delete users in directory
           List<User> deleteUsers = findDeleteUsersInDirectory(ldapUsers, usernameUserDbMap,
               directoryDb);
           Set<Long> deleteUserIds = deleteUsers.stream().map(User::getId)
@@ -410,13 +482,13 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
             }
             result.setDeleteUserNum(deleteUsers.size());
           }
-          // 4).Ignore users number in the directory
+          // 4). Ignore users number in directory
           result.setIgnoreUserNum(ldapUsers.size() - addUsers.size() - updateUsers.size());
           result.setUserSuccess(true);
 
-          // 4. Sync membership when the user and group are sync successfully
+          // 4. Synchronize membership when user and group synchronization is successful
           if (result.getUserSuccess() && result.getGroupSuccess()) {
-            // 4.1. Find the latest membership in the directory
+            // 4.1. Find latest membership in directory
             List<Group> directoryGroupsDb = groupManager.find(tenantDb.getId(),
                 directoryDb.getId());
             if (isNotEmpty(directoryGroupsDb)) {
@@ -445,7 +517,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
               result.setDeleteMembershipNum(deletedMembership.size());
             }
 
-            // 4.2. Calculate membership sync results
+            // 4.2. Calculate membership synchronization results
             result.setMembershipSuccess(true);
           }
 
@@ -453,7 +525,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
           log.info("Synchronize user directory result: {}", result);
           log.info("Synchronize user directory successfully");
 
-          // Save operation log
+          // Log operation for audit
           operationLogCmd.add(USER_DIRECTORY, directoryDb, SYNC);
           return result;
         } catch (Exception e) {
@@ -471,6 +543,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Synchronizes all enabled directories.
+   * </p>
+   * <p>
+   * Processes all enabled directories and returns synchronization results for each.
+   * </p>
+   */
   // @Transactional(rollbackFor = Exception.class)
   @Override
   public Map<String, DirectorySyncResult> sync() {
@@ -491,6 +571,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Tests directory configuration without permanent changes.
+   * </p>
+   * <p>
+   * Creates temporary directory, performs test synchronization, and cleans up.
+   * </p>
+   */
   // @Transactional(rollbackFor = Exception.class)
   @Override
   public DirectorySyncResult test(UserDirectory directory) {
@@ -505,6 +593,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes user directory and associated data.
+   * </p>
+   * <p>
+   * Removes directory configuration and optionally deletes or empties associated users and groups.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(Long id, boolean deleteSync) {
@@ -529,6 +625,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Searches groups in LDAP directory.
+   * </p>
+   * <p>
+   * Retrieves groups from LDAP using configured schema and filter settings.
+   * </p>
+   */
   private List<Group> searchGroup(UserDirectory ldap, LdapTemplate template) {
     AndFilter andFilter = new AndFilter();
     if (isNotBlank(ldap.getGroupSchemaData().getObjectFilter())) {
@@ -547,6 +651,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return groups;
   }
 
+  /**
+   * <p>
+   * Searches users in LDAP directory.
+   * </p>
+   * <p>
+   * Retrieves users from LDAP using configured schema and filter settings.
+   * </p>
+   */
   private List<User> searchUser(UserDirectory ldap, LdapTemplate template) {
     AndFilter andFilter = new AndFilter();
     if (isNotBlank(ldap.getUserSchemaData().getObjectFilter())) {
@@ -568,7 +680,12 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
   }
 
   /**
-   * Search membership groups according to user
+   * <p>
+   * Searches membership groups according to user.
+   * </p>
+   * <p>
+   * Retrieves group memberships for a specific user from LDAP directory.
+   * </p>
    */
   private List<GroupUser> searchMemberGroup(UserDirectory directory, LdapTemplate template,
       Group group) {
@@ -597,6 +714,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return memberships;
   }
 
+  /**
+   * <p>
+   * Assembles group-user associations from LDAP data.
+   * </p>
+   * <p>
+   * Builds group-user relationships based on LDAP membership data and existing database users.
+   * </p>
+   */
   private List<GroupUser> assembleGroupUserAssociation(LdapTemplate ldapTemplate, Tenant tenantDb,
       UserDirectory directoryDb, List<Group> directoryGroupsDb, List<Group> groupsLdap) {
     List<GroupUser> groupUsers = new ArrayList<>();
@@ -630,14 +755,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }
 
     if (isNotEmpty(groupUsers)) {
-      // Latest user data in DB
+      // Latest user data in database
       Map<String, User> usernameUserMap = userManager.findByTenantIdAndDirectoryId(
               tenantDb.getId(), directoryDb.getId()).stream()
           .collect(Collectors.toMap(User::getUsername, x -> x));
       if (isNotEmpty(usernameUserMap)) {
         for (GroupUser groupUser : groupUsers) {
           User user = usernameUserMap.get(groupUser.getUsername());
-          // Fix:: The group relationship in OpenLDAP is not automatically deleted after the user is deleted
+          // Fix: The group relationship in OpenLDAP is not automatically deleted after the user is deleted
           // The relationship existed but the user or group has been deleted
           if (nonNull(user)) {
             groupUser.setTenantId(tenantDb.getId());
@@ -653,10 +778,18 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         && nonNull(x.getGroupId())).collect(Collectors.toList());
   }
 
+  /**
+   * <p>
+   * Finds new groups in directory that don't exist in database.
+   * </p>
+   * <p>
+   * Identifies groups that exist in LDAP but not in the local database.
+   * </p>
+   */
   private List<Group> findNewGroupsInDirectory(List<Group> groupsLdap,
       Map<String, List<Group>> nameGroupDbMap, Map<String, Group> codeGroupDbMap,
       UserDirectory directoryDb) {
-    if (isEmpty(codeGroupDbMap) /* Empty in DB */ || isEmpty(groupsLdap)) {
+    if (isEmpty(codeGroupDbMap) /* Empty in database */ || isEmpty(groupsLdap)) {
       return groupsLdap;
     }
 
@@ -677,10 +810,18 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return newGroups;
   }
 
+  /**
+   * <p>
+   * Finds groups in directory that need updates in database.
+   * </p>
+   * <p>
+   * Identifies groups that exist in both LDAP and database but have different attributes.
+   * </p>
+   */
   private List<Group> findUpdateGroupsInDirectory(List<Group> groupsLdap,
       Map<String, List<Group>> nameGroupDbMap, Map<String, Group> codeGroupDbMap,
       UserDirectory directoryDb) {
-    if (isEmpty(codeGroupDbMap) /* Empty in DB */ || isEmpty(groupsLdap)) {
+    if (isEmpty(codeGroupDbMap) /* Empty in database */ || isEmpty(groupsLdap)) {
       return Collections.emptyList();
     }
     List<Group> updateGroupsDb = new ArrayList<>();
@@ -710,9 +851,17 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return updateGroupsDb;
   }
 
+  /**
+   * <p>
+   * Finds groups in database that should be deleted based on directory data.
+   * </p>
+   * <p>
+   * Identifies groups that exist in database but not in LDAP directory.
+   * </p>
+   */
   private List<Group> findDeleteGroupsInDirectory(List<Group> groupsLdap,
       Map<String, Group> codeGroupDbMap, UserDirectory directoryDb) {
-    // Filter existed group in DB by directoryId
+    // Filter existed group in database by directoryId
     // Deleting other directory data is not allowed
     List<Group> existGroupsInDb = codeGroupDbMap.values().stream()
         .filter(x -> directoryDb.getId().equals(x.getDirectoryId())).collect(Collectors.toList());
@@ -731,10 +880,18 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return deleteGroups;
   }
 
+  /**
+   * <p>
+   * Finds new users in directory that don't exist in database.
+   * </p>
+   * <p>
+   * Identifies users that exist in LDAP but not in the local database.
+   * </p>
+   */
   private List<User> findNewUsersInDirectory(List<User> usersLdap,
       Map<String, User> usernameUserDbMap, Map<String, User> emailUserDbMap,
       Map<String, User> mobileUserDbMap) {
-    if (isEmpty(usernameUserDbMap) /* Empty in DB */ || isEmpty(usersLdap)) {
+    if (isEmpty(usernameUserDbMap) /* Empty in database */ || isEmpty(usersLdap)) {
       return usersLdap;
     }
     List<User> newUsers = new ArrayList<>();
@@ -754,9 +911,17 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return newUsers;
   }
 
+  /**
+   * <p>
+   * Finds users in directory that need updates in database.
+   * </p>
+   * <p>
+   * Identifies users that exist in both LDAP and database but have different attributes.
+   * </p>
+   */
   private List<User> findUpdateUsersInDirectory(List<User> usersLdap,
       Map<String, User> usernameUserDbMap, UserDirectory directoryDb, Tenant tenantDb) {
-    if (isEmpty(usernameUserDbMap) /* Empty in DB */ || isEmpty(usersLdap)) {
+    if (isEmpty(usernameUserDbMap) /* Empty in database */ || isEmpty(usersLdap)) {
       return Collections.emptyList();
     }
     List<User> updateUsersDb = new ArrayList<>();
@@ -765,7 +930,7 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
       User userDb = usernameUserDbMap.get(userLdap.getUsername());
       // Updating other directory data is not allowed, must be same directory and entry
       if (nonNull(userDb) && directoryDb.getId().equals(userDb.getDirectoryId())) {
-        // Important:: When the user source is LDAP_SYNCHRONIZE, the following fields on the page are not allowed to be updated, otherwise, the modification will be overwritten by LDAP synchronization
+        // Important: When the user source is LDAP_SYNCHRONIZE, the following fields on the page are not allowed to be updated, otherwise, the modification will be overwritten by LDAP synchronization
         // firstNameAttribute/lastNameAttribute/displayNameAttribute/emailAttribute/mobileAttribute/passdAttribute/passdEncoderType
         if (userLdap.notSameInDirectory(tenantDb, userDb, syncMobile)) {
           userDb.setFirstName(userLdap.getFirstName())
@@ -785,9 +950,17 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return updateUsersDb;
   }
 
+  /**
+   * <p>
+   * Finds users in database that should be deleted based on directory data.
+   * </p>
+   * <p>
+   * Identifies users that exist in database but not in LDAP directory.
+   * </p>
+   */
   private List<User> findDeleteUsersInDirectory(List<User> usersLdap,
       Map<String, User> usernameUserDbMap, UserDirectory directoryDb) {
-    // Filter existed group in DB by directoryId
+    // Filter existed group in database by directoryId
     // Deleting other directory data is not allowed
     List<User> existUsersInDb = usernameUserDbMap.values().stream()
         .filter(x -> directoryDb.getId().equals(x.getDirectoryId())).collect(Collectors.toList());
@@ -807,7 +980,12 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
   }
 
   /**
-   * Verify Host and auth information
+   * <p>
+   * Verifies host and authentication information.
+   * </p>
+   * <p>
+   * Tests LDAP connection and updates result with connection status.
+   * </p>
    */
   private void tryConnectLdapServer(DirectorySyncResult result, UserDirectory directoryDb,
       boolean onlyTest) {
@@ -827,6 +1005,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }
   }
 
+  /**
+   * <p>
+   * Opens LDAP connection with server configuration.
+   * </p>
+   * <p>
+   * Creates LDAP connection using server host, port, username, and password.
+   * </p>
+   */
   private LDAPConnection openConnection(DirectoryServer server, boolean onlyTest)
       throws LDAPException {
     return new LDAPConnection(server.getHost(), server.getPort(), server.getUsername(),
@@ -834,7 +1020,16 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
   }
 
   /**
-   * ldaps <a href="https://blog.csdn.net/wokoone/article/details/127843172">reference</a>
+   * <p>
+   * Creates LDAP template for directory operations.
+   * </p>
+   * <p>
+   * Configures LDAP context source with directory settings and creates template.
+   * Supports both LDAP and LDAPS protocols.
+   * </p>
+   * <p>
+   * LDAPS reference: <a href="https://blog.csdn.net/wokoone/article/details/127843172">reference</a>
+   * </p>
    */
   public LdapTemplate getLdapTemplate(UserDirectory directory, boolean onlyTest) {
     LdapContextSource contextSource = new LdapContextSource();
@@ -849,6 +1044,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return new LdapTemplate(contextSource);
   }
 
+  /**
+   * <p>
+   * Calculates default sequence for directory.
+   * </p>
+   * <p>
+   * Sets sequence number based on existing directory sequences.
+   * </p>
+   */
   private void calcDefaultSequence(UserDirectory directory) {
     Integer maxSequence = userDirectoryRepo.findMaxSequence();
     if (Objects.isNull(maxSequence)) {
@@ -858,6 +1061,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     }
   }
 
+  /**
+   * <p>
+   * Encrypts server password for storage.
+   * </p>
+   * <p>
+   * Uses AES encryption with predefined key for secure password storage.
+   * </p>
+   */
   private String encryptServerPassword(String content) {
     Pair<String, String> passwordAndContent = Pair.of(new Str0(
         new long[]{0xE3F8C962FD1EBC09L, 0x2B9622D1AFD4BAFBL, 0x5995E6A31CA7BCA2L,
@@ -866,6 +1077,14 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
     return AESUtils.encrypt(passwordAndContent);
   }
 
+  /**
+   * <p>
+   * Decrypts server password for use.
+   * </p>
+   * <p>
+   * Uses AES decryption with predefined key to retrieve original password.
+   * </p>
+   */
   private String decryptServerPassword(String encrypted) {
     Pair<String, String> passwordAndEncrypted = Pair.of(new Str0(
         new long[]{0xE06AD76F1A38E7F2L, 0xAD2E9D08B20EBBB5L, 0x818203C030C715F3L,

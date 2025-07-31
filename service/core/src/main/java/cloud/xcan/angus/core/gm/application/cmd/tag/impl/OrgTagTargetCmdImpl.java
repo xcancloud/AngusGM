@@ -44,35 +44,49 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of organization tag target command operations.
+ * </p>
+ * <p>
+ * Manages tag-target associations for users, departments, and groups.
+ * Provides comprehensive tag assignment, replacement, and deletion functionality.
+ * </p>
+ * <p>
+ * Supports quota validation, deduplication, and audit logging for all tag operations.
+ * Handles both individual and batch tag-target operations.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements OrgTagTargetCmd {
 
   @Resource
   private OrgTagTargetRepo orgTagTargetRepo;
-
   @Resource
   private OrgTagQuery orgTagQuery;
-
   @Resource
   private OrgTagTargetQuery orgTagTargetQuery;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private DeptQuery deptQuery;
-
   @Resource
   private GroupQuery groupQuery;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Adds tag targets to a specific tag.
+   * </p>
+   * <p>
+   * Validates tag existence and target deduplication for users, departments, and groups.
+   * Checks quota limits and logs operations for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> tagTargetAdd(Long tagId, List<OrgTagTarget> tagTargets) {
@@ -85,14 +99,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
 
       @Override
       protected void checkParams() {
-        // Check the tag existed
+        // Verify tag exists
         tagDb = orgTagQuery.checkAndFind(tagId);
-        // Check the tag targets existed
+        // Verify tag targets and perform deduplication
         newTagTargets = new HashSet<>(tagTargets);
         userDb = orgTagTargetQuery.checkUserAndDeduplication(newTagTargets, tagTargets, tagId);
         deptDb = orgTagTargetQuery.checkDeptAndDeduplication(newTagTargets, tagTargets, tagId);
         groupDb = orgTagTargetQuery.checkGroupAndDeduplication(newTagTargets, tagTargets, tagId);
-        // Check the target tags quota
+        // Verify target tags quota
         orgTagTargetQuery.checkTargetAppendTagQuota(getOptTenantId(), tagTargets);
       }
 
@@ -100,6 +114,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       protected List<IdKey<Long, Object>> process() {
         if (isNotEmpty(newTagTargets)) {
           List<IdKey<Long, Object>> idKeys = batchInsert(newTagTargets);
+          // Log operations for audit
           operationLogCmd.addAll(USER, userDb, TARGET_TAG_UPDATED, tagDb.getName());
           operationLogCmd.addAll(DEPT, deptDb, TARGET_TAG_UPDATED, tagDb.getName());
           operationLogCmd.addAll(GROUP, groupDb, TARGET_TAG_UPDATED, tagDb.getName());
@@ -110,6 +125,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes tag targets from a specific tag.
+   * </p>
+   * <p>
+   * Removes tag-target associations and logs operations for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void tagTargetDelete(Long tagId, HashSet<Long> targetIds) {
@@ -118,7 +141,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
 
       @Override
       protected void checkParams() {
-        // Check the tag existed
+        // Verify tag exists
         tagDb = orgTagQuery.checkAndFind(tagId);
       }
 
@@ -126,6 +149,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       protected Void process() {
         orgTagTargetRepo.deleteByTagIdAndTargetIdIn(tagId, targetIds);
 
+        // Log operations for audit
         List<User> userDb = userQuery.findByIdIn(targetIds);
         operationLogCmd.addAll(USER, userDb, TARGET_TAG_DELETED, tagDb.getName());
         List<Dept> deptDb = deptQuery.findByIdIn(targetIds);
@@ -137,6 +161,15 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Adds tags to a specific user.
+   * </p>
+   * <p>
+   * Validates user and tag existence, performs deduplication, and checks quota limits.
+   * Logs operations for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> userTagAdd(Long userId, LinkedHashSet<Long> tagIds) {
@@ -152,6 +185,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
 
       @Override
       protected List<IdKey<Long, Object>> process() {
+        // Check existing tag associations and remove duplicates
         Set<OrgTagTarget> tagTargetDb = orgTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, OrgTargetType.USER, userId);
         if (isNotEmpty(tagTargetDb)) {
@@ -159,6 +193,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         }
 
         if (isNotEmpty(tagIds)) {
+          // Verify quota for new tag associations
           orgTagTargetQuery.checkTargetAppendTagQuota(getOptTenantId(), tagIds.size(), userId);
 
           batchInsert(tagIds.stream()
@@ -166,6 +201,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
                   .setTargetType(OrgTargetType.USER).setTargetId(userId))
               .collect(Collectors.toList()));
 
+          // Log operation for audit
           operationLogCmd.add(USER, userDb, TARGET_TAG_UPDATED,
               tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         }
@@ -174,6 +210,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces all tags for a specific user.
+   * </p>
+   * <p>
+   * Clears existing tag associations and assigns new tags with quota validation.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void userTagReplace(Long userId, LinkedHashSet<Long> tagIds) {
@@ -184,6 +228,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       protected void checkParams() {
         userDb = userQuery.checkAndFind(userId);
         if (isNotEmpty(tagIds)) {
+          // Verify quota for tag replacement
           settingTenantQuotaManager.checkTenantQuota(QuotaResource.OrgTargetTag,
               singleton(userId), (long) tagIds.size());
         }
@@ -191,9 +236,9 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
 
       @Override
       protected Void process() {
-        // Clear empty
+        // Clear existing tag associations
         deleteAllByTarget(OrgTargetType.USER, singleton(userId));
-        // Save new association
+        // Save new tag associations
         if (isNotEmpty(tagIds)) {
           add(tagIds.stream().map(tagId -> UserTagConverter.toUserTagTarget(tagId, userDb))
               .collect(Collectors.toList()));
@@ -203,6 +248,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes specific tags from a user.
+   * </p>
+   * <p>
+   * Removes tag associations and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void userTagDelete(Long userId, HashSet<Long> tagIds) {
@@ -220,6 +273,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       protected Void process() {
         orgTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, userId);
 
+        // Log operation for audit
         operationLogCmd.add(APP, userDb, TARGET_TAG_DELETED,
             tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         return null;
@@ -227,6 +281,15 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Adds tags to a specific department.
+   * </p>
+   * <p>
+   * Validates department and tag existence, performs deduplication, and checks quota limits.
+   * Logs operations for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> deptTagAdd(Long deptId, LinkedHashSet<Long> tagIds) {
@@ -242,6 +305,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
 
       @Override
       protected List<IdKey<Long, Object>> process() {
+        // Check existing tag associations and remove duplicates
         Set<OrgTagTarget> tagTargetDb = orgTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, OrgTargetType.DEPT, deptId);
         if (isNotEmpty(tagTargetDb)) {
@@ -249,6 +313,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         }
 
         if (isNotEmpty(tagIds)) {
+          // Verify quota for new tag associations
           orgTagTargetQuery.checkTargetAppendTagQuota(getOptTenantId(), tagIds.size(), deptId);
 
           batchInsert(tagIds.stream()
@@ -256,6 +321,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
                   .setTargetId(deptId))
               .collect(Collectors.toList()));
 
+          // Log operation for audit
           operationLogCmd.add(DEPT, deptDb, TARGET_TAG_UPDATED,
               tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         }
@@ -264,6 +330,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces all tags for a specific department.
+   * </p>
+   * <p>
+   * Clears existing tag associations and assigns new tags with quota validation.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deptTagReplace(Long deptId, LinkedHashSet<Long> tagIds) {
@@ -273,15 +347,16 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       @Override
       protected void checkParams() {
         deptDb = deptQuery.checkAndFind(deptId);
+        // Verify quota for tag replacement
         settingTenantQuotaManager.checkTenantQuota(QuotaResource.OrgTargetTag,
             singleton(deptId), (long) tagIds.size());
       }
 
       @Override
       protected Void process() {
-        // Clear empty
+        // Clear existing tag associations
         deleteAllByTarget(OrgTargetType.DEPT, singleton(deptId));
-        // Save new association
+        // Save new tag associations
         if (isNotEmpty(tagIds)) {
           add(tagIds.stream().map(tagId -> toDeptTagTarget(tagId, deptDb))
               .collect(Collectors.toList()));
@@ -291,6 +366,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes specific tags from a department.
+   * </p>
+   * <p>
+   * Removes tag associations and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deptTagDelete(Long deptId, HashSet<Long> tagIds) {
@@ -308,6 +391,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       protected Void process() {
         orgTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, deptId);
 
+        // Log operation for audit
         operationLogCmd.add(DEPT, deptDb, TARGET_TAG_DELETED,
             tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         return null;
@@ -315,6 +399,15 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Adds tags to a specific group.
+   * </p>
+   * <p>
+   * Validates group and tag existence, performs deduplication, and checks quota limits.
+   * Logs operations for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> groupTagAdd(Long groupId, LinkedHashSet<Long> tagIds) {
@@ -330,6 +423,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
 
       @Override
       protected List<IdKey<Long, Object>> process() {
+        // Check existing tag associations and remove duplicates
         Set<OrgTagTarget> tagTargetDb = orgTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, OrgTargetType.GROUP, groupId);
         if (isNotEmpty(tagTargetDb)) {
@@ -337,6 +431,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         }
 
         if (isNotEmpty(tagIds)) {
+          // Verify quota for new tag associations
           orgTagTargetQuery.checkTargetAppendTagQuota(getOptTenantId(), tagIds.size(), groupId);
 
           batchInsert(tagIds.stream()
@@ -344,6 +439,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
                   .setTargetType(OrgTargetType.GROUP).setTargetId(groupId))
               .collect(Collectors.toList()));
 
+          // Log operation for audit
           operationLogCmd.add(GROUP, groupDb, TARGET_TAG_UPDATED,
               tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         }
@@ -352,6 +448,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces all tags for a specific group.
+   * </p>
+   * <p>
+   * Clears existing tag associations and assigns new tags with quota validation.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void groupTagReplace(Long groupId, LinkedHashSet<Long> tagIds) {
@@ -361,15 +465,16 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       @Override
       protected void checkParams() {
         groupDb = groupQuery.checkValidAndFind(groupId);
+        // Verify quota for tag replacement
         settingTenantQuotaManager.checkTenantQuota(QuotaResource.OrgTargetTag,
             singleton(groupId), (long) tagIds.size());
       }
 
       @Override
       protected Void process() {
-        // Clear empty
+        // Clear existing tag associations
         deleteAllByTarget(OrgTargetType.GROUP, singleton(groupId));
-        // Save new association
+        // Save new tag associations
         if (isNotEmpty(tagIds)) {
           add(tagIds.stream().map(tagId -> toGroupTagTarget(tagId, groupDb))
               .collect(Collectors.toList()));
@@ -379,6 +484,14 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes specific tags from a group.
+   * </p>
+   * <p>
+   * Removes tag associations and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void groupTagDelete(Long groupId, HashSet<Long> tagIds) {
@@ -396,6 +509,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
       protected Void process() {
         orgTagTargetRepo.deleteByTagIdInAndTargetId(tagIds, groupId);
 
+        // Log operation for audit
         operationLogCmd.add(GROUP, groupDb, TARGET_TAG_DELETED,
             tagsDb.stream().map(OrgTag::getName).collect(Collectors.joining(",")));
         return null;
@@ -403,21 +517,45 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
     }.execute();
   }
 
+  /**
+   * <p>
+   * Adds tag targets with validation.
+   * </p>
+   * <p>
+   * Validates tag existence and quota limits before adding tag targets.
+   * </p>
+   */
   @Override
   public void add(List<OrgTagTarget> tagTargets) {
-    // Check the tags existed
+    // Verify tags exist
     orgTagQuery.checkAndFind(tagTargets.stream().map(OrgTagTarget::getTagId)
         .collect(Collectors.toList()));
-    // Check the target tags quota
+    // Verify target tags quota
     orgTagTargetQuery.checkTargetTagQuota(getOptTenantId(), tagTargets);
     batchInsert0(tagTargets);
   }
 
+  /**
+   * <p>
+   * Deletes all tag targets for specific target types and IDs.
+   * </p>
+   * <p>
+   * Removes all tag associations for the specified target types and IDs.
+   * </p>
+   */
   @Override
   public void deleteAllByTarget(OrgTargetType targetType, Collection<Long> targetIds) {
     orgTagTargetRepo.deleteByTargetTypeAndTargetIdIn(targetType, targetIds);
   }
 
+  /**
+   * <p>
+   * Deletes all tag targets for specific tenant IDs.
+   * </p>
+   * <p>
+   * Removes all tag associations for the specified tenant IDs.
+   * </p>
+   */
   @Override
   public void deleteAllByTenantId(Set<Long> tenantIds) {
     orgTagTargetRepo.deleteAllByTenantId(tenantIds);

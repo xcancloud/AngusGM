@@ -23,28 +23,44 @@ import jakarta.annotation.Resource;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of current user command operations.
+ * </p>
+ * <p>
+ * Manages current user profile updates including basic information, mobile number,
+ * and email address changes with verification.
+ * </p>
+ * <p>
+ * Supports secure profile updates with SMS and email verification for sensitive
+ * information changes.
+ * </p>
+ */
 @Biz
 public class UserCurrentCmdImpl implements UserCurrentCmd {
 
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private AuthUserQuery authUserQuery;
-
   @Resource
   private AuthUserCmd authUserCmd;
-
   @Resource
   private SmsCmd smsCmd;
-
   @Resource
   private EmailCmd emailCmd;
 
+  /**
+   * <p>
+   * Updates current user profile information.
+   * </p>
+   * <p>
+   * Validates user existence and username uniqueness, updates user information,
+   * and refreshes OAuth2 user data.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateCurrent(User user) {
@@ -53,9 +69,9 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
 
       @Override
       protected void checkParams() {
-        // Check the user exists
+        // Verify user exists
         userDb = userQuery.checkAndFind(getUserId());
-        // Check the username is not duplicate
+        // Verify username uniqueness
         if (isNotEmpty(user.getUsername()) && !user.getUsername().equals(userDb.getUsername())) {
           userQuery.checkUsernameUpdate(user.getUsername(), userDb.getId());
         }
@@ -71,6 +87,15 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates current user mobile number with verification.
+   * </p>
+   * <p>
+   * Validates mobile format, SMS link secret, verification code, and mobile uniqueness.
+   * Updates user mobile information and refreshes OAuth2 user data.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void mobileUpdate(String mobile, String country, String itc, String verificationCode,
@@ -81,13 +106,13 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
 
       @Override
       protected void checkParams() {
-        // Check the mobile format
+        // Verify mobile format
         ValidatorUtils.isMobile(mobile, country);
-        // Check the sms link secret
+        // Verify SMS link secret
         authUserQuery.checkSmsLinkSecret(userId, linkSecret, bizKey);
-        // Check the verification code
+        // Verify verification code
         smsCmd.checkVerificationCode(bizKey, mobile, verificationCode);
-        //Check the same mobile exists under the tenant
+        // Verify mobile uniqueness within tenant
         List<User> users = userRepo.findByMobile(mobile);
         assertResourceExisted(isEmpty(users)
             || users.get(0).getId().equals(userId), mobile, "User");
@@ -105,6 +130,15 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates current user email address with verification.
+   * </p>
+   * <p>
+   * Validates email link secret, verification code, and email uniqueness.
+   * Updates user email information and refreshes OAuth2 user data.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateEmail(String email, String verificationCode, String linkSecret,
@@ -115,11 +149,11 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
 
       @Override
       protected void checkParams() {
-        // Check the sms link secret
+        // Verify email link secret
         authUserQuery.checkLinkSecret(userId, linkSecret, bizKey);
-        // Check the verification code
+        // Verify verification code
         emailCmd.checkVerificationCode(bizKey, email, verificationCode);
-        //Check the same mobile exists under the tenant
+        // Verify email uniqueness within tenant
         List<User> users = userRepo.findByEmail(email);
         assertResourceExisted(isEmpty(users)
             || users.get(0).getId().equals(userId), email, "User");

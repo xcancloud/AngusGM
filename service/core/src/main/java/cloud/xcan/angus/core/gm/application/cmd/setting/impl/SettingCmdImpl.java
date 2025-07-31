@@ -29,17 +29,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of system setting command operations.
+ * </p>
+ * <p>
+ * Manages global system settings including social configurations, AI agent settings,
+ * log configurations, and resource quotas.
+ * </p>
+ * <p>
+ * Provides centralized setting management with proper permission validation
+ * and cache eviction for real-time updates.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class SettingCmdImpl extends CommCmd<Setting, Long> implements SettingCmd {
 
   @Resource
   private SettingRepo settingRepo;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Updates system settings with validation and cache management.
+   * </p>
+   * <p>
+   * Validates permissions for setting modifications and updates the database.
+   * Automatically evicts related cache entries to ensure real-time updates.
+   * </p>
+   * <p>
+   * Supports various setting types including social, AI agent, logging,
+   * and resource quota configurations.
+   * </p>
+   */
   @CacheEvict(key = "'key_' + #key", value = "setting")
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -48,6 +72,7 @@ public class SettingCmdImpl extends CommCmd<Setting, Long> implements SettingCmd
 
       @Override
       protected void checkParams() {
+        // Verify permissions for setting modifications
         assertTrue(isPrivateEdition() || (isCloudServiceEdition() && isOpClient()),
             "Only allow privatization or cloud service edition modification on the operation client");
       }
@@ -56,44 +81,53 @@ public class SettingCmdImpl extends CommCmd<Setting, Long> implements SettingCmd
       protected Void process() {
         switch (setting.getKey()) {
           case SOCIAL:
+            // Update social configuration settings
             settingRepo.updateValueByKey(SOCIAL.getValue(), toJson(setting.getSocial()));
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.SOCIAL));
             return null;
           case AI_AGENT:
+            // Update AI agent configuration settings
             settingRepo.updateValueByKey(AI_AGENT.getValue(), toJson(setting.getAiAgent()));
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.AI_AGENT));
             return null;
           case OPERATION_LOG_CONFIG:
+            // Update operation log configuration settings
             settingRepo.updateValueByKey(OPERATION_LOG_CONFIG.getValue(),
                 toJson(setting.getOperationLog()));
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.OPERATION_LOG));
             return null;
           case API_LOG_CONFIG:
+            // Update API log configuration settings
             settingRepo.updateValueByKey(API_LOG_CONFIG.getValue(), toJson(setting.getApiLog()));
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.API_LOG));
             return null;
           case SYSTEM_LOG_CONFIG:
+            // Update system log configuration settings
             settingRepo.updateValueByKey(SYSTEM_LOG_CONFIG.getValue(),
                 toJson(setting.getSystemLog()));
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.SYSTEM_LOG));
             return null;
           case MAX_RESOURCE_ACTIVITIES:
+            // Update maximum resource activities setting
             settingRepo.updateValueByKey(MAX_RESOURCE_ACTIVITIES.getValue(),
                 setting.getMaxResourceActivities().toString());
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.MAX_RESOURCE_ACTIVITIES));
+            return null;
           case MAX_METRICS_DAYS:
+            // Update maximum metrics days setting
             settingRepo.updateValueByKey(MAX_METRICS_DAYS.getValue(),
                 setting.getMaxMetricsDays().toString());
             operationLogCmd.add(toModifiedOperation(setting.getKey().getValue(),
                 "setting", true, ModifiedResourceType.MAX_METRICS_DAYS));
+            return null;
           default: {
-            // NOOP
+            // NOOP for unsupported setting types
           }
           return null;
         }

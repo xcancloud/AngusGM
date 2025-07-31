@@ -33,37 +33,52 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>
+ * Implementation of service command operations.
+ * </p>
+ * <p>
+ * Manages service lifecycle including creation, updates, deletion, and synchronization
+ * with service discovery systems like Eureka.
+ * </p>
+ * <p>
+ * Provides comprehensive service management functionality with API association,
+ * status management, and discovery integration.
+ * </p>
+ */
 @Biz
 public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd {
 
   @Resource
   private ApiRepo apiRepo;
-
   @Resource
   private ApiQuery apiQuery;
-
   @Resource
   private ApiCmd apiCmd;
-
   @Resource
   private ServiceRepo serviceRepo;
-
   @Resource
   private ServiceQuery serviceQuery;
-
   @Resource
   private ApiAuthorityCmd authorityCmd;
-
   @Resource
   private DiscoveryClient discoveryClient;
 
+  /**
+   * <p>
+   * Creates a new service with validation.
+   * </p>
+   * <p>
+   * Validates service code uniqueness and creates the service in the database.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> add(Service service) {
     return new BizTemplate<IdKey<Long, Object>>() {
       @Override
       protected void checkParams() {
-        // Check the service code existed
+        // Verify service code uniqueness
         serviceQuery.checkAddServiceCode(service);
       }
 
@@ -74,6 +89,15 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates an existing service with validation.
+   * </p>
+   * <p>
+   * Validates service existence and code uniqueness, then updates the service
+   * and synchronizes related API information.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(Service service) {
@@ -82,9 +106,9 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
       @Override
       protected void checkParams() {
-        // Check the service existed
+        // Verify service exists
         serviceDb = serviceQuery.checkAndFind(service.getId());
-        // Check the service code existed
+        // Verify service code uniqueness
         serviceQuery.checkUpdateServiceCode(service);
       }
 
@@ -97,6 +121,15 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces a service with new or updated data.
+   * </p>
+   * <p>
+   * Creates new service if ID is null, otherwise updates existing service.
+   * Preserves immutable fields during updates.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> replace(Service service) {
@@ -106,9 +139,9 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
       @Override
       protected void checkParams() {
         if(nonNull(service.getId())){
-          // Check the updated services existed
+          // Verify service exists
           serviceDb = serviceQuery.checkAndFind(service.getId());
-          // Check update code is not repeated
+          // Verify service code uniqueness
           serviceQuery.checkUpdateServiceCode(service);
         }
       }
@@ -119,7 +152,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
           return add(service);
         }
 
-        // Do not replace source, enabled and tenant auditing
+        // Preserve immutable fields during update
         serviceRepo.save(copyPropertiesIgnoreTenantAuditing(service, serviceDb,
             "code", "source", "enabled"));
 
@@ -129,6 +162,15 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Enables or disables services and synchronizes related components.
+   * </p>
+   * <p>
+   * Updates service status and synchronizes API status and authority status
+   * to maintain consistency across the system.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void enabled(List<Service> services) {
@@ -137,7 +179,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
       @Override
       protected void checkParams() {
-        // Check the service existed
+        // Verify services exist
         serviceIds = services.stream().map(Service::getId).collect(Collectors.toSet());
         serviceQuery.checkAndFind(serviceIds, false);
       }
@@ -146,15 +188,25 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
       protected Void process() {
         batchUpdateOrNotFound(services);
 
+        // Synchronize API service status
         apiCmd.updateApiServiceStatus(services);
 
-        // Sync update authority status
+        // Synchronize authority service status
         authorityCmd.updateAuthorityServiceStatus(serviceIds, services);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes services and their associated data.
+   * </p>
+   * <p>
+   * Removes services and synchronously deletes associated APIs and authorities
+   * to maintain data consistency.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(HashSet<Long> ids) {
@@ -165,7 +217,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
         // Delete services
         serviceRepo.deleteByIdIn(ids);
 
-        // Synchronous deletion apis and authority
+        // Synchronously delete associated APIs and authorities
         for (Long id : ids) {
           List<Long> serviceApiIds = apiRepo.findIdByServiceId(id);
           if (isNotEmpty(serviceApiIds)) {
@@ -177,6 +229,14 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Adds APIs to services.
+   * </p>
+   * <p>
+   * Delegates to API command to add multiple APIs to services.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> apiAdd(List<Api> apis) {
@@ -189,12 +249,21 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes APIs from a specific service.
+   * </p>
+   * <p>
+   * Validates API ownership and removes specified APIs from the service.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void apiDelete(Long serviceId, HashSet<Long> apiIds) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
+        // Verify APIs belong to the service
         apiQuery.checkByServiceId(serviceId, apiIds);
       }
 
@@ -206,6 +275,15 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Synchronizes service APIs from service discovery.
+   * </p>
+   * <p>
+   * Retrieves service instances from discovery client and synchronizes
+   * their APIs with the database.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void syncServiceApi(String serviceCode) {
@@ -215,11 +293,11 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
       @Override
       protected void checkParams() {
-        // Check the service existed
+        // Verify service exists in database
         serviceDb = serviceRepo.findByCode(serviceCode)
             .orElseThrow(() -> ResourceNotFound.of(serviceCode, "Service"));
 
-        // Get registry service
+        // Get service instances from discovery
         serviceInstances = discoveryClient.getInstances(serviceCode.toLowerCase());
         assertResourceNotFound(serviceInstances, SERVICE_EUREKA_NOT_EXISTED_T,
             new Object[]{serviceCode});
@@ -233,6 +311,15 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Synchronizes all services with discovery center.
+   * </p>
+   * <p>
+   * Discovers all services from the discovery center and synchronizes
+   * their APIs with the database for services that exist in both systems.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void discoveryApiSync() {
@@ -240,28 +327,29 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
       @Override
       protected Void process() {
-        // Get all service codes(LowerCase) of the discovery center
+        // Get all service codes from discovery center
         List<String> discoveryServices = discoveryClient.getServices();
         if (isEmpty(discoveryServices)) {
-          // The discovery service is empty
+          // Discovery service is empty
           return null;
         }
 
         List<Service> serviceDbs = serviceRepo.findAll();
         if (isEmpty(serviceDbs)) {
-          // Not existed services in the database
+          // No services exist in database
           return null;
         }
 
+        // Find services that exist in both discovery and database
         List<String> serviceCodesInDb = serviceDbs.stream().map(Service::getCode)
             .map(String::toLowerCase).collect(Collectors.toList());
         discoveryServices.retainAll(serviceCodesInDb);
         if (isEmpty(discoveryServices)) {
-          // The service in the datasource is not registered with discovery
+          // Services in database are not registered with discovery
           return null;
         }
 
-        // Query the service instance in discovery
+        // Query service instances from discovery
         List<ServiceInstance> instances = new ArrayList<>();
         discoveryServices.forEach(code -> {
           List<ServiceInstance> serviceInstances = discoveryClient.getInstances(code);
@@ -275,8 +363,17 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates API service name and code when service information changes.
+   * </p>
+   * <p>
+   * Synchronizes service name and code changes to associated APIs
+   * to maintain consistency.
+   * </p>
+   */
   private void updateApiServiceNameAndCode(Service service, Service serviceDb) {
-    // Modify api when the name or code of service is changed
+    // Update APIs when service name or code changes
     if (service.getId() != null) {
       if (isNotEmpty(service.getCode()) && !service.getCode().equals(serviceDb.getCode())) {
         apiRepo.updateServiceCodeByServiceId(service.getId(), service.getCode());

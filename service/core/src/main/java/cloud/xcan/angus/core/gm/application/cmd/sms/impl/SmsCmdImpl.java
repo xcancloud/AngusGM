@@ -67,7 +67,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of SMS command operations.
+ * </p>
+ * <p>
+ * Manages SMS sending, verification code handling, and recipient management.
+ * Supports various recipient types including users, departments, groups, and policies.
+ * </p>
+ * <p>
+ * Provides immediate sending for verification codes and test messages,
+ * with job-based scheduling for bulk messages.
+ * </p>
+ */
 @Biz
 @Slf4j
 @DependsOn({"pluginManager"})
@@ -75,33 +87,35 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
 
   @Resource
   private SmsRepo smsRepo;
-
   @Resource
   private SmsQuery smsQuery;
-
   @Resource
   private SmsChannelQuery smsChannelQuery;
-
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private GroupUserRepo groupUserRepo;
-
   @Resource
   private DeptUserRepo deptUserRepo;
-
   @Resource
   private TORoleUserRepo toRoleUserRepo;
-
   @Resource
   private ObjectMapper objectMapper;
-
   @Resource
   private RedisService<String> stringRedisService;
 
   /**
-   * The verification code SMS and channel test SMS will be sent immediately.
+   * <p>
+   * Sends SMS messages with comprehensive validation and processing.
+   * </p>
+   * <p>
+   * Validates recipient information, channel availability, and template configuration.
+   * Supports both mobile-based and organization-based sending with pagination for large recipient lists.
+   * </p>
+   * <p>
+   * Verification code SMS and channel test SMS are sent immediately.
+   * Note: Future enhancement needed to support resending after failure.
+   * </p>
    */
   @DoInFuture("Support resending after failure")
   @Override
@@ -113,32 +127,32 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
 
       @Override
       protected void checkParams() {
-        // Check the sender:One of the verification parameters toAddress and objectIds is required
+        // Verify sender: One of verification parameters toAddress and objectIds is required
         assertTrue(sms.isSendByMobiles() || sms.isSendByOrgType(), SMS_RECEIVER_IS_MISSING);
 
-        // Check the mobiles is required when sending the verification code
+        // Verify mobiles are required when sending verification code
         assertTrue(!sms.getVerificationCode() || isNotEmpty(sms.getInputParamData().getMobiles()),
             VERIFY_CODE_MOBILES_IS_MISSING);
 
-        // Check the mobile format
+        // Verify mobile format
         smsQuery.checkMobileFormat(sms);
 
-        // Check the send verification code repeatedly
+        // Verify send verification code repeatedly
         if (sms.getVerificationCode()) {
           smsQuery.checkVerifyCodeSendRepeated(sms);
         }
 
-        // Check the enabled channel is existed
+        // Verify enabled channel exists
         if (testChannel) {
           enabledChannel = smsChannelQuery.detail(sms.getChannelId());
         } else {
           enabledChannel = smsQuery.checkChannelEnabledAndGet();
         }
 
-        // Check the sms template existed
+        // Verify SMS template exists
         smsTemplate = smsQuery.checkTemplateAndGet(sms, enabledChannel);
 
-        // Check and get the enabled channel plug-in SmsProvider
+        // Verify and get enabled channel plugin SmsProvider
         if (sms.isSendNow()) {
           smsProvider = smsQuery.checkAndGetSmsProvider(enabledChannel);
         }
@@ -153,7 +167,7 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
         if (sms.isSendByMobiles()) {
           send0(testChannel, sms, smsTemplate, enabledChannel, smsProvider);
         } else {
-          // When both type exist, sending by orgType will be ignored
+          // When both types exist, sending by orgType will be ignored
           int page = 0, size = 500;
           List<String> pageMobiles = getReceiveObjectMobiles(sms.getReceiveObjectType(),
               sms.getReceiveObjectIds(), sms.getReceivePolicyCodes(), page, size);
@@ -184,7 +198,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
   }
 
   /**
-   * The verification code SMS and channel test SMS will be sent immediately.
+   * <p>
+   * Sends SMS messages by job processing.
+   * </p>
+   * <p>
+   * Used for scheduled SMS sending with pre-validated channel and provider.
+   * Verification code SMS and channel test SMS are sent immediately.
+   * Note: Future enhancement needed to support resending after failure.
+   * </p>
    */
   @DoInFuture("Support resending after failure")
   @Override
@@ -199,6 +220,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Verifies SMS verification code.
+   * </p>
+   * <p>
+   * Validates verification code against cached value and removes cache after successful verification.
+   * </p>
+   */
   @Override
   public void checkVerificationCode(SmsBizKey bizKey, String mobile, String verificationCode) {
     new BizTemplate<Void>() {
@@ -214,6 +243,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes SMS records.
+   * </p>
+   * <p>
+   * Removes SMS records from the database.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(HashSet<Long> ids) {
@@ -226,12 +263,29 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates SMS records in batch.
+   * </p>
+   * <p>
+   * Updates multiple SMS records in a single operation.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update0(List<Sms> sms) {
     batchUpdate0(sms);
   }
 
+  /**
+   * <p>
+   * Sends SMS with comprehensive processing and error handling.
+   * </p>
+   * <p>
+   * Handles both immediate sending and job-based scheduling with proper error handling
+   * and verification code caching.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
   public void send0(boolean testChannel, Sms sms, SmsTemplate smsTemplate,
       SmsChannel enabledChannel, SmsProvider smsProvider) {
@@ -245,7 +299,7 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     // ** Send now **
     if (testChannel || sms.getVerificationCode() || sms.isSendNow()) {
       try {
-        // Send urgent sms directly
+        // Send urgent SMS directly
         SimpleResult simpleResult = sendSmsNow(sms, smsProvider, smsTemplate, enabledChannel);
         setSendSmsResultStatus(simpleResult, sms);
         smsRepo.save(sms);
@@ -279,22 +333,38 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     smsRepo.save(sms);
   }
 
+  /**
+   * <p>
+   * Sends SMS immediately using the SMS provider.
+   * </p>
+   * <p>
+   * Assembles third-party parameters and sends SMS through the provider.
+   * </p>
+   */
   @SneakyThrows
   private SimpleResult sendSmsNow(Sms sms, SmsProvider smsProvider, SmsTemplate smsTemplate,
       SmsChannel enabledChannel) {
-    // Assemble and use the plug-in to send SMS requests
+    // Assemble and use the plugin to send SMS requests
     cloud.xcan.angus.extension.sms.api.Sms pluginSms = assembleThirdParams(sms, smsTemplate);
     sms.setThirdInputParam(objectMapper.writeValueAsString(pluginSms));
     return smsProvider.sendSms(pluginSms, getMessageChannel(enabledChannel));
   }
 
   /**
+   * <p>
+   * Gets mobile numbers for different recipient object types.
+   * </p>
+   * <p>
+   * Supports various recipient types including tenant, user, department, group, policy, and all users.
+   * </p>
+   * <p>
    * @param receiveObjectType  {@link ReceiveObjectType}
    * @param receiveObjectIds   receive object ids
    * @param receivePolicyCodes receive policy codes
    * @param page               zero-based page index, must not be negative.
    * @param size               the size of the page to be returned, must be greater than 0.
    * @return mobiles
+   * </p>
    */
   public List<String> getReceiveObjectMobiles(ReceiveObjectType receiveObjectType,
       List<Long> receiveObjectIds, List<String> receivePolicyCodes, int page, int size) {
@@ -314,7 +384,7 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
         pageMobiles = groupUserRepo.findValidMobileByGroupIds(receiveObjectIds, page * size, size);
         break;
       case POLICY:
-        // TODO
+        // TODO: Implement policy-based mobile retrieval
         break;
       case TO_POLICY:
         pageMobiles = toRoleUserRepo
@@ -325,12 +395,20 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
             .findValidAllMobile(PageRequest.of(page, size, Sort.Direction.DESC, "id")).getContent();
         break;
       default:
-        // NOOP
+        // NOOP for unsupported recipient types
     }
     return Objects.nonNull(pageMobiles) ? pageMobiles.stream()
         .filter(ObjectUtils::isNotEmpty).collect(Collectors.toList()) : null;
   }
 
+  /**
+   * <p>
+   * Sets SMS sending result status.
+   * </p>
+   * <p>
+   * Updates SMS status based on sending result and handles user action vs job action differently.
+   * </p>
+   */
   @SneakyThrows
   private void setSendSmsResultStatus(SimpleResult simpleResult, Sms sms) {
     if (simpleResult.isSuccess()) {
@@ -351,6 +429,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     }
   }
 
+  /**
+   * <p>
+   * Caches verification code for validation.
+   * </p>
+   * <p>
+   * Stores verification code in Redis with expiration time and repeat check key.
+   * </p>
+   */
   private void cacheVerificationCode(Sms sms) {
     final InputParam inputParamData = sms.getInputParamData();
     for (String mobile : inputParamData.getMobiles()) {
@@ -365,11 +451,27 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     }
   }
 
+  /**
+   * <p>
+   * Deletes verification code cache after successful verification.
+   * </p>
+   * <p>
+   * Removes both verification code and repeat check cache entries.
+   * </p>
+   */
   private void deleteVerificationCodeCache(String cacheKey, SmsBizKey bizKey, String mobile) {
     stringRedisService.delete(cacheKey);
     stringRedisService.delete(getVerificationCodeRepeatCheckKey(bizKey, mobile));
   }
 
+  /**
+   * <p>
+   * Assembles SMS sending parameters.
+   * </p>
+   * <p>
+   * Prepares SMS parameters for test channels and verification codes.
+   * </p>
+   */
   private void assembleSmsSendParam(boolean testChannel, Sms sms, SmsTemplate smsTemplate,
       SmsChannel enabledSmsChannel) {
     if (testChannel) {
@@ -382,7 +484,12 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
   }
 
   /**
-   * Assemble and send SMS verification code parameters
+   * <p>
+   * Assembles and sends SMS verification code parameters.
+   * </p>
+   * <p>
+   * Generates verification code if not provided and sets expiration time.
+   * </p>
    */
   private void assembleVerificationCodeParams(Sms sms, SmsTemplate template) {
     InputParam inputParamData = sms.getInputParamData();
@@ -402,6 +509,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     }
   }
 
+  /**
+   * <p>
+   * Assembles test channel parameters.
+   * </p>
+   * <p>
+   * Sets channel type parameter for test messages.
+   * </p>
+   */
   private void assembleTestChannelParams(Sms sms, SmsChannel enabledChannel) {
     Map<String, String> templateParams = new HashMap<>();
     templateParams.put("channelType", enabledChannel.getName());
@@ -409,7 +524,12 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
   }
 
   /**
-   * Assemble third-party request parameters for sending SMS
+   * <p>
+   * Assembles third-party request parameters for sending SMS.
+   * </p>
+   * <p>
+   * Creates SMS object with mobile numbers, signature, template code, and parameters.
+   * </p>
    */
   private cloud.xcan.angus.extension.sms.api.Sms assembleThirdParams(Sms sms,
       SmsTemplate smsTemplate) {
@@ -420,6 +540,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
         .setTemplateParams(sms.getInputParamData().getTemplateParams());
   }
 
+  /**
+   * <p>
+   * Gets verification code expiration time in minutes.
+   * </p>
+   * <p>
+   * Uses provided expiration time or template default, converted to minutes.
+   * </p>
+   */
   private Integer getVerificationCodeExpireInMinute(InputParam inputParamData,
       SmsTemplate smsTemplate) {
     Integer expire = nonNull(inputParamData.getExpire()) && inputParamData.getExpire() > 0
@@ -427,6 +555,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
     return expire / 60;
   }
 
+  /**
+   * <p>
+   * Creates message channel from SMS channel configuration.
+   * </p>
+   * <p>
+   * Maps SMS channel settings to message channel object for provider communication.
+   * </p>
+   */
   private MessageChannel getMessageChannel(SmsChannel smsChannel) {
     return new MessageChannel().setName(smsChannel.getName())
         .setLogo(smsChannel.getLogo())
@@ -436,6 +572,14 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
         .setThirdChannelNo(smsChannel.getThirdChannelNo());
   }
 
+  /**
+   * <p>
+   * Translates sending exceptions to no-rollback exceptions.
+   * </p>
+   * <p>
+   * Converts sending failures to appropriate exception types that don't trigger transaction rollback.
+   * </p>
+   */
   private void translateSendNoRollbackException(Exception e) {
     if (e instanceof AbstractResultMessageException) {
       throw NoRollbackException.of(((AbstractResultMessageException) e).getCode(), e.getMessage());

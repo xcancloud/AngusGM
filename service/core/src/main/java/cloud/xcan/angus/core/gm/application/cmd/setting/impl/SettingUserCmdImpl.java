@@ -29,24 +29,42 @@ import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>
+ * Implementation of user setting command operations.
+ * </p>
+ * <p>
+ * Manages user-specific settings including preferences, API proxy configurations,
+ * and social binding information.
+ * </p>
+ * <p>
+ * Provides user setting initialization, updates, and synchronization with
+ * tenant-level configurations.
+ * </p>
+ */
 @Biz
 public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements SettingUserCmd {
 
   @Resource
   private SettingUserRepo settingUserRepo;
-
   @Resource
   private SettingUserQuery settingUserQuery;
-
   @Resource
   private SettingTenantQuery settingTenantQuery;
-
   @Resource
   private SettingTenantCmd settingTenantCmd;
-
   @Resource
   private SettingTenantQuotaCmd settingTenantQuotaCmd;
 
+  /**
+   * <p>
+   * Finds and initializes user settings.
+   * </p>
+   * <p>
+   * Retrieves existing user settings or creates new ones with default values.
+   * Loads timezone configuration and refreshes API proxy settings from tenant configuration.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public SettingUser findAndInit(Long userId) {
@@ -57,18 +75,19 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
         SettingUser userSetting = settingUserQuery.find0(userId);
         SettingTenant tenantSetting = settingTenantQuery.detail(getOptTenantId());
         if (nonNull(userSetting)) {
-          // Load TimeZone in configuration
+          // Load timezone from application configuration
           userSetting.getPreference().setDefaultTimeZone(getApplicationInfo().getTimezone());
-          // Load latest server proxy url without persistence
+          // Load latest server proxy URL without persistence
           UserApiProxy apiProxy = userSetting.getApiProxy().copy();
           apiProxy.getServerProxy().setUrl(nonNull(tenantSetting.getServerApiProxyData())
               ? tenantSetting.getServerApiProxyData().getUrl() : null);
           userSetting.setApiProxyRefresh(apiProxy);
           return userSetting;
         }
+        // Initialize new user settings
         userSetting = initUserSetting(getOptTenantId(), tenantSetting);
         userSetting.setId(userId);
-        // Load TimeZone in configuration
+        // Load timezone from application configuration
         userSetting.getPreference().setDefaultTimeZone(getApplicationInfo().getTimezone());
         settingUserRepo.save(userSetting);
         return userSetting;
@@ -76,6 +95,15 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
     }.execute();
   }
 
+  /**
+   * <p>
+   * Initializes tenant and user settings for new users.
+   * </p>
+   * <p>
+   * Creates tenant settings and user settings when they don't exist,
+   * ensuring proper initialization for new tenant users.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void tenantAndUserInit(Long tenantId, Boolean initTenant, Long userId) {
@@ -85,9 +113,11 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
       protected Void process() {
         if (!settingUserRepo.existsByTenantId(userId)) {
           if (initTenant) {
+            // Initialize tenant settings
             settingTenantCmd.init(tenantId);
             settingTenantQuotaCmd.init(tenantId);
           }
+          // Initialize user settings
           SettingTenant tenantSetting = settingTenantQuery.find(tenantId);
           insert0(initUserSetting(tenantId, tenantSetting));
         }
@@ -96,11 +126,19 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates user preference settings.
+   * </p>
+   * <p>
+   * Updates user preferences with new values while preserving existing
+   * settings that are not provided in the update.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void preferenceUpdate(Preference preference) {
     new BizTemplate<Void>() {
-
 
       @Override
       protected Void process() {
@@ -112,11 +150,18 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates user API proxy URL configuration.
+   * </p>
+   * <p>
+   * Updates the client proxy URL for the current user's API proxy settings.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void proxyUpdate(String url) {
     new BizTemplate<Void>() {
-
 
       @Override
       protected Void process() {
@@ -128,42 +173,54 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
     }.execute();
   }
 
+  /**
+   * <p>
+   * Enables specific API proxy type for user.
+   * </p>
+   * <p>
+   * Activates the specified proxy type while disabling all other proxy types
+   * to ensure only one proxy type is active at a time.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void proxyEnabled(ApiProxyType proxyType) {
     new BizTemplate<Void>() {
-
 
       @Override
       protected Void process() {
         SettingUser settingDb = settingUserQuery.find(getUserId());
         switch (proxyType) {
           case NO_PROXY:
+            // Enable no proxy, disable all others
             settingDb.getApiProxy().getNoProxy().setEnabled(true);
             settingDb.getApiProxy().getClientProxy().setEnabled(false);
             settingDb.getApiProxy().getServerProxy().setEnabled(false);
             settingDb.getApiProxy().getCloudProxy().setEnabled(false);
             break;
           case CLIENT_PROXY:
+            // Enable client proxy, disable all others
             settingDb.getApiProxy().getNoProxy().setEnabled(false);
             settingDb.getApiProxy().getClientProxy().setEnabled(true);
             settingDb.getApiProxy().getServerProxy().setEnabled(false);
             settingDb.getApiProxy().getCloudProxy().setEnabled(false);
             break;
           case SERVER_PROXY:
+            // Enable server proxy, disable all others
             settingDb.getApiProxy().getNoProxy().setEnabled(false);
             settingDb.getApiProxy().getClientProxy().setEnabled(false);
             settingDb.getApiProxy().getServerProxy().setEnabled(true);
             settingDb.getApiProxy().getCloudProxy().setEnabled(false);
             break;
           case CLOUD_PROXY:
+            // Enable cloud proxy, disable all others
             settingDb.getApiProxy().getNoProxy().setEnabled(false);
             settingDb.getApiProxy().getClientProxy().setEnabled(false);
             settingDb.getApiProxy().getServerProxy().setEnabled(false);
             settingDb.getApiProxy().getCloudProxy().setEnabled(true);
             break;
           default:
-            // NOOP
+            // NOOP for unsupported proxy types
         }
         settingUserRepo.save(settingDb);
         return null;
@@ -171,6 +228,15 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates social binding information for user.
+   * </p>
+   * <p>
+   * Updates social account binding with current timestamp and saves
+   * the binding information to user settings.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void socialBindingUpdate(SocialType type, SocialBinding socialBinding) {
@@ -190,7 +256,7 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
             socialBinding.setGoogleUserBindDate(LocalDateTime.now());
             break;
           default:
-            // NOOP
+            // NOOP for unsupported social types
         }
         settingDb.setSocialBind(socialBinding);
         settingUserRepo.save(settingDb);
@@ -199,6 +265,15 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes social binding for user.
+   * </p>
+   * <p>
+   * Unbinds the specified social account type by clearing the user ID
+   * and binding date for that social platform.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void socialUnbind(SocialType type) {
@@ -222,7 +297,7 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
             socialBinding.setGoogleUserId(null).setGoogleUserBindDate(null);
             break;
           default:
-            // NOOP
+            // NOOP for unsupported social types
         }
         settingDb.setSocialBind(socialBinding);
         settingUserRepo.save(settingDb);

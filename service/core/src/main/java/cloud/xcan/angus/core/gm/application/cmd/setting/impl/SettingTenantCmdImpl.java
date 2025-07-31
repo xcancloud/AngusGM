@@ -33,26 +33,43 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of tenant setting command operations.
+ * </p>
+ * <p>
+ * Manages tenant-level settings including locale, security, API proxy,
+ * and performance indicator configurations.
+ * </p>
+ * <p>
+ * Provides tenant setting initialization, updates, and cache management
+ * for real-time configuration updates.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implements SettingTenantCmd {
 
   @Resource
   private SettingTenantRepo settingTenantRepo;
-
   @Resource
   private SettingTenantQuery settingTenantQuery;
-
   @Resource
   private SettingQuery settingQuery;
-
   @Resource
   private BidGenerator bidGenerator;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Replaces tenant locale settings.
+   * </p>
+   * <p>
+   * Updates tenant locale configuration and evicts related cache entries
+   * to ensure real-time updates across the system.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void localeReplace(Locale locale) {
@@ -71,6 +88,15 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant security settings.
+   * </p>
+   * <p>
+   * Updates security configuration including invitation code settings
+   * and logs the modification for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void securityReplace(Security security) {
@@ -84,13 +110,22 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
         setting.setSecurityData(security);
         updateTenantSetting(getOptTenantId(), setting);
 
-        operationLogCmd.add(toModifiedOperation("LOCALE",
+        operationLogCmd.add(toModifiedOperation("SECURITY",
             "SettingTenant", true, ModifiedResourceType.TENANT_SECURITY));
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Generates invitation code for tenant.
+   * </p>
+   * <p>
+   * Creates a unique invitation code using bid generator and random string
+   * for tenant invitation purposes.
+   * </p>
+   */
   @Override
   public String invitationCodeGen() {
     return new BizTemplate<String>() {
@@ -99,13 +134,21 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
       protected String process() {
         String code = bidGenerator.getId(BID_INVITATION_CODE_KEY) + "." + randomAlphanumeric(6);
 
-        operationLogCmd.add(toModifiedOperation("LOCALE",
+        operationLogCmd.add(toModifiedOperation("INVITATION_CODE",
             "SettingTenant", true, ModifiedResourceType.TENANT_INVITATION_CODE));
         return code;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant API proxy settings.
+   * </p>
+   * <p>
+   * Updates server API proxy configuration for the tenant.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void proxyReplace(ServerApiProxy apiProxy) {
@@ -121,6 +164,14 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant tester event settings.
+   * </p>
+   * <p>
+   * Updates tester event configuration for the tenant.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void testerEventReplace(List<TesterEvent> testerEvent) {
@@ -136,6 +187,14 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant function indicator settings.
+   * </p>
+   * <p>
+   * Updates function performance indicator configuration for the tenant.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void funcReplace(Func data) {
@@ -151,6 +210,14 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant performance indicator settings.
+   * </p>
+   * <p>
+   * Updates performance indicator configuration for the tenant.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void perfReplace(Perf data) {
@@ -166,6 +233,14 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant stability indicator settings.
+   * </p>
+   * <p>
+   * Updates stability indicator configuration for the tenant.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void stabilityReplace(Stability stability) {
@@ -181,16 +256,34 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates tenant setting with cache eviction.
+   * </p>
+   * <p>
+   * Saves tenant setting to database and evicts related cache entries
+   * to ensure real-time updates across the system.
+   * </p>
+   */
   @CacheEvict(key = "'key_' + #tenantId", value = "settingTenant")
   public void updateTenantSetting(Long tenantId, SettingTenant setting) {
     settingTenantRepo.save(setting);
   }
 
+  /**
+   * <p>
+   * Initializes tenant settings.
+   * </p>
+   * <p>
+   * Creates default tenant settings with timezone configuration
+   * when tenant settings don't exist.
+   * </p>
+   */
   @Override
   public void init(Long tenantId) {
     if (!settingTenantRepo.existsByTenantId(tenantId)) {
       SettingTenant tenantSetting = initTenantSetting(tenantId, settingQuery);
-      // Load TimeZone in configuration
+      // Load timezone from application configuration
       tenantSetting.getLocaleData().setDefaultTimeZone(getApplicationInfo().getTimezone());
       settingTenantRepo.save(tenantSetting);
     }

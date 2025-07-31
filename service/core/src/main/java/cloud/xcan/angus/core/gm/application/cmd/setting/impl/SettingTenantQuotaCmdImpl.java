@@ -32,6 +32,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>
+ * Implementation of tenant quota setting command operations.
+ * </p>
+ * <p>
+ * Manages tenant-level quota settings including resource limits, activity quotas,
+ * and metrics retention periods.
+ * </p>
+ * <p>
+ * Provides quota initialization, updates, and batch operations with proper
+ * validation and range checking.
+ * </p>
+ */
 @Slf4j
 @Biz
 public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
@@ -39,16 +52,22 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
 
   @Resource
   private SettingTenantQuotaRepo settingTenantQuotaRepo;
-
   @Resource
   private SettingTenantQuotaQuery settingTenantQuotaQuery;
-
   @Resource
   private SettingQuery settingQuery;
-
   @Resource
   private TenantRepo tenantRepo;
 
+  /**
+   * <p>
+   * Replaces tenant quota setting with validation.
+   * </p>
+   * <p>
+   * Validates quota value against minimum and maximum limits before updating.
+   * Only updates if the new quota value differs from the current value.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void quotaReplace(String name, Long quota) {
@@ -57,11 +76,11 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
 
       @Override
       protected void checkParams() {
-        // Check the system-wide quota name existed
+        // Verify system-wide quota name exists
         settingQuery.checkAndFindQuota(name);
-        // Check the tenant-wide quota existed
+        // Verify tenant-wide quota exists
         tenantQuotaDb = settingTenantQuotaQuery.checkAndFind(name);
-        // Check the quota value range
+        // Validate quota value range
         assertTrue(quota >= tenantQuotaDb.getMin() && quota <= tenantQuotaDb.getMax(),
             QUOTA_VALUE_ERROR_T, new Object[]{quota, tenantQuotaDb.getMin(),
                 tenantQuotaDb.getMax()});
@@ -78,6 +97,15 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces multiple quota settings in batch.
+   * </p>
+   * <p>
+   * Processes multiple quota updates in a single operation.
+   * Note: Future optimization needed to avoid performance issues with loop calls.
+   * </p>
+   */
   @DoInFuture("Optimize for loop calls to avoid performance problems")
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -94,6 +122,15 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant quotas based on order status and expiration.
+   * </p>
+   * <p>
+   * Updates quotas based on order completion status and expiration flags.
+   * Handles quota addition for completed orders and quota release for expired orders.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void quotaReplaceByOrder(Long orderId, Map<QuotaResource, Long> quotaMap, Long tenantId,
@@ -102,38 +139,40 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
 
       @Override
       protected void checkParams() {
-        // Check and find tenant order
-        // NOOP
+        // Verify tenant order exists
+        // NOOP - validation handled in business logic
       }
 
       @Override
       protected Void process() {
-        // Fix:: May be called by the /innerapi
+        // Set tenant context for inner API calls
         setOptTenantId(tenantId);
         if (/* Order status may not be submitted -> OrderCmd#payUpdate() */
             (isFinished() || isPending()) && expired) {
+          // Add quotas for completed orders
           for (QuotaResource resource : quotaMap.keySet()) {
-            // Check the tenant quota existed
+            // Verify tenant quota exists
             SettingTenantQuota tenantQuotaDb = settingTenantQuotaQuery.checkAndFind(
                 resource.getValue());
             long newQuota = tenantQuotaDb.getQuota() + quotaMap.get(resource);
-            // Check the quota value range
+            // Validate quota value range
             assertTrue(newQuota >= tenantQuotaDb.getMin()
                     && newQuota <= tenantQuotaDb.getMax(), QUOTA_VALUE_ERROR_T2,
                 new Object[]{resource, newQuota, tenantQuotaDb.getMin(), tenantQuotaDb.getMax()});
             // Save new quota purchased
-            // A value less than 0 appears, which may be repeatedly modified by the job during development and debugging
+            // Handle negative values that may occur during development and debugging
             tenantQuotaDb.setQuota(newQuota < 0 ? 0 : newQuota);
             settingTenantQuotaRepo.save(tenantQuotaDb);
           }
         } else if (expired) {
+          // Release quotas for expired orders
           for (QuotaResource resource : quotaMap.keySet()) {
-            // Check the tenant quota existed
+            // Verify tenant quota exists
             SettingTenantQuota tenantQuotaDb = settingTenantQuotaQuery.checkAndFind(
                 resource.getValue());
             long newQuota = tenantQuotaDb.getQuota() - quotaMap.get(resource);
             // Release expired quota
-            // A value less than 0 appears, which may be repeatedly modified by the job during development and debugging
+            // Handle negative values that may occur during development and debugging
             tenantQuotaDb.setQuota(newQuota < 0 ? 0 : newQuota);
             settingTenantQuotaRepo.save(tenantQuotaDb);
           }
@@ -146,14 +185,24 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
       }
 
       /**
-       * see AngusExpense OrderStatus enum
+       * <p>
+       * Checks if order status is pending.
+       * </p>
+       * <p>
+       * See AngusExpense OrderStatus enum for status values.
+       * </p>
        */
       public boolean isPending() {
         return status.equals("CREATED") || status.equals("AWAITING_PAY");
       }
 
       /**
-       * see AngusExpense OrderStatus enum
+       * <p>
+       * Checks if order status is finished.
+       * </p>
+       * <p>
+       * See AngusExpense OrderStatus enum for status values.
+       * </p>
        */
       public boolean isFinished() {
         return status.equals("FINISHED");
@@ -161,9 +210,14 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
     }.execute();
   }
 
-
   /**
-   * Initialize new quotas for all tenants.
+   * <p>
+   * Initializes new quotas for all tenants.
+   * </p>
+   * <p>
+   * Creates quota settings for all existing tenants that don't have
+   * the specified quota type initialized.
+   * </p>
    */
   @Override
   public Long newQuotaInit(String name) {
@@ -172,7 +226,7 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
 
       @Override
       protected void checkParams() {
-        // Check the system-wide quota name existed
+        // Verify system-wide quota name exists
         quotaData = settingQuery.checkAndFindQuota(name);
       }
 
@@ -184,8 +238,10 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
         do {
           idsPage = tenantRepo.findAllIds(PageRequest.of(page, size));
           if (idsPage.hasContent()) {
+            // Find tenants that already have this quota initialized
             List<Long> tenantIds = settingTenantQuotaRepo.findInitializedTenantIds(
                 idsPage.getContent(), name);
+            // Calculate tenants that need initialization
             List<Long> unInitTenantIds = new ArrayList<>(idsPage.getContent());
             unInitTenantIds.removeAll(tenantIds);
             add0(quotaData, unInitTenantIds);
@@ -198,6 +254,14 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
     }.execute();
   }
 
+  /**
+   * <p>
+   * Adds quota settings for multiple tenants.
+   * </p>
+   * <p>
+   * Creates quota settings for the specified tenants using the provided quota data.
+   * </p>
+   */
   @Transactional
   @Override
   public void add0(Quota quotaData, List<Long> tenantIds) {
@@ -215,7 +279,13 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
   }
 
   /**
-   * Adding new quotas requires manual initialization for tenants.
+   * <p>
+   * Initializes quota settings for a new tenant.
+   * </p>
+   * <p>
+   * Creates quota settings for all quota types when a new tenant is created.
+   * Manual initialization is required when new quota types are added.
+   * </p>
    */
   @Override
   public void init(Long tenantId) {

@@ -45,30 +45,47 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>
+ * Implementation of tenant command operations.
+ * </p>
+ * <p>
+ * Manages tenant lifecycle including creation, updates, status management,
+ * and lock/unlock operations.
+ * </p>
+ * <p>
+ * Supports tenant creation with certificate audit, status management,
+ * and scheduled lock/unlock operations via job processing.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
   @Resource
   private TenantRepo tenantRepo;
-
   @Resource
   private TenantQuery tenantQuery;
-
   @Resource
   private TenantCertAuditCmd tenantCertAuditCmd;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private UserCmd userCmd;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
   /**
-   * Allow tenants to submit their own cert after adding.
+   * <p>
+   * Creates a new tenant with certificate audit and system administrator.
+   * </p>
+   * <p>
+   * Creates tenant, submits certificate audit if provided, and creates
+   * system administrator user for the tenant.
+   * </p>
+   * <p>
+   * Allows tenants to submit their own certificates after creation.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -78,14 +95,14 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
       @Override
       protected IdKey<Long, Object> process() {
-        // Save tenant
+        // Save tenant with real-name status
         if (!audit.isCertSubmitted()) {
           tenant.setRealNameStatus(TenantRealNameStatus.NOT_SUBMITTED)
               .setType(audit.getType());
         }
         IdKey<Long, Object> idKey = insert(tenant, "name");
 
-        // Save the pending audit of tenant
+        // Submit certificate audit if provided
         Long tenantId = tenant.getId();
         setOptTenantId(tenantId);
         if (audit.isCertSubmitted()) {
@@ -93,19 +110,28 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
           tenantCertAuditCmd.submit(audit);
         }
 
-        // Save the system admin user of tenant
+        // Create system administrator user for tenant
         user.setTenantId(tenantId);
         user.setTenantName(tenant.getName());
         setOptTenantId(tenantId);
         userCmd.add(user, emptyList(), emptyList(), emptyList(), userSource);
 
-        // Save operation activity
+        // Log operation for audit
         operationLogCmd.add(TENANT, tenant, CREATED);
         return idKey;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates tenant information and related data.
+   * </p>
+   * <p>
+   * Updates tenant details, certificate audit if applicable, and user information.
+   * Prevents name modification after real-name authentication is passed.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(Tenant tenant, TenantCertAudit audit, User user) {
@@ -114,40 +140,49 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
       @Override
       protected void checkParams() {
-        // Check the canceled status
+        // Verify tenant is not canceled
         tenantDb = tenantQuery.checkAndFind(tenant.getId());
         tenantQuery.checkTenantCanceled(tenantDb);
       }
 
       @Override
       protected Void process() {
-        // Update tenant
+        // Update tenant information
         setOptTenantId(tenant.getId());
         if (tenantDb.isRealNamePassed()) {
-          tenant.setName(null); // Cannot modify after real name
+          tenant.setName(null); // Cannot modify name after real-name authentication
         }
         tenantRepo.save(copyPropertiesIgnoreNull(tenant, tenantDb));
 
-        // Ignore the cert information modification when the real name audit has passed
+        // Submit certificate audit if applicable
         if (nonNull(audit) && !tenantDb.isRealNamePassed() && tenantDb.isRealNameAuditing()) {
           audit.setId(tenant.getId()).setTenantId(tenant.getId());
           tenantCertAuditCmd.submit(audit);
         }
 
         if (nonNull(user)) {
-          // Update user
+          // Update user information
           User updateUserDb = userQuery.findSignupOrFirstSysAdminUser(tenant.getId());
           user.setId(updateUserDb.getId());
           userCmd.update(user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         }
 
-        // Save operation activity
+        // Log operation for audit
         operationLogCmd.add(TENANT, tenant, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces tenant information completely.
+   * </p>
+   * <p>
+   * Replaces tenant details, certificate audit if applicable, and user information.
+   * Validates certificate submission requirements.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void replace(Tenant tenant, TenantCertAudit audit, User user) {
@@ -158,11 +193,11 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
       protected void checkParams() {
         setOptTenantId(tenant.getId());
 
-        // Check the canceled status
+        // Verify tenant is not canceled
         tenantDb = tenantQuery.checkAndFind(tenant.getId());
         tenantQuery.checkTenantCanceled(tenantDb);
 
-        // Check the cert is required
+        // Verify certificate is required when applicable
         if (nonNull(audit) && !tenantDb.isRealNamePassed() && tenantDb.isRealNameAuditing()) {
           assertTrue(audit.isCertSubmitted(), TENANT_CERT_MISSING_T,
               new Object[]{nonNull(audit.getType()) ? audit.getType() : null});
@@ -171,27 +206,35 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
       @Override
       protected Void process() {
-        // Update tenant
+        // Replace tenant information
         assembleTenantInfo(tenantDb, tenant);
         tenantRepo.save(tenantDb);
 
-        // Ignore the cert information modification when the real name audit has passed
+        // Submit certificate audit if applicable
         if (nonNull(audit) && !tenantDb.isRealNamePassed() && tenantDb.isRealNameAuditing()) {
           audit.setId(tenant.getId()).setTenantId(tenant.getId());
           tenantCertAuditCmd.submit(audit);
         }
-        // Replace user
+        // Replace user information
         User updateUserDb = userQuery.findSignupOrFirstSysAdminUser(tenant.getId());
         user.setId(updateUserDb.getId());
         userCmd.replace(user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        // Save operation activity
+        // Log operation for audit
         operationLogCmd.add(TENANT, tenantDb, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Enables or disables tenant.
+   * </p>
+   * <p>
+   * Updates tenant status and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void enabled(Long id, Boolean enabled) {
@@ -200,10 +243,10 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
       @Override
       protected void checkParams() {
-        // Check the tenant existed
+        // Verify tenant exists
         tenantDb = tenantQuery.checkAndFind(id);
 
-        // Check the canceled status
+        // Verify tenant is not canceled
         tenantQuery.checkTenantCanceled(tenantDb);
       }
 
@@ -212,13 +255,22 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
         tenantDb.setStatus(enabled ? TenantStatus.ENABLED : TenantStatus.DISABLED);
         tenantRepo.save(tenantDb);
 
-        // Save operation activity
+        // Log operation for audit
         operationLogCmd.add(TENANT, tenantDb, enabled ? ENABLED : DISABLED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Locks or unlocks tenant with optional date constraints.
+   * </p>
+   * <p>
+   * Sets lock status with start and end dates, validates date constraints,
+   * and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void locked(Long id, Boolean locked, LocalDateTime lockStartDate,
@@ -228,9 +280,9 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
       @Override
       protected void checkParams() {
-        // Check operation permission when user action
+        // Verify operation permissions when user action
 
-        // Check date is valid
+        // Verify date constraints are valid
         assertTrue(!locked || isNull(lockStartDate)
                 || isNull(lockEndDate) || lockEndDate.isAfter(lockStartDate),
             String.format("lockEndDate[%s] is not after lockStartDate[%s]",
@@ -238,10 +290,10 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
                 nonNull(lockStartDate) ? lockStartDate.format(DATE_TIME_FMT) : null));
         assertTrue(!locked || isNull(lockEndDate) // Ignore warning??
                 || lockEndDate.isAfter(LocalDateTime.now()),
-            String.format("lockEndDate[%s] must is a future date",
+            String.format("lockEndDate[%s] must be a future date",
                 nonNull(lockEndDate) ? lockEndDate.format(DATE_TIME_FMT) : null));
 
-        // Check the tenant existed
+        // Verify tenant exists
         tenantDb = tenantQuery.checkAndFind(id);
       }
 
@@ -257,7 +309,7 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
         }
         tenantRepo.save(tenantDb);
 
-        // Save operation activity
+        // Log operation for audit
         operationLogCmd.add(TENANT, tenantDb, locked ? LOCKED : UNLOCKED);
         return null;
       }
@@ -266,7 +318,12 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
   }
 
   /**
-   * User by {@link TenantLockedJob}
+   * <p>
+   * Processes expired tenant locks.
+   * </p>
+   * <p>
+   * Used by TenantLockedJob to automatically lock tenants when lock conditions are met.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -284,7 +341,12 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
   }
 
   /**
-   * User by {@link TenantUnlockedJob}
+   * <p>
+   * Processes expired tenant unlocks.
+   * </p>
+   * <p>
+   * Used by TenantUnlockedJob to automatically unlock tenants when unlock conditions are met.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -301,6 +363,14 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Creates tenant without additional processing.
+   * </p>
+   * <p>
+   * Basic tenant creation without certificate audit or user creation.
+   * </p>
+   */
   @Override
   public IdKey<Long, Object> add0(Tenant tenant) {
     return insert(tenant, "name");

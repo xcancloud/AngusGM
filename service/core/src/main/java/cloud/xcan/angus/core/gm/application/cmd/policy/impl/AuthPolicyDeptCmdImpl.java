@@ -35,7 +35,19 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of department authorization policy command operations.
+ * </p>
+ * <p>
+ * Manages the association between departments and authorization policies,
+ * providing bidirectional operations for adding and removing policy-department relationships.
+ * </p>
+ * <p>
+ * Supports both policy-centric and department-centric operations with proper
+ * validation and audit logging.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
@@ -43,16 +55,26 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private DeptQuery deptQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Associates departments with a specific authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and departments exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * Only creates new associations for departments that aren't already
+   * associated with the policy.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> policyDeptAdd(Long policyId, List<AuthPolicyOrg> policyDept) {
@@ -63,18 +85,18 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists and is accessible
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
-        // Check the departments existed
+        // Verify departments exist
         deptIds = policyDept.stream().map(AuthPolicyOrg::getOrgId).collect(Collectors.toSet());
         deptDb = deptQuery.checkAndFind(deptIds);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // De-duplication of authorized departments
+        // Remove already authorized departments to prevent duplicates
         List<Long> existedDeptIds = authPolicyOrgRepo.findOrgIdsByPolicyIdAndOrgTypeAndOrgIdIn(
             policyId, OrgTargetType.DEPT.getValue(), deptIds);
         deptIds.removeAll(existedDeptIds);
@@ -83,7 +105,7 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           // Complete authorization information
           assembleOrgAuthInfo(policyDept, policyDb);
 
-          // Save nonexistent authorization
+          // Save new department authorizations
           List<AuthPolicyOrg> newPolicyDept = policyDept.stream()
               .filter(x -> deptIds.contains(x.getOrgId())).collect(Collectors.toList());
           if (isNotEmpty(newPolicyDept)) {
@@ -99,6 +121,15 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes department associations from a specific authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and departments exist, checks permissions,
+   * and removes the specified department-policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void policyDeptDelete(Long policyId, Set<Long> deptIds) {
@@ -108,11 +139,11 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
-        // Check the departments existed
+        // Verify departments exist
         deptDb = deptQuery.checkAndFind(deptIds);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
@@ -128,6 +159,19 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Associates authorization policies with a specific department.
+   * </p>
+   * <p>
+   * Validates that the department and policies exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * Only creates new associations for policies that aren't already
+   * associated with the department.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> deptPolicyAdd(Long deptId, List<AuthPolicyOrg> deptPolices) {
@@ -138,19 +182,19 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the department existed
+        // Verify department exists
         deptDb = deptQuery.checkAndFind(deptId);
-        // Check the policy existed
+        // Verify policies exist
         policyIds = deptPolices.stream().map(AuthPolicyOrg::getPolicyId)
             .collect(Collectors.toSet());
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policiesDb);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // De-duplication of authorized polices
+        // Remove already authorized policies to prevent duplicates
         List<Long> existedPolicyIds = authPolicyOrgRepo
             .findPolicyIdsByUserIdAndOrgTypeAndPolicyIdIn(deptId, OrgTargetType.DEPT.getValue(),
                 policyIds);
@@ -160,7 +204,7 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
           // Complete authorization information
           assemblePolicyAuthInfo(deptPolices, policiesDb);
 
-          // Save nonexistent authorization
+          // Save new policy authorizations
           List<AuthPolicyOrg> addDeptPolices = deptPolices.stream()
               .filter(x -> policyIds.contains(x.getPolicyId())).collect(Collectors.toList());
           if (isNotEmpty(addDeptPolices)) {
@@ -176,6 +220,15 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes authorization policy associations from a specific department.
+   * </p>
+   * <p>
+   * Validates that the department and policies exist, checks permissions,
+   * and removes the specified policy-department associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deptPolicyDelete(Long deptId, Set<Long> policyIds) {
@@ -185,11 +238,11 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
 
       @Override
       protected void checkParams() {
-        // Check the department existed
+        // Verify department exists
         deptDb = deptQuery.checkAndFind(deptId);
-        // Check the policy existed
+        // Verify policies exist
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyIds);
       }
 
@@ -205,20 +258,36 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
     }.execute();
   }
 
+  /**
+   * <p>
+   * Batch removes department-policy associations.
+   * </p>
+   * <p>
+   * Used when deleting departments or policies to clean up all related associations.
+   * Skips permission checks as this is typically called during cleanup operations.
+   * </p>
+   * <p>
+   * If policyIds is empty, removes all policy associations for the specified departments.
+   * Otherwise, removes only the specified policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void deptPolicyDeleteBatch(HashSet<Long> deptIds, HashSet<Long> policyIds) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // NOOP:: Check the policy permission <- UC deletes policies when deleting departments, and does not check permissions.
+        // NOOP:: Skip permission checks for cleanup operations
+        // UC deletes policies when deleting departments, and does not check permissions.
       }
 
       @Override
       protected Void process() {
         if (isEmpty(policyIds)) {
+          // Remove all policy associations for the specified departments
           authPolicyOrgRepo.deleteByOrgIdInAndOrgType(deptIds, AuthOrgType.DEPT.getValue());
         } else {
+          // Remove specific policy associations for the specified departments
           authPolicyOrgRepo.deleteByOrgIdInAndOrgTypeAndPolicyIdIn(deptIds,
               AuthOrgType.DEPT.getValue(), policyIds);
         }

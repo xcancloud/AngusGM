@@ -33,7 +33,19 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of authorization policy function command operations.
+ * </p>
+ * <p>
+ * Manages the association between authorization policies and application functions,
+ * providing operations to add, replace, and delete function-policy relationships.
+ * </p>
+ * <p>
+ * Supports hierarchical function authorization where parent functions are
+ * automatically authorized when child functions are authorized.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> implements
@@ -41,21 +53,27 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
   @Resource
   private AuthPolicyFuncRepo authPolicyFuncRepo;
-
   @Resource
   private AuthPolicyFuncQuery authPolicyFuncQuery;
-
   @Resource
   private AppFuncQuery appFuncQuery;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
   /**
-   * When a child function is authorized, the parent function is also authorized.
+   * <p>
+   * Associates application functions with an authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and functions exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * When a child function is authorized, the parent function is also authorized
+   * automatically to maintain hierarchical consistency.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -66,13 +84,13 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFind(policyId, false, true);
 
-        // Check that only permission operation are allowed to enable or disable PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         authPolicyQuery.checkOpPolicyPermission(singletonList(policyDb));
 
-        // Check app functions existed
+        // Verify application functions exist
         if (isNotEmpty(appFuncIds)) {
           funcDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
         }
@@ -82,11 +100,14 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
       protected Void process() {
         Set<Long> existedFuncIds = authPolicyFuncQuery.findExistedFuncIdsByPolicyId(policyId);
         if (isEmpty(existedFuncIds)) {
-          policyDb.setPolicyFunc(existedFuncIds.stream()
+          // No existing functions, add all new functions
+          policyDb.setPolicyFunc(appFuncIds.stream()
               .map(x -> new AuthPolicyFunc().setFuncId(x)).collect(Collectors.toList()));
           add0(singletonList(policyDb), funcDb);
           return null;
         }
+        
+        // Add only functions that don't already exist
         List<AppFunc> notExistedFuncDb = funcDb.stream()
             .filter(x -> !existedFuncIds.contains(x.getId())).collect(Collectors.toList());
         if (isNotEmpty(notExistedFuncDb)) {
@@ -103,7 +124,17 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
   }
 
   /**
-   * When a child function is authorized, the parent function is also authorized.
+   * <p>
+   * Replaces all function associations for an authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and functions exist, checks permissions,
+   * and completely replaces existing function associations.
+   * </p>
+   * <p>
+   * When a child function is authorized, the parent function is also authorized
+   * automatically to maintain hierarchical consistency.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -114,13 +145,13 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFind(policyId, false, true);
 
-        // Check that only permission operation are allowed to enable or disable PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         authPolicyQuery.checkOpPolicyPermission(singletonList(policyDb));
 
-        // Check the application functions existed
+        // Verify application functions exist
         if (isNotEmpty(appFuncIds)) {
           funcDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
         }
@@ -128,13 +159,13 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
       @Override
       protected Void process() {
-        // Clear when appFuncIds is empty
+        // Clear all existing function associations when appFuncIds is empty
         if (isEmpty(appFuncIds)) {
           authPolicyFuncRepo.deleteByPolicyIdIn(singleton(policyId));
           return null;
         }
 
-        // Clear and re-add
+        // Replace all function associations
         policyDb.setPolicyFunc(funcDb.stream()
             .map(x -> new AuthPolicyFunc().setFuncId(x.getId())).collect(Collectors.toList()));
         replace0(singletonList(policyDb), funcDb);
@@ -146,6 +177,15 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes specific function associations from an authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and functions exist, checks permissions,
+   * and removes the specified function-policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(Long policyId, Set<Long> appFuncIds) {
@@ -155,11 +195,11 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFind(policyId, false, false);
-        // Check the application functions existed
+        // Verify application functions exist
         funcDb = appFuncQuery.checkAndFind(policyDb.getAppId(), appFuncIds, true);
-        // Check that only permission operation are allowed to enable or disable PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         authPolicyQuery.checkOpPolicyPermission(singletonList(policyDb));
       }
 
@@ -175,7 +215,17 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
   }
 
   /**
-   * When a child function is authorized, the parent function is also authorized.
+   * <p>
+   * Associates application functions with multiple authorization policies.
+   * </p>
+   * <p>
+   * Internal method used by other operations to batch create function-policy associations.
+   * Sets up the complete authorization information including app ID and function type.
+   * </p>
+   * <p>
+   * When a child function is authorized, the parent function is also authorized
+   * automatically to maintain hierarchical consistency.
+   * </p>
    */
   @Override
   public List<IdKey<Long, Object>> add0(List<AuthPolicy> policies, List<AppFunc> appFuncDb) {
@@ -195,6 +245,15 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
     return batchInsert(policyFunc);
   }
 
+  /**
+   * <p>
+   * Replaces all function associations for multiple authorization policies.
+   * </p>
+   * <p>
+   * Internal method used by other operations to batch replace function-policy associations.
+   * First removes all existing associations, then creates new ones.
+   * </p>
+   */
   @Override
   public void replace0(List<AuthPolicy> policies, List<AppFunc> appFuncDb) {
     authPolicyFuncRepo.deleteByPolicyIdIn(policies.stream().map(AuthPolicy::getId)

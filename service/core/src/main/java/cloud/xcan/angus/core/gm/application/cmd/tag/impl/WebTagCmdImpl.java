@@ -22,7 +22,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of web tag command operations.
+ * </p>
+ * <p>
+ * Manages web tag lifecycle including creation, updates, and deletion.
+ * Provides tag management with validation and audit logging.
+ * </p>
+ * <p>
+ * Supports web application tag management with proper validation and
+ * cascading deletion of tag targets.
+ * </p>
+ */
 @Biz
 public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
 
@@ -38,13 +50,22 @@ public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Creates web tags with validation.
+   * </p>
+   * <p>
+   * Validates tag names and checks for duplicates before creation.
+   * Creates tags and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add(List<WebTag> tags) {
     return new BizTemplate<List<IdKey<Long, Object>>>() {
       @Override
       protected void checkParams() {
-        // Check the tag names existed
+        // Verify tag names exist and are unique
         webTagQuery.checkAddTagNameExist(tags.stream().map(WebTag::getName)
             .collect(Collectors.toList()));
       }
@@ -58,25 +79,43 @@ public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates web tags with validation.
+   * </p>
+   * <p>
+   * Validates tag names and checks for uniqueness during updates.
+   * Updates tags and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(List<WebTag> tags) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Check the tag names existed
+        // Verify tag names exist and are unique during update
         webTagQuery.checkUpdateTagNameExist(tags);
       }
 
       @Override
       protected Void process() {
-        List<WebTag> tagsDb =  batchUpdateOrNotFound(tags);
+        List<WebTag> tagsDb = batchUpdateOrNotFound(tags);
         operationLogCmd.addAll(ORG_TAG, tagsDb, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes web tags and associated targets.
+   * </p>
+   * <p>
+   * Removes tags and cascades deletion to associated tag targets.
+   * Logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(HashSet<Long> ids) {
@@ -85,9 +124,11 @@ public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
       protected Void process() {
         List<WebTag> tagsDb = webTagQuery.checkAndFind(ids);
         if (!tagsDb.isEmpty()) {
+          // Delete tag targets first, then tags
           webTagTargetRepo.deleteByTagIdIn(ids);
           webTagRepo.deleteByIdIn(ids);
 
+          // Log operation for audit
           operationLogCmd.addAll(ORG_TAG, tagsDb, DELETED);
         }
         return null;

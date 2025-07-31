@@ -36,7 +36,19 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of group authorization policy command operations.
+ * </p>
+ * <p>
+ * Manages the association between groups and authorization policies,
+ * providing bidirectional operations for adding and removing policy-group relationships.
+ * </p>
+ * <p>
+ * Supports both policy-centric and group-centric operations with proper
+ * validation and audit logging.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
@@ -44,16 +56,26 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private GroupQuery groupQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Associates groups with a specific authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and groups exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * Only creates new associations for groups that aren't already
+   * associated with the policy.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> policyGroupAdd(Long policyId, List<AuthPolicyOrg> policyGroups) {
@@ -64,18 +86,18 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists and is accessible
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
-        // Check the groups existed
+        // Verify groups exist and are valid
         groupIds = policyGroups.stream().map(AuthPolicyOrg::getOrgId).collect(Collectors.toSet());
         groupsDb = groupQuery.checkValidAndFind(groupIds);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // De-duplication of authorized groups
+        // Remove already authorized groups to prevent duplicates
         List<Long> existedGroupIds = authPolicyOrgRepo.findOrgIdsByPolicyIdAndOrgTypeAndOrgIdIn(
             policyId, OrgTargetType.GROUP.getValue(), groupIds);
         groupIds.removeAll(existedGroupIds);
@@ -84,7 +106,7 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
           // Complete authorization information
           assembleOrgAuthInfo(policyGroups, policyDb);
 
-          // Save nonexistent authorization
+          // Save new group authorizations
           List<AuthPolicyOrg> newPolicyGroups = policyGroups.stream()
               .filter(x -> groupIds.contains(x.getOrgId())).collect(Collectors.toList());
           if (isNotEmpty(newPolicyGroups)) {
@@ -100,6 +122,15 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes group associations from a specific authorization policy.
+   * </p>
+   * <p>
+   * Validates that the policy and groups exist, checks permissions,
+   * and removes the specified group-policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void policyGroupDelete(Long policyId, Set<Long> groupIds) {
@@ -109,11 +140,11 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists
         policyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, false, false);
-        // Check the groups existed
+        // Verify groups exist
         groupsDb = groupQuery.checkAndFind(groupIds);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyDb.getAppId(), singleton(policyId));
       }
 
@@ -129,6 +160,19 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
     }.execute();
   }
 
+  /**
+   * <p>
+   * Associates authorization policies with a specific group.
+   * </p>
+   * <p>
+   * Validates that the group and policies exist, checks permissions,
+   * and prevents duplicate associations.
+   * </p>
+   * <p>
+   * Only creates new associations for policies that aren't already
+   * associated with the group.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> groupPolicyAdd(Long groupId, List<AuthPolicyOrg> groupPolices) {
@@ -139,19 +183,19 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
 
       @Override
       protected void checkParams() {
-        // Check the group existed
+        // Verify group exists and is valid
         groupDb = groupQuery.checkValidAndFind(groupId);
-        // Check the policies existed
+        // Verify policies exist
         policyIds = groupPolices.stream().map(AuthPolicyOrg::getPolicyId)
             .collect(Collectors.toSet());
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policiesDb);
       }
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // De-duplication of authorized polices
+        // Remove already authorized policies to prevent duplicates
         List<Long> existedPolicyIds = authPolicyOrgRepo
             .findPolicyIdsByUserIdAndOrgTypeAndPolicyIdIn(groupId, OrgTargetType.GROUP.getValue(),
                 policyIds);
@@ -161,7 +205,7 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
           // Complete authorization information
           assemblePolicyAuthInfo(groupPolices, policiesDb);
 
-          // Save nonexistent authorization
+          // Save new policy authorizations
           List<AuthPolicyOrg> newGroupPolices = groupPolices.stream()
               .filter(x -> policyIds.contains(x.getPolicyId())).collect(Collectors.toList());
           if (isNotEmpty(newGroupPolices)) {
@@ -177,21 +221,29 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
     }.execute();
   }
 
+  /**
+   * <p>
+   * Removes authorization policy associations from a specific group.
+   * </p>
+   * <p>
+   * Validates that the group and policies exist, checks permissions,
+   * and removes the specified policy-group associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void groupPolicyDelete(Long groupId, Set<Long> policyIds) {
     new BizTemplate<Void>() {
       Group groupDb;
-      Set<Long> policyIds;
       List<AuthPolicy> policiesDb;
 
       @Override
       protected void checkParams() {
-        // Check the group existed
+        // Verify group exists and is valid
         groupDb = groupQuery.checkValidAndFind(groupId);
-        // Check the policies existed
+        // Verify policies exist
         policiesDb = authPolicyQuery.checkAndFindTenantPolicy(policyIds, true, true);
-        // Check the policy permission
+        // Validate policy permissions
         authPolicyQuery.checkAuthPolicyPermission(policyIds);
       }
 
@@ -207,20 +259,36 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
     }.execute();
   }
 
+  /**
+   * <p>
+   * Batch removes group-policy associations.
+   * </p>
+   * <p>
+   * Used when deleting groups or policies to clean up all related associations.
+   * Skips permission checks as this is typically called during cleanup operations.
+   * </p>
+   * <p>
+   * If policyIds is empty, removes all policy associations for the specified groups.
+   * Otherwise, removes only the specified policy associations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void groupPolicyDeleteBatch(@NotEmpty HashSet<Long> groupIds, HashSet<Long> policyIds) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // NOOP:: Check the policy permission <- UC deletes policies when deleting groups, and does not check permissions.
+        // NOOP:: Skip permission checks for cleanup operations
+        // UC deletes policies when deleting groups, and does not check permissions.
       }
 
       @Override
       protected Void process() {
         if (isEmpty(policyIds)) {
+          // Remove all policy associations for the specified groups
           authPolicyOrgRepo.deleteByOrgIdInAndOrgType(groupIds, AuthOrgType.GROUP.getValue());
         } else {
+          // Remove specific policy associations for the specified groups
           authPolicyOrgRepo.deleteByOrgIdInAndOrgTypeAndPolicyIdIn(groupIds,
               AuthOrgType.GROUP.getValue(), policyIds);
         }
@@ -233,5 +301,4 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
   protected BaseRepository<AuthPolicyOrg, Long> getRepository() {
     return this.authPolicyOrgRepo;
   }
-
 }

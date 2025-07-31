@@ -75,44 +75,59 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of user command operations.
+ * </p>
+ * <p>
+ * Manages user lifecycle including creation, updates, deletion, status management,
+ * and lock/unlock operations.
+ * </p>
+ * <p>
+ * Supports comprehensive user management with department, group, and tag associations,
+ * OAuth2 integration, and audit logging.
+ * </p>
+ */
 @Slf4j
 @Biz
 public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private DeptUserCmd userDeptCmd;
-
   @Resource
   private GroupUserCmd userGroupCmd;
-
   @Resource
   private TenantQuery tenantQuery;
-
   @Resource
   private TenantCmd tenantCmd;
-
   @Resource
   private OrgTagTargetCmd orgTagTargetCmd;
-
   @Resource
   private SettingTenantManager settingTenantManager;
-
   @Resource
   private AuthUserCmd authUserCmd;
-
   @Resource
   private SettingUserCmd settingUserCmd;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Creates a new user with comprehensive validation and associations.
+   * </p>
+   * <p>
+   * Validates user information, tenant initialization, quota limits, and duplicate checks.
+   * Creates user with department, group, and tag associations, and initializes OAuth2 user.
+   * </p>
+   * <p>
+   * Supports different user sources including platform signup, invitation code signup,
+   * background signup, and LDAP synchronization.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> add(User user, List<DeptUser> deptUsers, List<GroupUser> groupUsers,
@@ -122,59 +137,59 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected void checkParams() {
-        // Check and init tenant
+        // Verify and initialize tenant
         optTenant = checkAndInitTenant(user, userSource);
 
-        // Check the required account
+        // Verify required account information
         // Allow LDAP user's mobile and email to be empty
         assertTrue(LDAP_SYNCHRONIZE.equals(userSource)
                 || isNotEmpty(user.getEmail()) || isNotEmpty(user.getMobile()),
             "Mobile and email cannot be all empty");
 
-        // Check the account if new tenant signup
+        // Verify account for new tenant signup
         if (UserSource.isNewSignup(userSource)) {
           userQuery.checkSignupAccounts(user);
         }
 
-        // Add the user account if tenant existed
+        // Verify user account for existing tenant
         if (UserSource.isAddUser(userSource)) {
-          // Check the user quota
+          // Verify user quota
           userQuery.checkAddQuota(optTenant, user, deptUsers, groupUsers, userTags);
 
-          // Check the duplicated username under the platform
+          // Verify username uniqueness across platform
           userQuery.checkAddUsername(user.getUsername());
           // userQuery#checkUsernames() will turn off multiTenantCtrl
 
-          // Check the duplicated mobile under the tenant
+          // Verify mobile uniqueness within tenant
           userQuery.checkAddMobile(user.getMobile(), userSource);
 
-          // Check the duplicated email under the tenant
+          // Verify email uniqueness within tenant
           userQuery.checkAddEmail(user.getEmail(), userSource);
         }
       }
 
       @Override
       protected IdKey<Long, Object> process() {
-        // Add associate targets when added in the background
+        // Add associated targets when added in background
         addAssociateTarget(deptUsers, groupUsers, userTags);
 
         // Set user tenant name
         user.setTenantName(optTenant.getName());
-        // Set the main dept of user
+        // Set user's main department
         setUserMainDeptAndHead(deptUsers, user);
 
         // Save user
         IdKey<Long, Object> idKeys = insert(user);
 
-        // Initialize tenant or user setting
+        // Initialize tenant or user settings
         settingUserCmd.tenantAndUserInit(optTenant.getId(), isNewSignup(user.getSource()),
             user.getId());
 
-        // Initialize the oauth2 user
+        // Initialize OAuth2 user
         authUserCmd.replace0(replaceToAuthUser(user, user.getPassword(), optTenant),
             isNewSignup(userSource));
 
-        // Save operation log
+        // Log operation for audit
         if (!isUserAction()) {
           PrincipalContext.get().setUserId(user.getId()).setFullName(user.getFullName())
               .setTenantId(user.getTenantId()).setTenantName(user.getTenantName());
@@ -189,6 +204,15 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates user information and associated data.
+   * </p>
+   * <p>
+   * Validates user existence and uniqueness constraints, updates user information,
+   * and manages associated department, group, and tag relationships.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(User user, List<DeptUser> deptUsers, List<GroupUser> groupUsers,
@@ -198,20 +222,20 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Verify user exists
         userDb = userQuery.checkAndFind(user.getId());
 
-        // Check the username is not duplicated
+        // Verify username uniqueness
         if (isNotEmpty(user.getUsername()) && !user.getUsername().equals(userDb.getUsername())) {
           userQuery.checkUsernameUpdate(user.getUsername(), userDb.getId());
         }
 
-        // Check the email is not duplicated
+        // Verify email uniqueness
         if (isNotEmpty(user.getEmail()) && !user.getEmail().equals(userDb.getEmail())) {
           userQuery.checkUpdateEmail(user.getEmail(), user.getId());
         }
 
-        // Check the mobile is not duplicated
+        // Verify mobile uniqueness
         if (isNotEmpty(user.getMobile()) && !user.getMobile().equals(userDb.getMobile())) {
           userQuery.checkUpdateMobile(user.getMobile(), user.getId());
         }
@@ -219,25 +243,34 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected Void process() {
-        // Update associate targets
+        // Update associated targets
         updateAssociateTarget(user.getId(), deptUsers, groupUsers, userTags);
 
-        // Set the main dept of user
+        // Set user's main department
         setUserMainDeptAndHead(deptUsers, userDb);
 
         // Save user
         userRepo.save(copyPropertiesIgnoreNull(user, userDb));
 
-        // Update oauth2 user
+        // Update OAuth2 user
         authUserCmd.replaceAuthUser(userDb, user.getPassword(), false);
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER, userDb, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces user information completely.
+   * </p>
+   * <p>
+   * Handles both new user creation and existing user updates with comprehensive validation.
+   * Manages user associations and OAuth2 integration.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> replace(User user, List<DeptUser> deptUsers,
@@ -248,10 +281,10 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
       @Override
       protected void checkParams() {
         if (nonNull(user.getId())) {
-          // Check the user existed
+          // Verify user exists
           userDb = userQuery.checkAndFind(user.getId());
 
-          // Check the account required
+          // Verify required account information
           assertTrue(isNotEmpty(user.getEmail()) || isNotEmpty(user.getMobile()),
               "Mobile and email address cannot be all empty");
           assertNotEmpty(!userDb.getSignupAccountType().isEmail()
@@ -261,15 +294,15 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
                   || userDb.getMobile().equals(user.getMobile()),
               "The registered mobile cannot be modified");
 
-          // Check the username is not duplicated
+          // Verify username uniqueness
           userQuery.checkUsernameUpdate(user.getUsername(), userDb.getId());
 
-          // Check the email is not duplicated
+          // Verify email uniqueness
           if (isNotEmpty(user.getEmail()) && !user.getEmail().equals(userDb.getEmail())) {
             userQuery.checkUpdateEmail(user.getEmail(), user.getId());
           }
 
-          // Check the  mobile is not duplicated
+          // Verify mobile uniqueness
           if (isNotEmpty(user.getMobile()) && !user.getMobile().equals(userDb.getMobile())) {
             userQuery.checkUpdateMobile(user.getMobile(), user.getId());
           }
@@ -282,29 +315,38 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
           return add(user, deptUsers, groupUsers, userTags, UserSource.BACKGROUND_ADDED);
         }
 
-        // Replace associate targets
+        // Replace associated targets
         replaceAssociateTarget(user.getId(), deptUsers, groupUsers, userTags);
 
-        // Set the main dept of user
+        // Set user's main department
         setUserMainDeptAndHead(deptUsers, userDb);
 
-        // Set update user info
+        // Assemble updated user information
         assembleUserInfo(userDb, user);
 
         // Save user
         userRepo.save(userDb);
 
-        // Update oauth2 user
+        // Update OAuth2 user
         Tenant tenantDb = tenantQuery.checkAndFind(userDb.getTenantId());
         authUserCmd.replace0(replaceToAuthUser(userDb, user.getPassword(), tenantDb), false);
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER, userDb, UPDATED);
         return IdKey.of(userDb.getId(), userDb.getFullName());
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes users and associated data.
+   * </p>
+   * <p>
+   * Validates administrator permissions and ensures at least one system administrator remains.
+   * Removes user associations and OAuth2 authorizations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(Set<Long> ids) {
@@ -313,35 +355,44 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Verify users exist
         usersDb = userQuery.checkAndFind(ids);
-        // Check the delete admin permission
+        // Verify administrator operation permissions
         userQuery.checkRefuseOperateAdmin(usersDb);
-        // Check there is at least one system administrator
+        // Verify at least one system administrator remains
         assertTrue(userQuery.countValidSysAdminUser() > ids.size(), USER_SYS_ADMIN_NUM_ERROR);
       }
 
       @Override
       protected Void process() {
-        // Delete associate targets
+        // Delete associated targets
         deleteUserAssociateRelation(ids);
 
-        // Delete the user
+        // Delete users
         userRepo.deleteByIdIn(ids);
 
-        // Delete oauth2 user
+        // Delete OAuth2 users
         authUserCmd.delete(ids);
 
-        // Delete oauth2 authorization, force user to log out
+        // Delete OAuth2 authorizations to force user logout
         authUserCmd.deleteAuthorization(usersDb.stream().map(User::getUsername).toList());
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.addAll(USER, usersDb, DELETED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Enables or disables users.
+   * </p>
+   * <p>
+   * Updates user status and ensures at least one system administrator remains.
+   * Manages OAuth2 user status and forces disabled users to logout.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void enabled(List<User> users) {
@@ -350,37 +401,37 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected void checkParams() {
-        // Check the user existed
+        // Verify users exist
         usersDb = userQuery.checkAndFind(users.stream().map(User::getId)
             .collect(Collectors.toList()));
-        // Check the enable or disable admin permission
+        // Verify administrator operation permissions
         userQuery.checkRefuseOperateAdmin(usersDb);
       }
 
       @Override
       protected Void process() {
-        // Update enabled status of the user
+        // Update user enabled status
         Map<Long, User> usersMap = users.stream().collect(Collectors.toMap(User::getId, x -> x));
         for (User userDb : usersDb) {
           userDb.setEnabled(usersMap.get(userDb.getId()).getEnabled());
         }
         batchUpdate0(usersDb);
 
-        // Check there is at least one system administrator
+        // Verify at least one system administrator remains
         assertTrue(userQuery.countValidSysAdminUser() > 0, USER_SYS_ADMIN_NUM_ERROR);
 
-        // Update enabled status of the oauth user
+        // Update OAuth2 user status
         for (User userDb : usersDb) {
           authUserCmd.replaceAuthUser(userDb, null, false);
         }
 
-        // Delete oauth2 authorization, force user to log out
+        // Delete OAuth2 authorizations for disabled users to force logout
         List<User> disabledUsers = usersDb.stream().filter(x -> !x.getEnabled()).toList();
         if (isNotEmpty(disabledUsers)){
           authUserCmd.deleteAuthorization(disabledUsers.stream().map(User::getUsername).toList());
         }
 
-        // Save operation log
+        // Log operations for audit
         operationLogCmd.addAll(USER, usersDb.stream().filter(User::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(USER, disabledUsers , DISABLED);
         return null;
@@ -388,6 +439,15 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Locks or unlocks users with optional date constraints.
+   * </p>
+   * <p>
+   * Validates date constraints and administrator permissions, updates lock status,
+   * and manages OAuth2 authorizations.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void locked(Long userId, Boolean locked, LocalDateTime lockStartDate,
@@ -397,7 +457,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected void checkParams() {
-        // Check the date is valid
+        // Verify date constraints are valid
         assertTrue(!locked || isNull(lockStartDate)
                 || isNull(lockEndDate) || lockEndDate.isAfter(lockStartDate),
             String.format("lockEndDate[%s] is not after lockStartDate[%s]",
@@ -405,22 +465,22 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
                 nonNull(lockStartDate) ? lockStartDate.format(DATE_TIME_FMT) : null));
         assertTrue(!locked || isNull(lockEndDate) // Ignore warning??
                 || lockEndDate.isAfter(LocalDateTime.now()),
-            String.format("lockEndDate[%s] must is a future date",
+            String.format("lockEndDate[%s] must be a future date",
                 nonNull(lockEndDate) ? lockEndDate.format(DATE_TIME_FMT) : null));
-        // Check the user existed
+        // Verify user exists
         userDb = userQuery.checkAndFind(userId);
 
-        // Check the lock or unlock admin permission
+        // Verify administrator operation permissions
         userQuery.checkRefuseOperateAdmin(Collections.singletonList(userDb));
 
-        // Check there is at least one system administrator
+        // Verify at least one system administrator remains
         assertTrue(!locked || !userDb.getSysAdmin()
             || userQuery.countValidSysAdminUser() > 1, USER_SYS_ADMIN_NUM_ERROR);
       }
 
       @Override
       protected Void process() {
-        // Update locked status of the user
+        // Update user lock status
         if (locked) {
           userDb.setLocked((isNull(lockStartDate) && isNull(lockEndDate))
                   || (nonNull(lockStartDate) && lockStartDate
@@ -431,21 +491,30 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         }
         userRepo.save(userDb);
 
-        // Update locked status of the oauth user
+        // Update OAuth2 user lock status
         authUserCmd.replaceAuthUser(userDb, null, false);
 
-        // Delete oauth2 authorization, force user to log out
+        // Delete OAuth2 authorization to force user logout when locked
         if (locked){
           authUserCmd.deleteAuthorization(List.of(userDb.getUsername()));
         }
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER, userDb, locked ? LOCKED : UNLOCKED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Sets or cancels system administrator status for users.
+   * </p>
+   * <p>
+   * Validates administrator permissions and ensures at least one system administrator remains.
+   * Updates user system administrator status and OAuth2 user information.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void adminSet(Long userId, Boolean sysAdmin) {
@@ -454,11 +523,11 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
       @Override
       protected void checkParams() {
-        // Check the system admin permission
+        // Verify system administrator permissions
         assertForbidden(isTenantSysAdmin() || isToUser(), USER_REFUSE_OPERATE_ADMIN, FORBIDDEN_KEY);
-        // Check the user existed
+        // Verify user exists
         userDb = userQuery.checkAndFind(userId);
-        // Check there is at least one system administrator
+        // Verify at least one system administrator remains
         assertTrue(sysAdmin || userQuery.countValidSysAdminUser() > 1,
             USER_SYS_ADMIN_NUM_ERROR);
       }
@@ -470,7 +539,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
         authUserCmd.replaceAuthUser(userDb, null, false);
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(USER, userDb, sysAdmin ? SET_SYS_ADMIN : CANCEL_SYS_ADMIN);
         return null;
       }
@@ -478,7 +547,12 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   }
 
   /**
-   * User by {@link UserLockJob}
+   * <p>
+   * Processes expired user locks.
+   * </p>
+   * <p>
+   * Used by UserLockJob to automatically lock users when lock conditions are met.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -495,7 +569,12 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   }
 
   /**
-   * User by {@link UserUnlockJob}
+   * <p>
+   * Processes expired user unlocks.
+   * </p>
+   * <p>
+   * Used by UserUnlockJob to automatically unlock users when unlock conditions are met.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -511,62 +590,127 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes directory users and associated data.
+   * </p>
+   * <p>
+   * Removes users, associated relationships, and OAuth2 users.
+   * Ensures at least one system administrator remains.
+   * </p>
+   */
   @Override
   public void deleteDirectoryUsers(Set<Long> userIds) {
     if (isEmpty(userIds)) {
       return;
     }
 
-    // Delete user account
+    // Delete user accounts
     userRepo.deleteAllByIdIn(userIds);
 
-    // Check there is at least one system administrator
+    // Verify at least one system administrator remains
     assertTrue(userQuery.countValidSysAdminUser() > 0, USER_SYS_ADMIN_NUM_ERROR);
 
-    // Delete associate targets
+    // Delete associated targets
     userDeptCmd.deleteByUserId(userIds);
     userGroupCmd.deleteByUserId(userIds);
     orgTagTargetCmd.deleteAllByTarget(OrgTargetType.USER, userIds);
 
-    // Delete oauth2 user
+    // Delete OAuth2 users
     authUserCmd.delete(userIds);
   }
 
+  /**
+   * <p>
+   * Empties directory users without deletion.
+   * </p>
+   * <p>
+   * Marks directory users as empty without removing them from the system.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void emptyDirectoryUsers(Set<Long> userIds) {
     userRepo.updateDirectoryEmptyByUserIdIn(userIds);
   }
 
+  /**
+   * <p>
+   * Empties all users in a specific directory.
+   * </p>
+   * <p>
+   * Marks all users in the specified directory as empty.
+   * </p>
+   */
   @Override
   public void emptyDirectoryUsers(Long directoryId) {
     userRepo.updateDirectoryEmptyByDirectoryId(directoryId);
   }
 
+  /**
+   * <p>
+   * Clears main department for users in specified departments.
+   * </p>
+   * <p>
+   * Removes main department assignment for users in the specified departments.
+   * </p>
+   */
   @Override
   public void clearMainDeptByDeptIdIn(Set<Long> deptIds) {
     userRepo.updateMainDeptByDeptIdIn(deptIds);
   }
 
+  /**
+   * <p>
+   * Clears main department for specific user and departments.
+   * </p>
+   * <p>
+   * Removes main department assignment for specific user in specified departments.
+   * </p>
+   */
   @Override
   public void clearMainDeptByUserIdAndDeptIdIn(Long userId, Set<Long> deptIds) {
     userRepo.updateMainDeptByUserIdAndDeptIdIn(userId, deptIds);
   }
 
+  /**
+   * <p>
+   * Clears main department for users in specific department.
+   * </p>
+   * <p>
+   * Removes main department assignment for users in the specified department.
+   * </p>
+   */
   @Override
   public void clearMainDeptByDeptIdAndUserIdIn(Long deptId, Set<Long> userIds) {
     userRepo.updateMainDeptByDeptIdAndUserIdIn(deptId, userIds);
   }
 
+  /**
+   * <p>
+   * Deletes users by tenant IDs.
+   * </p>
+   * <p>
+   * Removes all users and associated data for the specified tenants.
+   * </p>
+   */
   @Override
   public void deleteByTenant(Set<Long> tenantIds) {
     deleteTenantAssociateRelation(tenantIds);
-    // Delete user account info
+    // Delete user account information
     userRepo.deleteByTenantIdIn(tenantIds);
 
-    // NOOP:: authUserRemote.deleteByTenantId(new HashSet<>(tenantIds));
+    // NOOP: authUserRemote.deleteByTenantId(new HashSet<>(tenantIds));
   }
 
+  /**
+   * <p>
+   * Deletes users by directory with optional synchronization.
+   * </p>
+   * <p>
+   * Deletes or empties users based on directory configuration and synchronization settings.
+   * </p>
+   */
   @Override
   public void deleteByDirectory(Long id, boolean deleteSync) {
     if (deleteSync) {
@@ -576,6 +720,14 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }
   }
 
+  /**
+   * <p>
+   * Validates and initializes invitation tenant.
+   * </p>
+   * <p>
+   * Verifies invitation code and retrieves associated tenant information.
+   * </p>
+   */
   private Tenant checkAndInitInvitationTenant(User user) {
     String invitationCode = user.getInvitationCode();
     assertNotEmpty(invitationCode, "invitationCode is required");
@@ -585,13 +737,21 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     return tenant;
   }
 
+  /**
+   * <p>
+   * Validates and initializes tenant based on user source.
+   * </p>
+   * <p>
+   * Handles different tenant initialization scenarios based on user source type.
+   * </p>
+   */
   public Tenant checkAndInitTenant(User user, UserSource userSource) {
     Tenant optTenant;
     if (UserSource.PLATFORM_SIGNUP.equals(userSource)) {
       optTenant = initPlatformSignupTenant(user);
     } else if (UserSource.INVITATION_CODE_SIGNUP.equals(userSource)) {
       optTenant = checkAndInitInvitationTenant(user);
-      // Important:: Enable multi tenant controller <- Invoke by /innerapi
+      // Important: Enable multi tenant controller <- Invoke by /innerapi
       setMultiTenantCtrl(true);
     } else if (UserSource.BACKGROUND_SIGNUP.equals(userSource)) {
       // See TenantCmd#add()
@@ -602,21 +762,37 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
       // THIRD_PARTY_LOGIN, LDAP_SYNCHRONIZE
       optTenant = tenantQuery.detail(user.getTenantId());
     }
-    // Set tenant
+    // Set tenant context
     PrincipalContext.get().setTenantId(optTenant.getId());
     PrincipalContext.get().setTenantName(optTenant.getName());
     user.setTenantId(nullSafe(user.getTenantId(), optTenant.getId()));
     return optTenant;
   }
 
+  /**
+   * <p>
+   * Initializes platform signup tenant.
+   * </p>
+   * <p>
+   * Creates new tenant for platform signup users.
+   * </p>
+   */
   private Tenant initPlatformSignupTenant(User user) {
-    //Signup tenant
+    // Create signup tenant
     Tenant signupTenant = TenantConverter.toSignupTenant(TenantSource.PLATFORM_SIGNUP);
     tenantCmd.add0(signupTenant);
     user.setTenantId(signupTenant.getId());
     return signupTenant;
   }
 
+  /**
+   * <p>
+   * Adds associated targets for user.
+   * </p>
+   * <p>
+   * Creates department, group, and tag associations for the user.
+   * </p>
+   */
   private void addAssociateTarget(List<DeptUser> deptUsers,
       List<GroupUser> groupUsers, List<OrgTagTarget> userTags) {
     long optTenantId = getOptTenantId();
@@ -639,6 +815,14 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }
   }
 
+  /**
+   * <p>
+   * Updates associated targets for user.
+   * </p>
+   * <p>
+   * Replaces department, group, and tag associations for the user.
+   * </p>
+   */
   private void updateAssociateTarget(Long userId, List<DeptUser> deptUsers,
       List<GroupUser> groupUsers, List<OrgTagTarget> userTags) {
     long optTenantId = getOptTenantId();
@@ -664,15 +848,31 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }
   }
 
+  /**
+   * <p>
+   * Replaces associated targets for user.
+   * </p>
+   * <p>
+   * Clears existing associations and creates new ones.
+   * </p>
+   */
   private void replaceAssociateTarget(Long userId, List<DeptUser> deptUsers,
       List<GroupUser> groupUsers, List<OrgTagTarget> userTags) {
-    // Replace -> Clear the empty of association
+    // Replace -> Clear existing associations
     deleteUserAssociateRelation(Collections.singleton(userId));
 
-    // Add new association
+    // Add new associations
     addAssociateTarget(deptUsers, groupUsers, userTags);
   }
 
+  /**
+   * <p>
+   * Deletes user associated relationships.
+   * </p>
+   * <p>
+   * Removes department, group, and tag associations for specified users.
+   * </p>
+   */
   private void deleteUserAssociateRelation(Set<Long> userIds) {
     if (isNotEmpty(userIds)) {
       userDeptCmd.deleteByUserId(userIds);
@@ -681,6 +881,14 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
     }
   }
 
+  /**
+   * <p>
+   * Deletes tenant associated relationships.
+   * </p>
+   * <p>
+   * Removes department, group, and tag associations for specified tenants.
+   * </p>
+   */
   private void deleteTenantAssociateRelation(Set<Long> tenantIds) {
     if (isNotEmpty(tenantIds)) {
       userDeptCmd.deleteByTenantId(tenantIds);

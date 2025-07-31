@@ -22,22 +22,40 @@ import java.util.HashSet;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of organization tag command operations.
+ * </p>
+ * <p>
+ * Manages organization tag lifecycle including creation, updates, and deletion.
+ * Provides tag management with quota validation and audit logging.
+ * </p>
+ * <p>
+ * Supports tenant-specific tag management with proper validation and
+ * cascading deletion of tag targets.
+ * </p>
+ */
 @Biz
 public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
 
   @Resource
   private OrgTagRepo orgTagRepo;
-
   @Resource
   private OrgTagTargetRepo orgTagTargetRepo;
-
   @Resource
   private OrgTagQuery orgTagQuery;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Creates organization tags with validation.
+   * </p>
+   * <p>
+   * Validates tag names, checks for duplicates, and verifies quota limits.
+   * Creates tags and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public List<IdKey<Long, Object>> add(List<OrgTag> tags) {
@@ -46,8 +64,11 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
 
       @Override
       protected void checkParams() {
+        // Verify tag names in parameters
         orgTagQuery.checkNameInParam(tags);
+        // Verify tag name uniqueness for tenant
         orgTagQuery.checkAddTagName(tenantId, tags);
+        // Verify tag quota for tenant
         orgTagQuery.checkQuota(tenantId, tags.size());
       }
 
@@ -60,25 +81,45 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates organization tags with validation.
+   * </p>
+   * <p>
+   * Validates tag names and checks for uniqueness during updates.
+   * Updates tags and logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(List<OrgTag> tags) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
+        // Verify tag names in parameters
         orgTagQuery.checkNameInParam(tags);
+        // Verify tag name uniqueness for tenant during update
         orgTagQuery.checkUpdateTagName(getOptTenantId(), tags);
       }
 
       @Override
       protected Void process() {
-        List<OrgTag> tagsDb =  batchUpdateOrNotFound(tags);
+        List<OrgTag> tagsDb = batchUpdateOrNotFound(tags);
         operationLogCmd.addAll(ORG_TAG, tagsDb, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes organization tags and associated targets.
+   * </p>
+   * <p>
+   * Removes tags and cascades deletion to associated tag targets.
+   * Logs the operation for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(HashSet<Long> ids) {
@@ -87,9 +128,11 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
       protected Void process() {
         List<OrgTag> tagsDb = orgTagQuery.checkAndFind(ids);
         if (!tagsDb.isEmpty()) {
+          // Delete tags and associated targets
           orgTagRepo.deleteByIdIn(ids);
           orgTagTargetRepo.deleteByTagIdIn(ids);
 
+          // Log operation for audit
           operationLogCmd.addAll(ORG_TAG, tagsDb, DELETED);
         }
         return null;

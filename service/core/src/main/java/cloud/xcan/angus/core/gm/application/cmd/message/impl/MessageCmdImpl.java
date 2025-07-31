@@ -39,38 +39,64 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * Implementation of message command operations for managing system messages.
+ * 
+ * <p>This class provides comprehensive functionality for message management including:</p>
+ * <ul>
+ *   <li>Creating and sending system messages</li>
+ *   <li>Managing message delivery via WebSocket and email</li>
+ *   <li>Handling message status tracking</li>
+ *   <li>Managing message recipients and quotas</li>
+ * </ul>
+ * 
+ * <p>The implementation ensures proper message delivery with status tracking
+ * and recipient management across different delivery channels.</p>
+ */
 @Slf4j
 @Service
 public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd {
 
   @Resource
   private MessageRepo messageRepo;
-
   @Resource
   private MessageCurrentRepo messageCurrentRepo;
-
   @Resource
   private UserManager userManager;
-
   @Resource
   private MessageCenterCmd messageCenterCmd;
-
   @Resource
   private EmailCmd emailCmd;
 
+  /**
+   * Creates a new message with comprehensive validation.
+   * 
+   * <p>This method performs message creation including:</p>
+   * <ul>
+   *   <li>Validating tenant access permissions</li>
+   *   <li>Checking message recipient requirements</li>
+   *   <li>Setting tenant context appropriately</li>
+   *   <li>Creating message record</li>
+   * </ul>
+   * 
+   * @param message Message to create
+   * @return Created message identifier
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public IdKey<Long, Object> add(Message message) {
     return new BizTemplate<IdKey<Long, Object>>() {
       @Override
       protected void checkParams() {
+        // Validate tenant access permissions
         assertTrue(isOpClient() || (nonNull(message.getReceiveTenantId())
                 && getTenantId().equals(message.getReceiveTenantId())),
             "Deny operation to other tenant");
+        // Validate message recipient requirements
         assertTrue(ReceiveObjectType.ALL.equals(message.getReceiveObjectType())
                 || isNotEmpty(message.getReceiveObjectData()),
             "receiveObjects cannot be empty when receiveObjectType is not ALL");
+        // Validate tenant ID requirements
         assertForbidden(ReceiveObjectType.ALL.equals(message.getReceiveObjectType())
                 || nonNull(message.getReceiveTenantId()),
             "receiveTenantId cannot be empty when receiveObjectType is not ALL");
@@ -78,6 +104,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
       @Override
       protected IdKey<Long, Object> process() {
+        // Set tenant context
         setOptTenantId(getTenantId());
         if (isTenantClient()) {
           message.setReceiveTenantId(getTenantId());
@@ -90,6 +117,11 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
     }.execute();
   }
 
+  /**
+   * Deletes messages by marking them as deleted.
+   * 
+   * @param ids Set of message identifiers to delete
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(Set<Long> ids) {
@@ -97,12 +129,26 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
       @Override
       protected Void process() {
+        // Mark messages as deleted with timestamp
         messageRepo.updateDeletedByIdIn(ids, LocalDateTime.now());
         return null;
       }
     }.execute();
   }
 
+  /**
+   * Sends in-site messages via WebSocket with comprehensive tracking.
+   * 
+   * <p>This method performs in-site message delivery including:</p>
+   * <ul>
+   *   <li>Sending messages via WebSocket</li>
+   *   <li>Creating user message records</li>
+   *   <li>Updating message status and statistics</li>
+   *   <li>Handling delivery failures</li>
+   * </ul>
+   * 
+   * @param message Message to send
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void sentInSiteMessage(Message message) {
@@ -112,10 +158,10 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
       protected Void process() {
         String failureReason = null;
         try {
-          // Sent message by WebSocket
+          // Send message via WebSocket
           messageCenterCmd.push(messageToPushDto(message));
 
-          // Save user message
+          // Create user message records
           Set<Long> allReceiveUserIds = getSentUserIds(message);
           if (isNotEmpty(allReceiveUserIds)) {
             List<MessageSent> messages = allReceiveUserIds.stream().map(
@@ -124,7 +170,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
             messageCurrentRepo.batchInsert0(messages);
           }
 
-          // Save message status
+          // Update message status and statistics
           message.setStatus(MessageStatus.SENT).setSendDate(LocalDateTime.now())
               .setSentNum(allReceiveUserIds.size());
           messageRepo.save(message);
@@ -137,6 +183,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
           }
         }
 
+        // Handle delivery failure
         if (nonNull(failureReason)) {
           message.setStatus(MessageStatus.FAILURE)
               .setFailureReason(lengthSafe(failureReason, 200));
@@ -147,6 +194,18 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
     }.execute();
   }
 
+  /**
+   * Sends email messages with comprehensive tracking.
+   * 
+   * <p>This method performs email message delivery including:</p>
+   * <ul>
+   *   <li>Sending messages via email service</li>
+   *   <li>Updating message status and statistics</li>
+   *   <li>Handling delivery failures</li>
+   * </ul>
+   * 
+   * @param message Message to send
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void sentEmailMessage(Message message) {
@@ -155,10 +214,10 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
       protected Void process() {
         String failureReason = null;
         try {
-          // Sent message by email
+          // Send message via email service
           emailCmd.send(toSendEmailMessage(message), false);
 
-          // Save message status
+          // Update message status and statistics
           Set<Long> allReceiveUserIds = getSentUserIds(message);
           message.setStatus(MessageStatus.SENT).setSendDate(LocalDateTime.now())
               .setSentNum(allReceiveUserIds.size());
@@ -172,6 +231,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
           }
         }
 
+        // Handle delivery failure
         if (nonNull(failureReason)) {
           message.setStatus(MessageStatus.FAILURE)
               .setFailureReason(lengthSafe(failureReason, 200));
@@ -182,38 +242,62 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
     }.execute();
   }
 
+  /**
+   * Increments read count for specified messages.
+   * 
+   * @param messageIds Set of message identifiers to update read count
+   */
   @Override
   public void plusReadNum(Set<Long> messageIds) {
     messageRepo.incrReadNum(messageIds);
   }
 
+  /**
+   * Retrieves user IDs for message recipients based on receive object type.
+   * 
+   * <p>This method determines recipients including:</p>
+   * <ul>
+   *   <li>All users in system or specific tenant</li>
+   *   <li>Users within specific groups</li>
+   *   <li>Users within specific departments</li>
+   *   <li>Specific users by ID</li>
+   * </ul>
+   * 
+   * @param message Message containing recipient information
+   * @return Set of user identifiers for message recipients
+   */
   private Set<Long> getSentUserIds(Message message) {
     Set<Long> allReceiveUserIds = new HashSet<>();
     switch (message.getReceiveObjectType()) {
       case ALL:
+        // Get all valid users or users in specific tenant
         allReceiveUserIds = message.isSentAllUsers() ? userManager.getAllValidUserIds()
             : userManager.getAllValidUserIdsByTenantId(message.getReceiveTenantId());
         break;
       case USER:
+        // Get specific users by ID
         allReceiveUserIds = message.getReceiveObjectData().stream()
             .map(ReceiveObject::getId).collect(Collectors.toSet());
         break;
       case GROUP:
+        // Get users within specific groups
         allReceiveUserIds = userManager.getValidUserIdsByGroupIds(message.getReceiveTenantId(),
             message.getReceiveObjectData().stream()
                 .map(ReceiveObject::getId).collect(Collectors.toSet()));
         break;
       case DEPT:
+        // Get users within specific departments
         allReceiveUserIds = userManager.getValidUserIdsByDeptIds(message.getReceiveTenantId(),
             message.getReceiveObjectData().stream()
                 .map(ReceiveObject::getId).collect(Collectors.toSet()));
         break;
       case TENANT:
+        // Get all users in specific tenant
         allReceiveUserIds = userManager
             .getAllValidUserIdsByTenantId(message.getReceiveTenantId());
         break;
       default:
-        // NOOP
+        // No action for unsupported object types
     }
     return allReceiveUserIds;
   }

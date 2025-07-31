@@ -53,44 +53,59 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of authorization policy command operations.
+ * </p>
+ * <p>
+ * Provides comprehensive policy management functionality including creation, updates, deletion,
+ * and initialization of authorization policies for different organizational entities.
+ * </p>
+ * <p>
+ * Supports both platform-level predefined policies and tenant-level user-defined policies
+ * with proper permission validation and quota management.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements AuthPolicyCmd {
 
   @Resource
   private AuthPolicyRepo authPolicyRepo;
-
   @Resource
   private AuthPolicyFuncCmd authPolicyFuncCmd;
-
   @Resource
   private AuthPolicyFuncRepo authPolicyFuncRepo;
-
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AppOpenRepo appOpenRepo;
-
   @Resource
   private AppOpenCmd appOpenCmd;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private AppFuncQuery appFuncQuery;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private AuthPolicyTenantCmd authPolicyTenantCmd;
-
   @Resource
   private OperationLogCmd operationLogCmd;
 
+  /**
+   * <p>
+   * Creates new authorization policies with comprehensive validation.
+   * </p>
+   * <p>
+   * Performs validation for policy code suffixes, duplicates, permissions, and quotas.
+   * Handles both platform-type and tenant-type policies with appropriate checks.
+   * </p>
+   * <p>
+   * Automatically associates policies with their corresponding application functions
+   * and generates operation logs for audit purposes.
+   * </p>
+   */
   @Transactional(rollbackFor = {Exception.class})
   @Override
   public List<IdKey<Long, Object>> add(List<AuthPolicy> policies) {
@@ -99,28 +114,28 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check the custom policy suffix is secure
+        // Validate predefined policy suffixes for security
         for (AuthPolicy policy : policies) {
           assertTrue(
               !policy.isPreDefined() || POLICY_PRE_DEFINED_SUFFIX.contains(policy.getCodeSuffix()),
               POLICY_PRE_SUFFIX_ERROR_T, new Object[]{join(POLICY_PRE_DEFINED_SUFFIX, ",")});
         }
 
-        // Check the code and name duplication in params
+        // Check for duplicate codes and names within the input parameters
         authPolicyQuery.checkDuplicateParam(policies, true);
-        // Check the code and name duplication in db
+        // Check for duplicate codes and names in the database
         authPolicyQuery.checkUniqueCodeAndNameSuffix(policies);
 
-        // Check that only permission operation are allowed to add PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         List<AuthPolicy> platformTypePolicies = policies.stream().filter(AuthPolicy::isPlatformType)
             .collect(Collectors.toList());
         authPolicyQuery.checkOpPolicyPermission(platformTypePolicies);
 
-        // Check the code and name duplication under the platform when the type is equal to PRE_DEFINED
+        // Validate platform-type policies (predefined policies)
         if (isNotEmpty(platformTypePolicies)) {
           closeMultiTenantCtrl();
           authPolicyQuery.checkUniqueCodeAndNameSuffix(platformTypePolicies);
-          // Check the app existed, appId is required in params
+          // Verify applications exist and set client IDs
           List<Long> appIds = platformTypePolicies.stream().map(AuthPolicy::getAppId)
               .distinct().collect(Collectors.toList());
           List<App> apps = appQuery.checkAndFindTenantApp(appIds, true);
@@ -130,12 +145,12 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
           enableMultiTenantCtrl();
         }
 
-        // Check the code and name duplication under the tenant when the type is equal to USER_DEFINED
+        // Validate tenant-type policies (user-defined policies)
         List<AuthPolicy> tenantTypePolicies = policies.stream().filter(AuthPolicy::isTenantType)
             .collect(Collectors.toList());
         if (isNotEmpty(tenantTypePolicies)) {
-          authPolicyQuery.checkUniqueCodeAndNameSuffix(platformTypePolicies);
-          // Check the app existed, appId is required in params
+          authPolicyQuery.checkUniqueCodeAndNameSuffix(tenantTypePolicies);
+          // Verify applications exist and set client IDs
           List<Long> appIds = tenantTypePolicies.stream().map(AuthPolicy::getAppId)
               .distinct().collect(Collectors.toList());
           List<App> apps = appQuery.checkAndFindTenantApp(appIds, true);
@@ -146,7 +161,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
           }
         }
 
-        // Check the app functions existed
+        // Validate application functions exist
         for (AuthPolicy policy : policies) {
           if (policy.hasFunc()) {
             appFuncDb.addAll(appFuncQuery.checkAndFindTenantAppFunc(policy.getAppId(),
@@ -155,7 +170,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
           }
         }
 
-        // Check the tenant quota when the type is equal to USER_DEFINED
+        // Check tenant quota for user-defined policies
         if (isNotEmpty(tenantTypePolicies)) {
           authPolicyQuery.checkPolicyQuota(getTenantId(), tenantTypePolicies.size());
         }
@@ -163,23 +178,30 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected List<IdKey<Long, Object>> process() {
-        // NOOP:: Set default and safe params <- AuthPolicyAssembler
-
-        // Save policies
+        // Save policies to database
         List<IdKey<Long, Object>> idKeys = batchInsert(policies, "code");
 
-        // Save functions of policies
+        // Associate policies with their functions
         if (isNotEmpty(appFuncDb)) {
           authPolicyFuncCmd.add0(policies, appFuncDb);
         }
 
-        // Save operation log
+        // Log operation for audit trail
         operationLogCmd.addAll(POLICY, policies, CREATED);
         return idKeys;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Updates existing authorization policies with validation.
+   * </p>
+   * <p>
+   * Ensures policies exist and validates permissions before allowing updates.
+   * Replaces associated functions when provided and maintains audit logs.
+   * </p>
+   */
   @Transactional(rollbackFor = {Exception.class})
   @Override
   public void update(List<AuthPolicy> policies) {
@@ -188,23 +210,21 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check the policies existed
+        // Verify policies exist in database
         List<AuthPolicy> authPoliciesDb = authPolicyQuery.checkAndFind(policies.stream()
             .map(AuthPolicy::getId).collect(Collectors.toList()), false, true);
 
-        // Check the code and name duplication in params
+        // Check for duplicate codes and names within input parameters
         authPolicyQuery.checkDuplicateParam(policies, false);
-        // Check the code and name duplication in db
+        // Check for duplicate codes and names in database
         authPolicyQuery.checkUniqueCodeAndNameSuffix(policies);
 
-        // Check that only permission operation are allowed to add OPEN_GRANT and PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         List<AuthPolicy> platformTypePolicies = policies.stream().filter(AuthPolicy::isPlatformType)
             .collect(Collectors.toList());
         authPolicyQuery.checkOpPolicyPermission(platformTypePolicies);
 
-        // NOOP:: Check app existed, appId is not required and is immutable
-
-        // Check the app functions existed, appId is not required and is immutable
+        // Validate application functions exist
         Map<Long, Long> authPolicyAppMap = authPoliciesDb.stream()
             .collect(Collectors.toMap(AuthPolicy::getId, AuthPolicy::getAppId));
         for (AuthPolicy policy : policies) {
@@ -219,23 +239,30 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected Void process() {
-        // NOOP:: Set default and safe params <- params is immutable
-
-        // Save policies
+        // Update policies in database
         List<AuthPolicy> policiesDb = batchUpdateOrNotFound0(policies);
 
-        // Replace functions of policies when the functions is not empty
+        // Replace associated functions when provided
         if (isNotEmpty(appFuncDb)) {
           authPolicyFuncCmd.replace0(policies, appFuncDb);
         }
 
-        // Save operation log
+        // Log operation for audit trail
         operationLogCmd.addAll(POLICY, policiesDb, UPDATED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Replaces authorization policies with a mix of new and updated policies.
+   * </p>
+   * <p>
+   * Creates new policies and updates existing ones in a single operation.
+   * Maintains data integrity by preserving immutable fields during updates.
+   * </p>
+   */
   @Transactional(rollbackFor = {Exception.class})
   @Override
   public List<IdKey<Long, Object>> replace(List<AuthPolicy> policies) {
@@ -248,7 +275,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
         replacePolicies = policies.stream().filter(policy -> nonNull(policy.getId()))
             .collect(Collectors.toList());
         if (isNotEmpty(replacePolicies)) {
-          // Check the updated policies existed
+          // Verify existing policies to be updated
           replacePoliciesDb = authPolicyQuery.checkAndFind(replacePolicies.stream()
               .map(AuthPolicy::getId).collect(Collectors.toList()), false, true);
         }
@@ -258,16 +285,18 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
       protected List<IdKey<Long, Object>> process() {
         List<IdKey<Long, Object>> idKeys = new ArrayList<>();
 
+        // Add new policies
         List<AuthPolicy> addApps = policies.stream().filter(app -> isNull(app.getId()))
             .collect(Collectors.toList());
         if (isNotEmpty(addApps)) {
           idKeys.addAll(add(addApps));
         }
 
+        // Update existing policies
         if (isNotEmpty(replacePolicies)) {
           Map<Long, AuthPolicy> appDbMap = replacePoliciesDb.stream()
               .collect(Collectors.toMap(AuthPolicy::getId, x -> x));
-          // Do not replace source and enabled
+          // Preserve immutable fields during update
           replacePoliciesDb = replacePolicies.stream()
               .map(x -> copyPropertiesIgnoreTenantAuditing(x, appDbMap.get(x.getId()),
                   "code", "type", "grantStage", "appId", "clientId", "enabled"))
@@ -277,7 +306,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
           idKeys.addAll(replacePoliciesDb.stream()
               .map(x -> IdKey.of(x.getId(), x.getName())).toList());
 
-          // Save operation log
+          // Log operation for audit trail
           operationLogCmd.addAll(POLICY, replacePoliciesDb, UPDATED);
         }
         return idKeys;
@@ -285,6 +314,15 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes authorization policies and their associated data.
+   * </p>
+   * <p>
+   * Removes policy functions, organization associations, and the policies themselves.
+   * Validates permissions before deletion and maintains audit logs.
+   * </p>
+   */
   @Transactional(rollbackFor = {Exception.class})
   @Override
   public void delete(Set<Long> ids) {
@@ -293,20 +331,20 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check that only permission operation are allowed to add OPEN_GRANT and PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         policiesDb = authPolicyRepo.findAllById(ids);
         authPolicyQuery.checkOpPolicyPermission(policiesDb);
       }
 
       @Override
       protected Void process() {
-        // Open multiTenantAutoCtrlWhenOpClient is required, Need to delete other tenant data
+        // Remove associated data and policies
         if (isNotEmpty(policiesDb)) {
           authPolicyFuncRepo.deleteByPolicyIdIn(ids);
           authPolicyOrgRepo.deleteByPolicyIdIn(ids);
           authPolicyRepo.deleteByIdIn(ids);
 
-          // Save operation log
+          // Log operation for audit trail
           operationLogCmd.addAll(POLICY, policiesDb, DELETED);
         }
         return null;
@@ -314,6 +352,15 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * <p>
+   * Enables or disables authorization policies.
+   * </p>
+   * <p>
+   * Updates the enabled status of policies and logs the operation for audit purposes.
+   * Validates permissions before allowing status changes.
+   * </p>
+   */
   @Transactional(rollbackFor = {Exception.class})
   @Override
   public void enabled(List<AuthPolicy> policies) {
@@ -323,11 +370,11 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check the policies existed
+        // Verify policies exist in database
         ids = policies.stream().map(AuthPolicy::getId).collect(Collectors.toList());
         policiesDb = authPolicyQuery.checkAndFind(ids, false, true);
 
-        // Check that only permission operation are allowed to enable or disable PRE_DEFINED policies on OP client
+        // Validate permissions for predefined policies on operation client
         authPolicyQuery.checkOpPolicyPermission(policiesDb);
       }
 
@@ -335,7 +382,7 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
       protected Void process() {
         batchUpdateOrNotFound(policies);
 
-        // Save operation log
+        // Log enabled and disabled policies separately
         operationLogCmd.addAll(POLICY, policiesDb.stream()
             .filter(AuthPolicy::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(POLICY, policiesDb.stream()
@@ -346,18 +393,20 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
   }
 
   /**
-   * Manually initialize the PRE_DEFINED authorization policy for the tenants and it is only used to
-   * authorize new application permissions to existing tenants.
    * <p>
-   * Ignored when repeated initialization.
-   *
-   * <pre>
-   *   - If policy is _ADMIN policy , save authorization when _ADMIN policy does not exist.
-   *   - If policy is _USER or _GUEST policy, save authorization when default policy does not exist.
-   * </pre>
+   * Manually initializes predefined authorization policies for tenants.
+   * </p>
    * <p>
-   * Automatically initialize policy when signup succeed, see
-   * {@link AuthPolicyTenantCmd#intAndOpenAppByTenantWhenSignup(Long)}
+   * Used to authorize new application permissions to existing tenants.
+   * Ignores repeated initialization attempts.
+   * </p>
+   * <p>
+   * For admin policies: saves authorization when admin policy doesn't exist.
+   * For user/guest policies: saves authorization when default policy doesn't exist.
+   * </p>
+   * <p>
+   * Automatically opens applications when initialized for the first time.
+   * </p>
    */
   @Transactional(rollbackFor = {Exception.class})
   @Override
@@ -368,21 +417,21 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
 
       @Override
       protected void checkParams() {
-        // Check the policy existed
+        // Verify policy exists and is accessible
         authPolicyDb = authPolicyQuery.checkAndFindTenantPolicy(policyId, true, true);
-        // Check the policy type must be PRE_DEFINED
+        // Ensure policy is predefined type
         assertTrue(authPolicyDb.isPlatformType(),
-            "Only PRE_DEFINED type authorization policy is supported");
-        // Check the policy type must be PRE_DEFINED
+            "Only predefined type authorization policies are supported");
+        // Ensure policy is not extension type
         assertTrue(!authPolicyDb.isExtPolicy(),
-            "Only non _EXT type authorization policy is supported");
-        // Check the policy type must be PRE_DEFINED
+            "Only non-extension type authorization policies are supported");
+        // Ensure policy has automatic grant stage
         assertTrue(!authPolicyDb.getGrantStage().isManual(),
-            String.format("Non automatic authorization policy grantStage[%s]",
+            String.format("Non-automatic authorization policy grantStage[%s]",
                 authPolicyDb.getGrantStage().getValue()));
-        // Check and find policy app
+        // Verify associated application exists
         appDb = appQuery.checkAndFind(authPolicyDb.getAppId(), true);
-        // Check only allow authorization to initialize tenant applications
+        // Ensure only tenant applications can be initialized
         assertTrue(!appDb.isOpApp(),
             "Operation application authorization initialization is not supported. Please authorize manually after opening");
       }
@@ -390,31 +439,31 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
       @DoInFuture("Optimize to pageable query, the number of tenants may be large")
       @Override
       protected Void process() {
-        // Open the application when it is initialized for the first time and is not opened
+        // Open application when initialized for the first time
         openAppWhenInitPolicy(authPolicyDb, appDb);
 
-        // Query the tenants of unauthorized policy
+        // Query tenants without policy authorization
         Set<Long> unauthTenantIds = null;
         switch (authPolicyDb.getGrantStage()) {
           case SIGNUP_SUCCESS:
             unauthTenantIds = authPolicyDb.isAdminPolicy() ?
-                // Query the signup tenants of unauthorized admin policy
+                // Query signup tenants without admin policy authorization
                 authPolicyOrgRepo.findTenantIdByWhenSignupAndUnauth(policyId) :
-                // Query the signup tenants of unauthorized default policy
+                // Query signup tenants without default policy authorization
                 authPolicyOrgRepo.findTenantIdByWhenSignupAndUnauthDefault(authPolicyDb.getAppId());
             break;
           //case REAL_NAME_PASSED:
           // NOOP:: Cloud service edition applications need to be opened by default
           //  unauthTenantIds = authPolicyDb.isAdminPolicy() ?
-          //      // Query the realname tenants of unauthorized admin policy
+          //      // Query realname tenants without admin policy authorization
           //      authPolicyOrgRepo.findTenantIdByWhenRealnameAndUnauth(policyId) :
-          //      // Query the realname tenants of unauthorized default policy
+          //      // Query realname tenants without default policy authorization
           //      authPolicyOrgRepo.findTenantIdByWhenRealnameAndUnauthDefault(
           //          authPolicyDb.getAppId());
           //  break;
           //case OPEN_SUCCESS:
           // NOOP:: Cloud service edition applications need to be opened by default
-          // Query the opened tenants of unauthorized policy
+          // Query opened tenants without policy authorization
           // unauthTenantIds = authPolicyOrgRepo.findTenantIdByWhenAppOpenedAndUnauth(policyId);
           // break;
           //  throw new RuntimeException("Authorized OPEN_SUCCESS policy is not supported");
@@ -438,6 +487,14 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
     }.execute();
   }
 
+  /**
+   * <p>
+   * Opens applications for tenants when initializing policies.
+   * </p>
+   * <p>
+   * Handles application opening for tenants that haven't opened the application yet.
+   * </p>
+   */
   private void openAppWhenInitPolicy(AuthPolicy authPolicyDb, App appDb) {
     List<Long> unopenTenantIds = null;
     if (authPolicyDb.getGrantStage().equals(SIGNUP_SUCCESS)) {
@@ -449,6 +506,14 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
     }
   }
 
+  /**
+   * <p>
+   * Generates a random policy code for new policies.
+   * </p>
+   * <p>
+   * Creates an 8-character alphanumeric code in uppercase format.
+   * </p>
+   */
   public static String genPolicyCode() {
     return RandomStringUtils.randomAlphanumeric(8).toUpperCase();
   }

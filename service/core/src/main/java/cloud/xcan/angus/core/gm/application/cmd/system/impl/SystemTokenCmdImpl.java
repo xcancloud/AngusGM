@@ -45,43 +45,55 @@ import org.springframework.security.oauth2.server.authorization.authentication.O
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of system token command operations.
+ * </p>
+ * <p>
+ * Manages system token lifecycle including creation, deletion, and OAuth2 integration.
+ * Provides secure token generation with proper authentication and authorization.
+ * </p>
+ * <p>
+ * Integrates with OAuth2 authorization server for token management and client registration.
+ * Supports API authentication and resource-based access control.
+ * </p>
+ */
 @Biz
 public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements SystemTokenCmd {
 
   @Resource
   private SystemTokenRepo systemTokenRepo;
-
   @Resource
   private SystemTokenResourceRepo systemTokenResourceRepo;
-
   @Resource
   private SystemTokenQuery systemTokenQuery;
-
   @Resource
   private AuthClientCmd clientCmd;
-
   @Resource
   private ApiQuery apiQuery;
-
   @Resource
   private OAuth2AuthorizationService oauth2AuthorizationService;
-
   @Resource
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
-
   @Resource
   private SystemTokenCmd systemTokenCmd;
-
   @Resource
   private OperationLogCmd operationLogCmd;
-
   @Resource
   private PasswordEncoder passwordEncoder;
 
   /**
-   * @see OAuth2ClientCredentialsAuthenticationProvider#authenticate(Authentication)
-   * @see OAuth2AccessTokenGenerator#generate(OAuth2TokenContext)
+   * <p>
+   * Creates a new system token with OAuth2 integration.
+   * </p>
+   * <p>
+   * Validates administrator permissions, token name uniqueness, and resource existence.
+   * Creates OAuth2 client, performs authentication, and saves encrypted token.
+   * </p>
+   * <p>
+   * Integrates with OAuth2ClientCredentialsAuthenticationProvider and OAuth2AccessTokenGenerator
+   * for secure token generation and management.
+   * </p>
    */
   @Override
   public SystemToken add(SystemToken systemToken, List<SystemTokenResource> resources) {
@@ -91,25 +103,26 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
 
       @Override
       protected void checkParams() {
-        // Check the current user must be a system administrator
+        // Verify current user must be a system administrator
         checkTenantSysAdmin();
-        // Check the name not existed
+        // Verify token name uniqueness
         systemTokenQuery.checkNameNotExisted(systemToken);
-        // Check the resources existed
+        // Verify resources exist
         serviceResourceMap = apiQuery.checkAndFindResource(resources.stream()
             .map(SystemTokenResource::getResource).collect(Collectors.toSet()));
         if (systemToken.isApiAuth()) {
-          // Check the apis existed
+          // Verify APIs exist for API authentication
           List<Long> apiIds = resources.stream().map(x -> Long.valueOf(x.getAuthority()))
               .collect(Collectors.toList());
           apiQuery.checkAndFind(apiIds, true);
         }
-        // Check the token quota
+        // Verify token quota
         systemTokenQuery.checkTokenQuota(optTenantId, 1);
       }
 
       @Override
       protected SystemToken process() {
+        // Create OAuth2 client for system token
         CustomOAuth2RegisteredClient client = systemTokenCmd.saveCustomOAuth2RegisteredClient(
             systemToken);
 
@@ -125,20 +138,29 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
           throw new SysException(e.getMessage());
         }
 
-        // Save system token
+        // Save system token with encrypted access token
         systemTokenCmd.saveSystemAccessToken(systemToken, resources, serviceResourceMap, result);
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.add(SYSTEM_TOKEN, systemToken, CREATED);
         return systemToken;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Saves OAuth2 registered client for system token.
+   * </p>
+   * <p>
+   * Creates and configures OAuth2 client with proper credentials and expiration.
+   * Removes existing client with same ID before creating new one.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public CustomOAuth2RegisteredClient saveCustomOAuth2RegisteredClient(SystemToken systemToken) {
-    // Generate client for system token
+    // Generate OAuth2 client for system token
     CustomOAuth2RegisteredClient client = toSystemTokenToDomain(systemToken.getName(),
         systemToken.getExpiredDate());
     customOAuth2ClientRepository.deleteByClientId(client.getClientId());
@@ -147,6 +169,15 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
     return client;
   }
 
+  /**
+   * <p>
+   * Saves system access token with encryption and resource associations.
+   * </p>
+   * <p>
+   * Encrypts access token, saves system token, and creates resource associations.
+   * Ensures resources are unique across all services.
+   * </p>
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void saveSystemAccessToken(SystemToken systemToken, List<SystemTokenResource> resources,
@@ -158,15 +189,21 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
     insert0(systemToken);
 
     // Save system token resources
-    // Important:: Resources must be unique under all services
+    // Important: Resources must be unique under all services
     List<SystemTokenResource> tokenResources = toSystemTokenResource(systemToken.getId(),
         resources, serviceResourceMap);
     systemTokenResourceRepo.saveAll(tokenResources);
   }
 
   /**
-   * Note: The access_token will automatically expire in auth2. After expiration, the configuration
-   * needs to be manually deleted by the user.
+   * <p>
+   * Deletes system tokens and associated OAuth2 authorizations.
+   * </p>
+   * <p>
+   * Removes OAuth2 authorizations and client registrations for each token.
+   * Note: Access tokens automatically expire in OAuth2. After expiration,
+   * configuration needs to be manually deleted by the user.
+   * </p>
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -174,7 +211,7 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
     return new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Check the current user must be a system administrator
+        // Verify current user must be a system administrator
         checkTenantSysAdmin();
       }
 
@@ -188,32 +225,52 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
         for (SystemToken systemToken : systemTokensDb) {
           String accessToken = systemTokenQuery.decryptValue(systemToken.getValue());
           try {
+            // Remove OAuth2 authorization
             OAuth2Authorization authorizationDb = oauth2AuthorizationService.findByToken(
                 accessToken, null);
             if (nonNull(authorizationDb)) {
               oauth2AuthorizationService.remove(authorizationDb);
             }
           } catch (Exception e) {
-            // NOOP
+            // NOOP - handle authorization removal errors gracefully
           }
+          // Delete OAuth2 client registration
           clientCmd.deleteSystemTokenClient(systemToken.getName(), XCAN_SYS_TOKEN);
         }
+        // Delete system tokens and resources
         systemTokenRepo.deleteByIdIn(ids);
         systemTokenResourceRepo.deleteBySystemTokenIdIn(ids);
 
-        // Save operation log
+        // Log operation for audit
         operationLogCmd.addAll(SYSTEM_TOKEN, systemTokensDb, DELETED);
         return null;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Deletes system token resources by API IDs.
+   * </p>
+   * <p>
+   * Removes all system token resources associated with the specified API IDs.
+   * </p>
+   */
   @Override
   public void deleteByApiIdIn(Collection<Long> ids) {
     systemTokenResourceRepo.deleteByAuthorityIn(ids.stream().map(String::valueOf)
         .collect(Collectors.toSet()));
   }
 
+  /**
+   * <p>
+   * Converts system token resources with service code mapping.
+   * </p>
+   * <p>
+   * Maps resources to system token resources with proper service code assignment
+   * and unique ID generation.
+   * </p>
+   */
   private List<SystemTokenResource> toSystemTokenResource(Long systemTokenId,
       List<SystemTokenResource> resources, Map<String, List<ServiceResource>> serviceResourceMap) {
     return resources.stream().map(resource ->
