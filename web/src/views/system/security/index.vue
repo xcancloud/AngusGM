@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, defineAsyncComponent } from 'vue';
-import { site } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
 import { SafetyConfig, Operation } from './PropsType';
@@ -164,8 +164,7 @@ const earlyWarningChange = (value, type, operation?: Operation) => {
 
 const editionType = ref<string>();
 onMounted(async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
   getTenantSafetyConfig();
 });
 

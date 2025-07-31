@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { PureCard, Grid, Icon, Input, notification, ButtonAuth } from '@xcan-angus/vue-ui';
 import { useRouter } from 'vue-router';
 import { Badge, Spin, Tooltip, Tag } from 'ant-design-vue';
-import { app } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/infra';
 
 import { _gidColumns } from './PropsType';
 import { Detail } from '../../PropsType';

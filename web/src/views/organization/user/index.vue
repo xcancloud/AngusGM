@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { inject, onMounted, computed, defineAsyncComponent, Ref, ref, reactive } from 'vue';
+import { onMounted, computed, defineAsyncComponent, ref, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
@@ -16,8 +16,7 @@ import {
   IconRefresh,
   IconCount
 } from '@xcan-angus/vue-ui';
-import { app, utils, GM } from '@xcan-angus/tools';
-import { appContext } from '@xcan-angus/infra'
+import { appContext, app, utils, GM } from '@xcan-angus/infra'
 
 import { User, SearchParams, FilterOp } from './PropsType';
 import { user } from '@/api';

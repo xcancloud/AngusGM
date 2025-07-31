@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { password, site } from '@xcan-angus/tools';
+import { passwordUtils, app } from '@xcan-angus/infra';
 import { Popover } from 'ant-design-vue';
 import { Hints, Modal, Icon, Input } from '@xcan-angus/vue-ui';
 
@@ -77,7 +77,7 @@ const ok = async (): Promise<void> => {
     return;
   }
 
-  site.signout(true);
+  app.signOut(true);
 };
 
 const changeHandle = (event: any, passwordType: 1 | 2 | 3): void => {
@@ -131,7 +131,7 @@ const newPasswordChange = () => {
 
   newPasswordError.value = false;
   showStrength.value = true;
-  strength.value = password.calcStrength(newPassword.value);
+  strength.value = passwordUtils.calcStrength(newPassword.value);
 
   return true;
 };
@@ -143,7 +143,7 @@ const validateOldPassword = (): boolean => {
   }
 
   if (newPassword.value && (newPassword.value !== oldPassword.value)) {
-    const result = password.isInvalid(newPassword.value);
+    const result = passwordUtils.isInvalid(newPassword.value);
     if (result.invalid) {
       showStrength.value = false;
       newPasswordError.value = true;
@@ -158,7 +158,7 @@ const validateOldPassword = (): boolean => {
 };
 
 const validateNewPassword = (): boolean => {
-  const result = password.isInvalid(newPassword.value);
+  const result = passwordUtils.isInvalid(newPassword.value);
   if (result.invalid) {
     showStrength.value = false;
     newPasswordError.value = true;

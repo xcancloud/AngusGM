@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { Divider, Form, FormItem } from 'ant-design-vue';
 import { modal, notification, Input, Select, ButtonAuth } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { regexp } from '@xcan-angus/tools';
+import { regexpUtils } from '@xcan-angus/infra';
 
 import { event } from '@/api';
 
@@ -42,7 +42,7 @@ const validateEmial = (_val, value) => {
   }
   if (value) {
     const values = value.split(',');
-    if (values.every(email => regexp.isEmail(email))) {
+    if (values.every(email => regexpUtils.isEmail(email))) {
       return Promise.resolve();
     } else {
       Promise.reject(new Error('请输入正确邮箱地址'));
@@ -55,7 +55,7 @@ const validateAddress = (_val, value) => {
   if (!value.trim()) {
     return Promise.reject(new Error(t('address-required')));
   }
-  if (value && regexp.isUrl(value)) {
+  if (value && regexpUtils.isUrl(value)) {
     return Promise.resolve();
   }
   return Promise.reject(new Error('请输入正确地址'));

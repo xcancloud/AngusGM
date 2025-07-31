@@ -2,7 +2,7 @@
 import { defineAsyncComponent, inject, onMounted, ref, Ref, watch } from 'vue';
 import { Button, Divider, Skeleton } from 'ant-design-vue';
 import { AsyncComponent, Card, Grid, Icon, Image, Input, notification, Cropper } from '@xcan-angus/vue-ui';
-import { site } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
 import { app } from '@/api';
@@ -10,6 +10,7 @@ import { AppInfo } from './PropsType';
 
 const ExpandHead = defineAsyncComponent(() => import('./components/expandHead.vue'));
 
+// TODO 替换上下文
 const tenantInfo: Ref = inject('tenantInfo', ref());
 
 const { t } = useI18n();
@@ -18,8 +19,7 @@ const loading = ref(false);
 const firstLoad = ref(true);
 
 const init = async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
 };
 
 const appList = ref<AppInfo[]>([]);

@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Table, PureCard, Select, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
-import { app, site } from '@xcan-angus/tools';
+import { app, appContext } from '@xcan-angus/infra';
 
 import { Quota } from '../../PropsType';
 import { setting } from '@/api';
@@ -22,8 +22,7 @@ const params = ref<{ pageNo: number, pageSize: number, appCode?: string }>({
 
 const tableList = ref<Quota[]>([]);
 const init = async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
   loadList();
 };
 

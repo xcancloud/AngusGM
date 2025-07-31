@@ -17,7 +17,7 @@ import {
   ButtonAuth,
   modal
 } from '@xcan-angus/vue-ui';
-import { app, enumLoader } from '@xcan-angus/tools';
+import { app, enumLoader } from '@xcan-angus/infra';
 
 import SelectApis from '@/views/system/token/components/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';

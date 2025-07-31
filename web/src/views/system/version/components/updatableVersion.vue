@@ -2,11 +2,13 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Card, Grid, NoData, Colon } from '@xcan-angus/vue-ui';
-import { site } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra';
 import { Skeleton } from 'ant-design-vue';
 
 import { UpgradeableVersion } from '../PropsType';
 import { edition } from '@/api';
+
+// TODO 删除多主题内容
 import darkImg from '../images/dark2.png';
 import grayImg from '../images/gray2.png';
 
@@ -28,8 +30,7 @@ const editionType = ref<string>();
 const varsionData = ref<UpgradeableVersion>();
 
 const init = async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
 };
 
 const loadUpgradeableVersion = async (): Promise<void> => {
@@ -63,6 +64,7 @@ const updateColumns = (_columns) => {
 
 const getImg = computed(() => {
   const theme = document.body.className;
+// TODO 删除多主题内容
   switch (theme) {
     case 'dark-theme':
       return darkImg;

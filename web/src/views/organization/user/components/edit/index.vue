@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, InputPassword, Form, FormItem, Popover, RadioGroup, Radio } from 'ant-design-vue';
 import { Image, Input, PureCard, Icon, SelectItc, notification, Cropper } from '@xcan-angus/vue-ui';
-import { itc, password, regexp, utils, enumLoader, duration } from '@xcan-angus/tools';
+import { itc, passwordUtils, regexpUtils, utils, enumLoader, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { FormState, Gender } from '../../PropsType';
@@ -52,7 +52,7 @@ const addUser = async (isContinueAdd?: boolean) => {
   const _firstName = formState.value.firstName;
   const _lastName = formState.value.lastName;
   const _fullName = formState.value.fullName;
-  if (regexp.hasZh(_firstName) || regexp.hasZh(_lastName)) {
+  if (regexpUtils.hasZh(_firstName) || regexpUtils.hasZh(_lastName)) {
     if (!_fullName) {
       formState.value.fullName = _lastName + _firstName;
     }
@@ -240,7 +240,7 @@ const emailValidator = (_rule, value) => {
   if (!value) {
     return Promise.reject(new Error(t('userRule5')));
   }
-  const isEmail = regexp.isEmail(value);
+  const isEmail = regexpUtils.isEmail(value);
   if (!isEmail) {
     return Promise.reject(new Error(t('userRule6')));
   }
@@ -253,7 +253,7 @@ const mobileRule = ref({
 const mobileValidator = (_rule, value) => {
   if (!value) {
     return Promise.resolve();
-  } else if (!regexp.isMobileNumber(formState.value.country || 'CN', value)) {
+  } else if (!regexpUtils.isMobileNumber(formState.value.country || 'CN', value)) {
     return Promise.reject(new Error(t('userRule8')));
   }
   return Promise.resolve();
@@ -289,7 +289,7 @@ const loadUserDetail = async () => {
 const changeStrength = (e: { target: { value: string } }) => {
   const { value = '' } = e.target;
   const valArr = value.split('');
-  const typeNum = password.getTypesNum(valArr);
+  const typeNum = passwordUtils.getTypesNum(valArr);
   state.length = value.length >= 6 && value.length <= 50;
   state.chart = typeNum >= 2;
 };
@@ -316,7 +316,7 @@ const firstNameChange = debounce(duration.search, (event: any) => {
     return;
   }
 
-  if (regexp.hasZh(value) || regexp.hasZh(_lastName)) {
+  if (regexpUtils.hasZh(value) || regexpUtils.hasZh(_lastName)) {
     formState.value.fullName = _lastName + value;
     formRef.value.clearValidate('fullName');
     return;
@@ -333,7 +333,7 @@ const lastNameChange = debounce(duration.search, (event: any) => {
     return;
   }
 
-  if (regexp.hasZh(value) || regexp.hasZh(_firstName)) {
+  if (regexpUtils.hasZh(value) || regexpUtils.hasZh(_firstName)) {
     formState.value.fullName = value + _firstName;
     formRef.value.clearValidate('fullName');
     return;

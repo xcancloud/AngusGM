@@ -3,7 +3,7 @@ import { computed, ref, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PureCard, Grid, Icon, Input } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
-import { regexp } from '@xcan-angus/tools';
+import { regexpUtils } from '@xcan-angus/infra';
 import { user } from '@/api';
 
 const tenantInfo = inject('tenantInfo', ref());
@@ -93,7 +93,7 @@ const nameChange = () => {
     return;
   }
 
-  if (regexp.hasZh(firstName.value || '') || regexp.hasZh(lastName.value || '')) {
+  if (regexpUtils.hasZh(firstName.value || '') || regexpUtils.hasZh(lastName.value || '')) {
     fullName.value = (firstName.value || '') + (lastName.value || '');
     return;
   }

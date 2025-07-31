@@ -3,7 +3,7 @@ import { ref, onMounted, defineAsyncComponent, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Tooltip, Tag, Pagination } from 'ant-design-vue';
 import { modal, PureCard, Spin, Input, AsyncComponent, IconRefresh, notification, ButtonAuth } from '@xcan-angus/vue-ui';
-import { app, duration } from '@xcan-angus/tools';
+import { app, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { OrgTag, SearchParams } from '../../PropsType';

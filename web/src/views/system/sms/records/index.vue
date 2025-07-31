@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/tools';
+import { app, GM } from '@xcan-angus/infra';
 import { Badge } from 'ant-design-vue';
 
 import { sms } from '@/api';

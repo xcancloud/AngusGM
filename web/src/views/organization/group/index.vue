@@ -14,7 +14,7 @@ import {
   IconCount,
   IconRefresh
 } from '@xcan-angus/vue-ui';
-import { app, utils, GM } from '@xcan-angus/tools';
+import { app, utils, GM } from '@xcan-angus/infra';
 
 import { _columns, ListGroup, SearchParams, FilterOp } from './PropsType';
 import { group } from '@/api';

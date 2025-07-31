@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch, ref, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { enumLoader } from '@xcan-angus/tools';
+import { enumLoader } from '@xcan-angus/infra';
 import { CheckboxGroup, Form, FormItem, Popover, Tag, Select } from 'ant-design-vue';
 import { Modal } from '@xcan-angus/vue-ui';
 

@@ -15,7 +15,7 @@ import {
 import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { store } from '@/api';
 import { useRouter } from 'vue-router';
-import { site, app } from '@xcan-angus/tools';
+import {DomainManager, app, AppOrServiceRoute} from '@xcan-angus/infra';
 import type { Goods } from './PropsType';
 import { goodsTypeColor } from './PropsType';
 import ShowButton from './components/showButton.vue';
@@ -155,7 +155,7 @@ const topay = (purchaseUrl) => {
 };
 
 onMounted(async () => {
-  const host = await site.getUrl('www');
+  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   hotList.value[0].purchaseUrl = host + '/purchase';
   loadGoods();
   loadAngus();

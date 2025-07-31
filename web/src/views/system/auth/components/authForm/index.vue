@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Form, FormItem } from 'ant-design-vue';
 import { Card, Hints, Input, notification } from '@xcan-angus/vue-ui';
-import { regexp } from '@xcan-angus/tools';
+import { regexpUtils } from '@xcan-angus/infra';
 
 import UploadImage from './uploadImage.vue';
 import AuditStatus from '@/components/AuditStatus/index.vue';
@@ -125,7 +125,7 @@ const validateId = () => {
     if (!form.value.personalCert.certNo.trim()) {
       return Promise.reject(new Error(t('idCardRequiredTip')));
     }
-    if (!regexp.isId(form.value.personalCert.certNo)) {
+    if (!regexpUtils.isId(form.value.personalCert.certNo)) {
       return Promise.reject(new Error('请输入正确的身份证号'));
     }
     return Promise.resolve();
@@ -134,7 +134,7 @@ const validateId = () => {
     if (!form.value.enterpriseLegalPersonCert.certNo.trim()) {
       return Promise.reject(new Error(t('legalIdCardRequiredTip')));
     }
-    if (!regexp.isId(form.value.enterpriseLegalPersonCert.certNo)) {
+    if (!regexpUtils.isId(form.value.enterpriseLegalPersonCert.certNo)) {
       return Promise.reject(new Error('请输入正确的身份证号'));
     }
     return Promise.resolve();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { site } from '@xcan-angus/tools';
+import { appContext, EditionType } from '@xcan-angus/infra';
 
 import Tab from '@/components/SignTab/index.vue';
 import Form from './form.vue';
@@ -12,12 +12,11 @@ const activeValue = ref('account');
 
 const editionType = ref<string>();
 onMounted(async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
 });
 
 const tabList = computed(() => {
-  if (editionType.value === 'CLOUD_SERVICE') {
+  if (editionType.value === EditionType.CLOUD_SERVICE) {
     return [{ label: t('signin-account'), value: 'account' }, { label: t('signin-sms'), value: 'mobile' }];
   }
 

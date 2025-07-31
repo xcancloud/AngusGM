@@ -2,7 +2,7 @@
 import {onMounted, ref, h, computed} from 'vue';
 import {Badge, Spin} from 'ant-design-vue';
 import {PureCard, Icon, SearchPanel, Table, Image, IconRefresh} from '@xcan-angus/vue-ui';
-import {app} from '@xcan-angus/tools';
+import {app} from '@xcan-angus/infra';
 import {LoadingOutlined} from '@ant-design/icons-vue';
 
 import {useI18n} from 'vue-i18n';

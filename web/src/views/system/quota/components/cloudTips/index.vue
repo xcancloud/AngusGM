@@ -2,13 +2,13 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Icon } from '@xcan-angus/vue-ui';
-import { site } from '@xcan-angus/tools';
+import {AppOrServiceRoute, DomainManager} from '@xcan-angus/infra';
 
 const { t } = useI18n();
 
 const href = ref();
 onMounted(async () => {
-  const host = await site.getUrl('www');
+  const host = await DomainManager.getInstance().getApiDomain(AppOrServiceRoute.www);
   href.value = host + '/workorders?s=quota';
 });
 </script>

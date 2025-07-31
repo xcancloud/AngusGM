@@ -3,7 +3,7 @@ import { onMounted, ref, reactive } from 'vue';
 import { PureCard, SearchPanel, DropdownSort, Icon, Image, NoData, Colon, Spin, IconRefresh } from '@xcan-angus/vue-ui';
 import { Carousel, TypographyParagraph, Tag, Divider, Pagination, Button } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { site, http, API, VERSION } from '@xcan-angus/tools';
+import {DomainManager, http, API, VERSION, AppOrServiceRoute} from '@xcan-angus/infra';
 
 import type { Goods } from './PropsType';
 import { goodsTypeColor, getEnumMessages } from './PropsType';
@@ -156,7 +156,7 @@ const topay = (purchaseUrl) => {
 };
 
 onMounted(async () => {
-  const purchaseUrl = await site.getUrl('www');
+  const purchaseUrl = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   hotList.value[0].purchaseUrl = purchaseUrl + '/purchase';
   loadGoods();
   loadAngus();

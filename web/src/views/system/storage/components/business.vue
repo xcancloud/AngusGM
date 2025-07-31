@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { Button, RadioGroup, Radio } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { Hints, modal, Card, Icon, Input, Grid } from '@xcan-angus/vue-ui';
-import { app, enumLoader } from '@xcan-angus/tools';
+import { app, enumLoader } from '@xcan-angus/infra';
 import { storage as storageApi } from '@/api/index';
 
 const { t } = useI18n();

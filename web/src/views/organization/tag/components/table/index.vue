@@ -2,7 +2,7 @@
 import { ref, computed, watch, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { SelectEnum, Card, Table, AsyncComponent, Input, Icon, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
-import { app, utils, duration } from '@xcan-angus/tools';
+import { app, utils, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { Target, TargetType } from '../../PropsType';

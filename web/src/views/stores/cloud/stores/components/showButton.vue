@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { downloadEditionTypes, isCloudGoods, isPriGoods, multipleEditionTypes } from '../PropsType';
 import { Button, Popconfirm, RadioButton, RadioGroup } from 'ant-design-vue';
-import { site, download, ESS } from '@xcan-angus/tools';
+import {AppOrServiceRoute, DomainManager, routerUtils, download, ESS} from '@xcan-angus/infra';
 import { notification } from '@xcan-angus/vue-ui';
 import { store } from '@/api';
 
@@ -30,7 +30,7 @@ const topay = () => {
 };
 
 const toDownloadApply = async () => {
-  const host = await site.getUrl('www');
+  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.open(host + '/deployment', '_blank');
 };
 
@@ -52,8 +52,8 @@ const downloadInstallEdition = async (installType: string = downloadEdition.valu
   }
   downLoading.value = true;
   emit('update:downLoading', true);
-  const host = await site.getUrl('apis');
-  const [error] = await download(`${host}${ESS}/package/plugin/${props.goods.goodsId}/${installType}/download`);
+  let url = routerUtils.getESSApiUrl(`/package/plugin/${props.goods.goodsId}/${installType}/download`)
+  const [error] = await download(url);
   if (error) {
     notification.error(error.message);
   }

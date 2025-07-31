@@ -3,7 +3,7 @@ import { reactive, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Tooltip, Menu, MenuItem, Dropdown } from 'ant-design-vue';
 import { modal, notification, Card, Input, Table, Icon, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
-import { app, duration } from '@xcan-angus/tools';
+import { app, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { auth } from '@/api';

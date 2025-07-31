@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { enumLoader, GM } from '@xcan-angus/tools';
+import { enumLoader, GM } from '@xcan-angus/infra';
 import { ref, computed, onMounted } from 'vue';
 import { Button } from 'ant-design-vue';
 import { notification, Select, Icon } from '@xcan-angus/vue-ui';

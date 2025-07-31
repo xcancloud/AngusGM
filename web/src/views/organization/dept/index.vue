@@ -18,7 +18,7 @@ import {
   IconRefresh,
   IconCount
 } from '@xcan-angus/vue-ui';
-import { app, utils, duration, GM } from '@xcan-angus/tools';
+import { app, utils, duration, GM } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { DataType, TreeRecordType, UserRecordType } from './PropsType';

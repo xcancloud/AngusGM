@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, modal, PureCard, Table } from '@xcan-angus/vue-ui';
-import { app } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/infra';
 
 import { email } from '@/api';
 import { MailboxService } from './PropsType';

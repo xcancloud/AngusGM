@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import clipboard from 'vue-clipboard3';
 import { Tooltip, Skeleton } from 'ant-design-vue';
 import { Card, Grid, Icon } from '@xcan-angus/vue-ui';
-import { site } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra';
 import dayjs from 'dayjs';
 
 import { edition } from '@/api';
@@ -103,8 +103,7 @@ const gridColumnsPriv = [
 ];
 
 const init = async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
   loadInstalledVersion();
 };
 

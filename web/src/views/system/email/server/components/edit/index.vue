@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon, IconRequired, Input, PureCard, Select } from '@xcan-angus/vue-ui';
-import { app, utils } from '@xcan-angus/tools';
+import { app, utils } from '@xcan-angus/infra';
 import { Button, Checkbox, Form, FormItem, Switch, Textarea } from 'ant-design-vue';
 
 import { email } from '@/api';

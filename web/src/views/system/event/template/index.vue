@@ -2,7 +2,7 @@
 import { onMounted, reactive, ref, computed, defineAsyncComponent } from 'vue';
 import { Popover, Button } from 'ant-design-vue';
 import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
-import { app, enumLoader } from '@xcan-angus/tools';
+import { app, enumLoader } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { appopen } from '@/api/index';
 

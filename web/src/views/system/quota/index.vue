@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { AsyncComponent } from '@xcan-angus/vue-ui';
-import { site } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra';
 
 const CloudTips = defineAsyncComponent(() => import('@/views/system/quota/components/cloudTips/index.vue'));
 const Table = defineAsyncComponent(() => import('@/views/system/quota/components/list/index.vue'));
@@ -9,8 +9,7 @@ const Table = defineAsyncComponent(() => import('@/views/system/quota/components
 const editionType = ref<string>();
 
 onMounted(async () => {
-  const envContent = await site.getEnvContent();
-  editionType.value = envContent?.VITE_EDITION_TYPE;
+  editionType.value = appContext.getEditionType();
 });
 
 const isShow = computed(() => {

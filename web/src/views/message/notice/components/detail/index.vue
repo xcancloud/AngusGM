@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { modal, Card, Grid, notification } from '@xcan-angus/vue-ui';
-import { app } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/infra';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Skeleton } from 'ant-design-vue';
 

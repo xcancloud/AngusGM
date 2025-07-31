@@ -1,4 +1,4 @@
-import { codeUtils, site } from '@xcan-angus/infra';
+import {AppOrServiceRoute, codeUtils, DomainManager} from '@xcan-angus/infra';
 
 // Redirect URL after successful login
 const redirectTo = async (data?: { accessToken: string; refreshToken: string; clientId: string; }): Promise<void> => {
@@ -17,9 +17,10 @@ const redirectTo = async (data?: { accessToken: string; refreshToken: string; cl
 const getRedirectUrl = async (): Promise<string> => {
   const { searchParams } = new URL(location.href);
   const target = searchParams.get('t');
-  let host = await site.getUrl('at');
+  let domainManager = DomainManager.getInstance();
+  let host = await domainManager.getApiDomain(AppOrServiceRoute.tester);
   if (!host || host === 'undefined') {
-    host = await site.getUrl('gm');
+    host = await domainManager.getApiDomain(AppOrServiceRoute.gm);
   }
   if (!target) {
     return host;

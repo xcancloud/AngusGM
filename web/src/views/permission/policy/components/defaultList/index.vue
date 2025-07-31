@@ -3,7 +3,7 @@ import { reactive, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { modal, notification, Card, Table, Select } from '@xcan-angus/vue-ui';
 import { RadioGroup, Radio } from 'ant-design-vue';
-import { app } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
 

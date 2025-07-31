@@ -2,7 +2,7 @@
 import { computed, inject, ref, nextTick, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {Grid, PureCard, Icon, Image, Input, Cropper, notification} from '@xcan-angus/vue-ui';
-import { site, clipboard } from '@xcan-angus/tools';
+import {AppOrServiceRoute, DomainManager, toClipboard} from "@xcan-angus/infra";
 
 import defaultAvatar from '../assets/default.jpg';
 
@@ -10,6 +10,7 @@ import { user } from '@/api';
 
 type UpdateInfo = (data: Record<string, string>) => void
 
+// TODO 替换 appContext
 const updateTenantInfo: UpdateInfo = inject('updateTenantInfo') as UpdateInfo;
 const tenantInfo = inject('tenantInfo', ref());
 
@@ -38,8 +39,9 @@ const success = async (jsonData): Promise<void> => {
   updateTenantInfo(temp);
 };
 
+// TODO 提到api
 onMounted(async () => {
-  const host = await site.getUrl('gm');
+  const host = await DomainManager.getInstance().getApiDomain(AppOrServiceRoute.gm);
   authUrl.value = host + '/system/auth';
 });
 
@@ -150,7 +152,7 @@ const cancelEditUserName = () => {
 };
 
 const copyID = () => {
-  clipboard.toClipboard(tenantInfo.value?.tenantId)
+  toClipboard.toClipboard(tenantInfo.value?.tenantId)
     .then(() => {
       notification.success('复制到剪贴板');
     });

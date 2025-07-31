@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { regexp } from '@xcan-angus/tools';
+import { regexpUtils } from '@xcan-angus/infra';
 import { Input } from '@xcan-angus/vue-ui';
 
 interface Props {
@@ -26,13 +26,13 @@ const error = ref(false);
 
 watch(() => inputValue.value, (newValue) => {
   emit('update:value', newValue);
-  if (newValue && regexp.isMobileNumber('CN', newValue)) {
+  if (newValue && regexpUtils.isMobileNumber('CN', newValue)) {
     error.value = false;
   }
 });
 
 const validateData = () => {
-  if (inputValue.value && regexp.isMobileNumber('CN', inputValue.value)) {
+  if (inputValue.value && regexpUtils.isMobileNumber('CN', inputValue.value)) {
     error.value = false;
     return true;
   }

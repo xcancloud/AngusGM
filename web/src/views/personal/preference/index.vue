@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RadioGroup, Radio } from 'ant-design-vue';
 import { SelectEnum, PureCard } from '@xcan-angus/vue-ui';
-import { enumLoader } from '@xcan-angus/tools';
+import { enumLoader } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
 

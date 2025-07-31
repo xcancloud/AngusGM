@@ -2,7 +2,7 @@
 import { defineAsyncComponent, ref } from 'vue';
 import { Hints, PureCard, Card, Icon } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { app, GM } from '@xcan-angus/tools';
+import { app, GM } from '@xcan-angus/infra';
 
 import { OrgTag } from './PropsType';
 

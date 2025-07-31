@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { site } from '@xcan-angus/tools';
+import { appContext } from '@xcan-angus/infra';
 
 import Logo from '@/components/Logo/index.vue';
 import OfficialLink from '@/components/OfficialLink/index.vue';
@@ -26,7 +26,7 @@ const tabList = computed(() => {
 });
 
 onMounted(async () => {
-  isPrivate.value = await site.isPrivate();
+  isPrivate.value = await appContext.isPrivateEdition();
 });
 </script>
 

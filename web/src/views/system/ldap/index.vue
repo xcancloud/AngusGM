@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Alert, Badge, Button, Dropdown, Form, FormItem, Menu, MenuItem, Skeleton } from 'ant-design-vue';
 import { ButtonAuth, Hints, Icon, IconRefresh, Input, modal, notification, PureCard, Table } from '@xcan-angus/vue-ui';
-import { app } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
 import { userDirectory } from '@/api';

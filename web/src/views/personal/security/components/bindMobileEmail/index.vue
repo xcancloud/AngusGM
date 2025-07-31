@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { regexp } from '@xcan-angus/tools';
+import { regexpUtils } from '@xcan-angus/infra';
 import { Modal, Icon, Input } from '@xcan-angus/vue-ui';
 
 import VerificationCode from '@/views/personal/security/components/verificationCode/index.vue';
@@ -97,7 +97,7 @@ const ok = (): void => {
 const codeError = ref(false);
 const emailError = ref(false);
 const validateEmail = () => {
-  const isValid = regexp.isEmail(email.value);
+  const isValid = regexpUtils.isEmail(email.value);
   emailError.value = !isValid;
   canSend.value = isValid;
   return isValid;
@@ -134,7 +134,7 @@ const emailOk = async () => {
 
 const mobileError = ref(false);
 const validatePhone = () => {
-  const isValid = regexp.isMobileNumber(country.value, mobile.value);
+  const isValid = regexpUtils.isMobileNumber(country.value, mobile.value);
   mobileError.value = !isValid;
   canSend.value = isValid;
   return isValid;

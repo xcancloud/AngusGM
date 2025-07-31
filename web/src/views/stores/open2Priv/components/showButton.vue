@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { site } from '@xcan-angus/tools';
+import {AppOrServiceRoute, DomainManager} from '@xcan-angus/infra';
 import { Button } from 'ant-design-vue';
 import { store } from '@/api';
 
@@ -24,7 +24,7 @@ const handleToPrice = () => {
 
 // 跳到官网安装、下载
 const toPriCloud = async () => {
-  const host = await site.getUrl('www');
+  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.parent.postMessage({ e: 'purchase', value: host + '/deployment' }, '*');
 };
 

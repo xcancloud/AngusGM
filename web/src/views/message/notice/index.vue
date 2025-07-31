@@ -13,7 +13,7 @@ import {
   IconRefresh,
   ButtonAuth
 } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/tools';
+import { app, GM } from '@xcan-angus/infra';
 import { Tooltip } from 'ant-design-vue';
 
 import { notice } from '@/api';

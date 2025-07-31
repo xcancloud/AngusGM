@@ -2,7 +2,7 @@
 import { computed, onMounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ConfigProvider, Header, Denied, NetworkError, NotFound, VuexHelper } from '@xcan-angus/vue-ui';
-import { app, sessionStore, site } from '@xcan-angus/tools';
+import { app, sessionStore } from '@xcan-angus/infra';
 
 import { personalCenterMenus, getTopRightMenu } from '@/layout/fixed-top-menu';
 
@@ -11,7 +11,6 @@ const { t } = useI18n();
 const { useState, useMutations } = VuexHelper;
 const { statusCode, layoutCode } = useState(['statusCode', 'layoutCode']);
 
-const envConfigs = ref<{ [key: string]: string }>({});
 const codeList = ref<{
   code: string;
   hasAuth: boolean;
@@ -20,8 +19,6 @@ const codeList = ref<{
 }[]>([]);
 
 onMounted(async () => {
-  envConfigs.value = await site.getProfiles();
-
   if (!layoutCode.value) {
     let tempLayoutCode = sessionStore.get('__LC__');
     if (!['gm', 'pl'].includes(tempLayoutCode)) {
@@ -53,8 +50,6 @@ const codeMap = computed(() => {
 });
 
 const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
-
-provide('envConfigs', envConfigs);
 </script>
 
 <template>

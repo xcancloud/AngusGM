@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, onMounted, computed, ref, defineAsyncComponent } from 'vue';
 import { SearchPanel, Table, PureCard, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/tools';
+import { app, GM } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
 

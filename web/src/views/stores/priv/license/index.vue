@@ -3,7 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PureCard, Table, Input, IconRefresh, Icon } from '@xcan-angus/vue-ui';
 import { Button } from 'ant-design-vue';
-import { download, site, cookie, GM, duration } from '@xcan-angus/tools';
+import { download, routerUtils, cookieUtils, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { privLicense } from '@/api';
@@ -70,10 +70,11 @@ const handleRefresh = () => {
   loadLicensedList();
 };
 
+// TODO 移到api
 const downloadLicense = async (licenseNo: string): Promise<void> => {
-  const host = await site.getUrl('apis');
   const token = cookieUtils.get('access_token');
-  download(`${host}${GM}/store/license/${licenseNo}/download?access_token=${token}`);
+  const url = await routerUtils.getGMApiUrl(`/store/license/${licenseNo}/download?access_token=${token}`);
+  download(url);
 };
 
 const columns = [

@@ -3,7 +3,7 @@ import { onMounted, reactive, ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Form, FormItem, RadioGroup, Radio, Textarea } from 'ant-design-vue';
 import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan-angus/vue-ui';
-import { enumLoader, GM } from '@xcan-angus/tools';
+import { enumLoader, GM } from '@xcan-angus/infra';
 import { useRouter } from 'vue-router';
 
 import type { FormDataType } from '../../interface';

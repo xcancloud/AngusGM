@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { site } from '@xcan-angus/tools';
+import { DomainManager } from '@xcan-angus/infra';
+import {AppOrServiceRoute} from "@xcan-angus/infra/lib/router/apiRouterPrefix";
 
 const officialUrl = ref<string>();
 onMounted(async () => {
-  officialUrl.value = await site.getUrl('www');
+  officialUrl.value = await DomainManager.getInstance().getApiDomain(AppOrServiceRoute.www);
 });
 </script>
 

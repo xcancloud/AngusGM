@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Form, FormItem, InputPassword } from 'ant-design-vue';
 import { Modal, notification } from '@xcan-angus/vue-ui';
 
-import { password } from '@xcan-angus/tools';
+import { passwordUtils } from '@xcan-angus/infra';
 import { auth } from '@/api';
 
 const PasswdTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
@@ -51,7 +51,7 @@ const validFuncs = {
       return Promise.reject(new Error(t('userRule0')));
     } else if (val.length < 6 || val.length > 50) {
       return Promise.reject(new Error(t('userRule3')));
-    } else if (password.getTypesNum(val.split('')) < 2) {
+    } else if (passwordUtils.getTypesNum(val.split('')) < 2) {
       return Promise.reject(new Error(t('userRule4')));
     }
     return Promise.resolve();
@@ -82,7 +82,7 @@ const handleFuncs = {
   changeStrength: (e: { target: { value: string } }) => {
     const { value = '' } = e.target;
     const valArr = value.split('');
-    const typeNum = password.getTypesNum(valArr);
+    const typeNum = passwordUtils.getTypesNum(valArr);
     state.length = value.length >= 6 && value.length <= 50;
     state.chart = typeNum >= 2;
   },

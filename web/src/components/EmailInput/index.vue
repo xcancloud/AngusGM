@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { regexp } from '@xcan-angus/tools';
+import { regexpUtils } from '@xcan-angus/infra';
 import { Input } from '@xcan-angus/vue-ui';
 
 const error = ref(false);
@@ -23,13 +23,13 @@ const emit = defineEmits<{
 
 watch(() => inputValue.value, (newValue) => {
   emit('update:value', newValue);
-  if (newValue && regexp.isEmail(newValue)) {
+  if (newValue && regexpUtils.isEmail(newValue)) {
     error.value = false;
   }
 });
 
 const validateData = () => {
-  if (inputValue.value && regexp.isEmail(inputValue.value)) {
+  if (inputValue.value && regexpUtils.isEmail(inputValue.value)) {
     error.value = false;
     return true;
   }

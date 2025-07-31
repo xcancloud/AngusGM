@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { PureCard, Icon } from '@xcan-angus/vue-ui';
-import { app } from '@xcan-angus/tools';
+import { app } from '@xcan-angus/infra';
 import { Button } from 'ant-design-vue';
 
 type status = 'AUDITING' | 'FAILED_AUDIT';
