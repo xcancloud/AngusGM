@@ -34,9 +34,7 @@ import cloud.xcan.angus.core.gm.domain.auth.AuthUserTokenRepo;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.remote.message.AbstractResultMessageException;
 import cloud.xcan.angus.remote.message.SysException;
-import cloud.xcan.angus.security.authentication.OAuth2AccessTokenGenerator;
 import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
-import cloud.xcan.angus.security.authentication.password.OAuth2PasswordAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.experimental.BizConstant.AuthKey;
 import jakarta.annotation.Resource;
@@ -50,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of user token command operations for managing user access tokens.
- * 
+ *
  * <p>This class provides comprehensive functionality for user token management including:</p>
  * <ul>
  *   <li>Creating user access tokens with password verification</li>
@@ -59,7 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Integrating with OAuth2 authorization service</li>
  *   <li>Recording token operation audit logs</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures secure token management with proper validation
  * and integration with OAuth2 authorization framework.</p>
  */
@@ -85,7 +83,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
 
   /**
    * Creates user access token with comprehensive validation and security.
-   * 
+   *
    * <p>This method performs token creation including:</p>
    * <ul>
    *   <li>Validating current user password</li>
@@ -95,10 +93,10 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
    *   <li>Generating OAuth2 access token</li>
    *   <li>Storing encrypted token data</li>
    * </ul>
-   * 
+   *
    * <p>This method integrates with OAuth2PasswordAuthenticationProvider and
    * OAuth2AccessTokenGenerator for token generation.</p>
-   * 
+   *
    * @param userToken User token entity to create
    * @return Created user token entity
    */
@@ -171,10 +169,10 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
 
   /**
    * Deletes user tokens and cleans up OAuth2 authorizations.
-   * 
+   *
    * <p>Note: Access tokens will automatically expire in OAuth2. After expiration,
    * the configuration needs to be manually deleted by the user.</p>
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Finding user tokens by identifiers</li>
@@ -182,7 +180,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
    *   <li>Deleting token records</li>
    *   <li>Recording deletion audit logs</li>
    * </ul>
-   * 
+   *
    * @param ids Set of token identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)

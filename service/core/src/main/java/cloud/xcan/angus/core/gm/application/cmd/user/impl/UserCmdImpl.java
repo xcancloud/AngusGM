@@ -60,8 +60,6 @@ import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.converter.TenantConverter;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
-import cloud.xcan.angus.core.gm.infra.job.UserLockJob;
-import cloud.xcan.angus.core.gm.infra.job.UserUnlockJob;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.experimental.IdKey;
 import cloud.xcan.angus.spec.principal.PrincipalContext;

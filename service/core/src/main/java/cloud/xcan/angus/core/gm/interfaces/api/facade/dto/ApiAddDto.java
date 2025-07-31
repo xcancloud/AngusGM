@@ -6,7 +6,6 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_OPENAPI_DOC_DESC_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_OPENAPI_SUMMARY_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_URI_LENGTH;
-import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_URI_LENGTH_X4;
 
 import cloud.xcan.angus.api.enums.ApiType;
 import cloud.xcan.angus.spec.http.HttpMethod;

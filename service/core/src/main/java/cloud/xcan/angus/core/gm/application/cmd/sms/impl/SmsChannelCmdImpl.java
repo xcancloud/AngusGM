@@ -16,7 +16,6 @@ import cloud.xcan.angus.core.gm.application.cmd.sms.SmsTemplateCmd;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannel;
 import cloud.xcan.angus.core.gm.domain.sms.channel.SmsChannelRepo;
-import cloud.xcan.angus.core.gm.infra.plugin.SmsPluginStateListener;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.spec.annotations.DoInFuture;
 import jakarta.annotation.Resource;

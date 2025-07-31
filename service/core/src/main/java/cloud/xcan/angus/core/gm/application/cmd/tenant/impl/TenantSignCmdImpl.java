@@ -31,7 +31,6 @@ import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantSignCmd;
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
-import cloud.xcan.angus.core.gm.infra.job.TenantSignCancelExpireJob;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
