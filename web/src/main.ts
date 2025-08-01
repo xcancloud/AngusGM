@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
-import { app, AppOrServiceRoute, cookieUtils, http } from '@xcan-angus/infra';
+import { app, AppOrServiceRoute, EnumPlugin, EnumPluginOptions, enumUtils, cookieUtils, http } from '@xcan-angus/infra';
 
 import router, { startupGuard } from '@/router';
 import store from '@/store';
@@ -10,6 +10,9 @@ import 'tailwindcss/base.css';
 import 'tailwindcss/components.css';
 import 'tailwindcss/utilities.css';
 
+import zhEnumCNLocale from '@/enums/locales/zh_CN.json';
+import enEnumLocale from '@/enums/locales/en.json';
+
 import '../public/iconfont/iconfont.js';
 
 const bootstrap = async () => {
@@ -17,6 +20,8 @@ const bootstrap = async () => {
   await http.create();
   app.initAfterAuthentication({ code: AppOrServiceRoute.gm }).then(async () => {
     startupGuard();
+
+    // TODO 修改配置
     const locale = getPreferredLocale();
     const messages = (await import(`./locales/${locale}/index.js`)).default;
     const i18n = createI18n({
@@ -27,10 +32,21 @@ const bootstrap = async () => {
       }
     });
 
+    // Merge locale messages
+    i18n.global.mergeLocaleMessage(SupportedLanguage.zh_CN, zhEnumCNLocale);
+    i18n.global.mergeLocaleMessage(SupportedLanguage.en, enEnumLocale);
+
+    const enumPluginOptions = {
+      i18n,
+      enumUtils,
+      appEnums: enumNamespaceMap
+    } as EnumPluginOptions;
+
     const App = (await import('@/App.vue')).default;
     createApp(App)
       .use(router)
       .use(store)
+      .use(EnumPlugin, enumPluginOptions)
       .use(i18n)
       .mount('#app');
   });

@@ -1,0 +1,130 @@
+{
+  "xcm": {
+    "enum": {
+      "OrgTargetType": {
+        "USER": "用户",
+        "DEPT": "部门",
+        "GROUP": "组"
+      },
+      "AuthOrgType": {
+        "TENANT": "租户",
+        "USER": "用户",
+        "DEPT": "部门",
+        "GROUP": "组"
+      },
+      "GroupSource": {
+        "BACKGROUND_ADDED": "后台添加",
+        "LDAP_SYNCHRONIZE": "Ldap同步"
+      },
+      "AppFuncType": {
+        "MENU": "菜单",
+        "BUTTON": "按钮",
+        "PANEL": "看板"
+      },
+      "ClientSource": {
+        "XCAN_TP_SIGNIN": "租户端登录",
+        "XCAN_OP_SIGNIN": "运营端登录",
+        "XCAN_SYS_INTROSPECT": "系统内部认证登录",
+        "XCAN_SYS_TOKEN": "系统访问令牌",
+        "XCAN_2P_SIGNIN": "私有化接入(许可授权)"
+      },
+      "PolicyType": {
+        "PRE_DEFINED": "应用预置",
+        "USER_DEFINED": "用户自定义"
+      },
+      "PolicyGrantScope": {
+        "TENANT_SYS_ADMIN": "租户系统管理员",
+        "TENANT_ALL_USER": "租户所有用户",
+        "TENANT_ORG": "租户组织人员"
+      },
+      "PolicyGrantStage": {
+        "MANUAL": "手动授权",
+        "SIGNUP_SUCCESS": "注册成功"
+      },
+      "ServiceSource": {
+        "BACK_ADD": "后台添加",
+        "EUREKA": "EUREKA"
+      },
+      "ApiProxyType": {
+        "NO_PROXY": "无代理",
+        "CLIENT_PROXY": "客户端代理",
+        "SERVER_PROXY": "服务端代理",
+        "CLOUD_PROXY": "云代理"
+      },
+      "SmokeCheckSetting": {
+        "SERVICE_AVAILABLE": "检测服务是否可用(有响应状态码)",
+        "API_AVAILABLE": "检测接口是否可用(返回状态码2xx）、默认",
+        "USER_DEFINED_ASSERTION": "根据自定义断言结果检测"
+      },
+      "SecurityCheckSetting": {
+        "NOT_SECURITY_CODE": "检测状态码不是401和403、默认",
+        "IS_SECURITY_CODE": "检测状态码是401或403、反例",
+        "USER_DEFINED_ASSERTION": "根据自定义断言结果检测"
+      },
+      "Area": {
+        "NAVIGATION": "导航区",
+        "CONTENT": "内容区"
+      },
+      "ThemeType": {
+        "DEFAULT": "系统默认",
+        "CUSTOM": "自定义"
+      },
+      "ThemeCode": {
+        "GRAY": "灰色模式",
+        "DARK": "黑色模式"
+      },
+      "Status": {
+        "ENABLED": "启用",
+        "NORMAL": "正常",
+        "NOT_EXPIRED": "未过期",
+        "EXPIRED": "已过期",
+        "DISABLED": "禁用",
+        "LOCKED": "已锁定",
+        "DELETED": "已删除"
+      },
+      "Scope": {
+        "GLOBAL_MANAGEMENT": "全局管理",
+        "APP": "应用"
+      },
+      "ReceiveChannelType": {
+        "WEBHOOK": "Webhook",
+        "EMAIL": "邮件组",
+        "DINGTALK": "钉钉机器人",
+        "WECHAT": "企业微信机器人"
+      },
+      "EventPushStatus": {
+        "PENDING": "待推送",
+        "PUSHING": "推送中",
+        "PUSH_SUCCESS": "推送成功",
+        "PUSH_FAIL": "推送失败",
+        "IGNORED": "忽略"
+      },
+      "MessageStatus": {
+        "SENT": "已发送",
+        "PENDING": "待发送",
+        "FAILURE": "失败"
+      },
+      "MessageReadTab": {
+        "ALL": "全部",
+        "READ": "已读",
+        "UNREAD": "未读"
+      },
+      "SentType": {
+        "SEND_NOW": "立即发送",
+        "TIMING_SEND": "定时发送"
+      },
+      "NoticeScope": {
+        "GLOBAL": "全局",
+        "APP": "应用"
+      },
+      "MessageReceiveType": {
+        "SITE": "站内消息",
+        "EMAIL": "邮件"
+      },
+      "OperationResourceType": {
+        "TENANT": "租户",
+        "DEPT": "部门"
+      }
+    }
+  }
+}
