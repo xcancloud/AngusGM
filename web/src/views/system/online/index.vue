@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {onMounted, ref, h, computed} from 'vue';
-import {Badge, Spin} from 'ant-design-vue';
-import {PureCard, Icon, SearchPanel, Table, Image, IconRefresh} from '@xcan-angus/vue-ui';
-import {app} from '@xcan-angus/infra';
-import {LoadingOutlined} from '@ant-design/icons-vue';
+import { computed, h, onMounted, ref } from 'vue';
+import { Badge, Spin } from 'ant-design-vue';
+import { Icon, IconRefresh, Image, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
+import { app } from '@xcan-angus/infra';
+import { LoadingOutlined } from '@ant-design/icons-vue';
 
-import {useI18n} from 'vue-i18n';
-import {online} from '@/api';
+import { useI18n } from 'vue-i18n';
+import { online } from '@/api';
 
 type Online = {
   id: bigint;
@@ -44,7 +44,7 @@ type SearchParams = {
   filters?: Filters;
 }
 
-const {t} = useI18n();
+const { t } = useI18n();
 
 const params = ref<SearchParams>({
   pageNo: 1,
@@ -64,19 +64,19 @@ const getList = async function () {
   }
 
   loading.value = true;
-  const [error, {data = {list: [], total: 0}}] = await online.getOnlineUserList(params.value);
+  const [error, { data = { list: [], total: 0 } }] = await online.getOnlineUserList(params.value);
   loading.value = false;
   if (error) {
     return;
   }
 
-  onlineList.value = data?.list.map(item => ({...item, loading: false}));
+  onlineList.value = data?.list.map(item => ({ ...item, loading: false }));
   total.value = +data.total;
 };
 
 const handleLogOut = async function (item: Online) {
   item.loading = true;
-  await online.offlineUser({receiveObjectIds: [item.userId], receiveObjectType: 'USER', broadcast: false});
+  await online.offlineUser({ receiveObjectIds: [item.userId], receiveObjectType: 'USER', broadcast: false });
   item.loading = false;
   disabled.value = true;
   await getList();
@@ -87,7 +87,7 @@ const tableChange = async (_pagination, _filters, sorter: {
   orderBy: string;
   orderSort: 'DESC' | 'ASC'
 }) => {
-  const {current, pageSize} = _pagination;
+  const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
   params.value.orderBy = sorter.orderBy;
@@ -169,7 +169,7 @@ const columns = [
     dataIndex: 'onlineDate',
     key: 'onlineDate',
     width: '12%',
-    customRender: ({text}) => text || '--',
+    customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.onlineDate > b.onlineDate
     }
@@ -179,7 +179,7 @@ const columns = [
     dataIndex: 'offlineDate',
     key: 'offlineDate',
     width: '12%',
-    customRender: ({text}) => text || '--',
+    customRender: ({ text }) => text || '--',
     sorter: {
       compare: (a, b) => a.offlineDate > b.offlineDate
     }
@@ -189,7 +189,7 @@ const columns = [
     dataIndex: 'userAgent',
     width: '42%',
     groupName: 'userAgent',
-    customRender: ({text}) => text || '--'
+    customRender: ({ text }) => text || '--'
   },
   {
     title: t('设备ID'),
@@ -197,7 +197,7 @@ const columns = [
     width: '42%',
     hide: true,
     groupName: 'userAgent',
-    customRender: ({text}) => text || '--'
+    customRender: ({ text }) => text || '--'
   },
   {
     title: 'IP',
@@ -226,11 +226,11 @@ const indicator = h(LoadingOutlined, {
       <SearchPanel
         class="flex-1"
         :options="searchOptions"
-        @change="searchChange"/>
+        @change="searchChange" />
       <IconRefresh
         :loading="loading"
         :disabled="disabled"
-        @click="getList"/>
+        @click="getList" />
     </div>
     <Table
       :columns="columns"
@@ -245,27 +245,27 @@ const indicator = h(LoadingOutlined, {
             <Image
               type="avatar"
               class="w-6 rounded-full mr-1"
-              :src="record.avatar"/>
+              :src="record.avatar" />
             <span class="flex-1 truncate" :tite="record.fullName">{{ record.fullName }}</span>
           </div>
         </template>
         <template v-if="column.dataIndex === 'online'">
-          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online1'): t('offline1')"/>
+          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online1'): t('offline1')" />
         </template>
         <template v-if="column.dataIndex === 'option' && app.show('SignOut')">
           <template v-if="record.loading">
-            <Spin :indicator="indicator"/>
+            <Spin :indicator="indicator" />
           </template>
           <template v-else>
             <Icon
               v-if="record.online && app.has('SignOut')"
               icon="icon-xuanzezhanghao1"
               class="cursor-pointer text-theme-special text-theme-text-hover"
-              @click="handleLogOut(record)"/>
+              @click="handleLogOut(record)" />
             <Icon
               v-else
               icon="icon-xuanzezhanghao1"
-              class="cursor-pointer text-theme-sub-content"/>
+              class="cursor-pointer text-theme-sub-content" />
           </template>
         </template>
       </template>

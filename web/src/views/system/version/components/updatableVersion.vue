@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Card, Grid, NoData, Colon } from '@xcan-angus/vue-ui';
+import { Card, Colon, Grid, NoData } from '@xcan-angus/vue-ui';
 import { appContext } from '@xcan-angus/infra';
 import { Skeleton } from 'ant-design-vue';
 
@@ -64,7 +64,7 @@ const updateColumns = (_columns) => {
 
 const getImg = computed(() => {
   const theme = document.body.className;
-// TODO 删除多主题内容
+  // TODO 删除多主题内容
   switch (theme) {
     case 'dark-theme':
       return darkImg;

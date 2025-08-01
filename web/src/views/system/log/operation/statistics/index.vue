@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { enumLoader } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
-import { PieSetting, DateType } from './PropsType';
+import { DateType, PieSetting } from './PropsType';
 
 const LoadChart = defineAsyncComponent(() => import('./LoadChart.vue'));
 

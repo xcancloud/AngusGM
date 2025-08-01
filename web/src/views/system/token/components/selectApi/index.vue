@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import SelectApis from './selectApi.vue';
 import { Button } from 'ant-design-vue';
-import { notification, Select, Icon } from '@xcan-angus/vue-ui';
+import { Icon, notification, Select } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { GM } from '@xcan-angus/infra';
 

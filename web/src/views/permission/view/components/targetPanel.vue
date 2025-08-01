@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import { reactive, watch, computed, ref, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Image, Input, Icon, Scroll, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { AsyncComponent, ButtonAuth, Icon, IconRefresh, Image, Input, Scroll } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, GM } from '@xcan-angus/infra';
 

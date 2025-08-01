@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { appContext } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
-import { SafetyConfig, Operation } from './PropsType';
+import { Operation, SafetyConfig } from './PropsType';
 
 const LoginRestrictions = defineAsyncComponent(() => import('./components/loginRestrictions.vue'));
 const Invitation = defineAsyncComponent(() => import('./components/invitation.vue'));

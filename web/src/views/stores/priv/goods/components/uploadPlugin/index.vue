@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { cookieUtils, utils } from '@xcan-angus/infra';
-import { Upload, Modal, RadioGroup } from 'ant-design-vue';
+import { Modal, RadioGroup, Upload } from 'ant-design-vue';
 import { Hints, Icon, notification } from '@xcan-angus/vue-ui';
 
 import { privStore } from '@/api';

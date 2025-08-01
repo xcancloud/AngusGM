@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import { ref, reactive, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { Form, FormItem } from 'ant-design-vue';
-import { Modal, Input, notification } from '@xcan-angus/vue-ui';
+import {reactive, ref, watch} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Form, FormItem} from 'ant-design-vue';
+import {Input, Modal, notification} from '@xcan-angus/vue-ui';
 
-import { dept } from '@/api';
+import {dept} from '@/api';
 
 interface FormType {
   name: string | undefined

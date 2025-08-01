@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { VuexHelper, Breadcrumb, Header, Sidebar } from '@xcan-angus/vue-ui';
+import { Breadcrumb, Header, Sidebar, VuexHelper } from '@xcan-angus/vue-ui';
 import { appContext } from '@xcan-angus/infra';
+
 const { useMutations } = VuexHelper;
 
 const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);

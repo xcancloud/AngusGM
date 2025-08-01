@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CheckboxGroup, Checkbox } from 'ant-design-vue';
-import { Modal, Image, Input, Icon, Scroll, Select } from '@xcan-angus/vue-ui';
+import { Checkbox, CheckboxGroup } from 'ant-design-vue';
+import { Icon, Image, Input, Modal, Scroll, Select } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, GM } from '@xcan-angus/infra';
 

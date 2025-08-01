@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { regexpUtils, appContext } from '@xcan-angus/infra';
-import { Modal, Icon, Input } from '@xcan-angus/vue-ui';
+import {computed, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {appContext, regexpUtils} from '@xcan-angus/infra';
+import {Icon, Input, Modal} from '@xcan-angus/vue-ui';
 
 import VerificationCode from '@/views/personal/security/components/verificationCode/index.vue';
-import { user } from '@/api';
+import {user} from '@/api';
 
 interface Props {
   valueKey: 'email' | 'mobile',
@@ -172,7 +172,7 @@ const mobileOk = async () => {
 };
 
 const updateUser = (info: Record<string, string>) => {
-    appContext.setUser({ ...appContext.getUser(), ...info })
+  appContext.setUser({ ...appContext.getUser(), ...info });
 };
 
 const typeIfy = computed(() => {

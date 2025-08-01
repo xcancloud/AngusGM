@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
-import { regexpUtils } from '@xcan-angus/infra';
-import { Input } from '@xcan-angus/vue-ui';
+import {ref, watch} from 'vue';
+import {regexpUtils} from '@xcan-angus/infra';
+import {Input} from '@xcan-angus/vue-ui';
 
 const error = ref(false);
 const inputValue = ref<string>();

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue';
-import { Icon, Arrow } from '@xcan-angus/vue-ui';
+import { reactive, ref, watch } from 'vue';
+import { Arrow, Icon } from '@xcan-angus/vue-ui';
 import { service } from '@/api';
 import { useI18n } from 'vue-i18n';
-import { Checkbox, CheckboxGroup, Row, Col } from 'ant-design-vue';
+import { Checkbox, CheckboxGroup, Col, Row } from 'ant-design-vue';
 
 const { t } = useI18n();
 

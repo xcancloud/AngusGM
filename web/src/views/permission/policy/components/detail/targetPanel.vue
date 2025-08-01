@@ -1,22 +1,22 @@
 <script setup lang='ts'>
-import { reactive, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { Pagination } from 'ant-design-vue';
+import {onMounted, reactive} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Pagination} from 'ant-design-vue';
 import {
-  modal,
-  notification,
-  SelectUser,
-  SelectDept,
-  SelectGroup,
-  PureCard,
-  NoData,
+  ButtonAuth,
   Icon,
   Image,
-  ButtonAuth
+  modal,
+  NoData,
+  notification,
+  PureCard,
+  SelectDept,
+  SelectGroup,
+  SelectUser
 } from '@xcan-angus/vue-ui';
-import { cookieUtils } from '@xcan-angus/infra';
+import {cookieUtils} from '@xcan-angus/infra';
 
-import { auth } from '@/api';
+import {auth} from '@/api';
 
 interface Props {
   policyId: string | undefined,

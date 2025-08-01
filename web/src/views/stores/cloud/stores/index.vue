@@ -15,7 +15,7 @@ import {
 import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { store } from '@/api';
 import { useRouter } from 'vue-router';
-import {DomainManager, app, AppOrServiceRoute} from '@xcan-angus/infra';
+import { app, AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 import type { Goods } from './PropsType';
 import { goodsTypeColor } from './PropsType';
 import ShowButton from './components/showButton.vue';

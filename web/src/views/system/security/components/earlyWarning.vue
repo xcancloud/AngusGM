@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent } from 'vue';
-import { Card, Icon, AsyncComponent, Grid } from '@xcan-angus/vue-ui';
+import { defineAsyncComponent, ref, watch } from 'vue';
+import { AsyncComponent, Card, Grid, Icon } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
-import { CheckboxGroup, Checkbox, Switch, Tag, Button } from 'ant-design-vue';
+import { Button, Checkbox, CheckboxGroup, Switch, Tag } from 'ant-design-vue';
 
 import { Alarm, Operation } from '../PropsType';
 

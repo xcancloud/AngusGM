@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue';
-import { PureCard, SearchPanel, DropdownSort, Icon, Image, NoData, Colon, Spin, IconRefresh } from '@xcan-angus/vue-ui';
-import { Carousel, TypographyParagraph, Tag, Divider, Pagination, Button } from 'ant-design-vue';
+import { onMounted, reactive, ref } from 'vue';
+import { Colon, DropdownSort, Icon, IconRefresh, Image, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
+import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import {DomainManager, http, API, VERSION, AppOrServiceRoute} from '@xcan-angus/infra';
+import { API, AppOrServiceRoute, DomainManager, http, VERSION } from '@xcan-angus/infra';
 
 import type { Goods } from './PropsType';
-import { goodsTypeColor, getEnumMessages } from './PropsType';
+import { getEnumMessages, goodsTypeColor } from './PropsType';
 import { store } from '@/api';
 import ShowButton from './components/showButton.vue';
 

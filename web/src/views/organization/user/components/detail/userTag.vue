@@ -1,11 +1,11 @@
 <script setup lang='ts'>
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Hints, Table, Input, Icon, AsyncComponent, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, utils } from '@xcan-angus/infra';
 
-import { UserTag, SearchParams } from './PropsType';
+import { SearchParams, UserTag } from './PropsType';
 import { user } from '@/api';
 
 const TagModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));

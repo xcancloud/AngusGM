@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
-  ButtonAuth,
-  modal,
-  SearchPanel,
-  Table,
-  PureCard,
-  Icon,
   AsyncComponent,
-  notification,
+  ButtonAuth,
+  Icon,
   IconCount,
-  IconRefresh
+  IconRefresh,
+  modal,
+  notification,
+  PureCard,
+  SearchPanel,
+  Table
 } from '@xcan-angus/vue-ui';
-import { app, utils, GM } from '@xcan-angus/infra';
+import { app, GM, utils } from '@xcan-angus/infra';
 
-import { _columns, ListGroup, SearchParams, FilterOp } from './PropsType';
+import { _columns, FilterOp, ListGroup, SearchParams } from './PropsType';
 import { group } from '@/api';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));

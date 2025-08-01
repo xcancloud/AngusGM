@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { Button, RadioGroup, Radio } from 'ant-design-vue';
+import { onMounted, ref } from 'vue';
+import { Button, Radio, RadioGroup } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
-import { Hints, modal, Card, Icon, Input, Grid } from '@xcan-angus/vue-ui';
+import { Card, Grid, Hints, Icon, Input, modal } from '@xcan-angus/vue-ui';
 import { app, enumLoader } from '@xcan-angus/infra';
 import { storage as storageApi } from '@/api/index';
 

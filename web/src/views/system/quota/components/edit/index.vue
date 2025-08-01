@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Modal, Input, Icon, IconRequired } from '@xcan-angus/vue-ui';
+import { Icon, IconRequired, Input, Modal } from '@xcan-angus/vue-ui';
 
 import { setting } from '@/api';
 

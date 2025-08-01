@@ -2,8 +2,8 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { store } from '@/api';
-import { cookieUtils, http, API, VERSION } from '@xcan-angus/infra';
-import { Carousel, StoreComment, Image, PureCard, Icon, Colon } from '@xcan-angus/vue-ui';
+import { API, cookieUtils, http, VERSION } from '@xcan-angus/infra';
+import { Carousel, Colon, Icon, Image, PureCard, StoreComment } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
 
 import VideoLink from '@/views/stores/open2Priv/info/videoLink/index.vue';
@@ -11,7 +11,7 @@ import ContentInfo from '@/views/stores/open2Priv/info/contentInfo/index.vue';
 import ShowButton from '../components/showButton.vue';
 
 import type { Goods } from '../PropsType';
-import { goodsTypeColor, getEnumMessages } from '../PropsType';
+import { getEnumMessages, goodsTypeColor } from '../PropsType';
 
 const route = useRoute();
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent, onMounted, watch, computed } from 'vue';
-import { PieSetting, PieData, BarData, DateType } from './PropsType';
+import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue';
+import { BarData, DateType, PieData, PieSetting } from './PropsType';
 import dayjs from 'dayjs';
 import { http } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';

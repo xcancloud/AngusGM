@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import { ref, reactive, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Form, FormItem, RadioGroup, Radio } from 'ant-design-vue';
-import { notification, SelectUser, SelectDept, SelectGroup, Input, Modal } from '@xcan-angus/vue-ui';
+import { Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
+import { Input, Modal, notification, SelectDept, SelectGroup, SelectUser } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
 

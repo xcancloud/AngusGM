@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, onBeforeMount} from 'vue';
+import { onBeforeMount, onMounted, ref, watch } from 'vue';
 import * as echarts from 'echarts/core';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent
-} from 'echarts/components';
+import { GridComponent, LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 
 import { PieChart } from 'echarts/charts';
 import { LabelLayout } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
-import { appContext} from '@xcan-angus/infra'
 
 interface Props {
   source: string;

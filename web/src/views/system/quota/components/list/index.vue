@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import { computed, ref, onMounted, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Table, PureCard, Select, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
+import { AsyncComponent, IconRefresh, PureCard, Select, Table } from '@xcan-angus/vue-ui';
 import { app, appContext } from '@xcan-angus/infra';
 
 import { Quota } from '../../PropsType';

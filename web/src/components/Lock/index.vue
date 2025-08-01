@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import { ref, reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
-import { Form, FormItem, RadioGroup, Radio } from 'ant-design-vue';
+import { Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 import { http, utils } from '@xcan-angus/infra';
-import { notification, DatePicker, Modal, Icon, Colon } from '@xcan-angus/vue-ui';
+import { Colon, DatePicker, Icon, Modal, notification } from '@xcan-angus/vue-ui';
 
 interface FormType {
   type: 1 | 2, // 1: Time-based Lock, 2: Irreversible Lock

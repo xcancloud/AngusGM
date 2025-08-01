@@ -2,8 +2,8 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { Tag, Skeleton, Badge } from 'ant-design-vue';
-import { Image, Card, Grid } from '@xcan-angus/vue-ui';
+import { Badge, Skeleton, Tag } from 'ant-design-vue';
+import { Card, Grid, Image } from '@xcan-angus/vue-ui';
 import RichEditor from '@/components/RichEditor/index.vue';
 
 import { message } from '@/api';

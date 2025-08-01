@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {AppOrServiceRoute, DomainManager} from '@xcan-angus/infra';
+import { AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 import { Button } from 'ant-design-vue';
 import { store } from '@/api';
 

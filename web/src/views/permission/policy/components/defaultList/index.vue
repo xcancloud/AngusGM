@@ -1,11 +1,11 @@
 <script setup lang='ts'>
-import { reactive, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { modal, notification, Card, Table, Select } from '@xcan-angus/vue-ui';
-import { RadioGroup, Radio } from 'ant-design-vue';
-import { app } from '@xcan-angus/infra';
+import {onMounted, reactive} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Card, modal, notification, Select, Table} from '@xcan-angus/vue-ui';
+import {Radio, RadioGroup} from 'ant-design-vue';
+import {app} from '@xcan-angus/infra';
 
-import { auth } from '@/api';
+import {auth} from '@/api';
 
 const { t } = useI18n();
 

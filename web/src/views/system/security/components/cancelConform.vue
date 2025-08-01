@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, inject, Ref } from 'vue';
+import { ref } from 'vue';
 import { Button } from 'ant-design-vue';
-import { Modal, Input, Hints, notification, Colon } from '@xcan-angus/vue-ui';
+import { Colon, Hints, Input, Modal, notification } from '@xcan-angus/vue-ui';
 import { appContext } from '@xcan-angus/infra';
 
 import { tenant } from '@/api';

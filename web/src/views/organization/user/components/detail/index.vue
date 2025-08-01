@@ -1,12 +1,12 @@
 <script setup lang='ts'>
-import { computed, reactive, inject, onMounted, ref, defineAsyncComponent, Ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Badge, Skeleton, Tabs } from 'ant-design-vue';
-import { ButtonAuth, modal, Grid, PureCard, Image, notification, AsyncComponent } from '@xcan-angus/vue-ui';
+import { AsyncComponent, ButtonAuth, Grid, Image, modal, notification, PureCard } from '@xcan-angus/vue-ui';
 import { Detail } from './PropsType';
 import router from '@/router';
-import { GM, appContext } from '@xcan-angus/infra';
+import { appContext, GM } from '@xcan-angus/infra';
 import { user } from '@/api';
 
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));

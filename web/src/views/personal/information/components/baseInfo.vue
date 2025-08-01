@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import {Grid, PureCard, Icon, Image, Input, Cropper, notification} from '@xcan-angus/vue-ui';
-import {AppOrServiceRoute, DomainManager, toClipboard, appContext} from "@xcan-angus/infra";
+import { Cropper, Grid, Icon, Image, Input, notification, PureCard } from '@xcan-angus/vue-ui';
+import { appContext, AppOrServiceRoute, DomainManager, toClipboard } from '@xcan-angus/infra';
 
 import defaultAvatar from '../assets/default.jpg';
 
@@ -97,7 +97,7 @@ const columns = computed(() => {
       break;
   }
   return [[
-    { dataIndex: 'tenantId', label: t('账号ID')},
+    { dataIndex: 'tenantId', label: t('账号ID') },
     { dataIndex: 'accountName', label },
     { dataIndex: 'username', label: t('personalCenter.information.userName') }
   ]];
@@ -167,7 +167,10 @@ const copyID = () => {
       <template #tenantId>
         <div class="flex space-x-2 items-center">
           <span>{{ appContext.getUser()?.tenantId }}</span>
-          <Icon icon="icon-fuzhi" class="text-4 text-text-link cursor-pointer" @click="copyID" />
+          <Icon
+            icon="icon-fuzhi"
+            class="text-4 text-text-link cursor-pointer"
+            @click="copyID" />
         </div>
       </template>
       <template #accountName>

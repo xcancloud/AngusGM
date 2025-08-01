@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { RadioGroup, Radio } from 'ant-design-vue';
-import { SelectEnum, PureCard } from '@xcan-angus/vue-ui';
-import { enumLoader } from '@xcan-angus/infra';
+import {onMounted, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Radio, RadioGroup} from 'ant-design-vue';
+import {PureCard, SelectEnum} from '@xcan-angus/vue-ui';
+import {enumLoader} from '@xcan-angus/infra';
 
-import { setting } from '@/api';
+import {setting} from '@/api';
 
 interface Theme {
   message: string;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { PureCard, Icon } from '@xcan-angus/vue-ui';
+import { Icon, PureCard } from '@xcan-angus/vue-ui';
 import { app } from '@xcan-angus/infra';
 import { Button } from 'ant-design-vue';
 

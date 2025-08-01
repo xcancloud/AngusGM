@@ -1,4 +1,4 @@
-import { GM, PUB_GM, ESS, STORAGE } from '@xcan-angus/infra';
+import { ESS, GM, PUB_GM, STORAGE } from '@xcan-angus/infra';
 
 import Tenant from '@/api/Tenant';
 import User from '@/api/User';

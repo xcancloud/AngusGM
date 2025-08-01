@@ -1,25 +1,25 @@
 <script setup lang='ts'>
-import { onMounted, computed, defineAsyncComponent, ref, reactive } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
+import {computed, defineAsyncComponent, onMounted, reactive, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Badge, Dropdown, Menu, MenuItem} from 'ant-design-vue';
 import {
+  AsyncComponent,
   ButtonAuth,
   Hints,
-  modal,
-  SearchPanel,
   Icon,
-  Table,
-  PureCard,
-  AsyncComponent,
-  notification,
-  Image,
+  IconCount,
   IconRefresh,
-  IconCount
+  Image,
+  modal,
+  notification,
+  PureCard,
+  SearchPanel,
+  Table
 } from '@xcan-angus/vue-ui';
-import { appContext, app, utils, GM } from '@xcan-angus/infra'
+import {app, appContext, GM, utils} from '@xcan-angus/infra';
 
-import { User, SearchParams, FilterOp } from './PropsType';
-import { user } from '@/api';
+import {FilterOp, SearchParams, User} from './PropsType';
+import {user} from '@/api';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/components/password/index.vue'));

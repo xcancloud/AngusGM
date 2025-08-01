@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { defineAsyncComponent, inject, onMounted, ref, Ref, watch } from 'vue';
+import { defineAsyncComponent, onMounted, ref, watch } from 'vue';
 import { Button, Divider, Skeleton } from 'ant-design-vue';
-import { AsyncComponent, Card, Grid, Icon, Image, Input, notification, Cropper } from '@xcan-angus/vue-ui';
+import { AsyncComponent, Card, Cropper, Grid, Icon, Image, Input, notification } from '@xcan-angus/vue-ui';
 import { appContext } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
@@ -9,7 +9,6 @@ import { app } from '@/api';
 import { AppInfo } from './PropsType';
 
 const ExpandHead = defineAsyncComponent(() => import('./components/expandHead.vue'));
-
 
 const { t } = useI18n();
 const editionType = ref<string>();

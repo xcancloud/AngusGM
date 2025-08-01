@@ -1,5 +1,5 @@
-import {DomainManager, appContext, EditionType} from "@xcan-angus/infra";
-import {AppOrServiceRoute} from "@xcan-angus/infra/lib/router/apiRouterPrefix";
+import {appContext, DomainManager, EditionType} from '@xcan-angus/infra';
+import {AppOrServiceRoute} from '@xcan-angus/infra/lib/router/apiRouterPrefix';
 
 const personalCenterMenus = [
   {
@@ -45,7 +45,7 @@ const personalCenterMenus = [
 ];
 
 const getTopRightMenu = async () => {
-  let domainManager = DomainManager.getInstance();
+  const domainManager = DomainManager.getInstance();
   const expenseUrl = await domainManager.getAppDomain(AppOrServiceRoute.expense);
   const workOrderUrl = await domainManager.getUrl(AppOrServiceRoute.wo);
   const officialWebsiteUrl = await domainManager.getUrl(AppOrServiceRoute.www);

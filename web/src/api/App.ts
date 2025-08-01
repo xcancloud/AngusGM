@@ -1,4 +1,4 @@
-import { http, GM } from '@xcan-angus/infra';
+import { GM, http } from '@xcan-angus/infra';
 
 let baseUrl: string;
 export default class App {

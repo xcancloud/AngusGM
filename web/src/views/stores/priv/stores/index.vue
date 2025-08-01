@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, watch, ref, inject } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { cookieUtils, appContext } from '@xcan-angus/infra';
+import { appContext, cookieUtils } from '@xcan-angus/infra';
 
 const router = useRouter();
 const route = useRoute();

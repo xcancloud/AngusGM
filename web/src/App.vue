@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, provide, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ConfigProvider, Header, Denied, NetworkError, NotFound, VuexHelper } from '@xcan-angus/vue-ui';
+import { ConfigProvider, Denied, Header, NetworkError, NotFound, VuexHelper } from '@xcan-angus/vue-ui';
 import { app, sessionStore } from '@xcan-angus/infra';
 
-import { personalCenterMenus, getTopRightMenu } from '@/layout/fixed-top-menu';
+import { getTopRightMenu, personalCenterMenus } from '@/layout/fixed-top-menu';
 
 const { t } = useI18n();
 

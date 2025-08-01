@@ -1,12 +1,12 @@
 <script setup lang='ts'>
-import { ref, onMounted, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, Textarea } from 'ant-design-vue';
-import { Hints, PureCard, Input, IconRequired, Select, notification, Colon } from '@xcan-angus/vue-ui';
-import { utils, GM } from '@xcan-angus/infra';
+import { Colon, Hints, IconRequired, Input, notification, PureCard, Select } from '@xcan-angus/vue-ui';
+import { GM, utils } from '@xcan-angus/infra';
 
-import { FormState, Detail } from '../../PropsType';
+import { Detail, FormState } from '../../PropsType';
 import { group } from '@/api';
 
 const { t } = useI18n();

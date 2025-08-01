@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Input, Card } from '@xcan-angus/vue-ui';
+import { Card, Input } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { Switch } from 'ant-design-vue';
 import { duration } from '@xcan-angus/infra';
 
-import { SigninLimit, Operation } from '../PropsType';
+import { Operation, SigninLimit } from '../PropsType';
 
 interface Props {
   signinLimit: SigninLimit;

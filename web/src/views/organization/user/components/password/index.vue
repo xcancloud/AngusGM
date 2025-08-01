@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref, reactive, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Form, FormItem, InputPassword } from 'ant-design-vue';
 import { Modal, notification } from '@xcan-angus/vue-ui';

@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover } from 'ant-design-vue';
-import { Input, Hints, Icon, Table, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, utils } from '@xcan-angus/infra';
 

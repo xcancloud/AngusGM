@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from 'vue';
-import { cookieUtils, appContext, type TokenInfo } from '@xcan-angus/infra';
+import { appContext, cookieUtils, type TokenInfo } from '@xcan-angus/infra';
 import { redirectTo } from '@/utils/url';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';

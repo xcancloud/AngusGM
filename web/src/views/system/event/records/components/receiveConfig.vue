@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { watch, reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover, Tag } from 'ant-design-vue';
-import { Modal, Grid, NoData } from '@xcan-angus/vue-ui';
+import { Grid, Modal, NoData } from '@xcan-angus/vue-ui';
 
 import { event } from '@/api';
 

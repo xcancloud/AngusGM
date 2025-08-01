@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue';
-import { Quill } from '@xcan-angus/vue-ui';
+import {nextTick, onMounted, ref, watch} from 'vue';
+import {Quill} from '@xcan-angus/vue-ui';
 import '@xcan-angus/quill/dist/quill.snow.css';
 import '@xcan-angus/quill/dist/quill.core.css';
 

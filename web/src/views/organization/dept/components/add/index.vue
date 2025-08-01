@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import { ref, reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Form, FormItem } from 'ant-design-vue';
-import { notification, Modal, Input, Select } from '@xcan-angus/vue-ui';
+import { Input, Modal, notification, Select } from '@xcan-angus/vue-ui';
 
 import { GM } from '@xcan-angus/infra';
 import { dept } from '@/api';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent, Ref, inject, onMounted } from 'vue';
-import { Card, AsyncComponent, notification } from '@xcan-angus/vue-ui';
+import { defineAsyncComponent, onMounted, ref } from 'vue';
+import { AsyncComponent, Card, notification } from '@xcan-angus/vue-ui';
 import { Switch } from 'ant-design-vue';
 import { appContext } from '@xcan-angus/infra';
 

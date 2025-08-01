@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import { ref, reactive, onMounted, inject, defineAsyncComponent, Ref, watch } from 'vue';
+import { defineAsyncComponent, inject, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { Button, InputPassword, Form, FormItem, Popover, RadioGroup, Radio } from 'ant-design-vue';
-import { Image, Input, PureCard, Icon, SelectItc, notification, Cropper } from '@xcan-angus/vue-ui';
-import { itc, passwordUtils, regexpUtils, utils, enumLoader, duration, appContext } from '@xcan-angus/infra';
+import { Button, Form, FormItem, InputPassword, Popover, Radio, RadioGroup } from 'ant-design-vue';
+import { Cropper, Icon, Image, Input, notification, PureCard, SelectItc } from '@xcan-angus/vue-ui';
+import { appContext, duration, enumLoader, itc, passwordUtils, regexpUtils, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { FormState, Gender } from '../../PropsType';

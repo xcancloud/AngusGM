@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, onBeforeMount, Ref, inject } from 'vue';
+import { onBeforeMount, onMounted, ref, watch } from 'vue';
 import * as echarts from 'echarts/core';
 import { NoData } from '@xcan-angus/vue-ui';
 
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent
-} from 'echarts/components';
+import { GridComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 
 import { BarChart, LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';

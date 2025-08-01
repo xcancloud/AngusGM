@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import { ref, onMounted, defineAsyncComponent, nextTick } from 'vue';
+import { defineAsyncComponent, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Tooltip, Tag, Pagination } from 'ant-design-vue';
-import { modal, PureCard, Spin, Input, AsyncComponent, IconRefresh, notification, ButtonAuth } from '@xcan-angus/vue-ui';
+import { Pagination, Tag, Tooltip } from 'ant-design-vue';
+import { AsyncComponent, ButtonAuth, IconRefresh, Input, modal, notification, PureCard, Spin } from '@xcan-angus/vue-ui';
 import { app, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 

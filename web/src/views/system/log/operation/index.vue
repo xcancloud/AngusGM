@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { Hints, PureCard, Table, Image } from '@xcan-angus/vue-ui';
+import { Hints, Image, PureCard, Table } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { GM } from '@xcan-angus/infra';
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { watch, reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { NoData } from '@xcan-angus/vue-ui';
 import { Tree } from 'ant-design-vue';

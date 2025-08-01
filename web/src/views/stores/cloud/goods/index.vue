@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, PureCard, Scroll, SearchPanel, Spin } from '@xcan-angus/vue-ui';
+import {
+  ButtonAuth,
+  Colon,
+  DropdownSort,
+  Icon,
+  IconRefresh,
+  PureCard,
+  Scroll,
+  SearchPanel,
+  Spin
+} from '@xcan-angus/vue-ui';
 // import { Button } from 'ant-design-vue';
-import { ESS, app } from '@xcan-angus/infra';
+import { app, ESS } from '@xcan-angus/infra';
 
 import UploadPlugin from './components/UploadPlugin/index.vue';
 import ShowButton from './components/ShowButton.vue';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import {DomainManager} from "@xcan-angus/infra";
-import {AppOrServiceRoute} from "@xcan-angus/infra/lib/router/apiRouterPrefix";
+import {onMounted, ref} from 'vue';
+import {DomainManager} from '@xcan-angus/infra';
+import {AppOrServiceRoute} from '@xcan-angus/infra/lib/router/apiRouterPrefix';
 
 const officialUrl = ref<string>();
 onMounted(async () => {
@@ -9,7 +9,8 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <a class="text-gray-content hover:text-blue-hover"
+  <a
+    class="text-gray-content hover:text-blue-hover"
     :href="officialUrl"
     target="_self">{{ $t('official-website') }}</a>
 </template>

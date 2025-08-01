@@ -1,11 +1,11 @@
 <script setup lang='ts'>
-import {onMounted, reactive, ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {Button, Checkbox, Form, FormItem, Textarea, Tree} from 'ant-design-vue';
-import {ButtonAuth, Card, Icon, Input, NoData, notification, Select} from '@xcan-angus/vue-ui';
-import {appContext, GM} from '@xcan-angus/infra';
+import { onMounted, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Button, Checkbox, Form, FormItem, Textarea, Tree } from 'ant-design-vue';
+import { ButtonAuth, Card, Icon, Input, NoData, notification, Select } from '@xcan-angus/vue-ui';
+import { appContext, GM } from '@xcan-angus/infra';
 
-import {auth} from '@/api';
+import { auth } from '@/api';
 
 interface FormType {
   id: string,

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PureCard, Table, Input, IconRefresh, Icon } from '@xcan-angus/vue-ui';
+import { Icon, IconRefresh, Input, PureCard, Table } from '@xcan-angus/vue-ui';
 import { Button } from 'ant-design-vue';
-import { download, routerUtils, cookieUtils, duration } from '@xcan-angus/infra';
+import { cookieUtils, download, duration, routerUtils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { privLicense } from '@/api';
-import { SearchParams, Licensed } from './PropsType';
+import { Licensed, SearchParams } from './PropsType';
 
 const { t } = useI18n();
 

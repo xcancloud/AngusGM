@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref, watch, onMounted } from 'vue';
+import { defineAsyncComponent, onMounted, ref, watch } from 'vue';
 import { Quill } from '@xcan-angus/vue-ui';
 import '@xcan-angus/quill/dist/quill.snow.css';
 import '@xcan-angus/quill/dist/quill.core.css';

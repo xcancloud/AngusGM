@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { onMounted, reactive, computed, ref, watch, inject } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import useClipboard from 'vue-clipboard3';
 import { useI18n } from 'vue-i18n';
-import { RadioGroup, Radio, Badge } from 'ant-design-vue';
+import { Badge, Radio, RadioGroup } from 'ant-design-vue';
 import {
-  Hints,
-  Input,
-  DatePicker,
-  Modal,
-  notification,
-  Card,
-  Table,
-  Icon,
-  AsyncComponent,
   Arrow,
+  AsyncComponent,
   ButtonAuth,
-  modal
+  Card,
+  DatePicker,
+  Hints,
+  Icon,
+  Input,
+  Modal,
+  modal,
+  notification,
+  Table
 } from '@xcan-angus/vue-ui';
-import { app, enumLoader, appContext } from '@xcan-angus/infra';
+import { app, appContext, enumLoader } from '@xcan-angus/infra';
 
 import SelectApis from '@/views/system/token/components/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';
-import { systemToken, setting } from '@/api';
-import { GrantData, Service, _columns } from './PropsType';
+import { setting, systemToken } from '@/api';
+import { _columns, GrantData, Service } from './PropsType';
 
 const { t } = useI18n();
 const { toClipboard } = useClipboard();

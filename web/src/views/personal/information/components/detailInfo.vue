@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, inject, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { PureCard, Grid, Icon, Input } from '@xcan-angus/vue-ui';
-import { Tag } from 'ant-design-vue';
-import { regexpUtils, appContext } from '@xcan-angus/infra';
-import { user } from '@/api';
+import {computed, ref, watch} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Grid, Icon, Input, PureCard} from '@xcan-angus/vue-ui';
+import {Tag} from 'ant-design-vue';
+import {appContext, regexpUtils} from '@xcan-angus/infra';
+import {user} from '@/api';
 
 const userInfo = ref(appContext.getUser());
 
@@ -400,7 +400,7 @@ watch(() => userInfo.value, (newValue: any) => {
           t('personalCenter.information.generalUser') }}
       </template>
       <template #depts>
-        <template v-if="depts?.length" >
+        <template v-if="depts?.length">
           <div
             v-for="item in depts"
             :key="item.id"
@@ -414,7 +414,7 @@ watch(() => userInfo.value, (newValue: any) => {
       </template>
       <template #tags>
         <div v-if="userInfo.tags">
-          <Tag v-for="item in userInfo.tags" :key="item.id">{{item.name}}</Tag>
+          <Tag v-for="item in userInfo.tags" :key="item.id">{{ item.name }}</Tag>
         </div>
       </template>
       <template #otherAccount>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
-import { DatePicker, Card, Input, Icon, Hints } from '@xcan-angus/vue-ui';
+import { Card, DatePicker, Hints, Icon, Input } from '@xcan-angus/vue-ui';
 
-import { userToken, setting } from '@/api';
+import { setting, userToken } from '@/api';
 import TokenTable from './Table.vue';
 
 const { t } = useI18n();

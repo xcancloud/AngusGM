@@ -1,15 +1,15 @@
 <script setup lang='ts'>
-import { reactive, ref, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import { Skeleton } from 'ant-design-vue';
+import {onMounted, reactive, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {useRoute} from 'vue-router';
+import {Skeleton} from 'ant-design-vue';
 
-import { auth } from '@/api';
-import type { DetailType } from './PropTypes';
+import {auth} from '@/api';
+import type {DetailType} from './PropTypes';
 import BaseInfo from './baseInfo.vue';
 import TargetPanel from './targetPanel.vue';
 import MenuAuth from './menuAuth.vue';
-import { Card, Hints } from '@xcan-angus/vue-ui';
+import {Card, Hints} from '@xcan-angus/vue-ui';
 
 const { t } = useI18n();
 const route = useRoute();

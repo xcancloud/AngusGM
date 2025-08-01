@@ -1,12 +1,11 @@
 <script setup lang='ts'>
-import { reactive, computed, defineAsyncComponent, ref, watch, inject } from 'vue';
+import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Tabs, TabPane } from 'ant-design-vue';
-import { modal, notification, PureCard, Table, Select, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
-import { appContext } from '@xcan-angus/infra';
+import { TabPane, Tabs } from 'ant-design-vue';
+import { ButtonAuth, IconRefresh, modal, notification, PureCard, Select, Table } from '@xcan-angus/vue-ui';
+import { appContext, GM } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
-import { GM } from '@xcan-angus/infra';
 
 const TargetPanel = defineAsyncComponent(() => import('./components/targetPanel.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));

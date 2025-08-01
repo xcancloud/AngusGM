@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, IconRefresh, Input, PureCard, Table } from '@xcan-angus/vue-ui';
-import { cookieUtils, ESS, duration, download } from '@xcan-angus/infra';
+import { cookieUtils, download, duration, ESS } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { license } from '@/api';

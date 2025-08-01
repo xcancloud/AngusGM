@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { enumLoader } from '@xcan-angus/infra';
-import { Card, AsyncComponent } from '@xcan-angus/vue-ui';
+import { AsyncComponent, Card } from '@xcan-angus/vue-ui';
 
 const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./components/http.vue'));
 const ReceivingConfigurationEmail = defineAsyncComponent(() => import('./components/email.vue'));

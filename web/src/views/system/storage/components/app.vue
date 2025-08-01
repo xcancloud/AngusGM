@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Card, Grid, Hints, Select } from '@xcan-angus/vue-ui';
 
-import { service as serviceApi, pubProxy } from '@/api';
+import { pubProxy, service as serviceApi } from '@/api';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

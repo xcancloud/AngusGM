@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, inject } from 'vue';
+import { ref } from 'vue';
 import { Modal } from '@xcan-angus/vue-ui';
-import { Tree } from 'ant-design-vue';
 import type { TreeProps } from 'ant-design-vue';
+import { Tree } from 'ant-design-vue';
 import { appContext } from '@xcan-angus/infra';
 
 import { dept } from '@/api';

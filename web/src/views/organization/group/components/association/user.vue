@@ -1,11 +1,11 @@
 <script setup lang='ts'>
-import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Hints, Table, AsyncComponent, Icon, Input, Image, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Image, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, utils } from '@xcan-angus/infra';
 
-import { User, SearchParams } from './PropsType';
+import { SearchParams, User } from './PropsType';
 
 import { group } from '@/api';
 

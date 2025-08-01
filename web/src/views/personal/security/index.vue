@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, ref, Ref, watch } from 'vue';
+import { computed, ref, Ref, watch } from 'vue';
 import { Button } from 'ant-design-vue';
-import { PureCard, Icon } from '@xcan-angus/vue-ui';
+import { Icon, PureCard } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { appContext } from '@xcan-angus/infra';
 

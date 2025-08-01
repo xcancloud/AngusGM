@@ -1,13 +1,13 @@
 <script setup lang='ts'>
-import { defineAsyncComponent, ref, inject, Ref } from 'vue';
-import { PureCard, notification } from '@xcan-angus/vue-ui';
+import { defineAsyncComponent, ref } from 'vue';
+import { notification, PureCard } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
 import { appContext } from '@xcan-angus/infra';
 
 import { message } from '@/api';
-import { ReceiveObjectType, MessageReceiveType, SendType } from './PropsType';
+import { MessageReceiveType, ReceiveObjectType, SendType } from './PropsType';
 
 const SendForm = defineAsyncComponent(() => import('./form.vue'));
 const SendList = defineAsyncComponent(() => import('./list.vue'));
@@ -71,7 +71,7 @@ const submit = async () => {
   };
   if (['TENANT', 'USER', 'GROUP', 'DEPT'].includes(receiveObjectType.value)) {
     params = { ...params, receiveTenantId: appContext.getTenant()?.id };
-    params = { ...params, receiveObjects: [{ id: appContext.getTenant()?.id, name: appContext.getTenant()?.name}] };
+    params = { ...params, receiveObjects: [{ id: appContext.getTenant()?.id, name: appContext.getTenant()?.name }] };
   }
 
   if (receiveObjectType.value === 'USER') {

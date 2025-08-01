@@ -16,5 +16,4 @@ export default class SystemLog {
   }): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/instance/${id}/file/${name}`, params);
   }
-
 }

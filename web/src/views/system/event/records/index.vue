@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Badge, Popover, Button } from 'ant-design-vue';
-import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconCount, IconRefresh } from '@xcan-angus/vue-ui';
+import { Badge, Button, Popover } from 'ant-design-vue';
+import { AsyncComponent, Hints, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
 import { app, GM } from '@xcan-angus/infra';
 import DOMPurify from 'dompurify';
 

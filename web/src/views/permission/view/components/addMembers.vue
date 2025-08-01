@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, Ref, inject } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { GM, appContext } from '@xcan-angus/infra';
-import { Modal, Grid, Select, SelectUser } from '@xcan-angus/vue-ui';
+import { appContext, GM } from '@xcan-angus/infra';
+import { Grid, Modal, Select, SelectUser } from '@xcan-angus/vue-ui';
 
 import { app } from '@/api';
 

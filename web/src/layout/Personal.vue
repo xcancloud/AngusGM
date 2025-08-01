@@ -2,9 +2,9 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { VuexHelper, Breadcrumb, Header } from '@xcan-angus/vue-ui';
+import { Breadcrumb, Header, VuexHelper } from '@xcan-angus/vue-ui';
 
-import { personalCenterMenus, getTopRightMenu } from './fixed-top-menu';
+import { getTopRightMenu, personalCenterMenus } from './fixed-top-menu';
 
 const route = useRoute();
 const { t } = useI18n();

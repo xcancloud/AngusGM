@@ -5,7 +5,7 @@ import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
 import { Button, Switch } from 'ant-design-vue';
 
-import { SignupAllow, Operation } from '../PropsType';
+import { Operation, SignupAllow } from '../PropsType';
 import { setting } from '@/api';
 
 interface Props {

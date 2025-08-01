@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Divider, Form, FormItem } from 'ant-design-vue';
-import { modal, notification, Input, Select, ButtonAuth } from '@xcan-angus/vue-ui';
+import { ButtonAuth, Input, modal, notification, Select } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { regexpUtils } from '@xcan-angus/infra';
 

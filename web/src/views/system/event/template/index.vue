@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, computed, defineAsyncComponent } from 'vue';
-import { Popover, Button } from 'ant-design-vue';
-import { Hints, SearchPanel, PureCard, Icon, Table, AsyncComponent, IconRefresh } from '@xcan-angus/vue-ui';
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
+import { Button, Popover } from 'ant-design-vue';
+import { AsyncComponent, Hints, Icon, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
 import { app, enumLoader } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { appopen } from '@/api/index';

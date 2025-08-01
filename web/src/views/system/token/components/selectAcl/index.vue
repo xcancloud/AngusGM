@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { enumLoader, GM } from '@xcan-angus/infra';
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Button } from 'ant-design-vue';
-import { notification, Select, Icon } from '@xcan-angus/vue-ui';
+import { Icon, notification, Select } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import SelectAcls from './selectAcl.vue';
 

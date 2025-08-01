@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { enumLoader } from '@xcan-angus/infra';
-import { DatePicker, Input, Hints } from '@xcan-angus/vue-ui';
+import { DatePicker, Hints, Input } from '@xcan-angus/vue-ui';
 import dayjs from 'dayjs';
 import RichEditor from '@/components/RichEditor/index.vue';
-import { RadioGroup, Radio, Form, FormItem } from 'ant-design-vue';
+import { Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 
 import { email } from '@/api';
 

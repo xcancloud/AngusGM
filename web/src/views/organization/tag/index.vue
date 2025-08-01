@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { defineAsyncComponent, ref } from 'vue';
-import { Hints, PureCard, Card, Icon } from '@xcan-angus/vue-ui';
+import { Card, Hints, Icon, PureCard } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { app, GM } from '@xcan-angus/infra';
 

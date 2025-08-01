@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Input, Card } from '@xcan-angus/vue-ui';
+import { Card, Input } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
 

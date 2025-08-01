@@ -2,11 +2,10 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { Button, RadioChangeEvent, Checkbox, Pagination } from 'ant-design-vue';
-import { Card, PureCard, NoData } from '@xcan-angus/vue-ui';
+import { Button, Checkbox, Pagination, RadioChangeEvent } from 'ant-design-vue';
+import { Card, NoData, PureCard } from '@xcan-angus/vue-ui';
 import RichEditor from '@/components/RichEditor/index.vue';
 // import RichBrowser from '@xcan/browser';
-
 import { message } from '@/api';
 
 interface Message {
