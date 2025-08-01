@@ -65,19 +65,6 @@ import org.springframework.lang.Nullable;
  * and multi-tenant authorization management.
  * </p>
  */
-/**
- * <p>
- * Implementation of application organization authorization query operations.
- * </p>
- * <p>
- * Manages application authorization queries for tenants, users, departments, and groups.
- * Provides comprehensive authorization checking and policy management.
- * </p>
- * <p>
- * Supports authorized and unauthorized entity queries, policy validation,
- * and multi-tenant authorization management.
- * </p>
- */
 @Biz
 public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
@@ -102,15 +89,6 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
   @Resource
   private WebTagQuery webTagQuery;
 
-  /**
-   * <p>
-   * Retrieves tenants authorized for the specified application.
-   * </p>
-   * <p>
-   * Queries tenants that have open authorization for the application.
-   * Supports pagination and filtering for comprehensive tenant management.
-   * </p>
-   */
   /**
    * <p>
    * Retrieves tenants authorized for the specified application.

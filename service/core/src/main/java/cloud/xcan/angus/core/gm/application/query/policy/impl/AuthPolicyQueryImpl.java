@@ -81,28 +81,20 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
 
   @Resource
   private AuthPolicyRepo authPolicyRepo;
-
   @Resource
   private AuthPolicyListRepo authPolicyListRepo;
-
   @Resource
   private AuthPolicySearchRepo authPolicySearchRepo;
-
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private AppOpenQuery appOpenQuery;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private UserManager userManager;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 

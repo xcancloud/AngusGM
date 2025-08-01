@@ -45,16 +45,12 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private AppOpenQuery appOpenQuery;
-
   @Resource
   private AppFuncQuery appFuncQuery;
 
