@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {computed, onMounted, reactive, ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {Badge, Popconfirm} from 'ant-design-vue';
-import {Card, Icon, IconCopy, Table} from '@xcan-angus/vue-ui';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Badge, Popconfirm } from 'ant-design-vue';
+import { Card, Icon, IconCopy, Table } from '@xcan-angus/vue-ui';
 
-import {userToken} from '@/api';
+import { userToken } from '@/api';
 
 interface Props {
   notify: string,

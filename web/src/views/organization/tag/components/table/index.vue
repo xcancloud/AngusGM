@@ -1,6 +1,6 @@
 <script setup lang='ts'>
-import {computed, defineAsyncComponent, ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
+import { computed, defineAsyncComponent, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import {
   AsyncComponent,
   ButtonAuth,
@@ -12,11 +12,11 @@ import {
   SelectEnum,
   Table
 } from '@xcan-angus/vue-ui';
-import {app, duration, utils} from '@xcan-angus/infra';
-import {debounce} from 'throttle-debounce';
+import { app, duration, utils } from '@xcan-angus/infra';
+import { debounce } from 'throttle-debounce';
 
-import {Target, TargetType} from '../../PropsType';
-import {orgTag} from '@/api';
+import { Target, TargetType } from '../../PropsType';
+import { orgTag } from '@/api';
 
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 const DeptModal = defineAsyncComponent(() => import('@/components/DeptModal/index.vue'));

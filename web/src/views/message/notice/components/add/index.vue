@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, inject } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Form, FormItem, RadioGroup, Radio, Textarea } from 'ant-design-vue';
 import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan-angus/vue-ui';
-import { enumLoader, appContext, GM } from '@xcan-angus/infra';
+import { enumUtils, appContext, GM } from '@xcan-angus/infra';
 import { useRouter } from 'vue-router';
 
 import type { FormDataType } from '../../interface';
@@ -152,16 +152,12 @@ const enumsList: {
 });
 
 // 获取字典
-const getDictory = async () => {
-  const [error, data] = await enumLoader.load('SentType');
-  if (error) {
-    return;
-  }
-  enumsList.SentTypeList = data;
+const getDirectory = async () => {
+  enumsList.SentTypeList = enumUtils.enumToMessages('SentType');
 };
 
 onMounted(() => {
-  getDictory();
+  getDirectory();
 });
 </script>
 <template>

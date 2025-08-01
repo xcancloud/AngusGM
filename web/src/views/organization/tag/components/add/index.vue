@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {IconRequired, Input, Modal} from '@xcan-angus/vue-ui';
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { IconRequired, Input, Modal } from '@xcan-angus/vue-ui';
 
 interface Props {
   visible: boolean;

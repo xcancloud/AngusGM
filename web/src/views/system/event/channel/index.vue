@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
-import { enumLoader } from '@xcan-angus/infra';
+import { enumUtils } from '@xcan-angus/infra';
 import { AsyncComponent, Card } from '@xcan-angus/vue-ui';
 
 const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./components/http.vue'));
@@ -15,22 +15,18 @@ const enumsList: {
   pKeyEnumList: []
 });
 
-const getDictory = async () => {
-  const [error, data] = await enumLoader.load('ReceiveChannelType');
-  if (error) {
-    return;
-  }
-
+const getDirectory = async () => {
+  const data = enumUtils.enumToMessages('ReceiveChannelType');
   enumsList.pKeyEnumList = data?.map(item => {
     return {
       key: item.value,
-      tab: item.message
+      tab: item.description
     };
   });
 };
 
 onMounted(() => {
-  getDictory();
+  getDirectory();
 });
 </script>
 <template>

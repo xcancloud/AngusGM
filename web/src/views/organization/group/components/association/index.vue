@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import {defineAsyncComponent} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {TabPane, Tabs} from 'ant-design-vue';
-import {PureCard} from '@xcan-angus/vue-ui';
+import { defineAsyncComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { TabPane, Tabs } from 'ant-design-vue';
+import { PureCard } from '@xcan-angus/vue-ui';
 
 const PolicyTable = defineAsyncComponent(() => import('./policy.vue'));
 const UserTable = defineAsyncComponent(() => import('./user.vue'));

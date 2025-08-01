@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {Grid, Icon, Input, PureCard} from '@xcan-angus/vue-ui';
-import {Tag} from 'ant-design-vue';
-import {appContext, regexpUtils} from '@xcan-angus/infra';
-import {user} from '@/api';
+import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Grid, Icon, Input, PureCard } from '@xcan-angus/vue-ui';
+import { Tag } from 'ant-design-vue';
+import { appContext, regexpUtils } from '@xcan-angus/infra';
+import { user } from '@/api';
 
 const userInfo = ref(appContext.getUser());
 

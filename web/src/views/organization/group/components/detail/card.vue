@@ -1,15 +1,15 @@
 <script setup lang='ts'>
-import {computed, nextTick, ref} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {ButtonAuth, Grid, Icon, Input, notification, PureCard} from '@xcan-angus/vue-ui';
-import {useRouter} from 'vue-router';
-import {Badge, Spin, Tag, Tooltip} from 'ant-design-vue';
-import {app} from '@xcan-angus/infra';
+import { computed, nextTick, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { ButtonAuth, Grid, Icon, Input, notification, PureCard } from '@xcan-angus/vue-ui';
+import { useRouter } from 'vue-router';
+import { Badge, Spin, Tag, Tooltip } from 'ant-design-vue';
+import { app } from '@xcan-angus/infra';
 
-import {_gidColumns} from './PropsType';
-import {Detail} from '../../PropsType';
+import { _gidColumns } from './PropsType';
+import { Detail } from '../../PropsType';
 
-import {group} from '@/api';
+import { group } from '@/api';
 
 interface Props {
   dataSource: Detail

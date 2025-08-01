@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import {onMounted, reactive} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {Pagination} from 'ant-design-vue';
+import { onMounted, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Pagination } from 'ant-design-vue';
 import {
   ButtonAuth,
   Icon,
@@ -14,9 +14,9 @@ import {
   SelectGroup,
   SelectUser
 } from '@xcan-angus/vue-ui';
-import {cookieUtils} from '@xcan-angus/infra';
+import { cookieUtils } from '@xcan-angus/infra';
 
-import {auth} from '@/api';
+import { auth } from '@/api';
 
 interface Props {
   policyId: string | undefined,

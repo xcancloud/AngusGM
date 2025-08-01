@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue';
-import {appContext, cookieUtils, type TokenInfo} from '@xcan-angus/infra';
-import {Hints, Input, Modal} from '@xcan-angus/vue-ui';
-import {login} from '@/api';
+import { onMounted, ref, watch } from 'vue';
+import { appContext, cookieUtils, type TokenInfo } from '@xcan-angus/infra';
+import { Hints, Input, Modal } from '@xcan-angus/vue-ui';
+import { login } from '@/api';
 
 interface Props {
   value: string,

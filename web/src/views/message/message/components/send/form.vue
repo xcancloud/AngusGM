@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { enumLoader } from '@xcan-angus/infra';
+import { EnumMessage, enumUtils } from '@xcan-angus/infra';
 import { DatePicker, Hints, Input } from '@xcan-angus/vue-ui';
 import dayjs from 'dayjs';
 import RichEditor from '@/components/RichEditor/index.vue';
@@ -35,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   notify: 0
 });
 
+// eslint-disable-next-line func-call-spacing
 const emit = defineEmits<{
   (e: 'update:propsTitle', value: string): void,
   (e: 'update:propsContent', value: string): void,
@@ -57,15 +58,14 @@ const init = () => {
   loadSentType();
 };
 
-const messageReceiveType = ref<{ message: string, value: string }[]>([]);
+const messageReceiveType = ref<EnumMessage<string>[]>([]);
 const loadMessageReceiveType = async () => {
-  messageReceiveType.value = (await enumLoader.load('MessageReceiveType'))[1];
+  messageReceiveType.value = (enumUtils.enumToMessages('MessageReceiveType'));
 };
 
-const sentTypeList = ref<{ message: string, value: string }[]>([]);
+const sentTypeList = ref<EnumMessage<string>[]>([]);
 const loadSentType = async () => {
-  const [_error, data] = await enumLoader.load('SentType');
-  sentTypeList.value = data;
+  sentTypeList.value = enumUtils.enumToMessages('SentType');
 };
 
 onMounted(() => {

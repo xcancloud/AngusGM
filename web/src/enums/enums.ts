@@ -1,54 +1,3 @@
-const enumNamespaceMap = new Map<any, string>([
-  // Organization Types
-  [OrgTargetType, 'xcm.enum.OrgTargetType'],
-  [AuthOrgType, 'xcm.enum.AuthOrgType'],
-
-  // Group Types
-  [GroupSource, 'xcm.enum.GroupSource'],
-
-  // Application Types
-  [AppFuncType, 'xcm.enum.AppFuncType'],
-
-  // Client Sources
-  [ClientSource, 'xcm.enum.ClientSource'],
-
-  // Policy Types
-  [PolicyType, 'xcm.enum.PolicyType'],
-  [PolicyGrantScope, 'xcm.enum.PolicyGrantScope'],
-  [PolicyGrantStage, 'xcm.enum.PolicyGrantStage'],
-
-  // Service Types
-  [ServiceSource, 'xcm.enum.ServiceSource'],
-  [ApiProxyType, 'xcm.enum.ApiProxyType'],
-
-  // Check Settings
-  [SmokeCheckSetting, 'xcm.enum.SmokeCheckSetting'],
-  [SecurityCheckSetting, 'xcm.enum.SecurityCheckSetting'],
-
-  // Theme Types
-  [Area, 'xcm.enum.Area'],
-  [ThemeType, 'xcm.enum.ThemeType'],
-  [ThemeCode, 'xcm.enum.ThemeCode'],
-
-  // Status Types
-  [Status, 'xcm.enum.Status'],
-  [Scope, 'xcm.enum.Scope'],
-
-  // Notification Types
-  [ReceiveChannelType, 'xcm.enum.ReceiveChannelType'],
-  [EventPushStatus, 'xcm.enum.EventPushStatus'],
-  [MessageStatus, 'xcm.enum.MessageStatus'],
-  [MessageReadTab, 'xcm.enum.MessageReadTab'],
-  [SentType, 'xcm.enum.SentType'],
-  [NoticeScope, 'xcm.enum.NoticeScope'],
-  [MessageReceiveType, 'xcm.enum.MessageReceiveType'],
-
-  // Operation Types
-  [OperationResourceType, 'xcm.enum.OperationResourceType'],
-  [ModifiedResourceType, 'xcm.enum.ModifiedResourceType']
-]);
-
-
 // Organization Types
 export enum OrgTargetType {
   USER = 'USER',
@@ -259,3 +208,53 @@ export enum ModifiedResourceType {
   TENANT_SECURITY = 'TENANT_SECURITY',
   TENANT_INVITATION_CODE = 'TENANT_INVITATION_CODE'
 }
+
+export const enumNamespaceMap = new Map<any, string>([
+  // Organization Types
+  [OrgTargetType, 'xcm.enum.OrgTargetType'],
+  [AuthOrgType, 'xcm.enum.AuthOrgType'],
+
+  // Group Types
+  [GroupSource, 'xcm.enum.GroupSource'],
+
+  // Application Types
+  [AppFuncType, 'xcm.enum.AppFuncType'],
+
+  // Client Sources
+  [ClientSource, 'xcm.enum.ClientSource'],
+
+  // Policy Types
+  [PolicyType, 'xcm.enum.PolicyType'],
+  [PolicyGrantScope, 'xcm.enum.PolicyGrantScope'],
+  [PolicyGrantStage, 'xcm.enum.PolicyGrantStage'],
+
+  // Service Types
+  [ServiceSource, 'xcm.enum.ServiceSource'],
+  [ApiProxyType, 'xcm.enum.ApiProxyType'],
+
+  // Check Settings
+  [SmokeCheckSetting, 'xcm.enum.SmokeCheckSetting'],
+  [SecurityCheckSetting, 'xcm.enum.SecurityCheckSetting'],
+
+  // Theme Types
+  [Area, 'xcm.enum.Area'],
+  [ThemeType, 'xcm.enum.ThemeType'],
+  [ThemeCode, 'xcm.enum.ThemeCode'],
+
+  // Status Types
+  [Status, 'xcm.enum.Status'],
+  [Scope, 'xcm.enum.Scope'],
+
+  // Notification Types
+  [ReceiveChannelType, 'xcm.enum.ReceiveChannelType'],
+  [EventPushStatus, 'xcm.enum.EventPushStatus'],
+  [MessageStatus, 'xcm.enum.MessageStatus'],
+  [MessageReadTab, 'xcm.enum.MessageReadTab'],
+  [SentType, 'xcm.enum.SentType'],
+  [NoticeScope, 'xcm.enum.NoticeScope'],
+  [MessageReceiveType, 'xcm.enum.MessageReceiveType'],
+
+  // Operation Types
+  [OperationResourceType, 'xcm.enum.OperationResourceType'],
+  [ModifiedResourceType, 'xcm.enum.ModifiedResourceType']
+]);

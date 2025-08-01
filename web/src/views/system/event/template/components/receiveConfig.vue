@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { enumLoader } from '@xcan-angus/infra';
+import { EnumMessage, enumUtils } from '@xcan-angus/infra';
 import { CheckboxGroup, Form, FormItem, Popover, Select, Tag } from 'ant-design-vue';
 import { Modal } from '@xcan-angus/vue-ui';
 
@@ -29,20 +29,17 @@ const emit = defineEmits<{(e: 'update:visible', value: boolean): void }>();
 
 const { t } = useI18n();
 
-const eventTypes = ref<{ value: string, message: string, models: string[] | undefined }[]>([]);
-const selectetType = ref<string[]>([]);
+const selectedType = ref<string[]>([]);
+const eventTypes = ref<EnumMessage<string>[]>([]);
+
 const init = async () => {
   await loadCurrentChannels();
-  loadEventTypes();
+  await loadEventTypes();
 };
 
 const loadEventTypes = async () => {
-  const [error, data] = await enumLoader.load('ReceiveChannelType');
-  if (error) {
-    return;
-  }
-  eventTypes.value = data?.map(m => {
-    selectetType.value.includes(m.value) && loadConfigOptions(m.value);
+  eventTypes.value = enumUtils.enumToMessages('ReceiveChannelType')?.map(m => {
+    selectedType.value.includes(m.value) && loadConfigOptions(m.value);
     return {
       ...m,
       label: m.message
@@ -50,7 +47,7 @@ const loadEventTypes = async () => {
   });
 };
 
-const channelValus = reactive({
+const channelValues = reactive({
   WEBHOOK: [],
   EMAIL: [],
   DINGTALK: [],
@@ -62,11 +59,11 @@ const loadCurrentChannels = async () => {
   if (error) {
     return;
   }
-  selectetType.value = (res.data.allowedChannelTypes || []).map(type => type.value);
-  channelValus.WEBHOOK = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'WEBHOOK').map(channel => channel.id) || [];
-  channelValus.EMAIL = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'EMAIL').map(channel => channel.id) || [];
-  channelValus.DINGTALK = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'DINGTALK').map(channel => channel.id) || [];
-  channelValus.WECHAT = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'WECHAT').map(channel => channel.id) || [];
+  selectedType.value = (res.data.allowedChannelTypes || []).map(type => type.value);
+  channelValues.WEBHOOK = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'WEBHOOK').map(channel => channel.id) || [];
+  channelValues.EMAIL = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'EMAIL').map(channel => channel.id) || [];
+  channelValues.DINGTALK = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'DINGTALK').map(channel => channel.id) || [];
+  channelValues.WECHAT = res.data.receiveSetting?.channels?.filter(channel => channel.channelType.value === 'WECHAT').map(channel => channel.id) || [];
 };
 
 const webOptions = ref<Options[]>([]);
@@ -136,8 +133,8 @@ const getPlaceholder = (key: string) => {
 
 const handleOk = async () => {
   let ids: string[] = [];
-  for (const eventType of selectetType.value) {
-    ids = ids.concat(channelValus[eventType]);
+  for (const eventType of selectedType.value) {
+    ids = ids.concat(channelValues[eventType]);
   }
   const [error] = await event.replaceTemplateChannel({ id: props.id, channelIds: ids });
   if (error) {
@@ -170,7 +167,7 @@ watch(() => props.visible, newValue => {
         name="receiveSetting">
         <CheckboxGroup
           :options="eventTypes"
-          :value="selectetType"
+          :value="selectedType"
           disabled>
         </CheckboxGroup>
       </FormItem>
@@ -181,11 +178,11 @@ watch(() => props.visible, newValue => {
           :label="type.message"
           :name="type.value">
           <Select
-            v-model:value="channelValus[type.value]"
+            v-model:value="channelValues[type.value]"
             :fieldNames="{value: 'id', label: 'name'}"
             :options="getOptions(type.value)"
             :placeholder="getPlaceholder(type.value)"
-            :disabled="!selectetType.includes(type.value)"
+            :disabled="!selectedType.includes(type.value)"
             mode="multiple">
             <template #tagRender="{option, label, closable, onClose}">
               <Popover>

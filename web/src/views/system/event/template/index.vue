@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, enumLoader } from '@xcan-angus/infra';
+import { EnumMessage, app, enumUtils } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { appopen } from '@/api/index';
 
@@ -112,13 +112,12 @@ const query = async (data: Record<string, string>[]) => {
 
 const loading = ref(false);
 const disabled = ref(false);
-const targetTypeEnums = ref<{ value: string; message: string }[]>([]);
+const targetTypeEnums = ref<EnumMessage<string>[]>([]);
 const appList = ref<{ appCode: string; appName: string; appShowName: string }[]>([]);
 const appLoaded = ref(false);
 
 const loadEnums = async () => {
-  const [, data1] = await enumLoader.load('CombinedTargetType');
-  targetTypeEnums.value = data1 || [];
+  targetTypeEnums.value = enumUtils.enumToMessages('CombinedTargetType');
 };
 
 const loadAppOptions = async (pageSize = 10) => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { enumLoader } from '@xcan-angus/infra';
+import { enumUtils } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { DateType, PieSetting } from './PropsType';
 
@@ -38,12 +38,9 @@ const operationLogsGroup = ref<PieSetting[]>([
 const hasPieChart = ref(true);
 // 日志操作类型
 const loadOperationLogType = async () => {
-  const [error, data] = await enumLoader.load('OperationResourceType');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('OperationResourceType');
   operationLogsGroup.value[0].type = data;
-  operationLogsGroup.value[0].color = data.map(item => getLogResourceTypeColor(item.value));
+  operationLogsGroup.value[0].color = data.map(item => getLogResourceTypeColor(item.value) || '');
 };
 
 const getLogResourceTypeColor = (value: string) => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { enumLoader } from '@xcan-angus/infra';
+import { enumUtils } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { DateType, PieSetting } from './PropsType';
 
@@ -352,39 +352,14 @@ const loadEnums = async () => {
 
 // 用户来源
 const loadUserSource = async () => {
-  const [error, data] = await enumLoader.load('UserSource');
-  if (error) {
-    return;
-  }
-  userGroup.value[0].type = data;
-  // userGroup.value[0].color = data.map(item => getUserPieChartColor(item.value));
+  userGroup.value[0].type = enumUtils.enumToMessages('UserSource');
 };
 
-// // 配置固定颜色
-// const getUserPieChartColor = (value:string) => {
-//   switch (value) {
-//     case 'PLATFORM_SIGNUP': // 平台注册
-//       return COLOR[0];
-//     case 'INVITATION_CODE_SIGNUP': // 邀请码注册
-//       return COLOR[1];
-//     case 'BACKGROUND_SIGNUP': // 后台注册
-//       return COLOR[2];
-//     case 'BACKGROUND_ADDED': // 后台添加
-//       return COLOR[3];
-//     case 'THIRD_PARTY_LOGIN': // 三方登录
-//       return COLOR[4];
-//     case 'LDAP_SYNCHRONIZE': // Ldap同步
-//       return COLOR[5];
-//   }
-// };
 // 用户性别
 const loadUserGender = async () => {
-  const [error, data] = await enumLoader.load('Gender');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('Gender');
   userGroup.value[4].type = data;
-  userGroup.value[4].color = data.map(item => getUserGenderColor(item.value));
+  userGroup.value[4].color = data.map(item => getUserGenderColor(item.value) || '');
 };
 
 // 配置固定颜色
@@ -401,30 +376,19 @@ const getUserGenderColor = (value: string) => {
 
 // 组来源
 const loadGroupSource = async () => {
-  const [error, data] = await enumLoader.load('GroupSource');
-  if (error) {
-    return;
-  }
-  groupByGroup.value[1].type = data;
+  groupByGroup.value[1].type = enumUtils.enumToMessages('GroupSource');
 };
 
 // 租户下标签类型
 const loadOrgTargetType = async () => {
-  const [error, data] = await enumLoader.load('OrgTargetType');
-  if (error) {
-    return;
-  }
-  orgTagGroup.value[0].type = data;
+  orgTagGroup.value[0].type = enumUtils.enumToMessages('OrgTargetType');
 };
 
 // 公告发送范围
 const loadNoticeScope = async () => {
-  const [error, data] = await enumLoader.load('NoticeScope');
-  if (error) {
-    return;
-  }
+  const data = await enumUtils.enumToMessages('NoticeScope');
   noticeGroup.value[0].type = data;
-  noticeGroup.value[0].color = data.map(item => getNoticeScopeColor(item.value));
+  noticeGroup.value[0].color = data.map(item => getNoticeScopeColor(item.value) || '');
 };
 const getNoticeScopeColor = (value: string) => {
   switch (value) {
@@ -436,12 +400,9 @@ const getNoticeScopeColor = (value: string) => {
 };
 //  公告发送类型
 const getNoticeSentType = async () => {
-  const [error, data] = await enumLoader.load('SentType');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('SentType');
   noticeGroup.value[1].type = data;
-  noticeGroup.value[1].color = data.map(item => getNoticeSentTypeColor(item.value));
+  noticeGroup.value[1].color = data.map(item => getNoticeSentTypeColor(item.value) || '');
 };
 
 const getNoticeSentTypeColor = (value: string) => {
@@ -455,12 +416,9 @@ const getNoticeSentTypeColor = (value: string) => {
 
 // 消息类型
 const loadMessageReceiveType = async () => {
-  const [error, data] = await enumLoader.load('MessageReceiveType');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('MessageReceiveType');
   messageGroup.value[0].type = data;
-  messageGroup.value[0].color = data.map(item => getMessageReceiveTypeColor(item.value));
+  messageGroup.value[0].color = data.map(item => getMessageReceiveTypeColor(item.value) || '');
 };
 
 const getMessageReceiveTypeColor = (value: string) => {
@@ -474,12 +432,9 @@ const getMessageReceiveTypeColor = (value: string) => {
 
 // 消息状态
 const loadMessageStatus = async () => {
-  const [error, data] = await enumLoader.load('MessageStatus');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('MessageStatus');
   messageGroup.value[1].type = data;
-  messageGroup.value[1].color = data.map(item => getMessageStatusColor(item.value));
+  messageGroup.value[1].color = data.map(item => getMessageStatusColor(item.value) || '');
 };
 
 const getMessageStatusColor = (value: string) => {
@@ -495,12 +450,9 @@ const getMessageStatusColor = (value: string) => {
 
 // 服务来源
 const loadServiceSource = async () => {
-  const [error, data] = await enumLoader.load('ServiceSource');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('ServiceSource');
   serviceGroup.value[0].type = data;
-  serviceGroup.value[0].color = data.map(item => getServiceSourceColor(item.value));
+  serviceGroup.value[0].color = data.map(item => getServiceSourceColor(item.value) || '');
 };
 
 const getServiceSourceColor = (value: string) => {
@@ -518,19 +470,16 @@ const getServiceSourceColor = (value: string) => {
 
 // 接口方法
 const loadApiHttpMethod = async () => {
-  const [error, data] = await enumLoader.load('HttpMethod');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('HttpMethod');
 
   if (props.resource === 'ApiLogs') {
     requestLogsGroup.value[1].type = data;
-    requestLogsGroup.value[1].color = data.map(item => getApiHttpMethodColor(item.value));
+    requestLogsGroup.value[1].color = data.map(item => getApiHttpMethodColor(item.value) || '');
     return;
   }
 
   apiGroup.value[0].type = data;
-  apiGroup.value[0].color = data.map(item => getApiHttpMethodColor(item.value));
+  apiGroup.value[0].color = data.map(item => getApiHttpMethodColor(item.value) || '');
 };
 
 const getApiHttpMethodColor = (value: string) => {
@@ -555,19 +504,16 @@ const getApiHttpMethodColor = (value: string) => {
 };
 // 接口类型
 const loadApiType = async () => {
-  const [error, data] = await enumLoader.load('ApiType');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('ApiType');
 
   if (props.resource === 'ApiLogs') {
     requestLogsGroup.value[0].type = data;
-    requestLogsGroup.value[0].color = data.map(item => getApiTypeColor(item.value));
+    requestLogsGroup.value[0].color = data.map(item => getApiTypeColor(item.value) || '');
     return;
   }
 
   apiGroup.value[1].type = data;
-  apiGroup.value[1].color = data.map(item => getApiTypeColor(item.value));
+  apiGroup.value[1].color = data.map(item => getApiTypeColor(item.value) || '');
 };
 
 const getApiTypeColor = (value: string) => {
@@ -591,12 +537,9 @@ const getApiTypeColor = (value: string) => {
 
 // 事件类型
 const loadEventType = async () => {
-  const [error, data] = await enumLoader.load('EventType');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('EventType');
   eventGroup.value[0].type = data;
-  eventGroup.value[0].color = data.map(item => getEventTypeColor(item.value));
+  eventGroup.value[0].color = data.map(item => getEventTypeColor(item.value) || '');
 };
 
 const getEventTypeColor = (value: string) => {
@@ -624,12 +567,9 @@ const getEventTypeColor = (value: string) => {
 
 // 事件推送状态
 const loadEventPushStatus = async () => {
-  const [error, data] = await enumLoader.load('EventPushStatus');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('EventPushStatus');
   eventGroup.value[1].type = data;
-  eventGroup.value[1].color = data.map(item => getEventPushStatusColor(item.value));
+  eventGroup.value[1].color = data.map(item => getEventPushStatusColor(item.value) || '');
 };
 
 const getEventPushStatusColor = (value: string) => {
@@ -649,18 +589,16 @@ const getEventPushStatusColor = (value: string) => {
 
 // 邮件和短信发送状态
 const loadSendStatusType = async () => {
-  const [error, data] = await enumLoader.load('ProcessStatus');
-  if (error) {
-    return;
-  }
+  const data = enumUtils.enumToMessages('ProcessStatus');
 
   if (props.resource === 'Email') {
     emailRecordGroup.value[0].type = data;
-    emailRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value));
+    emailRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value) || '');
     return;
   }
+
   smsRecordGroup.value[0].type = data;
-  smsRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value));
+  smsRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value) || '');
 };
 
 const getSendStatusColor = (value: string) => {

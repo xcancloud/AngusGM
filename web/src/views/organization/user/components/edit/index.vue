@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, InputPassword, Popover, Radio, RadioGroup } from 'ant-design-vue';
 import { Cropper, Icon, Image, Input, notification, PureCard, SelectItc } from '@xcan-angus/vue-ui';
-import { appContext, duration, enumLoader, itc, passwordUtils, regexpUtils, utils } from '@xcan-angus/infra';
+import { EnumMessage, appContext, duration, enumUtils, itc, passwordUtils, regexpUtils, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { FormState, Gender } from '../../PropsType';
@@ -299,13 +299,9 @@ const changeItc = (value: string) => {
   formState.value.country = item ? item.code : 'country';
 };
 
-const userGender = ref<{ value: Gender, message: string }[]>([]);
+const userGender = ref<EnumMessage<Gender>[]>([]);
 const loadUserGender = async () => {
-  const [error, data] = await enumLoader.load('Gender');
-  if (error) {
-    return;
-  }
-  userGender.value = data;
+  userGender.value = enumUtils.enumToMessages('Gender');
 };
 
 const firstNameChange = debounce(duration.search, (event: any) => {
