@@ -3,10 +3,10 @@ import { computed, ref, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PureCard, Grid, Icon, Input } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
-import { regexpUtils } from '@xcan-angus/infra';
+import { regexpUtils, appContext } from '@xcan-angus/infra';
 import { user } from '@/api';
 
-const tenantInfo = inject('tenantInfo', ref());
+const userInfo = ref(appContext.getUser());
 
 const { t } = useI18n();
 
@@ -46,18 +46,15 @@ const columns = [
     { dataIndex: 'depts', label: t('personalCenter.information.ownDept') },
     { dataIndex: 'tags', label: t('用户标签') },
     { dataIndex: 'otherAccount', label: t('personalCenter.information.otherAccount'), offset: true }
-    // {
-    //   label: t('所属租户'), dataIndex: 'tenantName'
-    // }
   ]
 ];
 
 const editName = () => {
-  firstName.value = tenantInfo.value.firstName;
+  firstName.value = userInfo.value.firstName;
   prevFirstName.value = firstName.value;
-  lastName.value = tenantInfo.value.lastName;
+  lastName.value = userInfo.value.lastName;
   prevLastName.value = lastName.value;
-  fullName.value = tenantInfo.value.fullName;
+  fullName.value = userInfo.value.fullName;
   nameInput.value = true;
   firstNameError.value = false;
   lastNameError.value = false;
@@ -126,9 +123,9 @@ const saveName = async () => {
     return;
   }
 
-  tenantInfo.value.firstName = params.firstName;
-  tenantInfo.value.lastName = params.lastName;
-  tenantInfo.value.fullName = params.fullName;
+  userInfo.value.firstName = params.firstName;
+  userInfo.value.lastName = params.lastName;
+  userInfo.value.fullName = params.fullName;
   nameInput.value = false;
 };
 
@@ -140,7 +137,7 @@ const cancelNameEdit = () => {
 };
 
 const editTitle = () => {
-  title.value = tenantInfo.value.title;
+  title.value = userInfo.value.title;
   titleInput.value = true;
 };
 
@@ -158,7 +155,7 @@ const saveTitle = async () => {
     return;
   }
 
-  tenantInfo.value.title = params.title;
+  userInfo.value.title = params.title;
   titleInput.value = false;
 };
 
@@ -168,7 +165,7 @@ const cancelTitleEdit = () => {
 };
 
 const editLandline = () => {
-  landline.value = tenantInfo.value.landline;
+  landline.value = userInfo.value.landline;
   landlineInput.value = true;
 };
 
@@ -186,7 +183,7 @@ const saveLandline = async () => {
     return;
   }
 
-  tenantInfo.value.landline = params.landline;
+  userInfo.value.landline = params.landline;
   landlineInput.value = false;
 };
 
@@ -196,7 +193,7 @@ const cancelLandlineEdit = () => {
 };
 
 const editAddress = () => {
-  address.value = tenantInfo.value.address;
+  address.value = userInfo.value.address;
   addressInput.value = true;
 };
 
@@ -214,7 +211,7 @@ const saveAddress = async () => {
     return;
   }
 
-  tenantInfo.value.address = params.address;
+  userInfo.value.address = params.address;
   addressInput.value = false;
 };
 
@@ -224,19 +221,19 @@ const cancelAddressEdit = () => {
 };
 
 const depts = computed(() => {
-  return tenantInfo.value?.depts || [];
+  return userInfo.value?.depts || [];
 });
 
 const groups = computed(() => {
-  return tenantInfo.value?.groups || [];
+  return userInfo.value?.groups || [];
 });
 
 const phone = computed(() => {
-  const temp = (+tenantInfo.value?.itc + ' ' + tenantInfo.value?.mobile).replace(/\+/, '');
+  const temp = (+userInfo.value?.itc + ' ' + userInfo.value?.mobile).replace(/\+/, '');
   return temp ? ('+' + temp) : '';
 });
 
-watch(() => tenantInfo.value, (newValue: any) => {
+watch(() => userInfo.value, (newValue: any) => {
   if (!newValue?.id) {
     return;
   }
@@ -256,11 +253,11 @@ watch(() => tenantInfo.value, (newValue: any) => {
 </script>
 <template>
   <PureCard class="py-7.5 px-25 w-11/12 2xl:px-6 mx-auto">
-    <Grid :columns="columns" :dataSource="tenantInfo">
+    <Grid :columns="columns" :dataSource="userInfo">
       <template #name>
         <div class="relative flex justify-between">
           <template v-if="!nameInput">
-            {{ tenantInfo.fullName }}
+            {{ userInfo.fullName }}
             <a class="mr-20 text-theme-special" @click="editName">
               <Icon icon="icon-shuxie" class="text-3.5" />
             </a>
@@ -301,7 +298,7 @@ watch(() => tenantInfo.value, (newValue: any) => {
       <template #title>
         <div class="relative flex justify-between">
           <template v-if="!titleInput">
-            {{ tenantInfo.title }}
+            {{ userInfo.title }}
             <a class="mr-20 text-theme-special" @click="editTitle">
               <Icon icon="icon-shuxie" class="text-3.5" />
             </a>
@@ -328,7 +325,7 @@ watch(() => tenantInfo.value, (newValue: any) => {
       <template #landline>
         <div class="relative flex justify-between">
           <template v-if="!landlineInput">
-            {{ tenantInfo.landline }}
+            {{ userInfo.landline }}
             <a class="mr-20 text-theme-special" @click="editLandline">
               <Icon icon="icon-shuxie" class="text-3.5" />
             </a>
@@ -357,7 +354,7 @@ watch(() => tenantInfo.value, (newValue: any) => {
       <template #address>
         <div class="relative flex justify-between">
           <template v-if="!addressInput">
-            {{ tenantInfo.address }}
+            {{ userInfo.address }}
             <a class="mr-20 text-theme-special" @click="editAddress">
               <Icon icon="icon-shuxie" class="text-3.5" />
             </a>
@@ -395,11 +392,11 @@ watch(() => tenantInfo.value, (newValue: any) => {
         </template>
       </template>
       <template #sysAdmin>
-        {{ tenantInfo.sysAdmin ? t('personalCenter.information.systemAdmin') :
+        {{ userInfo.sysAdmin ? t('personalCenter.information.systemAdmin') :
           t('personalCenter.information.generalUser') }}
       </template>
       <template #deptHead>
-        {{ tenantInfo.deptHead ? t('personalCenter.information.principal') :
+        {{ userInfo.deptHead ? t('personalCenter.information.principal') :
           t('personalCenter.information.generalUser') }}
       </template>
       <template #depts>
@@ -416,8 +413,8 @@ watch(() => tenantInfo.value, (newValue: any) => {
         </template>
       </template>
       <template #tags>
-        <div v-if="tenantInfo.tags">
-          <Tag v-for="item in tenantInfo.tags" :key="item.id">{{item.name}}</Tag>
+        <div v-if="userInfo.tags">
+          <Tag v-for="item in userInfo.tags" :key="item.id">{{item.name}}</Tag>
         </div>
       </template>
       <template #otherAccount>
@@ -425,21 +422,21 @@ watch(() => tenantInfo.value, (newValue: any) => {
           <div>
             <Icon
               class="mr-4 text-6 leading-6 text-gray-placeholder"
-              :class="{ 'active-wechat': tenantInfo.wechatUserId }"
+              :class="{ 'active-wechat': userInfo.wechatUserId }"
               icon="icon-weixin" />
             <Icon
               class="mr-4 text-6 leading-6 text-gray-placeholder"
-              :class="{ 'active-google': tenantInfo.googleUserId }"
+              :class="{ 'active-google': userInfo.googleUserId }"
               icon="icon-google" />
             <Icon
               class="text-6 leading-6 text-gray-placeholder"
-              :class="{ 'active-github': tenantInfo.githubUserId }"
+              :class="{ 'active-github': userInfo.githubUserId }"
               icon="icon-Github" />
           </div>
         </div>
       </template>
       <template #tenantName="{text}">
-        {{ text }}&nbsp;&nbsp;(ID:&nbsp;{{ tenantInfo?.tenantId }})
+        {{ text }}&nbsp;&nbsp;(ID:&nbsp;{{ userInfo?.tenantId }})
       </template>
     </Grid>
   </PureCard>

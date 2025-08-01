@@ -10,31 +10,31 @@ import { user } from '@/api';
 
 const { t } = useI18n();
 const loading = ref(true);
-const tenantInfo = ref<Record<string, string>>({});
+const userInfo = ref<Record<string, string>>({});
 const showWechatContainer = ref(false);
 const spinning = ref(true);
 
 const wechatInfo = computed(() => {
   return {
-    id: tenantInfo.value.wechatUserId,
-    date: tenantInfo.value.wechatUserBindDate,
-    account: tenantInfo.value.wechatUserAccount
+    id: userInfo.value.wechatUserId,
+    date: userInfo.value.wechatUserBindDate,
+    account: userInfo.value.wechatUserAccount
   };
 });
 
 const googleInfo = computed(() => {
   return {
-    id: tenantInfo.value.googleUserId,
-    date: tenantInfo.value.googleUserBindDate,
-    account: tenantInfo.value.googleUserAccount
+    id: userInfo.value.googleUserId,
+    date: userInfo.value.googleUserBindDate,
+    account: userInfo.value.googleUserAccount
   };
 });
 
 const githubInfo = computed(() => {
   return {
-    id: tenantInfo.value.githubUserId,
-    date: tenantInfo.value.githubUserBindDate,
-    account: tenantInfo.value.githubUserAccount
+    id: userInfo.value.githubUserId,
+    date: userInfo.value.githubUserBindDate,
+    account: userInfo.value.githubUserAccount
   };
 });
 
@@ -45,7 +45,7 @@ const loadUser = async () => {
     return;
   }
 
-  tenantInfo.value = res.data;
+  userInfo.value = res.data;
 };
 
 const bindAccount = async (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): Promise<void> => {

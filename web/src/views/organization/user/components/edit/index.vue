@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, InputPassword, Form, FormItem, Popover, RadioGroup, Radio } from 'ant-design-vue';
 import { Image, Input, PureCard, Icon, SelectItc, notification, Cropper } from '@xcan-angus/vue-ui';
-import { itc, passwordUtils, regexpUtils, utils, enumLoader, duration } from '@xcan-angus/infra';
+import { itc, passwordUtils, regexpUtils, utils, enumLoader, duration, appContext } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { FormState, Gender } from '../../PropsType';
@@ -18,7 +18,6 @@ type Fuc = (args: Record<string, any>) => void;
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
-const tenantInfo: Ref = inject('tenantInfo', ref());
 const formRef = ref();
 
 const userId = ref<string>(route.params.id as string);
@@ -82,7 +81,7 @@ const addUser = async (isContinueAdd?: boolean) => {
   router.push('/organization/user');
 };
 
-const updateTenantInfo: Fuc | undefined = inject('updateTenantInfo');
+const updateUserInfo: Fuc | undefined = inject('updateUserInfo');
 const patchGroup = async () => {
   if (loading.value) {
     return;
@@ -121,13 +120,13 @@ const patchGroup = async () => {
     return;
   }
   notification.success('修改成功');
-  if (userId.value && userId.value === tenantInfo.value.id) {
-    if (typeof updateTenantInfo === 'function') {
+  if (userId.value && userId.value === appContext.getUser()?.id) {
+    if (typeof updateUserInfo === 'function') {
       const temp = {
-        ...tenantInfo.value,
+        ...appContext.getUser(),
         ...params
       };
-      updateTenantInfo(temp);
+      updateUserInfo(temp);
     }
   }
   router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
@@ -561,7 +560,7 @@ onMounted(() => {
               <RadioGroup
                 v-model:value="formState.sysAdmin"
                 size="small"
-                :disabled="!tenantInfo.sysAdmin">
+                :disabled="!appContext.isSysAdmin()">
                 <Radio :value="false">{{ t('generalUsers') }}</Radio>
                 <Radio :value="true">{{ t('systemAdministrator') }}</Radio>
               </RadioGroup>

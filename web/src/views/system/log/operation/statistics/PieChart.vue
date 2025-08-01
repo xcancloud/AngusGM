@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, onBeforeMount, inject, Ref } from 'vue';
+import { ref, onMounted, watch, onBeforeMount} from 'vue';
 import * as echarts from 'echarts/core';
 import {
   TitleComponent,
@@ -43,7 +43,6 @@ echarts.use([
   LabelLayout
 ]);
 
-const tenantInfo: Ref = ref(appContext.getContext().user || {});
 const chartsRef = ref();
 let myChart: echarts.ECharts;
 

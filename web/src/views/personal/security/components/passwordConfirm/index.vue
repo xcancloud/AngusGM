@@ -21,8 +21,6 @@ const emit = defineEmits<{
   (e: 'ok'): void,
 }>();
 
-const tenantInfo = inject('tenantInfo', ref());
-
 const inputValue = ref<string>();
 const passIsError = ref(false);
 
@@ -32,7 +30,7 @@ const ok = async () => {
     return;
   }
 
-  if (!tenantInfo?.value?.id) {
+  if (!appContext.getUser()?.id) {
     return;
   }
 
@@ -40,11 +38,11 @@ const ok = async () => {
   const clientId = appContext.getEnv().oauthClientId || '';
   const clientSecret = appContext.getEnv().oauthClientSecret || '';
   const params = {
-    account: tenantInfo.value.mobile,
+    account: appContext.getUser()?.mobile,
     password: inputValue.value,
     scope: 'user_trust',
     signinType: 'ACCOUNT_PASSWORD',
-    userId: tenantInfo.value.id,
+    userId: appContext.getUser()?.id,
     clientId,
     clientSecret
   };

@@ -1,18 +1,12 @@
 <script setup lang="ts">
-import { computed, inject, ref, nextTick, onMounted } from 'vue';
+import { computed, ref, nextTick, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {Grid, PureCard, Icon, Image, Input, Cropper, notification} from '@xcan-angus/vue-ui';
-import {AppOrServiceRoute, DomainManager, toClipboard} from "@xcan-angus/infra";
+import {AppOrServiceRoute, DomainManager, toClipboard, appContext} from "@xcan-angus/infra";
 
 import defaultAvatar from '../assets/default.jpg';
 
 import { user } from '@/api';
-
-type UpdateInfo = (data: Record<string, string>) => void
-
-// TODO 替换 appContext
-const updateTenantInfo: UpdateInfo = inject('updateTenantInfo') as UpdateInfo;
-const tenantInfo = inject('tenantInfo', ref());
 
 const authUrl = ref<string>();
 const { t } = useI18n();
@@ -33,10 +27,10 @@ const success = async (jsonData): Promise<void> => {
   }
 
   const temp = {
-    ...tenantInfo.value,
+    ...appContext.getUser(),
     avatar
   };
-  updateTenantInfo(temp);
+  appContext.setUser(temp);
 };
 
 // TODO 提到api
@@ -45,10 +39,10 @@ onMounted(async () => {
   authUrl.value = host + '/system/auth';
 });
 
-const avatar = computed(() => tenantInfo.value.avatar || defaultAvatar);
+const avatar = computed(() => appContext.getUser()?.avatar || defaultAvatar);
 
 const tenantRealNameStatus = computed(() => {
-  if (!tenantInfo.value || !tenantInfo.value.tenantRealNameStatus) {
+  if (!appContext.getUser() || !appContext.getUser()?.tenantRealNameStatus) {
     return {
       message: t('personalCenter.information.toAuth'),
       textColor: 'text-danger',
@@ -56,7 +50,7 @@ const tenantRealNameStatus = computed(() => {
     };
   }
 
-  const { message, value } = tenantInfo.value.tenantRealNameStatus;
+  const { message, value } = appContext.getUser()?.tenantRealNameStatus;
   const result = {
     message,
     textColor: 'text-danger',
@@ -76,11 +70,11 @@ const tenantRealNameStatus = computed(() => {
 });
 
 const canAuth = computed(() => {
-  if (!tenantInfo.value || !tenantInfo.value.tenantRealNameStatus) {
+  if (!appContext.getUser() || !appContext.getUser()?.tenantRealNameStatus) {
     return true;
   }
 
-  const { value } = tenantInfo.value.tenantRealNameStatus;
+  const { value } = appContext.getUser()?.tenantRealNameStatus;
 
   switch (value) {
     case 'NOT_SUBMITTED':
@@ -93,7 +87,7 @@ const canAuth = computed(() => {
 
 const columns = computed(() => {
   let label = t('personalCenter.information.accountName');
-  const type = tenantInfo.value?.type?.value;
+  const type = appContext.getTenant()?.type?.value;
   switch (type) {
     case 'ENTERPRISE':
       label = t('personalCenter.information.enterpriseName');
@@ -110,49 +104,49 @@ const columns = computed(() => {
 });
 
 const accountName = computed(() => {
-  const name = tenantInfo.value?.tenantName;
+  const name = appContext.getTenant()?.name;
   if (!name) {
-    return 'xcan' + tenantInfo.value?.mobile;
+    return 'xcan' + appContext.getUser()?.mobile;
   }
-
   return name;
 });
 
-const userNameInputRef = ref();
-const editUserName = ref(false);
-const userName = ref('');
+const usernameInputRef = ref();
+const editUsername = ref(false);
+const username = ref('');
 const handleEditUserName = () => {
-  userName.value = tenantInfo.value?.username;
-  editUserName.value = true;
+  username.value = appContext.getUser()?.username;
+  editUsername.value = true;
   nextTick(() => {
-    userNameInputRef.value?.focus();
+    usernameInputRef.value?.focus();
   });
 };
 
 const handleBlur = async () => {
-  if (userName.value === tenantInfo.value?.username || !userName.value) {
-    editUserName.value = false;
+  if (username.value === appContext.getUser()?.username || !username.value) {
+    editUsername.value = false;
     return;
   }
 
-  const [error] = await user.updateCurrentUser({ username: userName.value });
+  const [error] = await user.updateCurrentUser({ username: username.value });
   if (error) {
     return;
   }
-  updateTenantInfo({
-    ...tenantInfo.value,
-    username: userName.value
+  appContext.setUser({
+    ...appContext.getUser(),
+    username: username.value
   });
-  editUserName.value = false;
+
+  editUsername.value = false;
 };
 
 const cancelEditUserName = () => {
-  userName.value = tenantInfo.value?.tenantName;
-  editUserName.value = false;
+  username.value = appContext.getUser()?.username;
+  editUsername.value = false;
 };
 
 const copyID = () => {
-  toClipboard.toClipboard(tenantInfo.value?.tenantId)
+  toClipboard.toClipboard(appContext.getUser()?.tenantId)
     .then(() => {
       notification.success('复制到剪贴板');
     });
@@ -172,7 +166,7 @@ const copyID = () => {
     <Grid class="ml-12" :columns="columns">
       <template #tenantId>
         <div class="flex space-x-2 items-center">
-          <span>{{ tenantInfo?.tenantId }}</span>
+          <span>{{ appContext.getUser()?.tenantId }}</span>
           <Icon icon="icon-fuzhi" class="text-4 text-text-link cursor-pointer" @click="copyID" />
         </div>
       </template>
@@ -192,11 +186,11 @@ const copyID = () => {
       </template>
       <template #username>
         <div class="relative">
-          <template v-if="editUserName">
+          <template v-if="editUsername">
             <div class="flex items-center absolute -top-1">
               <Input
-                ref="userNameInputRef"
-                v-model:value="userName"
+                ref="usernameInputRef"
+                v-model:value="username"
                 class="w-50 mr-2"
                 @blur="handleBlur" />
               <span
@@ -205,7 +199,7 @@ const copyID = () => {
             </div>
           </template>
           <template v-else>
-            <span class="flex items-center"> {{ tenantInfo.username }}<Icon
+            <span class="flex items-center"> {{ appContext.getUser()?.username }}<Icon
               icon="icon-shuxie"
               class="ml-3 text-text-link text-3.5 hover:text-text-link-hover cursor-pointer"
               @click="handleEditUserName" /></span>

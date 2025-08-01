@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { regexpUtils } from '@xcan-angus/infra';
+import { regexpUtils, appContext } from '@xcan-angus/infra';
 import { Modal, Icon, Input } from '@xcan-angus/vue-ui';
 
 import VerificationCode from '@/views/personal/security/components/verificationCode/index.vue';
@@ -34,9 +34,6 @@ const emit = defineEmits<{
   (e: 'cancel'): void,
   (e: 'ok', text: any, valueKey: 'email' | 'mobile'): void,
 }>();
-
-const tenantInfo = inject('tenantInfo', ref());
-const updateTenantInfo = inject('personalCenter.updateTenantInfo');
 
 const { t } = useI18n();
 const itc = ref('86');
@@ -175,9 +172,7 @@ const mobileOk = async () => {
 };
 
 const updateUser = (info: Record<string, string>) => {
-  if (typeof updateTenantInfo === 'function') {
-    updateTenantInfo({ ...tenantInfo.value, ...info });
-  }
+    appContext.setUser({ ...appContext.getUser(), ...info })
 };
 
 const typeIfy = computed(() => {

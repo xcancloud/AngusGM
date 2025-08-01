@@ -14,7 +14,7 @@ export interface UserInfoParams {
 interface Props {
   valueKey?: 'mobile' | 'email',
   visible: boolean,
-  tenantInfo: UserInfoParams
+  userInfo: UserInfoParams
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -49,20 +49,20 @@ watch(() => props.visible, () => {
   linkSecret.value = '';
 });
 
-watch(() => props.tenantInfo, () => {
+watch(() => props.userInfo, () => {
   step.value = isModify.value ? 1 : 2;
 });
 
 const isModify = computed(() => {
-  const { valueKey, tenantInfo } = props;
-  return !!tenantInfo[valueKey];
+  const { valueKey, userInfo } = props;
+  return !!userInfo[valueKey];
 });
 </script>
 
 <template>
   <template v-if="step === 1">
     <VerifyModal
-      :tenantInfo="tenantInfo"
+      :userInfo="userInfo"
       :visible="visible"
       :valueKey="valueKey"
       :isModify="isModify"

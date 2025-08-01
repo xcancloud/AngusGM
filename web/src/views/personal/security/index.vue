@@ -3,6 +3,7 @@ import { computed, inject, ref, Ref, watch } from 'vue';
 import { Button } from 'ant-design-vue';
 import { PureCard, Icon } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
+import { appContext } from '@xcan-angus/infra';
 
 import ModifyPassword, { Strength } from '@/views/personal/security/components/modifyPassword/index.vue';
 import PasswordStrength from '@/views/personal/security/components/passwordStrength/index.vue';
@@ -12,7 +13,7 @@ import ModifyMobileEmail, { UserInfoParams } from '@/views/personal/security/com
 
 type KeyType = 'email' | 'mobile';
 
-const tenantInfo = inject('tenantInfo', ref());
+const userInfo = ref(appContext.getUser());
 
 const { t } = useI18n();
 const email = ref('');
@@ -92,7 +93,7 @@ const _userInfo = computed(() => {
   };
 });
 
-watch(() => tenantInfo.value, (newValue) => {
+watch(() => userInfo.value, (newValue) => {
   if (!newValue) {
     return;
   }
@@ -234,6 +235,6 @@ watch(() => tenantInfo.value, (newValue) => {
     v-if="visible"
     v-model:visible="visible"
     :valueKey="valueKey"
-    :tenantInfo="_userInfo"
+    :userInfo="_userInfo"
     @ok="ok" />
 </template>

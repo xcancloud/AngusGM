@@ -3,6 +3,7 @@ import { ref, inject } from 'vue';
 import { Modal } from '@xcan-angus/vue-ui';
 import { Tree } from 'ant-design-vue';
 import type { TreeProps } from 'ant-design-vue';
+import { appContext } from '@xcan-angus/infra';
 
 import { dept } from '@/api';
 
@@ -18,7 +19,6 @@ const props = withDefaults(defineProps<Props>(), {
   defaultPid: ''
 });
 
-const tenantInfo = inject('tenantInfo', ref());
 const emit = defineEmits<{(e: 'ok', value: string): void, (e: 'update:visible', value: boolean): void }>();
 const selectedKeys = ref<string[]>([]);
 
@@ -35,7 +35,7 @@ const handleClose = () => {
   emit('update:visible', false);
 };
 
-const treeData = ref<{ name: string, id: string }[]>([{ name: tenantInfo.value.tenantName, id: '-1' }]);
+const treeData = ref<{ name: string, id: string }[]>([{ name: appContext.getTenant()?.name, id: '-1' }]);
 
 const onLoadData: TreeProps['loadData'] = treeNode => {
   const { id } = treeNode;

@@ -10,8 +10,6 @@ import { AppInfo } from './PropsType';
 
 const ExpandHead = defineAsyncComponent(() => import('./components/expandHead.vue'));
 
-// TODO 替换上下文
-const tenantInfo: Ref = inject('tenantInfo', ref());
 
 const { t } = useI18n();
 const editionType = ref<string>();
@@ -26,7 +24,7 @@ const appList = ref<AppInfo[]>([]);
 const oldAppList = ref<AppInfo[]>([]);
 const getAuthAppList = async function () {
   loading.value = true;
-  const [error, { data = [] }] = await app.getUserAuthApp(tenantInfo.value.id);
+  const [error, { data = [] }] = await app.getUserAuthApp(appContext.getUser()?.id);
   loading.value = false;
   if (error) {
     return;
@@ -42,7 +40,7 @@ const getAuthAppList = async function () {
   oldAppList.value = JSON.parse(JSON.stringify(appList.value));
 };
 
-watch(() => tenantInfo.value, (newValue) => {
+watch(() => appContext.getUser(), (newValue) => {
   if (newValue) {
     getAuthAppList();
   }

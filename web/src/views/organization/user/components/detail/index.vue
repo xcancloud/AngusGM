@@ -6,7 +6,7 @@ import { Badge, Skeleton, Tabs } from 'ant-design-vue';
 import { ButtonAuth, modal, Grid, PureCard, Image, notification, AsyncComponent } from '@xcan-angus/vue-ui';
 import { Detail } from './PropsType';
 import router from '@/router';
-import { GM } from '@xcan-angus/infra';
+import { GM, appContext } from '@xcan-angus/infra';
 import { user } from '@/api';
 
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
@@ -20,7 +20,6 @@ const UpdatePassword = defineAsyncComponent(() => import('@/views/organization/u
 const { t } = useI18n();
 const route = useRoute();
 const userId = route.params.id as string;
-const tenantInfo: Ref = inject('tenantInfo', ref());
 const activeKey = ref<string>('1');
 
 const userDetail = ref<Detail>();
@@ -163,8 +162,8 @@ const delUser = async () => {
   router.push('/organization/user');
 };
 
-const getOperatPermissions = computed(() => {
-  return !tenantInfo.value.sysAdmin && userDetail.value?.sysAdmin;
+const getOperationPermissions = computed(() => {
+  return !appContext.isSysAdmin() && userDetail.value?.sysAdmin;
 });
 
 onMounted(() => {
@@ -218,28 +217,28 @@ const userGridColumns = [
         <ButtonAuth
           code="UserModify"
           :href="`/organization/user/edit/${userDetail.id}?source=detail`"
-          :disabled="getOperatPermissions" />
+          :disabled="getOperationPermissions" />
         <ButtonAuth
           code="UserEnable"
-          :disabled="getOperatPermissions"
+          :disabled="getOperationPermissions"
           :showTextIndex="userDetail.enabled?1:0"
           @click="updateStatusConfirm" />
         <ButtonAuth
           code="UserDelete"
-          :disabled="getOperatPermissions"
+          :disabled="getOperationPermissions"
           @click="delUserConfirm" />
         <ButtonAuth
           code="LockingUser"
-          :disabled="getOperatPermissions"
+          :disabled="getOperationPermissions"
           :showTextIndex="userDetail.locked?1:0"
           @click="lockingUser(!userDetail.locked)" />
         <ButtonAuth
           code="ResetPassword"
-          :disabled="getOperatPermissions"
+          :disabled="getOperationPermissions"
           @click="openUpdatePasswdModal" />
         <ButtonAuth
           code="SetIdentity"
-          :disabled="getOperatPermissions && tenantInfo.sysAdmin"
+          :disabled="getOperationPermissions && appContext.isSysAdmin()"
           :showTextIndex="userDetail.sysAdmin?1:0"
           @click="setAdminConfirm" />
       </div>
@@ -262,16 +261,16 @@ const userGridColumns = [
           </Skeleton>
         </Tabs.TabPane>
         <Tabs.TabPane key="2" :tab="t('授权策略')">
-          <AuthorizationPolicy :userId="userId" :hasAuth="getOperatPermissions" />
+          <AuthorizationPolicy :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
         <Tabs.TabPane key="3" :tab="t('关联部门')">
-          <UserDept :userId="userId" :hasAuth="getOperatPermissions" />
+          <UserDept :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
         <Tabs.TabPane key="4" :tab="t('关联组')">
-          <UserGroup :userId="userId" :hasAuth="getOperatPermissions" />
+          <UserGroup :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
         <Tabs.TabPane key="5" :tab="t('关联标签')">
-          <UserTag :userId="userId" :hasAuth="getOperatPermissions" />
+          <UserTag :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
       </Tabs>
     </PureCard>

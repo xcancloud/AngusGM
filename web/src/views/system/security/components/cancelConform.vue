@@ -2,6 +2,7 @@
 import { ref, inject, Ref } from 'vue';
 import { Button } from 'ant-design-vue';
 import { Modal, Input, Hints, notification, Colon } from '@xcan-angus/vue-ui';
+import { appContext } from '@xcan-angus/infra';
 
 import { tenant } from '@/api';
 
@@ -12,7 +13,6 @@ interface Props {
 withDefaults(defineProps<Props>(), { visible: false });
 
 const emit = defineEmits<{(e: 'update:visible', value: boolean): void, (e: 'update', value: boolean): void }>();
-const tenantInfo: Ref = inject('tenantInfo', ref());
 
 const code = ref<string>('');
 const loading = ref(false);
@@ -82,7 +82,7 @@ const handleCancel = () => {
         <div class="flex flex-col flex-1 space-y-5">
           <Button
             size="small"
-            :disabled="!tenantInfo.sysAdmin || count !== 0"
+            :disabled="!appContext.isSysAdmin() || count !== 0"
             :loading="loading"
             @click="sendVerificationCode">
             向当前登录人手机发送验证码 {{ count !== 0?`(${count})` : '' }}
@@ -105,7 +105,7 @@ const handleCancel = () => {
         <Button
           size="small"
           type="primary"
-          :disabled="!tenantInfo.sysAdmin"
+          :disabled="!appContext.isSysAdmin()"
           @click="handleOk">
           确定
         </Button>

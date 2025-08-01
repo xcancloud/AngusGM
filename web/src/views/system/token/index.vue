@@ -17,7 +17,7 @@ import {
   ButtonAuth,
   modal
 } from '@xcan-angus/vue-ui';
-import { app, enumLoader } from '@xcan-angus/infra';
+import { app, enumLoader, appContext } from '@xcan-angus/infra';
 
 import SelectApis from '@/views/system/token/components/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';
@@ -31,7 +31,6 @@ const loading = ref(false);
 
 const selectApisRef = ref();
 const selectAclsRef = ref();
-const tenantInfo = inject('tenantInfo', ref());
 
 const columns = computed(() => {
   return _columns.map(item => {
@@ -47,7 +46,7 @@ const tableData = reactive({
 });
 
 const editable = computed(() => {
-  return tenantInfo.value?.sysAdmin && tableData.list.length < tokenQuota.value;
+  return appContext.isSysAdmin() && tableData.list.length < tokenQuota.value;
 });
 
 const authTypeOpt = ref<{ value: string, message: string }[]>([]);
@@ -324,7 +323,7 @@ onMounted(async () => {
               code="SystemTokenDelete"
               type="text"
               icon="icon-lajitong"
-              :disabled="!tenantInfo.sysAdmin"
+              :disabled="!appContext.isSysAdmin()"
               @click="handleDel(record.id,record.name)" />
           </template>
           <template v-if="column.dataIndex === 'createdByName'">

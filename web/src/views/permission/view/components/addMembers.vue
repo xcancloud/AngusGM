@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, Ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan-angus/infra';
+import { GM, appContext } from '@xcan-angus/infra';
 import { Modal, Grid, Select, SelectUser } from '@xcan-angus/vue-ui';
 
 import { app } from '@/api';
@@ -20,7 +20,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'update', refresh: boolean): void }>();
 
-const tenantInfo: Ref = inject('tenantInfo', ref());
 const { t } = useI18n();
 
 const selectedUserIds = ref();
@@ -124,8 +123,7 @@ const selectAppUnAuthOrgAction = computed(() => {
 
 // TODO 路径信息迁移到 api 路由
 const selectUserAuthPolicyAction = computed(() => {
-  // TODO user/${tenantInfo.value.id} 语义错误
-  return `${GM}/auth/user/${tenantInfo.value.id}/policy/associated?appId=${props.appId}&adminFullAssociated=true`;
+  return `${GM}/auth/user/${appContext.getUser()?.id}/policy/associated?appId=${props.appId}&adminFullAssociated=true`;
 });
 
 const fieldNames = computed(() => {

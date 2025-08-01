@@ -433,12 +433,8 @@ const columns = [
   }
 ];
 
-const _tenantInfo = computed(() => {
-  return appContext.getContext()?.user;
-});
-
-const getOperatPermissions = (sysAdmin: boolean): boolean => {
-  return !_tenantInfo.value?.sysAdmin && sysAdmin;
+const getOperationPermissions = (sysAdmin: boolean): boolean => {
+  return !appContext.isSysAdmin() && sysAdmin;
 };
 </script>
 <template>
@@ -542,12 +538,12 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
               code="UserModify"
               type="text"
               :href="`/organization/user/edit/${record.id}?source=home`"
-              :disabled="getOperatPermissions(record.sysAdmin)"
+              :disabled="getOperationPermissions(record.sysAdmin)"
               icon="icon-shuxie" />
             <ButtonAuth
               code="ResetPassword"
               type="text"
-              :disabled="getOperatPermissions(record.sysAdmin)"
+              :disabled="getOperationPermissions(record.sysAdmin)"
               icon="icon-zhongzhimima"
               @click="openUpdatePasswdModal(record.id)" />
             <Dropdown
@@ -558,7 +554,7 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
                 <Menu class="text-3.5 leading-3.5 font-normal">
                   <MenuItem
                     v-if="app.show('UserEnable')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('UserEnable')"
+                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('UserEnable')"
                     @click="updateStatusConfirm(record.id,record.fullName,record.enabled)">
                     <template #icon>
                       <Icon :icon="record.enabled?'icon-jinyong1':'icon-qiyong'" />
@@ -567,7 +563,7 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
                   </MenuItem>
                   <MenuItem
                     v-if="app.show('UserDelete')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('UserDelete')"
+                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('UserDelete')"
                     @click="delUserConfirm(record.id,record.fullName)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
@@ -576,7 +572,7 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
                   </MenuItem>
                   <MenuItem
                     v-if="!record.locked && app.show('LockingUser')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('LockingUser')"
+                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('LockingUser')"
                     @click="openLockedModal(record.id)">
                     <template #icon>
                       <Icon icon="icon-lock" />
@@ -585,7 +581,7 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
                   </MenuItem>
                   <MenuItem
                     v-if="record.locked && app.show('LockingUser')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('LockingUser')"
+                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('LockingUser')"
                     @click="unlock(record.id,record.fullName)">
                     <template #icon>
                       <Icon icon="icon-kaibiaojiemi" />
@@ -593,8 +589,8 @@ const getOperatPermissions = (sysAdmin: boolean): boolean => {
                     {{ app.getName('LockingUser', 1) }}
                   </MenuItem>
                   <MenuItem
-                    v-if="_tenantInfo.sysAdmin && app.show('SetIdentity')"
-                    :disabled="getOperatPermissions(record.sysAdmin)||!app.has('SetIdentity')"
+                    v-if="appContext.isSysAdmin() && app.show('SetIdentity')"
+                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('SetIdentity')"
                     @click="setAdminConfirm(record.id,record.fullName,record.sysAdmin)">
                     <template #icon>
                       <Icon :icon="record.sysAdmin?'icon-yonghu':'icon-guanliyuan'" />

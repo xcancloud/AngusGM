@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, watch, ref, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { cookieUtils } from '@xcan-angus/infra';
+import { cookieUtils, appContext } from '@xcan-angus/infra';
 
 const router = useRouter();
 const route = useRoute();
@@ -13,7 +13,6 @@ const timezone = cookieUtils.get('timezone') || '';
 const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET || '';
 
 const id = route.params.id || '';
-const tenantInfo = inject('tenantInfo', ref());
 
 const cloudRoute = ref(`/stores/cloud/open2p${id ? '/' + id : ''}`);
 const iframeSrc = ref<string>();
@@ -36,7 +35,7 @@ onMounted(async () => {
   url.searchParams.append('lc', localeCookie);
   url.searchParams.append('tz', timezone);
   url.searchParams.append('cs', clientSecret);
-  url.searchParams.append('uid', tenantInfo.value.id);
+  url.searchParams.append('uid', appContext.getUser()?.id);
   iframeSrc.value = url.href;
 
   window.addEventListener('message', function (e) {

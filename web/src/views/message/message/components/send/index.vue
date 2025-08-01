@@ -4,6 +4,7 @@ import { PureCard, notification } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
+import { appContext } from '@xcan-angus/infra';
 
 import { message } from '@/api';
 import { ReceiveObjectType, MessageReceiveType, SendType } from './PropsType';
@@ -14,7 +15,6 @@ const SendList = defineAsyncComponent(() => import('./list.vue'));
 const { t } = useI18n();
 const router = useRouter();
 const formRef = ref();
-const tenantInfo: Ref = inject('tenantInfo', ref());
 const userList = ref<{ id: string; name: string; }[]>([]);
 const deptList = ref<{ id: string; name: string; }[]>([]);
 const groupList = ref<{ id: string; name: string; }[]>([]);
@@ -70,8 +70,8 @@ const submit = async () => {
     title: title.value
   };
   if (['TENANT', 'USER', 'GROUP', 'DEPT'].includes(receiveObjectType.value)) {
-    params = { ...params, receiveTenantId: tenantInfo.value.tenantId };
-    params = { ...params, receiveObjects: [{ id: tenantInfo.value.tenantId, name: tenantInfo.value.tenantName }] };
+    params = { ...params, receiveTenantId: appContext.getTenant()?.id };
+    params = { ...params, receiveObjects: [{ id: appContext.getTenant()?.id, name: appContext.getTenant()?.name}] };
   }
 
   if (receiveObjectType.value === 'USER') {

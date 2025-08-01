@@ -3,7 +3,7 @@ import { onMounted, reactive, ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button, Form, FormItem, RadioGroup, Radio, Textarea } from 'ant-design-vue';
 import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan-angus/vue-ui';
-import { enumLoader, GM } from '@xcan-angus/infra';
+import { enumLoader, appContext, GM } from '@xcan-angus/infra';
 import { useRouter } from 'vue-router';
 
 import type { FormDataType } from '../../interface';
@@ -12,7 +12,6 @@ import { notice } from '@/api';
 const { t } = useI18n();
 const router = useRouter();
 
-const tenantInfo = inject('tenantInfo', ref());
 const form: FormDataType = reactive({
   content: '',
   scope: 'GLOBAL',
@@ -211,7 +210,7 @@ onMounted(() => {
             v-model:value="form.appId"
             :fieldNames="{label:'appName',value:'appId'}"
             :placeholder="t('form-placeholder')"
-            :action="`${GM}/appopen/list?tenantId=${tenantInfo.tenantId}`"
+            :action="`${GM}/appopen/list?tenantId=${appContext.getUser()?.tenantId}`"
             :lazy="false"
             defaultActiveFirstOption
             size="small"

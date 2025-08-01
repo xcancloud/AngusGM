@@ -3,6 +3,7 @@ import { reactive, computed, defineAsyncComponent, ref, watch, inject } from 'vu
 import { useI18n } from 'vue-i18n';
 import { Tabs, TabPane } from 'ant-design-vue';
 import { modal, notification, PureCard, Table, Select, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
+import { appContext } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
 import { GM } from '@xcan-angus/infra';
@@ -58,7 +59,6 @@ const _columns = [
 ];
 
 const { t } = useI18n();
-const tenantInfo = inject('tenantInfo', ref());
 
 const state = reactive<{
   tab: 'USER' | 'DEPT' | 'GROUP',
@@ -280,7 +280,7 @@ const deptColumns = [
       <div class="m-2">
         <Select
           showSearch
-          :action="`${GM}/appopen/list?tenantId=${tenantInfo.tenantId}&clientId=xcan_tp`"
+          :action="`${GM}/appopen/list?tenantId=${appContext.getUser()?.tenantId}&clientId=xcan_tp`"
           :placeholder="t('permissionsStrategy.add.appPlaceholder')"
           :lazy="false"
           :fieldNames="{label: 'appName', value: 'appId'}"

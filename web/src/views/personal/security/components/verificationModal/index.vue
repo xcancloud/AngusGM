@@ -10,7 +10,7 @@ import VerificationCode from '@/views/personal/security/components/verificationC
 interface Props {
   isModify: boolean,
   visible: boolean,
-  tenantInfo: UserInfoParams,
+  userInfo: UserInfoParams,
   valueKey?: 'email' | 'mobile',
 }
 
@@ -64,7 +64,7 @@ const ok = async (): Promise<void> => {
       break;
     case 'mobile':
       action = `${GM}/user/current/sms/check/`;
-      params.country = props.tenantInfo.country;
+      params.country = props.userInfo.country;
       params.mobile = mediumIfy.value;
       params.bizKey = 'MODIFY_MOBILE';
       break;
@@ -108,11 +108,11 @@ const prevDesc = computed(() => {
 });
 
 const mediumIfy = computed((): string => {
-  if (!props.tenantInfo) {
+  if (!props.userInfo) {
     return '';
   }
 
-  const { mobile, email } = props.tenantInfo;
+  const { mobile, email } = props.userInfo;
   switch (props.valueKey) {
     case 'mobile':
       return mobile || '';
@@ -137,14 +137,14 @@ const mediumIfy = computed((): string => {
     <div class="mt-8 text-theme-content">
       {{ prevDesc }}
       <span
-        class="content-primary-text">{{ props.valueKey === 'mobile' ? ('+' + tenantInfo.itc + ' ' + mediumIfy) : mediumIfy }}</span>
+        class="content-primary-text">{{ props.valueKey === 'mobile' ? ('+' + userInfo.itc + ' ' + mediumIfy) : mediumIfy }}</span>
     </div>
     <div class="flex items-center mt-5.5">
       <span class="flex items-center flex-grow-0 whitespace-nowrap text-theme-title mr-3">{{ t('personalCenter.verificationCode') }}</span>
       <VerificationCode
         class="flex-grow"
         :error="codeError"
-        :country="tenantInfo.country"
+        :country="userInfo.country"
         :mediumIfy="mediumIfy"
         :sendType="valueKey"
         :isModify="isModify"

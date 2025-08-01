@@ -2,16 +2,16 @@
 import { ref, defineAsyncComponent, Ref, inject, onMounted } from 'vue';
 import { Card, AsyncComponent, notification } from '@xcan-angus/vue-ui';
 import { Switch } from 'ant-design-vue';
+import { appContext } from '@xcan-angus/infra';
 
 import { tenant } from '@/api';
 
 const CancellationModal = defineAsyncComponent(() => import('./cancelConform.vue'));
-const tenantInfo: Ref = inject('tenantInfo', ref());
 
 const checked = ref(false);
 const tenantStatus = ref<{ value: string, message: string }>({ value: '', message: '' });
 const getTenantDetail = async () => {
-  const [error, { data }] = await tenant.getTenantDetail(tenantInfo.value.tenantId);
+  const [error, { data }] = await tenant.getTenantDetail(appContext.getUser()?.tenantId);
   if (error) {
     return;
   }

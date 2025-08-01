@@ -1,11 +1,11 @@
 <script setup lang='ts'>
-import { ref, reactive, onMounted, watch, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { Button, Checkbox, Form, FormItem, Textarea, Tree } from 'ant-design-vue';
-import { notification, Select, Input, Card, Icon, NoData, ButtonAuth } from '@xcan-angus/vue-ui';
-import { GM } from '@xcan-angus/infra';
+import {onMounted, reactive, ref, watch} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Button, Checkbox, Form, FormItem, Textarea, Tree} from 'ant-design-vue';
+import {ButtonAuth, Card, Icon, Input, NoData, notification, Select} from '@xcan-angus/vue-ui';
+import {appContext, GM} from '@xcan-angus/infra';
 
-import { auth } from '@/api';
+import {auth} from '@/api';
 
 interface FormType {
   id: string,
@@ -37,7 +37,6 @@ interface DataRecordType {
 const { t } = useI18n();
 const endReg = /.*(Door|pub)$/g;
 
-const tenantInfo = inject('tenantInfo', ref());
 const emit = defineEmits<{(e: 'reload'): void }>();
 
 // 添加权限策略面板折叠状态
@@ -156,7 +155,7 @@ const loadResourceByAppId = async () => {
     return;
   }
 
-  const [error, res] = await auth.getUserAppFunctionTree(tenantInfo.value.id, state.form.appId);
+  const [error, res] = await auth.getUserAppFunctionTree(appContext.getUser()?.id, state.form.appId);
   if (error) {
     return;
   }
@@ -361,7 +360,7 @@ defineExpose({
             <Select
               :value="state.form.appId"
               showSearch
-              :action="`${GM}/appopen/list?tenantId=${tenantInfo.tenantId}&clientId=xcan_tp`"
+              :action="`${GM}/appopen/list?tenantId=${appContext.getUser()?.tenantId}&clientId=xcan_tp`"
               :disabled="!!state.form.id"
               :placeholder="t('permissionsStrategy.add.appPlaceholder')"
               :lazy="false"
