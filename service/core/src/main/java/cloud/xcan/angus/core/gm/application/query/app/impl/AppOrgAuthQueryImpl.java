@@ -52,39 +52,74 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 
+/**
+ * <p>
+ * Implementation of application organization authorization query operations.
+ * </p>
+ * <p>
+ * Manages application authorization queries for tenants, users, departments, and groups.
+ * Provides comprehensive authorization checking and policy management.
+ * </p>
+ * <p>
+ * Supports authorized and unauthorized entity queries, policy validation,
+ * and multi-tenant authorization management.
+ * </p>
+ */
+/**
+ * <p>
+ * Implementation of application organization authorization query operations.
+ * </p>
+ * <p>
+ * Manages application authorization queries for tenants, users, departments, and groups.
+ * Provides comprehensive authorization checking and policy management.
+ * </p>
+ * <p>
+ * Supports authorized and unauthorized entity queries, policy validation,
+ * and multi-tenant authorization management.
+ * </p>
+ */
 @Biz
 public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
   @Resource
   private TenantRepo tenantRepo;
-
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private DeptRepo deptRepo;
-
   @Resource
   private GroupRepo groupRepo;
-
   @Resource
   private AppRepo appRepo;
-
   @Resource
   private AuthPolicyRepo authPolicyRepo;
-
   @Resource
   private UserManager userManager;
-
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AppOpenQuery appOpenQuery;
-
   @Resource
   private WebTagQuery webTagQuery;
 
+  /**
+   * <p>
+   * Retrieves tenants authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries tenants that have open authorization for the application.
+   * Supports pagination and filtering for comprehensive tenant management.
+   * </p>
+   */
+  /**
+   * <p>
+   * Retrieves tenants authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries tenants that have open authorization for the application.
+   * Supports pagination and filtering for comprehensive tenant management.
+   * </p>
+   */
   @Override
   public Page<Tenant> appAuthTenant(Long appId, GenericSpecification<Tenant> spec,
       PageRequest pageable) {
@@ -92,7 +127,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // NOOP:: appOpenQuery.checkAndFind(appId, getOptTenantId());
+        // NOOP: appOpenQuery.checkAndFind(appId, getOptTenantId());
       }
 
       @Override
@@ -117,6 +152,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves users authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries users that have authorization for the application within the tenant.
+   * Handles global authorization and individual user authorization scenarios.
+   * </p>
+   */
   @Override
   public Page<User> appAuthUser(Long appId, GenericSpecification<User> spec, PageRequest pageable) {
     return new BizTemplate<Page<User>>(false) {
@@ -124,13 +168,13 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
       @Override
       protected Page<User> process() {
-        // Whether all tenant users are authorized
+        // Check if all tenant users are authorized
         boolean allTenantUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
         PrincipalContext.addExtension("globalAuth", allTenantUserAuth);
 
@@ -147,7 +191,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
           }
         }
 
-        // Query user page
+        // Query user page with appropriate filters
         spec.getCriteria().addAll(SearchCriteria.criteria(
             SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("enabled", true),
             SearchCriteria.equal("deleted", false)));
@@ -156,13 +200,22 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         }
         Page<User> userPage = userRepo.findAll(spec, pageable);
 
-        // Query user authorized polices
+        // Query user authorized policies
         setUserAuthPolicy(appId, tenantId, userPage.getContent());
         return userPage;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves departments authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries departments that have authorization for the application within the tenant.
+   * Includes department authorization policy information.
+   * </p>
+   */
   @Override
   public Page<Dept> appAuthDept(Long appId, GenericSpecification<Dept> spec, PageRequest pageable) {
     return new BizTemplate<Page<Dept>>(false) {
@@ -170,7 +223,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, true);
       }
 
@@ -182,18 +235,27 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
           return Page.empty();
         }
 
-        // Query department page
+        // Query department page with authorization filters
         spec.getCriteria().addAll(SearchCriteria.criteria(
             SearchCriteria.equal("tenantId", tenantId), SearchCriteria.in("id", authOrgIds)));
         Page<Dept> deptPage = deptRepo.findAll(spec, pageable);
 
-        // Query dept authorized polices
+        // Query department authorized policies
         setDeptAuthPolicy(appId, tenantId, deptPage.getContent());
         return deptPage;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves groups authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries groups that have authorization for the application within the tenant.
+   * Includes group authorization policy information.
+   * </p>
+   */
   @Override
   public Page<Group> appAuthGroup(Long appId, GenericSpecification<Group> spec,
       PageRequest pageable) {
@@ -202,7 +264,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, true);
       }
 
@@ -214,19 +276,27 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
           return Page.empty();
         }
 
-        // Query  information
+        // Query group page with authorization filters
         spec.getCriteria().addAll(SearchCriteria.criteria(
             SearchCriteria.equal("tenantId", tenantId), SearchCriteria.in("id", authOrgIds),
             SearchCriteria.equal("enabled", true)));
         Page<Group> groupPage = groupRepo.findAll(spec, pageable);
 
-        // Query group authorized polices
+        // Query group authorized policies
         setGroupAuthPolicy(appId, tenantId, groupPage.getContent());
         return groupPage;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves global authorization policies for the application.
+   * </p>
+   * <p>
+   * Returns policies that apply to all users in the tenant for the specified application.
+   * </p>
+   */
   @Override
   public List<AuthPolicy> appAuthGlobal(Long appId) {
     return new BizTemplate<List<AuthPolicy>>() {
@@ -234,7 +304,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
@@ -245,6 +315,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Checks if an organization is authorized for the specified application.
+   * </p>
+   * <p>
+   * Validates authorization for different organization types (tenant, user, department, group).
+   * Handles special cases for system administrators and global authorization.
+   * </p>
+   */
   @Override
   public Boolean appAuthOrgCheck(Long appId, AuthOrgType orgType, Long orgId) {
     return new BizTemplate<Boolean>() {
@@ -253,11 +332,11 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the org existed
+        // Verify organization exists and is valid
         assertTrue(!orgType.equals(AuthOrgType.TENANT)
             || orgId.equals(tenantId), "The optTenantId is missing or incorrect");
         userManager.checkOrgExists(orgType.toOrgTargetType(), orgId);
-        // Check the application is opened
+        // Verify application is opened for the tenant
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
       }
 
@@ -273,15 +352,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
             if (((User) orgDb).getSysAdmin()) {
               return true;
             }
-            // Whether all tenant users are authorized
+            // Check if all tenant users are authorized
             boolean allTenantUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
             if (allTenantUserAuth) {
               return true;
             }
-            // Whether all tenant users are authorized
+            // Check individual user authorization
             List<Long> orgIds = userManager.getOrgAndUserIds(orgId);
             orgIds.add(tenantId);
-            // Whether all tenant users are authorized
+            // Check if user has authorization for the application
             List<Long> authAppIds = authPolicyOrgRepo.findAuthAppIdsOfNonSysAdminUser(orgIds);
             return authAppIds.contains(appId);
           case DEPT:
@@ -289,7 +368,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
           case GROUP:
             // Downward execute
           default:
-            // Whether all tenant users are authorized
+            // Check if organization has authorization for the application
             return !authPolicyOrgRepo.findByAppIdAndOrgIdAndOrgType(appId, orgId, orgType)
                 .isEmpty();
         }
@@ -297,6 +376,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves applications authorized for the specified organization.
+   * </p>
+   * <p>
+   * Queries applications that the organization has authorization to access.
+   * Supports different organization types and includes policy information.
+   * </p>
+   */
   @Override
   public List<App> orgAuthApp(AuthOrgType orgType, Long orgId, boolean joinPolicy) {
     return new BizTemplate<List<App>>(false) {
@@ -305,7 +393,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the org existed
+        // Verify organization exists and is valid
         assertTrue(!orgType.equals(AuthOrgType.TENANT) || orgId.equals(tenantId),
             "The optTenantId is missing or incorrect");
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
@@ -328,7 +416,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
             }
             List<Long> orgIds = userManager.getOrgAndUserIds(orgId);
             orgIds.add(tenantId);
-            // Whether all tenant users are authorized
+            // Check if user has authorization for applications
             authAppIds = authPolicyOrgRepo.findAuthAppIdsOfNonSysAdminUser(orgIds);
             break;
           case DEPT:
@@ -336,7 +424,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
           case GROUP:
             // Downward execute
           default:
-            // Whether all tenant org are authorized
+            // Check if organization has authorization for applications
             authAppIds = authPolicyOrgRepo.findAuthAppIdsByTenantIdAndOrgIdAndOrgType(
                 tenantId, orgId, orgType.getValue());
         }
@@ -356,6 +444,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves authorization policies for organization and application.
+   * </p>
+   * <p>
+   * Queries policies that authorize the organization for the specified application.
+   * Supports pagination and filtering for comprehensive policy management.
+   * </p>
+   */
   @Override
   public Page<AuthPolicy> orgAuthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       GenericSpecification<AuthPolicy> spec, PageRequest pageable) {
@@ -365,11 +462,11 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the org existed
+        // Verify organization exists and is valid
         assertTrue(!orgType.equals(AuthOrgType.TENANT) || orgId.equals(tenantId),
             "The optTenantId is missing or incorrect");
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
@@ -377,7 +474,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       protected Page<AuthPolicy> process() {
         closeMultiTenantCtrl();
 
-        // Query authorized policy
+        // Query authorized policies
         Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
         Page<AuthPolicyIdP> policyIdPage = getAuthPolicyIds(tenantId, appId, orgType,
             Set.of(orgId.toString()), idsFilter, pageable);
@@ -394,6 +491,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Checks if organization is authorized for the specified application.
+   * </p>
+   * <p>
+   * Validates if the organization has authorization to access the application.
+   * </p>
+   */
   @Override
   public Boolean orgAuthAppCheck(AuthOrgType orgType, Long orgId, Long appId) {
     return new BizTemplate<Boolean>() {
@@ -401,11 +506,11 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the org existed
+        // Verify organization exists and is valid
         assertTrue(!orgType.equals(AuthOrgType.TENANT)
             || orgId.equals(tenantId), "The optTenantId is missing or incorrect");
         userManager.checkOrgExists(orgType.toOrgTargetType(), orgId);
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
@@ -416,6 +521,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves tenants not authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries tenants that do not have open authorization for the application.
+   * Supports pagination and filtering for comprehensive tenant management.
+   * </p>
+   */
   @Override
   public Page<Tenant> appUnauthTenant(Long appId, GenericSpecification<Tenant> spec,
       PageRequest pageable) {
@@ -423,7 +537,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // NOOP:: appOpenQuery.checkAndFind(appId, getOptTenantId());
+        // NOOP: appOpenQuery.checkAndFind(appId, getOptTenantId());
       }
 
       @Override
@@ -439,6 +553,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves users not authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries users that do not have authorization for the application within the tenant.
+   * Handles global authorization scenarios appropriately.
+   * </p>
+   */
   @Override
   public Page<User> appUnauthUser(Long appId, GenericSpecification<User> spec,
       PageRequest pageable) {
@@ -447,13 +570,13 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
       @Override
       protected Page<User> process() {
-        // Whether all tenant users are authorized
+        // Check if all tenant users are authorized
         boolean allTenantUserAuth = authPolicyOrgRepo.existsAuthAllUser(appId, tenantId) > 0;
         if (allTenantUserAuth) {
           return Page.empty();
@@ -465,7 +588,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         Set<Long> authUserIds =
             isNotEmpty(authOrgIds) ? userManager.findUserIdsByOrgIds(authOrgIds) : null;
 
-        // Query user page
+        // Query user page with exclusion filters
         spec.getCriteria().addAll(SearchCriteria.criteria(
             SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("enabled", true),
             SearchCriteria.equal("deleted", false), SearchCriteria.in("id", idsFilter),
@@ -475,6 +598,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves departments not authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries departments that do not have authorization for the application within the tenant.
+   * </p>
+   */
   @Override
   public Page<Dept> appUnauthDept(Long appId, GenericSpecification<Dept> spec,
       PageRequest pageable) {
@@ -483,7 +614,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
@@ -492,7 +623,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
         List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.DEPT, null);
 
-        // Query department page
+        // Query department page with exclusion filters
         spec.getCriteria().addAll(SearchCriteria.criteria(
             SearchCriteria.equal("tenantId", tenantId), SearchCriteria.in("id", idsFilter),
             SearchCriteria.notIn("id", authOrgIds)));
@@ -501,6 +632,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves groups not authorized for the specified application.
+   * </p>
+   * <p>
+   * Queries groups that do not have authorization for the application within the tenant.
+   * </p>
+   */
   @Override
   public Page<Group> appUnauthGroup(Long appId, GenericSpecification<Group> spec,
       PageRequest pageable) {
@@ -509,7 +648,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
@@ -518,7 +657,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         Set<String> idsFilter = findAllIdInAndEqualValues(spec.getCriteria(), "id", true);
         List<Long> authOrgIds = getAuthOrgIds(tenantId, appId, AuthOrgType.GROUP, null);
 
-        // Query group page
+        // Query group page with exclusion filters
         spec.getCriteria().addAll(SearchCriteria.criteria(
             SearchCriteria.equal("tenantId", tenantId), SearchCriteria.equal("enabled", true),
             SearchCriteria.in("id", idsFilter), SearchCriteria.notIn("id", authOrgIds)));
@@ -527,6 +666,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves authorization policies not assigned to organization for application.
+   * </p>
+   * <p>
+   * Queries policies that are not used to authorize the organization for the specified application.
+   * Supports pagination and filtering for comprehensive policy management.
+   * </p>
+   */
   @Override
   public Page<AuthPolicy> orgUnauthPolicy(Long appId, AuthOrgType orgType, Long orgId,
       GenericSpecification<AuthPolicy> spec, PageRequest pageable) {
@@ -536,11 +684,11 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
       @Override
       protected void checkParams() {
-        // Check the org existed
+        // Verify organization exists and is valid
         assertTrue(!orgType.equals(AuthOrgType.TENANT) || orgId.equals(tenantId),
             "The optTenantId is missing or incorrect");
         orgDb = userManager.checkOrgAndFind(orgType.toOrgTargetType(), orgId);
-        // Check the application is opened
+        // Verify application is opened for the tenant
         appOpenQuery.checkAndFind(appId, tenantId, false);
       }
 
@@ -548,7 +696,7 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
       protected Page<AuthPolicy> process() {
         closeMultiTenantCtrl();
 
-        // Query authorized policy
+        // Query authorized policies
         List<Long> authPolicyIds = getAuthPolicyIds(tenantId, appId, orgType,
             Set.of(orgId.toString()), null);
 
@@ -566,6 +714,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves authorized organization IDs for the specified application and organization type.
+   * </p>
+   * <p>
+   * Queries organization IDs that have authorization for the application.
+   * Supports filtering by organization type and ID filters.
+   * </p>
+   */
   @Override
   public List<Long> getAuthOrgIds(Long tenantId, Long appId, @Nullable AuthOrgType orgType,
       @Nullable Set<String> idsFilter) {
@@ -575,6 +732,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         .stream().map(AuthPolicyOrgP::getOrgId).distinct().toList();
   }
 
+  /**
+   * <p>
+   * Retrieves authorized policy IDs for the specified application and organization.
+   * </p>
+   * <p>
+   * Queries policy IDs that authorize the organization for the application.
+   * Supports filtering by organization type and policy ID filters.
+   * </p>
+   */
   @Override
   public List<Long> getAuthPolicyIds(Long tenantId, Long appId, @Nullable AuthOrgType orgType,
       @Nullable Set<String> orgIdsFilter, @Nullable Set<String> policyIdsFilter) {
@@ -587,6 +753,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         .stream().map(AuthPolicyOrgP::getPolicyId).distinct().toList();
   }
 
+  /**
+   * <p>
+   * Retrieves authorized policy IDs with pagination support.
+   * </p>
+   * <p>
+   * Queries policy IDs that authorize the organization for the application with pagination.
+   * Supports filtering by organization type and various ID filters.
+   * </p>
+   */
   @Override
   public Page<AuthPolicyIdP> getAuthPolicyIds(Long tenantId, Long appId,
       @Nullable AuthOrgType orgType, @Nullable Set<String> orgIdsFilter,
@@ -599,6 +774,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
         AuthPolicyIdP.class, new GenericSpecification<>(criteria), pageable);
   }
 
+  /**
+   * <p>
+   * Builds search criteria for organization authorization queries.
+   * </p>
+   * <p>
+   * Creates standardized search criteria for organization authorization lookups.
+   * </p>
+   */
   private static @NotNull Set<SearchCriteria> getOrgSearchCriteria(Long tenantId, Long appId,
       AuthOrgType orgType, Set<String> orgIdsFilter) {
     Set<SearchCriteria> criteria = SearchCriteria.criteria(
@@ -612,12 +795,28 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     return criteria;
   }
 
+  /**
+   * <p>
+   * Associates user authorization policies with user list.
+   * </p>
+   * <p>
+   * Enriches users with their authorization policies for comprehensive user information.
+   * </p>
+   */
   private void setUserAuthPolicy(Long appId, Long tenantId, List<User> users) {
     for (User user : users) {
       addUserAuthPolicyToExtension(appId, tenantId, user, String.valueOf(user.getId()));
     }
   }
 
+  /**
+   * <p>
+   * Associates department authorization policies with department list.
+   * </p>
+   * <p>
+   * Enriches departments with their authorization policies for comprehensive department information.
+   * </p>
+   */
   private void setDeptAuthPolicy(Long appId, Long tenantId, List<Dept> depts) {
     for (Dept dept : depts) {
       addAuthPolicyToExtension(appId, tenantId, AuthOrgType.DEPT, dept.getId(),
@@ -625,6 +824,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }
   }
 
+  /**
+   * <p>
+   * Associates group authorization policies with group list.
+   * </p>
+   * <p>
+   * Enriches groups with their authorization policies for comprehensive group information.
+   * </p>
+   */
   private void setGroupAuthPolicy(Long appId, Long tenantId, List<Group> groups) {
     for (Group group : groups) {
       addAuthPolicyToExtension(appId, tenantId, AuthOrgType.GROUP, group.getId(),
@@ -632,6 +839,14 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }
   }
 
+  /**
+   * <p>
+   * Associates application authorization policies with application list.
+   * </p>
+   * <p>
+   * Enriches applications with their authorization policies based on organization type.
+   * </p>
+   */
   private void setAppAuthPolicy(Long tenantId, AuthOrgType orgType,
       Long orgId, Object orgDb, List<App> apps) {
     for (App app : apps) {
@@ -656,6 +871,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }
   }
 
+  /**
+   * <p>
+   * Adds user authorization policies to principal context extension.
+   * </p>
+   * <p>
+   * Retrieves and stores user authorization policies in the principal context
+   * for access during request processing.
+   * </p>
+   */
   private void addUserAuthPolicyToExtension(Long appId, Long tenantId, User user,
       String extendKey) {
     List<Long> allOrgIds = userManager.getOrgAndUserIds(user.getId());
@@ -677,6 +901,15 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
     }
   }
 
+  /**
+   * <p>
+   * Adds organization authorization policies to principal context extension.
+   * </p>
+   * <p>
+   * Retrieves and stores organization authorization policies in the principal context
+   * for access during request processing.
+   * </p>
+   */
   private void addAuthPolicyToExtension(Long appId, Long tenantId, AuthOrgType orgType,
       Long orgId, String extendKey) {
     List<Long> allAuthPolicyIds = authPolicyOrgRepo.findAuthPolicyIdsOfDept(appId, tenantId,

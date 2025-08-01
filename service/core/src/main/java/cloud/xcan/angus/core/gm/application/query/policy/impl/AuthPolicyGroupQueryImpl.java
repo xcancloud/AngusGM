@@ -31,25 +31,42 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 
-
+/**
+ * <p>
+ * Implementation of authentication policy group query operations.
+ * </p>
+ * <p>
+ * Manages group-policy relationship queries, validation, and authorization management.
+ * Provides comprehensive group-policy querying with authorization support.
+ * </p>
+ * <p>
+ * Supports policy-group queries, group-policy queries, authorization management,
+ * and unauthorized policy queries for comprehensive group-policy administration.
+ * </p>
+ */
 @Biz
 public class AuthPolicyGroupQueryImpl implements AuthPolicyGroupQuery {
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthOrgPolicyListRepo authOrgPolicyListRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private GroupRepo groupRepo;
-
   @Resource
   private AuthPolicyUserQuery authPolicyUserQuery;
 
+  /**
+   * <p>
+   * Retrieves groups associated with specific policy.
+   * </p>
+   * <p>
+   * Queries groups that are authorized by the specified policy.
+   * Validates policy existence and handles multi-tenant control.
+   * </p>
+   */
   @Override
   public Page<Group> policyGroupList(GenericSpecification<Group> spec, PageRequest pageable) {
     return new BizTemplate<Page<Group>>() {
@@ -59,7 +76,7 @@ public class AuthPolicyGroupQueryImpl implements AuthPolicyGroupQuery {
       protected void checkParams() {
         policyId = findFirstValueAndRemove(spec.getCriteria(), "policyId", EQUAL);
         assertNotEmpty(policyId, "Parameter policyId is required");
-        closeMultiTenantCtrl(); // May bedefault policy
+        closeMultiTenantCtrl(); // May be default policy
         authPolicyQuery.checkAndFind(Long.valueOf(policyId), false, false);
         enableMultiTenantCtrl();
       }
@@ -77,6 +94,15 @@ public class AuthPolicyGroupQueryImpl implements AuthPolicyGroupQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves groups not associated with specific policy.
+   * </p>
+   * <p>
+   * Queries groups that are not authorized by the specified policy.
+   * Validates policy existence for proper filtering.
+   * </p>
+   */
   @Override
   public Page<Group> policyUnauthGroupList(GenericSpecification<Group> spec,
       PageRequest pageable) {
@@ -102,6 +128,15 @@ public class AuthPolicyGroupQueryImpl implements AuthPolicyGroupQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves policies associated with specific group.
+   * </p>
+   * <p>
+   * Queries policies that are authorized to the specified group.
+   * Validates organization parameters and handles authorization filtering.
+   * </p>
+   */
   @Override
   public Page<AuthPolicy> groupPolicyList(GenericSpecification<AuthPolicy> spec,
       PageRequest pageable) {
@@ -129,7 +164,13 @@ public class AuthPolicyGroupQueryImpl implements AuthPolicyGroupQuery {
   }
 
   /**
-   * Query the policies that the current authorizer does not authorize to group.
+   * <p>
+   * Retrieves policies not authorized to group.
+   * </p>
+   * <p>
+   * Queries policies that the current authorizer does not authorize to group.
+   * Compares authorized policies with all available policies to find unauthorized ones.
+   * </p>
    */
   @Override
   public Page<AuthPolicy> groupUnauthPolicyList(GenericSpecification<AuthPolicy> spec,

@@ -23,15 +23,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.util.StringUtils;
 
+/**
+ * <p>
+ * Implementation of OAuth2 client query operations.
+ * </p>
+ * <p>
+ * Manages OAuth2 client retrieval, validation, and authentication.
+ * Provides comprehensive client querying with scope validation support.
+ * </p>
+ * <p>
+ * Supports client detail retrieval, authentication validation, scope checking,
+ * and enabled status verification for OAuth2 client management.
+ * </p>
+ */
 @Biz
 public class AuthClientQueryImpl implements AuthClientQuery {
 
   @Resource
   private CustomOAuth2ClientRepository customOAuth2ClientRepository;
-
   @Resource
   private PasswordEncoder passwordEncoder;
 
+  /**
+   * <p>
+   * Retrieves detailed OAuth2 client information by ID.
+   * </p>
+   * <p>
+   * Fetches complete client record with all associated information.
+   * Throws ResourceNotFound exception if client does not exist.
+   * </p>
+   */
   @Override
   public CustomOAuth2RegisteredClient detail(String id) {
     return new BizTemplate<CustomOAuth2RegisteredClient>() {
@@ -45,6 +66,15 @@ public class AuthClientQueryImpl implements AuthClientQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves OAuth2 clients with optional filtering.
+   * </p>
+   * <p>
+   * Supports filtering by ID, client ID, and tenant ID.
+   * Builds dynamic SQL filter based on provided parameters.
+   * </p>
+   */
   @Override
   public List<CustomOAuth2RegisteredClient> list(String id, String clientId, String tenantId) {
     return new BizTemplate<List<CustomOAuth2RegisteredClient>>() {
@@ -71,6 +101,15 @@ public class AuthClientQueryImpl implements AuthClientQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves OAuth2 client by client ID.
+   * </p>
+   * <p>
+   * Verifies client exists and returns client information.
+   * Throws ResourceNotFound exception if client does not exist.
+   * </p>
+   */
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId) {
     RegisteredClient client = customOAuth2ClientRepository.findByClientId(clientId);
@@ -78,6 +117,15 @@ public class AuthClientQueryImpl implements AuthClientQuery {
     return (CustomOAuth2RegisteredClient) client;
   }
 
+  /**
+   * <p>
+   * Validates OAuth2 client authentication with client secret.
+   * </p>
+   * <p>
+   * Verifies client exists and validates client secret using password encoder.
+   * Throws Unauthorized exception if authentication fails.
+   * </p>
+   */
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret) {
     CustomOAuth2RegisteredClient client = checkAndFind(clientId);
@@ -85,6 +133,15 @@ public class AuthClientQueryImpl implements AuthClientQuery {
     return client;
   }
 
+  /**
+   * <p>
+   * Validates OAuth2 client authentication with scope validation.
+   * </p>
+   * <p>
+   * Verifies client exists, validates client secret, and checks requested scopes.
+   * Throws appropriate exceptions for authentication or scope validation failures.
+   * </p>
+   */
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId, String clientSecret,
       @Nullable String scope) {
@@ -100,6 +157,15 @@ public class AuthClientQueryImpl implements AuthClientQuery {
     return client;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves OAuth2 client with optional enabled status check.
+   * </p>
+   * <p>
+   * Verifies client exists and optionally checks enabled status.
+   * Throws appropriate exceptions for missing or disabled clients.
+   * </p>
+   */
   @Override
   public CustomOAuth2RegisteredClient checkAndFind(String clientId, boolean checkEnabled) {
     CustomOAuth2RegisteredClient client = checkAndFind(clientId);
@@ -109,6 +175,15 @@ public class AuthClientQueryImpl implements AuthClientQuery {
     return client;
   }
 
+  /**
+   * <p>
+   * Retrieves valid OAuth2 client by client ID without exceptions.
+   * </p>
+   * <p>
+   * Returns client if it exists and is enabled, otherwise returns null.
+   * Used for non-critical client lookups.
+   * </p>
+   */
   @Override
   public CustomOAuth2RegisteredClient findValidByClientId0(String clientId) {
     RegisteredClient client = customOAuth2ClientRepository.findByClientId(clientId);

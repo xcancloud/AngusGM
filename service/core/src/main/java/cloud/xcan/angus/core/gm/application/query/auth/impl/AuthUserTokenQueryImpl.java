@@ -23,15 +23,36 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>
+ * Implementation of authentication user token query operations.
+ * </p>
+ * <p>
+ * Manages user token retrieval, validation, and encryption/decryption.
+ * Provides comprehensive token querying with security encryption support.
+ * </p>
+ * <p>
+ * Supports token detail retrieval, quota validation, encryption/decryption,
+ * and token name validation for secure user token management.
+ * </p>
+ */
 @Biz
 public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
 
   @Resource
   private AuthUserTokenRepo authUserTokenRepo;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 
+  /**
+   * <p>
+   * Retrieves detailed user token information with decrypted value.
+   * </p>
+   * <p>
+   * Fetches complete token record and decrypts the token value.
+   * Verifies token belongs to current user for security.
+   * </p>
+   */
   @Override
   public AuthUserToken value(Long id) {
     return new BizTemplate<AuthUserToken>() {
@@ -39,7 +60,7 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
 
       @Override
       protected void checkParams() {
-        // Check the token exists and is the current user token
+        // Verify token exists and belongs to current user
         userToken = checkAndFind(Collections.singleton(id)).get(0);
       }
 
@@ -51,6 +72,14 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves all user tokens for current user.
+   * </p>
+   * <p>
+   * Returns list of all tokens created by the current user.
+   * </p>
+   */
   @Override
   public List<AuthUserToken> list() {
     return new BizTemplate<List<AuthUserToken>>() {
@@ -62,6 +91,15 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves multiple user tokens by IDs.
+   * </p>
+   * <p>
+   * Verifies all tokens exist and belong to current user.
+   * Validates complete collection match and throws appropriate exceptions.
+   * </p>
+   */
   @Override
   public List<AuthUserToken> checkAndFind(Collection<Long> ids) {
     if (isEmpty(ids)) {
@@ -77,17 +115,44 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
     return userTokens;
   }
 
+  /**
+   * <p>
+   * Retrieves user tokens by IDs without validation.
+   * </p>
+   * <p>
+   * Returns tokens that belong to current user without validation checks.
+   * Used for non-critical token lookups.
+   * </p>
+   */
   @Override
   public List<AuthUserToken> find0(Collection<Long> ids) {
     return authUserTokenRepo.findByIdInAndCreatedBy(ids, getUserId());
   }
 
+  /**
+   * <p>
+   * Validates token name does not already exist.
+   * </p>
+   * <p>
+   * Checks for duplicate token names to ensure uniqueness.
+   * Throws ResourceExisted exception if token name already exists.
+   * </p>
+   */
   @Override
   public void checkNameNotExisted(AuthUserToken userToken) {
     assertResourceExisted(!authUserTokenRepo.existsByName(userToken.getName()),
         TOKEN_NAME_EXISTED_T, new Object[]{userToken.getName()});
   }
 
+  /**
+   * <p>
+   * Validates user token quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding tokens would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkTokenQuota(Long userId, long incr) {
     if (incr > 0) {
@@ -96,6 +161,14 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
     }
   }
 
+  /**
+   * <p>
+   * Encrypts token value for secure storage.
+   * </p>
+   * <p>
+   * Uses AES encryption with tenant-specific key for secure token storage.
+   * </p>
+   */
   @Override
   public String encryptValue(String value) {
     return AESUtils.encrypt(
@@ -105,6 +178,14 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
             .toString() /* => "435E9A3AB63ED118" */, value));
   }
 
+  /**
+   * <p>
+   * Decrypts token value for secure retrieval.
+   * </p>
+   * <p>
+   * Uses AES decryption with tenant-specific key for secure token retrieval.
+   * </p>
+   */
   @Override
   public String decryptValue(String value) {
     return AESUtils.decrypt(

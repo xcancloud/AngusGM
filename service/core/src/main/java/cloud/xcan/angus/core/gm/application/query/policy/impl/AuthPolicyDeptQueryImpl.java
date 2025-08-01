@@ -31,25 +31,42 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 
-
+/**
+ * <p>
+ * Implementation of authentication policy department query operations.
+ * </p>
+ * <p>
+ * Manages department-policy relationship queries, validation, and authorization management.
+ * Provides comprehensive department-policy querying with authorization support.
+ * </p>
+ * <p>
+ * Supports policy-department queries, department-policy queries, authorization management,
+ * and unauthorized policy queries for comprehensive department-policy administration.
+ * </p>
+ */
 @Biz
 public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthOrgPolicyListRepo authOrgPolicyListRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private DeptRepo deptRepo;
-
   @Resource
   private AuthPolicyUserQuery authPolicyUserQuery;
 
+  /**
+   * <p>
+   * Retrieves departments associated with specific policy.
+   * </p>
+   * <p>
+   * Queries departments that are authorized by the specified policy.
+   * Validates policy existence and handles multi-tenant control.
+   * </p>
+   */
   @Override
   public Page<Dept> policyDeptList(GenericSpecification<Dept> spec, PageRequest pageable) {
     return new BizTemplate<Page<Dept>>() {
@@ -77,6 +94,15 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves departments not associated with specific policy.
+   * </p>
+   * <p>
+   * Queries departments that are not authorized by the specified policy.
+   * Validates policy existence for proper filtering.
+   * </p>
+   */
   @Override
   public Page<Dept> policyUnauthDeptList(GenericSpecification<Dept> spec, PageRequest pageable) {
     return new BizTemplate<Page<Dept>>() {
@@ -101,6 +127,15 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves policies associated with specific department.
+   * </p>
+   * <p>
+   * Queries policies that are authorized to the specified department.
+   * Validates organization parameters and handles authorization filtering.
+   * </p>
+   */
   @Override
   public Page<AuthPolicy> deptPolicyList(GenericSpecification<AuthPolicy> spec,
       PageRequest pageable) {
@@ -128,7 +163,13 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
   }
 
   /**
-   * Query the policies that the current authorizer does not authorize to dept.
+   * <p>
+   * Retrieves policies not authorized to department.
+   * </p>
+   * <p>
+   * Queries policies that the current authorizer does not authorize to department.
+   * Compares authorized policies with all available policies to find unauthorized ones.
+   * </p>
    */
   @Override
   public Page<AuthPolicy> deptUnauthPolicyList(GenericSpecification<AuthPolicy> spec,
@@ -139,15 +180,15 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
       protected Page<AuthPolicy> process() {
         GenericSpecification<AuthPolicy> specCopy = new GenericSpecification<>(spec.getCriteria());
 
-        // Query the policies that have been authorized to users
+        // Query the policies that have been authorized to departments
         spec.getCriteria().add(SearchCriteria.equal("clientId", getClientId()));
         Page<AuthPolicy> authorizedPolicies = deptPolicyList(spec,
             PageRequest.of(0, 5000, JpaSort.by(Order.asc("id"))));
 
-        // Switch the authorization scope to all permissions of the current dept
+        // Switch the authorization scope to all permissions of the current department
         authPolicyUserQuery.checkSwitchUnAuthOrgCondition(specCopy);
 
-        // Query the policies that not authorized to dept
+        // Query the policies that not authorized to department
         if (authorizedPolicies.hasContent()) {
           spec.getCriteria().add(SearchCriteria.notIn("id",
               authorizedPolicies.getContent().stream().map(AuthPolicy::getId)

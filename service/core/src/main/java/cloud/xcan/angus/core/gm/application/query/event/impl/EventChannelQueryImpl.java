@@ -31,26 +31,42 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * <p>
+ * Implementation of event channel query operations.
+ * </p>
+ * <p>
+ * Manages event channel retrieval, caching, and quota validation.
+ * Provides comprehensive event channel querying with template association support.
+ * </p>
+ * <p>
+ * Supports channel listing, template association queries, quota validation,
+ * and usage checking for comprehensive event channel management.
+ * </p>
+ */
 @Slf4j
 @Service
 public class EventChannelQueryImpl implements EventChannelQuery {
 
   @Resource
   private EventChannelRepo eventChannelRepo;
-
   @Resource
   private EventTemplateReceiverRepo eventTemplateReceiverRepo;
-
   @Resource
   private EventTemplateRepo eventTemplateRepo;
-
   @Resource
   private EventTemplateChannelRepo eventTemplateChannelRepo;
-
   @Resource
   private EventChannelCache eventChannelCache;
 
+  /**
+   * <p>
+   * Retrieves event channels by channel type.
+   * </p>
+   * <p>
+   * Returns all channels of the specified type for event processing.
+   * </p>
+   */
   @Override
   public List<EventChannel> channelList(ReceiveChannelType channelType) {
     return new BizTemplate<List<EventChannel>>() {
@@ -62,6 +78,14 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves all supported receive channel types.
+   * </p>
+   * <p>
+   * Returns list of all channel types available in the system.
+   * </p>
+   */
   @Override
   public List<ReceiveChannelType> list() {
     return new BizTemplate<List<ReceiveChannelType>>() {
@@ -73,6 +97,15 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves event channels associated with template using caching.
+   * </p>
+   * <p>
+   * Uses cache for performance optimization and returns channels for template.
+   * Returns null if no channels are associated with the template.
+   * </p>
+   */
   @Override
   public List<EventChannel> findByTemplateId(Long tenantId, Long templateId) {
     return new BizTemplate<List<EventChannel>>() {
@@ -94,6 +127,14 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves event template receiver for template execution.
+   * </p>
+   * <p>
+   * Returns receiver configuration for the specified template and tenant.
+   * </p>
+   */
   @Override
   public EventTemplateReceiver findExecByTemplateId(Long tenantId, Long templateId) {
     return new BizTemplate<EventTemplateReceiver>() {
@@ -104,12 +145,30 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves event channel by ID.
+   * </p>
+   * <p>
+   * Verifies channel exists and returns channel information.
+   * Throws ResourceNotFound exception if channel does not exist.
+   * </p>
+   */
   @Override
   public EventChannel checkAndFind(Long id) {
     return eventChannelRepo.findById(id)
         .orElseThrow(() -> ResourceNotFound.of(id, "EventChannel"));
   }
 
+  /**
+   * <p>
+   * Validates and retrieves multiple event channels by IDs.
+   * </p>
+   * <p>
+   * Verifies all channels exist and returns channel information.
+   * Throws ResourceNotFound exception if any channel does not exist.
+   * </p>
+   */
   @Override
   public List<EventChannel> find(Collection<Long> channelIds) {
     List<EventChannel> channels = eventChannelRepo.findAllById(new HashSet<>(channelIds));
@@ -121,6 +180,15 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     throw ResourceNotFound.of(channelIds.iterator().next(), "EventChannel");
   }
 
+  /**
+   * <p>
+   * Validates channel name uniqueness.
+   * </p>
+   * <p>
+   * Checks if channel name already exists for new or updated channels.
+   * Throws ResourceExisted exception if name is not unique.
+   * </p>
+   */
   @Override
   public void checkNameExisted(EventChannel channel) {
     Long count = isNull(channel.getId()) ? eventChannelRepo.countByName(channel.getName())
@@ -130,6 +198,15 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates event channel quota for specified channel type.
+   * </p>
+   * <p>
+   * Checks if adding channels would exceed quota limits for the channel type.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkQuota(ReceiveChannelType channelType, int incr) {
     Long count = eventChannelRepo.countByType(channelType);
@@ -140,6 +217,15 @@ public class EventChannelQueryImpl implements EventChannelQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates channel is not in use by any templates.
+   * </p>
+   * <p>
+   * Checks if channel is associated with any event templates.
+   * Throws appropriate exception if channel is currently in use.
+   * </p>
+   */
   @Override
   public void checkNotInUse(Long id) {
     List<EventTemplateChannel> templateChannels = eventTemplateChannelRepo.findAllByChannelId(id);

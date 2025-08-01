@@ -15,6 +15,19 @@ import cloud.xcan.angus.core.gm.infra.remote.edition.InstalledEditionVo;
 import jakarta.annotation.Resource;
 import java.util.List;
 
+/**
+ * <p>
+ * Implementation of edition query operations.
+ * </p>
+ * <p>
+ * Manages edition retrieval and installation status checking.
+ * Provides comprehensive edition querying with license support.
+ * </p>
+ * <p>
+ * Supports installed edition retrieval, license-based edition checking,
+ * and private edition handling for comprehensive edition management.
+ * </p>
+ */
 @Biz
 public class EditionQueryImpl implements EditionQuery {
 
@@ -24,13 +37,22 @@ public class EditionQueryImpl implements EditionQuery {
   @Resource
   private LicenseInstalledRepo licenseInstalledRepo;
 
+  /**
+   * <p>
+   * Retrieves installed edition information for specified goods code.
+   * </p>
+   * <p>
+   * Checks license-based installation for private editions.
+   * Falls back to application-based edition for non-private editions.
+   * </p>
+   */
   @Override
   public InstalledEditionVo installed(String goodsCode) {
     return new BizTemplate<InstalledEditionVo>() {
       @Override
       protected InstalledEditionVo process() {
         if (isPrivateEdition()){
-          // Privatized edition may not have installed licenses.
+          // Private edition may not have installed licenses
           List<LicenseInstalled> licenses = licenseInstalledRepo.findByGoodsCode(goodsCode);
           if (!licenses.isEmpty()) {
             return toInstalledVo(licenses.get(licenses.size() - 1)); // Get last

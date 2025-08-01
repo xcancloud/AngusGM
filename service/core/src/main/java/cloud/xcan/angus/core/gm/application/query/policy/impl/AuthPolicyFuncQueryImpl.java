@@ -26,28 +26,44 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+/**
+ * <p>
+ * Implementation of authentication policy function query operations.
+ * </p>
+ * <p>
+ * Manages policy-function relationship queries, validation, and API association.
+ * Provides comprehensive policy-function querying with application support.
+ * </p>
+ * <p>
+ * Supports policy function queries, function validation, API association,
+ * and function existence checking for comprehensive policy-function administration.
+ * </p>
+ */
 @Biz
 public class AuthPolicyFuncQueryImpl implements AuthPolicyFuncQuery {
 
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private AuthPolicyFuncRepo authPolicyFuncRepo;
-
   @Resource
   private AppFuncRepo appFuncRepo;
-
   @Resource
   private AppFuncQuery appFuncQuery;
-
   @Resource
   private AppOpenQuery appOpenQuery;
-
   @Resource
   private ApiQuery apiQuery;
 
+  /**
+   * <p>
+   * Retrieves functions associated with specific policy.
+   * </p>
+   * <p>
+   * Queries application functions that are authorized by the specified policy.
+   * Validates policy existence and application opening status.
+   * </p>
+   */
   @NameJoin
   @Override
   public List<AppFunc> list(Long policyId) {
@@ -69,33 +85,73 @@ public class AuthPolicyFuncQueryImpl implements AuthPolicyFuncQuery {
       @Override
       protected List<AppFunc> process() {
         List<AppFunc> appFunc = appFuncQuery.findByPolicyIds(List.of(policyId));
-        // Join apis
+        // Join APIs
         joinAppFuncApis(appFunc);
         return appFunc;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves policy functions by policy ID.
+   * </p>
+   * <p>
+   * Returns policy function associations for the specified policy.
+   * </p>
+   */
   @Override
   public List<AuthPolicyFunc> findByPolicyId(Long policyId) {
     return authPolicyFuncRepo.findByPolicyId(policyId);
   }
 
+  /**
+   * <p>
+   * Retrieves policy functions by multiple policy IDs.
+   * </p>
+   * <p>
+   * Returns distinct policy function associations for the specified policies.
+   * </p>
+   */
   @Override
   public List<AuthPolicyFunc> findByPolicyId(Collection<Long> policyIds) {
     return distinct(authPolicyFuncRepo.findByPolicyIdIn(policyIds));
   }
 
+  /**
+   * <p>
+   * Retrieves valid functions by policy IDs.
+   * </p>
+   * <p>
+   * Returns valid application functions associated with the specified policies.
+   * </p>
+   */
   @Override
   public List<AppFunc> findValidFuncByPolicyId(Collection<Long> policyIds) {
     return appFuncRepo.findValidFuncByPolicyId(policyIds);
   }
 
+  /**
+   * <p>
+   * Retrieves existing function IDs by policy ID.
+   * </p>
+   * <p>
+   * Returns function IDs that are already associated with the specified policy.
+   * </p>
+   */
   @Override
   public Set<Long> findExistedFuncIdsByPolicyId(Long policyId) {
     return authPolicyFuncRepo.findFuncIdsByPolicyId(policyId);
   }
 
+  /**
+   * <p>
+   * Associates APIs with application functions.
+   * </p>
+   * <p>
+   * Loads API information and associates with application functions for complete data.
+   * </p>
+   */
   private void joinAppFuncApis(List<AppFunc> appFunc) {
     Set<Long> apiIds = new HashSet<>();
     for (AppFunc appFunc0 : appFunc) {

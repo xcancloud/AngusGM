@@ -24,20 +24,39 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * <p>
+ * Implementation of current message query operations.
+ * </p>
+ * <p>
+ * Manages current user message retrieval, status counting, and message information association.
+ * Provides comprehensive current message querying for user-specific message management.
+ * </p>
+ * <p>
+ * Supports current user message detail retrieval, status counting,
+ * and message information enrichment for comprehensive message management.
+ * </p>
+ */
 @Slf4j
 @Service
 public class MessageCurrentQueryImpl implements MessageCurrentQuery {
 
   @Resource
   private MessageCurrentRepo messageCurrentRepo;
-
   @Resource
   private MessageRepo messageRepo;
-
   @Resource
   private MessageInfoRepo messageInfoRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed current user message information by ID.
+   * </p>
+   * <p>
+   * Fetches complete message record for current user with message information association.
+   * Throws ResourceNotFound exception if message does not exist for current user.
+   * </p>
+   */
   @Override
   @Transactional(rollbackFor = Exception.class)
   public MessageSent detail(Long id) {
@@ -54,6 +73,15 @@ public class MessageCurrentQueryImpl implements MessageCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves current user messages with specification-based filtering.
+   * </p>
+   * <p>
+   * Supports dynamic filtering and pagination for comprehensive message management.
+   * Enriches results with message information for complete display.
+   * </p>
+   */
   @Override
   public Page<MessageSent> list(Specification<MessageSent> spec, Pageable pageable) {
     return new BizTemplate<Page<MessageSent>>(false) {
@@ -75,6 +103,15 @@ public class MessageCurrentQueryImpl implements MessageCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves message status count statistics for user.
+   * </p>
+   * <p>
+   * Returns count statistics for all, read, and unread messages.
+   * Provides comprehensive status overview for message management.
+   * </p>
+   */
   @Override
   public List<MessageStatusCountVo> statusCount(Long userId) {
     return new BizTemplate<List<MessageStatusCountVo>>() {

@@ -27,6 +27,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * <p>
+ * Implementation of authentication policy tenant query operations.
+ * </p>
+ * <p>
+ * Manages tenant-policy relationship queries, validation, and application management.
+ * Provides comprehensive tenant-policy querying with application support.
+ * </p>
+ * <p>
+ * Supports default policy queries, tenant application queries, application function queries,
+ * and admin authorization queries for comprehensive tenant-policy administration.
+ * </p>
+ */
 @Biz
 public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
 
@@ -45,11 +58,19 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
   @Resource
   private AppFuncQuery appFuncQuery;
 
+  /**
+   * <p>
+   * Retrieves default policies for tenant.
+   * </p>
+   * <p>
+   * Returns default policies available for the current tenant.
+   * Handles application opening status and client filtering.
+   * </p>
+   */
   @Override
   public List<AuthPolicyOrg> defaultPolicy() {
     return new BizTemplate<List<AuthPolicyOrg>>(false) {
       final Long optTenantId = getOptTenantId();
-
 
       @Override
       protected List<AuthPolicyOrg> process() {
@@ -87,6 +108,15 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves tenant application list.
+   * </p>
+   * <p>
+   * Returns applications opened by the current tenant.
+   * Validates application existence and opening status.
+   * </p>
+   */
   @Override
   public List<App> tenantAppList() {
     return new BizTemplate<List<App>>() {
@@ -103,6 +133,15 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves tenant application function list.
+   * </p>
+   * <p>
+   * Returns application functions available for the specified application and tenant.
+   * Validates application opening status and admin authorization.
+   * </p>
+   */
   @Override
   public List<AppFunc> tenantAppFuncList(Long appId) {
     return new BizTemplate<List<AppFunc>>() {
@@ -120,6 +159,15 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves admin open authorization by application ID and tenant ID.
+   * </p>
+   * <p>
+   * Returns admin authorization policy for the specified application and tenant.
+   * Throws ResourceNotFound if admin authorization not found.
+   * </p>
+   */
   @Override
   public AuthPolicyOrg findAdminOpenAuthByAppIdAndTenantId(Long appId, Long tenantId) {
     return authPolicyOrgRepo.findAdminOpenAuthByAppIdAndTenantId(appId, tenantId)

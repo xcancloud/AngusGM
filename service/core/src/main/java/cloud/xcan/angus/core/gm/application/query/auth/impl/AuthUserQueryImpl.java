@@ -41,18 +41,38 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * <p>
+ * Implementation of authentication user query operations.
+ * </p>
+ * <p>
+ * Manages authentication user retrieval, validation, and verification.
+ * Provides comprehensive user authentication querying with security checks.
+ * </p>
+ * <p>
+ * Supports user authentication, password validation, link secret verification,
+ * and user status validation for secure authentication management.
+ * </p>
+ */
 @Biz
 public class AuthUserQueryImpl implements AuthUserQuery {
 
   @Resource
   private AuthUserRepo authUserRepo;
-
   @Resource
   private PasswordEncoder passwordEncoder;
-
   @Resource
   private RedisService<String> stringRedisService;
 
+  /**
+   * <p>
+   * Authenticates users by account and password.
+   * </p>
+   * <p>
+   * Verifies account exists and validates password using password encoder.
+   * Returns filtered list of users with matching credentials.
+   * </p>
+   */
   @Override
   public List<AuthUser> findByAccountAndPassword(String account, String password) {
     return new BizTemplate<List<AuthUser>>(false) {
@@ -60,7 +80,7 @@ public class AuthUserQueryImpl implements AuthUserQuery {
 
       @Override
       protected void checkParams() {
-        // Check the account existed
+        // Verify account exists
         usersDb = authUserRepo.findByAccount(account);
       }
 
@@ -69,16 +89,25 @@ public class AuthUserQueryImpl implements AuthUserQuery {
         if (isEmpty(usersDb)) {
           return null;
         }
-        // Fix:: The value is empty when no password is set
+        // Fix: The value is empty when no password is set
         usersDb = usersDb.stream().filter(user -> isNotEmpty(user.getPassword())
             && passwordEncoder.matches(password, user.getPassword())).collect(Collectors.toList());
-        // NOOP:: Limit login failures number by sign-in
+        // NOOP: Limit login failures number by sign-in
         // BizAssert.assertTrue(CollectionUtils.isNotEmpty(usersDb), ACCOUNT_PASSWORD_ERROR);
         return usersDb;
       }
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates user password by user ID.
+   * </p>
+   * <p>
+   * Verifies user exists and validates provided password against stored password.
+   * Throws appropriate exception if password validation fails.
+   * </p>
+   */
   @Override
   public void checkPassword(Long id, String password) {
     new BizTemplate<Void>() {
@@ -97,12 +126,21 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves user by account with authentication.
+   * </p>
+   * <p>
+   * Handles multi-tenant scenarios and different sign-in types.
+   * Supports user ID-based login control and password-based user selection.
+   * </p>
+   */
   @Override
   public AuthUser checkAndFindByAccount(Long userId, SignInType signinType, String account,
       String password) {
     AuthUser finalUser = null;
     if (nonNull(userId)) {
-      // When the account has multiple tenants or sms login, control the login using the username by userId
+      // When the account has multiple tenants or SMS login, control the login using the username by userId
       // Multi-account login should set the userId
       finalUser = authUserRepo.findById(userId).orElse(null);
     } else if (SignInType.ACCOUNT_PASSWORD.equals(signinType)) {
@@ -114,7 +152,7 @@ public class AuthUserQueryImpl implements AuthUserQuery {
         }
         // Find according to password matching when multiple users
         for (AuthUser user : users) {
-          // Fix:: There is no PasswordEncoder mapped for the id \"null\" when passd not set <- isNotEmpty(user.getPassword())
+          // Fix: There is no PasswordEncoder mapped for the id "null" when password not set <- isNotEmpty(user.getPassword())
           if (isNotEmpty(user.getPassword())
               && passwordEncoder.matches(password, user.getPassword())) {
             finalUser = users.get(0);
@@ -127,6 +165,15 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     return finalUser;
   }
 
+  /**
+   * <p>
+   * Validates email link secret for user operations.
+   * </p>
+   * <p>
+   * Verifies link secret from Redis cache for email modification operations.
+   * Supports different business keys for various email operations.
+   * </p>
+   */
   @Override
   public void checkLinkSecret(Long userId, String linkSecret, EmailBizKey bizKey) {
     if (bizKey.sameValueAs(EmailBizKey.MODIFY_EMAIL)) {
@@ -143,6 +190,15 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates SMS link secret for user operations.
+   * </p>
+   * <p>
+   * Verifies link secret from Redis cache for mobile modification operations.
+   * Supports different business keys for various SMS operations.
+   * </p>
+   */
   @Override
   public void checkSmsLinkSecret(Long userId, String linkSecret, SmsBizKey bizKey) {
     if (bizKey.equals(SmsBizKey.MODIFY_MOBILE)) {
@@ -159,6 +215,15 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates user account status and validity.
+   * </p>
+   * <p>
+   * Checks if user is enabled, not locked, and not expired.
+   * Throws appropriate exceptions for invalid user status.
+   * </p>
+   */
   @Override
   public void checkUserValid(AuthUser user) {
     assertTrue(user.isEnabled(), USER_DISABLED_T, USER_DISABLED_KEY,
@@ -171,6 +236,15 @@ public class AuthUserQueryImpl implements AuthUserQuery {
         new Object[]{user.getFullName()});
   }
 
+  /**
+   * <p>
+   * Validates operation platform login access.
+   * </p>
+   * <p>
+   * Ensures only authorized users can access operation platform.
+   * Validates tenant ID and user role requirements.
+   * </p>
+   */
   @Override
   public void checkOperationPlatformLogin(CustomOAuth2User user) {
     if (nonNull(user.getClientSource()) && isOperationClientSignIn(user.getClientSource())) {
@@ -182,6 +256,15 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates and retrieves multiple authentication users by IDs.
+   * </p>
+   * <p>
+   * Verifies all users exist and validates complete collection match.
+   * Throws appropriate exceptions for missing or invalid users.
+   * </p>
+   */
   @Override
   public List<AuthUser> checkAndFind(List<Long> ids) {
     if (isEmpty(ids)) {
@@ -198,21 +281,54 @@ public class AuthUserQueryImpl implements AuthUserQuery {
     return users;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves authentication user by ID.
+   * </p>
+   * <p>
+   * Verifies user exists and returns user information.
+   * Throws ResourceNotFound exception if user does not exist.
+   * </p>
+   */
   @Override
   public AuthUser checkAndFind(Long id) {
     return authUserRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "AuthUser"));
   }
 
+  /**
+   * <p>
+   * Retrieves authentication user by username.
+   * </p>
+   * <p>
+   * Returns user information for the specified username.
+   * </p>
+   */
   @Override
   public AuthUser findByUsername(String username) {
     return authUserRepo.findByUsername(username);
   }
 
+  /**
+   * <p>
+   * Retrieves authentication users by email address.
+   * </p>
+   * <p>
+   * Returns list of users associated with the specified email address.
+   * </p>
+   */
   @Override
   public List<AuthUser> findByEmail(String email) {
     return authUserRepo.findByEmail(email);
   }
 
+  /**
+   * <p>
+   * Retrieves authentication users by mobile number.
+   * </p>
+   * <p>
+   * Returns list of users associated with the specified mobile number.
+   * </p>
+   */
   @Override
   public List<AuthUser> findByMobile(String mobile) {
     return authUserRepo.findByMobile(mobile);

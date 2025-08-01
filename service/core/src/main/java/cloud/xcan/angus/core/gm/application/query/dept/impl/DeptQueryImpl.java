@@ -41,7 +41,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of department query operations.
+ * </p>
+ * <p>
+ * Manages department retrieval, validation, hierarchical queries, and quota management.
+ * Provides comprehensive department querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports department detail retrieval, navigation queries, hierarchical management,
+ * quota validation, and tag management for comprehensive department administration.
+ * </p>
+ */
 @Biz
 @Slf4j
 @SummaryQueryRegister(name = "Dept", table = "dept", topAuthority = TOP_TENANT_ADMIN,
@@ -50,25 +62,28 @@ public class DeptQueryImpl implements DeptQuery {
 
   @Resource
   private DeptRepo deptRepo;
-
   @Resource
   private DeptManager deptManager;
-
   @Resource
   private DeptListRepo deptListRepo;
-
   @Resource
   private DeptSearchRepo deptSearchRepo;
-
   @Resource
   private DeptUserRepo deptUserRepo;
-
   @Resource
   private OrgTagTargetQuery orgTagTargetQuery;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 
+  /**
+   * <p>
+   * Retrieves department navigation information with parent chain.
+   * </p>
+   * <p>
+   * Fetches department details and builds complete parent hierarchy chain.
+   * Validates parent relationship data integrity.
+   * </p>
+   */
   @Override
   public Dept navigation(Long id) {
     return new BizTemplate<Dept>(true, true) {
@@ -93,6 +108,14 @@ public class DeptQueryImpl implements DeptQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves detailed department information with associated tags.
+   * </p>
+   * <p>
+   * Fetches complete department record with tag associations and sub-department status.
+   * </p>
+   */
   @Override
   public Dept detail(Long id) {
     return new BizTemplate<Dept>(true, true) {
@@ -112,6 +135,15 @@ public class DeptQueryImpl implements DeptQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves departments with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Sets sub-department status for comprehensive department management.
+   * </p>
+   */
   @Override
   public Page<Dept> list(GenericSpecification<Dept> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -128,6 +160,15 @@ public class DeptQueryImpl implements DeptQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves department sub-count statistics.
+   * </p>
+   * <p>
+   * Counts sub-departments and users under the specified department.
+   * Provides comprehensive statistics for department hierarchy management.
+   * </p>
+   */
   @Override
   public DeptSubCount subCount(Long id) {
     return new BizTemplate<DeptSubCount>() {
@@ -160,6 +201,14 @@ public class DeptQueryImpl implements DeptQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Sets sub-department status for department list.
+   * </p>
+   * <p>
+   * Identifies departments that have sub-departments and sets hasSubDept flag.
+   * </p>
+   */
   @Override
   public void setHasSubDept(List<Dept> deptDb) {
     if (isEmpty(deptDb)) {
@@ -172,26 +221,69 @@ public class DeptQueryImpl implements DeptQuery {
     }
   }
 
+  /**
+   * <p>
+   * Retrieves departments by IDs without validation.
+   * </p>
+   * <p>
+   * Returns departments for the specified IDs without validation checks.
+   * </p>
+   */
   @Override
   public List<Dept> findByIdIn(Collection<Long> ids) {
     return deptRepo.findByIdIn(ids);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves department by ID.
+   * </p>
+   * <p>
+   * Verifies department exists and returns department information.
+   * Throws appropriate exception if department does not exist.
+   * </p>
+   */
   @Override
   public Dept checkAndFind(Long id) {
     return deptManager.checkAndFind(id);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves multiple departments by IDs.
+   * </p>
+   * <p>
+   * Verifies all departments exist and returns department information.
+   * Throws appropriate exceptions for missing departments.
+   * </p>
+   */
   @Override
   public List<Dept> checkAndFind(Collection<Long> ids) {
     return deptManager.checkAndFind(ids);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves parent departments for department list.
+   * </p>
+   * <p>
+   * Verifies parent departments exist and returns parent information.
+   * </p>
+   */
   @Override
   public List<Dept> checkAndGetParent(Long tenantId, List<Dept> dept) {
     return deptManager.checkAndGetParent(tenantId, dept);
   }
 
+  /**
+   * <p>
+   * Validates department hierarchy for nested duplicates.
+   * </p>
+   * <p>
+   * Checks for circular references and nested duplicate relationships.
+   * Throws appropriate exception if nested duplicates are found.
+   * </p>
+   */
   @Override
   public void checkNestedDuplicates(List<Dept> deptDb) {
     Set<String> parentIds = deptDb.stream().filter(Dept::hasParent)
@@ -205,6 +297,15 @@ public class DeptQueryImpl implements DeptQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates department code uniqueness for new departments.
+   * </p>
+   * <p>
+   * Checks if department codes already exist within the tenant.
+   * Throws ResourceExisted exception if codes are not unique.
+   * </p>
+   */
   @Override
   public void checkAddDeptCode(Long tenantId, List<Dept> dept) {
     List<Dept> deptDbs = deptRepo.findAllByTenantIdAndCodeIn(tenantId, dept.stream()
@@ -213,6 +314,15 @@ public class DeptQueryImpl implements DeptQuery {
         ? deptDbs.get(0).getCode() : null, "Department");
   }
 
+  /**
+   * <p>
+   * Validates department code uniqueness for updated departments.
+   * </p>
+   * <p>
+   * Checks if department codes conflict with existing departments.
+   * Allows same code for the same department during updates.
+   * </p>
+   */
   @Override
   public void checkUpdateDeptCode(Long tenantId, List<Dept> dept) {
     if (isEmpty(dept)) {
@@ -234,6 +344,15 @@ public class DeptQueryImpl implements DeptQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates department quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding departments would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkDeptQuota(Long tenantId, long incr) {
     if (incr > 0) {
@@ -242,6 +361,15 @@ public class DeptQueryImpl implements DeptQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates department level quota for tenant.
+   * </p>
+   * <p>
+   * Checks if department hierarchy levels would exceed tenant quota limits.
+   * Supports both add and update operations with different validation logic.
+   * </p>
+   */
   @Override
   public void checkDeptLevelQuota(Long optTenantId, List<Dept> dept, Map<Long, Dept> deptsDbMap,
       Map<Long, Dept> parentDeptsDbMap, boolean add) {
@@ -263,7 +391,7 @@ public class DeptQueryImpl implements DeptQuery {
       return;
     }
 
-    // Check the level of the moved sub dept
+    // Verify the level of the moved sub dept
     for (Dept dept0 : dept) {
       if (dept0.hasParent()) {
         List<Dept> subDept = deptRepo.findSubDeptsByParentLikeId(optTenantId,
@@ -290,9 +418,18 @@ public class DeptQueryImpl implements DeptQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates tag quota for departments.
+   * </p>
+   * <p>
+   * Checks if department tag associations would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkTagQuota(Long optTenantId, List<Dept> dept) {
-    // Check tags quota
+    // Verify tags quota
     if (isEmpty(dept)) {
       return;
     }

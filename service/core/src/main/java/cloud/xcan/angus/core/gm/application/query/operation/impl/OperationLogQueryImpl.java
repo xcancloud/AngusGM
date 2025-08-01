@@ -18,7 +18,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of operation log query operations.
+ * </p>
+ * <p>
+ * Manages operation log retrieval, filtering, and user information association.
+ * Provides comprehensive operation log querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports operation log listing with client filtering and user information enrichment
+ * for comprehensive operation log management.
+ * </p>
+ */
 @Slf4j
 @Biz
 @SummaryQueryRegister(name = "OperationLog", table = "operation_log",
@@ -34,6 +46,15 @@ public class OperationLogQueryImpl implements OperationLogQuery {
   @Resource
   private UserManager userManager;
 
+  /**
+   * <p>
+   * Retrieves operation logs with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Applies client filtering for tenant clients and enriches results with user information.
+   * </p>
+   */
   @Override
   public Page<OperationLog> list(GenericSpecification<OperationLog> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {

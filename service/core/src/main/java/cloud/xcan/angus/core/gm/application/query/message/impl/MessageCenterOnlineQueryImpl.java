@@ -13,18 +13,38 @@ import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of message center online query operations.
+ * </p>
+ * <p>
+ * Manages message center online retrieval and user information association.
+ * Provides comprehensive message center online querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports message center online detail retrieval, paginated listing,
+ * and user information enrichment for comprehensive message center management.
+ * </p>
+ */
 @Biz
 public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
 
   @Resource
   private MessageCenterOnlineRepo messageCenterOnlineRepo;
-
   @Resource
   private MessageCenterOnlineSearchRepo messageCenterOnlineSearchRepo;
-
   @Resource
   private UserManager userManager;
 
+  /**
+   * <p>
+   * Retrieves detailed message center online information by ID.
+   * </p>
+   * <p>
+   * Fetches complete message center online record with all associated information.
+   * Throws ResourceNotFound exception if record does not exist.
+   * </p>
+   */
   @Override
   public MessageCenterOnline detail(Long id) {
     return new BizTemplate<MessageCenterOnline>() {
@@ -37,6 +57,15 @@ public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves message center online records with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Enriches results with user information for comprehensive display.
+   * </p>
+   */
   @Override
   public Page<MessageCenterOnline> list(GenericSpecification<MessageCenterOnline> spec,
       PageRequest pageable, boolean fullTextSearch, String[] match) {
@@ -54,6 +83,5 @@ public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
       }
     }.execute();
   }
-
 
 }

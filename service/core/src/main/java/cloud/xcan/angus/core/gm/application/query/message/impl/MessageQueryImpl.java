@@ -20,7 +20,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of message query operations.
+ * </p>
+ * <p>
+ * Manages message retrieval, validation, and pending message processing.
+ * Provides comprehensive message querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports message detail retrieval, paginated listing, full-text search,
+ * and pending message queries for comprehensive message management.
+ * </p>
+ */
 @Slf4j
 @Biz
 @SummaryQueryRegister(name = "Message", table = "message",
@@ -29,13 +41,20 @@ public class MessageQueryImpl implements MessageQuery {
 
   @Resource
   private MessageRepo messageRepo;
-
   @Resource
   private MessageInfoRepo messageInfoRepo;
-
   @Resource
   private MessageInfoSearchRepo messageSearchRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed message information by ID.
+   * </p>
+   * <p>
+   * Fetches complete message record with all associated information.
+   * Throws ResourceNotFound exception if message does not exist.
+   * </p>
+   */
   @Override
   public Message detail(Long id) {
     return new BizTemplate<Message>() {
@@ -47,6 +66,15 @@ public class MessageQueryImpl implements MessageQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves message information with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated results for comprehensive message management.
+   * </p>
+   */
   @Override
   public Page<MessageInfo> find(GenericSpecification<MessageInfo> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -61,6 +89,15 @@ public class MessageQueryImpl implements MessageQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves pending messages for processing.
+   * </p>
+   * <p>
+   * Returns messages that are pending for processing with timing validation.
+   * Limits results by size for processing control.
+   * </p>
+   */
   @Override
   public List<Message> getPendingMessage(MessageReceiveType receiveType, int size) {
     return new BizTemplate<List<Message>>(false) {

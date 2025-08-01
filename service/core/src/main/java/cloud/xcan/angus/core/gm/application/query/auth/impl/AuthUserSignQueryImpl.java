@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.application.query.auth.impl;
 
-
 import static cloud.xcan.angus.api.commonlink.AuthConstant.CACHE_EMAIL_CHECK_SECRET_PREFIX;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertTrue;
@@ -29,25 +28,42 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * <p>
+ * Implementation of authentication user sign-in query operations.
+ * </p>
+ * <p>
+ * Manages user sign-in verification, email/SMS validation, and password policy checks.
+ * Provides comprehensive sign-in querying with security validation support.
+ * </p>
+ * <p>
+ * Supports email verification, SMS verification, password policy validation,
+ * and tenant setting retrieval for secure user sign-in management.
+ * </p>
+ */
 @Biz
 public class AuthUserSignQueryImpl implements AuthUserSignQuery {
 
   @Resource
   private AuthUserQuery authUserQuery;
-
   @Resource
   private SettingTenantRepo settingTenantRepo;
-
   @Resource
   private SmsCmd smsCmd;
-
   @Resource
   private EmailCmd emailCmd;
-
   @Resource
   private RedisService<String> stringRedisService;
 
+  /**
+   * <p>
+   * Validates email verification and retrieves associated users.
+   * </p>
+   * <p>
+   * Verifies email verification code and generates link secrets for users.
+   * Stores link secrets in Redis cache for secure email operations.
+   * </p>
+   */
   @Override
   public List<AuthUser> checkEmail(String email, EmailBizKey bizKey, String verificationCode) {
     return new BizTemplate<List<AuthUser>>() {
@@ -55,9 +71,9 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
 
       @Override
       protected void checkParams() {
-        // Check whether the verification code is correct
+        // Verify email verification code is correct
         emailCmd.checkVerificationCode(bizKey, email, verificationCode);
-        // Check email user is existed
+        // Verify email user exists
         users = checkEmailUserExist(email);
       }
 
@@ -74,6 +90,15 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates SMS verification and retrieves associated users.
+   * </p>
+   * <p>
+   * Verifies SMS verification code and generates link secrets for users.
+   * Stores link secrets in Redis cache for secure mobile operations.
+   * </p>
+   */
   @Override
   public List<AuthUser> checkSms(String mobile, SmsBizKey bizKey, String verificationCode) {
     return new BizTemplate<List<AuthUser>>() {
@@ -81,9 +106,9 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
 
       @Override
       protected void checkParams() {
-        // Check whether the verification code is correct
+        // Verify SMS verification code is correct
         smsCmd.checkVerificationCode(bizKey, mobile, verificationCode);
-        // Check mobile user is existed
+        // Verify mobile user exists
         users = checkMobileUserExist(mobile);
       }
 
@@ -101,6 +126,15 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates password length against tenant security policy.
+   * </p>
+   * <p>
+   * Checks if password meets minimum length requirement defined in tenant settings.
+   * Throws appropriate exception if password is too short.
+   * </p>
+   */
   @Override
   public void checkMinPasswordLengthByTenantSetting(Long tenantId, String password) {
     SettingTenant settingTenant = checkAndFindSettingTenant(tenantId);
@@ -110,18 +144,45 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
         new Object[]{settingTenant.getSecurityData().getPasswordPolicy().getMinLength()});
   }
 
+  /**
+   * <p>
+   * Validates and retrieves tenant settings.
+   * </p>
+   * <p>
+   * Verifies tenant settings exist and returns setting information.
+   * Throws SysException if tenant settings are not initialized.
+   * </p>
+   */
   @Override
   public SettingTenant checkAndFindSettingTenant(Long tenantId) {
     return settingTenantRepo.findByTenantId(tenantId).orElseThrow(() ->
         SysException.of(String.format("Tenant %s setting is not initialized", tenantId)));
   }
 
+  /**
+   * <p>
+   * Validates email user existence.
+   * </p>
+   * <p>
+   * Verifies that users exist for the specified email address.
+   * Throws appropriate exception if no users found.
+   * </p>
+   */
   private List<AuthUser> checkEmailUserExist(String email) {
     List<AuthUser> users = authUserQuery.findByEmail(email);
     assertResourceNotFound(users, EMAIL_NOT_EXIST_T, new Object[]{email});
     return users;
   }
 
+  /**
+   * <p>
+   * Validates mobile user existence.
+   * </p>
+   * <p>
+   * Verifies that users exist for the specified mobile number.
+   * Throws appropriate exception if no users found.
+   * </p>
+   */
   private List<AuthUser> checkMobileUserExist(String mobile) {
     List<AuthUser> users = authUserQuery.findByMobile(mobile);
     assertResourceNotFound(users, MOBILE_NOT_EXIST_T, new Object[]{mobile});

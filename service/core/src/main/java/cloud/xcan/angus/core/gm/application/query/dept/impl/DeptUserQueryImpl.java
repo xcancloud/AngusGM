@@ -28,24 +28,42 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * <p>
+ * Implementation of department user query operations.
+ * </p>
+ * <p>
+ * Manages department-user relationship queries, validation, and quota management.
+ * Provides comprehensive department-user querying with association support.
+ * </p>
+ * <p>
+ * Supports user-department queries, department-user queries, association management,
+ * and quota validation for comprehensive department-user administration.
+ * </p>
+ */
 @Biz
 public class DeptUserQueryImpl implements DeptUserQuery {
 
   @Resource
   private DeptRepo deptRepo;
-
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private DeptUserRepo deptUserRepo;
-
   @Resource
   private DeptUserListRepo deptUserListRepo;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 
+  /**
+   * <p>
+   * Retrieves user-department relationships with pagination.
+   * </p>
+   * <p>
+   * Queries department associations for specific users with validation.
+   * Requires userId parameter for proper filtering.
+   * </p>
+   */
   @Override
   public Page<DeptUser> findUserDept(GenericSpecification<DeptUser> spec,
       Pageable pageable) {
@@ -66,6 +84,15 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves department-user relationships with pagination.
+   * </p>
+   * <p>
+   * Queries user associations for specific departments with validation.
+   * Requires deptId parameter for proper filtering.
+   * </p>
+   */
   @Override
   public Page<DeptUser> findDeptUser(GenericSpecification<DeptUser> spec,
       Pageable pageable) {
@@ -86,6 +113,14 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Sets sub-department status for department-user list.
+   * </p>
+   * <p>
+   * Identifies departments that have sub-departments and sets hasSubDept flag.
+   * </p>
+   */
   @Override
   public void setHasSubDept(List<DeptUser> deptUsersDb) {
     if (isEmpty(deptUsersDb)) {
@@ -98,6 +133,14 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets department associations for department-user page.
+   * </p>
+   * <p>
+   * Loads department information and associates with department-user records.
+   * </p>
+   */
   private void setAssociationDept(Page<DeptUser> userDeptPage) {
     Map<Long, Dept> groupMap = deptRepo.findAllById(userDeptPage.getContent().stream()
             .map(DeptUser::getDeptId).collect(Collectors.toList()))
@@ -107,6 +150,14 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets user associations for department-user page.
+   * </p>
+   * <p>
+   * Loads user information and associates with department-user records.
+   * </p>
+   */
   private void setAssociationUser(Page<DeptUser> userDeptPage) {
     Map<Long, User> userMap = userRepo.findAllById(userDeptPage.getContent().stream()
             .map(DeptUser::getUserId).collect(Collectors.toList()))
@@ -116,6 +167,15 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Retrieves all department associations for specific user.
+   * </p>
+   * <p>
+   * Returns all departments associated with the specified user.
+   * Loads department information for complete association data.
+   * </p>
+   */
   @Override
   public List<DeptUser> findAllByUserId(Long userId) {
     List<DeptUser> deptUsers = deptUserRepo.findAllByUserId(userId);
@@ -132,6 +192,15 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     return deptUsers;
   }
 
+  /**
+   * <p>
+   * Validates department-user append quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding users to department would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkDeptUserAppendQuota(Long tenantId, long incr, Long deptId) {
     if (incr > 0) {
@@ -141,6 +210,15 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates user-department replace quota for tenant.
+   * </p>
+   * <p>
+   * Checks if replacing user departments would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkUserDeptReplaceQuota(Long tenantId, long incr, Long userId) {
     if (incr > 0) {
@@ -150,6 +228,15 @@ public class DeptUserQueryImpl implements DeptUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates user-department append quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding departments to user would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkUserDeptAppendQuota(Long tenantId, long incr, Long userId) {
     if (incr > 0) {

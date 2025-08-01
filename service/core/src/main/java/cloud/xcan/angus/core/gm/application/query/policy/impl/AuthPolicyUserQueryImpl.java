@@ -50,37 +50,50 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 
-
+/**
+ * <p>
+ * Implementation of authentication policy user query operations.
+ * </p>
+ * <p>
+ * Manages user-policy relationship queries, validation, and authorization management.
+ * Provides comprehensive user-policy querying with authorization support.
+ * </p>
+ * <p>
+ * Supports policy-user queries, user-policy queries, authorization management,
+ * application function queries, and unauthorized policy queries for comprehensive user-policy administration.
+ * </p>
+ */
 @Biz
 public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
 
   @Resource
   private AuthPolicyOrgRepo authPolicyOrgRepo;
-
   @Resource
   private AuthOrgPolicyListRepo authOrgPolicyListRepo;
-
   @Resource
   private AuthUserAssocPolicyListRepo authUserAssocPolicyListRepo;
-
   @Resource
   private AuthPolicyQuery authPolicyQuery;
-
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private AppFuncQuery appFuncQuery;
-
   @Resource
   private UserManager userManager;
-
   @Resource
   private ApplicationInfo applicationInfo;
 
+  /**
+   * <p>
+   * Retrieves users associated with specific policy.
+   * </p>
+   * <p>
+   * Queries users that are authorized by the specified policy.
+   * Validates policy existence and handles multi-tenant control.
+   * </p>
+   */
   @Override
   public Page<User> policyUserList(GenericSpecification<User> spec, PageRequest pageable) {
     return new BizTemplate<Page<User>>() {
@@ -108,6 +121,15 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves users not associated with specific policy.
+   * </p>
+   * <p>
+   * Queries users that are not authorized by the specified policy.
+   * Validates policy existence for proper filtering.
+   * </p>
+   */
   @Override
   public Page<User> policyUnauthUserList(GenericSpecification<User> spec, PageRequest pageable) {
     return new BizTemplate<Page<User>>() {
@@ -132,6 +154,15 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves policies associated with specific user.
+   * </p>
+   * <p>
+   * Queries policies that are authorized to the specified user.
+   * Validates organization parameters and handles authorization filtering.
+   * </p>
+   */
   @Override
   public Page<AuthPolicy> userPolicyList(GenericSpecification<AuthPolicy> spec,
       PageRequest pageable) {
@@ -158,9 +189,9 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
 
         boolean isSysAdmin = judgeAdmin(spec, orgUser, false);
 
-        //Fix:: Only query orgType=USER
-        //List<Long> orgIds = userManager.getValidOrgAndUserIds(Long.valueOf(orgId));
-        //orgIds.add(getOptTenantId());
+        // Fix: Only query orgType=USER
+        // List<Long> orgIds = userManager.getValidOrgAndUserIds(Long.valueOf(orgId));
+        // orgIds.add(getOptTenantId());
         spec.getCriteria().add(SearchCriteria.in("orgId",
             List.of(Long.parseLong(orgId), getOptTenantId())));
         spec.getCriteria().add(SearchCriteria.equal("isSysAdmin", isSysAdmin));
@@ -175,6 +206,15 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves user associated policy list.
+   * </p>
+   * <p>
+   * Queries policies associated with specific user with comprehensive organization validation.
+   * Handles admin privileges and organization hierarchy.
+   * </p>
+   */
   @Override
   public Page<AuthPolicy> userAssociatedPolicyList(GenericSpecification<AuthPolicy> spec,
       PageRequest pageable, boolean currentAdmin) {
@@ -219,7 +259,13 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
   }
 
   /**
-   * Query the policies that the current authorizer does not authorize to users.
+   * <p>
+   * Retrieves policies not authorized to user.
+   * </p>
+   * <p>
+   * Queries policies that the current authorizer does not authorize to user.
+   * Compares authorized policies with all available policies to find unauthorized ones.
+   * </p>
    */
   @Override
   public Page<AuthPolicy> userUnauthPolicyList(GenericSpecification<AuthPolicy> spec,
@@ -250,6 +296,15 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves user application list.
+   * </p>
+   * <p>
+   * Returns applications that the specified user has access to.
+   * Validates user existence and authorization permissions.
+   * </p>
+   */
   @Override
   public List<App> userAppList(Long userId) {
     return new BizTemplate<List<App>>() {
@@ -276,6 +331,15 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves user application function list.
+   * </p>
+   * <p>
+   * Returns application functions available for the specified user and application.
+   * Handles admin privileges and authorization filtering.
+   * </p>
+   */
   @Override
   public App userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi,
       Boolean onlyEnabled) {
@@ -294,7 +358,7 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
         // Check the application existed
         appDb = appQuery.checkAndFind(appIdOrCode);
 
-        // NOOP:: Check app opened <- Condition in findAuthPolicyIdsOfNonSysAdminUser()
+        // NOOP: Check app opened <- Condition in findAuthPolicyIdsOfNonSysAdminUser()
       }
 
       @Override
@@ -307,7 +371,7 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
         // Join function tags
         appFuncQuery.setTags(appAllFuncs);
 
-        // Join function apis
+        // Join function APIs
         if (joinApi) {
           appFuncQuery.setApis(appDb);
           appFuncQuery.setApis(appAllFuncs);
@@ -341,7 +405,12 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
   }
 
   /**
-   * Switch to query the current user's authorization policies
+   * <p>
+   * Switches to query current user's authorization policies.
+   * </p>
+   * <p>
+   * Modifies specification to query policies for current user instead of specified organization.
+   * </p>
    */
   @Override
   public void checkSwitchUnAuthOrgCondition(GenericSpecification<AuthPolicy> spec) {
@@ -352,6 +421,14 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     spec.getCriteria().add(SearchCriteria.equal("orgType", USER.getValue()));
   }
 
+  /**
+   * <p>
+   * Judges if user has admin privileges.
+   * </p>
+   * <p>
+   * Determines admin status based on system admin privileges and application admin policies.
+   * </p>
+   */
   public boolean judgeAdmin(GenericSpecification<AuthPolicy> spec, User user,
       boolean currentAdmin) {
     // Query the all policy of all application when the system administrator queries
@@ -377,6 +454,14 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     return isSysAdmin;
   }
 
+  /**
+   * <p>
+   * Sets organization names for policy page.
+   * </p>
+   * <p>
+   * Loads organization names and associates with policy records for display.
+   * </p>
+   */
   private void setOrgName(Page<AuthPolicy> authPolicyPage) {
     Map<Long, String> orgIdAndNames = userManager.getOrgNameByIds(
         authPolicyPage.getContent().stream().map(AuthPolicy::getOrgId).collect(Collectors.toSet()));
@@ -385,11 +470,27 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Gets ignore authorization organization flag from specification.
+   * </p>
+   * <p>
+   * Extracts and parses ignoreAuthOrg parameter from search criteria.
+   * </p>
+   */
   public static boolean getIgnoreAuthOrg(GenericSpecification<AuthPolicy> spec) {
     String ignoreAuthOrg = findFirstValue(spec.getCriteria(), "ignoreAuthOrg");
     return isNotEmpty(ignoreAuthOrg) && parseBoolean(ignoreAuthOrg);
   }
 
+  /**
+   * <p>
+   * Judges if user has admin privileges for application functions.
+   * </p>
+   * <p>
+   * Determines admin status for application function access based on system and application admin privileges.
+   * </p>
+   */
   private boolean judgeIsAdminAppFunc(App appDb, User userDb) {
     if (isNull(userDb)) {
       return isSysAdmin();

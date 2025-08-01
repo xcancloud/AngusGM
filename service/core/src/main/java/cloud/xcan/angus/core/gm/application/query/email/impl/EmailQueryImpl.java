@@ -25,6 +25,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * <p>
+ * Implementation of email query operations.
+ * </p>
+ * <p>
+ * Manages email retrieval, template validation, and attachment quota checking.
+ * Provides comprehensive email querying with summary support.
+ * </p>
+ * <p>
+ * Supports email detail retrieval, template validation, pending email queries,
+ * and attachment quota validation for comprehensive email management.
+ * </p>
+ */
 @Biz
 @SummaryQueryRegister(name = "Email", table = "email", isMultiTenantCtrl = false,
     groupByColumns = {"actual_send_date", "send_status", "urgent", "verification_code",
@@ -33,13 +46,20 @@ public class EmailQueryImpl implements EmailQuery {
 
   @Resource
   private EmailRepo emailRepo;
-
   @Resource
   private EmailTemplateBizRepo emailTemplateBizRepo;
-
   @Resource
   private EmailTemplateQuery emailTemplateQuery;
 
+  /**
+   * <p>
+   * Retrieves detailed email information by ID.
+   * </p>
+   * <p>
+   * Fetches complete email record with all associated information.
+   * Throws ResourceNotFound exception if email does not exist.
+   * </p>
+   */
   @Override
   public Email detail(Long id) {
     return new BizTemplate<Email>() {
@@ -52,6 +72,14 @@ public class EmailQueryImpl implements EmailQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves emails with specification-based filtering.
+   * </p>
+   * <p>
+   * Supports dynamic filtering and pagination for comprehensive email management.
+   * </p>
+   */
   @Override
   public Page<Email> list(Specification<Email> spec, Pageable pageable) {
     return new BizTemplate<Page<Email>>() {
@@ -63,6 +91,15 @@ public class EmailQueryImpl implements EmailQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves email template for email.
+   * </p>
+   * <p>
+   * Verifies template exists and is properly configured for the email business key.
+   * Throws appropriate exception if template configuration is invalid.
+   * </p>
+   */
   @Override
   public EmailTemplate checkAndFindTemplate(Email email) {
     EmailTemplate templateDb = null;
@@ -76,19 +113,40 @@ public class EmailQueryImpl implements EmailQuery {
     return templateDb;
   }
 
+  /**
+   * <p>
+   * Retrieves pending tenant emails for processing.
+   * </p>
+   * <p>
+   * Returns specified number of pending emails for tenant processing.
+   * </p>
+   */
   @Override
   public List<Email> findTenantEmailInPending(int count) {
     return emailRepo.findTenantEmailInPending(count);
   }
 
+  /**
+   * <p>
+   * Retrieves pending platform emails for processing.
+   * </p>
+   * <p>
+   * Returns specified number of pending emails for platform processing.
+   * </p>
+   */
   @Override
   public List<Email> findPlatformEmailInPending(int count) {
     return emailRepo.findPlatformEmailInPending(count);
   }
 
   /**
-   * Check that the number of attachments cannot exceed the limit
-   * {@link EmailConstant#MAX_ATTACHMENT_NUM}
+   * <p>
+   * Validates email attachment quota limits.
+   * </p>
+   * <p>
+   * Verifies that the number of attachments does not exceed the maximum limit.
+   * Throws appropriate exception if quota is exceeded.
+   * </p>
    */
   @Override
   public void checkAttachmentQuota(Email email) {

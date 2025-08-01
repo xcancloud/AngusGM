@@ -31,7 +31,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
-
+/**
+ * <p>
+ * Implementation of email server query operations.
+ * </p>
+ * <p>
+ * Manages email server retrieval, health checking, and quota validation.
+ * Provides comprehensive email server querying with caching support.
+ * </p>
+ * <p>
+ * Supports server detail retrieval, health monitoring, quota validation,
+ * and name uniqueness checking for comprehensive email server management.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class EmailServerQueryImpl implements EmailServerQuery {
@@ -43,6 +55,15 @@ public class EmailServerQueryImpl implements EmailServerQuery {
 
   private Boolean cachedHealthResult;
 
+  /**
+   * <p>
+   * Retrieves detailed email server information by ID.
+   * </p>
+   * <p>
+   * Fetches complete server record with validation.
+   * Throws ResourceNotFound exception if server does not exist.
+   * </p>
+   */
   @Override
   public EmailServer detail(Long id) {
     return new BizTemplate<EmailServer>() {
@@ -60,6 +81,14 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves email servers with specification-based filtering.
+   * </p>
+   * <p>
+   * Supports dynamic filtering and pagination for comprehensive server management.
+   * </p>
+   */
   @Override
   public Page<EmailServer> list(Specification<EmailServer> spec, PageRequest pageable) {
     return new BizTemplate<Page<EmailServer>>() {
@@ -71,6 +100,15 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates email server availability for specified protocol.
+   * </p>
+   * <p>
+   * Verifies that enabled servers exist for the specified protocol.
+   * Throws appropriate exception if no servers are available.
+   * </p>
+   */
   @Override
   public void checkEnable(EmailProtocol protocol) {
     new BizTemplate<Void>() {
@@ -89,6 +127,15 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates email server health status for specified protocol.
+   * </p>
+   * <p>
+   * Tests server connectivity with caching for performance optimization.
+   * Supports future POP3 and IMAP protocol implementations.
+   * </p>
+   */
   @DoInFuture("Support the receiving protocol: POP3, IMAP")
   @Override
   public Boolean checkHealth(EmailProtocol protocol) {
@@ -107,12 +154,12 @@ public class EmailServerQueryImpl implements EmailServerQuery {
           if (enabledEmailServer.equals(cachedEmailServer)) {
             return cachedHealthResult;
           }
-          // Fix:: Authentication failed; nested exception is jakarta.mail.AuthenticationFailedException: 451 4.3.2 Temporary authentication failure (rate-limit)
+          // Fix: Authentication failed; nested exception is jakarta.mail.AuthenticationFailedException: 451 4.3.2 Temporary authentication failure (rate-limit)
           cachedEmailServer = enabledEmailServer;
-          //Get the Transport object
+          // Get the Transport object
           Transport transport = setupServerConfig(enabledEmailServer,
               5 * 1000, 5 * 1000).getTransport();
-          //connect mail smtp emailServer
+          // Connect mail SMTP email server
           transport.connect();
           cachedHealthResult = transport.isConnected();
           return cachedHealthResult;
@@ -124,12 +171,30 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves email server by ID.
+   * </p>
+   * <p>
+   * Verifies server exists and returns server information.
+   * Throws ResourceNotFound exception if server does not exist.
+   * </p>
+   */
   @Override
   public EmailServer checkAndFind(Long id) {
     return emailServerRepo.findById(id)
         .orElseThrow(() -> ResourceNotFound.of(String.valueOf(id), "MailServer"));
   }
 
+  /**
+   * <p>
+   * Retrieves enabled email server for specified protocol.
+   * </p>
+   * <p>
+   * Returns first enabled server for the protocol with validation.
+   * Throws appropriate exception if no enabled servers found.
+   * </p>
+   */
   @Override
   public EmailServer findEnabled(EmailProtocol protocol) {
     List<EmailServer> enabledEmailServers = emailServerRepo
@@ -139,6 +204,14 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     return enabledEmailServers.get(0);
   }
 
+  /**
+   * <p>
+   * Retrieves enabled email server for specified protocol without validation.
+   * </p>
+   * <p>
+   * Returns first enabled server for the protocol or null if none found.
+   * </p>
+   */
   @Override
   public EmailServer findEnabled0(EmailProtocol protocol) {
     List<EmailServer> enabledEmailServers = emailServerRepo
@@ -146,6 +219,15 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     return isEmpty(enabledEmailServers) ? null : enabledEmailServers.get(0);
   }
 
+  /**
+   * <p>
+   * Validates email server quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding servers would exceed maximum quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkQuota(int incr) {
     long count = emailServerRepo.count();
@@ -155,6 +237,15 @@ public class EmailServerQueryImpl implements EmailServerQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates server name uniqueness for new servers.
+   * </p>
+   * <p>
+   * Checks if server name already exists.
+   * Throws ResourceExisted exception if name is not unique.
+   * </p>
+   */
   @Override
   public void checkAddName(EmailServer emailServer) {
     List<EmailServer> servers = emailServerRepo.findByName(emailServer.getName());
@@ -162,10 +253,19 @@ public class EmailServerQueryImpl implements EmailServerQuery {
         new Object[]{emailServer.getName()});
   }
 
+  /**
+   * <p>
+   * Validates server name uniqueness for updated servers.
+   * </p>
+   * <p>
+   * Checks if server name conflicts with existing servers.
+   * Allows same name for the same server during updates.
+   * </p>
+   */
   @Override
   public void checkUpdateName(EmailServer emailServer) {
     List<EmailServer> servers = emailServerRepo.findByNameAndIdNot(emailServer.getName(),
-        emailServer.getId());
+      emailServer.getId());
     assertResourceExisted(servers, SERVER_NAME_EXISTED_EXISTED_T,
         new Object[]{emailServer.getName()});
   }

@@ -61,7 +61,19 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of authentication policy query operations.
+ * </p>
+ * <p>
+ * Manages authentication policy retrieval, validation, and permission management.
+ * Provides comprehensive policy querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports policy detail retrieval, paginated listing, permission validation,
+ * quota management, and policy uniqueness checking for comprehensive policy administration.
+ * </p>
+ */
 @Biz
 @SummaryQueryRegister(name = "AuthPolicy", table = "auth_policy",
     groupByColumns = {"created_date", "type", "grant_stage"/*Only OP Client*/, "enabled"})
@@ -94,11 +106,19 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 
+  /**
+   * <p>
+   * Retrieves detailed policy information by ID or code.
+   * </p>
+   * <p>
+   * Fetches complete policy record with tenant and application validation.
+   * Throws ResourceNotFound exception if policy does not exist.
+   * </p>
+   */
   @Override
   public AuthPolicy detail(String idOrCode) {
     return new BizTemplate<AuthPolicy>(false) {
       final Long tenantId = getOptTenantId();
-
 
       @Override
       protected AuthPolicy process() {
@@ -124,7 +144,13 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
-   * Query user-defined and platform preset policies.
+   * <p>
+   * Retrieves policies with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Enriches results with application information for comprehensive display.
+   * </p>
    */
   @Override
   public Page<AuthPolicy> list(GenericSpecification<AuthPolicy> spec, PageRequest pageable,
@@ -143,11 +169,20 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves tenant application default policies.
+   * </p>
+   * <p>
+   * Returns default policies for tenant's opened applications.
+   * Handles cloud service edition filtering for private edition applications.
+   * </p>
+   */
   @Override
   public List<AuthPolicy> findTenantAppDefaultPolices(Long tenantId) {
     // closeMultiTenantCtrl(); <- For query PRE_DEFINED policies
     List<Long> openAppIds = isCloudServiceEdition()
-        /* Fix:: Excluding private editions applications and authorizations for cloud service edition */
+        /* Fix: Excluding private editions applications and authorizations for cloud service edition */
         ? appOpenQuery.findValidAppIdsByTenantIdAndEditionType(tenantId, EditionType.CLOUD_SERVICE)
         : appOpenQuery.findValidAppIdsByTenantId(tenantId);
     return isEmpty(openAppIds) ? Collections.emptyList()
@@ -155,21 +190,38 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
-   * Query the policies that can be opened on the tenant client.
+   * <p>
+   * Retrieves operable tenant client policies.
+   * </p>
+   * <p>
+   * Returns policies that can be opened on the tenant client.
+   * </p>
    */
   @Override
   public List<AuthPolicy> findOperableTenantClientPolicies() {
     return authPolicyRepo.findOpenableTenantClientPolicies();
   }
 
+  /**
+   * <p>
+   * Retrieves policies by application IDs.
+   * </p>
+   * <p>
+   * Returns policies associated with the specified applications.
+   * </p>
+   */
   @Override
   public List<AuthPolicy> findByAppIdIn(Collection<Long> appIds) {
     return authPolicyRepo.findAllByAppIdIn(appIds);
   }
 
   /**
-   * Query the policies that can be opened on the operation client and tenant client applications
-   * need to include.
+   * <p>
+   * Retrieves operable operation client policies by application ID.
+   * </p>
+   * <p>
+   * Returns policies that can be opened on operation client and tenant client applications.
+   * </p>
    */
   @Override
   public List<AuthPolicy> findOperableOpClientPoliciesByAppId(Long appId) {
@@ -177,14 +229,26 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
-   * Important:: Consider turning off multi tenant control when you need to check predefined
-   * policies.
+   * <p>
+   * Validates and retrieves policy by ID.
+   * </p>
+   * <p>
+   * Important: Consider turning off multi tenant control when you need to check predefined policies.
+   * </p>
    */
   @Override
   public AuthPolicy checkAndFind(Long policyId, boolean checkEnabled, boolean checkOpenAppValid) {
     return checkAndFind(List.of(policyId), checkEnabled, checkOpenAppValid).get(0);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves tenant policy by ID.
+   * </p>
+   * <p>
+   * Validates policy existence and tenant-specific access control.
+   * </p>
+   */
   @Override
   public AuthPolicy checkAndFindTenantPolicy(Long policyId, boolean checkEnabled,
       boolean checkOpenAppValid) {
@@ -192,8 +256,12 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
-   * Important:: Consider turning off multi tenant control when you need to check predefined
-   * policies.
+   * <p>
+   * Validates and retrieves multiple policies by IDs.
+   * </p>
+   * <p>
+   * Important: Consider turning off multi tenant control when you need to check predefined policies.
+   * </p>
    */
   @Override
   public List<AuthPolicy> checkAndFind(Collection<Long> policyIds, boolean checkEnabled,
@@ -206,6 +274,14 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     return policiesDb;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves multiple tenant policies by IDs.
+   * </p>
+   * <p>
+   * Handles multi-tenant control for tenant-specific policy validation.
+   * </p>
+   */
   @Override
   public List<AuthPolicy> checkAndFindTenantPolicy(Collection<Long> policyIds, boolean checkEnabled,
       boolean checkOpenAppValid) {
@@ -223,12 +299,30 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     return policiesDb;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves application administrator policy.
+   * </p>
+   * <p>
+   * Returns application administrator policy for the specified application.
+   * Throws ResourceNotFound if application administrator not found.
+   * </p>
+   */
   @Override
   public AuthPolicy checkAppAdminAndFind(Long appId) {
     return authPolicyRepo.findAppAdminByAppId(appId).orElseThrow(
         () -> ResourceNotFound.of(String.format("App administrator %s not found", appId)));
   }
 
+  /**
+   * <p>
+   * Validates policy quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding policies would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkPolicyQuota(Long tenantId, long incr) {
     if (incr > 0) {
@@ -237,6 +331,14 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates and checks policy parameters.
+   * </p>
+   * <p>
+   * Performs comprehensive validation including application existence and policy status.
+   * </p>
+   */
   private void findAndCheck0(Collection<Long> policyIds, List<AuthPolicy> policiesDb,
       boolean checkEnabled, boolean checkOpenAppValid) {
     assertResourceNotFound(isNotEmpty(policiesDb), policyIds.iterator().next(), "AuthPolicy");
@@ -257,6 +359,15 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates operation policy permission.
+   * </p>
+   * <p>
+   * Ensures current user has appropriate operation policy permissions.
+   * Throws Forbidden exception if permission is insufficient.
+   * </p>
+   */
   @Override
   public void checkOpPolicyPermission() {
     if (isOpSysAdmin()) {
@@ -265,6 +376,14 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     checkHasAnyPolicy(TOP_PERMISSION_ADMIN, OP_PERMISSION_USER, OP_PLATFORM_ADMIN);
   }
 
+  /**
+   * <p>
+   * Checks if user has operation policy permission.
+   * </p>
+   * <p>
+   * Returns true if user has appropriate operation policy permissions.
+   * </p>
+   */
   @Override
   public boolean hasOpPolicyPermission() {
     if (isOpSysAdmin()) {
@@ -273,6 +392,14 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     return hasAnyPolicy(TOP_PERMISSION_ADMIN, OP_PERMISSION_USER, OP_PLATFORM_ADMIN);
   }
 
+  /**
+   * <p>
+   * Validates operation policy permission for specific policies.
+   * </p>
+   * <p>
+   * Ensures current user has appropriate permissions for platform type policies.
+   * </p>
+   */
   @Override
   public void checkOpPolicyPermission(Collection<AuthPolicy> policies) {
     if (isOpSysAdmin() || isEmpty(policies)) {
@@ -285,6 +412,14 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     }
   }
 
+  /**
+   * <p>
+   * Checks if user has operation policy permission for specific policies.
+   * </p>
+   * <p>
+   * Returns true if user has appropriate permissions for platform type policies.
+   * </p>
+   */
   @Override
   public boolean hasOpPolicyPermission(Collection<AuthPolicy> policies) {
     if (isOpSysAdmin() || isEmpty(policies)) {
@@ -299,10 +434,16 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
+   * <p>
+   * Validates authorization policy permission.
+   * </p>
+   * <p>
    * Authorizer must have authorization policy permission.
-   *
+   * </p>
+   * <p>
    * @param appId     Authorized application id
    * @param policyIds Authorized policy ids
+   * </p>
    */
   @Override
   public void checkAuthPolicyPermission(Long appId, Collection<Long> policyIds) {
@@ -310,9 +451,15 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
+   * <p>
+   * Validates authorization policy permission.
+   * </p>
+   * <p>
    * Authorizer must have authorization policy permission.
-   *
+   * </p>
+   * <p>
    * @param policyIds Authorized policy ids
+   * </p>
    */
   @Override
   public void checkAuthPolicyPermission(Collection<Long> policyIds) {
@@ -321,9 +468,15 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
+   * <p>
+   * Validates authorization policy permission.
+   * </p>
+   * <p>
    * Authorizer must have authorization policy permission.
-   *
+   * </p>
+   * <p>
    * @param policies Authorized policies
+   * </p>
    */
   @Override
   public void checkAuthPolicyPermission(List<AuthPolicy> policies) {
@@ -339,11 +492,17 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
+   * <p>
+   * Validates authorization policy permission.
+   * </p>
+   * <p>
    * Authorizer must have authorization policy permission.
-   *
+   * </p>
+   * <p>
    * @param appId     Authorized application id
    * @param userId    Authorized user ids
    * @param policyIds Authorized policy ids
+   * </p>
    */
   @Override
   public void checkAuthPolicyPermission(Long appId, Long userId, Collection<Long> policyIds) {
@@ -384,6 +543,15 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     setMultiTenantCtrl(isMultiTenantCtrl);
   }
 
+  /**
+   * <p>
+   * Validates duplicate parameters in policy list.
+   * </p>
+   * <p>
+   * Checks for duplicate codes and names within the provided policy list.
+   * Ensures only one application policies can be added at a time.
+   * </p>
+   */
   @Override
   public void checkDuplicateParam(List<AuthPolicy> policies, boolean add) {
     // Check code duplicate in param
@@ -394,7 +562,7 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     assertTrue(isEmpty(duplicateCodePolicies), PARAM_VALUE_DUPLICATE_T,
         new Object[]{"code", isEmpty(duplicateCodePolicies) ? null :
             duplicateCodePolicies.get(0).getCode()});
-    // Check code duplicate in param
+    // Check name duplicate in param
     List<AuthPolicy> duplicateNamePolicies = policies.stream()
         .filter(x -> nonNull(x.getName()))
         .filter(duplicateByKey(AuthPolicy::getName))
@@ -409,6 +577,15 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates unique code and name suffix for policies.
+   * </p>
+   * <p>
+   * Ensures policy codes and names are unique within the application.
+   * Handles both insert and update scenarios.
+   * </p>
+   */
   @Override
   public void checkUniqueCodeAndNameSuffix(List<AuthPolicy> policies) {
     for (AuthPolicy policy : policies) {
@@ -438,7 +615,12 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
   }
 
   /**
+   * <p>
+   * Validates predefined policy code suffix uniqueness.
+   * </p>
+   * <p>
    * The predefined policy code {@link AuthConstant#POLICY_PRE_DEFINED_SUFFIX} cannot be repeated.
+   * </p>
    */
   @Override
   public void checkCodeSuffixRepeated(List<AuthPolicy> policies) {
@@ -469,6 +651,14 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets application information for policy list.
+   * </p>
+   * <p>
+   * Loads application details and associates with policies for complete information.
+   * </p>
+   */
   @Override
   public void setAppInfo(List<AuthPolicy> policies) {
     Map<Long, App> appMap = appQuery.findMapById(

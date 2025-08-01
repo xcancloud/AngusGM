@@ -18,15 +18,35 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of country district query operations.
+ * </p>
+ * <p>
+ * Manages country district retrieval, hierarchical queries, and tree structure generation.
+ * Provides comprehensive district querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports district detail retrieval, hierarchical queries (province, city, area),
+ * tree structure generation, and paginated listing for country district management.
+ * </p>
+ */
 @Biz
 public class CountryDistrictQueryImpl implements CountryDistrictQuery {
 
   @Resource
   private DistrictRepo districtRepo;
-
   @Resource
   private DistrictSearchRepo districtSearchRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed district information by country and district codes.
+   * </p>
+   * <p>
+   * Fetches complete district record with all associated information.
+   * </p>
+   */
   @Override
   public District detail(String countryCode, String districtCode) {
     return new BizTemplate<District>() {
@@ -38,6 +58,15 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves districts with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated results for comprehensive district management.
+   * </p>
+   */
   @Override
   public Page<District> list(GenericSpecification<District> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -51,6 +80,14 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves provinces for the specified country.
+   * </p>
+   * <p>
+   * Returns all first-level districts (provinces) for the given country code.
+   * </p>
+   */
   @Override
   public List<District> province(String countryCode) {
     return new BizTemplate<List<District>>() {
@@ -62,6 +99,14 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves cities for the specified province.
+   * </p>
+   * <p>
+   * Returns all second-level districts (cities) under the given province code.
+   * </p>
+   */
   @Override
   public List<District> city(String countryCode, String provinceCode) {
     return new BizTemplate<List<District>>() {
@@ -75,6 +120,14 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves areas for the specified city.
+   * </p>
+   * <p>
+   * Returns all third-level districts (areas) under the given city code.
+   * </p>
+   */
   @Override
   public List<District> areas(String countryCode, String cityCode) {
     return new BizTemplate<List<District>>() {
@@ -88,6 +141,15 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Generates hierarchical tree structure for country districts.
+   * </p>
+   * <p>
+   * Creates tree structure starting from the specified parent code.
+   * Converts districts to tree view objects for hierarchical display.
+   * </p>
+   */
   @Override
   public List<CountryDistrictTreeVo> tree(String countryCode, String parentCode) {
     return new BizTemplate<List<CountryDistrictTreeVo>>() {
@@ -101,12 +163,30 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves district by ID with validation.
+   * </p>
+   * <p>
+   * Verifies district exists and returns district information.
+   * Throws ResourceNotFound exception if district does not exist.
+   * </p>
+   */
   @Override
   public District find(Long id) {
     return districtRepo.findById(id)
         .orElseThrow(() -> ResourceNotFound.of(id, "District"));
   }
 
+  /**
+   * <p>
+   * Builds hierarchical tree structure from district list.
+   * </p>
+   * <p>
+   * Recursively constructs tree structure starting from specified parent code.
+   * Filters districts by parent code and builds parent-child relationships.
+   * </p>
+   */
   private List<CountryDistrictTreeVo> makeTree(List<CountryDistrictTreeVo> districts,
       String parentCode) {
     List<CountryDistrictTreeVo> children = districts.stream()

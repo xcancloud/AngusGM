@@ -16,7 +16,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of event query operations.
+ * </p>
+ * <p>
+ * Manages event retrieval, validation, and search capabilities.
+ * Provides comprehensive event querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports event detail retrieval, paginated listing, full-text search,
+ * and pending event queries for comprehensive event management.
+ * </p>
+ */
 @Slf4j
 @Biz
 @SummaryQueryRegister(name = "Event", table = "event",
@@ -25,10 +37,18 @@ public class EventQueryImpl implements EventQuery {
 
   @Resource
   private EventRepo eventRepo;
-
   @Resource
   private EventSearchRepo eventSearchRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed event information by ID.
+   * </p>
+   * <p>
+   * Fetches complete event record with validation.
+   * Throws ResourceNotFound exception if event does not exist.
+   * </p>
+   */
   @Override
   public Event detail(Long id) {
     return new BizTemplate<Event>() {
@@ -46,6 +66,15 @@ public class EventQueryImpl implements EventQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves events with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated results for comprehensive event management.
+   * </p>
+   */
   @Override
   public Page<Event> list(GenericSpecification<Event> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -60,11 +89,29 @@ public class EventQueryImpl implements EventQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves event by ID.
+   * </p>
+   * <p>
+   * Verifies event exists and returns event information.
+   * Throws ResourceNotFound exception if event does not exist.
+   * </p>
+   */
   @Override
   public Event checkAndFind(Long id) {
     return eventRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "Event"));
   }
 
+  /**
+   * <p>
+   * Retrieves unprocessed events for push processing.
+   * </p>
+   * <p>
+   * Returns events with pending push status for processing.
+   * Limits results by size for processing control.
+   * </p>
+   */
   @Override
   public List<Event> findEventInUnPush(int size) {
     return eventRepo.findAllByPushStatus(EventPushStatus.PENDING.getValue(), size);

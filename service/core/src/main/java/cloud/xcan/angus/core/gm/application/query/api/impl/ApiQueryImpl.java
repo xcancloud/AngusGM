@@ -28,6 +28,19 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of API query operations.
+ * </p>
+ * <p>
+ * Manages API retrieval, validation, and service information enrichment.
+ * Provides comprehensive API querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports API detail retrieval, paginated listing, validation checks,
+ * and service information association for API management.
+ * </p>
+ */
 @Biz
 @SummaryQueryRegister(name = "Api", table = "api", isMultiTenantCtrl = false,
     groupByColumns = {"created_date", "method", "type", "enabled"})
@@ -35,13 +48,20 @@ public class ApiQueryImpl implements ApiQuery {
 
   @Resource
   private ApiRepo apiRepo;
-
   @Resource
   private ApiSearchRepo apiSearchRepo;
-
   @Resource
   private ServiceQuery serviceQuery;
 
+  /**
+   * <p>
+   * Retrieves detailed API information by ID.
+   * </p>
+   * <p>
+   * Fetches complete API record with all associated information.
+   * Throws ResourceNotFound exception if API does not exist.
+   * </p>
+   */
   @Override
   public Api detail(Long id) {
     return new BizTemplate<Api>() {
@@ -54,6 +74,15 @@ public class ApiQueryImpl implements ApiQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves paginated list of APIs with optional full-text search.
+   * </p>
+   * <p>
+   * Supports both regular database queries and full-text search operations.
+   * Returns filtered and paginated API results based on specification.
+   * </p>
+   */
   @Override
   public Page<Api> list(GenericSpecification<Api> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -68,6 +97,15 @@ public class ApiQueryImpl implements ApiQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves multiple APIs by their IDs.
+   * </p>
+   * <p>
+   * Fetches API records for the specified collection of IDs.
+   * Returns null if the collection is empty.
+   * </p>
+   */
   @Override
   public List<Api> findAllById(Collection<Long> ids) {
     if (isEmpty(ids)) {
@@ -76,13 +114,31 @@ public class ApiQueryImpl implements ApiQuery {
     return apiRepo.findAllById(ids);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves API by ID with enabled status check.
+   * </p>
+   * <p>
+   * Verifies API exists and is enabled. Throws appropriate exceptions
+   * for missing or disabled APIs.
+   * </p>
+   */
   @Override
   public Api checkAndFind(Long id) {
-    Api groupDb = apiRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "Api"));
-    assertTrue(groupDb.getEnabled(), API_IS_DISABLED_T, new Object[]{groupDb.getName()});
-    return groupDb;
+    Api apiDb = apiRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "Api"));
+    assertTrue(apiDb.getEnabled(), API_IS_DISABLED_T, new Object[]{apiDb.getName()});
+    return apiDb;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves multiple APIs by IDs with optional enabled status check.
+   * </p>
+   * <p>
+   * Verifies all APIs exist and optionally checks enabled status.
+   * Validates complete collection match and throws appropriate exceptions.
+   * </p>
+   */
   @Override
   public List<Api> checkAndFind(Collection<Long> apiIds, boolean checkEnabled) {
     if (isEmpty(apiIds)) {
@@ -103,6 +159,15 @@ public class ApiQueryImpl implements ApiQuery {
     return apis;
   }
 
+  /**
+   * <p>
+   * Validates APIs belong to a specific service.
+   * </p>
+   * <p>
+   * Verifies that all specified API IDs belong to the given service ID.
+   * Throws ResourceNotFound exception if any API is not found or doesn't belong to the service.
+   * </p>
+   */
   @Override
   public void checkByServiceId(Long serviceId, HashSet<Long> apiIds) {
     List<Api> apis = apiRepo.findAllByServiceIdAndIdIn(serviceId, apiIds);
@@ -115,6 +180,15 @@ public class ApiQueryImpl implements ApiQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates and retrieves service resources by resource names.
+   * </p>
+   * <p>
+   * Verifies that all specified resource names exist in the system.
+   * Returns grouped service resources by resource name.
+   * </p>
+   */
   @Override
   public Map<String, List<ServiceResource>> checkAndFindResource(Collection<String> resources) {
     List<ServiceResource> resourceNames = apiRepo.findServiceResourceByResourceNameIn(resources);
@@ -126,6 +200,15 @@ public class ApiQueryImpl implements ApiQuery {
     return resourceNames.stream().collect(Collectors.groupingBy(ServiceResource::getResourceName));
   }
 
+  /**
+   * <p>
+   * Enriches APIs with service information.
+   * </p>
+   * <p>
+   * Associates APIs with their corresponding service details including
+   * service name, code, and enabled status for comprehensive API management.
+   * </p>
+   */
   @Override
   public void setServiceInfo(List<Api> apis) {
     List<Service> servicesDb = serviceQuery.checkAndFind(apis.stream().map(Api::getServiceId)

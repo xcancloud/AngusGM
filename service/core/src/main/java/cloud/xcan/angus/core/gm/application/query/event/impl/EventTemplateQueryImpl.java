@@ -28,26 +28,43 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * <p>
+ * Implementation of event template query operations.
+ * </p>
+ * <p>
+ * Manages event template retrieval, caching, and tenant setting association.
+ * Provides comprehensive event template querying with caching support.
+ * </p>
+ * <p>
+ * Supports template detail retrieval, caching, tenant setting association,
+ * and name/code uniqueness validation for comprehensive event template management.
+ * </p>
+ */
 @Slf4j
 @Service
 public class EventTemplateQueryImpl implements EventTemplateQuery {
 
   @Resource
   private EventTemplateRepo eventTemplateRepo;
-
   @Resource
   private EventTemplateSearchRepo eventTemplateSearchRepo;
-
   @Resource
   private EventTemplateReceiverRepo eventTemplateReceiverRepo;
-
   @Resource
   private EventTemplateChannelRepo eventTemplateChannelRepo;
-
   @Resource
   private EventTemplateCache eventTemplateCache;
 
+  /**
+   * <p>
+   * Retrieves detailed event template information by ID.
+   * </p>
+   * <p>
+   * Fetches complete template record with optional tenant setting association.
+   * Throws ResourceNotFound exception if template does not exist.
+   * </p>
+   */
   @Override
   public EventTemplate detail(Long id, boolean joinTenantSetting) {
     return new BizTemplate<EventTemplate>() {
@@ -71,6 +88,15 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves event templates with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search, specification-based filtering, and tenant setting association.
+   * Returns paginated results for comprehensive template management.
+   * </p>
+   */
   @Override
   public Page<EventTemplate> list(GenericSpecification<EventTemplate> spec,
       boolean joinTenantSetting, PageRequest pageable, boolean fullTextSearch, String[] match) {
@@ -89,12 +115,30 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves event template by ID.
+   * </p>
+   * <p>
+   * Verifies template exists and returns template information.
+   * Throws ResourceNotFound exception if template does not exist.
+   * </p>
+   */
   @Override
   public EventTemplate checkAndFind(Long id) {
     return eventTemplateRepo.findById(id)
         .orElseThrow(() -> ResourceNotFound.of(id, "EventTemplate"));
   }
 
+  /**
+   * <p>
+   * Retrieves event template by event code using caching.
+   * </p>
+   * <p>
+   * Uses cache for performance optimization and returns template for event code.
+   * Returns null if no template found for the event code.
+   * </p>
+   */
   @Override
   public EventTemplate findByEventCode(String eventCode) {
     EventTemplate template = eventTemplateCache.getEventTemplate(eventCode);
@@ -109,6 +153,15 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
     return null;
   }
 
+  /**
+   * <p>
+   * Validates event template name uniqueness.
+   * </p>
+   * <p>
+   * Checks if template name already exists for new or updated templates.
+   * Throws ResourceExisted exception if name is not unique.
+   * </p>
+   */
   @Override
   public void checkEventNameExist(EventTemplate template) {
     boolean existed = isNull(template.getId())
@@ -117,6 +170,15 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
     assertResourceExisted(!existed, template.getEventName(), "EventTemplate");
   }
 
+  /**
+   * <p>
+   * Validates event template code uniqueness.
+   * </p>
+   * <p>
+   * Checks if template code already exists for new or updated templates.
+   * Throws ResourceExisted exception if code is not unique.
+   * </p>
+   */
   @Override
   public void checkEventCodeExist(EventTemplate template) {
     boolean existed = isNull(template.getId())
@@ -125,6 +187,14 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
     assertResourceExisted(!existed, template.getEventCode(), "EventTemplate");
   }
 
+  /**
+   * <p>
+   * Sets receive settings for event template page.
+   * </p>
+   * <p>
+   * Associates receiver and channel information with templates for tenant-specific settings.
+   * </p>
+   */
   @Override
   public void setReceiveSetting(Page<EventTemplate> templates) {
     Set<Long> templateIds = templates.stream().map(EventTemplate::getId)

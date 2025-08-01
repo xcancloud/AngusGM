@@ -12,15 +12,36 @@ import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of country query operations.
+ * </p>
+ * <p>
+ * Manages country retrieval, validation, and search capabilities.
+ * Provides comprehensive country querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports country detail retrieval, paginated listing, and specification-based
+ * filtering for country management.
+ * </p>
+ */
 @Biz
 public class CountryQueryImpl implements CountryQuery {
 
   @Resource
   private CountryRepo countryRepo;
-
   @Resource
   private CountrySearchRepo countrySearchRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed country information by ID.
+   * </p>
+   * <p>
+   * Fetches complete country record with all associated information.
+   * Throws ResourceNotFound exception if country does not exist.
+   * </p>
+   */
   @Override
   public Country detail(Long id) {
     return new BizTemplate<Country>() {
@@ -33,6 +54,15 @@ public class CountryQueryImpl implements CountryQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves countries with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated results for comprehensive country management.
+   * </p>
+   */
   @Override
   public Page<Country> list(GenericSpecification<Country> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
