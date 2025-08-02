@@ -25,21 +25,40 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of TO (Tenant Operation) user query operations.
+ * </p>
+ * <p>
+ * Manages TO user retrieval, validation, and role association.
+ * Provides comprehensive TO user querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports TO user detail retrieval, paginated listing, validation,
+ * and role association for comprehensive TO user administration.
+ * </p>
+ */
 @Biz
 public class TOUserQueryImpl implements TOUserQuery {
 
   @Resource
   private TOUserRepo toUserRepo;
-
   @Resource
   private TOUserSearchRepo toUserSearchRepo;
-
   @Resource
   private TORoleRepo toRoleRepo;
-
   @Resource
   private TORoleUserRepo toRoleUserRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed TO user information by user ID.
+   * </p>
+   * <p>
+   * Fetches TO user record with role association.
+   * Throws ResourceNotFound if TO user does not exist.
+   * </p>
+   */
   @Override
   public TOUser detail(Long userId) {
     return new BizTemplate<TOUser>() {
@@ -54,6 +73,15 @@ public class TOUserQueryImpl implements TOUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves TO users with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated TO user results.
+   * </p>
+   */
   @Override
   public Page<TOUser> list(GenericSpecification<TOUser> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -68,11 +96,29 @@ public class TOUserQueryImpl implements TOUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves TO user by user ID.
+   * </p>
+   * <p>
+   * Returns TO user with existence validation.
+   * Throws ResourceNotFound if TO user does not exist.
+   * </p>
+   */
   @Override
   public TOUser checkAndFind(Long userId) {
     return checkAndFind(List.of(userId)).get(0);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves TO users by user IDs.
+   * </p>
+   * <p>
+   * Returns TO users with existence validation.
+   * Validates that all requested TO user IDs exist.
+   * </p>
+   */
   @Override
   public List<TOUser> checkAndFind(Collection<Long> userIds) {
     if (isEmpty(userIds)) {
@@ -88,6 +134,15 @@ public class TOUserQueryImpl implements TOUserQuery {
     return toUsers;
   }
 
+  /**
+   * <p>
+   * Validates TO user existence by user IDs.
+   * </p>
+   * <p>
+   * Checks if TO users exist for the specified user IDs.
+   * Throws ResourceNotFound if any TO user does not exist.
+   * </p>
+   */
   @Override
   public void checkExists(Collection<Long> userIds) {
     if (isEmpty(userIds)) {
@@ -97,6 +152,15 @@ public class TOUserQueryImpl implements TOUserQuery {
     assertResourceExisted(toUsers, userIds.iterator().next(), "TOUser");
   }
 
+  /**
+   * <p>
+   * Sets role association for TO user.
+   * </p>
+   * <p>
+   * Associates roles with the specified TO user.
+   * Enriches TO user with role information for complete data.
+   * </p>
+   */
   private void setUserPolicy(TOUser toUser) {
     List<TORoleUser> tpu = toRoleUserRepo.findAllByUserIdIn(
         Collections.singletonList(toUser.getUserId()));

@@ -34,25 +34,42 @@ import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * <p>
+ * Implementation of current user query operations.
+ * </p>
+ * <p>
+ * Manages current user information retrieval, SMS/email verification, and binding.
+ * Provides comprehensive current user querying with verification support.
+ * </p>
+ * <p>
+ * Supports current user detail retrieval, SMS/email sending, verification code checking,
+ * and binding operations for comprehensive current user administration.
+ * </p>
+ */
 @Biz
 public class UserCurrentQueryImpl implements UserCurrentQuery {
 
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private SmsCmd smsCmd;
-
   @Resource
   private EmailCmd emailCmd;
-
   @Resource
   private RedisService<String> stringRedisService;
 
+  /**
+   * <p>
+   * Retrieves detailed current user information.
+   * </p>
+   * <p>
+   * Fetches current user details with optional association joining.
+   * Uses current user context for data retrieval.
+   * </p>
+   */
   @Override
   public User currentDetail(boolean joinAssoc) {
     return new BizTemplate<User>() {
@@ -64,6 +81,15 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Sends SMS verification to current user.
+   * </p>
+   * <p>
+   * Validates mobile format and user ownership before sending SMS.
+   * Ensures mobile belongs to current user for security.
+   * </p>
+   */
   @Override
   public void sendSms(Sms sms, String country) {
     new BizTemplate<Void>() {
@@ -74,7 +100,7 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
         // Check mobile format
         ValidatorUtils.checkMobile(country, mobile);
 
-        // Noop:: Use @EnumConstant instead of check that the bizkey is correct
+        // Noop: Use @EnumConstant instead of check that the bizkey is correct
 
         // Check whether the mobile is the current person's own mobile
         checkUserMobile(mobile, sms.getBizKey());
@@ -88,6 +114,15 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates SMS verification code and generates link secret.
+   * </p>
+   * <p>
+   * Checks verification code correctness and user ownership.
+   * Generates and stores link secret for binding confirmation.
+   * </p>
+   */
   @Override
   public String checkSms(SmsBizKey bizKey, String mobile, String country, String verificationCode) {
     return new BizTemplate<String>() {
@@ -98,7 +133,7 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
         // Check mobile format
         ValidatorUtils.checkMobile(country, mobile);
 
-        // Noop:: Use @EnumConstant instead of check that the bizkey is correct
+        // Noop: Use @EnumConstant instead of check that the bizkey is correct
 
         // Check whether the mobile is the current person's own mobile
         checkUserMobile(mobile, bizKey);
@@ -120,12 +155,21 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Sends email verification to current user.
+   * </p>
+   * <p>
+   * Validates email ownership before sending email.
+   * Ensures email belongs to current user for security.
+   * </p>
+   */
   @Override
   public void sendEmail(Email email) {
     new BizTemplate<Void>() {
       @Override
       protected void checkParams() {
-        // Noop:: Use @EnumConstant instead of check that the bizkey is correct
+        // Noop: Use @EnumConstant instead of check that the bizkey is correct
 
         // Check whether the email is the current person's own email
         checkUserEmail(email.getToAddrData().iterator().next(), email.getBizKey());
@@ -139,6 +183,15 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates email verification code and generates link secret.
+   * </p>
+   * <p>
+   * Checks verification code correctness and user ownership.
+   * Generates and stores link secret for binding confirmation.
+   * </p>
+   */
   @Override
   public String checkEmail(EmailBizKey bizKey, String email, String verificationCode) {
     return new BizTemplate<String>() {
@@ -146,7 +199,7 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
 
       @Override
       protected void checkParams() {
-        // Noop:: Use @EnumConstant instead of check that the bizkey is correct
+        // Noop: Use @EnumConstant instead of check that the bizkey is correct
 
         // Check whether the email is the current person's own email
         checkUserEmail(email, bizKey);
@@ -168,6 +221,15 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates mobile number ownership for current user.
+   * </p>
+   * <p>
+   * Checks if mobile belongs to current user or is available for binding.
+   * Throws appropriate exception for unauthorized access.
+   * </p>
+   */
   private void checkUserMobile(String mobile, SmsBizKey bizKey) {
     List<User> users = userRepo.findByMobile(mobile);
     if (BIND_MOBILE.equals(bizKey)) {
@@ -179,6 +241,15 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates email ownership for current user.
+   * </p>
+   * <p>
+   * Checks if email belongs to current user or is available for binding.
+   * Throws appropriate exception for unauthorized access.
+   * </p>
+   */
   private void checkUserEmail(String email, EmailBizKey bizKey) {
     List<User> users = userRepo.findByEmail(email);
     if (BIND_EMAIL.equals(bizKey)) {

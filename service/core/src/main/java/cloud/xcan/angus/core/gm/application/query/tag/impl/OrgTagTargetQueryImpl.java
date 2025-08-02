@@ -35,6 +35,19 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of organization tag target query operations.
+ * </p>
+ * <p>
+ * Manages organization tag target retrieval, validation, and quota management.
+ * Provides comprehensive organization tag target querying with target association support.
+ * </p>
+ * <p>
+ * Supports organization tag target queries, target tag queries, quota validation,
+ * deduplication, and target association for comprehensive organization tag target administration.
+ * </p>
+ */
 @Biz
 @SummaryQueryRegister(name = "OrgTagTarget", table = "org_tag_target", topAuthority = TOP_TENANT_ADMIN,
     groupByColumns = {"created_date", "target_type"})
@@ -42,25 +55,28 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
 
   @Resource
   private OrgTagTargetRepo orgTagTargetRepo;
-
   @Resource
   private OrgTagRepo orgTagRepo;
-
   @Resource
   private OrgTagTargetListRepo orgTagTargetListRepo;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
-
   @Resource
   private UserQuery userQuery;
-
   @Resource
   private DeptQuery deptQuery;
-
   @Resource
   private GroupQuery groupQuery;
 
+  /**
+   * <p>
+   * Retrieves tag targets for specific organization tag.
+   * </p>
+   * <p>
+   * Queries targets associated with the specified organization tag.
+   * Validates required parameters and returns paginated results.
+   * </p>
+   */
   @Override
   public Page<OrgTagTarget> findTagTarget(GenericSpecification<OrgTagTarget> spec,
       PageRequest pageable) {
@@ -81,6 +97,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves target tags for specific target.
+   * </p>
+   * <p>
+   * Queries organization tags associated with the specified target.
+   * Validates required parameters and returns paginated results.
+   * </p>
+   */
   @Override
   public Page<OrgTagTarget> findTargetTag(GenericSpecification<OrgTagTarget> spec,
       PageRequest pageable) {
@@ -101,6 +126,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates target tag quota for replacement.
+   * </p>
+   * <p>
+   * Checks if replacing target tags would exceed quota limits.
+   * Validates quota for specific organization ID.
+   * </p>
+   */
   @Override
   public void checkTargetTagQuota(Long optTenantId, long incr, Long orgId) {
     if (incr > 0) {
@@ -111,6 +145,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates target append tag quota.
+   * </p>
+   * <p>
+   * Checks if appending target tags would exceed quota limits.
+   * Validates quota for specific organization ID.
+   * </p>
+   */
   @Override
   public void checkTargetAppendTagQuota(Long optTenantId, long incr, Long orgId) {
     if (incr > 0) {
@@ -120,6 +163,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates target tag quota for multiple targets.
+   * </p>
+   * <p>
+   * Checks quota for replacement operations across multiple targets.
+   * Groups targets by target ID for efficient quota checking.
+   * </p>
+   */
   @Override
   public void checkTargetTagQuota(Long optTenantId, List<OrgTagTarget> tagTargets) {
     if (isEmpty(tagTargets)) {
@@ -132,6 +184,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates target append tag quota for multiple targets.
+   * </p>
+   * <p>
+   * Checks quota for append operations across multiple targets.
+   * Groups targets by target ID for efficient quota checking.
+   * </p>
+   */
   @Override
   public void checkTargetAppendTagQuota(Long optTenantId, List<OrgTagTarget> tagTargets) {
     if (isEmpty(tagTargets)) {
@@ -144,6 +205,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     }
   }
 
+  /**
+   * <p>
+   * Retrieves all organization tag targets for specific target.
+   * </p>
+   * <p>
+   * Returns organization tag targets with tag associations.
+   * Enriches results with tag information for complete data.
+   * </p>
+   */
   @Override
   public List<OrgTagTarget> findAllByTarget(OrgTargetType targetType, Long targetId) {
     List<OrgTagTarget> tagTargets = orgTagTargetRepo
@@ -161,6 +231,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     return tagTargets;
   }
 
+  /**
+   * <p>
+   * Validates users and performs deduplication.
+   * </p>
+   * <p>
+   * Checks user existence and removes duplicate tag targets.
+   * Returns validated user list for tag target operations.
+   * </p>
+   */
   @Override
   public List<User> checkUserAndDeduplication(Set<OrgTagTarget> newTagTargets,
       List<OrgTagTarget> tagTargets, Long tagId) {
@@ -180,6 +259,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     return users;
   }
 
+  /**
+   * <p>
+   * Validates departments and performs deduplication.
+   * </p>
+   * <p>
+   * Checks department existence and removes duplicate tag targets.
+   * Returns validated department list for tag target operations.
+   * </p>
+   */
   @Override
   public List<Dept> checkDeptAndDeduplication(Set<OrgTagTarget> newTagTargets,
       List<OrgTagTarget> tagTargets, Long tagId) {
@@ -199,6 +287,15 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
     return dept;
   }
 
+  /**
+   * <p>
+   * Validates groups and performs deduplication.
+   * </p>
+   * <p>
+   * Checks group existence and removes duplicate tag targets.
+   * Returns validated group list for tag target operations.
+   * </p>
+   */
   @Override
   public List<Group> checkGroupAndDeduplication(Set<OrgTagTarget> newTagTargets,
       List<OrgTagTarget> tagTargets, Long tagId) {

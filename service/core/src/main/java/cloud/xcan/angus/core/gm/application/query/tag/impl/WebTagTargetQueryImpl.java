@@ -31,21 +31,40 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 
+/**
+ * <p>
+ * Implementation of web tag target query operations.
+ * </p>
+ * <p>
+ * Manages web tag target retrieval, validation, and application association.
+ * Provides comprehensive web tag target querying with target association support.
+ * </p>
+ * <p>
+ * Supports web tag target queries, target tag queries, deduplication,
+ * and target association for comprehensive web tag target administration.
+ * </p>
+ */
 @Biz
 public class WebTagTargetQueryImpl implements WebTagTargetQuery {
 
   @Resource
   private WebTagTargetRepo webTagTargetRepo;
-
   @Resource
   private WebTagTargetListRepo webTagTargetListRepo;
-
   @Resource
   private AppQuery appQuery;
-
   @Resource
   private AppFuncQuery appFuncQuery;
 
+  /**
+   * <p>
+   * Retrieves tag targets for specific web tag.
+   * </p>
+   * <p>
+   * Queries targets associated with the specified web tag.
+   * Validates required parameters and returns paginated results.
+   * </p>
+   */
   @Override
   public Page<WebTagTarget> findTagTarget(GenericSpecification<WebTagTarget> spec,
       PageRequest pageable) {
@@ -66,6 +85,15 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves target tags for specific target.
+   * </p>
+   * <p>
+   * Queries web tags associated with the specified target.
+   * Validates required parameters and returns paginated results.
+   * </p>
+   */
   @Override
   public Page<WebTagTarget> findTargetTag(GenericSpecification<WebTagTarget> spec,
       PageRequest pageable) {
@@ -86,6 +114,15 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates applications and performs deduplication.
+   * </p>
+   * <p>
+   * Checks application existence and removes duplicate tag targets.
+   * Returns validated application list for tag target operations.
+   * </p>
+   */
   @Override
   public List<App> checkAppAndDeduplication(Set<WebTagTarget> newTagTargets,
       List<WebTagTarget> tagTargets, Long tagId) {
@@ -105,6 +142,15 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
     return appsDb;
   }
 
+  /**
+   * <p>
+   * Validates application functions and performs deduplication.
+   * </p>
+   * <p>
+   * Checks application function existence and removes duplicate tag targets.
+   * Returns validated application function list for tag target operations.
+   * </p>
+   */
   @Override
   public List<AppFunc> checkAppFuncAndDeduplication(Set<WebTagTarget> newTagTargets,
       List<WebTagTarget> tagTargets, Long tagId) {
@@ -124,11 +170,20 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
     return appFuncDb;
   }
 
+  /**
+   * <p>
+   * Retrieves target tags by target IDs.
+   * </p>
+   * <p>
+   * Returns web tag targets grouped by target ID for multiple targets.
+   * Queries all targets except applications for comprehensive coverage.
+   * </p>
+   */
   @Override
   public Map<Long, List<WebTagTarget>> findTargetTagByTargetId(Collection<Long> targetIds) {
     Set<SearchCriteria> criteria = new HashSet<>();
     criteria.add(SearchCriteria.in("targetId", targetIds));
-    //criteria.add(SearchCriteria.equal("targetType", !WebTagTargetType.APP.getValue()));
+    // criteria.add(SearchCriteria.equal("targetType", !WebTagTargetType.APP.getValue()));
     Page<WebTagTarget> page = webTagTargetListRepo.find(criteria, PageRequest.of(0, 5000,
             JpaSort.by(Order.asc("id"))), WebTagTarget.class,
         AppTagTargetConverter::objectArrToAppTagTarget, null);

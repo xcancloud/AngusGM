@@ -33,22 +33,40 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of TO (Tenant Operation) role query operations.
+ * </p>
+ * <p>
+ * Manages TO role retrieval, validation, and user association.
+ * Provides comprehensive TO role querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports TO role detail retrieval, paginated listing, validation,
+ * and user association for comprehensive TO role administration.
+ * </p>
+ */
 @Biz
 public class TORoleQueryImpl implements TORoleQuery {
 
   @Resource
   private TORoleRepo toRoleRepo;
-
   @Resource
   private TORoleSearchRepo toRoleSearchRepo;
-
   @Resource
   private TORoleUserRepo toRoleUserRepo;
-
   @Resource
   private UserRepo userRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed TO role information by ID or code.
+   * </p>
+   * <p>
+   * Fetches TO role by ID or code with user association.
+   * Supports both numeric ID and string code lookup.
+   * </p>
+   */
   @Override
   public TORole detail(String idOrCode) {
     return new BizTemplate<TORole>() {
@@ -72,6 +90,15 @@ public class TORoleQueryImpl implements TORoleQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves TO roles with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated TO role results.
+   * </p>
+   */
   @Override
   public Page<TORole> list(GenericSpecification<TORole> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -86,21 +113,57 @@ public class TORoleQueryImpl implements TORoleQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves TO role by ID without validation.
+   * </p>
+   * <p>
+   * Returns TO role without existence validation.
+   * Returns null if TO role does not exist.
+   * </p>
+   */
   @Override
   public TORole find0(Long policyId) {
     return toRoleRepo.findById(policyId).orElse(null);
   }
 
+  /**
+   * <p>
+   * Retrieves TO roles by IDs.
+   * </p>
+   * <p>
+   * Returns TO roles for the specified role IDs.
+   * Returns empty list if no roles found.
+   * </p>
+   */
   @Override
   public List<TORole> findAllById(Set<Long> ids) {
     return toRoleRepo.findAllByIdIn(ids);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves TO role by ID.
+   * </p>
+   * <p>
+   * Returns TO role with existence validation and optional enabled check.
+   * Throws ResourceNotFound if TO role does not exist.
+   * </p>
+   */
   @Override
   public TORole checkAndFind(Long policyId, boolean checkEnabled) {
     return checkAndFind(List.of(policyId), checkEnabled).get(0);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves TO roles by IDs.
+   * </p>
+   * <p>
+   * Returns TO roles with existence validation and optional enabled check.
+   * Validates that all requested TO role IDs exist.
+   * </p>
+   */
   @Override
   public List<TORole> checkAndFind(Collection<Long> policyIds, boolean checkEnabled) {
     if (isEmpty(policyIds)) {
@@ -121,6 +184,15 @@ public class TORoleQueryImpl implements TORoleQuery {
     return policies;
   }
 
+  /**
+   * <p>
+   * Validates duplicate TO roles in parameters.
+   * </p>
+   * <p>
+   * Checks for duplicate code and name within the provided role list.
+   * Throws ProtocolException if duplicates are found.
+   * </p>
+   */
   @Override
   public void checkDuplicateInParam(List<TORole> apps) {
     if (isEmpty(apps)) {
@@ -136,6 +208,15 @@ public class TORoleQueryImpl implements TORoleQuery {
         "name", isEmpty(duplicateNamePolicy) ? null : duplicateNamePolicy.get(0).getName()});
   }
 
+  /**
+   * <p>
+   * Validates TO role code and name uniqueness.
+   * </p>
+   * <p>
+   * Ensures TO role code and name are unique across the system.
+   * Handles both insert and update scenarios.
+   * </p>
+   */
   @Override
   public void checkUniqueCodeAndName(List<TORole> policies) {
     if (isEmpty(policies)) {
@@ -160,6 +241,15 @@ public class TORoleQueryImpl implements TORoleQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets user association for TO role.
+   * </p>
+   * <p>
+   * Associates users with the specified TO role.
+   * Enriches TO role with user information for complete data.
+   * </p>
+   */
   private void setPolicyUser(TORole toPolicyDb) {
     List<TORoleUser> tpu = toRoleUserRepo.findAllByToRoleIdIn(
         Collections.singletonList(toPolicyDb.getId()));

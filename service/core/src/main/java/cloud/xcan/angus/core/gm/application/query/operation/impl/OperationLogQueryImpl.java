@@ -39,10 +39,8 @@ public class OperationLogQueryImpl implements OperationLogQuery {
 
   @Resource
   private OperationLogRepo optionLogRepo;
-
   @Resource
   private OperationLogSearchRepo operationLogSearchRepo;
-
   @Resource
   private UserManager userManager;
 

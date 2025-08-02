@@ -29,25 +29,42 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+/**
+ * <p>
+ * Implementation of system token query operations.
+ * </p>
+ * <p>
+ * Manages system token retrieval, validation, and encryption/decryption.
+ * Provides comprehensive system token querying with resource association support.
+ * </p>
+ * <p>
+ * Supports system token authentication, value retrieval, listing, encryption/decryption,
+ * quota management, and resource association for comprehensive system token administration.
+ * </p>
+ */
 @Biz
 public class SystemTokenQueryImpl implements SystemTokenQuery {
 
   @Resource
   private SystemTokenRepo systemTokenRepo;
-
   @Resource
   private SystemTokenResourceRepo systemTokenResourceRepo;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
-
   @Resource
   private ApiQuery apiQuery;
-
   @Resource
   private ServiceQuery serviceQuery;
 
+  /**
+   * <p>
+   * Authenticates system token with resource association.
+   * </p>
+   * <p>
+   * Fetches system token with API and service resource associations.
+   * Validates token existence and enriches with resource information.
+   * </p>
+   */
   @Override
   public SystemToken auth(Long id) {
     return new BizTemplate<SystemToken>() {
@@ -56,7 +73,7 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
       protected SystemToken process() {
         SystemToken systemToken = systemTokenRepo.findById(id)
             .orElseThrow(() -> ResourceNotFound.of(id, "AuthUserToken"));
-        // Join resource api
+        // Join resource API
         List<SystemTokenResource> resources = systemTokenResourceRepo.findBySystemTokenId(id);
         if (systemToken.isApiAuth()) {
           List<Long> resourceIds = resources.stream().map(x -> Long.parseLong(x.getAuthority()))
@@ -84,6 +101,15 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves system token value with decryption.
+   * </p>
+   * <p>
+   * Fetches system token and decrypts its value for system administrators.
+   * Requires system administrator privileges for access.
+   * </p>
+   */
   @Override
   public SystemToken value(Long id) {
     return new BizTemplate<SystemToken>() {
@@ -103,6 +129,15 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves all system tokens.
+   * </p>
+   * <p>
+   * Returns complete list of system tokens without resource associations.
+   * Used for system token management and listing.
+   * </p>
+   */
   @Override
   public List<SystemToken> list() {
     return new BizTemplate<List<SystemToken>>() {
@@ -113,17 +148,44 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves system token by ID without validation.
+   * </p>
+   * <p>
+   * Returns system token without existence validation.
+   * Returns null if system token does not exist.
+   * </p>
+   */
   @Override
   public SystemToken find0(Long id) {
     return systemTokenRepo.findById(id).orElse(null);
   }
 
+  /**
+   * <p>
+   * Validates system token name uniqueness.
+   * </p>
+   * <p>
+   * Ensures system token name does not already exist.
+   * Throws ResourceExisted if token name already exists.
+   * </p>
+   */
   @Override
   public void checkNameNotExisted(SystemToken systemToken) {
     ProtocolAssert.assertResourceExisted(!systemTokenRepo.existsByName(systemToken.getName()),
         TOKEN_NAME_EXISTED_T, new Object[]{systemToken.getName()});
   }
 
+  /**
+   * <p>
+   * Validates system token quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding system tokens would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkTokenQuota(Long tenantId, long incr) {
     if (incr > 0) {
@@ -132,6 +194,15 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
     }
   }
 
+  /**
+   * <p>
+   * Encrypts system token value.
+   * </p>
+   * <p>
+   * Encrypts token value using AES encryption with tenant-specific key.
+   * Uses obfuscated key strings for security.
+   * </p>
+   */
   @Override
   public String encryptValue(String value) {
     return AESUtils.encrypt(
@@ -141,6 +212,15 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
             .toString() /* => "435E9A3AB63ED118" */, value));
   }
 
+  /**
+   * <p>
+   * Decrypts system token value.
+   * </p>
+   * <p>
+   * Decrypts token value using AES decryption with tenant-specific key.
+   * Uses obfuscated key strings for security.
+   * </p>
+   */
   @Override
   public String decryptValue(String value) {
     return AESUtils.decrypt(

@@ -31,22 +31,40 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-
+/**
+ * <p>
+ * Implementation of web tag query operations.
+ * </p>
+ * <p>
+ * Manages web tag retrieval, validation, and application association.
+ * Provides comprehensive web tag querying with full-text search support.
+ * </p>
+ * <p>
+ * Supports web tag detail retrieval, paginated listing, name validation,
+ * application association, and uniqueness checking for comprehensive web tag administration.
+ * </p>
+ */
 @Biz
 public class WebTagQueryImpl implements WebTagQuery {
 
   @Resource
   private WebTagRepo webTagRepo;
-
   @Resource
   private WebTagSearchRepo webTagSearchRepo;
-
   @Resource
   private WebTagTargetRepo webTagTargetRepo;
-
   @Resource
   private AppQuery appQuery;
 
+  /**
+   * <p>
+   * Retrieves detailed web tag information by ID.
+   * </p>
+   * <p>
+   * Fetches complete web tag record with existence validation.
+   * Throws ResourceNotFound exception if web tag does not exist.
+   * </p>
+   */
   @Override
   public WebTag detail(Long id) {
     return new BizTemplate<WebTag>() {
@@ -58,6 +76,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves web tags with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated web tag results.
+   * </p>
+   */
   @Override
   public Page<WebTag> list(GenericSpecification<WebTag> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -72,11 +99,29 @@ public class WebTagQueryImpl implements WebTagQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves web tags by IDs.
+   * </p>
+   * <p>
+   * Returns web tags for the specified tag IDs.
+   * Returns empty list if no tags found.
+   * </p>
+   */
   @Override
   public List<WebTag> findAllById(Collection<Long> tagIds) {
     return webTagRepo.findAllById(tagIds);
   }
 
+  /**
+   * <p>
+   * Retrieves web tags by target ID.
+   * </p>
+   * <p>
+   * Returns web tags associated with the specified target.
+   * Returns null if no tags found for target.
+   * </p>
+   */
   @Override
   public List<WebTag> findByTargetId(Long targetId) {
     Set<Long> tagIds = webTagTargetRepo.findAllByTargetId(targetId)
@@ -87,6 +132,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     return null;
   }
 
+  /**
+   * <p>
+   * Retrieves web tags by multiple target IDs.
+   * </p>
+   * <p>
+   * Returns web tags grouped by target ID for multiple targets.
+   * Associates tags with targets for complete data.
+   * </p>
+   */
   @Override
   public Map<Long, List<WebTag>> findByTargetIdIn(Collection<Long> targetIds) {
     List<WebTagTarget> tagTargets = webTagTargetRepo.findAllByTargetIdIn(targetIds);
@@ -106,11 +160,29 @@ public class WebTagQueryImpl implements WebTagQuery {
         Collectors.mapping(WebTagTarget::getTag, Collectors.toList())));
   }
 
+  /**
+   * <p>
+   * Validates and retrieves web tag by ID.
+   * </p>
+   * <p>
+   * Returns web tag with existence validation.
+   * Throws ResourceNotFound if web tag does not exist.
+   * </p>
+   */
   @Override
   public WebTag checkAndFind(Long id) {
     return webTagRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "WebTag"));
   }
 
+  /**
+   * <p>
+   * Validates and retrieves web tags by IDs.
+   * </p>
+   * <p>
+   * Returns web tags with existence validation.
+   * Validates that all requested web tag IDs exist.
+   * </p>
+   */
   @Override
   public List<WebTag> checkAndFind(Collection<Long> tagIds) {
     List<WebTag> tags = webTagRepo.findByIdIn(tagIds);
@@ -124,6 +196,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     return tags;
   }
 
+  /**
+   * <p>
+   * Validates web tag names for addition.
+   * </p>
+   * <p>
+   * Ensures web tag names do not already exist when adding new tags.
+   * Checks for duplicate names in parameters and existing tags.
+   * </p>
+   */
   @Override
   public void checkAddTagNameExist(List<String> names) {
     checkRepeatedTagNameInParams(names);
@@ -133,6 +214,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates web tag names for update.
+   * </p>
+   * <p>
+   * Ensures web tag name uniqueness when updating existing tags.
+   * Allows same tag to keep its name during update.
+   * </p>
+   */
   @Override
   public void checkUpdateTagNameExist(List<WebTag> webTags) {
     List<String> names = webTags.stream().map(WebTag::getName).collect(Collectors.toList());
@@ -150,6 +240,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates repeated tag names in parameters.
+   * </p>
+   * <p>
+   * Checks for duplicate tag names within the provided name list.
+   * Throws ProtocolException if duplicate names are found.
+   * </p>
+   */
   @Override
   public void checkRepeatedTagNameInParams(List<String> names) {
     List<String> repeatedNames = names.stream().filter(duplicateByKey(x -> x))
@@ -160,6 +259,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets application tags for application IDs.
+   * </p>
+   * <p>
+   * Associates web tags with applications by application IDs.
+   * Enriches applications with tag information for complete data.
+   * </p>
+   */
   @Override
   public void setAppTags(Collection<Long> appIds) {
     if (isEmpty(appIds)) {
@@ -174,6 +282,15 @@ public class WebTagQueryImpl implements WebTagQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets application tags for application list.
+   * </p>
+   * <p>
+   * Associates web tags with applications in the provided list.
+   * Enriches applications with tag information for complete data.
+   * </p>
+   */
   @Override
   public void setAppTags(List<App> apps) {
     if (isEmpty(apps)) {

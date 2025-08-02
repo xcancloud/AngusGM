@@ -24,18 +24,38 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * <p>
+ * Implementation of tenant quota setting query operations.
+ * </p>
+ * <p>
+ * Manages tenant quota setting retrieval, validation, and quota management.
+ * Provides comprehensive tenant quota querying with quota validation support.
+ * </p>
+ * <p>
+ * Supports tenant quota detail retrieval, paginated listing, quota validation,
+ * quota expansion checking, and default quota association for comprehensive quota administration.
+ * </p>
+ */
 @Biz
 public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
 
   @Resource
   private SettingTenantQuotaRepo settingTenantQuotaRepo;
-
   @Resource
   private SettingTenantQuotaRepoSearch settingTenantQuotaRepoSearch;
-
   @Resource
   private SettingQuery settingQuery;
 
+  /**
+   * <p>
+   * Retrieves detailed tenant quota setting by name.
+   * </p>
+   * <p>
+   * Fetches complete tenant quota record with default quota association.
+   * Validates quota existence and associates default values.
+   * </p>
+   */
   @Override
   public SettingTenantQuota detail(String name) {
     return new BizTemplate<SettingTenantQuota>() {
@@ -56,6 +76,15 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves tenant quota settings with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Enriches results with default quota information for comprehensive display.
+   * </p>
+   */
   @Override
   public Page<SettingTenantQuota> list(GenericSpecification<SettingTenantQuota> spec,
       PageRequest pageable, boolean fullTextSearch, String[] match) {
@@ -79,6 +108,15 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates quota values against tenant quota settings.
+   * </p>
+   * <p>
+   * Checks if quota values are within allowed range for each quota resource.
+   * Throws ProtocolException if quota values exceed limits.
+   * </p>
+   */
   @DoInFuture("Optimize for loop calls to avoid performance problems")
   @Override
   public void quotaCheck(Map<QuotaResource, Long> quotasMap) {
@@ -100,6 +138,15 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates quota expansion values against tenant quota settings.
+   * </p>
+   * <p>
+   * Checks if expanded quota values are within allowed range for each quota resource.
+   * Throws ProtocolException if expanded quota values exceed limits.
+   * </p>
+   */
   @DoInFuture("Optimize for loop calls to avoid performance problems")
   @Override
   public void quotaExpansionCheck(Map<QuotaResource, Long> quotasMap) {
@@ -122,11 +169,18 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     }.execute();
   }
 
-
+  /**
+   * <p>
+   * Retrieves application list for current tenant.
+   * </p>
+   * <p>
+   * Returns list of application names associated with current tenant.
+   * Used for quota management and application filtering.
+   * </p>
+   */
   @Override
   public List<String> appList() {
     return new BizTemplate<List<String>>() {
-
 
       @Override
       protected List<String> process() {
@@ -135,12 +189,29 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves tenant quota setting by name.
+   * </p>
+   * <p>
+   * Returns tenant quota setting with existence validation.
+   * Throws ResourceNotFound if tenant quota setting does not exist.
+   * </p>
+   */
   @Override
   public SettingTenantQuota checkAndFind(String name) {
     return settingTenantQuotaRepo.findByTenantIdAndName(getOptTenantId(), name)
         .orElseThrow(() -> ResourceNotFound.of(name, "SettingTenantQuota"));
   }
 
+  /**
+   * <p>
+   * Sets default quota values for tenant quota page.
+   * </p>
+   * <p>
+   * Loads default quota settings and associates with tenant quota records.
+   * </p>
+   */
   @Override
   public void setDefaultQuota(Page<SettingTenantQuota> tenantQuotas) {
     Setting defaultSetting = settingQuery.find0(SettingKey.QUOTA);
@@ -151,6 +222,14 @@ public class SettingTenantQuotaQueryImpl implements SettingTenantQuotaQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets default quota value for single tenant quota.
+   * </p>
+   * <p>
+   * Loads default quota setting and associates with tenant quota record.
+   * </p>
+   */
   public void setDefaultQuota(SettingTenantQuota tenantQuota, String name) {
     Setting defaultSetting = settingQuery.find0(SettingKey.QUOTA);
     Quota defaultQuota = defaultSetting.findQuotaByName(name);

@@ -54,6 +54,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * <p>
+ * Implementation of user query operations.
+ * </p>
+ * <p>
+ * Manages user retrieval, validation, and association management.
+ * Provides comprehensive user querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports user detail retrieval, paginated listing, validation, quota management,
+ * and association handling for comprehensive user administration.
+ * </p>
+ */
 @Biz
 @Slf4j
 @SummaryQueryRegister(name = "User", table = "user0", topAuthority = TOP_TENANT_ADMIN, ignoreDeleted = true,
@@ -63,31 +76,32 @@ public class UserQueryImpl implements UserQuery {
 
   @Resource
   private UserRepo userRepo;
-
   @Resource
   private UserListRepo userListRepo;
-
   @Resource
   private UserSearchRepo userSearchRepo;
-
   @Resource
   private AuthUserRepo commonAuthUserRepo;
-
   @Resource
   private DeptUserQuery userDeptQuery;
-
   @Resource
   private GroupUserQuery userGroupQuery;
-
   @Resource
   private OrgTagTargetQuery orgTagTargetQuery;
-
   @Resource
   private TenantQuery tenantQuery;
-
   @Resource
   private SettingTenantQuotaManager settingTenantQuotaManager;
 
+  /**
+   * <p>
+   * Retrieves detailed user information by ID.
+   * </p>
+   * <p>
+   * Fetches complete user record with optional association joining.
+   * Enriches user data with OAuth information and associations.
+   * </p>
+   */
   @SneakyThrow0
   @Override
   public User detail(Long id, boolean joinAssoc) {
@@ -114,6 +128,15 @@ public class UserQueryImpl implements UserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves users with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Returns paginated user results with comprehensive data.
+   * </p>
+   */
   @SneakyThrow0
   @Override
   public Page<User> list(GenericSpecification<User> spec, Pageable pageable,
@@ -128,6 +151,15 @@ public class UserQueryImpl implements UserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates username and returns user ID if exists.
+   * </p>
+   * <p>
+   * Checks username existence and logs duplicate warnings.
+   * Returns user ID if username exists, null otherwise.
+   * </p>
+   */
   @Override
   public Long checkUsername(String username) {
     return new BizTemplate<Long>(false) {
@@ -143,6 +175,15 @@ public class UserQueryImpl implements UserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves system administrators for current tenant.
+   * </p>
+   * <p>
+   * Returns all system admin users with first admin flag.
+   * Sets first system admin indicator for priority handling.
+   * </p>
+   */
   @Override
   public List<User> getSysAdmins() {
     return new BizTemplate<List<User>>() {
@@ -160,42 +201,114 @@ public class UserQueryImpl implements UserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves user by ID.
+   * </p>
+   * <p>
+   * Returns user by user ID without additional validation.
+   * Returns null if user does not exist.
+   * </p>
+   */
   @Override
   public User findById(Long id) {
     return userRepo.findByUserId(id);
   }
 
+  /**
+   * <p>
+   * Retrieves users by IDs.
+   * </p>
+   * <p>
+   * Returns users for the specified user IDs.
+   * Returns empty list if no users found.
+   * </p>
+   */
   @Override
   public List<User> findByIdIn(Collection<Long> ids) {
     return userRepo.findByIdIn(ids);
   }
 
+  /**
+   * <p>
+   * Finds users with expired lock.
+   * </p>
+   * <p>
+   * Returns user IDs that have exceeded lock period.
+   * Used for automatic unlock processing.
+   * </p>
+   */
   @Override
   public Set<Long> findLockExpire(Long count) {
     return userRepo.findLockExpire(LocalDateTime.now(), count);
   }
 
+  /**
+   * <p>
+   * Finds users with expired unlock.
+   * </p>
+   * <p>
+   * Returns user IDs that have exceeded unlock period.
+   * Used for automatic lock processing.
+   * </p>
+   */
   @Override
   public Set<Long> findUnlockExpire(Long count) {
     return userRepo.findUnockExpire(LocalDateTime.now(), count);
   }
 
+  /**
+   * <p>
+   * Retrieves tenant detail by ID.
+   * </p>
+   * <p>
+   * Delegates to tenant query for tenant information.
+   * Returns complete tenant details.
+   * </p>
+   */
   @Override
   public Tenant tenantDetail(Long id) {
     return tenantQuery.detail(id);
   }
 
+  /**
+   * <p>
+   * Finds signup or first system admin user for tenant.
+   * </p>
+   * <p>
+   * Returns main system admin user for the specified tenant.
+   * Throws ResourceNotFound if no admin user exists.
+   * </p>
+   */
   @Override
   public User findSignupOrFirstSysAdminUser(Long tenantId) {
     return userRepo.findMainSysAdminUser(tenantId)
         .orElseThrow(() -> ResourceNotFound.of(tenantId, "SignupOrFirstSysAdminUser"));
   }
 
+  /**
+   * <p>
+   * Counts valid system admin users for current tenant.
+   * </p>
+   * <p>
+   * Returns count of enabled system admin users.
+   * Used for quota and validation purposes.
+   * </p>
+   */
   @Override
   public int countValidSysAdminUser() {
     return userRepo.countValidSysAdminUser(getOptTenantId());
   }
 
+  /**
+   * <p>
+   * Validates username uniqueness for update.
+   * </p>
+   * <p>
+   * Ensures username is unique when updating user.
+   * Excludes current user from uniqueness check.
+   * </p>
+   */
   @Override
   public void checkUsernameUpdate(String username, Long id) {
     List<User> userDb = userRepo.findByUsernameAndIdNot(username, id);
@@ -203,6 +316,15 @@ public class UserQueryImpl implements UserQuery {
         new Object[]{username, "Username"});
   }
 
+  /**
+   * <p>
+   * Validates mobile uniqueness for update.
+   * </p>
+   * <p>
+   * Ensures mobile is unique when updating user.
+   * Excludes current user from uniqueness check.
+   * </p>
+   */
   @Override
   public void checkUpdateMobile(String mobile, Long id) {
     List<User> userDb = userRepo.findByMobileAndIdNot(mobile, id);
@@ -210,6 +332,15 @@ public class UserQueryImpl implements UserQuery {
         new Object[]{mobile, "Mobile"});
   }
 
+  /**
+   * <p>
+   * Validates email uniqueness for update.
+   * </p>
+   * <p>
+   * Ensures email is unique when updating user.
+   * Excludes current user from uniqueness check.
+   * </p>
+   */
   @Override
   public void checkUpdateEmail(String email, Long id) {
     List<User> userDb = userRepo.findByEmailAndIdNot(email, id);
@@ -217,11 +348,29 @@ public class UserQueryImpl implements UserQuery {
         new Object[]{email, "Email"});
   }
 
+  /**
+   * <p>
+   * Validates and retrieves user by ID.
+   * </p>
+   * <p>
+   * Returns user with existence validation.
+   * Throws ResourceNotFound if user does not exist.
+   * </p>
+   */
   @Override
   public User checkAndFind(Long id) {
     return userRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "User"));
   }
 
+  /**
+   * <p>
+   * Validates and retrieves users by IDs.
+   * </p>
+   * <p>
+   * Returns users with existence validation.
+   * Validates that all requested user IDs exist.
+   * </p>
+   */
   @Override
   public List<User> checkAndFind(Collection<Long> ids) {
     List<User> users = userRepo.findAllById(ids);
@@ -235,6 +384,15 @@ public class UserQueryImpl implements UserQuery {
     return users;
   }
 
+  /**
+   * <p>
+   * Validates user addition quota for tenant.
+   * </p>
+   * <p>
+   * Checks user quota and related association quotas.
+   * Validates department, group, and tag quotas for user addition.
+   * </p>
+   */
   @Override
   public void checkAddQuota(Tenant optTenant, User user, List<DeptUser> deptUsers,
       List<GroupUser> groupUsers, List<OrgTagTarget> userTags) {
@@ -247,7 +405,7 @@ public class UserQueryImpl implements UserQuery {
         user.getId());
     if (isNotEmpty(deptUsers)) {
       for (DeptUser userDept : deptUsers) {
-        // Noteworthy:: Duplicate data will trigger the database uniqueness constraint
+        // Noteworthy: Duplicate data will trigger the database uniqueness constraint
         userDeptQuery.checkDeptUserAppendQuota(optTenantId, 1, userDept.getDeptId());
       }
     }
@@ -257,7 +415,7 @@ public class UserQueryImpl implements UserQuery {
         : groupUsers.size(), user.getId());
     if (isNotEmpty(groupUsers)) {
       for (GroupUser groupUser : groupUsers) {
-        // Noteworthy:: Duplicate data will trigger the database uniqueness constraint
+        // Noteworthy: Duplicate data will trigger the database uniqueness constraint
         userGroupQuery.checkGroupUserAppendQuota(optTenantId, 1, groupUser.getGroupId());
       }
     }
@@ -268,9 +426,13 @@ public class UserQueryImpl implements UserQuery {
   }
 
   /**
-   * Only allow admin to operate admin: delete, enabled or disabled, locked or unlocked
-   *
-   * @param users operate users
+   * <p>
+   * Validates admin operation permissions.
+   * </p>
+   * <p>
+   * Only allows admin to operate admin users for delete, enable/disable, lock/unlock.
+   * Bypasses validation for internal API, TO user, or tenant system admin.
+   * </p>
    */
   @Override
   public void checkRefuseOperateAdmin(List<User> users) {
@@ -283,6 +445,15 @@ public class UserQueryImpl implements UserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates signup account uniqueness.
+   * </p>
+   * <p>
+   * Checks email and mobile uniqueness for signup accounts.
+   * Temporarily disables multi-tenant control for global uniqueness check.
+   * </p>
+   */
   @Override
   public void checkSignupAccounts(User user) {
     boolean isMultiTenantCtrl = isMultiTenantCtrl();
@@ -308,6 +479,15 @@ public class UserQueryImpl implements UserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates username uniqueness for addition.
+   * </p>
+   * <p>
+   * Checks username uniqueness across all tenants.
+   * Temporarily disables multi-tenant control for global check.
+   * </p>
+   */
   @Override
   public void checkAddUsername(String username) {
     if (isEmpty(username)) {
@@ -326,6 +506,15 @@ public class UserQueryImpl implements UserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates mobile uniqueness for addition.
+   * </p>
+   * <p>
+   * Checks mobile uniqueness based on user source type.
+   * Handles different validation rules for signup vs add user scenarios.
+   * </p>
+   */
   @Override
   public void checkAddMobile(String mobile, UserSource userSource) {
     if (isEmpty(mobile)) {
@@ -362,6 +551,15 @@ public class UserQueryImpl implements UserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates email uniqueness for addition.
+   * </p>
+   * <p>
+   * Checks email uniqueness based on user source type.
+   * Handles different validation rules for signup vs add user scenarios.
+   * </p>
+   */
   @Override
   public void checkAddEmail(String email, UserSource userSource) {
     if (isEmpty(email)) {
@@ -398,6 +596,15 @@ public class UserQueryImpl implements UserQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates user quota for tenant.
+   * </p>
+   * <p>
+   * Checks if adding users would exceed tenant quota limits.
+   * Throws appropriate exception if quota would be exceeded.
+   * </p>
+   */
   @Override
   public void checkUserQuota(Long tenantId, long incr, Long userId) {
     if (incr > 0) {

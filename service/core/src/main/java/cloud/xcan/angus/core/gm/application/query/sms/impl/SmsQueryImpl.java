@@ -42,7 +42,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-
+/**
+ * <p>
+ * Implementation of SMS query operations.
+ * </p>
+ * <p>
+ * Manages SMS retrieval, validation, and sending verification.
+ * Provides comprehensive SMS querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports SMS detail retrieval, paginated listing, verification code checking,
+ * mobile format validation, channel validation, template validation, and provider management
+ * for comprehensive SMS administration.
+ * </p>
+ */
 @Biz
 @SummaryQueryRegister(name = "Sms", table = "sms", isMultiTenantCtrl = false,
     groupByColumns = {"actual_send_date", "send_status", "urgent", "verification_code",
@@ -51,23 +64,27 @@ public class SmsQueryImpl implements SmsQuery {
 
   @Resource
   private SmsRepo smsRepo;
-
   @Resource
   private SmsChannelQuery smsChannelQuery;
-
   @Resource
   private SmsTemplateRepo smsTemplateRepo;
-
   @Resource
   private SmsTemplateBizRepo smsTemplateBizRepo;
-
   @Resource
   private RedisService<String> stringRedisService;
 
+  /**
+   * <p>
+   * Retrieves detailed SMS information by ID.
+   * </p>
+   * <p>
+   * Fetches complete SMS record with existence validation.
+   * Throws ResourceNotFound exception if SMS does not exist.
+   * </p>
+   */
   @Override
   public Sms detail(Long id) {
     return new BizTemplate<Sms>() {
-
       @Override
       protected Sms process() {
         return smsRepo.findById(id)
@@ -76,6 +93,15 @@ public class SmsQueryImpl implements SmsQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves SMS records with optional filtering and pagination.
+   * </p>
+   * <p>
+   * Supports specification-based filtering and pagination.
+   * Returns paginated SMS results.
+   * </p>
+   */
   @Override
   public Page<Sms> list(Specification<Sms> spec, Pageable pageable) {
     return new BizTemplate<Page<Sms>>() {
@@ -87,11 +113,29 @@ public class SmsQueryImpl implements SmsQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves pending SMS records for processing.
+   * </p>
+   * <p>
+   * Returns SMS records with PENDING status for batch processing.
+   * Limits the number of records returned for performance.
+   * </p>
+   */
   @Override
   public List<Sms> findSmsInPending(int count) {
     return smsRepo.findAllBySendStatusAndSize(ProcessStatus.PENDING.getValue(), count);
   }
 
+  /**
+   * <p>
+   * Validates verification code send repetition.
+   * </p>
+   * <p>
+   * Checks if verification code has been sent recently for each mobile number.
+   * Throws exception if verification code send is repeated too frequently.
+   * </p>
+   */
   @Override
   public void checkVerifyCodeSendRepeated(Sms sms) {
     final InputParam inputParamData = sms.getInputParamData();
@@ -103,6 +147,15 @@ public class SmsQueryImpl implements SmsQuery {
     );
   }
 
+  /**
+   * <p>
+   * Validates mobile number format.
+   * </p>
+   * <p>
+   * Checks mobile number format for each mobile in SMS input parameters.
+   * Validates format only when sending by mobile numbers.
+   * </p>
+   */
   @Override
   public void checkMobileFormat(Sms sms) {
     if (sms.isSendByMobiles()) {
@@ -110,6 +163,15 @@ public class SmsQueryImpl implements SmsQuery {
     }
   }
 
+  /**
+   * <p>
+   * Validates and retrieves enabled SMS channel.
+   * </p>
+   * <p>
+   * Checks if enabled SMS channel exists and returns it.
+   * Throws SysException if no enabled SMS channel is available.
+   * </p>
+   */
   @Override
   public SmsChannel checkChannelEnabledAndGet() {
     SmsChannel enabledSmsChannel = smsChannelQuery.findEnabled();
@@ -119,6 +181,15 @@ public class SmsQueryImpl implements SmsQuery {
     return enabledSmsChannel;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves SMS template.
+   * </p>
+   * <p>
+   * Checks SMS template business configuration and template existence.
+   * Throws SysException if template configuration is missing or template not found.
+   * </p>
+   */
   @Override
   public SmsTemplate checkTemplateAndGet(Sms sms, SmsChannel enabledSmsChannel) {
     SmsTemplate smsTemplate = null;
@@ -136,12 +207,21 @@ public class SmsQueryImpl implements SmsQuery {
     return smsTemplate;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves SMS provider.
+   * </p>
+   * <p>
+   * Checks SMS provider availability and matches with enabled channel.
+   * Throws SysException if no SMS plugin is available.
+   * </p>
+   */
   @Override
   public SmsProvider checkAndGetSmsProvider(SmsChannel enabledSmsChannel) {
     SmsProvider enabledSmsProvider = null;
     Map<String, SmsProvider> providerMap = null;
     try {
-      //Fix:: Dependency injection On linux
+      // Fix: Dependency injection on Linux
       providerMap = SpringContextHolder.getCtx().getBeansOfType(SmsProvider.class);
     } catch (Exception e) {
       // NOOP

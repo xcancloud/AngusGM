@@ -14,7 +14,19 @@ import jakarta.annotation.Resource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
-
+/**
+ * <p>
+ * Implementation of setting query operations.
+ * </p>
+ * <p>
+ * Manages system setting retrieval, validation, and quota management.
+ * Provides comprehensive setting querying with quota support.
+ * </p>
+ * <p>
+ * Supports setting detail retrieval, quota validation, and setting management
+ * for comprehensive system configuration administration.
+ * </p>
+ */
 @Biz
 @Slf4j
 public class SettingQueryImpl implements SettingQuery {
@@ -22,6 +34,15 @@ public class SettingQueryImpl implements SettingQuery {
   @Resource
   private SettingManager settingManager;
 
+  /**
+   * <p>
+   * Retrieves detailed setting information by key.
+   * </p>
+   * <p>
+   * Fetches complete setting record for the specified key.
+   * Returns setting with full configuration details.
+   * </p>
+   */
   @Override
   public Setting detail(SettingKey key) {
     return new BizTemplate<Setting>() {
@@ -33,11 +54,29 @@ public class SettingQueryImpl implements SettingQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves setting by key without business template.
+   * </p>
+   * <p>
+   * Returns setting directly from setting manager.
+   * Used for internal operations that don't require business template.
+   * </p>
+   */
   @Override
   public Setting find0(SettingKey key) {
     return settingManager.setting(key);
   }
 
+  /**
+   * <p>
+   * Validates and retrieves quota by name.
+   * </p>
+   * <p>
+   * Validates quota resource existence and returns quota configuration.
+   * Throws ResourceNotFound if quota resource or setting not found.
+   * </p>
+   */
   @Override
   public Quota checkAndFindQuota(String name) {
     QuotaResource quota;

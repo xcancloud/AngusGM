@@ -15,15 +15,36 @@ import cloud.xcan.angus.spec.experimental.Assert;
 import jakarta.annotation.Resource;
 import java.util.Objects;
 
+/**
+ * <p>
+ * Implementation of user setting query operations.
+ * </p>
+ * <p>
+ * Manages user setting retrieval, validation, and proxy configuration.
+ * Provides comprehensive user setting querying with tenant setting support.
+ * </p>
+ * <p>
+ * Supports user setting detail retrieval, proxy configuration assembly,
+ * and tenant setting integration for comprehensive user configuration administration.
+ * </p>
+ */
 @Biz
 public class SettingUserQueryImpl implements SettingUserQuery {
 
   @Resource
   private SettingUserRepo settingUserRepo;
-
   @Resource
   private SettingTenantQuery settingTenantQuery;
 
+  /**
+   * <p>
+   * Retrieves proxy configuration by tenant ID.
+   * </p>
+   * <p>
+   * Fetches tenant setting and assembles proxy configuration.
+   * Validates tenant setting existence before proxy assembly.
+   * </p>
+   */
   @Override
   public UserApiProxy findProxyByTenantId(Long optTenantId) {
     return new BizTemplate<UserApiProxy>() {
@@ -37,12 +58,30 @@ public class SettingUserQueryImpl implements SettingUserQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves user setting by user ID with validation.
+   * </p>
+   * <p>
+   * Returns user setting with existence validation.
+   * Throws ResourceNotFound if user setting does not exist.
+   * </p>
+   */
   @Override
   public SettingUser find(Long userId) {
     return settingUserRepo.findById(userId).orElseThrow(
         () -> ResourceNotFound.of(userId, "UserSetting"));
   }
 
+  /**
+   * <p>
+   * Retrieves user setting by user ID without validation.
+   * </p>
+   * <p>
+   * Returns user setting without existence validation.
+   * Returns null if user setting does not exist.
+   * </p>
+   */
   @Override
   public SettingUser find0(Long userId) {
     SettingUser settingUser = settingUserRepo.findById(userId).orElse(null);

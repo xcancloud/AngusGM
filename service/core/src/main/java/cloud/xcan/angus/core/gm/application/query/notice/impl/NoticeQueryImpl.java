@@ -51,10 +51,8 @@ public class NoticeQueryImpl implements NoticeQuery {
 
   @Resource
   private NoticeRepo noticeRepo;
-
   @Resource
   private NoticeSearchRepo noticeSearchRepo;
-
   @Resource
   private AppRepo appRepo;
 

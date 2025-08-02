@@ -35,6 +35,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <p>
+ * Implementation of service query operations.
+ * </p>
+ * <p>
+ * Manages service retrieval, validation, and API association.
+ * Provides comprehensive service querying with full-text search and summary support.
+ * </p>
+ * <p>
+ * Supports service detail retrieval, paginated listing, API management,
+ * resource queries, and service validation for comprehensive service administration.
+ * </p>
+ */
 @Biz
 @SummaryQueryRegister(name = "Service", table = "service", isMultiTenantCtrl = false,
     groupByColumns = {"created_date", "source", /*"api_doc_type",*/ "enabled"})
@@ -42,16 +55,22 @@ public class ServiceQueryImpl implements ServiceQuery {
 
   @Resource
   private ServiceRepo serviceRepo;
-
   @Resource
   private ServiceSearchRepo serviceSearchRepo;
-
   @Resource
   private ApiRepo apiRepo;
-
   @Resource
   private ServiceResourceApiRepo serviceResourceApiRepo;
 
+  /**
+   * <p>
+   * Retrieves detailed service information by ID.
+   * </p>
+   * <p>
+   * Fetches complete service record with API count association.
+   * Throws ResourceNotFound exception if service does not exist.
+   * </p>
+   */
   @Override
   public Service detail(Long id) {
     return new BizTemplate<Service>() {
@@ -66,6 +85,15 @@ public class ServiceQueryImpl implements ServiceQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves services with optional filtering and search capabilities.
+   * </p>
+   * <p>
+   * Supports full-text search and specification-based filtering.
+   * Enriches results with API count information for comprehensive display.
+   * </p>
+   */
   @Override
   public Page<Service> list(GenericSpecification<Service> spec, PageRequest pageable,
       boolean fullTextSearch, String[] match) {
@@ -82,6 +110,15 @@ public class ServiceQueryImpl implements ServiceQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves API list for specific service.
+   * </p>
+   * <p>
+   * Returns all APIs associated with the specified service.
+   * Validates service existence before retrieving APIs.
+   * </p>
+   */
   @Override
   public List<Api> apiList(Long id) {
     return new BizTemplate<List<Api>>() {
@@ -96,6 +133,15 @@ public class ServiceQueryImpl implements ServiceQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves resource list for services.
+   * </p>
+   * <p>
+   * Returns service resources with optional authentication filtering.
+   * Handles both specific service code and all services scenarios.
+   * </p>
+   */
   @Override
   public List<Service> resourceList(String serviceCode, Boolean auth) {
     return new BizTemplate<List<Service>>(false) {
@@ -130,6 +176,15 @@ public class ServiceQueryImpl implements ServiceQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Retrieves resource API list for specific service.
+   * </p>
+   * <p>
+   * Returns service resource APIs with optional authentication filtering.
+   * Supports both all resources and specific resource name scenarios.
+   * </p>
+   */
   @Transactional
   @Override
   public Service resourceApiList(String serviceCode, String resourceName, Boolean auth) {
@@ -157,11 +212,29 @@ public class ServiceQueryImpl implements ServiceQuery {
     }.execute();
   }
 
+  /**
+   * <p>
+   * Validates and retrieves service by ID.
+   * </p>
+   * <p>
+   * Returns service by ID with existence validation.
+   * Throws ResourceNotFound if service does not exist.
+   * </p>
+   */
   @Override
   public Service checkAndFind(Long id) {
     return serviceRepo.findById(id).orElseThrow(() -> ResourceNotFound.of(id, "Service"));
   }
 
+  /**
+   * <p>
+   * Validates and retrieves services by service codes.
+   * </p>
+   * <p>
+   * Returns services by codes with existence validation.
+   * Validates that all requested service codes exist.
+   * </p>
+   */
   @Override
   public List<Service> checkAndFind(Collection<String> serviceCodes) {
     List<Service> services = serviceRepo.findByCodeIn(serviceCodes);
@@ -176,6 +249,15 @@ public class ServiceQueryImpl implements ServiceQuery {
     return services;
   }
 
+  /**
+   * <p>
+   * Validates and retrieves services by IDs with optional enabled check.
+   * </p>
+   * <p>
+   * Returns services by IDs with existence validation.
+   * Optionally validates that all services are enabled.
+   * </p>
+   */
   @Override
   public List<Service> checkAndFind(Collection<Long> ids, boolean checkEnabled) {
     List<Service> services = serviceRepo.findAllByIdIn(ids);
@@ -188,19 +270,37 @@ public class ServiceQueryImpl implements ServiceQuery {
     }
 
     if (checkEnabled) {
-      for (Service api : services) {
-        assertTrue(api.getEnabled(), SERVICE_IS_DISABLED_T, new Object[]{api.getName()});
+      for (Service service : services) {
+        assertTrue(service.getEnabled(), SERVICE_IS_DISABLED_T, new Object[]{service.getName()});
       }
     }
     return services;
   }
 
+  /**
+   * <p>
+   * Validates service code for addition.
+   * </p>
+   * <p>
+   * Ensures service code does not already exist when adding new service.
+   * Throws ResourceExisted if service code already exists.
+   * </p>
+   */
   @Override
   public void checkAddServiceCode(Service service) {
     Service serviceDb = serviceRepo.findByCode(service.getCode()).orElse(null);
     assertResourceExisted(serviceDb, service.getCode(), "Service");
   }
 
+  /**
+   * <p>
+   * Validates service code for update.
+   * </p>
+   * <p>
+   * Ensures service code uniqueness when updating existing service.
+   * Allows same service to keep its code during update.
+   * </p>
+   */
   @Override
   public void checkUpdateServiceCode(Service service) {
     if (nonNull(service.getCode())) {
@@ -210,6 +310,14 @@ public class ServiceQueryImpl implements ServiceQuery {
     }
   }
 
+  /**
+   * <p>
+   * Sets API count for service list.
+   * </p>
+   * <p>
+   * Loads API counts and associates with services for complete information.
+   * </p>
+   */
   @Override
   public void setApiNum(List<Service> services) {
     if (isNotEmpty(services)) {
