@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
-import { enumUtils } from '@xcan-angus/infra';
-import { ReceiveChannelType } from '@/enums/enums';
+import { ReceiveChannelType, enumUtils } from '@xcan-angus/infra';
 import { AsyncComponent, Card } from '@xcan-angus/vue-ui';
 
 const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./components/http.vue'));

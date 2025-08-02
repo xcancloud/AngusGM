@@ -86,12 +86,6 @@
         "GLOBAL_MANAGEMENT": "Global Management",
         "APP": "Application"
       },
-      "ReceiveChannelType": {
-        "WEBHOOK": "Webhook",
-        "EMAIL": "Email Group",
-        "DINGTALK": "DingTalk Bot",
-        "WECHAT": "WeChat Work Bot"
-      },
       "EventPushStatus": {
         "PENDING": "Pending",
         "PUSHING": "Pushing",

@@ -86,12 +86,6 @@
         "GLOBAL_MANAGEMENT": "全局管理",
         "APP": "应用"
       },
-      "ReceiveChannelType": {
-        "WEBHOOK": "Webhook",
-        "EMAIL": "邮件组",
-        "DINGTALK": "钉钉机器人",
-        "WECHAT": "企业微信机器人"
-      },
       "EventPushStatus": {
         "PENDING": "待推送",
         "PUSHING": "推送中",

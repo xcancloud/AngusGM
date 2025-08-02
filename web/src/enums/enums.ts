@@ -109,14 +109,6 @@ export enum Scope {
   APP = 'APP'
 }
 
-// Notification Types
-export enum ReceiveChannelType {
-  WEBHOOK = 'WEBHOOK',
-  EMAIL = 'EMAIL',
-  DINGTALK = 'DINGTALK',
-  WECHAT = 'WECHAT'
-}
-
 export enum EventPushStatus {
   PENDING = 'PENDING',
   PUSHING = 'PUSHING',
@@ -246,7 +238,6 @@ export const enumNamespaceMap = new Map<any, string>([
   [Scope, 'xcm.enum.Scope'],
 
   // Notification Types
-  [ReceiveChannelType, 'xcm.enum.ReceiveChannelType'],
   [EventPushStatus, 'xcm.enum.EventPushStatus'],
   [MessageStatus, 'xcm.enum.MessageStatus'],
   [MessageReadTab, 'xcm.enum.MessageReadTab'],
