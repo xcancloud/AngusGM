@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Button, Form, FormItem, RadioGroup, Radio, Textarea } from 'ant-design-vue';
 import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan-angus/vue-ui';
 import { enumUtils, appContext, GM } from '@xcan-angus/infra';
+import { SentType } from '@/enums/enums';
 import { useRouter } from 'vue-router';
 
 import type { FormDataType } from '../../interface';
@@ -153,7 +154,7 @@ const enumsList: {
 
 // 获取字典
 const getDirectory = async () => {
-  enumsList.SentTypeList = enumUtils.enumToMessages('SentType');
+  enumsList.SentTypeList = enumUtils.enumToMessages(SentType);
 };
 
 onMounted(() => {

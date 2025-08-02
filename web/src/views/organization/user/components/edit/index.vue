@@ -301,7 +301,7 @@ const changeItc = (value: string) => {
 
 const userGender = ref<EnumMessage<Gender>[]>([]);
 const loadUserGender = async () => {
-  userGender.value = enumUtils.enumToMessages('Gender');
+  userGender.value = enumUtils.enumToMessages(Gender);
 };
 
 const firstNameChange = debounce(duration.search, (event: any) => {

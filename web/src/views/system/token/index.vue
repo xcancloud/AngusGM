@@ -17,7 +17,7 @@ import {
   notification,
   Table
 } from '@xcan-angus/vue-ui';
-import {app, appContext, EnumMessage, enumUtils} from '@xcan-angus/infra';
+import { app, appContext, EnumMessage, ResourceAuthType, ResourceAclType, enumUtils } from '@xcan-angus/infra';
 
 import SelectApis from '@/views/system/token/components/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';
@@ -49,9 +49,9 @@ const editable = computed(() => {
   return appContext.isSysAdmin() && tableData.list.length < tokenQuota.value;
 });
 
-const authTypeOpt = ref<EnumMessage<string>[]>([]);
+const authTypeOpt = ref<EnumMessage<ResourceAuthType>[]>([]);
 const fetchAuthType = async () => {
-  authTypeOpt.value = enumUtils.enumToMessages('ResourceAuthType');
+  authTypeOpt.value = enumUtils.enumToMessages(ResourceAuthType);
 };
 
 const changeAuthType = e => {
@@ -162,9 +162,9 @@ const closeToken = (id: string) => {
   });
 };
 
-const ResourceAclTypeOpt = ref<EnumMessage<string>[]>([]);
+const ResourceAclTypeOpt = ref<EnumMessage<ResourceAclType>[]>([]);
 const getResourceAclType = async () => {
-  ResourceAclTypeOpt.value = enumUtils.enumToMessages('ResourceAclType');
+  ResourceAclTypeOpt.value = enumUtils.enumToMessages(ResourceAclType);
 };
 
 const getIsExpired = (item) => {

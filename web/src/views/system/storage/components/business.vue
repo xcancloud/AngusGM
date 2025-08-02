@@ -3,14 +3,14 @@ import { onMounted, ref } from 'vue';
 import { Button, Radio, RadioGroup } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { Card, Grid, Hints, Icon, Input, modal } from '@xcan-angus/vue-ui';
-import { app, enumUtils } from '@xcan-angus/infra';
+import { app, EnumMessage, PlatformStoreType, enumUtils } from '@xcan-angus/infra';
 import { storage as storageApi } from '@/api/index';
 
 const { t } = useI18n();
-const enumData = ref<{ value: string, message: string }[]>([]);
+const enumData = ref<EnumMessage<PlatformStoreType>[]>([]);
 
 const loadEnums = async () => {
-  enumData.value = enumUtils.enumToMessages('PlatformStoreType');
+  enumData.value = enumUtils.enumToMessages(PlatformStoreType);
 };
 
 const handleChange = e => {

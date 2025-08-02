@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { enumUtils } from '@xcan-angus/infra';
+import { enumUtils, UserSource, Gender, HttpMethod, ApiType, EventType, ProcessStatus } from '@xcan-angus/infra';
+import { GroupSource, OrgTargetType, NoticeScope, SentType, MessageReceiveType, MessageStatus, ServiceSource, EventPushStatus } from '@/enums/enums';
 import { useI18n } from 'vue-i18n';
 import { DateType, PieSetting } from './PropsType';
 
@@ -26,15 +27,6 @@ const props = withDefaults(defineProps<Props>(), {
 const { t } = useI18n();
 // ---------------蓝---------绿-----------黄------------红---------------浅蓝-------------紫----------橘黄---------灰色-------------粉色-------------浅蓝1
 const COLOR = ['45,142,255', '82,196,26', '255,165,43', '245,34,45', '103,215,255', '201,119,255', '255,102,0', '217, 217, 217', '251, 129, 255', '171, 211, 255'];
-
-/**
- * 饼图统计图配置说明：
- * key: 对应数据库表的列,请求接口的groupByColumns参数,返回的统计数据和顺序有关,可参照后台接口返回（开启loadCountGroup()可查看具体返回结果）
- * value: 每一列统计的类型名称,前端配置，对应统计图的title
- * type: 分两种 一种是统计结果有多种类型,对应具体的enum接口;另一种只有0 和 1（0和1前端配置）
- * color:rgba格式，配置rgb即可,颜色数组的长度对应type的长度，缺少会报错
- * 顺序决定统计的结果的顺序
- */
 
 // 用户统计配置
 const userGroup = ref<PieSetting[]>([
@@ -352,12 +344,12 @@ const loadEnums = async () => {
 
 // 用户来源
 const loadUserSource = async () => {
-  userGroup.value[0].type = enumUtils.enumToMessages('UserSource');
+  userGroup.value[0].type = enumUtils.enumToMessages(UserSource);
 };
 
 // 用户性别
 const loadUserGender = async () => {
-  const data = enumUtils.enumToMessages('Gender');
+  const data = enumUtils.enumToMessages(Gender);
   userGroup.value[4].type = data;
   userGroup.value[4].color = data.map(item => getUserGenderColor(item.value) || '');
 };
@@ -376,17 +368,17 @@ const getUserGenderColor = (value: string) => {
 
 // 组来源
 const loadGroupSource = async () => {
-  groupByGroup.value[1].type = enumUtils.enumToMessages('GroupSource');
+  groupByGroup.value[1].type = enumUtils.enumToMessages(GroupSource);
 };
 
 // 租户下标签类型
 const loadOrgTargetType = async () => {
-  orgTagGroup.value[0].type = enumUtils.enumToMessages('OrgTargetType');
+  orgTagGroup.value[0].type = enumUtils.enumToMessages(OrgTargetType);
 };
 
 // 公告发送范围
 const loadNoticeScope = async () => {
-  const data = await enumUtils.enumToMessages('NoticeScope');
+  const data = enumUtils.enumToMessages(NoticeScope);
   noticeGroup.value[0].type = data;
   noticeGroup.value[0].color = data.map(item => getNoticeScopeColor(item.value) || '');
 };
@@ -398,13 +390,13 @@ const getNoticeScopeColor = (value: string) => {
       return COLOR[1];
   }
 };
+
 //  公告发送类型
 const getNoticeSentType = async () => {
-  const data = enumUtils.enumToMessages('SentType');
+  const data = enumUtils.enumToMessages(SentType);
   noticeGroup.value[1].type = data;
   noticeGroup.value[1].color = data.map(item => getNoticeSentTypeColor(item.value) || '');
 };
-
 const getNoticeSentTypeColor = (value: string) => {
   switch (value) {
     case 'SEND_NOW': // 立即发送
@@ -416,7 +408,7 @@ const getNoticeSentTypeColor = (value: string) => {
 
 // 消息类型
 const loadMessageReceiveType = async () => {
-  const data = enumUtils.enumToMessages('MessageReceiveType');
+  const data = enumUtils.enumToMessages(MessageReceiveType);
   messageGroup.value[0].type = data;
   messageGroup.value[0].color = data.map(item => getMessageReceiveTypeColor(item.value) || '');
 };
@@ -432,11 +424,10 @@ const getMessageReceiveTypeColor = (value: string) => {
 
 // 消息状态
 const loadMessageStatus = async () => {
-  const data = enumUtils.enumToMessages('MessageStatus');
+  const data = enumUtils.enumToMessages(MessageStatus);
   messageGroup.value[1].type = data;
   messageGroup.value[1].color = data.map(item => getMessageStatusColor(item.value) || '');
 };
-
 const getMessageStatusColor = (value: string) => {
   switch (value) {
     case 'PENDING': // 待发送
@@ -450,11 +441,10 @@ const getMessageStatusColor = (value: string) => {
 
 // 服务来源
 const loadServiceSource = async () => {
-  const data = enumUtils.enumToMessages('ServiceSource');
+  const data = enumUtils.enumToMessages(ServiceSource);
   serviceGroup.value[0].type = data;
   serviceGroup.value[0].color = data.map(item => getServiceSourceColor(item.value) || '');
 };
-
 const getServiceSourceColor = (value: string) => {
   switch (value) {
     case 'BACK_ADD': // 后台添加
@@ -470,7 +460,7 @@ const getServiceSourceColor = (value: string) => {
 
 // 接口方法
 const loadApiHttpMethod = async () => {
-  const data = enumUtils.enumToMessages('HttpMethod');
+  const data = enumUtils.enumToMessages(HttpMethod);
 
   if (props.resource === 'ApiLogs') {
     requestLogsGroup.value[1].type = data;
@@ -481,7 +471,6 @@ const loadApiHttpMethod = async () => {
   apiGroup.value[0].type = data;
   apiGroup.value[0].color = data.map(item => getApiHttpMethodColor(item.value) || '');
 };
-
 const getApiHttpMethodColor = (value: string) => {
   switch (value) {
     case 'GET': // GET
@@ -504,7 +493,7 @@ const getApiHttpMethodColor = (value: string) => {
 };
 // 接口类型
 const loadApiType = async () => {
-  const data = enumUtils.enumToMessages('ApiType');
+  const data = enumUtils.enumToMessages(ApiType);
 
   if (props.resource === 'ApiLogs') {
     requestLogsGroup.value[0].type = data;
@@ -537,11 +526,10 @@ const getApiTypeColor = (value: string) => {
 
 // 事件类型
 const loadEventType = async () => {
-  const data = enumUtils.enumToMessages('EventType');
+  const data = enumUtils.enumToMessages(EventType);
   eventGroup.value[0].type = data;
   eventGroup.value[0].color = data.map(item => getEventTypeColor(item.value) || '');
 };
-
 const getEventTypeColor = (value: string) => {
   switch (value) {
     case 'BUSINESS': // 业务
@@ -567,7 +555,7 @@ const getEventTypeColor = (value: string) => {
 
 // 事件推送状态
 const loadEventPushStatus = async () => {
-  const data = enumUtils.enumToMessages('EventPushStatus');
+  const data = enumUtils.enumToMessages(EventPushStatus);
   eventGroup.value[1].type = data;
   eventGroup.value[1].color = data.map(item => getEventPushStatusColor(item.value) || '');
 };
@@ -589,7 +577,7 @@ const getEventPushStatusColor = (value: string) => {
 
 // 邮件和短信发送状态
 const loadSendStatusType = async () => {
-  const data = enumUtils.enumToMessages('ProcessStatus');
+  const data = enumUtils.enumToMessages(ProcessStatus);
 
   if (props.resource === 'Email') {
     emailRecordGroup.value[0].type = data;

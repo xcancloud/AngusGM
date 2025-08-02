@@ -2,6 +2,7 @@
 import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EnumMessage, enumUtils } from '@xcan-angus/infra';
+import { ReceiveChannelType } from '@/enums/enums';
 import { CheckboxGroup, Form, FormItem, Popover, Select, Tag } from 'ant-design-vue';
 import { Modal } from '@xcan-angus/vue-ui';
 
@@ -38,7 +39,7 @@ const init = async () => {
 };
 
 const loadEventTypes = async () => {
-  eventTypes.value = enumUtils.enumToMessages('ReceiveChannelType')?.map(m => {
+  eventTypes.value = enumUtils.enumToMessages(ReceiveChannelType)?.map(m => {
     selectedType.value.includes(m.value) && loadConfigOptions(m.value);
     return {
       ...m,

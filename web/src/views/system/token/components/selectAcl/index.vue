@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { enumUtils, GM } from '@xcan-angus/infra';
+import { EnumMessage, enumUtils, ResourceAclType, GM } from '@xcan-angus/infra';
 import { computed, onMounted, ref } from 'vue';
 import { Button } from 'ant-design-vue';
 import { Icon, notification, Select } from '@xcan-angus/vue-ui';
@@ -68,9 +68,10 @@ const add = () => {
   dataSource.value.push({ serviceCode: serviceCode.value, serviceName: serviceName.value, source: {} });
 };
 
-const ResourceAclTypeOpt = ref([]);
+const ResourceAclTypeOpt = ref<EnumMessage<string>[]>([]);
 const getResourceAclType = async () => {
-  ResourceAclTypeOpt.value = enumUtils.enumToMessages('ResourceAclType').filter(type => type.value !== 'ALL');
+  ResourceAclTypeOpt.value = enumUtils.enumToMessages(ResourceAclType)
+    .filter(type => type.value !== ResourceAclType.ALL);
 };
 
 const clearData = () => {

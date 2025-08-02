@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EnumMessage, enumUtils } from '@xcan-angus/infra';
+import { MessageReceiveType, SentType } from '@/enums/enums';
 import { DatePicker, Hints, Input } from '@xcan-angus/vue-ui';
 import dayjs from 'dayjs';
 import RichEditor from '@/components/RichEditor/index.vue';
@@ -58,14 +59,14 @@ const init = () => {
   loadSentType();
 };
 
-const messageReceiveType = ref<EnumMessage<string>[]>([]);
+const messageReceiveType = ref<EnumMessage<MessageReceiveType>[]>([]);
 const loadMessageReceiveType = async () => {
-  messageReceiveType.value = (enumUtils.enumToMessages('MessageReceiveType'));
+  messageReceiveType.value = (enumUtils.enumToMessages(MessageReceiveType));
 };
 
-const sentTypeList = ref<EnumMessage<string>[]>([]);
+const sentTypeList = ref<EnumMessage<SentType>[]>([]);
 const loadSentType = async () => {
-  sentTypeList.value = enumUtils.enumToMessages('SentType');
+  sentTypeList.value = enumUtils.enumToMessages(SentType);
 };
 
 onMounted(() => {
