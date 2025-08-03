@@ -51,8 +51,7 @@ public class TenantAddByMobileDto implements Serializable {
 
   //@NotBlank
   @Length(max = MAX_COUNTRY_LENGTH)
-  @Schema(description = "User country code for regional settings. Used for localization and regional compliance",
-      example = "CN")
+  @Schema(description = "User country code for regional settings. Used for localization and regional compliance", example = "CN")
   private String country;
 
   @NotBlank
