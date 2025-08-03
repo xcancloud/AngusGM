@@ -22,19 +22,19 @@ public class SendNoticeDto implements Serializable {
 
   @NotNull
   @Size(min = 1, max = 3)
-  @Schema(description = "Notification method type", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Notification method types for multi-channel message delivery. Supports 1-3 different notification channels", requiredMode = RequiredMode.REQUIRED)
   private List<NoticeType> noticeTypes;
 
   @Valid
-  @Schema(description = "Required when NoticeType is SMS")
+  @Schema(description = "SMS notification parameters. Required when NoticeType includes SMS for SMS message delivery")
   private SendSmsParam sendSmsParam;
 
   @Valid
-  @Schema(description = "Required when NoticeType is EMAIL")
+  @Schema(description = "Email notification parameters. Required when NoticeType includes EMAIL for email message delivery")
   private SendEmailParam sendEmailParam;
 
   @Valid
-  @Schema(description = "Required when NoticeType is IN_SITE")
+  @Schema(description = "In-site notification parameters. Required when NoticeType includes IN_SITE for internal message delivery")
   private SendInsiteParam sendInsiteParam;
 
 }

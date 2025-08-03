@@ -35,86 +35,79 @@ import org.hibernate.validator.constraints.Length;
 public class SendEmailParam implements Serializable {
 
   @Length(max = MAX_OUT_ID_LENGTH)
-  @Schema(description = "Out business id, used to establish associations with external businesses.",
-      maxLength = MAX_OUT_ID_LENGTH)
+  @Schema(description = "External business identifier for establishing associations with external systems. Used for cross-system integration and tracking")
   private String outId;
 
-  @Schema(description = "Email business key, it is required when type=TEMPLATE.", example = "SIGNUP")
+  @Schema(description = "Email business key for template-based email sending. Required when type=TEMPLATE for proper template selection", example = "SIGNUP")
   private EmailBizKey bizKey;
 
   @Length(max = MAX_LANGUAGE_LENGTH)
-  @Schema(description = "Use language to send email content.", defaultValue = "zh_CN",
-      example = "zh_CN", maxLength = MAX_LANGUAGE_LENGTH)
+  @Schema(description = "Language code for email content localization. Used for multi-language email template selection", defaultValue = "zh_CN")
   private String language;
 
   @NotNull
-  @Schema(description = "Email type.", requiredMode = RequiredMode.REQUIRED, example = "CUSTOM")
+  @Schema(description = "Email type for determining sending method. CUSTOM for custom content, TEMPLATE for template-based sending", requiredMode = RequiredMode.REQUIRED, example = "CUSTOM")
   private EmailType type;
 
   @Length(max = MAX_SUBJECT_LENGTH)
-  @Schema(description = "Email subject.", example = "subject", maxLength = MAX_SUBJECT_LENGTH)
+  @Schema(description = "Email subject line for recipient identification. Used for email categorization and search", example = "subject")
   private String subject;
 
   //  @Schema("Default false")
   //  private Boolean urgent = false;
 
   @Size(max = MAX_EMAIL_ADDRESS)
-  @Schema(description = "List of email receiving addresses, supporting up to `500` addresses. "
-      + "Parameter toAddress and objectIds are required to choose one, if both are passed, toAddress is used by default.",
+  @Schema(description = "List of primary recipient email addresses. Takes precedence over receiveObjectIds when both are provided",
       type = "array", example = "[\"user1@xcancloud.com\",\"user2@xcancloud.com\"]")
   private Set<String> toAddress;
 
   @Size(max = MAX_EMAIL_ADDRESS)
-  @Schema(description = "List of email CC addresses, supporting up to `500` addresses. ", type = "array", example = "[\"demo@xcancloud.com\"]")
+  @Schema(description = "List of carbon copy recipient email addresses. Supports up to 500 addresses for additional recipients", type = "array", example = "[\"demo@xcancloud.com\"]")
   private Set<String> ccAddress;
 
   @NotNull
-  @Schema(description = "Whether or not verification code email flag.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Flag indicating whether this is a verification code email. Used for special handling of verification emails", requiredMode = RequiredMode.REQUIRED)
   private Boolean verificationCode;
 
   @Max(value = EmailConstant.MAX_VC_VALID_SECOND)
-  @Schema(description = "Validity period of verification code, in seconds, it is required when verificationCode=true.", defaultValue = "300")
+  @Schema(description = "Verification code validity period in seconds. Required when verificationCode=true for proper expiration handling", defaultValue = "300")
   private Integer verificationCodeValidSecond;
 
-  @Schema(description = "Non user operation (job or innerapi) is required.")
+  @Schema(description = "Tenant identifier for email sending context. Required for non-user operations like jobs or internal APIs")
   private Long sendTenantId;
 
-  @Schema(description = "Non user operation (job or innerapi) is required.")
+  @Schema(description = "User identifier for email sending context. Required for non-user operations like jobs or internal APIs")
   private Long sendUserId;
 
   @NotNull
-  @Schema(description = "Whether or not html content email flag.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Flag indicating whether email content is HTML format. Used for proper content rendering and display", requiredMode = RequiredMode.REQUIRED)
   private Boolean html;
 
   @Size(max = MAX_EMAIL_CONTEXT_SIZE)
-  @Schema(description = "Email content, it is required when type=CUSTOM.", maxLength = MAX_EMAIL_CONTEXT_SIZE)
+  @Schema(description = "Email content body. Required when type=CUSTOM for custom email content")
   private String content;
 
   @Size(max = MAX_EMAIL_ADDRESS)
-  @Schema(description =
-      "Email template parameters, it is required when type=TEMPLATE and there are template variables. "
-          + "Key is email address and value is template parameter, when all email template parameters are the same, only one value is set.")
+  @Schema(description = "Email template parameters for template-based sending. Required when type=TEMPLATE and template has variables. Key is email address, value is parameter map")
   private Map<String, Map<String, String>> templateParams;
 
   @Valid
   @Size(max = MAX_ATTACHMENT_NUM)
-  @Schema(description = "The attachments of the email, maximum support for `10`.")
+  @Schema(description = "Email attachments for file sharing. Supports maximum of 10 attachments for comprehensive file delivery")
   private Set<Attachment> attachments;
 
-  @Schema(description = "Email recipient object type, the receiveObjectType is required when sending via receiveObjectIds.")
+  @Schema(description = "Email recipient object type for system-based recipient selection. Required when using receiveObjectIds for recipient identification")
   private ReceiveObjectType receiveObjectType;
 
   @Size(max = EmailConstant.MAX_SEND_OBJECT_SIZE)
-  @Schema(description =
-      "Email recipient object ids, maximum support for `500`. Parameter toAddress and receiveObjectIds "
-          + "are required to choose one, if both are passed, toAddress is used by default", type = "array")
+  @Schema(description = "Email recipient object identifiers for system-based recipient selection. Secondary to toAddress when both are provided", type = "array")
   private List<Long> receiveObjectIds;
 
   @Size(max = MAX_SEND_OBJECT_SIZE)
-  @Schema(description = "Email recipient TOP policy codes, maximum support for `500`. ", type = "array")
+  @Schema(description = "Email recipient TOP policy codes for policy-based recipient selection", type = "array")
   private List<String> receivePolicyCodes;
 
-  @Schema(description = "Whether or not batch sending flag, multiple receiving addresses will be displayed in the mail.", defaultValue = "true")
+  @Schema(description = "Flag indicating batch sending mode. When true, multiple recipients are displayed in the email", defaultValue = "true")
   private Boolean batch;
 
   public SendEmailParam(Builder builder) {

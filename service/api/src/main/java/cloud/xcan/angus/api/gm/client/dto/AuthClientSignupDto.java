@@ -18,21 +18,20 @@ import org.hibernate.validator.constraints.Length;
 public class AuthClientSignupDto {
 
   @NotNull
-  @Schema(example = "Privatization client type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Privatization client type for signup configuration. Required for proper client registration and setup", requiredMode = RequiredMode.REQUIRED)
   private Client2pSignupBiz signupBiz;
 
   @NotNull
-  @Schema(description = "Grant tenant id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Grant tenant ID for client registration. Required for proper tenant association and access control", requiredMode = RequiredMode.REQUIRED)
   private Long tenantId;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Grant tenant name.", example = "XCan Technology Company, Ltd",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Grant tenant name for client registration. Used for display and identification purposes", requiredMode = RequiredMode.REQUIRED)
   private String tenantName;
 
   @NotNull
-  @Schema(description = "Grant resource id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Grant resource ID for client registration. Required for proper resource association and access control", requiredMode = RequiredMode.REQUIRED)
   private Long resourceId;
 
 }

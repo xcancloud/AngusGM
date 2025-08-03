@@ -27,41 +27,37 @@ import org.hibernate.validator.constraints.Length;
 public class SendSmsParam implements Serializable {
 
   @Length(max = MAX_OUT_ID_LENGTH)
-  @Schema(description = "Out business id, used to establish associations with external businesses.",
-      maxLength = MAX_OUT_ID_LENGTH)
+  @Schema(description = "External business identifier for establishing associations with external systems. Used for cross-system integration and tracking")
   private String outId;
 
   @NotNull
-  @Schema(description = "Sms business key.", example = "SIGNUP", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "SMS business key for template-based SMS sending. Used for identifying the SMS template and context", example = "SIGNUP", requiredMode = RequiredMode.REQUIRED)
   private SmsBizKey bizKey;
 
-  @Schema(description = "Whether or not urgent sent flag.")
+  @Schema(description = "Flag indicating urgent SMS priority. Used for priority-based SMS processing and delivery")
   private Boolean urgent = false;
 
   @Length(max = MAX_LANGUAGE_LENGTH)
-  @Schema(description = "Use language to send sms content.", defaultValue = "zh_CN",
-      example = "zh_CN", maxLength = MAX_LANGUAGE_LENGTH)
+  @Schema(description = "Language code for SMS content localization. Used for multi-language SMS template selection", defaultValue = "zh_CN", example = "zh_CN")
   private String language;
 
   @Size(max = MAX_MOBILE_SIZE)
-  @Schema(description = "Receive SMS mobiles, maximum support for `500`. the mobiles and receiveObjectIds must have one of the parameters.")
+  @Schema(description = "List of recipient mobile numbers for SMS delivery. Takes precedence over receiveObjectIds when both are provided")
   private List<String> mobiles;
 
   @Size(max = MAX_SMS_TEMPLATE_PARAM)
-  @Schema(description = "Sms template parameters, maximum support for `50`.")
+  @Schema(description = "SMS template parameters for template-based sending. Supports maximum of 50 parameters for comprehensive template customization")
   private Map<String, String> templateParams;
 
-  @Schema(description =
-      "Sms recipient object type. The receiveObjectType is required when sending via receiveObjectIds, "
-          + "receiveObjectIds and mobile must have one of the parameters.")
+  @Schema(description = "SMS recipient object type for system-based recipient selection. Required when using receiveObjectIds for recipient identification. Secondary to mobiles when both are provided")
   private ReceiveObjectType receiveObjectType;
 
   @Size(max = MAX_SEND_OBJECT_SIZE)
-  @Schema(description = "Sms recipient object ids, maximum support for `500`. Parameter mobiles and receiveObjectIds are required to choose one, if both are passed, mobiles is used by default")
+  @Schema(description = "SMS recipient object identifiers for system-based recipient selection. Secondary to mobiles when both are provided")
   private List<Long> receiveObjectIds;
 
   @Size(max = MAX_SEND_OBJECT_SIZE)
-  @Schema(description = "Sms recipient policy codes, maximum support for `500`.")
+  @Schema(description = "SMS recipient policy codes for policy-based recipient selection")
   private List<String> receivePolicyCodes;
 
   public SendSmsParam(Builder builder) {

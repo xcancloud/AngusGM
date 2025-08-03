@@ -20,21 +20,19 @@ public class AuthClientSignInDto {
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description =
-      "OAuth2 registered client identifier. The clientId uniquely identifies an application "
-          + "to the OAuth2 server, enabling authorization and token requests.",
+      "Unique client identifier for OAuth2 server authentication. Enables authorization and token requests for the application. Must be unique across the system",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String clientId;
 
   @NotBlank
   @Length(max = MAX_CLIENT_SECRET_LENGTH)
   @Schema(description =
-      "OAuth2 registered client secret or null if not available. The client secret securely "
-          + "authenticates the application's identity, ensuring only trusted clients access protected resources.",
+      "Client secret for secure application authentication. Ensures only trusted clients access protected resources. Required for client authentication",
       maxLength = MAX_CLIENT_SECRET_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String clientSecret;
 
   @NotEmpty
-  @Schema(description = "The scope(s) that the client may use.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Scope that the client may use for authorization. Required for proper scope-based access control", requiredMode = RequiredMode.REQUIRED)
   private String scope;
 
 }

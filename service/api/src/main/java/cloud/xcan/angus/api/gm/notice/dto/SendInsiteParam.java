@@ -26,35 +26,36 @@ import org.hibernate.validator.constraints.Length;
 public class SendInsiteParam implements Serializable {
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Out biz id, generate UUID when not specified")
+  @Schema(description = "External business identifier for establishing associations with external systems. Generates UUID when not specified")
   private String messageId;
 
   @NotNull
-  @Schema(requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Push message media type for determining message format and delivery method", requiredMode = RequiredMode.REQUIRED)
   private PushMediaType pushMediaType;
 
+  @Schema(description = "User identifier who sent the message. Used for sender identification and audit tracking")
   private Long sendUserId;
 
   @Length(max = MAX_NAME_LENGTH)
+  @Schema(description = "Full name of the user who sent the message. Used for sender display and identification")
   private String sendUserName;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Short title for the push message. Used for message identification and display", requiredMode = RequiredMode.REQUIRED)
   private String title;
 
   @NotBlank
   @Length(max = MessageCenterConstant.MAX_PUSH_CONTENT_LENGTH)
-  @Schema(description = "Max length "
-      + MessageCenterConstant.MAX_PUSH_CONTENT_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Push message content for recipient notification. Used for message delivery and display", requiredMode = RequiredMode.REQUIRED)
   private String content;
 
   @NotNull
-  @Schema(requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Message recipient object type for system-based recipient selection. Used for recipient identification and targeting", requiredMode = RequiredMode.REQUIRED)
   private ReceiveObjectType receiveObjectType;
 
   @Size(max = MessageCenterConstant.MAX_PUSH_OBJECT_NUM)
-  @Schema(description = "Max size " + MessageCenterConstant.MAX_PUSH_OBJECT_NUM)
+  @Schema(description = "Message recipient object identifiers for system-based recipient selection")
   private List<Long> receiveObjectIds;
 
   public SendInsiteParam(Builder builder) {

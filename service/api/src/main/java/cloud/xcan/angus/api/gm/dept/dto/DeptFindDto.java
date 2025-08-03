@@ -12,28 +12,28 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class DeptFindDto extends PageQuery {
 
-  @Schema(description = "Department id.")
+  @Schema(description = "Unique identifier for the department. Used for precise department identification")
   private Long id;
 
-  @Schema(description = "Department code.")
+  @Schema(description = "Department code for identification and reference. Used for department lookup and organization")
   private String code;
 
-  @Schema(description = "Department name.")
+  @Schema(description = "Department name for display and identification. Used for department search and filtering")
   private String name;
 
-  @Schema(description = "Parent department id.")
+  @Schema(description = "Parent department identifier for hierarchical organization structure")
   private Long pid;
 
-  @Schema(description = "Department level.")
+  @Schema(description = "Department level in the organizational hierarchy. Used for tree structure management")
   private Integer level;
 
-  @Schema(description = "Department association tag id.")
+  @Schema(description = "Department association tag identifier for categorization and grouping")
   private Long tagId;
 
-  @Schema(description = "Department creation user id.")
+  @Schema(description = "User identifier who created the department. Used for audit and tracking purposes")
   private Long createdBy;
 
-  @Schema(description = "Department creation date.")
+  @Schema(description = "Timestamp when the department was created. Used for audit and lifecycle tracking")
   private LocalDateTime createdDate;
 
 }

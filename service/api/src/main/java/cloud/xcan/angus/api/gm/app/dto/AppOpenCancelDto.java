@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 public class AppOpenCancelDto {
 
   @NotNull
-  @Schema(description = "Open application id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Required application ID to identify which application to cancel", requiredMode = RequiredMode.REQUIRED)
   private Long appId;
 
 }

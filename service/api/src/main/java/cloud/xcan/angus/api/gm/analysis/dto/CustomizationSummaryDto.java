@@ -25,34 +25,34 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class CustomizationSummaryDto implements Serializable {
 
-  @Schema(description = "Summary project id.")
+  @Schema(description = "Unique identifier for the summary project configuration. Used to associate summary settings with specific projects for data analysis and reporting")
   private Long projectId;
 
-  @Schema(description = "Turn off multi tenant control, summary all tenants when true.", example = "false")
+  @Schema(description = "Multi-tenant control flag. When true, disables multi-tenant control and summarizes all tenants. When false, applies tenant-specific filtering for data isolation", example = "false")
   private boolean closeMultiTenantCtrl = false;
 
   @NotEmpty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Summary resource name.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Required name for the summary configuration. Must not exceed maximum name length constraint. Used for identifying and managing summary configurations", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
-  @Schema(description = "Summary group type.")
+  @Schema(description = "Defines the grouping strategy for summary data. Determines how data is grouped for aggregation and analysis")
   private GroupBy groupBy;
 
   @Size(max = 5)
-  @Schema(description = "Grouping statistics column count, supporting a maximum of `5` columns.")
+  @Schema(description = "List of columns used for grouping statistics. Each column represents a dimension for data aggregation")
   private List<String> groupByColumns;
 
-  @Schema(description = "Supported date statistics range.")
+  @Schema(description = "Defines the supported date statistics range for time-based data grouping and analysis")
   private DateRangeType dateRangeType;
 
   @Valid
   @Size(max = 10)
-  @Schema(description = "Aggregate function and column configuration, supporting a maximum of `10` columns.")
+  @Schema(description = "List of aggregate functions and column configurations")
   private List<Aggregate> aggregates;
 
   @Size(max = MAX_FILTER_SIZE)
-  @Schema(description = "Dynamic filter and search conditions, max " + MAX_FILTER_SIZE)
+  @Schema(description = "Dynamic filter and search conditions for filtering summary data")
   protected List<SearchCriteria> filters = new ArrayList<>();
 
 }

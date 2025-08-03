@@ -18,8 +18,7 @@ public class BusinessRecognizeDto {
 
   @NotBlank
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "URL address of license file used for identification.",
-      maxLength = MAX_URL_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Business license file URL for OCR recognition. Used for automated business license information extraction and verification", requiredMode = RequiredMode.REQUIRED)
   private String businessLicensePicUrl;
 
 }

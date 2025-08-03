@@ -30,95 +30,91 @@ public class AuthClientAddDto {
    * OAuth2 client fields
    */
   @Length(max = MAX_KEY_LENGTH)
-  @Schema(description = "Client primary key id. Automatically generate a UUID string value if not specified.",
+  @Schema(description = "Client primary key ID for OAuth2 registration. Automatically generates UUID string if not specified. Used for unique client identification",
       maxLength = MAX_KEY_LENGTH)
   private String id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
   @Schema(description =
-      "OAuth2 registered client identifier. The clientId uniquely identifies an application "
-          + "to the OAuth2 server, enabling authorization and token requests.",
+      "Unique client identifier for OAuth2 server authentication. Enables authorization and token requests for the application. Must be unique across the system",
       maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
   private String clientId;
 
-  //@Schema(description = "The time at which the client identifier was issued.")
+  //@Schema(description = "The time at which the client identifier was issued")
   //private LocalDateTime clientIdIssuedAt;
 
   @Length(max = MAX_CLIENT_SECRET_LENGTH)
   @Schema(description =
-      "OAuth2 registered client secret or null if not available. The client secret securely "
-          + "authenticates the application's identity, ensuring only trusted clients access protected resources.",
+      "Client secret for secure application authentication. Ensures only trusted clients access protected resources. Can be null if not available",
       maxLength = MAX_CLIENT_SECRET_LENGTH)
   private String clientSecret;
 
-  @Schema(description = "The time at which the client secret expires or null if it does not expire..")
+  @Schema(description = "Timestamp when the client secret expires. Null if the secret does not expire. Used for secret lifecycle management")
   private LocalDateTime clientSecretExpiresAt;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH_X2)
-  @Schema(description = "OAuth2 registered client name.", maxLength = MAX_NAME_LENGTH_X2,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Human-readable name for the OAuth2 client. Used for display and identification purposes in management interfaces",
+      maxLength = MAX_NAME_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
   private String clientName;
 
   @NotEmpty
-  @Schema(description = "The authentication method(s) that the client may use.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Set of authentication methods that the client may use. Required for proper client authentication configuration", requiredMode = RequiredMode.REQUIRED)
   private Set<String> clientAuthenticationMethods;
 
   @NotEmpty
-  @Schema(description = "The authorization grant type(s) that the client may use.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Set of authorization grant types that the client may use. Required for proper authorization flow configuration", requiredMode = RequiredMode.REQUIRED)
   private Set<String> authorizationGrantTypes;
 
-  @Schema(description = "The redirect URI(s) that the client may use in redirect-based flows.")
+  @Schema(description = "Set of redirect URIs that the client may use in redirect-based flows. Used for authorization code and implicit grant flows")
   private Set<String> redirectUris;
 
-  @Schema(description = "The post logout redirect URI(s) that the client may use for logout. "
-      + "The post_logout_redirect_uri parameter is used by the client when requesting that the End-User's "
-      + "User Agent be redirected to after a logout has been performed.")
+  @Schema(description = "Set of post-logout redirect URIs for client logout flows. Used when requesting End-User's User Agent redirection after logout")
   private Set<String> postLogoutRedirectUris;
 
   @NotEmpty
-  @Schema(description = "The scope(s) that the client may use.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Set of scopes that the client may use. Required for proper scope-based access control and authorization", requiredMode = RequiredMode.REQUIRED)
   private Set<String> scopes;
 
   @NotEmpty
-  @Schema(description = "The client configuration settings.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Map of client configuration settings. Required for proper client behavior configuration and customization", requiredMode = RequiredMode.REQUIRED)
   private Map<String, Object> clientSettings;
 
   @NotEmpty
-  @Schema(description = "The token configuration settings.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Map of token configuration settings. Required for proper token behavior configuration and customization", requiredMode = RequiredMode.REQUIRED)
   private Map<String, Object> tokenSettings;
 
   // OAuth2 client temp fields <- Important:: Use scopes instead of authorization authorities permission.
   //@Size(max = MAX_CLIENT_AUTHORITY_SIZE)
-  //@Schema(description = "The authorities granted to the client.")
+  //@Schema(description = "The authorities granted to the client")
   //private List<String> authorities;
 
   /**
    * AngusGM Client Info.
    */
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Client description.", maxLength = MAX_NAME_LENGTH_X2)
+  @Schema(description = "Human-readable description of the client. Used for documentation and management purposes", maxLength = MAX_NAME_LENGTH_X2)
   private String description;
 
-  @Schema(description = "Client enabled or disabled status.", defaultValue = "true")
+  @Schema(description = "Boolean flag indicating whether the client is enabled or disabled. Defaults to true for new clients", defaultValue = "true")
   private Boolean enabled;
 
-  @Schema(description = "The platform used by the client.", defaultValue = "XCAN_TP")
+  @Schema(description = "Platform used by the client for proper platform-specific configuration. Defaults to XCAN_TP for new clients", defaultValue = "XCAN_TP")
   private Platform platform;
 
-  @Schema(description = "The registered source of client.", defaultValue = "XCAN_USER_TOKEN")
+  @Schema(description = "Source of client registration for tracking and management. Defaults to XCAN_USER_TOKEN for new clients", defaultValue = "XCAN_USER_TOKEN")
   private ClientSource source;
 
   @Length(max = MAX_KEY_LENGTH_X2)
-  @Schema(description = "The business tag of client.", maxLength = MAX_KEY_LENGTH_X2)
+  @Schema(description = "Business tag for client categorization and management. Used for organizational purposes", maxLength = MAX_KEY_LENGTH_X2)
   private String bizTag;
 
-  @Schema(description = "The client used by the tenant (id), effective for all tenants when the value is empty.")
+  @Schema(description = "Tenant ID for which the client is registered. Empty value indicates effective for all tenants")
   private String tenantId;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "The client used by the tenant (name).", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Human-readable tenant name associated with the client. Used for display and identification purposes", maxLength = MAX_NAME_LENGTH)
   private String tenantName;
 
 }

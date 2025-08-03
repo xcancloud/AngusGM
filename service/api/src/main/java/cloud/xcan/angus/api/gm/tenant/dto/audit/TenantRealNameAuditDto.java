@@ -19,16 +19,16 @@ import org.hibernate.validator.constraints.Length;
 public class TenantRealNameAuditDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Tenant id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant identifier for real name audit. Used for identifying the specific tenant for audit processing", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull
-  @Schema(description = "Tenant real name status.", example = "AUDITED", allowableValues = "AUDITED,FAILED_AUDIT",
+  @Schema(description = "Tenant real name audit status for approval decision. Used for determining the audit result and next steps", example = "AUDITED", allowableValues = "AUDITED,FAILED_AUDIT",
       requiredMode = RequiredMode.REQUIRED)
   private TenantRealNameStatus status;
 
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(example = "Reason for tenant's real name approval or rejection.", maxLength = MAX_REMARK_LENGTH)
+  @Schema(description = "Audit reason for approval or rejection decision. Used for providing feedback on the audit result", example = "Reason for tenant's real name approval or rejection")
   private String reason;
 
 }

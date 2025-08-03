@@ -18,19 +18,19 @@ import org.hibernate.validator.constraints.Length;
 public class UserSocialUpdateDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Bind social type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Social platform type for user account binding. Used for identifying the social platform for account linkage", requiredMode = RequiredMode.REQUIRED)
   private SocialType type;
 
   @Length(max = MAX_SOCIAL_USER_ID_LENGTH)
-  @Schema(description = "Bind WeChat user id.", maxLength = MAX_SOCIAL_USER_ID_LENGTH)
+  @Schema(description = "WeChat user identifier for social account binding. Used for WeChat platform integration and user identification")
   private String wechatUserId;
 
   @Length(max = MAX_SOCIAL_USER_ID_LENGTH)
-  @Schema(description = "Bind github user id.", maxLength = MAX_SOCIAL_USER_ID_LENGTH)
+  @Schema(description = "GitHub user identifier for social account binding. Used for GitHub platform integration and user identification")
   private String githubUserId;
 
   @Length(max = MAX_SOCIAL_USER_ID_LENGTH)
-  @Schema(description = "Bind google user id.", maxLength = MAX_SOCIAL_USER_ID_LENGTH)
+  @Schema(description = "Google user identifier for social account binding. Used for Google platform integration and user identification")
   private String googleUserId;
 
 }

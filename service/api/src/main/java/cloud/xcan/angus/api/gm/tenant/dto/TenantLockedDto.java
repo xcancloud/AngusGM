@@ -16,17 +16,17 @@ import lombok.experimental.Accessors;
 public class TenantLockedDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Tenant id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant identifier for lock management. Used for identifying the specific tenant for lock operations", example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotNull
-  @Schema(description = "Tenant locked or unlocked flag.", example = "true", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant lock status flag for account security. Used for enabling or disabling tenant account access", example = "true", requiredMode = RequiredMode.REQUIRED)
   private Boolean locked;
 
-  @Schema(description = "Tenant account locking start date.", example = "2022-04-01 12:00:00")
+  @Schema(description = "Tenant account lock start date for security tracking. Used for lock period management and monitoring", example = "2022-04-01 12:00:00")
   private LocalDateTime lockStartDate;
 
-  @Schema(description = "Tenant account locking end date.", example = "2023-06-01 12:00:00")
+  @Schema(description = "Tenant account lock end date for security tracking. Used for lock period management and monitoring", example = "2023-06-01 12:00:00")
   private LocalDateTime lockEndDate;
 
 }

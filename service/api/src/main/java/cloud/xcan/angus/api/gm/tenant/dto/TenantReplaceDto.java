@@ -35,73 +35,73 @@ import org.hibernate.validator.constraints.Length;
 public class TenantReplaceDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Tenant id.", example = "1", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant identifier for replacement operation. Used for identifying the specific tenant for replacement",
+    example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Tenant name.", example = "XCan Company",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant name for identification and display. Used for tenant management and organization", example = "XCan Company",
+      requiredMode = RequiredMode.REQUIRED)
   private String name;
 
-  @Schema(description = "Tenant type.")
+  @Schema(description = "Tenant type for classification and management. Used for determining tenant category and applicable policies")
   private TenantType type;
 
   @Length(max = MAX_REMARK_LENGTH)
-  @Schema(description = "Tenant remark.", maxLength = MAX_REMARK_LENGTH)
+  @Schema(description = "Tenant remark for additional information. Used for tenant documentation and management notes")
   private String remark;
 
   @Length(max = MAX_ADDRESS_LENGTH)
-  @Schema(description = "Tenant contact address.", maxLength = MAX_ADDRESS_LENGTH)
+  @Schema(description = "Tenant contact address for location information. Used for contact details and regional compliance")
   private String address;
 
   @NotNull
   //@NotEmpty // Registered user firstName is empty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "System administer first name.", example = "James",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "System administrator first name for user identification. Used for user profile and contact information", example = "James",
+      requiredMode = RequiredMode.REQUIRED)
   private String firstName;
 
   @NotNull
   //@NotEmpty // Registered user firstName is empty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "System administer last name.", example = "Jones",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "System administrator last name for user identification. Used for user profile and contact information", example = "Jones",
+      requiredMode = RequiredMode.REQUIRED)
   private String lastName;
 
   @NotNull
   //@NotEmpty // Registered user firstName is empty
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "System administer full name.", example = "James Jones",
-      maxLength = MAX_NAME_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "System administrator full name for user identification. Used for user profile and contact information", example = "James Jones",
+      requiredMode = RequiredMode.REQUIRED)
   private String fullName;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "System administer title.", example = "CTO", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "System administrator title for role identification. Used for organizational hierarchy and contact information", example = "CTO")
   private String title;
 
   @Length(max = MAX_ITC_LENGTH)
-  @Schema(description = "International telephone area code.", example = "86",
-      maxLength = MAX_ITC_LENGTH)
+  @Schema(description = "International telephone area code for contact information. Used for phone number formatting and international calling", example = "86")
   private String itc;
 
   //@NotBlank
   @Length(max = MAX_COUNTRY_LENGTH)
-  @Schema(description = "User country code.", example = "CN", maxLength = MAX_COUNTRY_LENGTH)
+  @Schema(description = "User country code for regional settings. Used for localization and regional compliance", example = "CN")
   private String country;
 
   @NotEmpty
   @Mobile
   @Length(max = MAX_MOBILE_LENGTH)
-  @Schema(description = "System administer mobile. There must be one mobile and email address.",
-      example = "13813000000", maxLength = MAX_MOBILE_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "System administrator mobile number for contact and verification. At least one mobile or email address is required",
+      example = "13813000000", requiredMode = RequiredMode.REQUIRED)
   private String mobile;
 
   @NotEmpty
   @Email
   @Length(max = MAX_EMAIL_LENGTH)
-  @Schema(description = "System administer email. There must be one mobile and email address.",
-      example = "james@xcan.cloud", maxLength = MAX_EMAIL_LENGTH, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "System administrator email address for contact and verification. At least one mobile or email address is required",
+      example = "james@xcan.cloud", requiredMode = RequiredMode.REQUIRED)
   private String email;
 
   @Valid

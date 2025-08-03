@@ -18,14 +18,12 @@ public class IdCardRecognizeDto implements Serializable {
 
   @NotBlank
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "URL address of personal ID face picture used for identification.",
-      maxLength = MAX_URL_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Personal ID card face image URL for OCR recognition. Used for automated personal identity information extraction and verification", requiredMode = RequiredMode.REQUIRED)
   private String facePicUrl;
 
   @NotBlank
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "URL address of personal ID background picture used for identification.",
-      maxLength = MAX_URL_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Personal ID card back image URL for OCR recognition. Used for automated personal identity information extraction and verification", requiredMode = RequiredMode.REQUIRED)
   private String backPicUrl;
 
 }

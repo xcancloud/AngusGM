@@ -21,23 +21,23 @@ import lombok.experimental.Accessors;
 public class TenantRealNameSubmitDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Tenant real name type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant real name type for authentication submission. Used for determining the type of authentication information to be submitted", requiredMode = RequiredMode.REQUIRED)
   private TenantType type;
 
   @Valid
-  @Schema(description = "Personal tenant authentication information.")
+  @Schema(description = "Personal tenant authentication information for real name submission. Used for personal identity verification and compliance")
   private PersonalCert personalCert;
 
   @Valid
-  @Schema(description = "Enterprise tenant authentication information.")
+  @Schema(description = "Enterprise tenant authentication information for real name submission. Used for enterprise identity verification and compliance")
   private EnterpriseCert enterpriseCert;
 
   @Valid
-  @Schema(description = "Enterprise legal person authentication information.")
+  @Schema(description = "Enterprise legal person authentication information for real name submission. Used for legal person identity verification and compliance")
   private EnterpriseLegalPersonCert enterpriseLegalPersonCert;
 
   @Valid
-  @Schema(description = "Government tenant authentication information.")
+  @Schema(description = "Government tenant authentication information for real name submission. Used for government identity verification and compliance")
   private GovernmentCert governmentCert;
 
 }

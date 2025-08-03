@@ -20,17 +20,17 @@ import org.hibernate.validator.constraints.Length;
 public class EmailVerificationCodeCheckDto implements Serializable {
 
   @NotNull
-  @Schema(description = "Email business key.", example = "SIGNUP", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email business key for verification code validation. Used for identifying the verification context and template", example = "SIGNUP", requiredMode = RequiredMode.REQUIRED)
   private EmailBizKey bizKey;
 
   @Email
   @NotEmpty
-  @Schema(description = "Verification email address.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email address for verification code validation. Used for recipient identification and verification", requiredMode = RequiredMode.REQUIRED)
   private String email;
 
   @NotEmpty
   @Length(max = MAX_CODE_LENGTH_X2)
-  @Schema(example = "Email verification code.", maxLength = MAX_CODE_LENGTH_X2, requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Email verification code for validation. Used for security verification and access control", example = "Email verification code", requiredMode = RequiredMode.REQUIRED)
   private String verificationCode;
 
 }

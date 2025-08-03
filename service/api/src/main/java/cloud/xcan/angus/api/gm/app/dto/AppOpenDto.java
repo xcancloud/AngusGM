@@ -19,35 +19,35 @@ public class AppOpenDto {
 
   @Code
   @NotEmpty
-  @Schema(description = "Open application code.", pattern = "^[A-Za-z0-9_:\\-.]{1,80}$",
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique application code following specific pattern validation. Must match pattern for alphanumeric characters, underscores, hyphens, and dots. Used for application identification",
+      pattern = "^[A-Za-z0-9_:\\-.]{1,80}$", requiredMode = RequiredMode.REQUIRED)
   private String appCode;
 
   @NotNull
-  @Schema(description = "Open application edition type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Defines the edition type of the application being opened", requiredMode = RequiredMode.REQUIRED)
   private EditionType editionType;
 
   @Version
   @NotEmpty
-  @Schema(description = "Open application version.",
+  @Schema(description = "Semantic version string following version pattern validation. Supports major.minor.patch format with optional pre-release and build metadata.",
       pattern = "^([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?$",
       requiredMode = RequiredMode.REQUIRED)
   private String version;
 
   @NotNull
-  @Schema(description = "Open tenant id.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Identifies the tenant for which the application is being opened", requiredMode = RequiredMode.REQUIRED)
   private Long tenantId;
 
-  @Schema(description = "Open user id.")
+  @Schema(description = "Optional user ID associated with the application opening")
   private Long userId;
 
   @NotNull
-  @Schema(description = "Open date.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Timestamp when the application opening request is processed", requiredMode = RequiredMode.REQUIRED)
   protected LocalDateTime openDate;
 
   //Fix:: @Future There is a delay in the store renewal job during the remote call
   @NotNull
-  @Schema(description = "Open application expired date.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Timestamp when the application access expires. Note: Future validation is disabled due to remote call delays in store renewal jobs", requiredMode = RequiredMode.REQUIRED)
   protected LocalDateTime expirationDate;
 
 }

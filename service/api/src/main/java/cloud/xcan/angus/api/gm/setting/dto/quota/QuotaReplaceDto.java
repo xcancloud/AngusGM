@@ -23,11 +23,11 @@ public class QuotaReplaceDto implements Serializable {
    * @see SummaryQueryRegister
    */
   @NotNull
-  @Schema(description = "Quota resource name.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Quota resource identifier for quota replacement. Must be consistent with SummaryQueryRegister name value for proper quota management", requiredMode = RequiredMode.REQUIRED)
   private QuotaResource name;
 
   @NotNull
-  @Schema(description = "Quota value, storage disk must be converted to bytes.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Quota value for resource allocation replacement. Storage disk values must be converted to bytes for proper quota management", requiredMode = RequiredMode.REQUIRED)
   private Long quota;
 
   @Override

@@ -25,43 +25,40 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class MessageCenterPushDto implements Serializable {
 
-  @Schema(description = "Send messages to other instances of the service.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Flag indicating whether to broadcast message to other service instances. Used for cross-instance message distribution", requiredMode = RequiredMode.REQUIRED)
   private boolean broadcast = true;
 
   @Length(max = MAX_OUT_ID_LENGTH)
-  @Schema(description = "Out message id, used to establish associations with external businesses.",
-      maxLength = MAX_OUT_ID_LENGTH)
+  @Schema(description = "External message identifier for establishing associations with external systems. Used for cross-system integration and tracking")
   private String messageId;
 
   @NotNull
-  @Schema(description = "Push message media type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Push message media type for determining message format and delivery method", requiredMode = RequiredMode.REQUIRED)
   private PushMediaType mediaType;
 
-  @Schema(description = "Send message user id.")
+  @Schema(description = "User identifier who sent the message. Used for sender identification and audit tracking")
   private Long sendBy;
 
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Send message user full name.", maxLength = MAX_NAME_LENGTH)
+  @Schema(description = "Full name of the user who sent the message. Used for sender display and identification")
   private String sendByName;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Send message short title.", maxLength = MAX_NAME_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Short title for the push message. Used for message identification and display", requiredMode = RequiredMode.REQUIRED)
   private String title;
 
   @NotBlank
   @Length(max = MAX_PUSH_CONTENT_LENGTH)
-  @Schema(description = "Send message content.", maxLength = MAX_PUSH_CONTENT_LENGTH,
-      requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Push message content for recipient notification. Used for message delivery and display", requiredMode = RequiredMode.REQUIRED)
   private String content;
 
   @NotNull
-  @Schema(description = "Message recipient object type.", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Message recipient object type for system-based recipient selection. Used for recipient identification and targeting", requiredMode = RequiredMode.REQUIRED)
   private ReceiveObjectType receiveObjectType;
 
   @Size(max = MAX_PUSH_OBJECT_NUM)
-  @Schema(description = "Message recipient object ids, maximum support for `10000`. Note: Send to everyone when not specified.")
+  @Schema(description = "Message recipient object identifiers for system-based recipient selection. Sends to everyone when not specified", type = "array")
   private List<Long> receiveObjectIds;
 
 }
