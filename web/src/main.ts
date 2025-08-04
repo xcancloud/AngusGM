@@ -20,6 +20,7 @@ const bootstrap = async () => {
   await app.initEnvironment();
   await http.create();
   app.initAfterAuthentication({ code: AppOrServiceRoute.gm }).then(async () => {
+    await app.initializeDefaultThemeStyle();
     startupGuard();
 
     // TODO 修改配置
