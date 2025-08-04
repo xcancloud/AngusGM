@@ -1,9 +1,18 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { enumUtils, UserSource, Gender, HttpMethod, ApiType, EventType, ProcessStatus } from '@xcan-angus/infra';
-import { GroupSource, OrgTargetType, NoticeScope, SentType, MessageReceiveType, MessageStatus, ServiceSource, EventPushStatus } from '@/enums/enums';
-import { useI18n } from 'vue-i18n';
-import { DateType, PieSetting } from './PropsType';
+import {computed, defineAsyncComponent, onMounted, ref} from 'vue';
+import {enumUtils, UserSource, Gender, HttpMethod, ApiType, EventType, ProcessStatus} from '@xcan-angus/infra';
+import {
+  GroupSource,
+  OrgTargetType,
+  NoticeScope,
+  SentType,
+  MessageReceiveType,
+  MessageStatus,
+  ServiceSource,
+  EventPushStatus
+} from '@/enums/enums';
+import {useI18n} from 'vue-i18n';
+import {DateType, PieSetting} from './PropsType';
 
 const LoadChart = defineAsyncComponent(() => import('./LoadChart.vue'));
 
@@ -24,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   userId: ''
 });
 
-const { t } = useI18n();
+const {t} = useI18n();
 // ---------------蓝---------绿-----------黄------------红---------------浅蓝-------------紫----------橘黄---------灰色-------------粉色-------------浅蓝1
 const COLOR = ['45,142,255', '82,196,26', '255,165,43', '245,34,45', '103,215,255', '201,119,255', '255,102,0', '217, 217, 217', '251, 129, 255', '171, 211, 255'];
 
@@ -39,22 +48,22 @@ const userGroup = ref<PieSetting[]>([
   {
     key: 'sys_admin',
     value: t('oprole'),
-    type: [{ value: 0, message: t('generalUsers') }, { value: 1, message: t('administrators') }],
+    type: [{value: 0, message: t('generalUsers')}, {value: 1, message: t('administrators')}],
     color: [COLOR[0], COLOR[6]]
   },
   {
     key: 'enabled',
     value: t('validStatus'),
-    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
+    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   },
   {
     key: 'locked',
     value: t('lockStatus'),
-    type: [{ value: 0, message: t('unlocked') }, { value: 1, message: t('lockout') }],
+    type: [{value: 0, message: t('unlocked')}, {value: 1, message: t('lockout')}],
     color: [COLOR[1], COLOR[3]]
   },
-  { key: 'gender', value: t('gender'), type: [], color: [COLOR[5], COLOR[6], COLOR[3]] }
+  {key: 'gender', value: t('gender'), type: [], color: [COLOR[5], COLOR[6], COLOR[3]]}
 ]);
 
 // 组统计配置
@@ -62,10 +71,10 @@ const groupByGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
     value: t('status'),
-    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
+    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
     color: [COLOR[3], COLOR[1]]
   },
-  { key: 'source', value: t('source'), type: [], color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3]] }
+  {key: 'source', value: t('source'), type: [], color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]}
 ]);
 
 // 部门统计配置
@@ -74,16 +83,16 @@ const deptByGroup = ref<PieSetting[]>([
     key: 'level',
     value: t('level'),
     type: [
-      { value: 1, message: t('grade1') },
-      { value: 2, message: t('grade2') },
-      { value: 3, message: t('grade3') },
-      { value: 4, message: t('grade4') },
-      { value: 5, message: t('grade5') },
-      { value: 6, message: t('grade6') },
-      { value: 7, message: t('grade7') },
-      { value: 8, message: t('grade8') },
-      { value: 9, message: t('grade9') },
-      { value: 10, message: t('grade10') }
+      {value: 1, message: t('grade1')},
+      {value: 2, message: t('grade2')},
+      {value: 3, message: t('grade3')},
+      {value: 4, message: t('grade4')},
+      {value: 5, message: t('grade5')},
+      {value: 6, message: t('grade6')},
+      {value: 7, message: t('grade7')},
+      {value: 8, message: t('grade8')},
+      {value: 9, message: t('grade9')},
+      {value: 10, message: t('grade10')}
     ],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
   }
@@ -91,7 +100,7 @@ const deptByGroup = ref<PieSetting[]>([
 
 // 租户标签统计配置
 const orgTagGroup = ref<PieSetting[]>([
-  { key: 'target_type', value: t('related'), type: [], color: [COLOR[1], COLOR[4], COLOR[5]] }
+  {key: 'target_type', value: t('related'), type: [], color: [COLOR[1], COLOR[4], COLOR[5]]}
 ]);
 
 // 公告统计配置
@@ -138,7 +147,7 @@ const serviceGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
     value: t('status'),
-    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
+    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   }
 ]);
@@ -160,7 +169,7 @@ const apiGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
     value: t('status'),
-    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
+    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   }
 ]);
@@ -197,11 +206,11 @@ const requestLogsGroup = ref<PieSetting[]>([
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
-  { key: 'status', value: t('状态码'), type: statusCode, color: [COLOR[4], COLOR[1], COLOR[0], COLOR[3], COLOR[2]] },
+  {key: 'status', value: t('状态码'), type: statusCode, color: [COLOR[4], COLOR[1], COLOR[0], COLOR[3], COLOR[2]]},
   {
     key: 'success',
     value: t('是否成功'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[1], COLOR[3]]
   }
 ]);
@@ -221,59 +230,59 @@ const eventGroup = ref<PieSetting[]>([
   {
     key: 'type',
     value: t('事件类型'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[1], COLOR[3]]
   },
   {
     key: 'push_status',
     value: t('推送状态'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[1], COLOR[3]]
   }
 ]);
 
 // 系统-短信发送记录
 const smsRecordGroup = ref<PieSetting[]>([
-  { key: 'send_status', value: t('发送状态'), type: [], color: [] },
+  {key: 'send_status', value: t('发送状态'), type: [], color: []},
   {
     key: 'urgent',
     value: t('是否加急'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'verification_code',
     value: t('是否验证码'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'batch',
     value: t('批量发送'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[3], COLOR[1]]
   }
 ]);
 
 // 系统-邮件发送记录
 const emailRecordGroup = ref<PieSetting[]>([
-  { key: 'send_status', value: t('发送状态'), type: [], color: [] },
+  {key: 'send_status', value: t('发送状态'), type: [], color: []},
   {
     key: 'urgent',
     value: t('是否加急'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'verification_code',
     value: t('是否验证码'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'batch',
     value: t('批量发送'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
     color: [COLOR[3], COLOR[1]]
   }
 ]);
@@ -283,72 +292,71 @@ const hasPieChart = ref(false);
 const loadEnums = async () => {
   switch (props.resource) {
     case 'User':
-      await loadUserSource();
-      await loadUserGender();
+      loadUserSource();
+      loadUserGender();
       hasPieChart.value = true;
       break;
     case 'Dept':
       hasPieChart.value = true;
       break;
     case 'Group':
-      await loadGroupSource();
+      loadGroupSource();
       hasPieChart.value = true;
       break;
     case 'OrgTagTarget':
-      await loadOrgTargetType();
+      loadOrgTargetType();
       hasPieChart.value = true;
       break;
     case 'Notice':
-      await loadNoticeScope();
-      await getNoticeSentType();
+      loadNoticeScope();
+      getNoticeSentType();
       hasPieChart.value = true;
       break;
     case 'Message':
-      await loadMessageReceiveType();
-      await loadMessageStatus();
+      loadMessageReceiveType();
+      loadMessageStatus();
       hasPieChart.value = true;
       break;
     case 'Service':
-      await loadServiceSource();
-      // await loadApiDocType();
+      loadServiceSource();
       hasPieChart.value = true;
       break;
     case 'Api':
-      await loadApiHttpMethod();
-      await loadApiType();
+      loadApiHttpMethod();
+      loadApiType();
       hasPieChart.value = true;
       break;
     case 'ApiLogs':
-      await loadApiType();
-      await loadApiHttpMethod();
+      loadApiType();
+      loadApiHttpMethod();
       hasPieChart.value = true;
       break;
     case 'OperationLog':
       hasPieChart.value = true;
       break;
     case 'Event':
-      await loadEventType();
-      await loadEventPushStatus();
+      loadEventType();
+      oadEventPushStatus();
       hasPieChart.value = true;
       break;
     case 'Sms':
-      await loadSendStatusType();
+      loadSendStatusType();
       hasPieChart.value = true;
       break;
     case 'Email':
-      await loadSendStatusType();
+      loadSendStatusType();
       hasPieChart.value = true;
       break;
   }
 };
 
 // 用户来源
-const loadUserSource = async () => {
+const loadUserSource = () => {
   userGroup.value[0].type = enumUtils.enumToMessages(UserSource);
 };
 
 // 用户性别
-const loadUserGender = async () => {
+const loadUserGender = () => {
   const data = enumUtils.enumToMessages(Gender);
   userGroup.value[4].type = data;
   userGroup.value[4].color = data.map(item => getUserGenderColor(item.value) || '');
@@ -367,21 +375,22 @@ const getUserGenderColor = (value: string) => {
 };
 
 // 组来源
-const loadGroupSource = async () => {
+const loadGroupSource = () => {
   groupByGroup.value[1].type = enumUtils.enumToMessages(GroupSource);
 };
 
 // 租户下标签类型
-const loadOrgTargetType = async () => {
+const loadOrgTargetType = () => {
   orgTagGroup.value[0].type = enumUtils.enumToMessages(OrgTargetType);
 };
 
 // 公告发送范围
-const loadNoticeScope = async () => {
+const loadNoticeScope = () => {
   const data = enumUtils.enumToMessages(NoticeScope);
   noticeGroup.value[0].type = data;
   noticeGroup.value[0].color = data.map(item => getNoticeScopeColor(item.value) || '');
 };
+
 const getNoticeScopeColor = (value: string) => {
   switch (value) {
     case 'GLOBAL': // 全局
@@ -392,7 +401,7 @@ const getNoticeScopeColor = (value: string) => {
 };
 
 //  公告发送类型
-const getNoticeSentType = async () => {
+const getNoticeSentType = () => {
   const data = enumUtils.enumToMessages(SentType);
   noticeGroup.value[1].type = data;
   noticeGroup.value[1].color = data.map(item => getNoticeSentTypeColor(item.value) || '');
@@ -407,7 +416,7 @@ const getNoticeSentTypeColor = (value: string) => {
 };
 
 // 消息类型
-const loadMessageReceiveType = async () => {
+const loadMessageReceiveType = () => {
   const data = enumUtils.enumToMessages(MessageReceiveType);
   messageGroup.value[0].type = data;
   messageGroup.value[0].color = data.map(item => getMessageReceiveTypeColor(item.value) || '');
@@ -423,7 +432,7 @@ const getMessageReceiveTypeColor = (value: string) => {
 };
 
 // 消息状态
-const loadMessageStatus = async () => {
+const loadMessageStatus = () => {
   const data = enumUtils.enumToMessages(MessageStatus);
   messageGroup.value[1].type = data;
   messageGroup.value[1].color = data.map(item => getMessageStatusColor(item.value) || '');
@@ -440,7 +449,7 @@ const getMessageStatusColor = (value: string) => {
 };
 
 // 服务来源
-const loadServiceSource = async () => {
+const loadServiceSource = () => {
   const data = enumUtils.enumToMessages(ServiceSource);
   serviceGroup.value[0].type = data;
   serviceGroup.value[0].color = data.map(item => getServiceSourceColor(item.value) || '');
@@ -459,7 +468,7 @@ const getServiceSourceColor = (value: string) => {
 };
 
 // 接口方法
-const loadApiHttpMethod = async () => {
+const loadApiHttpMethod = () => {
   const data = enumUtils.enumToMessages(HttpMethod);
 
   if (props.resource === 'ApiLogs') {
@@ -492,7 +501,7 @@ const getApiHttpMethodColor = (value: string) => {
   }
 };
 // 接口类型
-const loadApiType = async () => {
+const loadApiType = () => {
   const data = enumUtils.enumToMessages(ApiType);
 
   if (props.resource === 'ApiLogs') {
@@ -525,7 +534,7 @@ const getApiTypeColor = (value: string) => {
 };
 
 // 事件类型
-const loadEventType = async () => {
+const loadEventType = () => {
   const data = enumUtils.enumToMessages(EventType);
   eventGroup.value[0].type = data;
   eventGroup.value[0].color = data.map(item => getEventTypeColor(item.value) || '');
@@ -554,7 +563,7 @@ const getEventTypeColor = (value: string) => {
 };
 
 // 事件推送状态
-const loadEventPushStatus = async () => {
+const loadEventPushStatus = () => {
   const data = enumUtils.enumToMessages(EventPushStatus);
   eventGroup.value[1].type = data;
   eventGroup.value[1].color = data.map(item => getEventPushStatusColor(item.value) || '');
@@ -576,7 +585,7 @@ const getEventPushStatusColor = (value: string) => {
 };
 
 // 邮件和短信发送状态
-const loadSendStatusType = async () => {
+const loadSendStatusType = () => {
   const data = enumUtils.enumToMessages(ProcessStatus);
 
   if (props.resource === 'Email') {

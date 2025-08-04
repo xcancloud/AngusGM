@@ -60,12 +60,12 @@ const init = () => {
 };
 
 const messageReceiveType = ref<EnumMessage<MessageReceiveType>[]>([]);
-const loadMessageReceiveType = async () => {
+const loadMessageReceiveType = () => {
   messageReceiveType.value = (enumUtils.enumToMessages(MessageReceiveType));
 };
 
 const sentTypeList = ref<EnumMessage<SentType>[]>([]);
-const loadSentType = async () => {
+const loadSentType = () => {
   sentTypeList.value = enumUtils.enumToMessages(SentType);
 };
 
