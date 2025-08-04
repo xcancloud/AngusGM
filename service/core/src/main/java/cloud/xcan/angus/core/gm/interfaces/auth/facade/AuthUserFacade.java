@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.auth.facade;
 
+import cloud.xcan.angus.core.gm.domain.app.App;
 import cloud.xcan.angus.core.gm.interfaces.app.facade.vo.AppVo;
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.AuthUserPasswordCheckDto;
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.AuthUserPasswordUpdateDto;
@@ -7,6 +8,7 @@ import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.AuthUserRealNameUpdat
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.CurrentAuthUserPasswordCheckDto;
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.CurrentAuthUserPasswordInitDto;
 import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.CurrentAuthUserPasswordUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppFuncVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppTreeVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.func.AuthAppVo;
 import java.util.HashSet;
@@ -34,4 +36,7 @@ public interface AuthUserFacade {
 
   AuthAppTreeVo appFuncTree(Long userId, String appIdOrCode, Boolean joinApi, Boolean onlyEnabled);
 
+  App getApp(Long userId, String appIdOrCode, Boolean joinApi, Boolean onlyEnabled);
+
+  List<AuthAppFuncVo> getAuthAppFuncVos(App app);
 }

@@ -5,6 +5,7 @@ import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.OpenStage;
+import cloud.xcan.angus.remote.MessageJoinField;
 import cloud.xcan.angus.remote.NameJoinField;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +23,10 @@ public class AppDetailVo {
 
   private String code;
 
+  @MessageJoinField(type = "APP")
   private String name;
 
+  @MessageJoinField(type = "APP")
   private String showName;
 
   private String icon;
@@ -32,6 +35,7 @@ public class AppDetailVo {
 
   private EditionType editionType;
 
+  @MessageJoinField(type = "APP")
   private String description;
 
   private Boolean authCtrl;

@@ -5,6 +5,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 
 import cloud.xcan.angus.api.gm.app.vo.AuthAppFuncTreeVo;
+import cloud.xcan.angus.core.biz.MessageJoin;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCurrentCmd;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserQuery;
@@ -46,6 +47,9 @@ public class AuthUserFacadeImpl implements AuthUserFacade {
   @Resource
   private AuthPolicyUserQuery authPolicyUserQuery;
 
+  @Resource
+  private AuthUserFacade authUserFacade;
+
   @Override
   public void updateCurrentPassword(AuthUserPasswordUpdateDto dto) {
     userCmd.passwordUpdate(dto.getId(), dto.getNewPassword());
@@ -81,32 +85,44 @@ public class AuthUserFacadeImpl implements AuthUserFacade {
     authUserCurrentCmd.initCurrentPassword(dto.getNewPassword());
   }
 
+  @MessageJoin
   @Override
   public List<AppVo> userAppList(Long userId) {
     List<App> apps = authPolicyUserQuery.userAppList(userId);
     return apps.stream().map(AppAssembler::toVo).collect(Collectors.toList());
   }
 
+  @MessageJoin
   @Override
   public AuthAppVo userAppFuncList(Long userId, String appIdOrCode, Boolean joinApi,
       Boolean onlyEnabled) {
-    App app = authPolicyUserQuery.userAppFuncList(userId, appIdOrCode,
-        nullSafe(joinApi, false),  nullSafe(onlyEnabled, true));
-    List<AuthAppFuncVo> funcVos = app.getAppFunc().stream().map(AuthUserAssembler::toAuthFuncVo)
-        .collect(Collectors.toList());
+    App app = getApp(userId, appIdOrCode, joinApi, onlyEnabled);
+    List<AuthAppFuncVo> funcVos = authUserFacade.getAuthAppFuncVos(app);
     return AuthUserAssembler.toAuthAppVo(app, funcVos);
   }
 
+  @MessageJoin
   @Override
   public AuthAppTreeVo appFuncTree(Long userId, String appIdOrCode, Boolean joinApi,
       Boolean onlyEnabled) {
-    App app = authPolicyUserQuery.userAppFuncList(userId, appIdOrCode,
-        nullSafe(joinApi, false), nullSafe(onlyEnabled, true));
-    List<AuthAppFuncVo> funcVos = app.getAppFunc().stream().map(AuthUserAssembler::toAuthFuncVo)
-        .collect(Collectors.toList());
+    App app = getApp(userId, appIdOrCode, joinApi, onlyEnabled);
+    List<AuthAppFuncVo> funcVos = authUserFacade.getAuthAppFuncVos(app);
     List<AuthAppFuncTreeVo> funcVosTree = isEmpty(funcVos) ? null :
         TreeUtils.toTree(funcVos.stream().map(AuthUserAssembler::toAuthAppFuncTreeVo)
             .collect(Collectors.toList()), true);
     return toAuthAppTreeVo(app, funcVosTree);
+  }
+
+  @Override
+  public App getApp(Long userId, String appIdOrCode, Boolean joinApi, Boolean onlyEnabled) {
+    return authPolicyUserQuery.userAppFuncList(userId, appIdOrCode,
+        nullSafe(joinApi, false), nullSafe(onlyEnabled, true));
+  }
+
+  @MessageJoin
+  @Override
+  public List<AuthAppFuncVo> getAuthAppFuncVos(App app) {
+    return app.getAppFunc().stream().map(AuthUserAssembler::toAuthFuncVo)
+        .collect(Collectors.toList());
   }
 }

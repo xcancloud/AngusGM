@@ -12,6 +12,7 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.ExportFileType;
 import cloud.xcan.angus.api.gm.app.vo.AppDetailVo;
+import cloud.xcan.angus.core.biz.MessageJoin;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
@@ -90,18 +91,21 @@ public class AppFacadeImpl implements AppFacade {
     //    handler.export(dto.getId(), dto.getExportType(), response);
   }
 
+  @MessageJoin
   @NameJoin
   @Override
   public AppDetailVo detail(Long id) {
     return toDetailVo(appQuery.detail(id));
   }
 
+  @MessageJoin
   @NameJoin
   @Override
   public AppDetailVo detail(String code, EditionType editionType) {
     return toDetailVo(appQuery.detail(code, editionType));
   }
 
+  @MessageJoin
   @NameJoin
   @Override
   public PageResult<AppVo> list(AppFindDto dto) {

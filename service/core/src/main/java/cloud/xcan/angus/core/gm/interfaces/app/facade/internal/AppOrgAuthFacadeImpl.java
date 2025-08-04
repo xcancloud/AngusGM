@@ -20,6 +20,7 @@ import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.gm.app.vo.OrgAppAuthVo;
+import cloud.xcan.angus.core.biz.MessageJoin;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOrgAuthCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppOrgAuthQuery;
@@ -111,6 +112,7 @@ public class AppOrgAuthFacadeImpl implements AppOrgAuthFacade {
     return appOrgAuthQuery.appAuthOrgCheck(appId, orgType, orgId);
   }
 
+  @MessageJoin
   @Override
   public List<OrgAppAuthVo> orgAuthApp(AuthOrgType orgType, Long orgId, Boolean joinPolicy) {
     List<App> authApps = appOrgAuthQuery.orgAuthApp(orgType, orgId, nullSafe(joinPolicy, false));

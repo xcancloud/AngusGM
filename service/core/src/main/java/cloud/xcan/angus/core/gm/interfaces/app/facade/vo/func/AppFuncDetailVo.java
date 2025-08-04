@@ -5,6 +5,7 @@ import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 import cloud.xcan.angus.api.commonlink.app.func.AppFuncType;
 import cloud.xcan.angus.api.gm.app.vo.ApiInfoVo;
 import cloud.xcan.angus.api.gm.app.vo.AppTagInfoVo;
+import cloud.xcan.angus.remote.MessageJoinField;
 import cloud.xcan.angus.remote.NameJoinField;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +23,10 @@ public class AppFuncDetailVo {
 
   private String code;
 
+  @MessageJoinField(type = "APP")
   private String name;
 
+  @MessageJoinField(type = "APP")
   private String showName;
 
   private Long pid;

@@ -2,7 +2,6 @@ package cloud.xcan.angus.api.commonlink.i18nmessage;
 
 import cloud.xcan.angus.core.biz.I18nMessage;
 import cloud.xcan.angus.spec.experimental.EntitySupport;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -26,10 +25,8 @@ public class I18nMessages extends EntitySupport<I18nMessages, Long> implements I
 
   private String language;
 
-  @Column(name = "default_message")
   private String defaultMessage;
 
-  @Column(name = "i18n_message")
   private String i18nMessage;
 
   @Override

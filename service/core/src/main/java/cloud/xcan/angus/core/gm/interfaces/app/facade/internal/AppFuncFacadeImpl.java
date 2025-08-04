@@ -11,6 +11,7 @@ import static cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder.getMatchS
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.gm.app.vo.AppFuncTreeVo;
 import cloud.xcan.angus.core.biz.JoinSupplier;
+import cloud.xcan.angus.core.biz.MessageJoin;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppFuncCmd;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
@@ -76,6 +77,7 @@ public class AppFuncFacadeImpl implements AppFuncFacade {
     appFuncCmd.enabled(appId, appFunctions);
   }
 
+  @MessageJoin
   @NameJoin
   @Override
   public AppFuncDetailVo detail(Long id) {
@@ -83,20 +85,24 @@ public class AppFuncFacadeImpl implements AppFuncFacade {
     return toAppFuncDetailVo(appFunctions);
   }
 
-  @NameJoin
   @Override
   public List<AppFuncVo> list(Long appId, AppFuncFindDto dto) {
-    List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto),
-        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+    List<AppFunc> appFunctions = getAppFuncs(appId, dto);
+    joinSupplier.execute(() -> appFunctions);
     return appFunctions.stream().map(AppFuncAssembler::toAppFuncVo).collect(Collectors.toList());
   }
 
   @Override
   public List<AppFuncTreeVo> tree(Long appId, AppFuncFindDto dto) {
-    List<AppFunc> appFunctions = appFuncQuery.list(getSpecification(appId, dto),
-        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+    List<AppFunc> appFunctions = getAppFuncs(appId, dto);
     joinSupplier.execute(() -> appFunctions);
     return toTree(appFunctions);
   }
 
+  @MessageJoin
+  @NameJoin
+  public List<AppFunc> getAppFuncs(Long appId, AppFuncFindDto dto) {
+    return appFuncQuery.list(getSpecification(appId, dto),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+  }
 }
