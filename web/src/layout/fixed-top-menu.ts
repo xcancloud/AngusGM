@@ -1,5 +1,4 @@
-import {appContext, DomainManager, EditionType} from '@xcan-angus/infra';
-import {AppOrServiceRoute} from '@xcan-angus/infra/lib/router/apiRouterPrefix';
+import { appContext, AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 
 const personalCenterMenus = [
   {
@@ -47,8 +46,8 @@ const personalCenterMenus = [
 const getTopRightMenu = async () => {
   const domainManager = DomainManager.getInstance();
   const expenseUrl = await domainManager.getAppDomain(AppOrServiceRoute.expense);
-  const workOrderUrl = await domainManager.getUrl(AppOrServiceRoute.wo);
-  const officialWebsiteUrl = await domainManager.getUrl(AppOrServiceRoute.www);
+  const workOrderUrl = await domainManager.getAppDomain(AppOrServiceRoute.wo);
+  const officialWebsiteUrl = await domainManager.getAppDomain(AppOrServiceRoute.www);
 
   let menus = [
     { code: 'GlobalSearch', hasAuth: true, showName: '搜索框' },
@@ -58,7 +57,7 @@ const getTopRightMenu = async () => {
     { code: 'Information', hasAuth: true, showName: '消息中心' }
   ];
 
-  if (appContext.getProfile() !== EditionType.CLOUD_SERVICE) {
+  if (!appContext.isCloudServiceEdition()) {
     menus = menus.filter(item => !['Expense', 'WorkOrder', 'OfficialWebsite'].includes(item.code));
   }
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import {ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {InputPassword} from 'ant-design-vue';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { InputPassword } from 'ant-design-vue';
 
 const { t } = useI18n();
 

@@ -12,15 +12,15 @@ const proxy = {
   },
   '/storage': {
     target: 'http://dev-files.xcan.cloud',
-    //target: 'http://localhost:1819',
-    changeOrigin: true,
-    //rewrite: (path) => path.replace(/^\/storage/, '')
+    // target: 'http://localhost:1819',
+    changeOrigin: true
+    // rewrite: (path) => path.replace(/^\/storage/, '')
   },
   '/defender': {
     target: 'http://dev-apis.xcan.cloud',
-    //target: 'http://localhost:1823',
-    changeOrigin: true,
-    //rewrite: (path) => path.replace(/^\/defender/, '')
+    // target: 'http://localhost:1823',
+    changeOrigin: true
+    // rewrite: (path) => path.replace(/^\/defender/, '')
   }
 };
 

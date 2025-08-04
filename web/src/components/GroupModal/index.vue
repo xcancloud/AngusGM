@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {Checkbox, CheckboxGroup, Divider} from 'ant-design-vue';
-import {Icon, Input, Modal, Scroll, Select} from '@xcan-angus/vue-ui';
-import {debounce} from 'throttle-debounce';
-import {duration, GM} from '@xcan-angus/infra';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Checkbox, CheckboxGroup, Divider } from 'ant-design-vue';
+import { Icon, Input, Modal, Scroll, Select } from '@xcan-angus/vue-ui';
+import { debounce } from 'throttle-debounce';
+import { duration, GM } from '@xcan-angus/infra';
 
-import {orgTag, user} from '@/api';
+import { orgTag, user } from '@/api';
 
 interface Props {
   visible: boolean;

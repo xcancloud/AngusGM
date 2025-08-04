@@ -1,3 +1,5 @@
+import { Gender } from '@xcan-angus/infra';
+
 export type FilterOp =
   'EQUAL'
   | 'NOT_EQUAL'
@@ -21,7 +23,8 @@ export type SearchParams = {
   filters?: Filters;
 }
 
-export type Gender = 'FEMALE' | 'MALE' | 'UNKNOWN'
+// TODO 删除重复定义
+
 export type Source =
   'PLATFORM_SIGNUP'
   | 'INVITATION_CODE_SIGNUP'

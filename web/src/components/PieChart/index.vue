@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {onBeforeMount, onMounted, ref, watch} from 'vue';
+import { onBeforeMount, onMounted, ref, watch } from 'vue';
 import * as echarts from 'echarts/core';
-import {GridComponent, LegendComponent, TitleComponent, TooltipComponent} from 'echarts/components';
+import { GridComponent, LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 
-import {PieChart} from 'echarts/charts';
-import {LabelLayout} from 'echarts/features';
-import {CanvasRenderer} from 'echarts/renderers';
+import { PieChart } from 'echarts/charts';
+import { LabelLayout } from 'echarts/features';
+import { CanvasRenderer } from 'echarts/renderers';
 // import DarkTheme from '../Statistics/echartsDark.json';
 // import GrayTheme from '../Statistics/echartsGray.json';
 
@@ -46,7 +46,6 @@ const initCharts = () => {
   if (!chartsRef.value) {
     return;
   }
-  // echarts.registerTheme(tenantInfo.value.preference.themeCode, tenantInfo.value.preference.themeCode === 'dark' ? DarkTheme : GrayTheme);
   myChart = echarts.init(chartsRef.value);
   myChart.setOption(chartsOption, true, false);
   window.addEventListener('resize', () => {

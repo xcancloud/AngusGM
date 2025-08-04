@@ -4,10 +4,10 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, InputPassword, Popover, Radio, RadioGroup } from 'ant-design-vue';
 import { Cropper, Icon, Image, Input, notification, PureCard, SelectItc } from '@xcan-angus/vue-ui';
-import { EnumMessage, appContext, duration, enumUtils, itc, passwordUtils, regexpUtils, utils } from '@xcan-angus/infra';
+import { EnumMessage, Gender, appContext, duration, enumUtils, itc, passwordUtils, regexpUtils, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
-import { FormState, Gender } from '../../PropsType';
+import { FormState } from '../../PropsType';
 
 import { user } from '@/api';
 

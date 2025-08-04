@@ -7,7 +7,7 @@ const { execSync } = require('child_process');
  * Parse command line arguments
  * @returns {Object} Parsed parameters object
  */
-function parseArgs() {
+function parseArgs () {
   const args = process.argv.slice(2);
   console.log('> args: ', args);
 
@@ -38,7 +38,7 @@ const uuid = (() => {
  * @param {string} p Relative path
  * @returns {string} Absolute path
  */
-function resolve(p) {
+function resolve (p) {
   return path.join(__dirname, p);
 }
 
@@ -48,7 +48,7 @@ function resolve(p) {
  * @param {Array} data Replacement data array
  * @returns {string} Replaced string
  */
-function replace(str, data) {
+function replace (str, data) {
   for (let i = 0, len = data.length; i < len; i++) {
     const { key, value } = data[i];
     const rex = new RegExp(`(${key}=)\\S+`, 'gmi');
@@ -63,7 +63,7 @@ function replace(str, data) {
  * @param {string} encoding Encoding format
  * @returns {string} File content
  */
-function safeReadFile(filePath, encoding = 'utf8') {
+function safeReadFile (filePath, encoding = 'utf8') {
   try {
     if (!fs.existsSync(filePath)) {
       console.warn(`⚠️  File does not exist: ${filePath}`);
@@ -82,7 +82,7 @@ function safeReadFile(filePath, encoding = 'utf8') {
  * @param {string} content File content
  * @param {string} encoding Encoding format
  */
-function safeWriteFile(filePath, content, encoding = 'utf8') {
+function safeWriteFile (filePath, content, encoding = 'utf8') {
   try {
     // Ensure directory exists
     const dir = path.dirname(filePath);
@@ -104,7 +104,7 @@ function safeWriteFile(filePath, content, encoding = 'utf8') {
  * @param {Array} replaceList Replacement list
  * @returns {string} Merged environment configuration content
  */
-function mergeEnvFiles(baseEnvPath, deployEnvPath, replaceList) {
+function mergeEnvFiles (baseEnvPath, deployEnvPath, replaceList) {
   console.log('> Reading base environment configuration file');
   let envContent = safeReadFile(baseEnvPath);
 
@@ -129,7 +129,7 @@ function mergeEnvFiles(baseEnvPath, deployEnvPath, replaceList) {
 /**
  * Main function
  */
-function start() {
+function start () {
   const params = parseArgs();
   const deployEnv = params.env;
   const editionType = params.edition_type || 'COMMUNITY';

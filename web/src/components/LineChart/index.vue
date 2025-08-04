@@ -41,7 +41,6 @@ const initCharts = () => {
   if (!chartsRef.value) {
     return;
   }
-  // echarts.registerTheme(tenantInfo.value.preference.themeCode, GrayTheme);
   myChart = echarts.init(chartsRef.value);
   myChart.setOption(chartsOption);
   window.addEventListener('resize', () => {
