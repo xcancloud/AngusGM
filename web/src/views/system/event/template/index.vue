@@ -116,7 +116,7 @@ const targetTypeEnums = ref<EnumMessage<CombinedTargetType>[]>([]);
 const appList = ref<{ appCode: string; appName: string; appShowName: string }[]>([]);
 const appLoaded = ref(false);
 
-const loadEnums = async () => {
+const loadEnums = () => {
   targetTypeEnums.value = enumUtils.enumToMessages(CombinedTargetType);
 };
 
@@ -178,9 +178,9 @@ const pagination = computed(() => {
   };
 });
 
-onMounted(async () => {
-  await loadAppOptions();
-  await loadEnums();
+onMounted(() => {
+  loadAppOptions();
+  loadEnums();
   getEventTemplate();
 });
 </script>

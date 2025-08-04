@@ -336,7 +336,7 @@ const loadEnums = async () => {
       break;
     case 'Event':
       loadEventType();
-      oadEventPushStatus();
+      loadEventPushStatus();
       hasPieChart.value = true;
       break;
     case 'Sms':
