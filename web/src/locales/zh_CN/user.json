@@ -1,0 +1,125 @@
+{
+  "user": {
+    "management": {
+      "title": "用户管理",
+      "addUser": "添加用户",
+      "editUser": "编辑用户",
+      "deleteUser": "删除用户",
+      "lockUser": "锁定用户",
+      "unlockUser": "解锁用户",
+      "resetPassword": "重置密码",
+      "viewDetails": "查看详情",
+      "searchPlaceholder": "按用户名、手机号、邮箱搜索",
+      "filters": {
+        "status": "状态",
+        "type": "类型",
+        "department": "部门",
+        "group": "组",
+        "createdDate": "创建时间"
+      }
+    },
+    "profile": {
+      "title": "用户资料",
+      "basicInfo": "基本信息",
+      "security": "安全设置",
+      "preference": "偏好设置",
+      "messages": "消息",
+      "tokens": "访问令牌",
+      "firstName": "名",
+      "lastName": "姓",
+      "fullName": "姓名",
+      "gender": "性别",
+      "mobile": "手机号",
+      "email": "邮箱",
+      "address": "地址",
+      "department": "部门",
+      "position": "职位",
+      "identity": "身份",
+      "systemAdmin": "系统管理员",
+      "generalUser": "普通用户",
+      "accountType": "账号类型",
+      "status": "状态",
+      "createdDate": "创建时间",
+      "lastLogin": "最后登录"
+    },
+    "security": {
+      "title": "安全设置",
+      "changePassword": "修改密码",
+      "bindMobile": "绑定手机",
+      "bindEmail": "绑定邮箱",
+      "twoFactorAuth": "双因素认证",
+      "currentPassword": "当前密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "mobileBinding": "手机绑定",
+      "emailBinding": "邮箱绑定",
+      "unbind": "解绑",
+      "bind": "绑定",
+      "bound": "已绑定",
+      "unbound": "未绑定",
+      "bindingTime": "绑定时间",
+      "verificationCode": "验证码",
+      "sendCode": "发送验证码",
+      "resend": "重新发送({countDown}秒)",
+      "placeholder": {
+        "currentPassword": "请输入当前密码",
+        "newPassword": "请输入新密码",
+        "confirmPassword": "确认新密码",
+        "verificationCode": "请输入验证码",
+        "mobile": "请输入手机号",
+        "email": "请输入邮箱地址"
+      },
+      "description": {
+        "passwordSecurity": "建议您定期更换密码，安全级别更高的密码可以让您的账号更安全。密码设置规则：包含大小写字母、数字、特殊符号中至少两种条件且长度大于六个字符的密码。",
+        "mobileSecurity": "您已绑定手机号{mobile}，可用于登录、找回密码、接收短信通知消息。",
+        "emailSecurity": "您已绑定邮箱{email}，可用于登录、接收短信通知消息。",
+        "unbindWarning": "解绑后，您将无法使用{typeText}账号登录，确定要解绑吗？",
+        "passwordChangeSuccess": "密码修改成功后，显示登录页面，需要重新登录系统"
+      }
+    },
+    "tokens": {
+      "title": "访问令牌",
+      "introduce": "当前生成的access_token为用户访问令牌。用户访问令牌具有与用户相同的资源数据权限。通过API携带的用户访问令牌可以在不泄露用户密码的情况下访问受保护的用户资源和数据。为了使用安全，请将过期时间设置得尽可能短；当过期或用户状态不可用时，访问令牌会自动删除。用户访问令牌所有访问操作的审计信息将与相应用户关联。每个用户最多支持10个访问令牌",
+      "addToken": "添加访问令牌",
+      "tokenName": "令牌名称",
+      "expireTime": "过期时间",
+      "expireTimeDesc": "过期时间（不指定默认24小时）",
+      "createToken": "创建令牌",
+      "copyToken": "复制令牌",
+      "copied": "已复制",
+      "placeholder": {
+        "tokenName": "30个字符以内",
+        "password": "请输入登录密码"
+      },
+      "description": {
+        "addTokenLimit": "每个用户最多添加3个令牌",
+        "copyTokenWarning": "令牌\"{name}\"已创建。您将无法再次看到生成的Token，请确保\"立即复制Token\"。",
+        "tokenCount": "十个令牌已添加{total}个"
+      }
+    },
+    "department": {
+      "level": "部门层级",
+      "level1": "一级",
+      "level2": "二级",
+      "level3": "三级",
+      "level4": "四级",
+      "level5": "五级",
+      "level6": "六级",
+      "level7": "七级",
+      "level8": "八级",
+      "level9": "九级",
+      "level10": "十级"
+    },
+    "messages": {
+      "title": "消息",
+      "total": "总计",
+      "unread": "未读",
+      "read": "已读",
+      "markRead": "标记为已读",
+      "selectAll": "全选",
+      "sender": "发送者",
+      "selected": "已选择",
+      "noMessages": "暂无消息"
+    }
+  }
+}

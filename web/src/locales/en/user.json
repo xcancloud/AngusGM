@@ -1,0 +1,125 @@
+{
+  "user": {
+    "management": {
+      "title": "User Management",
+      "addUser": "Add User",
+      "editUser": "Edit User",
+      "deleteUser": "Delete User",
+      "lockUser": "Lock User",
+      "unlockUser": "Unlock User",
+      "resetPassword": "Reset Password",
+      "viewDetails": "View Details",
+      "searchPlaceholder": "Search by username, mobile, email",
+      "filters": {
+        "status": "Status",
+        "type": "Type",
+        "department": "Department",
+        "group": "Group",
+        "createdDate": "Created Date"
+      }
+    },
+    "profile": {
+      "title": "User Profile",
+      "basicInfo": "Basic Information",
+      "security": "Security Settings",
+      "preference": "Preferences",
+      "messages": "Messages",
+      "tokens": "Access Tokens",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "fullName": "Full Name",
+      "gender": "Gender",
+      "mobile": "Mobile",
+      "email": "Email",
+      "address": "Address",
+      "department": "Department",
+      "position": "Position",
+      "identity": "Identity",
+      "systemAdmin": "Administrator",
+      "generalUser": "General User",
+      "accountType": "Account Type",
+      "status": "Status",
+      "createdDate": "Created Date",
+      "lastLogin": "Last Login"
+    },
+    "security": {
+      "title": "Security Settings",
+      "changePassword": "Change Password",
+      "bindMobile": "Bind Mobile",
+      "bindEmail": "Bind Email",
+      "twoFactorAuth": "Two-Factor Authentication",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "mobileBinding": "Mobile Binding",
+      "emailBinding": "Email Binding",
+      "unbind": "Unbind",
+      "bind": "Bind",
+      "bound": "Bound",
+      "unbound": "Unbound",
+      "bindingTime": "Binding Time",
+      "verificationCode": "Verification Code",
+      "sendCode": "Send Code",
+      "resend": "Resend ({countDown}s)",
+      "placeholder": {
+        "currentPassword": "Enter current password",
+        "newPassword": "Enter new password",
+        "confirmPassword": "Confirm new password",
+        "verificationCode": "Enter verification code",
+        "mobile": "Enter mobile number",
+        "email": "Enter email address"
+      },
+      "description": {
+        "passwordSecurity": "You are advised to change your password periodically. A password with a higher security level can make your account more secure. Password setting rule: A password that contains at least two conditions including uppercase and lowercase letters, digits, or special symbols and is longer than six characters in length.",
+        "mobileSecurity": "You have bound your mobile phone number {mobile}, which can be used to log in, retrieve your password, and receive SMS notification messages.",
+        "emailSecurity": "You have bound the mailbox {email} to log in to and receive SMS notification messages.",
+        "unbindWarning": "After unbinding, you will not be able to log in using the {typeText} account. Are you sure to unbind?",
+        "passwordChangeSuccess": "After the password is successfully changed, the login page is displayed and you need to log in to the system again"
+      }
+    },
+    "tokens": {
+      "title": "Access Tokens",
+      "introduce": "Currently, the generated access_token is a user access token. The user access token has the same resource and data rights as the user. The user access token carried through the API can access the protected user resources and data without disclosing the user password. In order to use Security, please set the expiration time as short as possible; The access token is automatically deleted when it expires or the user status is unavailable. User access token Audit information about all access operations will be associated with corresponding users. Each user supports up to 10 access tokens",
+      "addToken": "Add Access Token",
+      "tokenName": "Token Name",
+      "expireTime": "Expiration Time",
+      "expireTimeDesc": "Expiration time (not specified default 24 hours)",
+      "createToken": "Create Token",
+      "copyToken": "Copy Token",
+      "copied": "Copied",
+      "placeholder": {
+        "tokenName": "30 characters or less",
+        "password": "Enter your login password"
+      },
+      "description": {
+        "addTokenLimit": "Add a limit of 3 tokens per user",
+        "copyTokenWarning": "Token \"{name}\" has been created. You will not be able to see the generated Token again, please make sure to copy the Token now.",
+        "tokenCount": "Ten tokens have {total} added"
+      }
+    },
+    "department": {
+      "level": "Level",
+      "level1": "L1",
+      "level2": "L2",
+      "level3": "L3",
+      "level4": "L4",
+      "level5": "L5",
+      "level6": "L6",
+      "level7": "L7",
+      "level8": "L8",
+      "level9": "L9",
+      "level10": "L10"
+    },
+    "messages": {
+      "title": "Messages",
+      "total": "Total",
+      "unread": "Unread",
+      "read": "Read",
+      "markRead": "Mark as Read",
+      "selectAll": "Select All",
+      "sender": "Sender",
+      "selected": "Selected",
+      "noMessages": "No messages"
+    }
+  }
+}
