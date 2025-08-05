@@ -205,10 +205,11 @@ onMounted(() => {
     <Hints :text="t('globalNoticeTip')" class="mb-1" />
     <PureCard class="p-3.5 flex-1">
       <Statistics
-        :visible="showCount"
         resource="Notice"
-        :barTitle="t('notice')"
-        :geteway="GM" />
+        :barTitle="t('statistics.metrics.newNotification')"
+        :router="GM"
+        dateType="MONTH"
+        :visible="showCount" />
       <div class="flex items-start my-2 justify-between">
         <SearchPanel
           :options="searchOpt"

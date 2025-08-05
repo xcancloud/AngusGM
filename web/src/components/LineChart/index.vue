@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, watch } from 'vue';
+import { onBeforeMount, onMounted, ref, watch, nextTick, computed } from 'vue';
 import * as echarts from 'echarts/core';
 import { NoData } from '@xcan-angus/vue-ui';
-
 import { GridComponent, TitleComponent, TooltipComponent } from 'echarts/components';
-
 import { BarChart, LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
-import { computed } from '@vue/reactivity';
-// import DarkTheme from '../Statistics/echartsDark.json';
-// import GrayTheme from '../Statistics/echartsGray.json';
+import { useI18n } from 'vue-i18n';
 
+/**
+ * Component props interface definition
+ * Defines the structure for line/bar chart configuration
+ */
 interface Props {
-  title: string
-  unit: string
-  xData: string[]
-  yData: (number | null)[];
+  title: string; // Chart title
+  unit: string; // Data unit (e.g., "count", "percentage")
+  xData: string[]; // X-axis labels (time periods)
+  yData: (number | null)[]; // Y-axis values (counts)
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   yData: () => []
 });
 
+// Register ECharts components
 echarts.use([
   TitleComponent,
   GridComponent,
@@ -34,25 +35,94 @@ echarts.use([
   LineChart
 ]);
 
-const chartsRef = ref();
-let myChart: echarts.ECharts;
+// Chart reference and instance
+const chartsRef = ref<HTMLElement>();
+let myChart: echarts.ECharts | null = null;
 
-const initCharts = () => {
+const { t } = useI18n();
+
+/**
+ * Check if DOM element is ready for chart initialization
+ * @returns Whether the DOM element has valid dimensions
+ */
+const isDomReady = (): boolean => {
   if (!chartsRef.value) {
-    return;
+    return false;
   }
-  myChart = echarts.init(chartsRef.value);
-  myChart.setOption(chartsOption);
-  window.addEventListener('resize', () => {
-    myChart.resize();
-  });
+
+  const dom = chartsRef.value;
+  return dom.clientWidth > 0 && dom.clientHeight > 0;
 };
 
+/**
+ * Initialize chart with retry mechanism
+ * Handles DOM dimension issues and ensures proper chart initialization
+ */
+const initCharts = async (): Promise<void> => {
+  // Wait for DOM rendering to complete
+  await nextTick();
+
+  if (!isDomReady()) {
+    // Retry initialization if DOM is not ready
+    setTimeout(() => {
+      initCharts();
+    }, 100);
+    return;
+  }
+
+  try {
+    // Dispose existing chart instance
+    if (myChart) {
+      myChart.dispose();
+    }
+
+    if (chartsRef.value) {
+      myChart = echarts.init(chartsRef.value);
+      myChart.setOption(chartsOption.value, true, false);
+
+      // Add window resize listener
+      window.addEventListener('resize', handleResize);
+    }
+  } catch (error) {
+    console.error('Failed to initialize line chart:', error);
+  }
+};
+
+/**
+ * Handle window resize events
+ * Resizes chart when window dimensions change
+ */
+const handleResize = (): void => {
+  if (myChart && isDomReady()) {
+    myChart.resize();
+  }
+};
+
+/**
+ * Destroy chart instance and cleanup event listeners
+ */
+const destroyChart = (): void => {
+  if (myChart) {
+    window.removeEventListener('resize', handleResize);
+    myChart.dispose();
+    myChart = null;
+  }
+};
+
+/**
+ * Computed property to check if data is empty
+ * Returns true when there's only one data point with value 0
+ */
 const noData = computed(() => {
   return props.yData.length === 1 && props.yData[0] === 0;
 });
 
-const chartsOption = {
+/**
+ * Computed chart configuration
+ * Provides reactive chart options based on props
+ */
+const totalMessage = t('statistics.total');
+const chartsOption = computed(() => ({
   grid: {
     top: 32,
     right: 15,
@@ -60,7 +130,7 @@ const chartsOption = {
     left: 40
   },
   title: {
-    text: `${props.title} ( ${props.unit} , 总数: ${props.yData.length ? props.yData.reduce((n, m) => Number(n) + Number(m)) : ''})`,
+    text: `${props.title} ( ${props.unit} , ${totalMessage}: ${props.yData.length ? props.yData.reduce((n, m) => Number(n) + Number(m)) : ''})`,
     bottom: 0,
     left: 'center',
     textStyle: {
@@ -72,7 +142,7 @@ const chartsOption = {
     axisPointer: {
       type: 'shadow'
     },
-    formatter: function (params) {
+    formatter: function (params: any) {
       let res = `<div style='margin-bottom:5px;width:100%;font-size: 12px;min-width:100px;color:#8C8C8C;color:var(--content-text-title);'>${params.name}</div>`;
       res += `<div style="font-size: 14px;line-height: 16px;display:flex;justify-content: space-between;align-items: center;">
       <div style="display:flex;align-items: center;">
@@ -97,9 +167,6 @@ const chartsOption = {
           // color: '#8C8C8C'
         }
       }
-      // axisLabel: {
-      //   fontSize: 12
-      // }
     }
   ],
   yAxis: [
@@ -137,43 +204,48 @@ const chartsOption = {
       areaStyle: {}
     }
   ]
-};
+}));
 
-// Enable data zoom when user click bar.
-
-watch(() => props.xData, () => {
-  chartsOption.title.text = `${props.title} ( ${props.unit} , 总数: ${props.yData.length ? props.yData.reduce((n, m) => Number(n) + Number(m)) : ''})`;
-  chartsOption.xAxis[0].data = props.xData;
-  chartsOption.yAxis[0].max = props.yData.length === 1 && props.yData[0] === 0 ? 100 : 'dataMax';
-  chartsOption.series[0].data = props.yData;
-  chartsOption.series[0].label.show = props.yData.length === 1 && props.yData[0] === 0 ? false : props.yData.length;
-  myChart?.setOption(chartsOption, true);
+// Watch for data changes and update chart
+watch(() => [props.xData, props.yData, props.title, props.unit], () => {
+  if (myChart && isDomReady()) {
+    myChart.setOption(chartsOption.value, true, false);
+  }
 }, { deep: true });
 
-onBeforeMount(() => {
-  window.removeEventListener('resize', () => {
-    myChart.resize();
-  });
-});
-
+// Lifecycle hooks
 onMounted(() => {
   initCharts();
 });
 
+onBeforeMount(() => {
+  destroyChart();
+});
 </script>
+
 <template>
   <div class="relative" style="height: 200px;">
-    <div ref="chartsRef" class="w-full h-full flex-shrink-0">
+    <div
+      ref="chartsRef"
+      class="w-full h-full flex-shrink-0"
+      style="min-height: 200px; min-width: 200px;">
     </div>
     <template v-if="noData">
-      <NoData class="!h-30 absolute w-30  my-no-data" />
+      <NoData class="!h-30 absolute w-30 my-no-data" />
     </template>
   </div>
 </template>
+
 <style scoped>
 .my-no-data {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Ensure minimum dimensions for chart container */
+.w-full.h-full {
+  min-height: 200px;
+  min-width: 200px;
 }
 </style>

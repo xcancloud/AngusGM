@@ -255,10 +255,10 @@ onMounted(() => {
     <Hints :text="t('eventLogTip')" class="mb-1" />
     <PureCard class="flex-1 p-3.5">
       <Statistics
-        :visible="showCount"
         resource="Event"
-        :barTitle="t('事件')"
-        :geteway="GM" />
+        :barTitle="t('statistics.metrics.newEvents')"
+        :router="GM"
+        :visible="showCount" />
       <div class="flex items-center justify-between mb-2">
         <SearchPanel
           class="flex-1"

@@ -205,7 +205,7 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
   <PureCard class="flex-1 p-3.5">
     <Statistics
       resource="Sms"
-      :geteway="GM"
+      :router="GM"
       :barTitle="t('发送记录')"
       :visible="showCount" />
     <div class="flex items-start  mb-2">

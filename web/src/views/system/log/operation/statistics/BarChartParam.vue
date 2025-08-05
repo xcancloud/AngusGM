@@ -56,11 +56,11 @@ const dataType = ref(props.dateType);
       size="small"
       class="whitespace-nowrap"
       @change="radioGroupChange">
-      <RadioButton value="DAY">{{ t('today') }}</RadioButton>
-      <RadioButton value="WEEK">{{ t('nearly7Days') }}</RadioButton>
-      <RadioButton value="MONTH">{{ t('近1月') }}</RadioButton>
+      <RadioButton value="DAY">{{ t('statistics.timeRanges.today') }}</RadioButton>
+      <RadioButton value="WEEK">{{ t('statistics.timeRanges.last7Days') }}</RadioButton>
+      <RadioButton value="MONTH">{{ t('statistics.timeRanges.last30Days') }}</RadioButton>
       <template v-if="!['ApiLogs', 'OperationLog'].includes(props.resource)">
-        <RadioButton value="YEAR">{{ t('nearlyaYear') }}</RadioButton>
+        <RadioButton value="YEAR">{{ t('statistics.timeRanges.lastYear') }}</RadioButton>
       </template>
     </RadioGroup>
     <DatePicker

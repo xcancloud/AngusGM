@@ -10,9 +10,9 @@ const PieChart = defineAsyncComponent(() => import('./PieChart.vue'));
 const LineChart = defineAsyncComponent(() => import('@/components/LineChart/index.vue'));
 
 interface Props {
-  geteway: string,
+  router: string,
   resource: string,
-  pieParmas: PieSetting[];
+  pieParams: PieSetting[];
   barTitle: string;
   dateType: DateType;
   hasPieChart: boolean;
@@ -22,7 +22,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   resource: '',
-  pieParmas: () => [],
+  pieParams: () => [],
   barTitle: '',
   dateType: 'MONTH',
   hasPieChart: false,
@@ -160,7 +160,7 @@ const publicParams = {
 const pieloading = ref(true); // 饼图统计是否加载完成
 const pieChartData = ref<PieData []>([]);
 const loadCount = async () => {
-  const groupByColumns = props.pieParmas.map(item => item.key);
+  const groupByColumns = props.pieParams.map(item => item.key);
   groupByColumns?.length ? publicParams.groupBy = 'STATUS' : delete publicParams.groupBy;
   const params = {
     ...publicParams,
@@ -187,7 +187,7 @@ const loadCount = async () => {
     });
   }
 
-  const [error, { data }] = await http.get(`${props.geteway}/analysis/customization/summary`, params);
+  const [error, { data }] = await http.get(`${props.router}/analysis/customization/summary`, params);
   pieloading.value = false;
   if (error) {
     return;
@@ -197,7 +197,7 @@ const loadCount = async () => {
     data.status = getHandleHttpStatusCode(data.status);
   }
 
-  pieChartData.value = getCountData(props.pieParmas, data);
+  pieChartData.value = getCountData(props.pieParams, data);
 };
 
 const getCountData = (group, data) => {
@@ -428,7 +428,7 @@ const loadDateCount = async () => {
     });
   }
 
-  const [error, { data }] = await http.get(`${props.geteway}/analysis/customization/summary`, params);
+  const [error, { data }] = await http.get(`${props.router}/analysis/customization/summary`, params);
   barLoading.value = false;
   if (error) {
     return;
@@ -438,7 +438,7 @@ const loadDateCount = async () => {
 
 // 设置柱状图默认数据
 const setBarChartDefault = () => {
-  barChartData.value.title = `${t('new')}${props.barTitle}`;
+  barChartData.value.title = `${props.barTitle}`;
   barChartData.value.unit = `${t('时间单位')}: ${dateRangeType.value[1]}`;
   barChartData.value.xData = [];
   barChartData.value.yData = [];

@@ -1,28 +1,27 @@
 <script setup lang="ts">
-import {computed, defineAsyncComponent, onMounted, ref} from 'vue';
-import {enumUtils, UserSource, Gender, HttpMethod, ApiType, EventType, ProcessStatus} from '@xcan-angus/infra';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import { enumUtils, UserSource, Gender, HttpMethod, ApiType, EventType, ProcessStatus } from '@xcan-angus/infra';
 import {
-  GroupSource,
-  OrgTargetType,
-  NoticeScope,
-  SentType,
-  MessageReceiveType,
-  MessageStatus,
-  ServiceSource,
-  EventPushStatus
+  GroupSource, OrgTargetType, NoticeScope, SentType, MessageReceiveType,
+  MessageStatus, EventPushStatus, ServiceSource
 } from '@/enums/enums';
-import {useI18n} from 'vue-i18n';
-import {DateType, PieSetting} from './PropsType';
+import { useI18n } from 'vue-i18n';
+import { DateType, PieSetting } from './PropsType';
 
+// Async component for chart loading
 const LoadChart = defineAsyncComponent(() => import('./LoadChart.vue'));
 
+/**
+ * Component props interface definition
+ * Defines the structure for statistics component configuration
+ */
 interface Props {
-  geteway: string;
-  resource: string;
-  barTitle: string;
-  dateType: DateType;
-  visible?: boolean;
-  userId?: string;
+  router: string; // API gateway URL
+  resource: string; // Resource type for statistics
+  barTitle: string; // Title for bar chart
+  dateType: DateType; // Date range type
+  visible?: boolean; // Visibility control for statistics panel
+  userId?: string; // Optional user ID for filtering
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -33,109 +32,136 @@ const props = withDefaults(defineProps<Props>(), {
   userId: ''
 });
 
-const {t} = useI18n();
-// ---------------蓝---------绿-----------黄------------红---------------浅蓝-------------紫----------橘黄---------灰色-------------粉色-------------浅蓝1
-const COLOR = ['45,142,255', '82,196,26', '255,165,43', '245,34,45', '103,215,255', '201,119,255', '255,102,0', '217, 217, 217', '251, 129, 255', '171, 211, 255'];
+const { t } = useI18n();
 
-// 用户统计配置
+// Color palette configuration for charts
+const COLOR = [
+  '45,142,255', // Blue
+  '82,196,26', // Green
+  '255,165,43', // Yellow
+  '245,34,45', // Red
+  '103,215,255', // Light Blue
+  '201,119,255', // Purple
+  '255,102,0', // Orange
+  '217, 217, 217', // Gray
+  '251, 129, 255', // Pink
+  '171, 211, 255' // Light Blue 1
+] as const;
+
+// User statistics configuration - defines pie chart settings for user data
 const userGroup = ref<PieSetting[]>([
   {
-    key: 'source',
+    key: 'source', // TODO 删除来源饼图
     value: t('source'),
     type: [],
     color: [COLOR[0], COLOR[1], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[1]]
   },
   {
     key: 'sys_admin',
-    value: t('oprole'),
-    type: [{value: 0, message: t('generalUsers')}, {value: 1, message: t('administrators')}],
+    value: t('user.profile.identity'),
+    type: [{ value: 0, message: t('user.profile.generalUser') }, { value: 1, message: t('user.profile.systemAdmin') }],
     color: [COLOR[0], COLOR[6]]
   },
   {
     key: 'enabled',
-    value: t('validStatus'),
-    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
+    value: t('common.status.validStatus'),
+    type: [{ value: 0, message: t('common.status.disabled') }, { value: 1, message: t('common.status.enabled') }],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   },
   {
     key: 'locked',
-    value: t('lockStatus'),
-    type: [{value: 0, message: t('unlocked')}, {value: 1, message: t('lockout')}],
+    value: t('common.status.lockStatus'),
+    type: [{ value: 0, message: t('common.status.unlocked') }, { value: 1, message: t('common.status.locked') }],
     color: [COLOR[1], COLOR[3]]
   },
-  {key: 'gender', value: t('gender'), type: [], color: [COLOR[5], COLOR[6], COLOR[3]]}
+  {
+    key: 'gender',
+    value: t('user.profile.gender'),
+    type: [],
+    color: [COLOR[5], COLOR[6], COLOR[3]]
+  }
 ]);
 
-// 组统计配置
+// Group statistics configuration
 const groupByGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
-    value: t('status'),
-    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
+    value: t('common.status.validStatus'),
+    type: [{ value: 0, message: t('common.status.disabled') }, { value: 1, message: t('common.status.enabled') }],
     color: [COLOR[3], COLOR[1]]
   },
-  {key: 'source', value: t('source'), type: [], color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]}
+  {
+    key: 'source',
+    value: t('common.labels.source'),
+    type: [],
+    color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
+  }
 ]);
 
-// 部门统计配置
+// Department statistics configuration
 const deptByGroup = ref<PieSetting[]>([
   {
     key: 'level',
-    value: t('level'),
+    value: t('user.department.level'),
     type: [
-      {value: 1, message: t('grade1')},
-      {value: 2, message: t('grade2')},
-      {value: 3, message: t('grade3')},
-      {value: 4, message: t('grade4')},
-      {value: 5, message: t('grade5')},
-      {value: 6, message: t('grade6')},
-      {value: 7, message: t('grade7')},
-      {value: 8, message: t('grade8')},
-      {value: 9, message: t('grade9')},
-      {value: 10, message: t('grade10')}
+      { value: 1, message: t('user.department.level1') },
+      { value: 2, message: t('user.department.level2') },
+      { value: 3, message: t('user.department.level3') },
+      { value: 4, message: t('user.department.level4') },
+      { value: 5, message: t('user.department.level5') },
+      { value: 6, message: t('user.department.level6') },
+      { value: 7, message: t('user.department.level7') },
+      { value: 8, message: t('user.department.level8') },
+      { value: 9, message: t('user.department.level9') },
+      { value: 10, message: t('user.department.level10') }
     ],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
   }
 ]);
 
-// 租户标签统计配置
+// Organization tag statistics configuration
 const orgTagGroup = ref<PieSetting[]>([
-  {key: 'target_type', value: t('related'), type: [], color: [COLOR[1], COLOR[4], COLOR[5]]}
+  {
+    key: 'target_type',
+    value: t('common.labels.association'),
+    type: [],
+    color: [COLOR[1], COLOR[4], COLOR[5]]
+  }
 ]);
 
-// 公告统计配置
+// Notice statistics configuration
 const noticeGroup = ref<PieSetting[]>([
   {
     key: 'scope',
-    value: t('发送范围'),
+    value: t('statistics.metrics.sendScope'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
   {
     key: 'send_type',
-    value: t('发送类型'),
+    value: t('statistics.metrics.sendType'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   }
 ]);
 
-// 消息统计配置
+// Message statistics configuration
 const messageGroup = ref<PieSetting[]>([
   {
     key: 'receive_type',
-    value: t('status'),
+    value: t('statistics.metrics.receiveType'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
   {
     key: 'status',
-    value: t('status'),
+    value: t('statistics.metrics.sendStatus'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   }
 ]);
 
-// 服务统计配置
+// Service statistics configuration
 const serviceGroup = ref<PieSetting[]>([
   {
     key: 'source',
@@ -143,16 +169,15 @@ const serviceGroup = ref<PieSetting[]>([
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
-  // { key: 'api_doc_type', value: t('ApiDoc类型'), type: [], color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]] },
   {
     key: 'enabled',
     value: t('status'),
-    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
+    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   }
 ]);
 
-// 接口统计配置
+// API statistics configuration
 const apiGroup = ref<PieSetting[]>([
   {
     key: 'method',
@@ -169,449 +194,624 @@ const apiGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
     value: t('status'),
-    type: [{value: 0, message: t('disable')}, {value: 1, message: t('enable')}],
+    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   }
 ]);
 
-// http状态码范围
+// HTTP status code ranges for API logs
 const statusCode = [
-  {
-    value: 100, message: '1xx' // 信息性状态码
-  },
-  {
-    value: 200, message: '2xx' // 成功
-  },
-  {
-    value: 300, message: '3xx' // 重定向
-  },
-  {
-    value: 400, message: '4xx' // 客户端错误
-  },
-  {
-    value: 500, message: '5xx' // 服务器错误
-  }
+  { value: 100, message: '1xx' }, // Informational status codes
+  { value: 200, message: '2xx' }, // Success
+  { value: 300, message: '3xx' }, // Redirection
+  { value: 400, message: '4xx' }, // Client errors
+  { value: 500, message: '5xx' } // Server errors
 ];
-// 日志-请求日志配置
+
+// Request logs statistics configuration // TODO 未展示默认数量0
 const requestLogsGroup = ref<PieSetting[]>([
   {
-    key: 'api_type',
-    value: t('接口类型'),
+    key: 'api_type', // TODO 删除类型饼图
+    value: t('statistics.metrics.apiType'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
   {
     key: 'method',
-    value: t('请求方式'),
+    value: t('statistics.metrics.requestMethod'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
-  {key: 'status', value: t('状态码'), type: statusCode, color: [COLOR[4], COLOR[1], COLOR[0], COLOR[3], COLOR[2]]},
+  {
+    key: 'status',
+    value: t('statistics.metrics.httpStatus'),
+    type: statusCode,
+    color: [COLOR[4], COLOR[1], COLOR[0], COLOR[3], COLOR[2]]
+  },
   {
     key: 'success',
-    value: t('是否成功'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.status.name'),
+    type: [{ value: 1, message: t('statistics.status.success') }, { value: 0, message: t('statistics.status.failed') }],
     color: [COLOR[1], COLOR[3]]
   }
 ]);
 
-// 日志-操作日志配置
-const operationLogsGroup = ref<PieSetting[]>([
-  // {
-  //   key: 'success',
-  //   value: t('是否成功'),
-  //   type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
-  //   color: [COLOR[1], COLOR[3]]
-  // }
-]);
+// Operation logs statistics configuration
+const operationLogsGroup = ref<PieSetting[]>([]);
 
-// 系统事件-事件模板统计
+// System events statistics configuration
 const eventGroup = ref<PieSetting[]>([
   {
     key: 'type',
-    value: t('事件类型'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.eventType'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[1], COLOR[3]]
   },
   {
     key: 'push_status',
-    value: t('推送状态'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.eventPushStatus'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[1], COLOR[3]]
   }
 ]);
 
-// 系统-短信发送记录
+// SMS records statistics configuration
 const smsRecordGroup = ref<PieSetting[]>([
-  {key: 'send_status', value: t('发送状态'), type: [], color: []},
+  {
+    key: 'send_status',
+    value: t('statistics.metrics.sendStatus'),
+    type: [],
+    color: []
+  },
   {
     key: 'urgent',
-    value: t('是否加急'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.isUrgent'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'verification_code',
-    value: t('是否验证码'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.isVCode'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'batch',
-    value: t('批量发送'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.isBatchSend'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[3], COLOR[1]]
   }
 ]);
 
-// 系统-邮件发送记录
+// Email records statistics configuration
 const emailRecordGroup = ref<PieSetting[]>([
-  {key: 'send_status', value: t('发送状态'), type: [], color: []},
+  {
+    key: 'send_status',
+    value: t('statistics.metrics.sendStatus'),
+    type: [],
+    color: []
+  },
   {
     key: 'urgent',
-    value: t('是否加急'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.isUrgent'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'verification_code',
-    value: t('是否验证码'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.isVCode'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'batch',
-    value: t('批量发送'),
-    type: [{value: 1, message: t('yes')}, {value: 0, message: t('no')}],
+    value: t('statistics.metrics.isBatchSend'),
+    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
     color: [COLOR[3], COLOR[1]]
   }
 ]);
 
+// Flag to control pie chart visibility
 const hasPieChart = ref(false);
-// 获取饼图统计相关枚举
-const loadEnums = async () => {
-  switch (props.resource) {
-    case 'User':
-      loadUserSource();
-      loadUserGender();
-      hasPieChart.value = true;
-      break;
-    case 'Dept':
-      hasPieChart.value = true;
-      break;
-    case 'Group':
-      loadGroupSource();
-      hasPieChart.value = true;
-      break;
-    case 'OrgTagTarget':
-      loadOrgTargetType();
-      hasPieChart.value = true;
-      break;
-    case 'Notice':
-      loadNoticeScope();
-      getNoticeSentType();
-      hasPieChart.value = true;
-      break;
-    case 'Message':
-      loadMessageReceiveType();
-      loadMessageStatus();
-      hasPieChart.value = true;
-      break;
-    case 'Service':
-      loadServiceSource();
-      hasPieChart.value = true;
-      break;
-    case 'Api':
-      loadApiHttpMethod();
-      loadApiType();
-      hasPieChart.value = true;
-      break;
-    case 'ApiLogs':
-      loadApiType();
-      loadApiHttpMethod();
-      hasPieChart.value = true;
-      break;
-    case 'OperationLog':
-      hasPieChart.value = true;
-      break;
-    case 'Event':
-      loadEventType();
-      loadEventPushStatus();
-      hasPieChart.value = true;
-      break;
-    case 'Sms':
-      loadSendStatusType();
-      hasPieChart.value = true;
-      break;
-    case 'Email':
-      loadSendStatusType();
-      hasPieChart.value = true;
-      break;
+
+/**
+ * Load statistics-related enums based on resource type
+ * Initializes pie chart configurations for different resource types
+ */
+const loadEnums = async (): Promise<void> => {
+  try {
+    switch (props.resource) {
+      case 'User':
+        loadUserSource();
+        loadUserGender();
+        hasPieChart.value = true;
+        break;
+      case 'Dept':
+        hasPieChart.value = true;
+        break;
+      case 'Group':
+        loadGroupSource();
+        hasPieChart.value = true;
+        break;
+      case 'OrgTagTarget':
+        loadOrgTargetType();
+        hasPieChart.value = true;
+        break;
+      case 'Notice':
+        loadNoticeScope();
+        getNoticeSentType();
+        hasPieChart.value = true;
+        break;
+      case 'Message':
+        loadMessageReceiveType();
+        loadMessageStatus();
+        hasPieChart.value = true;
+        break;
+      case 'Service':
+        loadServiceSource();
+        hasPieChart.value = true;
+        break;
+      case 'Api':
+        loadApiHttpMethod();
+        loadApiType();
+        hasPieChart.value = true;
+        break;
+      case 'ApiLogs':
+        loadApiType();
+        loadApiHttpMethod();
+        hasPieChart.value = true;
+        break;
+      case 'OperationLog':
+        hasPieChart.value = true;
+        break;
+      case 'Event':
+        loadEventType();
+        loadEventPushStatus();
+        hasPieChart.value = true;
+        break;
+      case 'Sms':
+        loadSendStatusType();
+        hasPieChart.value = true;
+        break;
+      case 'Email':
+        loadSendStatusType();
+        hasPieChart.value = true;
+        break;
+    }
+  } catch (error) {
+    console.error('Failed to load enum data:', error);
   }
 };
 
-// 用户来源
-const loadUserSource = () => {
-  userGroup.value[0].type = enumUtils.enumToMessages(UserSource);
+/**
+ * Load user source enum data
+ * Maps enum values to user group configuration
+ */
+const loadUserSource = (): void => {
+  try {
+    userGroup.value[0].type = enumUtils.enumToMessages(UserSource);
+  } catch (error) {
+    console.error('Failed to load user source:', error);
+  }
 };
 
-// 用户性别
-const loadUserGender = () => {
-  const data = enumUtils.enumToMessages(Gender);
-  userGroup.value[4].type = data;
-  userGroup.value[4].color = data.map(item => getUserGenderColor(item.value) || '');
+/**
+ * Load user gender enum data
+ * Maps enum values and assigns colors based on gender
+ */
+const loadUserGender = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(Gender);
+    userGroup.value[4].type = data;
+    userGroup.value[4].color = data.map(item => getUserGenderColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load user gender:', error);
+  }
 };
 
-// 配置固定颜色
-const getUserGenderColor = (value: string) => {
+/**
+ * Get color for user gender
+ * @param value - Gender enum value
+ * @returns Color string for the gender
+ */
+const getUserGenderColor = (value: string): string => {
   switch (value) {
-    case 'MALE': // 男
+    case Gender.MALE:
       return COLOR[0];
-    case 'FEMALE': // 女
+    case Gender.FEMALE:
       return COLOR[2];
-    case 'UNKNOWN': // 未知
+    case Gender.UNKNOWN:
+      return COLOR[1];
+    default:
       return COLOR[1];
   }
 };
 
-// 组来源
-const loadGroupSource = () => {
-  groupByGroup.value[1].type = enumUtils.enumToMessages(GroupSource);
-};
-
-// 租户下标签类型
-const loadOrgTargetType = () => {
-  orgTagGroup.value[0].type = enumUtils.enumToMessages(OrgTargetType);
-};
-
-// 公告发送范围
-const loadNoticeScope = () => {
-  const data = enumUtils.enumToMessages(NoticeScope);
-  noticeGroup.value[0].type = data;
-  noticeGroup.value[0].color = data.map(item => getNoticeScopeColor(item.value) || '');
-};
-
-const getNoticeScopeColor = (value: string) => {
-  switch (value) {
-    case 'GLOBAL': // 全局
-      return COLOR[0];
-    case 'APP': // 应用
-      return COLOR[1];
+/**
+ * Load group source enum data
+ */
+const loadGroupSource = (): void => {
+  try {
+    groupByGroup.value[1].type = enumUtils.enumToMessages(GroupSource); // TODO 英文不生效
+  } catch (error) {
+    console.error('Failed to load group source:', error);
   }
 };
 
-//  公告发送类型
-const getNoticeSentType = () => {
-  const data = enumUtils.enumToMessages(SentType);
-  noticeGroup.value[1].type = data;
-  noticeGroup.value[1].color = data.map(item => getNoticeSentTypeColor(item.value) || '');
+/**
+ * Load organization target type enum data
+ */
+const loadOrgTargetType = (): void => {
+  try {
+    orgTagGroup.value[0].type = enumUtils.enumToMessages(OrgTargetType); // TODO 英文不生效
+    console.log(orgTagGroup.value);
+  } catch (error) {
+    console.error('Failed to load organization target type:', error);
+  }
 };
-const getNoticeSentTypeColor = (value: string) => {
+
+/**
+ * Load notice scope enum data
+ * Maps enum values and assigns colors based on scope
+ */
+const loadNoticeScope = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(NoticeScope);
+    noticeGroup.value[0].type = data;
+    noticeGroup.value[0].color = data.map(item => getNoticeScopeColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load notice scope:', error);
+  }
+};
+
+/**
+ * Get color for notice scope
+ * @param value - Scope enum value
+ * @returns Color string for the scope
+ */
+const getNoticeScopeColor = (value: string): string => {
   switch (value) {
-    case 'SEND_NOW': // 立即发送
+    case NoticeScope.GLOBAL:
+      return COLOR[0];
+    case NoticeScope.APP:
+      return COLOR[1];
+    default:
+      return COLOR[0];
+  }
+};
+
+/**
+ * Load notice sent type enum data
+ */
+const getNoticeSentType = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(SentType);
+    noticeGroup.value[1].type = data;
+    noticeGroup.value[1].color = data.map(item => getNoticeSentTypeColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load notice sent type:', error);
+  }
+};
+
+/**
+ * Get color for notice sent type
+ * @param value - Sent type enum value
+ * @returns Color string for the sent type
+ */
+const getNoticeSentTypeColor = (value: string): string => {
+  switch (value) {
+    case SentType.SEND_NOW:
       return COLOR[2];
-    case 'TIMING_SEND': // 定时发送
+    case SentType.TIMING_SEND:
+      return COLOR[4];
+    default:
+      return COLOR[2];
+  }
+};
+
+/**
+ * Load message receive type enum data
+ */
+const loadMessageReceiveType = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(MessageReceiveType);
+    messageGroup.value[0].type = data;
+    messageGroup.value[0].color = data.map(item => getMessageReceiveTypeColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load message receive type:', error);
+  }
+};
+
+/**
+ * Get color for message receive type
+ * @param value - Receive type enum value
+ * @returns Color string for the receive type
+ */
+const getMessageReceiveTypeColor = (value: string): string => {
+  switch (value) {
+    case MessageReceiveType.SITE:
+      return COLOR[4];
+    case MessageReceiveType.EMAIL:
+      return COLOR[1];
+    default:
       return COLOR[4];
   }
 };
 
-// 消息类型
-const loadMessageReceiveType = () => {
-  const data = enumUtils.enumToMessages(MessageReceiveType);
-  messageGroup.value[0].type = data;
-  messageGroup.value[0].color = data.map(item => getMessageReceiveTypeColor(item.value) || '');
-};
-
-const getMessageReceiveTypeColor = (value: string) => {
-  switch (value) {
-    case 'SITE': // 站内
-      return COLOR[4];
-    case 'EMAIL': // 邮件
-      return COLOR[1];
+/**
+ * Load message status enum data
+ */
+const loadMessageStatus = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(MessageStatus);
+    messageGroup.value[1].type = data;
+    messageGroup.value[1].color = data.map(item => getMessageStatusColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load message status:', error);
   }
 };
 
-// 消息状态
-const loadMessageStatus = () => {
-  const data = enumUtils.enumToMessages(MessageStatus);
-  messageGroup.value[1].type = data;
-  messageGroup.value[1].color = data.map(item => getMessageStatusColor(item.value) || '');
-};
-const getMessageStatusColor = (value: string) => {
+/**
+ * Get color for message status
+ * @param value - Status enum value
+ * @returns Color string for the status
+ */
+const getMessageStatusColor = (value: string): string => {
   switch (value) {
-    case 'PENDING': // 待发送
+    case MessageStatus.PENDING:
       return COLOR[2];
-    case 'FAILURE': // 失败
+    case MessageStatus.FAILURE:
       return COLOR[3];
-    case 'SENT': // 已发送
+    case MessageStatus.SENT:
       return COLOR[1];
+    default:
+      return COLOR[2];
   }
 };
 
-// 服务来源
-const loadServiceSource = () => {
-  const data = enumUtils.enumToMessages(ServiceSource);
-  serviceGroup.value[0].type = data;
-  serviceGroup.value[0].color = data.map(item => getServiceSourceColor(item.value) || '');
+/**
+ * Load service source enum data
+ */
+const loadServiceSource = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(ServiceSource);
+    serviceGroup.value[0].type = data;
+    serviceGroup.value[0].color = data.map(item => getServiceSourceColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load service source:', error);
+  }
 };
-const getServiceSourceColor = (value: string) => {
+
+/**
+ * Get color for service source
+ * @param value - Source enum value
+ * @returns Color string for the source
+ */
+const getServiceSourceColor = (value: string): string => {
   switch (value) {
-    case 'BACK_ADD': // 后台添加
+    case ServiceSource.BACK_ADD:
       return COLOR[2];
-    case 'EUREKA': // EUREKA
+    case ServiceSource.EUREKA:
       return COLOR[3];
-    case 'NACOS': // NACOS
-      return COLOR[1];
-    case 'CONSUL': // CONSUL
-      return COLOR[4];
-  }
-};
-
-// 接口方法
-const loadApiHttpMethod = () => {
-  const data = enumUtils.enumToMessages(HttpMethod);
-
-  if (props.resource === 'ApiLogs') {
-    requestLogsGroup.value[1].type = data;
-    requestLogsGroup.value[1].color = data.map(item => getApiHttpMethodColor(item.value) || '');
-    return;
-  }
-
-  apiGroup.value[0].type = data;
-  apiGroup.value[0].color = data.map(item => getApiHttpMethodColor(item.value) || '');
-};
-const getApiHttpMethodColor = (value: string) => {
-  switch (value) {
-    case 'GET': // GET
-      return COLOR[0];
-    case 'HEAD': // HEAD
-      return COLOR[1];
-    case 'POST': // POST
+    default:
       return COLOR[2];
-    case 'PUT': // PUT
+  }
+};
+
+/**
+ * Load API HTTP method enum data
+ * Handles both API and API logs configurations
+ */
+const loadApiHttpMethod = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(HttpMethod);
+    if (props.resource === 'ApiLogs') {
+      requestLogsGroup.value[1].type = data;
+      requestLogsGroup.value[1].color = data.map(item => getApiHttpMethodColor(item.value) || '');
+      return;
+    }
+    apiGroup.value[0].type = data;
+    apiGroup.value[0].color = data.map(item => getApiHttpMethodColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load API HTTP method:', error);
+  }
+};
+
+/**
+ * Get color for API HTTP method
+ * @param value - HTTP method enum value
+ * @returns Color string for the method
+ */
+const getApiHttpMethodColor = (value: string): string => {
+  switch (value) {
+    case HttpMethod.GET:
+      return COLOR[0];
+    case HttpMethod.HEAD:
+      return COLOR[1];
+    case HttpMethod.POST:
+      return COLOR[2];
+    case HttpMethod.PUT:
       return COLOR[5];
-    case 'PATCH': // PATCH
+    case HttpMethod.PATCH:
       return COLOR[4];
-    case 'DELETE': // DELETE
+    case HttpMethod.DELETE:
       return COLOR[3];
-    case 'TRACE': // TRACE
+    case HttpMethod.TRACE:
       return COLOR[6];
-    case 'OPTIONS': // OPTIONS
+    case HttpMethod.OPTIONS:
       return COLOR[7];
-  }
-};
-// 接口类型
-const loadApiType = () => {
-  const data = enumUtils.enumToMessages(ApiType);
-
-  if (props.resource === 'ApiLogs') {
-    requestLogsGroup.value[0].type = data;
-    requestLogsGroup.value[0].color = data.map(item => getApiTypeColor(item.value) || '');
-    return;
-  }
-
-  apiGroup.value[1].type = data;
-  apiGroup.value[1].color = data.map(item => getApiTypeColor(item.value) || '');
-};
-
-const getApiTypeColor = (value: string) => {
-  switch (value) {
-    case 'API':
+    default:
       return COLOR[0];
-    case 'OPEN_API':
+  }
+};
+
+/**
+ * Load API type enum data
+ * Handles both API and API logs configurations
+ */
+const loadApiType = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(ApiType);
+
+    if (props.resource === 'ApiLogs') {
+      requestLogsGroup.value[0].type = data;
+      requestLogsGroup.value[0].color = data.map(item => getApiTypeColor(item.value) || '');
+      return;
+    }
+    apiGroup.value[1].type = data;
+    apiGroup.value[1].color = data.map(item => getApiTypeColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load API type:', error);
+  }
+};
+
+/**
+ * Get color for API type
+ * @param value - API type enum value
+ * @returns Color string for the type
+ */
+const getApiTypeColor = (value: string): string => {
+  switch (value) {
+    case ApiType.API:
+      return COLOR[0];
+    case ApiType.OPEN_API:
       return COLOR[1];
-    case 'OPEN_API_2P':
+    case ApiType.OPEN_API_2P:
       return COLOR[2];
-    case 'DOOR_API':
+    case ApiType.DOOR_API:
       return COLOR[4];
-    case 'PUB_API':
+    case ApiType.PUB_API:
       return COLOR[5];
-    case 'VIEW':
+    case ApiType.VIEW:
       return COLOR[6];
-    case 'PUB_VIEW':
+    case ApiType.PUB_VIEW:
       return COLOR[7];
+    default:
+      return COLOR[0];
   }
 };
 
-// 事件类型
-const loadEventType = () => {
-  const data = enumUtils.enumToMessages(EventType);
-  eventGroup.value[0].type = data;
-  eventGroup.value[0].color = data.map(item => getEventTypeColor(item.value) || '');
+/**
+ * Load event type enum data
+ */
+const loadEventType = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(EventType);
+    eventGroup.value[0].type = data;
+    eventGroup.value[0].color = data.map(item => getEventTypeColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load event type:', error);
+  }
 };
-const getEventTypeColor = (value: string) => {
+
+/**
+ * Get color for event type
+ * @param value - Event type enum value
+ * @returns Color string for the type
+ */
+const getEventTypeColor = (value: string): string => {
   switch (value) {
-    case 'BUSINESS': // 业务
+    case EventType.BUSINESS:
       return COLOR[0];
-    case 'SECURITY': // 安全
+    case EventType.SECURITY:
       return COLOR[1];
-    case 'QUOTA': // 配额
+    case EventType.QUOTA:
       return COLOR[2];
-    case 'SYSTEM': // 系统
+    case EventType.SYSTEM:
       return COLOR[3];
-    case 'OPERATION': // 操作
+    case EventType.OPERATION:
       return COLOR[4];
-    case 'PROTOCOL': // 协议
+    case EventType.PROTOCOL:
       return COLOR[5];
-    case 'API': // 接口
+    case EventType.API:
       return COLOR[6];
-    case 'NOTICE': // 通知
+    case EventType.NOTICE:
       return COLOR[8];
-    case 'OTHER': // 其他
+    case EventType.OTHER:
       return COLOR[9];
-  }
-};
-
-// 事件推送状态
-const loadEventPushStatus = () => {
-  const data = enumUtils.enumToMessages(EventPushStatus);
-  eventGroup.value[1].type = data;
-  eventGroup.value[1].color = data.map(item => getEventPushStatusColor(item.value) || '');
-};
-
-const getEventPushStatusColor = (value: string) => {
-  switch (value) {
-    case 'PENDING': // 未推送
-      return COLOR[7];
-    case 'PUSHING': // 推送中
+    default:
       return COLOR[0];
-    case 'PUSH_SUCCESS': // 推送成功
-      return COLOR[1];
-    case 'PUSH_FAIL': // 推送失败
-      return COLOR[3];
-    case 'IGNORED':
-      return COLOR[2];
   }
 };
 
-// 邮件和短信发送状态
-const loadSendStatusType = () => {
-  const data = enumUtils.enumToMessages(ProcessStatus);
-
-  if (props.resource === 'Email') {
-    emailRecordGroup.value[0].type = data;
-    emailRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value) || '');
-    return;
+/**
+ * Load event push status enum data
+ */
+const loadEventPushStatus = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(EventPushStatus);
+    eventGroup.value[1].type = data;
+    eventGroup.value[1].color = data.map(item => getEventPushStatusColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load event push status:', error);
   }
-
-  smsRecordGroup.value[0].type = data;
-  smsRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value) || '');
 };
 
-const getSendStatusColor = (value: string) => {
+/**
+ * Get color for event push status
+ * @param value - Push status enum value
+ * @returns Color string for the status
+ */
+const getEventPushStatusColor = (value: string): string => {
   switch (value) {
-    case 'SUCCESS': // 成功
+    case EventPushStatus.PENDING:
+      return COLOR[7];
+    case EventPushStatus.PUSHING:
+      return COLOR[0];
+    case EventPushStatus.PUSH_SUCCESS:
       return COLOR[1];
-    case 'PENDING': // 待处理
-      return COLOR[2];
-    case 'FAILURE': // 失败
+    case EventPushStatus.PUSH_FAIL:
       return COLOR[3];
+    case EventPushStatus.IGNORED:
+      return COLOR[2];
+    default:
+      return COLOR[7];
   }
 };
 
-const pieParmas = computed(() => {
+/**
+ * Load send status enum data for email and SMS
+ */
+const loadSendStatusType = (): void => {
+  try {
+    const data = enumUtils.enumToMessages(ProcessStatus);
+    if (props.resource === 'Email') {
+      emailRecordGroup.value[0].type = data;
+      emailRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value) || '');
+      return;
+    }
+    smsRecordGroup.value[0].type = data;
+    smsRecordGroup.value[0].color = data.map(item => getSendStatusColor(item.value) || '');
+  } catch (error) {
+    console.error('Failed to load send status:', error);
+  }
+};
+
+/**
+ * Get color for send status
+ * @param value - Send status enum value
+ * @returns Color string for the status
+ */
+const getSendStatusColor = (value: string): string => {
+  switch (value) {
+    case ProcessStatus.SUCCESS:
+      return COLOR[1];
+    case ProcessStatus.PENDING:
+      return COLOR[2];
+    case ProcessStatus.FAILURE:
+      return COLOR[3];
+    default:
+      return COLOR[1];
+  }
+};
+
+/**
+ * Computed pie chart parameters based on resource type
+ * Returns appropriate configuration for different resource types
+ */
+const pieSetting = computed(() => {
   switch (props.resource) {
-    case 'User': // 用户
+    case 'User': // User
       return userGroup.value;
     case 'Group':
       return groupByGroup.value;
@@ -642,23 +842,20 @@ const pieParmas = computed(() => {
   }
 });
 
+// Lifecycle hook - load enums on component mount
 onMounted(() => {
   loadEnums();
 });
-
 </script>
+
 <template>
   <LoadChart
-    :visible="props.visible"
-    :geteway="props.geteway"
-    :resource="props.resource"
-    :barTitle="props.barTitle"
-    :pieParmas="pieParmas"
+    :router="router"
+    :resource="resource"
+    :pieSetting="pieSetting"
+    :barTitle="barTitle"
+    :dateType="dateType"
     :hasPieChart="hasPieChart"
-    :userId="props.userId"
-    :dateType="props.dateType">
-    <template #default>
-      <slot></slot>
-    </template>
-  </LoadChart>
+    :visible="visible"
+    :userId="userId" />
 </template>

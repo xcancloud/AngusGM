@@ -218,8 +218,8 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
   <PureCard class="flex-1 p-3.5">
     <Statistics
       resource="Email"
-      :geteway="GM"
-      :barTitle="t('发送记录')"
+      :barTitle="t('statistics.metrics.newEmails')"
+      :router="GM"
       :visible="showCount" />
     <div class="flex items-start mb-2">
       <SearchPanel

@@ -1,40 +1,9 @@
-import { Gender } from '@xcan-angus/infra';
+import { Gender, UserSource, EnumMessage } from '@xcan-angus/infra';
 
-export type FilterOp =
-  'EQUAL'
-  | 'NOT_EQUAL'
-  | 'GREATER_THAN'
-  | 'GREATER_THAN_EQUAL'
-  | 'LESS_THAN'
-  | 'LESS_THAN_EQUAL'
-  | 'CONTAIN'
-  | 'NOT_CONTAIN'
-  | 'MATCH_END'
-  | 'MATCH'
-  | 'IN'
-  | 'NOT_IN'
-export type Filters = { key: string, value: string, op: FilterOp }[]
-export type SearchParams = {
-  pageNo?: number;
-  pageSize?: number;
-  orderBy?: string;
-  orderSort?: 'ASC' | 'DESC';
-  fullTextSearch?: boolean;
-  filters?: Filters;
-}
-
-// TODO 删除重复定义
-
-export type Source =
-  'PLATFORM_SIGNUP'
-  | 'INVITATION_CODE_SIGNUP'
-  | 'BACKGROUND_SIGNUP'
-  | 'BACKGROUND_ADDED'
-  | 'BACKGROUND_INVITATION'
-  | 'THIRD_PARTY_LOGIN'
-  | 'LDAP_SYNCHRONIZE'
-
-export type User = {
+/**
+ * 用户信息类型定义
+ */
+export interface User {
   id: string;
   username: string;
   fullName: string;
@@ -47,24 +16,18 @@ export type User = {
   landline: string;
   avatar: string;
   title: string;
-  gender: {
-    value: Gender;
-    message: string;
-  },
+  gender: EnumMessage<Gender>;
   address: {
     provinceCode: string;
     provinceName: string;
     cityCode: string;
     cityName: string;
     street: string;
-  },
+  };
   sysAdmin: boolean;
   deptHead: boolean;
   enabled: boolean;
-  source: {
-    value: Source;
-    message: string;
-  },
+  source: EnumMessage<UserSource>;
   locked: boolean;
   lockStartDate: string;
   lockEndDate: string;
@@ -81,14 +44,17 @@ export type User = {
   lastModifiedDate: string;
 }
 
-export type FormState = {
+/**
+ * 表单状态类型定义
+ */
+export interface FormState {
   address: string;
   avatar: string;
   country: string;
   email: string;
   firstName: string;
   fullName: string;
-  gender: Gender
+  gender: Gender;
   itc: string;
   landline: string;
   lastName: string;
@@ -100,7 +66,10 @@ export type FormState = {
   confirmPassword?: string;
 }
 
-export type Dept = {
+/**
+ * 部门信息类型定义
+ */
+export interface Dept {
   id: string;
   code: string;
   name: string;
@@ -117,10 +86,37 @@ export type Dept = {
   hasSubDept: boolean;
 }
 
-export type TreeData = Dept & {
-  level: number,
-  mainDept: boolean,
-  pageNo: number,
-  total: number,
-  children: TreeData[]
+/**
+ * 用户状态管理类型定义
+ */
+export interface UserState {
+  updatePasswdVisible: boolean;
+  lockModalVisible: boolean;
+  currentUserId: string | undefined;
+}
+
+/**
+ * 搜索选项类型定义
+ */
+export type SearchOptionType = 'input' | 'select-enum' | 'date-range' | 'select' | 'date' | 'select-app' | 'select-dept' | 'select-group' | 'select-intl' | 'select-itc' | 'select-user' | 'select-service' | 'select-tag' | 'select-tenant' | 'tree-select';
+
+/**
+ * 搜索操作符类型定义
+ */
+export type SearchOperator = 'EQUAL' | 'GREATER_THAN' | 'GREATER_THAN_EQUAL' | 'IN' | 'LESS_THAN' | 'LESS_THAN_EQUAL' | 'MATCH' | 'MATCH_END' | 'NOT_EQUAL' | 'NOT_IN';
+
+/**
+ * 搜索选项配置类型定义
+ */
+export interface SearchOption {
+  placeholder?: string;
+  valueKey: string;
+  type: SearchOptionType;
+  op?: SearchOperator;
+  allowClear?: boolean;
+  enumKey?: string;
+  action?: string;
+  fieldNames?: { label: string; value: string };
+  showSearch?: boolean;
+  lazy?: boolean;
 }

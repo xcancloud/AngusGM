@@ -611,10 +611,10 @@ const rightOpenMove = (selected) => {
   <PureCard class="p-3.5 flex flex-col h-full">
     <Statistics
       resource="Dept"
-      :geteway="GM"
+      :barTitle="t('statistics.metrics.newDepartments')"
+      :router="GM"
       dateType="YEAR"
-      :visible="showCount"
-      :barTitle="t('sector')" />
+      :visible="showCount" />
     <div class="flex space-x-2 flex-1 min-h-0">
       <PureCard class="w-100 p-3 h-full overflow-x-hidden dept-tree pr-2 border-r flex flex-col">
         <div class="flex items-center justify-between space-x-1 mb-2">

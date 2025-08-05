@@ -54,7 +54,6 @@ const searchOptions = computed(() => {
       valueKey: 'receiveObjectType',
       type: 'select-enum',
       enumKey: 'ReceiveObjectType',
-      excludes: ['TOP_POLICY', 'POLICY', 'ALL'],
       placeholder: t('placeholder.p4'),
       allowClear: true
     }
@@ -202,8 +201,9 @@ onMounted(() => {
   <PureCard class="min-h-full p-3.5">
     <Statistics
       resource="Message"
-      :geteway="GM"
-      :barTitle="t('message')"
+      :barTitle="t('statistics.metrics.newMessages')"
+      :router="GM"
+      dateType="MONTH"
       :visible="showCount" />
     <div class="flex items-center justify-between my-2">
       <SearchPanel

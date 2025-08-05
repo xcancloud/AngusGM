@@ -220,10 +220,10 @@ onMounted(() => {
   <PureCard class="p-3.5 min-h-full">
     <Statistics
       :visible="showCount"
-      :barTitle="t('group')"
+      :barTitle="t('statistics.metrics.newGroups')"
       dateType="YEAR"
       resource="Group"
-      :geteway="GM"
+      :router="GM"
       class="mb-3" />
     <div class="flex items-center justify-between mb-3">
       <SearchPanel :options="searchOptions" @change="searchChange" />

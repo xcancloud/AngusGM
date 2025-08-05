@@ -5,10 +5,12 @@ import { OperationResourceType } from '@/enums/enums';
 import { useI18n } from 'vue-i18n';
 import { DateType, PieSetting } from './PropsType';
 
+// TODO 合并到组件统计：web/src/components/Statistics； 并解决国际化配置
+
 const LoadChart = defineAsyncComponent(() => import('./LoadChart.vue'));
 
 interface Props {
-  geteway: string;
+  router: string;
   resource: string;
   barTitle: string;
   dateType: DateType;
@@ -129,7 +131,7 @@ const getLogResourceTypeColor = (value: string) => {
   }
 };
 
-const pieParmas = computed(() => {
+const pieParams = computed(() => {
   switch (props.resource) {
     case 'OperationLog':
       return operationLogsGroup.value;
@@ -146,10 +148,10 @@ onMounted(() => {
 <template>
   <LoadChart
     :visible="props.visible"
-    :geteway="props.geteway"
+    :router="props.router"
     :resource="props.resource"
     :barTitle="props.barTitle"
-    :pieParmas="pieParmas"
+    :pieParams="pieParams"
     :hasPieChart="hasPieChart"
     :userId="props.userId"
     :dateType="props.dateType">

@@ -24,9 +24,9 @@ const editTagName = () => {
   <PureCard class="p-3.5 flex flex-col h-full">
     <Statistics
       resource="OrgTagTarget"
-      :geteway="GM"
+      :barTitle="t('statistics.metrics.newTags')"
+      :router="GM"
       dateType="YEAR"
-      :barTitle="t('label')"
       :visible="visible" />
     <Hints
       class="my-1"

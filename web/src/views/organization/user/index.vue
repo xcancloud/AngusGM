@@ -3,92 +3,138 @@ import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
-  AsyncComponent,
-  ButtonAuth,
-  Hints,
-  Icon,
-  IconCount,
-  IconRefresh,
-  Image,
-  modal,
-  notification,
-  PureCard,
-  SearchPanel,
-  Table
+  AsyncComponent, ButtonAuth, Hints, Icon, IconCount, IconRefresh,
+  Image, modal, notification, PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { app, appContext, GM, utils } from '@xcan-angus/infra';
+import { app, appContext, GM, utils, SearchCriteria, PageQuery } from '@xcan-angus/infra';
 
-import { FilterOp, SearchParams, User } from './PropsType';
+import { User, UserState, SearchOption } from './PropsType';
 import { user } from '@/api';
 
+// Async component definitions for lazy loading
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/components/password/index.vue'));
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 
+// Reactive data and state management
 const { t } = useI18n();
-const showCount = ref(true);
-const loading = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
-const total = ref(0);
-const userList = ref<User[]>([]);
-const state = reactive<{
-  updatePasswdVisible: boolean,
-  lockModalVisible: boolean,
-  currentUserId: string | undefined,
-}>({
-  updatePasswdVisible: false,
-  lockModalVisible: false,
-  currentUserId: undefined
+const showCount = ref(true); // Controls statistics panel visibility
+const loading = ref(false); // Loading state for table operations
+const disabled = ref(false); // Disabled state for buttons during operations
+const total = ref(0); // Total number of users for pagination
+const userList = ref<User[]>([]); // User list data
+
+// Pagination and search parameters
+const params = ref<PageQuery>({
+  pageNo: 1,
+  pageSize: 10,
+  filters: [],
+  fullTextSearch: true
 });
 
-const pagination = computed(() => {
-  return {
-    current: params.value.pageNo,
-    pageSize: params.value.pageSize,
-    total: total.value
-  };
+// Modal state management
+const state = reactive<UserState>({
+  updatePasswdVisible: false, // Password reset modal visibility
+  lockModalVisible: false, // User lock modal visibility
+  currentUserId: undefined // Currently selected user ID
 });
 
-const init = async () => {
-  disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
+// Computed pagination object for table
+const pagination = computed(() => ({
+  current: params.value.pageNo,
+  pageSize: params.value.pageSize,
+  total: total.value
+}));
+
+/**
+ * Check operation permissions based on user's system admin status
+ * @param sysAdmin - Whether the user is a system administrator
+ * @returns Whether the operation is disabled
+ */
+const getOperationPermissions = (sysAdmin: boolean): boolean => {
+  return !appContext.isSysAdmin() && sysAdmin;
 };
 
+/**
+ * Load user list from API
+ * Handles loading state and error notifications
+ */
 const loadUserList = async (): Promise<void> => {
-  loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await user.getUserList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
+  try {
+    loading.value = true;
+    const [error, { data = { list: [], total: 0 } }] = await user.getUserList(params.value);
+
+    if (error) {
+      notification.error('加载用户列表失败');
+      return;
+    }
+
+    userList.value = data.list;
+    total.value = +data.total;
+  } catch (error) {
+    notification.error('加载用户列表失败');
+  } finally {
+    loading.value = false;
   }
-  userList.value = data.list;
-  total.value = +data.total;
 };
 
-// 禁用刷新转圈效果
-const disabled = ref(false);
-const searchChange = async (data: { key: string; value: string; op: FilterOp; }[]) => {
-  params.value.pageNo = 1;
+/**
+ * Initialize component data
+ * Sets disabled state during initialization
+ */
+const init = async (): Promise<void> => {
+  disabled.value = true;
+  try {
+    await loadUserList();
+  } finally {
+    disabled.value = false;
+  }
+};
+
+/**
+ * Handle search criteria changes
+ * Resets pagination and reloads data with new filters
+ * @param data - Search criteria array
+ */
+const searchChange = async (data: SearchCriteria[]): Promise<void> => {
+  params.value.pageNo = 1; // Reset to first page
   params.value.filters = data;
   disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
+  try {
+    await loadUserList();
+  } finally {
+    disabled.value = false;
+  }
 };
 
-const tableChange = async (_pagination, _filters, sorter) => {
+/**
+ * Handle table pagination, sorting, and filtering changes
+ * @param _pagination - Pagination object
+ * @param _filters - Filter object
+ * @param sorter - Sorting object
+ */
+const tableChange = async (_pagination: any, _filters: any, sorter: any): Promise<void> => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
   params.value.orderBy = sorter.orderBy;
   params.value.orderSort = sorter.orderSort;
+
   disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
+  try {
+    await loadUserList();
+  } finally {
+    disabled.value = false;
+  }
 };
 
-// 设置或取消用户系统管理员弹框
-const setAdminConfirm = (id: string, name: string, sysAdmin: boolean) => {
+/**
+ * Show confirmation modal for setting/canceling system administrator
+ * @param id - User ID
+ * @param name - User name
+ * @param sysAdmin - Current system admin status
+ */
+const setAdminConfirm = (id: string, name: string, sysAdmin: boolean): void => {
   modal.confirm({
     centered: true,
     title: sysAdmin ? t('cancelAdministrator') : t('setupAdministrator'),
@@ -99,21 +145,33 @@ const setAdminConfirm = (id: string, name: string, sysAdmin: boolean) => {
   });
 };
 
-// 修改用户系统身份请求
-const updateSysAdmin = async (id: string, sysAdmin: boolean) => {
-  const params = { id: id, sysAdmin: !sysAdmin };
-  const [error] = await user.updateUserSysAdmin(params);
-  if (error) {
-    return;
+/**
+ * Update user's system administrator status
+ * @param id - User ID
+ * @param sysAdmin - Current system admin status
+ */
+const updateSysAdmin = async (id: string, sysAdmin: boolean): Promise<void> => {
+  try {
+    const [error] = await user.updateUserSysAdmin({ id, sysAdmin: !sysAdmin });
+
+    if (error) {
+      notification.error('修改失败');
+      return;
+    }
+
+    notification.success('修改成功');
+    await refreshUserList();
+  } catch (error) {
+    notification.error('修改失败');
   }
-  notification.success('修改成功');
-  disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
 };
 
-// 删除用户弹框
-const delUserConfirm = (id: string, name: string) => {
+/**
+ * Show confirmation modal for user deletion
+ * @param id - User ID
+ * @param name - User name
+ */
+const delUserConfirm = (id: string, name: string): void => {
   modal.confirm({
     centered: true,
     title: t('delUser'),
@@ -124,21 +182,40 @@ const delUserConfirm = (id: string, name: string) => {
   });
 };
 
-// 删除用户请求
-const delUser = async (id: string) => {
-  const [error] = await user.deleteUser([id]);
-  if (error) {
-    return;
+/**
+ * Delete user from system
+ * Handles pagination recalculation after deletion
+ * @param id - User ID
+ */
+const delUser = async (id: string): Promise<void> => {
+  try {
+    const [error] = await user.deleteUser([id]);
+
+    if (error) {
+      notification.error('删除失败');
+      return;
+    }
+
+    notification.success('删除成功');
+    // Recalculate current page after deletion
+    params.value.pageNo = utils.getCurrentPage(
+      params.value.pageNo as number,
+      params.value.pageSize as number,
+      total.value
+    );
+    await refreshUserList();
+  } catch (error) {
+    notification.error('删除失败');
   }
-  notification.success('删除成功');
-  params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
-  disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
 };
 
-// 禁用启用用户弹框
-const updateStatusConfirm = (id: string, name: string, enabled: boolean) => {
+/**
+ * Show confirmation modal for enabling/disabling user
+ * @param id - User ID
+ * @param name - User name
+ * @param enabled - Current enabled status
+ */
+const updateStatusConfirm = (id: string, name: string, enabled: boolean): void => {
   modal.confirm({
     centered: true,
     title: enabled ? t('disable') : t('enable'),
@@ -149,80 +226,121 @@ const updateStatusConfirm = (id: string, name: string, enabled: boolean) => {
   });
 };
 
-// 禁用启用用户请求
-const updateStatus = async (id: string, enabled: boolean) => {
-  const params = [{ id: id, enabled: !enabled }];
-  const [error] = await user.toggleUserEnabled(params);
-  if (error) {
-    return;
+/**
+ * Toggle user enabled/disabled status
+ * @param id - User ID
+ * @param enabled - Current enabled status
+ */
+const updateStatus = async (id: string, enabled: boolean): Promise<void> => {
+  try {
+    const [error] = await user.toggleUserEnabled([{ id, enabled: !enabled }]);
+
+    if (error) {
+      notification.error(enabled ? '禁用失败' : '启用失败');
+      return;
+    }
+
+    notification.success(enabled ? '禁用成功' : '启用成功');
+    await refreshUserList();
+  } catch (error) {
+    notification.error(enabled ? '禁用失败' : '启用失败');
   }
-  notification.success(enabled ? '禁用成功' : '启用成功');
-  disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
 };
 
-// 打开锁定
-const openLockedModal = (id: string) => {
+/**
+ * Open user lock modal
+ * @param id - User ID
+ */
+const openLockedModal = (id: string): void => {
   state.currentUserId = id;
   state.lockModalVisible = true;
 };
 
-// 关闭锁定
-const closeLockModal = () => {
+/**
+ * Close user lock modal
+ */
+const closeLockModal = (): void => {
   state.lockModalVisible = false;
 };
 
-// 保存锁定修改
-const saveLock = async () => {
+/**
+ * Save lock changes and refresh user list
+ */
+const saveLock = async (): Promise<void> => {
   state.lockModalVisible = false;
-  disabled.value = true;
-  await loadUserList();
-  disabled.value = false;
+  await refreshUserList();
 };
 
-// 解锁用户
-const unlock = (id: string, name: string) => {
+/**
+ * Unlock user with confirmation
+ * @param id - User ID
+ * @param name - User name
+ */
+const unlock = (id: string, name: string): void => {
   modal.confirm({
     centered: true,
     title: t('unlockUsers'),
     content: t('userTip7', { name }),
     async onOk () {
-      const [error] = await user.toggleUserLocked({ id: id, locked: false });
-      if (error) {
-        return;
+      try {
+        const [error] = await user.toggleUserLocked({ id, locked: false });
+
+        if (error) {
+          notification.error('解锁失败');
+          return;
+        }
+
+        notification.success('解锁成功');
+        await refreshUserList();
+      } catch (error) {
+        notification.error('解锁失败');
       }
-      notification.success('解锁成功');
-      disabled.value = true;
-      await loadUserList();
-      disabled.value = false;
     }
   });
 };
 
-// 重置密码弹框
-const openUpdatePasswdModal = (id: string) => {
+/**
+ * Open password reset modal
+ * @param id - User ID
+ */
+const openUpdatePasswdModal = (id: string): void => {
   state.currentUserId = id;
   state.updatePasswdVisible = true;
 };
 
-// 取消重置密码
-const closeUpdatePasswdModal = () => {
+/**
+ * Close password reset modal
+ */
+const closeUpdatePasswdModal = (): void => {
   state.updatePasswdVisible = false;
 };
 
-const handleRefresh = () => {
+/**
+ * Refresh user list with current parameters
+ * Handles loading state during refresh
+ */
+const refreshUserList = async (): Promise<void> => {
+  disabled.value = true;
+  try {
+    await loadUserList();
+  } finally {
+    disabled.value = false;
+  }
+};
+
+/**
+ * Handle refresh button click
+ * Prevents multiple simultaneous requests
+ */
+const handleRefresh = (): void => {
   if (loading.value) {
     return;
   }
   loadUserList();
 };
 
-onMounted(() => {
-  init();
-});
-
-const searchOptions = ref([
+// Search options configuration for SearchPanel component
+const searchOptions = ref<SearchOption[]>([
   {
     placeholder: t('查询用户ID'),
     valueKey: 'id',
@@ -267,14 +385,13 @@ const searchOptions = ref([
   }
 ]);
 
+// Table columns configuration with custom cell renderers
 const columns = [
   {
     title: 'ID',
     dataIndex: 'id',
     width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('name2'),
@@ -290,33 +407,25 @@ const columns = [
     title: t('status'),
     dataIndex: 'enabled',
     width: '5%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('source'),
     dataIndex: 'source',
     width: '6%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('lockedStatus'),
     dataIndex: 'locked',
     width: '6%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('onlineStatus'),
     dataIndex: 'online',
     width: '6%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('mobileNumber'),
@@ -324,9 +433,7 @@ const columns = [
     groupName: 'contact',
     width: '11%',
     customRender: ({ text }): string => text || '--',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('landline'),
@@ -335,9 +442,7 @@ const columns = [
     customRender: ({ text }): string => text || '--',
     hide: true,
     width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('email'),
@@ -352,9 +457,7 @@ const columns = [
     dataIndex: 'sysAdmin',
     groupName: 'auth',
     width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('sectorIdentity'),
@@ -362,9 +465,7 @@ const columns = [
     groupName: 'auth',
     hide: true,
     width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('position'),
@@ -372,9 +473,7 @@ const columns = [
     groupName: 'auth',
     hide: true,
     width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('joinTime'),
@@ -382,9 +481,7 @@ const columns = [
     dataIndex: 'createdDate',
     groupName: 'date',
     width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('recentlyOnline'),
@@ -392,9 +489,7 @@ const columns = [
     groupName: 'date',
     hide: true,
     width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('添加人'),
@@ -421,9 +516,7 @@ const columns = [
     customRender: ({ text }): string => text || '--',
     hide: true,
     width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('operation'),
@@ -433,18 +526,19 @@ const columns = [
   }
 ];
 
-const getOperationPermissions = (sysAdmin: boolean): boolean => {
-  return !appContext.isSysAdmin() && sysAdmin;
-};
+// Lifecycle hook - initialize component on mount
+onMounted(() => {
+  init();
+});
 </script>
 <template>
   <PureCard class="w-full min-h-full p-3.5">
     <Statistics
       :visible="showCount"
-      :barTitle="t('user') "
+      :barTitle="t('statistics.metrics.newUsers')"
       resource="User"
       dateType="YEAR"
-      :geteway="GM" />
+      :router="GM" />
     <Hints :text="t('userTip1')" class="mb-1" />
     <div class="flex items-start my-2 justify-between">
       <SearchPanel

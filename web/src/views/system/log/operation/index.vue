@@ -153,11 +153,11 @@ const columns = [
       class="mb-1" />
     <PureCard class="flex-1 p-3.5">
       <Statistics
-        :visible="showCount"
-        :barTitle="t('操作日志')"
-        dateType="DAY"
         resource="OperationLog"
-        :geteway="GM" />
+        :barTitle="t('statistics.metrics.newOperations')"
+        dateType="DAY"
+        :router="GM"
+        :visible="showCount" />
       <SearchPanel
         :loading="loading"
         :showCount="showCount"

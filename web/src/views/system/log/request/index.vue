@@ -287,11 +287,11 @@ const activeKey = ref(0);
     <PureCard class="p-3.5" style="height: calc(100% - 24px);">
       <div ref="searchBar">
         <Statistics
-          :visible="showCount"
-          :barTitle="t('请求日志')"
-          dateType="DAY"
           resource="ApiLogs"
-          :geteway="GM" />
+          :barTitle="t('statistics.metrics.newRequests')"
+          dateType="DAY"
+          :router="GM"
+          :visible="showCount" />
         <div class="flex items-start justify-between text-3 leading-3 mb-2">
           <SearchPanel
             :options="options"
