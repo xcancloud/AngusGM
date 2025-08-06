@@ -14,7 +14,7 @@ import {
   SearchPanel,
   Table
 } from '@xcan-angus/vue-ui';
-import { app, GM, utils } from '@xcan-angus/infra';
+import { app, GM, utils, Enabled } from '@xcan-angus/infra';
 
 import { _columns, FilterOp, ListGroup, SearchParams } from './PropsType';
 import { group } from '@/api';
@@ -186,7 +186,7 @@ const searchOptions = ref([
     placeholder: t('selectState'),
     valueKey: 'enabled',
     type: 'select-enum',
-    enumKey: 'Enabled',
+    enumKey: Enabled,
     allowClear: true
   },
   {

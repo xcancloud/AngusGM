@@ -156,6 +156,17 @@
         "SETTING_TENANT_QUOTA": "配额设置",
         "SYSTEM_TOKEN": "系统令牌",
         "OTHER": "其他"
+      },
+      "DirectoryType": {
+        "MicrosoftActiveDirectory": "微软活动目录",
+        "ApacheDS": "Apache目录服务器",
+        "AppleOpenDirectory": "苹果开放目录",
+        "FedoraDS": "Fedora目录服务器",
+        "GenericLDAP": "通用LDAP目录服务器",
+        "NovelleDirectory": "Novell eDirectory服务器",
+        "OpenDS": "OpenDS目录服务器",
+        "OpenLDAP": "OpenLDAP目录服务器",
+        "SunDirectory": "Sun目录服务器"
       }
     }
   }

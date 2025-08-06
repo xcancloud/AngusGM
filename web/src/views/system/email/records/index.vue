@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/infra';
+import { app, GM, ProcessStatus } from '@xcan-angus/infra';
 import { Badge } from 'ant-design-vue';
 
 import { email } from '@/api';
@@ -151,7 +151,7 @@ const searchOptions = ref([
   {
     valueKey: 'sendStatus',
     type: 'select-enum',
-    enumKey: 'ProcessStatus',
+    enumKey: ProcessStatus,
     placeholder: t('选择发送状态'),
     allowClear: true
   },

@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/infra';
+import { app, GM, ProcessStatus } from '@xcan-angus/infra';
 import { Badge } from 'ant-design-vue';
 
 import { sms } from '@/api';
@@ -134,7 +134,7 @@ const columns = [
   }
 ];
 
-const searchoptions = ref([
+const searchOptions = ref([
   {
     valueKey: 'sendUserId',
     type: 'select-user',
@@ -145,7 +145,7 @@ const searchoptions = ref([
   {
     valueKey: 'sendStatus',
     type: 'select-enum',
-    enumKey: 'ProcessStatus',
+    enumKey: ProcessStatus,
     placeholder: t('选择发送状态'),
     allowClear: true
   },
@@ -210,7 +210,7 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
       :visible="showCount" />
     <div class="flex items-start  mb-2">
       <SearchPanel
-        :options="searchoptions"
+        :options="searchOptions"
         class="flex-1 mr-2"
         @change="searchChange" />
       <div class="flex items-center flex-none h-7">

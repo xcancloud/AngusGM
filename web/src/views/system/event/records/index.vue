@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/infra';
+import { app, GM, EventPushStatus, EventType } from '@xcan-angus/infra';
 import DOMPurify from 'dompurify';
 
 import { event } from '@/api';
@@ -46,14 +46,14 @@ const Options = [
   {
     valueKey: 'type',
     type: 'select-enum',
-    enumKey: 'EventType',
+    enumKey: EventType,
     allowClear: true,
     placeholder: t('placeholder.p2')
   },
   {
     valueKey: 'pushStatus',
     type: 'select-enum',
-    enumKey: 'EventPushStatus',
+    enumKey: EventPushStatus,
     allowClear: true,
     placeholder: t('placeholder.p3')
   },

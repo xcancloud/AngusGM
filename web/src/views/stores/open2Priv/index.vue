@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { Colon, DropdownSort, Icon, IconRefresh, Image, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { API, AppOrServiceRoute, DomainManager, http, VERSION } from '@xcan-angus/infra';
+import { API, AppOrServiceRoute, DomainManager, http, VERSION, GoodsType, EditionType } from '@xcan-angus/infra';
 
 import type { Goods } from './PropsType';
 import { getEnumMessages, goodsTypeColor } from './PropsType';
@@ -21,14 +21,14 @@ const searchOpt = [
   {
     type: 'select-enum',
     valueKey: 'type',
-    enumKey: 'GoodsType',
+    enumKey: GoodsType,
     placeholder: '选择商品类型',
     allowClear: true
   },
   {
     type: 'select-enum',
     valueKey: 'applyEditionType',
-    enumKey: 'EditionType',
+    enumKey: EditionType,
     placeholder: '选择适用版本类型',
     op: 'MATCH',
     excludes: ['CLOUD_SERVICE'],

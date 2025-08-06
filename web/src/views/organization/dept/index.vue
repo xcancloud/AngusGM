@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, reactive, ref } from 'vue';
+import { computed, defineAsyncComponent, reactive, ref, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Dropdown, Menu, MenuItem, TabPane, Tabs, Tag } from 'ant-design-vue';
 import {
@@ -24,8 +24,9 @@ import { debounce } from 'throttle-debounce';
 import { DataType, TreeRecordType, UserRecordType } from './PropsType';
 import { auth, dept } from '@/api';
 
+// Type definitions for filter operations and search parameters
 type FilterOp =
-  'EQUAL'
+  | 'EQUAL'
   | 'NOT_EQUAL'
   | 'GREATER_THAN'
   | 'GREATER_THAN_EQUAL'
@@ -36,9 +37,11 @@ type FilterOp =
   | 'MATCH_END'
   | 'MATCH'
   | 'IN'
-  | 'NOT_IN'
-type Filters = { key: string, value: string, op: FilterOp }[]
-type SearchParams = {
+  | 'NOT_IN';
+
+type Filters = { key: string; value: string; op: FilterOp }[];
+
+interface SearchParams {
   pageNo?: number;
   pageSize?: number;
   filters?: Filters;
@@ -46,19 +49,9 @@ type SearchParams = {
   orderSort?: 'ASC' | 'DESC';
 }
 
-const SelectTargetModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
-const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/components/add/index.vue'));
-const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/components/edit/index.vue'));
-const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
-const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
-const MoveDeptModal = defineAsyncComponent(() => import('./components/move/index.vue'));
-const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
-
-const { t } = useI18n();
-
-const showCount = ref(true);
-const state = reactive<{
-  sortForm: any;
+// Department state interface
+interface DeptState {
+  sortForm: Record<string, any>;
   searchForm: any[];
   loading: boolean;
   dataSource: DataType[];
@@ -69,7 +62,35 @@ const state = reactive<{
   userDataSource: UserRecordType[];
   currentSelectedNode: TreeRecordType;
   concatUserSource: UserRecordType[];
-}>({
+}
+
+// Department info interface
+interface DeptInfo {
+  createdByName: string;
+  createdDate: string;
+  tags: { id: string; name: string }[];
+  level: string;
+  name: string;
+  code: string;
+  id: string;
+  lastModifiedDate: string;
+  lastModifiedByName: string;
+}
+
+// Async component definitions
+const SelectTargetModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
+const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/components/add/index.vue'));
+const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/components/edit/index.vue'));
+const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
+const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
+const MoveDeptModal = defineAsyncComponent(() => import('./components/move/index.vue'));
+const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
+
+const { t } = useI18n();
+
+// Reactive state management
+const showCount = ref(true); // Controls statistics panel visibility
+const state = reactive<DeptState>({
   sortForm: {},
   searchForm: [],
   loading: false,
@@ -83,33 +104,124 @@ const state = reactive<{
   concatUserSource: []
 });
 
+// Tree and search related refs
 const treeSelect = ref();
-const changeSelect = async (_selectedKeys: string[], selected: boolean, info: {
-  id: string | undefined,
-  name: string | undefined,
-  pid: string | undefined
-}) => {
+const searchDeptId = ref<string>();
+const searchTagId = ref<string>();
+const selectedDept = ref<string>();
+
+// Search parameters and pagination
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const total = ref(0);
+
+// Loading states
+const userLoading = ref(false);
+const treeLoading = ref(false);
+const refreshDisabled = ref(false);
+const userLoadDisabled = ref(false);
+const policyLoadDisabled = ref(false);
+const policyUpdateLoading = ref(false);
+
+// Modal visibility states
+const addModalVisible = ref(false);
+const editModalVisible = ref(false);
+const editTagVisible = ref(false);
+const userVisible = ref(false);
+const moveVisible = ref(false);
+const policyVisible = ref(false);
+
+// Form data
+const addPid = ref('-1');
+const userSearchName = ref<string>();
+const isRefresh = ref(false);
+const userUpdateLoading = ref(false);
+const notify = ref(0);
+
+// Current action node for operations
+const currentActionNode = ref<{ id: string; name: string; pid: string }>({ id: '', name: '', pid: '' });
+
+// Department info reactive object
+const deptInfo = reactive<DeptInfo>({
+  createdByName: '',
+  createdDate: '',
+  tags: [],
+  level: '',
+  name: '',
+  code: '',
+  id: '',
+  lastModifiedDate: '',
+  lastModifiedByName: ''
+});
+
+// Policy related state
+const policyData = ref([]);
+const policyPagination = reactive({
+  current: 1,
+  pageSize: 10,
+  total: 0
+});
+const policyFilters = ref<{ key: string; value: string; op: FilterOp }[]>([]);
+const policyLoading = ref(false);
+
+// Computed properties
+const pagination = computed(() => ({
+  current: params.value.pageNo,
+  pageSize: params.value.pageSize,
+  total: total.value
+}));
+
+const getSearchDeptParams = computed(() => ({
+  tagId: searchTagId.value,
+  fullTextSearch: true
+}));
+
+const treeParams = computed(() => ({
+  pid: -1,
+  pageSize: 30,
+  tagId: searchTagId.value,
+  orderBy: 'createdDate',
+  orderSort: 'ASC'
+}));
+
+const treeFieldNames = { title: 'name', key: 'id', children: 'hasSubDept' };
+
+// Tree selection change handler
+const changeSelect = async (
+  _selectedKeys: string[],
+  selected: boolean,
+  info: { id: string | undefined; name: string | undefined; pid: string | undefined }
+): Promise<void> => {
   const { id, name, pid } = info;
+  
   if (selected) {
     state.currentSelectedNode = { id, name, pid };
     params.value.pageNo = 1;
     policyPagination.current = 1;
-    userLoadDisabled.value = true;
-    await loadUser();
-    userLoadDisabled.value = false;
-    loadDeptInfo();
-    policyLoadDisabled.value = true;
-    await getDeptPolicy();
-    policyLoadDisabled.value = false;
+    
+    try {
+      userLoadDisabled.value = true;
+      await loadUser();
+      userLoadDisabled.value = false;
+      
+      await loadDeptInfo();
+      
+      policyLoadDisabled.value = true;
+      await getDeptPolicy();
+      policyLoadDisabled.value = false;
+    } catch (error) {
+      console.error('Error in changeSelect:', error);
+      notification.error(t('common.messages.operationFailed'));
+    }
   } else {
     state.currentSelectedNode = { id: undefined, name: undefined, pid: undefined };
   }
 };
 
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
-const total = ref(0);
-const userLoading = ref(false);
-const loadUser = async () => {
+/**
+ * Load user list for selected department
+ * Handles loading state and error notifications
+ */
+const loadUser = async (): Promise<void> => {
   if (!state.currentSelectedNode.id) {
     notification.warning(t('loadUserWarn'));
     return;
@@ -119,32 +231,78 @@ const loadUser = async () => {
     return;
   }
 
-  if (userSearchName.value && params.value.filters) {
-    params.value.filters.push({ key: 'fullName', op: 'MATCH_END', value: userSearchName.value });
-  } else {
-    params.value.filters = [];
-  }
-  userLoading.value = true;
-  const [error, res] = await dept.getDeptUsers(state.currentSelectedNode.id, params.value);
-  userLoading.value = false;
-  if (error) {
-    return;
-  }
+  try {
+    // Prepare filters for search
+    if (userSearchName.value && params.value.filters) {
+      params.value.filters.push({ key: 'fullName', op: 'MATCH_END', value: userSearchName.value });
+    } else {
+      params.value.filters = [];
+    }
 
-  state.userDataSource = res.data.list;
-  total.value = +res.data.total;
+    userLoading.value = true;
+    const [error, res] = await dept.getDeptUsers(state.currentSelectedNode.id, params.value);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+
+    state.userDataSource = res.data.list;
+    total.value = +res.data.total;
+  } catch (error) {
+    console.error('Error loading users:', error);
+    notification.error(t('common.messages.networkError'));
+  } finally {
+    userLoading.value = false;
+  }
 };
 
-const addModalVisible = ref(false);
-const addPid = ref('-1');
-const addDept = (pid = '-1' as string) => {
+/**
+ * Load department information
+ * Updates deptInfo with current department details
+ */
+const loadDeptInfo = async (): Promise<void> => {
+  if (!state.currentSelectedNode.id) return;
+
+  try {
+    const [error, { data = {} }] = await dept.getDeptDetail(state.currentSelectedNode.id);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+
+    // Update department info
+    Object.assign(deptInfo, {
+      name: data.name || '',
+      code: data.code || '',
+      id: data.id || '',
+      createdByName: data.createdByName || '',
+      createdDate: data.createdDate || '',
+      tags: data.tags || [],
+      level: data.level || '',
+      lastModifiedDate: data.lastModifiedDate || '',
+      lastModifiedByName: data.lastModifiedByName || '--'
+    });
+  } catch (error) {
+    console.error('Error loading department info:', error);
+    notification.error(t('common.messages.networkError'));
+  }
+};
+
+/**
+ * Add department modal handlers
+ */
+const addDept = (pid = '-1' as string): void => {
   addModalVisible.value = true;
   addPid.value = pid;
 };
-const closeAdd = () => {
+
+const closeAdd = (): void => {
   addModalVisible.value = false;
 };
-const saveAdd = (value) => {
+
+const saveAdd = (value: any): void => {
   closeAdd();
   if (value.pid && +value.pid < 0 && !searchDeptId.value) {
     notify.value += 1;
@@ -153,14 +311,18 @@ const saveAdd = (value) => {
   }
 };
 
-const editModalVisible = ref(false);
-const editDeptName = () => {
+/**
+ * Edit department name modal handlers
+ */
+const editDeptName = (): void => {
   editModalVisible.value = true;
 };
-const closeEditName = () => {
+
+const closeEditName = (): void => {
   editModalVisible.value = false;
 };
-const saveEditName = (name) => {
+
+const saveEditName = (name: string): void => {
   closeEditName();
   treeSelect.value.edit({
     id: currentActionNode.value.id,
@@ -168,157 +330,234 @@ const saveEditName = (name) => {
   });
 };
 
-const del = async () => {
-  const [error, res] = await dept.getDeptCount(currentActionNode.value.id as string);
-  if (error) {
-    return;
-  }
-
-  const { subDeptNum, sunUserNum } = res.data;
-  const existChildDept = subDeptNum > 0;
-  const existUser = sunUserNum > 0;
-  let content = '';
-  if (existChildDept && existUser) {
-    content = t('childAndUserTip', { childNum: subDeptNum, userNum: sunUserNum });
-  } else if (existChildDept && !existUser) {
-    content = t('tenantDelChildTip', { childNum: subDeptNum });
-  } else if (!existChildDept && existUser) {
-    content = t('tenantDelUserTip', { userNum: sunUserNum });
-  }
-  modal.confirm({
-    centered: true,
-    title: t('delDept'),
-    content: t('delDeptTip', { content }),
-    onOk: async () => {
-      const [error] = await dept.deleteDept({ ids: [currentActionNode.value.id as string] });
-      if (error) {
-        return;
-      }
-      notification.success(t('delSuccess'));
-      treeSelect.value.del(currentActionNode.value.id);
-      if (currentActionNode.value.pid && +currentActionNode.value.pid < 0 && !searchDeptId.value) {
-        notify.value += 1;
-      }
-      if (currentActionNode.value.id === state.currentSelectedNode.id) {
-        state.currentSelectedNode.id = undefined;
-        state.currentSelectedNode.pid = undefined;
-        state.currentSelectedNode.name = undefined;
-        state.userDataSource = [];
-      }
+/**
+ * Delete department with confirmation
+ * Checks for child departments and users before deletion
+ */
+const del = async (): Promise<void> => {
+  try {
+    const [error, res] = await dept.getDeptCount(currentActionNode.value.id as string);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
     }
-  });
+
+    const { subDeptNum, sunUserNum } = res.data;
+    const existChildDept = subDeptNum > 0;
+    const existUser = sunUserNum > 0;
+    
+    let content = '';
+    if (existChildDept && existUser) {
+      content = t('childAndUserTip', { childNum: subDeptNum, userNum: sunUserNum });
+    } else if (existChildDept && !existUser) {
+      content = t('tenantDelChildTip', { childNum: subDeptNum });
+    } else if (!existChildDept && existUser) {
+      content = t('tenantDelUserTip', { userNum: sunUserNum });
+    }
+
+    modal.confirm({
+      centered: true,
+      title: t('delDept'),
+      content: t('delDeptTip', { content }),
+      onOk: async () => {
+        try {
+          const [error] = await dept.deleteDept({ ids: [currentActionNode.value.id as string] });
+          
+          if (error) {
+            notification.error(t('common.messages.operationFailed'));
+            return;
+          }
+
+          notification.success(t('common.messages.deleteSuccess'));
+          treeSelect.value.del(currentActionNode.value.id);
+          
+          if (currentActionNode.value.pid && +currentActionNode.value.pid < 0 && !searchDeptId.value) {
+            notify.value += 1;
+          }
+          
+          if (currentActionNode.value.id === state.currentSelectedNode.id) {
+            state.currentSelectedNode.id = undefined;
+            state.currentSelectedNode.pid = undefined;
+            state.currentSelectedNode.name = undefined;
+            state.userDataSource = [];
+          }
+        } catch (error) {
+          console.error('Error deleting department:', error);
+          notification.error(t('common.messages.operationFailed'));
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error getting department count:', error);
+    notification.error(t('common.messages.networkError'));
+  }
 };
 
-// 关联标签
-const editTagVisible = ref(false);
-const editTag = async () => {
+/**
+ * Tag management handlers
+ */
+const editTag = async (): Promise<void> => {
   editTagVisible.value = true;
 };
 
-// 用户搜索
-const userSearchName = ref();
+const tagSave = async (
+  _tagIds: string[],
+  _tags: { id: string; name: string }[],
+  deleteTagIds: string[]
+): Promise<void> => {
+  try {
+    // Add new tags
+    if (_tagIds.length) {
+      await dept.addDeptTags({ id: currentActionNode.value.id as string, ids: _tagIds });
+    }
+    
+    // Delete tags
+    if (deleteTagIds.length) {
+      await dept.deleteDeptTag({ id: currentActionNode.value.id as string, ids: deleteTagIds });
+    }
+    
+    editTagVisible.value = false;
+    await loadDeptInfo();
+  } catch (error) {
+    console.error('Error saving tags:', error);
+    notification.error(t('common.messages.operationFailed'));
+  }
+};
+
+/**
+ * User search with debounced input
+ */
 const searchLoadUser = debounce(duration.search, () => {
   params.value.pageNo = 1;
   loadUser();
 });
 
-// 关联用户
-const userVisible = ref(false);
-const concatUser = async () => {
+/**
+ * User association handlers
+ */
+const concatUser = async (): Promise<void> => {
   userVisible.value = true;
 };
 
-// 保存关联用户
-const isRefresh = ref(false);
-const userUpdateLoading = ref(false);
-const userLoadDisabled = ref(false);
-const userSave = async (_userIds: string[], _users: { id: string, fullName: string }[], deleteUserIds: string[]) => {
-  // 如果有删除的用户
-  if (deleteUserIds.length) {
-    await delDeptUser(deleteUserIds, 'Modal');
-  }
+const userSave = async (
+  _userIds: string[],
+  _users: { id: string; fullName: string }[],
+  deleteUserIds: string[]
+): Promise<void> => {
+  try {
+    // Delete users if any
+    if (deleteUserIds.length) {
+      await delDeptUser(deleteUserIds, 'Modal');
+    }
 
-  // 如果有新增的用户
-  if (_userIds.length) {
-    await addDeptUser(_userIds);
-  }
+    // Add new users if any
+    if (_userIds.length) {
+      await addDeptUser(_userIds);
+    }
 
-  userVisible.value = false;
-  userUpdateLoading.value = false;
-  if (isRefresh.value) {
-    userLoadDisabled.value = true;
-    await loadUser();
-    userLoadDisabled.value = false;
-    isRefresh.value = false;
+    userVisible.value = false;
+    userUpdateLoading.value = false;
+    
+    if (isRefresh.value) {
+      userLoadDisabled.value = true;
+      await loadUser();
+      userLoadDisabled.value = false;
+      isRefresh.value = false;
+    }
+  } catch (error) {
+    console.error('Error saving users:', error);
+    notification.error(t('common.messages.operationFailed'));
   }
 };
 
-// 部门添加用户
-const addDeptUser = async (userIds: string[]) => {
-  userUpdateLoading.value = true;
-  const [error] = await dept.createDeptUser(state.currentSelectedNode.id as string, userIds);
-  userUpdateLoading.value = false;
-  if (error) {
-    return;
-  }
-  isRefresh.value = true;
-};
-
-// 删除部门用户
-const delDeptUser = async (userIds: string[], type?: 'Table' | 'Modal') => {
-  userUpdateLoading.value = true;
-  const [error] = await dept.deleteDeptUser(state.currentSelectedNode.id as string, userIds);
-  userUpdateLoading.value = false;
-  if (type === 'Table') {
+/**
+ * Add users to department
+ */
+const addDeptUser = async (userIds: string[]): Promise<void> => {
+  try {
+    userUpdateLoading.value = true;
+    const [error] = await dept.createDeptUser(state.currentSelectedNode.id as string, userIds);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+    
+    isRefresh.value = true;
+  } catch (error) {
+    console.error('Error adding users to department:', error);
+    notification.error(t('common.messages.networkError'));
+  } finally {
     userUpdateLoading.value = false;
   }
-  if (error) {
-    return;
-  }
+};
 
-  if (type === 'Modal') {
-    isRefresh.value = true;
-  }
+/**
+ * Remove users from department
+ */
+const delDeptUser = async (userIds: string[], type?: 'Table' | 'Modal'): Promise<void> => {
+  try {
+    userUpdateLoading.value = true;
+    const [error] = await dept.deleteDeptUser(state.currentSelectedNode.id as string, userIds);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
 
-  params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
-  // 要求表格操作不影响刷新图标
-  if (type === 'Table') {
-    userLoadDisabled.value = true;
-    await loadUser();
-    userLoadDisabled.value = false;
+    if (type === 'Modal') {
+      isRefresh.value = true;
+    }
+
+    params.value.pageNo = utils.getCurrentPage(
+      params.value.pageNo as number,
+      params.value.pageSize as number,
+      total.value
+    );
+
+    // Refresh table data for table operations
+    if (type === 'Table') {
+      userLoadDisabled.value = true;
+      await loadUser();
+      userLoadDisabled.value = false;
+    }
+  } catch (error) {
+    console.error('Error removing users from department:', error);
+    notification.error(t('common.messages.networkError'));
+  } finally {
+    userUpdateLoading.value = false;
   }
 };
 
-const getSearchDeptParams = computed(() => {
-  return {
-    tagId: searchTagId.value,
-    fullTextSearch: true
-  };
-});
+/**
+ * Department search handlers
+ */
+const handleSearchDept = async (value: any): Promise<void> => {
+  if (!value) return;
 
-// 部门搜索框
-const searchDeptId = ref();
-const selectedDept = ref<string>();
-const handleSearchDept = async (value) => {
-  if (!value) {
-    return;
-  }
-  const [error, res] = await dept.getNavigationByDeptId({ id: value });
-  if (error) {
-    return;
-  }
-  const parentChain = (res.data.parentChain || []).map(item => ({ ...item, hasSubDept: true }));
-  const { id, pid, name } = res.data.current;
-  setTimeout(() => {
+  try {
+    const [error, res] = await dept.getNavigationByDeptId({ id: value });
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+
+    const parentChain = (res.data.parentChain || []).map(item => ({ ...item, hasSubDept: true }));
+    const { id, pid, name } = res.data.current;
+    
+    await nextTick();
     selectedDept.value = id;
-  });
-  state.dataSource = [...parentChain, res.data.current];
-  changeSelect([id], true, { id, pid, name });
+    state.dataSource = [...parentChain, res.data.current];
+    await changeSelect([id], true, { id, pid, name });
+  } catch (error) {
+    console.error('Error searching department:', error);
+    notification.error(t('common.messages.networkError'));
+  }
 };
 
-// 标签搜索框
-const searchTagId = ref();
-const handleSearchTag = (value) => {
+const handleSearchTag = (value: any): void => {
   searchTagId.value = value;
   if (searchDeptId.value) {
     searchDeptId.value = undefined;
@@ -326,297 +565,286 @@ const handleSearchTag = (value) => {
   changeSelect([], false, state.currentSelectedNode);
 };
 
-const treeFieldNames = { label: 'name', children: 'hasSubDept' };
-
-const treeParams = computed(() => {
-  return { pid: -1, pageSize: 30, tagId: searchTagId.value, orderBy: 'createdDate', orderSort: 'ASC' };
-});
-
+/**
+ * Tree loading and refresh handlers
+ */
 const hasDept = ref(false);
-const loaded = (options) => {
+
+const loaded = (options: any[]): void => {
   hasDept.value = !!options.length;
 };
 
-const tagSave = async (_tagIds: string[], _tags: { id: string, name: string }[], deleteTagIds: string[]) => {
-  // 如果有新增的标签
-  if (_tagIds.length) {
-    await dept.addDeptTags({ id: currentActionNode.value.id as string, ids: _tagIds });
-  }
-  // 如果有删除的标签
-  if (deleteTagIds.length) {
-    await dept.deleteDeptTag({ id: currentActionNode.value.id as string, ids: deleteTagIds });
-  }
-  editTagVisible.value = false;
-  loadDeptInfo();
-};
-
-const deptInfo = reactive({
-  createdByName: '',
-  createdDate: '',
-  tags: [] as { id: string, name: string }[],
-  level: '',
-  name: '',
-  code: '',
-  id: '',
-  lastModifiedDate: '',
-  lastModifiedByName: ''
-});
-const loadDeptInfo = async () => {
-  const [error, { data = {} }] = await dept.getDeptDetail(state.currentSelectedNode.id as string);
-  if (error) {
-    return;
-  }
-  deptInfo.name = data.name;
-  deptInfo.code = data.code;
-  deptInfo.id = data.id;
-  deptInfo.createdByName = data.createdByName;
-  deptInfo.createdDate = data.createdDate;
-  deptInfo.tags = data.tags || [];
-  deptInfo.level = data.level;
-  deptInfo.lastModifiedDate = data.lastModifiedDate;
-  deptInfo.lastModifiedByName = data.lastModifiedByName || '--';
-};
-const handleRefreshUser = () => {
+const handleRefreshUser = (): void => {
   loadUser();
 };
 
-// 移动部门
-const notify = ref(0);
-const moveVisible = ref(false);
-const openMove = () => {
-  moveVisible.value = true;
-};
-
-const confirmMove = async (targetId) => {
-  const [error] = await dept.updateDept([{ pid: targetId, id: currentActionNode.value.id }]);
-  if (error) {
-    return;
-  }
-  moveVisible.value = false;
-  notify.value += 1;
-};
-
-const treeLoading = ref(false);
-const handleRefreshDeptList = () => {
+const handleRefreshDeptList = (): void => {
   notify.value++;
 };
 
-const pagination = computed(() => {
-  return {
-    current: params.value.pageNo,
-    pageSize: params.value.pageSize,
-    total: total.value
-  };
-});
+/**
+ * Department move handlers
+ */
+const openMove = (): void => {
+  moveVisible.value = true;
+};
 
-const tableChange = async (_pagination) => {
+const confirmMove = async (targetId: string): Promise<void> => {
+  try {
+    const [error] = await dept.updateDept([{ pid: targetId, id: currentActionNode.value.id }]);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+    
+    moveVisible.value = false;
+    notify.value += 1;
+  } catch (error) {
+    console.error('Error moving department:', error);
+    notification.error(t('common.messages.networkError'));
+  }
+};
+
+/**
+ * Table pagination change handler
+ */
+const tableChange = async (_pagination: any): Promise<void> => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
+  
   userLoadDisabled.value = true;
   await loadUser();
   userLoadDisabled.value = false;
 };
 
-const columns = [
-  {
-    title: t('用户ID'),
-    dataIndex: 'id',
-    width: '22%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('userName1'),
-    dataIndex: 'fullName',
-    ellipsis: true
-  },
-  {
-    title: t('associatedPerson'),
-    dataIndex: 'createdByName',
-    width: '20%'
-  },
-  {
-    title: t('associatedTime'),
-    dataIndex: 'createdDate',
-    width: '20%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('operation'),
-    dataIndex: 'action',
-    width: 82,
-    align: 'center'
-  }
-];
-const policyColumns = [
-  {
-    title: t('策略ID'),
-    dataIndex: 'id',
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('permissionsStrategy.auth.name'),
-    dataIndex: 'name',
-    ellipsis: true
-  },
-  {
-    title: t('permissionsStrategy.detail.info.code'),
-    dataIndex: 'code',
-    width: '11%'
-  },
-  {
-    title: t('授权人'),
-    dataIndex: 'authByName',
-    width: '11%'
-  },
-  {
-    title: t('授权时间'),
-    dataIndex: 'authDate',
-    width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('operation'),
-    dataIndex: 'action',
-    width: 82,
-    align: 'center'
-  }
-];
-const policyVisible = ref(false);
-
-const openPolicyModal = () => {
+/**
+ * Policy management handlers
+ */
+const openPolicyModal = (): void => {
   policyVisible.value = true;
 };
 
-const policyData = ref([]);
-const policyPagination = reactive({
-  current: 1,
-  pageSize: 10,
-  total: 0
-});
-const policyFilters = ref<{
-  key: string;
-  value: string;
-  op: FilterOp;
-}[]>([]);
+const getDeptPolicy = async (): Promise<void> => {
+  if (policyLoading.value) return;
 
-const policyLoading = ref(false);
-const getDeptPolicy = async () => {
-  if (policyLoading.value) {
-    return;
+  try {
+    const { pageSize, current } = policyPagination;
+    policyLoading.value = true;
+    
+    const [error, res] = await auth.getDeptPolicy(state.currentSelectedNode.id as string, {
+      pageSize,
+      pageNo: current,
+      filters: policyFilters.value
+    });
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+    
+    policyData.value = res.data?.list || [];
+    policyPagination.total = res.data.total;
+  } catch (error) {
+    console.error('Error loading department policies:', error);
+    notification.error(t('common.messages.networkError'));
+  } finally {
+    policyLoading.value = false;
   }
-  const { pageSize, current } = policyPagination;
-  policyLoading.value = true;
-  const [error, res] = await auth.getDeptPolicy(state.currentSelectedNode.id as string, {
-    pageSize,
-    pageNo: current,
-    filters: policyFilters.value
-  });
-  policyLoading.value = false;
-  if (error) {
-    return;
-  }
-  policyData.value = res.data?.list || [];
-  policyPagination.total = res.data.total;
 };
-const policyLoadDisabled = ref(false);
-const policyUpdateLoading = ref(false);
-const policySave = async (addIds) => {
+
+const policySave = async (addIds: string[]): Promise<void> => {
   if (!addIds.length) {
     policyVisible.value = false;
     return;
   }
 
-  policyUpdateLoading.value = true;
-  const [error] = await auth.addPolicyByDept(state.currentSelectedNode.id as string, addIds);
-  policyUpdateLoading.value = false;
-  policyVisible.value = false;
-  if (error) {
-    return;
+  try {
+    policyUpdateLoading.value = true;
+    const [error] = await auth.addPolicyByDept(state.currentSelectedNode.id as string, addIds);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+    
+    policyVisible.value = false;
+    policyLoadDisabled.value = true;
+    await getDeptPolicy();
+    policyLoadDisabled.value = false;
+  } catch (error) {
+    console.error('Error saving policies:', error);
+    notification.error(t('common.messages.networkError'));
+  } finally {
+    policyUpdateLoading.value = false;
   }
-  policyLoadDisabled.value = true;
-  await getDeptPolicy();
-  policyLoadDisabled.value = false;
 };
 
-const handleCancel = async (delId) => {
-  const [error] = await auth.deletePolicyByDept(state.currentSelectedNode.id as string, [delId]);
-  if (error) {
-    return;
+const handleCancel = async (delId: string): Promise<void> => {
+  try {
+    const [error] = await auth.deletePolicyByDept(state.currentSelectedNode.id as string, [delId]);
+    
+    if (error) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+    
+    policyLoadDisabled.value = true;
+    await getDeptPolicy();
+    policyLoadDisabled.value = false;
+  } catch (error) {
+    console.error('Error canceling policy:', error);
+    notification.error(t('common.messages.networkError'));
   }
-  policyLoadDisabled.value = true;
-  await getDeptPolicy();
-  policyLoadDisabled.value = false;
 };
 
-const changePolicyPage = async (page) => {
+const changePolicyPage = async (page: any): Promise<void> => {
   policyPagination.current = page.current;
   policyPagination.pageSize = page.pageSize;
+  
   policyLoadDisabled.value = true;
   await getDeptPolicy();
   policyLoadDisabled.value = false;
 };
 
-const policyNameChange = debounce(duration.search, async (event: any) => {
+const policyNameChange = debounce(duration.search, async (event: any): Promise<void> => {
   const value = event.target.value;
   policyPagination.current = 1;
+  
   if (value) {
     policyFilters.value = [{ key: 'name', op: 'MATCH_END', value: value }];
   } else {
     policyFilters.value = [];
   }
+  
   policyLoadDisabled.value = true;
   await getDeptPolicy();
   policyLoadDisabled.value = false;
 });
 
-const refreshDisabled = ref(false);
-
-// 当前选中或者操作的部门
-const currentActionNode = ref<{ id: string, name: string, pid: string }>({});
-
-const rightEditDeptName = (selected) => {
+/**
+ * Right-click menu handlers
+ */
+const rightEditDeptName = (selected: any): void => {
   currentActionNode.value = selected;
   editDeptName();
 };
-const rightAddDept = (selected) => {
+
+const rightAddDept = (selected: any): void => {
   currentActionNode.value = selected;
   addDept(selected.id);
 };
 
-const rightDel = (selected) => {
+const rightDel = (selected: any): void => {
   currentActionNode.value = selected;
   del();
 };
 
-const rightEditTag = (selected) => {
+const rightEditTag = (selected: any): void => {
   currentActionNode.value = selected;
   editTag();
 };
-const rightOpenMove = (selected) => {
+
+const rightOpenMove = (selected: any): void => {
   currentActionNode.value = selected;
   openMove();
 };
+
+// Table column definitions
+const columns = [
+  {
+    key: 'id',
+    title: t('用户ID'),
+    dataIndex: 'id',
+    width: '22%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
+    key: 'fullName',
+    title: t('userName1'),
+    dataIndex: 'fullName',
+    ellipsis: true
+  },
+  {
+    key: 'createdByName',
+    title: t('associatedPerson'),
+    dataIndex: 'createdByName',
+    width: '20%'
+  },
+  {
+    key: 'createdDate',
+    title: t('associatedTime'),
+    dataIndex: 'createdDate',
+    width: '20%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
+    key: 'action',
+    title: t('operation'),
+    dataIndex: 'action',
+    width: 82,
+    align: 'center'
+  }
+];
+
+const policyColumns = [
+  {
+    key: 'id',
+    title: t('策略ID'),
+    dataIndex: 'id',
+    width: '12%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
+    key: 'name',
+    title: t('permissionsStrategy.auth.name'),
+    dataIndex: 'name',
+    ellipsis: true
+  },
+  {
+    key: 'code',
+    title: t('permissionsStrategy.detail.info.code'),
+    dataIndex: 'code',
+    width: '11%'
+  },
+  {
+    key: 'authByName',
+    title: t('授权人'),
+    dataIndex: 'authByName',
+    width: '11%'
+  },
+  {
+    key: 'authDate',
+    title: t('授权时间'),
+    dataIndex: 'authDate',
+    width: '11%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
+    key: 'action',
+    title: t('operation'),
+    dataIndex: 'action',
+    width: 82,
+    align: 'center'
+  }
+];
 </script>
+
 <template>
   <PureCard class="p-3.5 flex flex-col h-full">
+    <!-- Statistics panel -->
     <Statistics
       resource="Dept"
       :barTitle="t('statistics.metrics.newDepartments')"
       :router="GM"
       dateType="YEAR"
       :visible="showCount" />
+    
     <div class="flex space-x-2 flex-1 min-h-0">
+      <!-- Department tree panel -->
       <PureCard class="w-100 p-3 h-full overflow-x-hidden dept-tree pr-2 border-r flex flex-col">
+        <!-- Search and action controls -->
         <div class="flex items-center justify-between space-x-1 mb-2">
           <Select
             v-model:value="searchDeptId"
@@ -649,6 +877,8 @@ const rightOpenMove = (selected) => {
             :disabled="refreshDisabled"
             @click="handleRefreshDeptList" />
         </div>
+        
+        <!-- Department tree -->
         <Tree
           ref="treeSelect"
           v-model:loading="treeLoading"
@@ -723,7 +953,10 @@ const rightOpenMove = (selected) => {
           </template>
         </Tree>
       </PureCard>
+      
+      <!-- Content panel -->
       <div class="flex-1 flex flex-col overflow-y-auto">
+        <!-- Department info card -->
         <Card v-show="state.currentSelectedNode.id" class="mb-2">
           <template #title>
             <span class="text-3">基本信息</span>
@@ -759,6 +992,8 @@ const rightOpenMove = (selected) => {
               <IconCount v-model:value="showCount" />
             </div>
           </template>
+          
+          <!-- Department information display -->
           <div v-show="state.currentSelectedNode.id" class="text-3">
             <div class="flex">
               <div class="flex-1">{{ t('name') + `: ${deptInfo.name || ''}` }}</div>
@@ -785,12 +1020,15 @@ const rightOpenMove = (selected) => {
             </div>
           </div>
         </Card>
+        
+        <!-- Tab content -->
         <div class="flex-1">
           <PureCard class="px-2 min-h-full">
             <Tabs
               v-show="state.currentSelectedNode.id"
               class="dept-tab"
               size="small">
+              <!-- Users tab -->
               <TabPane key="user" :tab="t('permissionsStrategy.auth.dept')">
                 <div class="flex item-center justify-between mb-2">
                   <Input
@@ -819,6 +1057,8 @@ const rightOpenMove = (selected) => {
                       @click="handleRefreshUser" />
                   </div>
                 </div>
+                
+                <!-- Users table -->
                 <Table
                   :dataSource="state.userDataSource"
                   rowKey="id"
@@ -847,6 +1087,8 @@ const rightOpenMove = (selected) => {
                   </template>
                 </Table>
               </TabPane>
+              
+              <!-- Policy tab -->
               <TabPane key="strategy" :tab="t('authorizationPolicy')">
                 <div class="flex items-center justify-between mb-2">
                   <Input
@@ -870,6 +1112,8 @@ const rightOpenMove = (selected) => {
                       @click="getDeptPolicy" />
                   </div>
                 </div>
+                
+                <!-- Policy table -->
                 <Table
                   :columns="policyColumns"
                   size="small"
@@ -900,6 +1144,8 @@ const rightOpenMove = (selected) => {
       </div>
     </div>
   </PureCard>
+  
+  <!-- Modal components -->
   <AsyncComponent :visible="addModalVisible">
     <AddDeptModal
       v-if="addModalVisible"
@@ -909,6 +1155,7 @@ const rightOpenMove = (selected) => {
       @close="closeAdd()"
       @save="saveAdd" />
   </AsyncComponent>
+  
   <AsyncComponent :visible="editModalVisible">
     <EditModal
       :id="currentActionNode.id"
@@ -917,6 +1164,7 @@ const rightOpenMove = (selected) => {
       @close="closeEditName()"
       @save="saveEditName" />
   </AsyncComponent>
+  
   <AsyncComponent :visible="editTagVisible">
     <SelectTargetModal
       v-model:visible="editTagVisible"
@@ -924,6 +1172,7 @@ const rightOpenMove = (selected) => {
       type="Dept"
       @change="tagSave" />
   </AsyncComponent>
+  
   <AsyncComponent :visible="userVisible">
     <UserModal
       v-if="userVisible"
@@ -933,6 +1182,7 @@ const rightOpenMove = (selected) => {
       :deptId="state.currentSelectedNode.id"
       @change="userSave" />
   </AsyncComponent>
+  
   <AsyncComponent :visible="moveVisible">
     <MoveDeptModal
       v-model:visible="moveVisible"
@@ -940,6 +1190,7 @@ const rightOpenMove = (selected) => {
       :defaultPid="currentActionNode.pid"
       @ok="confirmMove" />
   </AsyncComponent>
+  
   <AsyncComponent :visible="policyVisible">
     <PolicyModal
       v-model:visible="policyVisible"
@@ -949,6 +1200,7 @@ const rightOpenMove = (selected) => {
       @change="policySave" />
   </AsyncComponent>
 </template>
+
 <style scoped>
 .dept-tab :deep(.ant-tabs-nav) {
   @apply mb-1.5;
@@ -956,7 +1208,6 @@ const rightOpenMove = (selected) => {
 
 .dept-tab :deep(.ant-tabs-nav::before) {
   @apply mb-1.5;
-
   display: none;
 }
 </style>

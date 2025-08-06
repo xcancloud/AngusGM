@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { reactive, onMounted, computed, ref, defineAsyncComponent } from 'vue';
 import { SearchPanel, Table, PureCard, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/infra';
+import { app, GM, ReceiveObjectType } from '@xcan-angus/infra';
+import { MessageReceiveType, MessageStatus } from '@/enums/enums';
 import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
 
@@ -39,21 +40,21 @@ const searchOptions = computed(() => {
     {
       valueKey: 'receiveType',
       type: 'select-enum',
-      enumKey: 'MessageReceiveType',
+      enumKey: MessageReceiveType,
       placeholder: t('selectReceivingMethod'),
       allowClear: true
     },
     {
       valueKey: 'status',
       type: 'select-enum',
-      enumKey: 'MessageStatus',
+      enumKey: MessageStatus,
       allowClear: true,
       placeholder: t('placeholder.p3')
     },
     {
       valueKey: 'receiveObjectType',
       type: 'select-enum',
-      enumKey: 'ReceiveObjectType',
+      enumKey: ReceiveObjectType,
       placeholder: t('placeholder.p4'),
       allowClear: true
     }

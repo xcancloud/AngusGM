@@ -201,6 +201,18 @@ export enum ModifiedResourceType {
   TENANT_INVITATION_CODE = 'TENANT_INVITATION_CODE'
 }
 
+export enum DirectoryType {
+  MicrosoftActiveDirectory = 'MicrosoftActiveDirectory',
+  ApacheDS = 'ApacheDS',
+  AppleOpenDirectory = 'AppleOpenDirectory',
+  FedoraDS = 'FedoraDS',
+  GenericLDAP = 'GenericLDAP',
+  NovelleDirectory = 'NovelleDirectory',
+  OpenDS = 'OpenDS',
+  OpenLDAP = 'OpenLDAP',
+  SunDirectory = 'SunDirectory'
+}
+
 export const enumNamespaceMap = new Map<any, string>([
   // Organization Types
   [OrgTargetType, 'xcm.enum.OrgTargetType'],
@@ -247,5 +259,7 @@ export const enumNamespaceMap = new Map<any, string>([
 
   // Operation Types
   [OperationResourceType, 'xcm.enum.OperationResourceType'],
-  [ModifiedResourceType, 'xcm.enum.ModifiedResourceType']
+  [ModifiedResourceType, 'xcm.enum.ModifiedResourceType'],
+
+  [DirectoryType, 'xcm.enum.DirectoryType']
 ]);

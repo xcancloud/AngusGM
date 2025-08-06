@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { EnumMessage, app, enumUtils, CombinedTargetType } from '@xcan-angus/infra';
+import { EnumMessage, app, enumUtils, CombinedTargetType, EventType } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { appopen } from '@/api/index';
 
@@ -35,7 +35,7 @@ const Options = ref([
     valueKey: 'eventType',
     type: 'select-enum',
     op: 'EQUAL',
-    enumKey: 'EventType',
+    enumKey: EventType,
     allowClear: true,
     placeholder: t('placeholder.p2')
   },

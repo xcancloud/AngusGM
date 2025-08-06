@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @EndpointRegister
 @Getter
-public enum DirectoryType implements ValueObject<DirectoryType>, EnumValueMessage<String> {
+public enum DirectoryType implements EnumValueMessage<String> {
   MicrosoftActiveDirectory("Microsoft Active Directory"),
   ApacheDS("Apache Directory Server"),
   AppleOpenDirectory("Apple Open Directory"),

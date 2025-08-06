@@ -6,7 +6,7 @@ import {
   AsyncComponent, ButtonAuth, Hints, Icon, IconCount, IconRefresh,
   Image, modal, notification, PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { app, appContext, GM, utils, SearchCriteria, PageQuery } from '@xcan-angus/infra';
+import { app, appContext, GM, utils, Enabled, UserSource, SearchCriteria, PageQuery } from '@xcan-angus/infra';
 
 import { User, UserState, SearchOption } from './PropsType';
 import { user } from '@/api';
@@ -358,14 +358,14 @@ const searchOptions = ref<SearchOption[]>([
     placeholder: t('selectState'),
     valueKey: 'enabled',
     type: 'select-enum',
-    enumKey: 'Enabled',
+    enumKey: Enabled,
     allowClear: true
   },
   {
     placeholder: t('selectSource'),
     valueKey: 'source',
     type: 'select-enum',
-    enumKey: 'UserSource',
+    enumKey: UserSource,
     allowClear: true
   },
   {

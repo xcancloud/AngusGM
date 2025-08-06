@@ -12,8 +12,7 @@ import {
   SearchPanel,
   Spin
 } from '@xcan-angus/vue-ui';
-// import { Button } from 'ant-design-vue';
-import { app, ESS } from '@xcan-angus/infra';
+import { app, ESS, GoodsType } from '@xcan-angus/infra';
 
 import UploadPlugin from './components/UploadPlugin/index.vue';
 import ShowButton from './components/ShowButton.vue';
@@ -51,10 +50,6 @@ const handleParamChange = (filters) => {
   notify.value++;
 };
 
-// const openUpload = () => {
-//   visible.value = true;
-// };
-
 const refresh = (isRefresh: boolean) => {
   if (isRefresh) {
     notify.value++;
@@ -85,7 +80,7 @@ const options = [
   {
     type: 'select-enum',
     valueKey: 'goodsType',
-    enumKey: 'GoodsType',
+    enumKey: GoodsType,
     placeholder: t('选择商品类型'),
     allowClear: true,
     excludes: ['RESOURCE_QUOTA']

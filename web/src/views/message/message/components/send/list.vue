@@ -15,11 +15,9 @@ import {
   Spin
 } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, ReceiveObjectType as ReceiveObjectTypeEnum } from '@xcan-angus/infra';
+import { duration, ReceiveObjectType } from '@xcan-angus/infra';
 import { Checkbox, CheckboxGroup, Divider, Pagination, Popover, Tooltip, Tree } from 'ant-design-vue';
 import { dept, group, user } from '@/api';
-
-import { ReceiveObjectType } from './PropsType';
 
 interface Props {
   receiveObjectType: ReceiveObjectType;
@@ -43,7 +41,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const receiveType = ref<ReceiveObjectType>('USER');
+const receiveType = ref<ReceiveObjectType>(ReceiveObjectType.USER);
 
 const excludes = ({ value }) => {
   return ['TO_POLICY', 'POLICY', 'ALL'].includes(value);
@@ -352,7 +350,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
         <SelectEnum
           v-model:value="receiveType"
           class="w-full ml-2"
-          :enumKey="ReceiveObjectTypeEnum"
+          :enumKey="ReceiveObjectType"
           :excludes="excludes"
           @change="receiveObjectTypeChange">
         </SelectEnum>

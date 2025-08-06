@@ -4,10 +4,10 @@ import { notification, PureCard } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
-import { appContext } from '@xcan-angus/infra';
+import { appContext, ReceiveObjectType } from '@xcan-angus/infra';
+import { MessageReceiveType, SentType } from '@/enums/enums';
 
 import { message } from '@/api';
-import { MessageReceiveType, ReceiveObjectType, SendType } from './PropsType';
 
 const SendForm = defineAsyncComponent(() => import('./form.vue'));
 const SendList = defineAsyncComponent(() => import('./list.vue'));
@@ -21,9 +21,9 @@ const groupList = ref<{ id: string; name: string; }[]>([]);
 const title = ref<string>('');
 const content = ref<string>('');
 const timingDate = ref<string>('');
-const receiveType = ref<MessageReceiveType>('SITE');
-const sendType = ref<SendType>('SEND_NOW');
-const receiveObjectType = ref<ReceiveObjectType>('USER');
+const receiveType = ref<MessageReceiveType>(MessageReceiveType.SITE);
+const sendType = ref<SentType>(SentType.SEND_NOW);
+const receiveObjectType = ref<ReceiveObjectType>(ReceiveObjectType.USER);
 const receiveTenantId = ref<string>('');
 const tenantName = ref<string>('');
 const notify = ref(0); // 更新表单通知
@@ -44,7 +44,7 @@ const submit = async () => {
     return;
   }
 
-  if (sendType.value === 'TIMING_SEND' && !timingDate.value) {
+  if (sendType.value === SentType.TIMING_SEND && !timingDate.value) {
     if (!timingDate.value) {
       dateRule.value = true;
     }
@@ -55,7 +55,7 @@ const submit = async () => {
     title: string;
     content: string;
     receiveType: MessageReceiveType;
-    sendType: SendType;
+    sendType: SentType;
     timingDate?: string;
     receiveTenantId?: string;
     receiveObjectType?: ReceiveObjectType,

@@ -156,6 +156,17 @@
         "SETTING_TENANT_QUOTA": "Quota Setting",
         "SYSTEM_TOKEN": "System Token",
         "OTHER": "Other"
+      },
+      "DirectoryType": {
+        "MicrosoftActiveDirectory": "Microsoft Active Directory",
+        "ApacheDS": "Apache Directory Server",
+        "AppleOpenDirectory": "Apple Open Directory",
+        "FedoraDS": "Fedora Directory Server",
+        "GenericLDAP": "Generic Directory Server",
+        "NovelleDirectory": "Novell eDirectory Server",
+        "OpenDS": "OpenDS Directory Server",
+        "OpenLDAP": "OpenLDAP Directory Server",
+        "SunDirectory": "Sun Directory Server"
       }
     }
   }

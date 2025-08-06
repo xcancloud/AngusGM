@@ -1,3 +1,7 @@
+/**
+ * Search option configuration for department management
+ * Defines search fields and their properties
+ */
 export const _searchOptions = [
   {
     placeholder: 'accountsDept.placeholder.p1',
@@ -13,6 +17,10 @@ export const _searchOptions = [
   }
 ];
 
+/**
+ * Table column configuration for department list
+ * Defines the structure and display properties of table columns
+ */
 export const _columns = [
   {
     title: 'accountsDept.columns.code',
@@ -37,35 +45,120 @@ export const _columns = [
   }
 ];
 
+/**
+ * Department data type interface
+ * Represents the structure of department information
+ */
 export interface DataType {
-  id: string | undefined,
-  name: string | undefined,
-  pid: string | undefined,
-  code: string | undefined,
-  createdDate: string | undefined,
-  tenantId: string | undefined,
-  tenantName: string | undefined,
-  tags: RecordType[]
+  /** Unique identifier for the department */
+  id: string | undefined;
+  /** Department name */
+  name: string | undefined;
+  /** Parent department ID */
+  pid: string | undefined;
+  /** Department code */
+  code: string | undefined;
+  /** Creation date */
+  createdDate: string | undefined;
+  /** Tenant ID */
+  tenantId: string | undefined;
+  /** Tenant name */
+  tenantName: string | undefined;
+  /** Associated tags */
+  tags: RecordType[];
 }
 
+/**
+ * Tree record type for department hierarchy
+ * Represents department nodes in the tree structure
+ */
 export interface TreeRecordType {
-  id: string | undefined,
-  name: string | undefined,
-  pid: string | undefined,
-  children?: TreeRecordType[],
-  tags?: { id: string, name: string }[],
-  icon?: string
+  /** Unique identifier for the department */
+  id: string | undefined;
+  /** Department name */
+  name: string | undefined;
+  /** Parent department ID */
+  pid: string | undefined;
+  /** Child departments */
+  children?: TreeRecordType[];
+  /** Associated tags */
+  tags?: { id: string; name: string }[];
+  /** Icon for the department */
+  icon?: string;
 }
 
+/**
+ * User record type for department users
+ * Represents user information within a department
+ */
 export interface UserRecordType {
-  id: string,
-  fullName: string | undefined,
-  deptId: string,
-  userId: string,
-  deptName: string | undefined,
-  createdDate: string | undefined,
-  avatar: string | undefined,
-  mobile: string | undefined,
-  deptHead: boolean,
-  mainDept: boolean
+  /** Unique identifier for the user */
+  id: string;
+  /** Full name of the user */
+  fullName: string | undefined;
+  /** Department ID */
+  deptId: string;
+  /** User ID */
+  userId: string;
+  /** Department name */
+  deptName: string | undefined;
+  /** Creation date */
+  createdDate: string | undefined;
+  /** User avatar URL */
+  avatar: string | undefined;
+  /** Mobile number */
+  mobile: string | undefined;
+  /** Whether user is department head */
+  deptHead: boolean;
+  /** Whether this is the main department for the user */
+  mainDept: boolean;
+}
+
+/**
+ * Record type for general data records
+ * Used for tags and other metadata
+ */
+export interface RecordType {
+  /** Unique identifier */
+  id: string;
+  /** Record name */
+  name: string;
+  /** Additional properties */
+  [key: string]: any;
+}
+
+/**
+ * Search option type for advanced filtering
+ * Defines the structure of search options
+ */
+export interface SearchOption {
+  /** Placeholder text for the search field */
+  placeholder: string;
+  /** Key for the search value */
+  valueKey: string;
+  /** Type of search field */
+  type: 'input' | 'select' | 'select-tag' | 'date';
+  /** Whether to allow clearing the field */
+  allowClear?: boolean;
+  /** Value for select options */
+  value?: string;
+}
+
+/**
+ * Table column type for data display
+ * Defines the structure of table columns
+ */
+export interface TableColumn {
+  /** Column title */
+  title: string;
+  /** Data field name */
+  dataIndex: string;
+  /** Column alignment */
+  align?: 'left' | 'center' | 'right';
+  /** Column width */
+  width?: string | number;
+  /** Whether to show ellipsis for long text */
+  ellipsis?: boolean;
+  /** Custom cell renderer */
+  customCell?: () => Record<string, any>;
 }

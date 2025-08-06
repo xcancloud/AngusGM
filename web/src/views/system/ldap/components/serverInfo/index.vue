@@ -2,6 +2,7 @@
 import { reactive, ref, watch } from 'vue';
 import { Hints, Input, SelectEnum } from '@xcan-angus/vue-ui';
 import { Checkbox, Form, FormItem } from 'ant-design-vue';
+import { DirectoryType } from '@/enums/enums';
 
 import { useI18n } from 'vue-i18n';
 
@@ -19,7 +20,7 @@ const { t } = useI18n();
 
 const labelCol = { span: 9 };
 const form = ref({
-  directoryType: 'OpenLDAP',
+  directoryType: DirectoryType.OpenLDAP,
   host: '',
   name: '',
   password: '',
@@ -96,7 +97,7 @@ defineExpose({ childRules });
       <SelectEnum
         v-model:value="form.directoryType"
         placeholder="请输入目录类型"
-        enumKey="DirectoryType"
+        :enumKey="DirectoryType"
         size="small" />
     </FormItem>
     <div class="flex">

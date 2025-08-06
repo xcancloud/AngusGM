@@ -15,7 +15,7 @@ import {
 import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { store } from '@/api';
 import { useRouter } from 'vue-router';
-import { app, AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
+import { app, AppOrServiceRoute, DomainManager, GoodsType, EditionType } from '@xcan-angus/infra';
 import type { Goods } from './PropsType';
 import { goodsTypeColor } from './PropsType';
 import ShowButton from './components/showButton.vue';
@@ -31,14 +31,14 @@ const searchOpt = [
   {
     type: 'select-enum',
     valueKey: 'type',
-    enumKey: 'GoodsType',
+    enumKey: GoodsType,
     placeholder: '选择商品类型',
     allowClear: true
   },
   {
     type: 'select-enum',
     valueKey: 'applyEditionType',
-    enumKey: 'EditionType',
+    enumKey: EditionType,
     placeholder: '选择适用版本',
     op: 'MATCH',
     allowClear: true

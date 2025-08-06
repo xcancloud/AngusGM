@@ -14,6 +14,7 @@ import {
   ButtonAuth
 } from '@xcan-angus/vue-ui';
 import { app, GM } from '@xcan-angus/infra';
+import { NoticeScope, SentType } from '@/enums/enums';
 import { Tooltip } from 'ant-design-vue';
 
 import { notice } from '@/api';
@@ -102,14 +103,14 @@ const searchOpt = [
     type: 'select-enum',
     allowClear: true,
     valueKey: 'scope',
-    enumKey: 'NoticeScope',
+    enumKey: NoticeScope,
     placeholder: t('noticeScope')
   },
   {
     type: 'select-enum',
     allowClear: true,
     valueKey: 'sendType',
-    enumKey: 'SentType',
+    enumKey: SentType,
     placeholder: t('sendType')
   }
 ];
