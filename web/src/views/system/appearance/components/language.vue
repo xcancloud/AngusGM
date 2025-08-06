@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { Skeleton } from 'ant-design-vue';
 import { SelectEnum, SelectIntl, Card, notification } from '@xcan-angus/vue-ui';
+import { SupportedLanguage } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
 import { useI18n } from 'vue-i18n';
@@ -60,7 +61,7 @@ onMounted(() => {
             v-model:value="language"
             size="small"
             class="w-112.5"
-            enumKey="SupportedLanguage"
+            :enumKey="SupportedLanguage"
             @change="handleChange" />
           <SelectIntl
             v-model:value="timeZone"

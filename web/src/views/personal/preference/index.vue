@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PureCard, SelectEnum } from '@xcan-angus/vue-ui';
+import { SupportedLanguage } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
 
@@ -60,7 +61,7 @@ onMounted(() => {
         <SelectEnum
           :value="language"
           class="w-50"
-          enumKey="SupportedLanguage"
+          :enumKey="SupportedLanguage"
           @change="updateLanguage" />
       </div>
     </div>

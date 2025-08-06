@@ -196,7 +196,7 @@ onMounted(() => {
       <TabPane :key="4" :tab="t('systemLdap.detail-9')" />
     </Tabs>
     <div class="flex flex-col items-center w-full text-3 leading-3">
-      <server-info
+      <ServerInfo
         v-show="activeKey===0"
         ref="server"
         keys="server"

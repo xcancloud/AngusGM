@@ -14,6 +14,7 @@ import {
 } from '@xcan-angus/vue-ui';
 import { app, duration, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
+import { OrgTargetType } from '@/enums/enums';
 
 import { Target, TargetType } from '../../PropsType';
 import { orgTag } from '@/api';
@@ -313,7 +314,7 @@ const cancelText = {
           internal
           class="w-50"
           size="small"
-          enumKey="OrgTargetType"
+          :enumKey="OrgTargetType"
           @change="targetTypeChange" />
         <Input
           :placeholder="placeholder"

@@ -15,7 +15,7 @@ import {
   Spin
 } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration } from '@xcan-angus/infra';
+import { duration, ReceiveObjectType as ReceiveObjectTypeEnum } from '@xcan-angus/infra';
 import { Checkbox, CheckboxGroup, Divider, Pagination, Popover, Tooltip, Tree } from 'ant-design-vue';
 import { dept, group, user } from '@/api';
 
@@ -352,7 +352,7 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
         <SelectEnum
           v-model:value="receiveType"
           class="w-full ml-2"
-          enumKey="ReceiveObjectType"
+          :enumKey="ReceiveObjectTypeEnum"
           :excludes="excludes"
           @change="receiveObjectTypeChange">
         </SelectEnum>
