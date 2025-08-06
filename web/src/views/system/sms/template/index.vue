@@ -3,7 +3,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Divider } from 'ant-design-vue';
 import { ButtonAuth, IconRefresh, Input, notification, PureCard, Select, SelectEnum, Table } from '@xcan-angus/vue-ui';
-import { GM } from '@xcan-angus/infra';
+import { GM, SupportedLanguage } from '@xcan-angus/infra';
 
 import { sms } from '@/api';
 import { _columns, Options, Template } from './PropsType';
@@ -155,7 +155,7 @@ onMounted(() => {
           :placeholder="t('selectLanguage')"
           internal
           allowClear
-          enumKey="SupportedLanguage"
+          :enumKey="SupportedLanguage"
           class="w-80"
           size="small" />
       </div>
@@ -191,7 +191,7 @@ onMounted(() => {
           <span v-if="record.showEdit">
             <SelectEnum
               v-model:value="record.editValues.language"
-              enumKey="SupportedLanguage" />
+              :enumKey="SupportedLanguage" />
           </span>
           <span v-else>{{ text.message }}</span>
         </template>

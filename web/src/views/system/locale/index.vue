@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { Button } from 'ant-design-vue';
+import { SupportedLanguage } from '@xcan-angus/infra';
 
 import { useI18n } from 'vue-i18n';
 import { tenant } from '@/api';
@@ -65,7 +66,7 @@ onMounted(() => {
         <SelectEnum
           v-model:value="language"
           class="w-112.5"
-          enumKey="SupportedLanguage" />
+          :enumKey="SupportedLanguage" />
         <SelectIntl
           v-model:value="timeZone"
           style="width: 28.125rem;"
