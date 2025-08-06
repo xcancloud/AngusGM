@@ -97,19 +97,6 @@
         "tokenCount": "十个令牌已添加{total}个"
       }
     },
-    "department": {
-      "level": "部门层级",
-      "level1": "一级",
-      "level2": "二级",
-      "level3": "三级",
-      "level4": "四级",
-      "level5": "五级",
-      "level6": "六级",
-      "level7": "七级",
-      "level8": "八级",
-      "level9": "九级",
-      "level10": "十级"
-    },
     "messages": {
       "title": "消息",
       "total": "总计",
@@ -121,5 +108,18 @@
       "selected": "已选择",
       "noMessages": "暂无消息"
     }
+  },
+  "department": {
+    "level": "部门层级",
+    "level1": "一级",
+    "level2": "二级",
+    "level3": "三级",
+    "level4": "四级",
+    "level5": "五级",
+    "level6": "六级",
+    "level7": "七级",
+    "level8": "八级",
+    "level9": "九级",
+    "level10": "十级"
   }
 }

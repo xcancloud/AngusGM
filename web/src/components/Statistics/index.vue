@@ -102,18 +102,18 @@ const groupByGroup = ref<PieSetting[]>([
 const deptByGroup = ref<PieSetting[]>([
   {
     key: 'level',
-    value: t('user.department.level'),
+    value: t('department.level'),
     type: [
-      { value: 1, message: t('user.department.level1') },
-      { value: 2, message: t('user.department.level2') },
-      { value: 3, message: t('user.department.level3') },
-      { value: 4, message: t('user.department.level4') },
-      { value: 5, message: t('user.department.level5') },
-      { value: 6, message: t('user.department.level6') },
-      { value: 7, message: t('user.department.level7') },
-      { value: 8, message: t('user.department.level8') },
-      { value: 9, message: t('user.department.level9') },
-      { value: 10, message: t('user.department.level10') }
+      { value: 1, message: t('department.level1') },
+      { value: 2, message: t('department.level2') },
+      { value: 3, message: t('department.level3') },
+      { value: 4, message: t('department.level4') },
+      { value: 5, message: t('department.level5') },
+      { value: 6, message: t('department.level6') },
+      { value: 7, message: t('department.level7') },
+      { value: 8, message: t('department.level8') },
+      { value: 9, message: t('department.level9') },
+      { value: 10, message: t('department.level10') }
     ],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
   }
