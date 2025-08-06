@@ -342,39 +342,39 @@ const handleRefresh = (): void => {
 // Search options configuration for SearchPanel component
 const searchOptions = ref<SearchOption[]>([
   {
-    placeholder: t('查询用户ID'),
+    placeholder: t('user.placeholder.userId'),
     valueKey: 'id',
     type: 'input',
     op: 'EQUAL',
     allowClear: true
   },
   {
-    placeholder: t('userPlaceholder1'),
+    placeholder: t('user.placeholder.search'),
     valueKey: 'fullName',
     type: 'input',
     allowClear: true
   },
   {
-    placeholder: t('selectState'),
+    placeholder: t('user.placeholder.enabled'),
     valueKey: 'enabled',
     type: 'select-enum',
     enumKey: Enabled,
     allowClear: true
   },
   {
-    placeholder: t('selectSource'),
+    placeholder: t('user.placeholder.source'),
     valueKey: 'source',
     type: 'select-enum',
     enumKey: UserSource,
     allowClear: true
   },
   {
-    valueKey: 'createdDate',
+    valueKey: 'createdDate', // TODO 时间提示
     type: 'date-range',
     allowClear: true
   },
   {
-    placeholder: '选择或查询标签',
+    placeholder: t('user.placeholder.tag'),
     valueKey: 'tagId',
     type: 'select',
     action: `${GM}/org/tag`,
@@ -394,49 +394,49 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('name2'),
+    title: t('user.columns.name'),
     dataIndex: 'fullName',
     ellipsis: true
   },
   {
-    title: t('userName'),
+    title: t('user.columns.username'),
     dataIndex: 'username',
     width: '12%'
   },
   {
-    title: t('status'),
+    title: t('user.columns.status'),
     dataIndex: 'enabled',
-    width: '5%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('source'),
-    dataIndex: 'source',
     width: '6%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('lockedStatus'),
+    title: t('user.columns.source'),
+    dataIndex: 'source',
+    width: '8%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
+    title: t('user.columns.lockedStatus'),
     dataIndex: 'locked',
     width: '6%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('onlineStatus'),
+    title: t('user.columns.onlineStatus'),
     dataIndex: 'online',
     width: '6%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('mobileNumber'),
+    title: t('user.columns.mobile'),
     dataIndex: 'mobile',
     groupName: 'contact',
-    width: '11%',
+    width: '8%',
     customRender: ({ text }): string => text || '--',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('landline'),
+    title: t('user.columns.landline'),
     dataIndex: 'landline',
     groupName: 'contact',
     customRender: ({ text }): string => text || '--',
@@ -445,7 +445,7 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('email'),
+    title: t('user.columns.email'),
     dataIndex: 'email',
     groupName: 'contact',
     customRender: ({ text }): string => text || '--',
@@ -453,14 +453,14 @@ const columns = [
     width: '15%'
   },
   {
-    title: t('systemIdentity'),
+    title: t('user.columns.identity'),
     dataIndex: 'sysAdmin',
     groupName: 'auth',
     width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('sectorIdentity'),
+    title: t('user.columns.deptHead'),
     dataIndex: 'deptHead',
     groupName: 'auth',
     hide: true,
@@ -468,7 +468,7 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('position'),
+    title: t('user.columns.title'),
     dataIndex: 'title',
     groupName: 'auth',
     hide: true,
@@ -476,7 +476,7 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('joinTime'),
+    title: t('user.columns.joinDate'),
     sorter: true,
     dataIndex: 'createdDate',
     groupName: 'date',
@@ -484,7 +484,7 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('recentlyOnline'),
+    title: t('user.columns.onlineDate'),
     dataIndex: 'onlineDate',
     groupName: 'date',
     hide: true,
@@ -492,7 +492,7 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('添加人'),
+    title: t('user.columns.createdByName'),
     dataIndex: 'createdByName',
     groupName: 'date',
     hide: true,
@@ -501,7 +501,7 @@ const columns = [
     customRender: ({ text }): string => text || '--'
   },
   {
-    title: t('最后修改人'),
+    title: t('user.columns.lastModifiedByName'),
     dataIndex: 'lastModifiedByName',
     groupName: 'date',
     hide: true,
@@ -510,7 +510,7 @@ const columns = [
     customRender: ({ text }): string => text || '--'
   },
   {
-    title: t('最后修改时间'),
+    title: t('user.columns.lastModifiedDate'),
     dataIndex: 'lastModifiedDate',
     groupName: 'date',
     customRender: ({ text }): string => text || '--',
@@ -519,7 +519,7 @@ const columns = [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('operation'),
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: 160,
     align: 'center'
@@ -539,7 +539,7 @@ onMounted(() => {
       resource="User"
       dateType="YEAR"
       :router="GM" />
-    <Hints :text="t('userTip1')" class="mb-1" />
+    <Hints :text="t('user.tip')" class="mb-1" />
     <div class="flex items-start my-2 justify-between">
       <SearchPanel
         class="flex-1 mr-2"
@@ -591,37 +591,37 @@ onMounted(() => {
           <Badge
             v-if="record.enabled"
             status="success"
-            :text="t('enable')" />
+            :text="t('common.status.enabled')" />
           <Badge
             v-else
             status="error"
-            :text="t('disable')" />
+            :text="t('common.status.disabled')" />
         </template>
         <template v-if="column.dataIndex === 'sysAdmin'">
-          {{ record.sysAdmin ? t('systemAdministrator') : t('generalUsers') }}
+          {{ record.sysAdmin ? t('user.profile.systemAdmin') : t('user.profile.generalUser') }}
         </template>
         <template v-if="column.dataIndex === 'deptHead'">
-          {{ record.deptHead ? t('responsiblePerson') : t('generalUsers') }}
+          {{ record.deptHead ? t('common.other.yes') : t('common.other.no') }}
         </template>
         <template v-if="column.dataIndex === 'locked'">
           <Badge
             v-if="record.locked"
             status="error"
-            :text="t('locked')" />
+            :text="t('common.status.locked')" />
           <Badge
             v-else
             status="success"
-            :text="t('unlocked')" />
+            :text="t('common.status.unlocked')" />
         </template>
         <template v-if="column.dataIndex === 'online'">
           <Badge
             v-if="record.online"
             status="success"
-            :text="t('onLine')" />
+            :text="t('common.status.online')" />
           <Badge
             v-else
             status="error"
-            :text="t('offLine')" />
+            :text="t('common.status.offline')" />
         </template>
         <template v-if="column.dataIndex === 'source'">
           {{ record.source?.message }}
@@ -653,11 +653,11 @@ onMounted(() => {
                     <template #icon>
                       <Icon :icon="record.enabled?'icon-jinyong1':'icon-qiyong'" />
                     </template>
-                    {{ record.enabled?app.getName('UserEnable', 1):app.getName('UserEnable',0) }}
+                    {{ record.enabled ? app.getName('UserEnable', 1) : app.getName('UserEnable',0) }}
                   </MenuItem>
                   <MenuItem
                     v-if="app.show('UserDelete')"
-                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('UserDelete')"
+                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('UserDelete')"
                     @click="delUserConfirm(record.id,record.fullName)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
@@ -666,7 +666,7 @@ onMounted(() => {
                   </MenuItem>
                   <MenuItem
                     v-if="!record.locked && app.show('LockingUser')"
-                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('LockingUser')"
+                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('LockingUser')"
                     @click="openLockedModal(record.id)">
                     <template #icon>
                       <Icon icon="icon-lock" />
@@ -675,8 +675,8 @@ onMounted(() => {
                   </MenuItem>
                   <MenuItem
                     v-if="record.locked && app.show('LockingUser')"
-                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('LockingUser')"
-                    @click="unlock(record.id,record.fullName)">
+                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('LockingUser')"
+                    @click="unlock(record.id, record.fullName)">
                     <template #icon>
                       <Icon icon="icon-kaibiaojiemi" />
                     </template>
@@ -684,12 +684,12 @@ onMounted(() => {
                   </MenuItem>
                   <MenuItem
                     v-if="appContext.isSysAdmin() && app.show('SetIdentity')"
-                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('SetIdentity')"
-                    @click="setAdminConfirm(record.id,record.fullName,record.sysAdmin)">
+                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('SetIdentity')"
+                    @click="setAdminConfirm(record.id, record.fullName, record.sysAdmin)">
                     <template #icon>
-                      <Icon :icon="record.sysAdmin?'icon-yonghu':'icon-guanliyuan'" />
+                      <Icon :icon="record.sysAdmin ? 'icon-yonghu' : 'icon-guanliyuan'" />
                     </template>
-                    {{ record.sysAdmin?t('setCommonBtn'):t('setAdminBtn') }}
+                    {{ record.sysAdmin ? t('user.actions.cancelAdmin') : t('user.actions.setAdmin') }}
                   </MenuItem>
                 </Menu>
               </template>
@@ -711,8 +711,8 @@ onMounted(() => {
       v-if="state.lockModalVisible"
       :id="state.currentUserId"
       :visible="state.lockModalVisible"
-      :title="t('lockUser')"
-      :tip="t('userTip8')"
+      :title="t('user.lockTitle')"
+      :tip="t('user.lockTip')"
       width="550px"
       :action="`${GM}/user/locked`"
       @cancel="closeLockModal"

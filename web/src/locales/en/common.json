@@ -1,6 +1,7 @@
 {
   "common": {
     "actions": {
+      "operation": "Operation",
       "add": "Add",
       "edit": "Edit",
       "delete": "Delete",
@@ -99,7 +100,6 @@
       }
     },
     "table": {
-      "operation": "Operation",
       "createdDate": "Created Date",
       "createdBy": "Created By",
       "updatedDate": "Updated Date",
@@ -134,6 +134,10 @@
     "labels": {
       "source": "Source",
       "association": "Association"
+    },
+    "other": {
+      "yes": "Yes",
+      "no": "No"
     }
   }
 }

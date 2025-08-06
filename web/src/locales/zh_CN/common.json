@@ -1,6 +1,7 @@
 {
   "common": {
     "actions": {
+      "operation": "操作",
       "add": "添加",
       "edit": "编辑",
       "delete": "删除",
@@ -42,7 +43,7 @@
       "disabled": "已禁用",
       "lockStatus": "锁定状态",
       "locked": "已锁定",
-      "unlocked": "已解锁",
+      "unlocked": "未锁定",
       "online": "在线",
       "offline": "离线",
       "active": "活跃",
@@ -99,7 +100,6 @@
       }
     },
     "table": {
-      "operation": "操作",
       "createdDate": "创建时间",
       "createdBy": "创建人",
       "updatedDate": "更新时间",
@@ -134,6 +134,10 @@
     "labels": {
       "source": "来源",
       "association": "关联"
+    },
+    "other": {
+      "yes": "是",
+      "no": "否"
     }
   }
 }

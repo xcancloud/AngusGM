@@ -1,22 +1,40 @@
 {
   "user": {
-    "management": {
-      "title": "用户管理",
-      "addUser": "添加用户",
-      "editUser": "编辑用户",
-      "deleteUser": "删除用户",
-      "lockUser": "锁定用户",
-      "unlockUser": "解锁用户",
-      "resetPassword": "重置密码",
-      "viewDetails": "查看详情",
-      "searchPlaceholder": "按用户名、手机号、邮箱搜索",
-      "filters": {
-        "status": "状态",
-        "type": "类型",
-        "department": "部门",
-        "group": "组",
-        "createdDate": "创建时间"
-      }
+    "title": "用户管理",
+    "tip": "\"一般用户\" 不允许添加、修改系统管理员。",
+    "lockTitle": "锁定用户",
+    "lockType": "锁定类型",
+    "lockTip": "您正在进行锁定用户操作，锁定成功后该用户将无法进行登录。",
+    "placeholder": {
+      "userId": "查询用户ID",
+      "search": "查询用户名称、手机号、职务",
+      "enabled": "选择状态",
+      "source": "选择用户来源",
+      "createdDate": "创建时间",
+      "tag": "选择或查询标签"
+    },
+    "columns": {
+      "name": "姓名",
+      "username": "用户名",
+      "status": "状态",
+      "source": "来源",
+      "lockedStatus": "锁定状态",
+      "onlineStatus": "在线状态",
+      "mobile": "手机号",
+      "landline": "座机",
+      "email": "邮箱",
+      "identity": "身份",
+      "deptHead": "部门负责人",
+      "title": "职务",
+      "joinDate": "加入时间",
+      "onlineDate": "最近上线时间",
+      "createdByName": "添加人",
+      "lastModifiedByName": "最后修改人",
+      "lastModifiedDate": "最后修改时间"
+    },
+    "actions": {
+      "setAdmin": "设为系统管理员",
+      "cancelAdmin": "设为一般用户"
     },
     "profile": {
       "title": "用户资料",

@@ -1,22 +1,40 @@
 {
   "user": {
-    "management": {
-      "title": "User Management",
-      "addUser": "Add User",
-      "editUser": "Edit User",
-      "deleteUser": "Delete User",
-      "lockUser": "Lock User",
-      "unlockUser": "Unlock User",
-      "resetPassword": "Reset Password",
-      "viewDetails": "View Details",
-      "searchPlaceholder": "Search by username, mobile, email",
-      "filters": {
-        "status": "Status",
-        "type": "Type",
-        "department": "Department",
-        "group": "Group",
-        "createdDate": "Created Date"
-      }
+    "title": "User Management",
+    "tip": "General users are not permitted to add or modify system administrators.",
+    "lockTitle": "Lock User",
+    "lockType": "Lock Type",
+    "lockTip": "You are about to lock this user. Once locked successfully, the user will be unable to log in.",
+    "placeholder": {
+      "userId": "Search ID",
+      "search": "Search by name, mobile, or title",
+      "enabled": "Select status",
+      "source": "Select source",
+      "createdDate": "Creation time",
+      "tag": "Select or search tags"
+    },
+    "columns": {
+      "name": "Name",
+      "username": "Username",
+      "status": "Status",
+      "source": "Source",
+      "lockedStatus": "Locked",
+      "onlineStatus": "Online",
+      "mobile": "Mobile",
+      "landline": "Landline",
+      "email": "Email",
+      "identity": "Identity",
+      "deptHead": "Department Head",
+      "title": "Title",
+      "joinDate": "Join Date",
+      "onlineDate": "Last Online Date",
+      "createdByName": "Creator",
+      "lastModifiedByName": "Last Modifier",
+      "lastModifiedDate": "Last Modified Date"
+    },
+    "actions": {
+      "setAdmin": "Set as Administrator",
+      "cancelAdmin": "Set as General User"
     },
     "profile": {
       "title": "User Profile",

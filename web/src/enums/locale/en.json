@@ -1,173 +1,171 @@
 {
-  "xcm": {
-    "enum": {
-      "OrgTargetType": {
-        "USER": "User",
-        "DEPT": "Department",
-        "GROUP": "Group"
-      },
-      "AuthOrgType": {
-        "TENANT": "Tenant",
-        "USER": "User",
-        "DEPT": "Department",
-        "GROUP": "Group"
-      },
-      "GroupSource": {
-        "BACKGROUND_ADDED": "Manually Added",
-        "LDAP_SYNCHRONIZE": "LDAP Sync"
-      },
-      "AppFuncType": {
-        "MENU": "Menu",
-        "BUTTON": "Button",
-        "PANEL": "Dashboard"
-      },
-      "ClientSource": {
-        "XCAN_TP_SIGNIN": "Tenant Portal Login",
-        "XCAN_OP_SIGNIN": "Operation Portal Login",
-        "XCAN_SYS_INTROSPECT": "System Internal Authentication",
-        "XCAN_SYS_TOKEN": "System Access Token",
-        "XCAN_2P_SIGNIN": "Privatized Deployment (License Authorization)"
-      },
-      "PolicyType": {
-        "PRE_DEFINED": "Predefined",
-        "USER_DEFINED": "Custom"
-      },
-      "PolicyGrantScope": {
-        "TENANT_SYS_ADMIN": "Tenant System Administrator",
-        "TENANT_ALL_USER": "All Tenant Users",
-        "TENANT_ORG": "Tenant Organization Members"
-      },
-      "PolicyGrantStage": {
-        "MANUAL": "Manual Authorization",
-        "SIGNUP_SUCCESS": "Registration Successful"
-      },
-      "ServiceSource": {
-        "BACK_ADD": "Manually Added",
-        "EUREKA": "EUREKA"
-      },
-      "ApiProxyType": {
-        "NO_PROXY": "No Proxy",
-        "CLIENT_PROXY": "Client Proxy",
-        "SERVER_PROXY": "Server Proxy",
-        "CLOUD_PROXY": "Cloud Proxy"
-      },
-      "SmokeCheckSetting": {
-        "SERVICE_AVAILABLE": "Check service availability (with response status code)",
-        "API_AVAILABLE": "Check API availability (2xx status code), default",
-        "USER_DEFINED_ASSERTION": "Detect based on custom assertions"
-      },
-      "SecurityCheckSetting": {
-        "NOT_SECURITY_CODE": "Check status code is not 401 or 403, default",
-        "IS_SECURITY_CODE": "Check status code is 401 or 403, negative case",
-        "USER_DEFINED_ASSERTION": "Detect based on custom assertions"
-      },
-      "Area": {
-        "NAVIGATION": "Navigation Area",
-        "CONTENT": "Content Area"
-      },
-      "ThemeType": {
-        "DEFAULT": "System Default",
-        "CUSTOM": "Custom"
-      },
-      "ThemeCode": {
-        "GRAY": "Gray Mode",
-        "DARK": "Dark Mode"
-      },
-      "Status": {
-        "ENABLED": "Enabled",
-        "NORMAL": "Normal",
-        "NOT_EXPIRED": "Not Expired",
-        "EXPIRED": "Expired",
-        "DISABLED": "Disabled",
-        "LOCKED": "Locked",
-        "DELETED": "Deleted"
-      },
-      "Scope": {
-        "GLOBAL_MANAGEMENT": "Global Management",
-        "APP": "Application"
-      },
-      "EventPushStatus": {
-        "PENDING": "Pending",
-        "PUSHING": "Pushing",
-        "PUSH_SUCCESS": "Push Successful",
-        "PUSH_FAIL": "Push Failed",
-        "IGNORED": "Ignored"
-      },
-      "MessageStatus": {
-        "SENT": "Sent",
-        "PENDING": "Pending",
-        "FAILURE": "Failed"
-      },
-      "MessageReadTab": {
-        "ALL": "All",
-        "READ": "Read",
-        "UNREAD": "Unread"
-      },
-      "SentType": {
-        "SEND_NOW": "Send Now",
-        "TIMING_SEND": "Scheduled Send"
-      },
-      "NoticeScope": {
-        "GLOBAL": "Global",
-        "APP": "Application"
-      },
-      "MessageReceiveType": {
-        "SITE": "In-Site Message",
-        "EMAIL": "Email"
-      },
-      "OperationResourceType": {
-        "TENANT": "Tenant",
-        "DEPT": "Department",
-        "GROUP": "Group",
-        "USER": "User",
-        "USER_DIRECTORY": "Directory",
-        "USER_TOKEN": "User Token",
-        "ORG_TAG": "Org Tag",
-        "AUTH_CLIENT": "Client",
-        "AUTH_USER": "Auth User",
-        "SERVICE": "Service",
-        "API": "API",
-        "APP": "App",
-        "APP_FUNC": "Function",
-        "WEB_TAG": "Web Tag",
-        "POLICY": "Policy",
-        "POLICY_APP": "App Policy",
-        "POLICY_FUNC": "Function Policy",
-        "POLICY_TENANT": "Tenant Policy",
-        "POLICY_DEPT": "Department Policy",
-        "POLICY_GROUP": "Group Policy",
-        "POLICY_USER": "User Policy",
-        "EVENT": "Event",
-        "EVENT_CHANNEL": "Event Channel",
-        "EVENT_TEMPLATE": "Event Template",
-        "EMAIL": "Email",
-        "EMAIL_SERVER": "Email Server",
-        "EMAIL_TEMPLATE": "Email Template",
-        "SMS": "SMS",
-        "SMS_CHANNEL": "SMS Channel",
-        "SMS_TEMPLATE": "SMS Template",
-        "TO_ROLE": "To Role",
-        "TO_USER": "To User",
-        "MESSAGE": "Message",
-        "NOTICE": "Notice",
-        "SETTING": "Setting",
-        "SETTING_USER": "User Setting",
-        "SETTING_TENANT": "Tenant Setting",
-        "SETTING_TENANT_QUOTA": "Quota Setting",
-        "SYSTEM_TOKEN": "System Token",
-        "OTHER": "Other"
-      },
-      "DirectoryType": {
-        "MicrosoftActiveDirectory": "Microsoft Active Directory",
-        "ApacheDS": "Apache Directory Server",
-        "AppleOpenDirectory": "Apple Open Directory",
-        "FedoraDS": "Fedora Directory Server",
-        "GenericLDAP": "Generic Directory Server",
-        "NovelleDirectory": "Novell eDirectory Server",
-        "OpenDS": "OpenDS Directory Server",
-        "OpenLDAP": "OpenLDAP Directory Server",
-        "SunDirectory": "Sun Directory Server"
-      }
+  "enum": {
+    "OrgTargetType": {
+      "USER": "User",
+      "DEPT": "Department",
+      "GROUP": "Group"
+    },
+    "AuthOrgType": {
+      "TENANT": "Tenant",
+      "USER": "User",
+      "DEPT": "Department",
+      "GROUP": "Group"
+    },
+    "GroupSource": {
+      "BACKGROUND_ADDED": "Manually Added",
+      "LDAP_SYNCHRONIZE": "LDAP Sync"
+    },
+    "AppFuncType": {
+      "MENU": "Menu",
+      "BUTTON": "Button",
+      "PANEL": "Dashboard"
+    },
+    "ClientSource": {
+      "XCAN_TP_SIGNIN": "Tenant Portal Login",
+      "XCAN_OP_SIGNIN": "Operation Portal Login",
+      "XCAN_SYS_INTROSPECT": "System Internal Authentication",
+      "XCAN_SYS_TOKEN": "System Access Token",
+      "XCAN_2P_SIGNIN": "Privatized Deployment (License Authorization)"
+    },
+    "PolicyType": {
+      "PRE_DEFINED": "Predefined",
+      "USER_DEFINED": "Custom"
+    },
+    "PolicyGrantScope": {
+      "TENANT_SYS_ADMIN": "Tenant System Administrator",
+      "TENANT_ALL_USER": "All Tenant Users",
+      "TENANT_ORG": "Tenant Organization Members"
+    },
+    "PolicyGrantStage": {
+      "MANUAL": "Manual Authorization",
+      "SIGNUP_SUCCESS": "Registration Successful"
+    },
+    "ServiceSource": {
+      "BACK_ADD": "Manually Added",
+      "EUREKA": "EUREKA"
+    },
+    "ApiProxyType": {
+      "NO_PROXY": "No Proxy",
+      "CLIENT_PROXY": "Client Proxy",
+      "SERVER_PROXY": "Server Proxy",
+      "CLOUD_PROXY": "Cloud Proxy"
+    },
+    "SmokeCheckSetting": {
+      "SERVICE_AVAILABLE": "Check service availability (with response status code)",
+      "API_AVAILABLE": "Check API availability (2xx status code), default",
+      "USER_DEFINED_ASSERTION": "Detect based on custom assertions"
+    },
+    "SecurityCheckSetting": {
+      "NOT_SECURITY_CODE": "Check status code is not 401 or 403, default",
+      "IS_SECURITY_CODE": "Check status code is 401 or 403, negative case",
+      "USER_DEFINED_ASSERTION": "Detect based on custom assertions"
+    },
+    "Area": {
+      "NAVIGATION": "Navigation Area",
+      "CONTENT": "Content Area"
+    },
+    "ThemeType": {
+      "DEFAULT": "System Default",
+      "CUSTOM": "Custom"
+    },
+    "ThemeCode": {
+      "GRAY": "Gray Mode",
+      "DARK": "Dark Mode"
+    },
+    "Status": {
+      "ENABLED": "Enabled",
+      "NORMAL": "Normal",
+      "NOT_EXPIRED": "Not Expired",
+      "EXPIRED": "Expired",
+      "DISABLED": "Disabled",
+      "LOCKED": "Locked",
+      "DELETED": "Deleted"
+    },
+    "Scope": {
+      "GLOBAL_MANAGEMENT": "Global Management",
+      "APP": "Application"
+    },
+    "EventPushStatus": {
+      "PENDING": "Pending",
+      "PUSHING": "Pushing",
+      "PUSH_SUCCESS": "Push Successful",
+      "PUSH_FAIL": "Push Failed",
+      "IGNORED": "Ignored"
+    },
+    "MessageStatus": {
+      "SENT": "Sent",
+      "PENDING": "Pending",
+      "FAILURE": "Failed"
+    },
+    "MessageReadTab": {
+      "ALL": "All",
+      "READ": "Read",
+      "UNREAD": "Unread"
+    },
+    "SentType": {
+      "SEND_NOW": "Send Now",
+      "TIMING_SEND": "Scheduled Send"
+    },
+    "NoticeScope": {
+      "GLOBAL": "Global",
+      "APP": "Application"
+    },
+    "MessageReceiveType": {
+      "SITE": "In-Site Message",
+      "EMAIL": "Email"
+    },
+    "OperationResourceType": {
+      "TENANT": "Tenant",
+      "DEPT": "Department",
+      "GROUP": "Group",
+      "USER": "User",
+      "USER_DIRECTORY": "Directory",
+      "USER_TOKEN": "User Token",
+      "ORG_TAG": "Org Tag",
+      "AUTH_CLIENT": "Client",
+      "AUTH_USER": "Auth User",
+      "SERVICE": "Service",
+      "API": "API",
+      "APP": "App",
+      "APP_FUNC": "Function",
+      "WEB_TAG": "Web Tag",
+      "POLICY": "Policy",
+      "POLICY_APP": "App Policy",
+      "POLICY_FUNC": "Function Policy",
+      "POLICY_TENANT": "Tenant Policy",
+      "POLICY_DEPT": "Department Policy",
+      "POLICY_GROUP": "Group Policy",
+      "POLICY_USER": "User Policy",
+      "EVENT": "Event",
+      "EVENT_CHANNEL": "Event Channel",
+      "EVENT_TEMPLATE": "Event Template",
+      "EMAIL": "Email",
+      "EMAIL_SERVER": "Email Server",
+      "EMAIL_TEMPLATE": "Email Template",
+      "SMS": "SMS",
+      "SMS_CHANNEL": "SMS Channel",
+      "SMS_TEMPLATE": "SMS Template",
+      "TO_ROLE": "To Role",
+      "TO_USER": "To User",
+      "MESSAGE": "Message",
+      "NOTICE": "Notice",
+      "SETTING": "Setting",
+      "SETTING_USER": "User Setting",
+      "SETTING_TENANT": "Tenant Setting",
+      "SETTING_TENANT_QUOTA": "Quota Setting",
+      "SYSTEM_TOKEN": "System Token",
+      "OTHER": "Other"
+    },
+    "DirectoryType": {
+      "MicrosoftActiveDirectory": "Microsoft Active Directory",
+      "ApacheDS": "Apache Directory Server",
+      "AppleOpenDirectory": "Apple Open Directory",
+      "FedoraDS": "Fedora Directory Server",
+      "GenericLDAP": "Generic Directory Server",
+      "NovelleDirectory": "Novell eDirectory Server",
+      "OpenDS": "OpenDS Directory Server",
+      "OpenLDAP": "OpenLDAP Directory Server",
+      "SunDirectory": "Sun Directory Server"
     }
   }
 }
