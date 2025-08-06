@@ -159,7 +159,7 @@ const updateSysAdmin = async (id: string, sysAdmin: boolean): Promise<void> => {
       return;
     }
 
-    notification.success('修改成功');
+    notification.success(t('common.messages.editSuccess'));
     await refreshUserList();
   } catch (error) {
     notification.error('修改失败');
@@ -345,7 +345,7 @@ const searchOptions = ref<SearchOption[]>([
     placeholder: t('user.placeholder.userId'),
     valueKey: 'id',
     type: 'input',
-    op: 'EQUAL',
+    op: SearchCriteria.OpEnum.Equal,
     allowClear: true
   },
   {
@@ -453,16 +453,24 @@ const columns = [
     width: '15%'
   },
   {
+    title: t('user.columns.gender'),
+    dataIndex: 'gender',
+    groupName: 'other',
+    width: '8%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
     title: t('user.columns.identity'),
     dataIndex: 'sysAdmin',
-    groupName: 'auth',
+    groupName: 'other',
+    hide: true,
     width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('user.columns.deptHead'),
     dataIndex: 'deptHead',
-    groupName: 'auth',
+    groupName: 'other',
     hide: true,
     width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
@@ -470,13 +478,13 @@ const columns = [
   {
     title: t('user.columns.title'),
     dataIndex: 'title',
-    groupName: 'auth',
+    groupName: 'other',
     hide: true,
     width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('user.columns.joinDate'),
+    title: t('user.columns.createdDate'),
     sorter: true,
     dataIndex: 'createdDate',
     groupName: 'date',
@@ -626,6 +634,9 @@ onMounted(() => {
         <template v-if="column.dataIndex === 'source'">
           {{ record.source?.message }}
         </template>
+        <template v-if="column.dataIndex === 'gender'">
+          {{ record.gender?.message }}
+        </template>
         <template v-if="column.dataIndex === 'action'">
           <div class="flex items-center space-x-2.5">
             <ButtonAuth
@@ -712,7 +723,7 @@ onMounted(() => {
       :id="state.currentUserId"
       :visible="state.lockModalVisible"
       :title="t('user.lockTitle')"
-      :tip="t('user.lockTip')"
+      :tip="t('common.messages.lockTip')"
       width="550px"
       :action="`${GM}/user/locked`"
       @cancel="closeLockModal"

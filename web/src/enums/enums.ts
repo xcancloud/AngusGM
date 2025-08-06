@@ -215,51 +215,51 @@ export enum DirectoryType {
 
 export const enumNamespaceMap = new Map<any, string>([
   // Organization Types
-  [OrgTargetType, 'xcm.enum.OrgTargetType'],
-  [AuthOrgType, 'xcm.enum.AuthOrgType'],
+  [OrgTargetType, 'enum.OrgTargetType'],
+  [AuthOrgType, 'enum.AuthOrgType'],
 
   // Group Types
-  [GroupSource, 'xcm.enum.GroupSource'],
+  [GroupSource, 'enum.GroupSource'],
 
   // Application Types
-  [AppFuncType, 'xcm.enum.AppFuncType'],
+  [AppFuncType, 'enum.AppFuncType'],
 
   // Client Sources
-  [ClientSource, 'xcm.enum.ClientSource'],
+  [ClientSource, 'enum.ClientSource'],
 
   // Policy Types
-  [PolicyType, 'xcm.enum.PolicyType'],
-  [PolicyGrantScope, 'xcm.enum.PolicyGrantScope'],
-  [PolicyGrantStage, 'xcm.enum.PolicyGrantStage'],
+  [PolicyType, 'enum.PolicyType'],
+  [PolicyGrantScope, 'enum.PolicyGrantScope'],
+  [PolicyGrantStage, 'enum.PolicyGrantStage'],
 
   // Service Types
-  [ServiceSource, 'xcm.enum.ServiceSource'],
-  [ApiProxyType, 'xcm.enum.ApiProxyType'],
+  [ServiceSource, 'enum.ServiceSource'],
+  [ApiProxyType, 'enum.ApiProxyType'],
 
   // Check Settings
-  [SmokeCheckSetting, 'xcm.enum.SmokeCheckSetting'],
-  [SecurityCheckSetting, 'xcm.enum.SecurityCheckSetting'],
+  [SmokeCheckSetting, 'enum.SmokeCheckSetting'],
+  [SecurityCheckSetting, 'enum.SecurityCheckSetting'],
 
   // Theme Types
-  [Area, 'xcm.enum.Area'],
-  [ThemeType, 'xcm.enum.ThemeType'],
-  [ThemeCode, 'xcm.enum.ThemeCode'],
+  [Area, 'enum.Area'],
+  [ThemeType, 'enum.ThemeType'],
+  [ThemeCode, 'enum.ThemeCode'],
 
   // Status Types
-  [Status, 'xcm.enum.Status'],
-  [Scope, 'xcm.enum.Scope'],
+  [Status, 'enum.Status'],
+  [Scope, 'enum.Scope'],
 
   // Notification Types
-  [EventPushStatus, 'xcm.enum.EventPushStatus'],
-  [MessageStatus, 'xcm.enum.MessageStatus'],
-  [MessageReadTab, 'xcm.enum.MessageReadTab'],
-  [SentType, 'xcm.enum.SentType'],
-  [NoticeScope, 'xcm.enum.NoticeScope'],
-  [MessageReceiveType, 'xcm.enum.MessageReceiveType'],
+  [EventPushStatus, 'enum.EventPushStatus'],
+  [MessageStatus, 'enum.MessageStatus'],
+  [MessageReadTab, 'enum.MessageReadTab'],
+  [SentType, 'enum.SentType'],
+  [NoticeScope, 'enum.NoticeScope'],
+  [MessageReceiveType, 'enum.MessageReceiveType'],
 
   // Operation Types
-  [OperationResourceType, 'xcm.enum.OperationResourceType'],
-  [ModifiedResourceType, 'xcm.enum.ModifiedResourceType'],
+  [OperationResourceType, 'enum.OperationResourceType'],
+  [ModifiedResourceType, 'enum.ModifiedResourceType'],
 
-  [DirectoryType, 'xcm.enum.DirectoryType']
+  [DirectoryType, 'enum.DirectoryType']
 ]);

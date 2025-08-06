@@ -44,8 +44,12 @@ const loadUserDetail = async () => {
 const updateStatusConfirm = () => {
   modal.confirm({
     centered: true,
-    title: userDetail.value?.enabled ? t('禁用') : t('启用'),
-    content: userDetail.value?.enabled ? `确定禁用【${userDetail.value?.fullName}】吗？` : `确定启用【${userDetail.value?.fullName}】吗？`,
+    title: userDetail.value?.enabled
+      ? t('common.actions.disable')
+      : t('common.actions.enable'),
+    content: userDetail.value?.enabled
+      ? t('common.messages.confirmDisable', { name: userDetail.value?.fullName })
+      : t('common.messages.confirmEnable', { name: userDetail.value?.fullName }),
     async onOk () {
       await updateStatus();
     }
@@ -60,13 +64,15 @@ const updateStatus = async () => {
   if (error) {
     return;
   }
-  notification.success(userDetail.value.enabled ? '禁用成功' : '启用成功');
+  notification.success(userDetail.value.enabled
+    ? t('common.messages.disableSuccess')
+    : t('common.messages.enableSuccess'));
   loadUserDetail();
 };
 
 const visible = ref(false);
-const lockingUser = (lockede: boolean) => {
-  if (lockede) {
+const lockingUser = (locked: boolean) => {
+  if (locked) {
     visible.value = true;
   } else {
     unlock();
@@ -83,15 +89,15 @@ const saveLock = () => {
 const unlock = () => {
   modal.confirm({
     centered: true,
-    title: t('unlockUsers'),
-    content: t('userTip7', { name: userDetail.value?.fullName }),
+    title: t('user.actions.unlockUser'),
+    content: t('common.messages.unlockTip', { name: userDetail.value?.fullName }),
     async onOk () {
       const [error] = await user.toggleUserLocked({ id: userDetail.value?.id, locked: false });
       if (error) {
         return;
       }
-      loadUserDetail();
-      notification.success(t('解锁成功'));
+      await loadUserDetail();
+      notification.success(t('common.messages.unlockSuccess'));
     }
   });
 };
@@ -117,8 +123,12 @@ const setAdminConfirm = () => {
   }
   modal.confirm({
     centered: true,
-    title: userDetail.value.sysAdmin ? t('cancelAdministrator') : t('setupAdministrator'),
-    content: userDetail.value.sysAdmin ? t('userTip2', { name: userDetail.value.fullName }) : t('userTip3', { name: userDetail.value.fullName }),
+    title: userDetail.value.sysAdmin
+      ? t('user.actions.cancelAdmin')
+      : t('user.actions.setAdmin'),
+    content: userDetail.value.sysAdmin
+      ? t('common.messages.cancelAdminTip', { name: userDetail.value.fullName })
+      : t('common.messages.setAdminTip', { name: userDetail.value.fullName }),
     async onOk () {
       await updateSysAdmin();
     }
@@ -133,8 +143,8 @@ const updateSysAdmin = async () => {
   if (error) {
     return;
   }
-  notification.success('修改成功');
-  loadUserDetail();
+  notification.success(t('common.messages.editSuccess'));
+  await loadUserDetail();
 };
 
 const delUserConfirm = () => {
@@ -143,8 +153,8 @@ const delUserConfirm = () => {
   }
   modal.confirm({
     centered: true,
-    title: t('delUser'),
-    content: t('userTip4', { name: userDetail.value.fullName }),
+    title: t('user.actions.deleteUser'),
+    content: t('common.messages.confirmDelete', { name: userDetail.value.fullName }),
     async onOk () {
       await delUser();
     }
@@ -158,7 +168,7 @@ const delUser = async () => {
   if (error) {
     return;
   }
-  notification.success('删除成功');
+  notification.success('common.messages.deleteSuccess');
   router.push('/organization/user');
 };
 
@@ -173,15 +183,15 @@ onMounted(() => {
 const userGridColumns = [
   [
     {
-      label: t('userName'),
+      label: t('user.columns.username'),
       dataIndex: 'username'
     },
     {
-      label: t('加入时间'),
+      label: t('user.columns.createdDate'),
       dataIndex: 'createdDate'
     },
     {
-      label: t('recentlyOnline'),
+      label: t('user.columns.onlineDate'),
       dataIndex: 'onlineDate'
     }
   ]
@@ -189,7 +199,7 @@ const userGridColumns = [
 </script>
 <template>
   <div class="flex flex-col min-h-full">
-    <PureCard class="p-3.5 h-42 px-10 py-8 flex justify-between itmes-start mb-2">
+    <PureCard class="p-3.5 h-45 px-10 py-8 flex justify-between itmes-start mb-2">
       <Skeleton
         active
         :loading="firstLoad"
@@ -204,11 +214,11 @@ const userGridColumns = [
               class="w-20 h-20 rounded-full" />
             <Badge
               :status="`${userDetail.online ? 'success' : 'default'}`"
-              :text="`${userDetail.online ? t('onLine') : t('offLine')}`"
+              :text="`${userDetail.online ? t('common.status.online') : t('common.status.offline')}`"
               class="text-center" />
           </div>
           <div class="ml-10 flex flex-col justify-between flex-1">
-            <div class="text-3.5 leading-3.5 text-theme-title font-medium">{{ userDetail.fullName }}</div>
+            <div class="text-4.5 leading-3.5 text-theme-title mb-3.5 font-bold">{{ userDetail.fullName }}</div>
             <Grid :columns="userGridColumns" :dataSource="userDetail" />
           </div>
         </div>
@@ -236,6 +246,7 @@ const userGridColumns = [
           code="ResetPassword"
           :disabled="getOperationPermissions"
           @click="openUpdatePasswdModal" />
+        <!-- TODO  英文按钮文案不生效     -->
         <ButtonAuth
           code="SetIdentity"
           :disabled="getOperationPermissions && appContext.isSysAdmin()"
@@ -250,7 +261,7 @@ const userGridColumns = [
         size="small">
         <Tabs.TabPane
           key="1"
-          :tab="t('basicInformation')"
+          :tab="t('user.profile.basicInfo')"
           class="p-3.5 pt-0">
           <Skeleton
             active
@@ -260,16 +271,16 @@ const userGridColumns = [
             <UserDetail :dataSource="userDetail" />
           </Skeleton>
         </Tabs.TabPane>
-        <Tabs.TabPane key="2" :tab="t('授权策略')">
+        <Tabs.TabPane key="2" :tab="t('user.tab.authPolicy')">
           <AuthorizationPolicy :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        <Tabs.TabPane key="3" :tab="t('关联部门')">
+        <Tabs.TabPane key="3" :tab="t('user.tab.associatedDepartment')">
           <UserDept :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        <Tabs.TabPane key="4" :tab="t('关联组')">
+        <Tabs.TabPane key="4" :tab="t('user.tab.associatedGroup')">
           <UserGroup :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        <Tabs.TabPane key="5" :tab="t('关联标签')">
+        <Tabs.TabPane key="5" :tab="t('user.tab.associatedTag')">
           <UserTag :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
       </Tabs>
@@ -279,8 +290,8 @@ const userGridColumns = [
         v-if="visible"
         :id="userDetail?.id"
         :visible="visible"
-        :title="t('lockout')+t('user')"
-        :tip="t('userTip8')"
+        :title="t('user.actions.lockUser')"
+        :tip="t('common.messages.lockTip')"
         width="550px"
         :action="`${GM}/user/locked`"
         @cancel="closeLockModal"

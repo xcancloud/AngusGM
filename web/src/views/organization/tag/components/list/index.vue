@@ -108,7 +108,7 @@ const addOK = async (name: string | undefined) => {
   if (error) {
     return;
   }
-  notification.success('添加成功');
+  notification.success(t('common.messages.addSuccess'));
   disabled.value = true;
   await loadTagList();
   disabled.value = false;

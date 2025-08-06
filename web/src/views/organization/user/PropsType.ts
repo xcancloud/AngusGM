@@ -1,8 +1,5 @@
-import { Gender, UserSource, EnumMessage } from '@xcan-angus/infra';
+import { Gender, UserSource, EnumMessage, SearchCriteria } from '@xcan-angus/infra';
 
-/**
- * 用户信息类型定义
- */
 export interface User {
   id: string;
   username: string;
@@ -101,20 +98,15 @@ export interface UserState {
 export type SearchOptionType = 'input' | 'select-enum' | 'date-range' | 'select' | 'date' | 'select-app' | 'select-dept' | 'select-group' | 'select-intl' | 'select-itc' | 'select-user' | 'select-service' | 'select-tag' | 'select-tenant' | 'tree-select';
 
 /**
- * 搜索操作符类型定义
- */
-export type SearchOperator = 'EQUAL' | 'GREATER_THAN' | 'GREATER_THAN_EQUAL' | 'IN' | 'LESS_THAN' | 'LESS_THAN_EQUAL' | 'MATCH' | 'MATCH_END' | 'NOT_EQUAL' | 'NOT_IN';
-
-/**
  * 搜索选项配置类型定义
  */
 export interface SearchOption {
   placeholder?: string;
   valueKey: string;
   type: SearchOptionType;
-  op?: SearchOperator;
+  op?: SearchCriteria.OpEnum;
   allowClear?: boolean;
-  enumKey?: string;
+  enumKey?: any;
   action?: string;
   fieldNames?: { label: string; value: string };
   showSearch?: boolean;

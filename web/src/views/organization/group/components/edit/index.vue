@@ -48,7 +48,7 @@ const addGroup = async () => {
   if (error) {
     return;
   }
-  notification.success('添加成功');
+  notification.success(t('common.messages.addSuccess'));
   router.push('/organization/group');
 };
 
@@ -69,7 +69,7 @@ const editGroup = async () => {
   if (error) {
     return;
   }
-  notification.success('修改成功');
+  notification.success(t('common.messages.editSuccess'));
   source === 'home' ? router.push('/organization/group') : router.push(`/organization/group/${groupId}`);
 };
 

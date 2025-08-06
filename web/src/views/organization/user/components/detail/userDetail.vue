@@ -23,52 +23,55 @@ const gridColumns = [
       dataIndex: 'id'
     },
     {
-      label: t('mobileNumber'),
+      label: t('user.columns.mobile'),
       dataIndex: 'mobile',
       customRender: ({ text }): string => text || '--'
     },
     {
-      label: t('email'),
+      label: t('user.columns.email'),
       dataIndex: 'email',
       customRender: ({ text }): string => text || '--'
     },
     {
-      label: t('landline'),
+      label: t('user.columns.landline'),
       dataIndex: 'landline'
     },
     {
-      label: t('gender'),
+      label: t('user.columns.gender'),
       dataIndex: 'gender',
       customRender: ({ text }): string => text?.message
     },
     {
-      label: t('source'),
+      label: t('user.columns.source'),
       dataIndex: 'source',
       customRender: ({ text }): string => text?.message
     }
   ],
   [
     {
-      label: t('position'),
+      label: t('user.columns.title'),
       dataIndex: 'title'
     },
     {
-      label: t('systemIdentity'),
+      label: t('user.columns.identity'),
       dataIndex: 'sysAdmin',
-      customRender: ({ text }): string => text ? t('systemAdministrator') : t('generalUsers')
+      customRender: ({ text }): string => text ? t('user.profile.systemAdmin') : t('user.profile.generalUser')
     },
     {
-      label: t('status'),
+      label: t('user.columns.status'),
       dataIndex: 'enabled'
     },
     {
-      label: t('lockedStatus'),
+      label: t('user.columns.lockedStatus'),
       dataIndex: 'locked',
-      customRender: ({ text }): string => text ? t('locked') : t('unlocked')
+      customRender: ({ text }): string => text ? t('common.status.locked') : t('common.status.unlocked')
     },
-    { label: t('lockTime'), dataIndex: 'lockStartDate' },
     {
-      label: t('address'),
+      label: t('user.columns.lockStartDate'),
+      dataIndex: 'lockStartDate'
+    },
+    {
+      label: t('user.columns.address'),
       dataIndex: 'address'
     }
   ]
@@ -77,7 +80,7 @@ const gridColumns = [
 <template>
   <Grid :columns="gridColumns" :dataSource="props.dataSource">
     <template #enabled="{text}">
-      <Badge :status=" text ? 'success' : 'error' " :text=" text ? t('enable') : t('disable') " />
+      <Badge :status=" text ? 'success' : 'error' " :text=" text ? t('common.status.enabled') : t('common.status.disabled') " />
     </template>
     <template #lockStartDate="{text}">
       {{ text }} - {{ props.dataSource?.lockEndDate }}

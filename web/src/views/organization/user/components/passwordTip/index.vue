@@ -26,7 +26,7 @@ const { t } = useI18n();
           class="text-danger -mt-0.5" />
       </div>
       <div class="text-theme-content">
-        {{ t('passwordTip1') }}
+        {{ t('user.validation.passwordLengthRange') }}
       </div>
     </div>
     <div class="flex items-start mt-4">
@@ -41,7 +41,7 @@ const { t } = useI18n();
           class="text-danger -mt-0.5" />
       </div>
       <div class="text-theme-content">
-        {{ t('passwordTip2') }}
+        {{ t('user.validation.passwordRequiredCombination') }}
       </div>
     </div>
     <div class="flex items-start mt-4">
@@ -49,7 +49,7 @@ const { t } = useI18n();
         <Icon icon="icon-gantanhao-yuankuang" class="text-blue-tips -mt-0.5" />
       </div>
       <div class="text-theme-contentbreak-all">
-        {{ t('passwordTip3') }} /‘”\:;~!@ #$%^&*()
+        {{ t('user.validation.passwordSpecialCharType') }} /‘”\:;~!@ #$%^&*()
       </div>
     </div>
     <div class="flex items-start mt-4">
@@ -57,7 +57,7 @@ const { t } = useI18n();
         <Icon icon="icon-gantanhao-yuankuang" class="text-blue-tips -mt-0.5" />
       </div>
       <div class="text-theme-content">
-        {{ t('passwordTip4') }}
+        {{ t('user.validation.passwordSpaceNotAllowed') }}
       </div>
     </div>
   </div>

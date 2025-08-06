@@ -3,6 +3,7 @@
     "actions": {
       "operation": "Operation",
       "add": "Add",
+      "continueAdding": "Continue",
       "edit": "Edit",
       "delete": "Delete",
       "save": "Save",
@@ -100,10 +101,6 @@
       }
     },
     "table": {
-      "createdDate": "Created Date",
-      "createdBy": "Created By",
-      "updatedDate": "Updated Date",
-      "updatedBy": "Updated By",
       "total": "Total",
       "page": "Page",
       "items": "Items",
@@ -112,14 +109,20 @@
       "pageShowTotal": "Total {total} records, Page {pageNo} / {totalPage}"
     },
     "messages": {
-      "confirmDelete": "Are you sure to delete?",
+      "confirmDelete": "Are you sure to delete `{name}`?",
       "deleteSuccess": "Delete successfully",
       "addSuccess": "Add successfully",
       "editSuccess": "Edit successfully",
+      "confirmEnable": "Are you sure you want to enable `{name}`?",
       "enableSuccess": "Enable successfully",
+      "confirmDisable": "Are you sure you want to disable `{name}`?",
       "disableSuccess": "Disable successfully",
+      "lockTip": "You are about to lock this user. Once locked successfully, the user will be unable to log in.",
+      "unlockTip": "Are you sure you want to unlock `{name}`?",
       "lockSuccess": "Lock successfully",
       "unlockSuccess": "Unlock successfully",
+      "cancelAdminTip": "Are you sure you want to set `{name}` as a general user?",
+      "setAdminTip": "Are you sure you want to set `{name}` as a system administrator?",
       "copySuccess": "Copy successfully",
       "uploadSuccess": "Upload successfully",
       "downloadSuccess": "Download successfully",

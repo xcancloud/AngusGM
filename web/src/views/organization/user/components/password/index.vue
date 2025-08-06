@@ -7,7 +7,7 @@ import { Modal, notification } from '@xcan-angus/vue-ui';
 import { passwordUtils } from '@xcan-angus/infra';
 import { auth } from '@/api';
 
-const PasswdTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
+const PasswordTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
 
 interface FormStateType {
   password: string | undefined,
@@ -44,23 +44,23 @@ const state = reactive<{
   }
 });
 
-const validFuncs = {
+const validate = {
   password: () => {
     const val = (state.form.password || '');
     if (!val) {
-      return Promise.reject(new Error(t('userRule0')));
+      return Promise.reject(new Error(t('user.validation.passwordRequired')));
     } else if (val.length < 6 || val.length > 50) {
-      return Promise.reject(new Error(t('userRule3')));
+      return Promise.reject(new Error(t('user.validation.passwordLengthRange')));
     } else if (passwordUtils.getTypesNum(val.split('')) < 2) {
-      return Promise.reject(new Error(t('userRule4')));
+      return Promise.reject(new Error(t('user.validation.passwordNotMeetRule')));
     }
     return Promise.resolve();
   },
   passwordConfirm: () => {
     if (!state.form.passwordConfirm) {
-      return Promise.reject(new Error(t('userRule1')));
+      return Promise.reject(new Error(t('user.validation.passwordConfirmRequired')));
     } else if (state.form.passwordConfirm !== state.form.password) {
-      return Promise.reject(new Error(t('userRule2')));
+      return Promise.reject(new Error(t('user.validation.passwordConfirmNotMatch')));
     }
     return Promise.resolve();
   }
@@ -68,10 +68,10 @@ const validFuncs = {
 
 const rules = {
   password: [
-    { required: true, min: 6, max: 50, validator: validFuncs.password, trigger: 'blur' }
+    { required: true, min: 6, max: 50, validator: validate.password, trigger: 'blur' }
   ],
   passwordConfirm: [
-    { required: true, validator: validFuncs.passwordConfirm, trigger: 'blur' }
+    { required: true, validator: validate.passwordConfirm, trigger: 'blur' }
   ]
 };
 
@@ -97,7 +97,7 @@ const handleFuncs = {
       if (error) {
         return;
       }
-      notification.success(t('passwordSuccess'));
+      notification.success(t('common.messages.editSuccess'));
       handleFuncs.close();
     });
   }
@@ -105,7 +105,7 @@ const handleFuncs = {
 </script>
 <template>
   <Modal
-    :title="t('resetPassword')"
+    :title="t('user.actions.resetPassword')"
     :maskClosable="false"
     :keyboard="false"
     :confirmLoading="state.confirmLoading"
@@ -120,11 +120,11 @@ const handleFuncs = {
       :model="state.form"
       :rules="rules"
       v-bind="{labelCol: {span: 6}, wrapperCol: {span: 16}}">
-      <FormItem :label="t('newPassword')" name="password">
+      <FormItem :label="t('user.security.newPassword')" name="password">
         <InputPassword
           v-model:value="state.form.password"
           :maxlength="50"
-          :placeholder="t('userPlaceholder7')"
+          :placeholder="t('user.security.placeholder.newPassword')"
           size="small"
           @focus="handleFuncs.changeShowTips(true)"
           @blur="handleFuncs.changeShowTips(false)"
@@ -132,15 +132,15 @@ const handleFuncs = {
         <div
           class="w-42.5 bg-white p-3 absolute top-0 -right-59  transition-all"
           :class="state.isShowTips ? 'show' : 'hide'">
-          <PasswdTip :length="state.length" :chart="state.chart" />
+          <PasswordTip :length="state.length" :chart="state.chart" />
         </div>
       </FormItem>
-      <FormItem :label="t('confirmPassword')" name="passwordConfirm">
+      <FormItem :label="t('user.security.confirmPassword')" name="passwordConfirm">
         <InputPassword
           v-model:value="state.form.passwordConfirm"
           size="small"
           :maxlength="50"
-          :placeholder="t('userPlaceholder8')" />
+          :placeholder="t('user.security.placeholder.confirmPassword')" />
       </FormItem>
     </Form>
   </Modal>

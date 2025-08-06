@@ -66,7 +66,7 @@ const editName = async (event) => {
   if (error) {
     return;
   }
-  notification.success('修改成功');
+  notification.success(t('common.messages.editSuccess'));
   emit('success');
 };
 

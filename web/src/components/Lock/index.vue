@@ -115,15 +115,15 @@ const handleFuncs = {
         <span class="ml-2">{{ tip }}</span>
       </p>
       <div class="px-6 py-3.25 bg-gray-light">
-        <span class="text-3 mr-2">{{ t('user.ockType') }}<Colon /></span>
+        <span class="text-3 mr-2">{{ t('user.lockType') }}<Colon /></span>
         <RadioGroup v-model:value="state.form.type">
-          <Radio :value="1">{{ t('enum.SentType.SEND_NOW') }}</Radio>
-          <Radio :value="2">{{ t('enum.SentType.TIMING_SEND') }}</Radio>
+          <Radio :value="1">{{ t('user.timingLock') }}</Radio>
+          <Radio :value="2">{{ t('user.permanentLock') }}</Radio>
         </RadioGroup>
       </div>
       <FormItem
         v-if="state.form.type === 1"
-        :label="t('times')"
+        :label="t('user.lockTime')"
         name="times"
         class="mt-6">
         <DatePicker

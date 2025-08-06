@@ -36,7 +36,7 @@ const handleChange = async (value: 'zh_CN' | 'en') => {
   if (error) {
     language.value = oldLanguage.value;
   }
-  notification.success('修改成功');
+  notification.success(t('common.messages.editSuccess'));
   // location.reload();
 };
 

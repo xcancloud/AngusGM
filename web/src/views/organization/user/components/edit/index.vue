@@ -4,16 +4,21 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, InputPassword, Popover, Radio, RadioGroup } from 'ant-design-vue';
 import { Cropper, Icon, Image, Input, notification, PureCard, SelectItc } from '@xcan-angus/vue-ui';
-import { EnumMessage, Gender, appContext, duration, enumUtils, itc, passwordUtils, regexpUtils, utils } from '@xcan-angus/infra';
+import {
+  EnumMessage, Gender, appContext, duration, enumUtils, itc, passwordUtils,
+  regexpUtils, utils, UserSource
+} from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { FormState } from '../../PropsType';
 
 import { user } from '@/api';
 
-const PasswdTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
+const PasswordTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
 
 type Fuc = (args: Record<string, any>) => void;
+
+// TODO 用户编辑页面和列表表格字体不一致，将UI组件字体大小统一修改成12px吗
 
 const route = useRoute();
 const router = useRouter();
@@ -29,7 +34,7 @@ const formState = ref<FormState>({
   email: '',
   firstName: '',
   fullName: '',
-  gender: 'UNKNOWN',
+  gender: Gender.UNKNOWN,
   itc: '86',
   landline: '',
   lastName: '',
@@ -72,7 +77,7 @@ const addUser = async (isContinueAdd?: boolean) => {
   if (error) {
     return;
   }
-  notification.success('添加成功');
+  notification.success(t('common.messages.addSuccess'));
   // 继续添加不跳转
   if (isContinueAdd) {
     formRef.value.resetFields();
@@ -81,7 +86,7 @@ const addUser = async (isContinueAdd?: boolean) => {
   router.push('/organization/user');
 };
 
-const updateUserInfo: Fuc | undefined = inject('updateUserInfo');
+const updateUserInfo: Fuc | undefined = inject('updateUserInfo'); // TODO 没有找到入口
 const patchGroup = async () => {
   if (loading.value) {
     return;
@@ -119,7 +124,7 @@ const patchGroup = async () => {
   if (error) {
     return;
   }
-  notification.success('修改成功');
+  notification.success(t('common.messages.editSuccess'));
   if (userId.value && userId.value === appContext.getUser()?.id) {
     if (typeof updateUserInfo === 'function') {
       const temp = {
@@ -174,11 +179,11 @@ const passwordValidator = (_rule, value) => {
   }
 
   if (!value) {
-    return Promise.reject(new Error(t('userRule0')));
+    return Promise.reject(new Error(t('user.validation.passwordRequired')));
   }
 
   if (!state.length || !state.chart) {
-    return Promise.reject(new Error(t('userRule4')));
+    return Promise.reject(new Error(t('user.validation.passwordNotMeetRule')));
   }
 
   return Promise.resolve();
@@ -193,11 +198,11 @@ const confirmPasswordValidator = (_rule, value) => {
   }
 
   if (!value) {
-    return Promise.reject(new Error(t('userRule1')));
+    return Promise.reject(new Error(t('user.validation.passwordConfirmRequired')));
   }
 
   if (formState.value.password !== value) {
-    return Promise.reject(new Error(t('userRule2')));
+    return Promise.reject(new Error(t('user.validation.passwordConfirmNotMatch')));
   }
   return Promise.resolve();
 };
@@ -228,7 +233,6 @@ watch(() => formState.value.confirmPassword, () => {
   if (!userId.value || !formState.value.password || formState.value.password === '********') {
     return;
   }
-
   confirmPasswordRule.value.required = true;
 });
 
@@ -237,11 +241,11 @@ const emailRule = ref({
 });
 const emailValidator = (_rule, value) => {
   if (!value) {
-    return Promise.reject(new Error(t('userRule5')));
+    return Promise.reject(new Error(t('user.validation.emailRequired')));
   }
   const isEmail = regexpUtils.isEmail(value);
   if (!isEmail) {
-    return Promise.reject(new Error(t('userRule6')));
+    return Promise.reject(new Error(t('user.validation.emailInvalidFormat')));
   }
   return Promise.resolve();
 };
@@ -253,7 +257,7 @@ const mobileValidator = (_rule, value) => {
   if (!value) {
     return Promise.resolve();
   } else if (!regexpUtils.isMobileNumber(formState.value.country || 'CN', value)) {
-    return Promise.reject(new Error(t('userRule8')));
+    return Promise.reject(new Error(t('user.validation.phoneInvalidFormat')));
   }
   return Promise.resolve();
 };
@@ -374,76 +378,76 @@ onMounted(() => {
             class="mt-6 text-3 leading-3 flex items-center mx-auto"
             @click="openUploadModal">
             <Icon icon="icon-shangchuan" class="text-3 leading-3 mr-1" />
-            <span>{{ t('uploadAvatar') }}</span>
+            <span>{{ t('user.uploadAvatarTip') }}</span>
           </Button>
         </FormItem>
         <div class="flex flex-1 space-x-10 5xl:space-x-20">
           <div class="w-2/4 align-top flex-1">
             <div class="flex flex-1 -mt-0.5 space-x-2">
               <FormItem
-                :label="t('名')"
-                :rules="[{ required: true, message:t('userRule9') }]"
+                :label="t('user.profile.firstName')"
+                :rules="[{ required: true, message:t('user.validation.firstNameRequired') }]"
                 name="firstName"
                 class="w-1/2">
                 <Input
                   v-model:value="formState.firstName"
                   size="small"
-                  :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                   :maxlength="100"
-                  :placeholder="t('userPlaceholder2')"
+                  :placeholder="t('user.placeholder.firstName')"
                   @change="firstNameChange" />
               </FormItem>
               <FormItem
-                :label="t('姓')"
-                :rules="[{ required: true, message:t('userRule10') }]"
+                :label="t('user.profile.lastName')"
+                :rules="[{ required: true, message:t('user.validation.lastNameRequired') }]"
                 name="lastName"
                 class="w-1/2">
                 <Input
                   v-model:value="formState.lastName"
                   size="small"
-                  :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                   :maxlength="100"
-                  :placeholder="t('userPlaceholder3')"
+                  :placeholder="t('user.placeholder.lastName')"
                   @change="lastNameChange" />
               </FormItem>
             </div>
             <FormItem
-              :label="t('name2')"
-              :rules="[{ required: true, message: t('请输入姓名') }]"
+              :label="t('user.profile.fullName')"
+              :rules="[{ required: true, message: t('user.validation.nameRequired') }]"
               name="fullName">
               <Input
                 v-model:value="formState.fullName"
                 size="small"
-                :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                 :maxlength="100"
-                :placeholder="t('name2')" />
+                :placeholder="t('user.placeholder.fullName')" />
             </FormItem>
             <FormItem
-              :label="t('userName')"
+              :label="t('user.profile.username')"
               name="username"
-              :rules="[{ required: true, message:t('userRule11') }]">
+              :rules="[{ required: true, message:t('user.validation.usernameRequired') }]">
               <Input
                 v-model:value="formState.username"
                 size="small"
                 :maxlength="100"
-                :placeholder="t('pubPlaceholder1',{name:t('userName'),num:100,chart:' - _ . '})"
+                :placeholder="t('user.placeholder.username',{name:t('user.profile.username'),num:100,chart:' - _ . '})"
                 dataType="mixin-en"
                 includes="-_." />
             </FormItem>
             <FormItem
-              :label="t('mobileNumber')"
+              :label="t('user.profile.mobile')"
               name="mobile"
               :rules="mobileRule">
               <Input
                 v-model:value="formState.mobile"
                 size="small"
                 :maxlength="11"
-                :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
-                :placeholder="t('userPlaceholder4')">
+                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                :placeholder="t('user.placeholder.mobile')">
                 <template #addonBefore>
                   <SelectItc
                     :value="formState.itc"
-                    :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                    :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                     style="width: 100px;"
                     internal
                     size="small"
@@ -451,23 +455,25 @@ onMounted(() => {
                 </template>
               </Input>
             </FormItem>
-            <FormItem :label="t('landline')" name="landline">
+            <FormItem
+              :label="t('user.profile.landline')"
+              name="landline">
               <Input
                 v-model:value="formState.landline"
                 size="small"
                 :maxlength="40"
-                :placeholder="t('userPlaceholder5')" />
+                :placeholder="t('user.placeholder.landline')" />
             </FormItem>
             <FormItem
-              :label="t('email')"
+              :label="t('user.profile.email')"
               name="email"
               :rules="emailRule">
               <Input
                 v-model:value="formState.email"
                 size="small"
-                :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                 :maxlength="100"
-                :placeholder="t('userPlaceholder6')" />
+                :placeholder="t('user.placeholder.email')" />
             </FormItem>
             <FormItem>
               <Button
@@ -476,7 +482,7 @@ onMounted(() => {
                 size="small"
                 htmlType="submit"
                 class="px-3">
-                {{ t('submit') }}
+                {{ t('common.actions.submit') }}
               </Button>
               <template v-if="!userId">
                 <Button
@@ -484,16 +490,18 @@ onMounted(() => {
                   size="small"
                   class="ml-5"
                   @click="continueAdd">
-                  {{ t('keepAdd') }}
+                  {{ t('common.actions.continueAdding') }}
                 </Button>
               </template>
               <RouterLink :to="source === 'home'?'/organization/user':`/organization/user/${userId}`">
-                <Button class="ml-5" size="small">{{ t('cancel') }}</Button>
+                <Button class="ml-5" size="small">{{ t('common.actions.cancel') }}</Button>
               </RouterLink>
             </FormItem>
           </div>
           <div class="inline-block w-2/4 align-top">
-            <FormItem :label="t('gender')" name="gender">
+            <FormItem
+              :label="t('user.profile.gender')"
+              name="gender">
               <RadioGroup v-model:value="formState.gender" size="small">
                 <Radio
                   v-for="item in userGender"
@@ -505,21 +513,21 @@ onMounted(() => {
             </FormItem>
             <FormItem
               v-if="!userId"
-              :label="t('password')"
+              :label="t('user.profile.password')"
               :rules="passwordRule"
               name="password">
               <Popover placement="leftTop" trigger="focus">
                 <template #content>
                   <div v-if="passwordRule.required" class="w-35">
-                    <PasswdTip :length="state.length" :chart="state.chart" />
+                    <PasswordTip :length="state.length" :chart="state.chart" />
                   </div>
                 </template>
                 <InputPassword
                   v-model:value="formState.password"
                   size="small"
-                  :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                   :maxlength="50"
-                  :placeholder="t('userPlaceholder7')"
+                  :placeholder="t('user.placeholder.password')"
                   autocomplete="new-password"
                   @change="changeStrength">
                 </InputPassword>
@@ -527,38 +535,44 @@ onMounted(() => {
             </FormItem>
             <FormItem
               v-if="!userId"
-              :label="t('confirmPassword')"
+              :label="t('user.profile.confirmPassword')"
               :rules="confirmPasswordRule"
               name="confirmPassword">
               <InputPassword
                 v-model:value="formState.confirmPassword"
                 size="small"
-                :disabled="userId && userSource === 'LDAP_SYNCHRONIZE'"
+                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
                 :maxlength="50"
-                :placeholder="t('userPlaceholder8')">
+                :placeholder="t('user.placeholder.confirmPassword')">
               </InputPassword>
             </FormItem>
-            <FormItem :label="t('position')" name="title">
+            <FormItem
+              :label="t('user.profile.title')"
+              name="title">
               <Input
                 v-model:value="formState.title"
                 size="small"
                 :maxlength="100"
-                :placeholder="t('userPlaceholder9')" />
+                :placeholder="t('user.placeholder.title')" />
             </FormItem>
-            <FormItem :label="t('address')" name="address">
+            <FormItem
+              :label="t('user.profile.address')"
+              name="address">
               <Input
                 v-model:value="formState.address"
                 size="small"
                 :maxlength="200"
-                :placeholder="t('userPlaceholder10')" />
+                :placeholder="t('user.placeholder.address')" />
             </FormItem>
-            <FormItem :label="t('systemIdentity')" name="sysAdmin">
+            <FormItem
+              :label="t('user.profile.identity')"
+              name="sysAdmin">
               <RadioGroup
                 v-model:value="formState.sysAdmin"
                 size="small"
                 :disabled="!appContext.isSysAdmin()">
-                <Radio :value="false">{{ t('generalUsers') }}</Radio>
-                <Radio :value="true">{{ t('systemAdministrator') }}</Radio>
+                <Radio :value="false">{{ t('user.profile.generalUser') }}</Radio>
+                <Radio :value="true">{{ t('user.profile.systemAdmin') }}</Radio>
               </RadioGroup>
             </FormItem>
           </div>

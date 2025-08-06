@@ -3,6 +3,7 @@
     "actions": {
       "operation": "操作",
       "add": "添加",
+      "continueAdding": "继续添加",
       "edit": "编辑",
       "delete": "删除",
       "save": "保存",
@@ -100,10 +101,6 @@
       }
     },
     "table": {
-      "createdDate": "创建时间",
-      "createdBy": "创建人",
-      "updatedDate": "更新时间",
-      "updatedBy": "更新人",
       "total": "总计",
       "page": "页",
       "items": "条",
@@ -112,14 +109,20 @@
       "pageShowTotal": "共{total}条记录，第{pageNo} / {totalPage}页"
     },
     "messages": {
-      "confirmDelete": "确认是否删除?",
+      "confirmDelete": "确认是否删除`{name}`?",
       "deleteSuccess": "删除成功",
       "addSuccess": "添加成功",
-      "editSuccess": "编辑成功",
+      "editSuccess": "修改成功",
+      "confirmEnable": "确定启用`{name}`吗？",
       "enableSuccess": "启用成功",
+      "confirmDisable": "确定禁用`{name}`吗？",
       "disableSuccess": "禁用成功",
+      "lockTip": "您正在进行锁定用户操作，锁定成功后该用户将无法进行登录。",
+      "unlockTip": "确定解锁`{name}`吗？",
       "lockSuccess": "锁定成功",
       "unlockSuccess": "解锁成功",
+      "cancelAdminTip": "确定设置`{name}`为一般用户吗？",
+      "setAdminTip": "确定设置`{name}`为系统管理员吗？",
       "copySuccess": "复制成功",
       "uploadSuccess": "上传成功",
       "downloadSuccess": "下载成功",

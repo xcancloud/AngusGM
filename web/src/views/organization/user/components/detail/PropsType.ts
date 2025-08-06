@@ -1,6 +1,6 @@
-import { Gender, Source } from '../PropsType';
+import { EnumMessage, Gender, UserSource, PasswordStrength } from '@xcan-angus/infra';
 
-export type SearchParams = {
+export type SearchParams = { // TODO 替换引用
   pageNo: number;
   pageSize: number;
   orderBy?: string;
@@ -70,18 +70,12 @@ export interface Detail {
   landline: string;
   avatar: string;
   title: string;
-  gender: {
-    value: Gender,
-    message: string;
-  },
+  gender: EnumMessage<Gender>,
   contactAddress: string;
   sysAdmin: boolean;
   deptHead: boolean;
   enabled: boolean;
-  source: {
-    value: Source;
-    message: string;
-  },
+  source: EnumMessage<UserSource>,
   locked: boolean;
   lockStartDate: string;
   lockEndDate: string;
@@ -93,10 +87,7 @@ export interface Detail {
   lastModifiedBy: string;
   lastModifiedByName: string;
   lastModifiedDate: string;
-  passwordStrength: {
-    value: string;
-    message: string;
-  },
+  passwordStrength: EnumMessage<PasswordStrength>,
   passwordExpired: boolean;
   passwordExpiredDate: string;
   tenantRealNameStatus: string;
