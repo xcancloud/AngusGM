@@ -88,7 +88,7 @@ const validate = {
     }
     return Promise.resolve();
   },
-  
+
   /**
    * Validates password confirmation field
    * Ensures confirmation matches the password
@@ -128,7 +128,7 @@ const handleFuncs = {
   changeShowTips: (flag: boolean) => {
     state.isShowTips = flag;
   },
-  
+
   /**
    * Analyze password strength and update validation status
    * Called on password input change
@@ -141,7 +141,7 @@ const handleFuncs = {
     state.length = value.length >= 6 && value.length <= 50;
     state.chart = typeNum >= 2;
   },
-  
+
   /**
    * Close the password reset modal
    * Emits cancel event to parent component
@@ -149,7 +149,7 @@ const handleFuncs = {
   close: () => {
     emit('cancel');
   },
-  
+
   /**
    * Save new password
    * Validates form, calls API, and handles success/error states
@@ -181,14 +181,12 @@ const handleFuncs = {
     class="reative"
     @ok="handleFuncs.save()"
     @cancel="handleFuncs.close()">
-    
     <!-- Password reset form -->
     <Form
       ref="formRef"
       :model="state.form"
       :rules="rules"
       v-bind="{labelCol: {span: 6}, wrapperCol: {span: 16}}">
-      
       <!-- New password field with strength validation -->
       <FormItem :label="t('user.security.newPassword')" name="password">
         <InputPassword
@@ -199,7 +197,7 @@ const handleFuncs = {
           @focus="handleFuncs.changeShowTips(true)"
           @blur="handleFuncs.changeShowTips(false)"
           @change="handleFuncs.changeStrength" />
-        
+
         <!-- Password strength tips overlay -->
         <div
           class="w-42.5 bg-white p-3 absolute top-0 -right-59  transition-all"
@@ -207,7 +205,7 @@ const handleFuncs = {
           <PasswordTip :length="state.length" :chart="state.chart" />
         </div>
       </FormItem>
-      
+
       <!-- Password confirmation field -->
       <FormItem :label="t('user.security.confirmPassword')" name="passwordConfirm">
         <InputPassword

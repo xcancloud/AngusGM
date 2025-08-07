@@ -614,7 +614,6 @@ onMounted(() => {
       rowKey="id"
       size="small"
       @change="tableChange">
-
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column,text, record }">
         <!-- User name with avatar and link to detail page -->

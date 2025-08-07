@@ -36,7 +36,7 @@ const { t } = useI18n();
         {{ t('user.validation.passwordLengthRange') }}
       </div>
     </div>
-    
+
     <!-- Password complexity requirement indicator -->
     <div class="flex items-start mt-4">
       <div class="w-3.5 mr-2">
@@ -53,7 +53,7 @@ const { t } = useI18n();
         {{ t('user.validation.passwordRequiredCombination') }}
       </div>
     </div>
-    
+
     <!-- Special character types information -->
     <div class="flex items-start mt-4">
       <div class="w-3.5 mr-2">
@@ -63,7 +63,7 @@ const { t } = useI18n();
         {{ t('user.validation.passwordSpecialCharType') }} /'"\:;~!@ #$%^&*()
       </div>
     </div>
-    
+
     <!-- Space restriction information -->
     <div class="flex items-start mt-4">
       <div class="w-3.5 mr-2">

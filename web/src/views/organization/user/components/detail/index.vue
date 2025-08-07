@@ -289,7 +289,6 @@ const userGridColumns = [
         :title="false"
         :avatar="{ size: 120, shape: 'square' }"
         :paragraph="{ rows: 4 }">
-        
         <!-- User information display -->
         <div v-if="userDetail" class="flex flex-1 space-x-10">
           <!-- User avatar and online status -->
@@ -303,7 +302,7 @@ const userGridColumns = [
               :text="`${userDetail.online ? t('common.status.online') : t('common.status.offline')}`"
               class="text-center" />
           </div>
-          
+
           <!-- User basic information grid -->
           <div class="ml-10 flex flex-col justify-between flex-1">
             <div class="text-4.5 leading-3.5 text-theme-title mb-3.5 font-bold">{{ userDetail.fullName }}</div>
@@ -311,7 +310,7 @@ const userGridColumns = [
           </div>
         </div>
       </Skeleton>
-      
+
       <!-- Action buttons for user operations -->
       <div v-if="!firstLoad && userDetail" class="flex space-x-3.5">
         <!-- Edit user button -->
@@ -319,33 +318,33 @@ const userGridColumns = [
           code="UserModify"
           :href="`/organization/user/edit/${userDetail.id}?source=detail`"
           :disabled="getOperationPermissions" />
-        
+
         <!-- Enable/Disable user button -->
         <ButtonAuth
           code="UserEnable"
           :disabled="getOperationPermissions"
           :showTextIndex="userDetail.enabled?1:0"
           @click="updateStatusConfirm" />
-        
+
         <!-- Delete user button -->
         <ButtonAuth
           code="UserDelete"
           :disabled="getOperationPermissions"
           @click="delUserConfirm" />
-        
+
         <!-- Lock/Unlock user button -->
         <ButtonAuth
           code="LockingUser"
           :disabled="getOperationPermissions"
           :showTextIndex="userDetail.locked?1:0"
           @click="lockingUser(!userDetail.locked)" />
-        
+
         <!-- Reset password button -->
         <ButtonAuth
           code="ResetPassword"
           :disabled="getOperationPermissions"
           @click="openUpdatePasswdModal" />
-        
+
         <!-- Set/Cancel system admin button -->
         <!-- TODO: English button text not working -->
         <ButtonAuth
@@ -355,14 +354,13 @@ const userGridColumns = [
           @click="setAdminConfirm" />
       </div>
     </PureCard>
-    
+
     <!-- Tabbed content area -->
     <PureCard class="flex-1 px-3.5 pb-3.5 pt-0 relative">
       <Tabs
         v-model:activeKey="activeKey"
         style="flex: 0 0 auto;"
         size="small">
-        
         <!-- Basic information tab -->
         <Tabs.TabPane
           key="1"
@@ -376,29 +374,29 @@ const userGridColumns = [
             <UserDetail :dataSource="userDetail" />
           </Skeleton>
         </Tabs.TabPane>
-        
+
         <!-- Associated departments tab -->
         <Tabs.TabPane key="2" :tab="t('user.tab.associatedDepartment')">
           <UserDept :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        
+
         <!-- Associated groups tab -->
         <Tabs.TabPane key="3" :tab="t('user.tab.associatedGroup')">
           <UserGroup :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        
+
         <!-- Associated tags tab -->
         <Tabs.TabPane key="4" :tab="t('user.tab.associatedTag')">
           <UserTag :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        
+
         <!-- Authorization policy tab -->
         <Tabs.TabPane key="5" :tab="t('user.tab.authPolicy')">
           <AuthorizationPolicy :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
       </Tabs>
     </PureCard>
-    
+
     <!-- User lock modal -->
     <AsyncComponent :visible="visible">
       <Lock
@@ -412,7 +410,7 @@ const userGridColumns = [
         @cancel="closeLockModal"
         @save="saveLock()" />
     </AsyncComponent>
-    
+
     <!-- Password reset modal -->
     <AsyncComponent :visible="state.updatePasswdVisible">
       <UpdatePassword

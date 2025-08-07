@@ -310,7 +310,6 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
-
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column, record }">
         <!-- Action buttons for each tag row -->

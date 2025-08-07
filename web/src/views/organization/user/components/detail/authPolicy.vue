@@ -302,7 +302,6 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
-
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column,text,record }">
         <!-- Policy name with description popover -->

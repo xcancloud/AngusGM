@@ -96,14 +96,14 @@ const gridColumns = [
         :status=" text ? 'success' : 'error' "
         :text=" text? t('common.status.enabled') : t('common.status.disabled') " />
     </template>
-    
+
     <!-- Locked status badge -->
     <template #locked="{text}">
       <Badge
         :status=" text ? 'error' : 'success' "
         :text=" text ? t('common.status.locked') : t('common.status.unlocked') " />
     </template>
-    
+
     <!-- Lock date range display -->
     <template v-if="props.dataSource?.locked" #lockStartDate="{text}">
       <div v-if="props.dataSource?.lockEndDate">

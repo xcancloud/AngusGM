@@ -103,7 +103,7 @@ export interface UserState {
  * Search option type definitions
  * Defines all available search field types for the SearchPanel component
  */
-export type SearchOptionType = 
+export type SearchOptionType =
   | 'input' // Text input field
   | 'select-enum' // Dropdown with enum values
   | 'date-range' // Date range picker

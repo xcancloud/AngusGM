@@ -37,26 +37,26 @@ const formRef = ref();
 /**
  * Reactive state management for component
  */
-  const userId = ref<string>(route.params.id as string); // Current user ID for editing
-  const source = ref<'home' | 'detail'>(route.query.source as 'home' | 'detail'); // Source page for navigation
-  const formState = ref<FormState>({
-    address: '',
-    avatar: '',
-    country: 'CN',
-    email: '',
-    firstName: '',
-    fullName: '',
-    gender: Gender.UNKNOWN,
-    itc: '86',
-    landline: '',
-    lastName: '',
-    mobile: null,
-    password: '',
-    sysAdmin: false,
-    title: '',
-    username: '',
-    confirmPassword: undefined
-  });
+const userId = ref<string>(route.params.id as string); // Current user ID for editing
+const source = ref<'home' | 'detail'>(route.query.source as 'home' | 'detail'); // Source page for navigation
+const formState = ref<FormState>({
+  address: '',
+  avatar: '',
+  country: 'CN',
+  email: '',
+  firstName: '',
+  fullName: '',
+  gender: Gender.UNKNOWN,
+  itc: '86',
+  landline: '',
+  lastName: '',
+  mobile: null,
+  password: '',
+  sysAdmin: false,
+  title: '',
+  username: '',
+  confirmPassword: undefined
+});
 
 /**
  * Password strength validation state
