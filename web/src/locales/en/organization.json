@@ -163,17 +163,6 @@
         "copyTokenWarning": "Token \"{name}\" has been created. You will not be able to see the generated Token again, please make sure to copy the Token now.",
         "tokenCount": "Ten tokens have {total} added"
       }
-    },
-    "messages": {
-      "title": "Messages",
-      "total": "Total",
-      "unread": "Unread",
-      "read": "Read",
-      "markRead": "Mark as Read",
-      "selectAll": "Select All",
-      "sender": "Sender",
-      "selected": "Selected",
-      "noMessages": "No messages"
     }
   },
   "department": {

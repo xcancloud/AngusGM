@@ -163,17 +163,6 @@
         "copyTokenWarning": "令牌\"{name}\"已创建。您将无法再次看到生成的Token，请确保\"立即复制Token\"。",
         "tokenCount": "十个令牌已添加{total}个"
       }
-    },
-    "messages": {
-      "title": "消息",
-      "total": "总计",
-      "unread": "未读",
-      "read": "已读",
-      "markRead": "标记为已读",
-      "selectAll": "全选",
-      "sender": "发送者",
-      "selected": "已选择",
-      "noMessages": "暂无消息"
     }
   },
   "department": {

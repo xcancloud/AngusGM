@@ -9,11 +9,19 @@ import { debounce } from 'throttle-debounce';
 import { auth } from '@/api';
 import { SearchParams } from './PropsType';
 
+/**
+ * Async component for policy modal
+ * Loaded only when needed to improve performance
+ */
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
 
+/**
+ * Component props interface
+ * Defines the properties passed to the authorization policy component
+ */
 interface Props {
-  userId: string;
-  hasAuth: boolean;
+  userId: string; // User ID for policy management
+  hasAuth: boolean; // Whether user has permission to modify policies
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -21,13 +29,22 @@ const props = withDefaults(defineProps<Props>(), {
   hasAuth: false
 });
 
+// Internationalization setup
 const { t } = useI18n();
 
-const loading = ref(false);
-const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
-const total = ref(0);
-const dataList = ref([]);
+/**
+ * Reactive state management for component
+ */
+const loading = ref(false); // Loading state for API calls
+const disabled = ref(false); // Disabled state for buttons during operations
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const total = ref(0); // Total number of policies for pagination
+const dataList = ref([]); // Policy list data
+
+/**
+ * Load user policies from API
+ * Handles loading state and error handling
+ */
 const getUserPolicy = async () => {
   if (loading.value) {
     return;
@@ -43,12 +60,28 @@ const getUserPolicy = async () => {
   total.value = +data.total;
 };
 
-const policyVisible = ref(false);
+/**
+ * Modal state management for policy operations
+ */
+const policyVisible = ref(false); // Policy modal visibility
+
+/**
+ * Open policy modal for adding new policies
+ */
 const addPolicy = () => {
   policyVisible.value = true;
 };
 
+/**
+ * Loading state for policy update operations
+ */
 const updateLoading = ref(false);
+
+/**
+ * Handle policy save from modal
+ * Processes selected policy IDs and calls add function
+ * @param addIds - Array of policy IDs to add
+ */
 const policySave = (addIds: string[]) => {
   if (!addIds.length) {
     return;
@@ -56,6 +89,11 @@ const policySave = (addIds: string[]) => {
   addUserPolicy(addIds);
 };
 
+/**
+ * Add policies to user
+ * Calls API to associate policies with user
+ * @param _addIds - Array of policy IDs to add
+ */
 const addUserPolicy = async (_addIds: string[]) => {
   updateLoading.value = true;
   const [error] = await auth.addUserPolicy(props.userId, _addIds);
@@ -69,6 +107,11 @@ const addUserPolicy = async (_addIds: string[]) => {
   disabled.value = false;
 };
 
+/**
+ * Cancel/Remove policy from user
+ * Calls API to remove policy association
+ * @param id - Policy ID to remove
+ */
 const handleCancel = async (id) => {
   if (loading.value) {
     return;
@@ -80,6 +123,7 @@ const handleCancel = async (id) => {
   if (error) {
     return;
   }
+  // Recalculate current page after deletion
   params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
 
   disabled.value = true;
@@ -87,6 +131,11 @@ const handleCancel = async (id) => {
   disabled.value = false;
 };
 
+/**
+ * Handle search input with debouncing
+ * Filters policies by name with end matching
+ * @param event - Input change event
+ */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
@@ -101,6 +150,13 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   disabled.value = false;
 });
 
+/**
+ * Handle table pagination, sorting, and filtering changes
+ * Updates parameters and reloads data based on table interactions
+ * @param _pagination - Pagination object from table
+ * @param _filters - Filter object from table
+ * @param sorter - Sorting object from table
+ */
 const handleChange = async (_pagination, _filters, sorter) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -112,6 +168,12 @@ const handleChange = async (_pagination, _filters, sorter) => {
   disabled.value = false;
 };
 
+/**
+ * Get authorization type display text
+ * Combines default and open authorization types
+ * @param record - Policy record object
+ * @returns Formatted authorization type string
+ */
 const getAuthorizationType = (record) => {
   const resultArr: string[] = [];
   if (record.currentDefault) {
@@ -123,6 +185,10 @@ const getAuthorizationType = (record) => {
   return resultArr.join(',');
 };
 
+/**
+ * Computed pagination object for table component
+ * Provides reactive pagination data to the table
+ */
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -131,10 +197,18 @@ const pagination = computed(() => {
   };
 });
 
+/**
+ * Lifecycle hook - initialize component on mount
+ * Loads initial policy data
+ */
 onMounted(() => {
   getUserPolicy();
 });
 
+/**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
 const columns = [
   {
     title: t('permission.authPolicies.id'),
@@ -185,8 +259,12 @@ const columns = [
 </script>
 <template>
   <div>
+    <!-- Authorization policy hints -->
     <Hints :text="t('permission.authPolicies.authTip')" class="mb-1" />
+    
+    <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">
+      <!-- Policy name search input -->
       <Input
         :placeholder="t('permission.placeholder.policyName')"
         class="w-60"
@@ -196,7 +274,10 @@ const columns = [
           <Icon class="text-theme-content text-theme-text-hover text-3 leading-3" icon="icon-sousuo" />
         </template>
       </Input>
+      
+      <!-- Action buttons -->
       <div class="flex items-center">
+        <!-- Add policy button -->
         <ButtonAuth
           code="AuthorizeUser"
           type="primary"
@@ -204,12 +285,16 @@ const columns = [
           class="mr-2"
           :disabled="props.hasAuth || total>=10"
           @click="addPolicy" />
+        
+        <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
           :disabled="disabled"
           @click="getUserPolicy" />
       </div>
     </div>
+    
+    <!-- Policy data table -->
     <Table
       size="small"
       :loading="loading"
@@ -218,7 +303,10 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
+      
+      <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column,text,record }">
+        <!-- Policy name with description popover -->
         <template v-if="column.dataIndex === 'name'">
           <div class="w-full truncate cursor-pointer">
             <Popover
@@ -234,6 +322,8 @@ const columns = [
             </Popover>
           </div>
         </template>
+        
+        <!-- Organization type display -->
         <template v-if="column.dataIndex === 'orgType'">
           <template v-if="['USER','DEPT','GROUP'].includes(text?.value)">
             {{ text?.message }}({{ record.orgName }})
@@ -242,6 +332,8 @@ const columns = [
             {{ getAuthorizationType(record) }}
           </template>
         </template>
+        
+        <!-- Action buttons for each policy row -->
         <template v-if="column.dataIndex === 'action'">
           <ButtonAuth
             code="UserAuthorizeCancel"
@@ -253,6 +345,8 @@ const columns = [
       </template>
     </Table>
   </div>
+  
+  <!-- Policy modal for adding new policies -->
   <AsyncComponent :visible="policyVisible">
     <PolicyModal
       v-if="policyVisible"

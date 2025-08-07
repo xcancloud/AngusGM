@@ -7,12 +7,16 @@ import { Icon, Modal, Select, Tree } from '@xcan-angus/vue-ui';
 import { DataType } from '@/views/organization/dept/PropsType';
 import { dept, orgTag, user } from '@/api';
 
+/**
+ * Component props interface
+ * Defines the properties passed to the department modal component
+ */
 interface Props {
-  visible: boolean;
-  updateLoading?: boolean;
-  type?: 'User' | 'Group' | 'Tag'
-  userId?: string;
-  tagId?: string;
+  visible: boolean; // Modal visibility flag
+  updateLoading?: boolean; // Loading state for update operations
+  type?: 'User' | 'Group' | 'Tag' // Type of association (User, Group, or Tag)
+  userId?: string; // User ID for user associations
+  tagId?: string; // Tag ID for tag associations
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,28 +27,49 @@ const props = withDefaults(defineProps<Props>(), {
   tagId: undefined
 });
 
+/**
+ * Component emits definition
+ * Defines events that this component can emit to parent
+ */
 const emit = defineEmits<{
-  (e: 'update:visible', value: boolean): void,
-  (e: 'change', ids: string[], delIds: string[]): void
+  (e: 'update:visible', value: boolean): void, // Update modal visibility
+  (e: 'change', ids: string[], delIds: string[]): void // Handle department changes
 }>();
 
+// Internationalization setup
 const { t } = useI18n();
 
+/**
+ * Handle modal confirmation
+ * Calculates added and deleted department IDs and emits change event
+ */
 const handleOk = () => {
   const addIds = checkedKeys.value.filter(item => !oldDeptIds.value.includes(item));
   const delIds = oldDeptIds.value.filter(item => !checkedKeys.value.includes(item));
   emit('change', addIds, delIds);
 };
 
+/**
+ * Handle modal cancellation
+ * Emits update event to close modal
+ */
 const handleCancel = () => {
   emit('update:visible', false);
 };
 
-const params = ref<{ tagId?: string, fullTextSearch: boolean }>({ fullTextSearch: true });
-const notify = ref(0);
-const oldDeptIds = ref<string[]>([]);
-const checkedKeys = ref<string[]>([]);
+/**
+ * Reactive state management for component
+ */
+const params = ref<{ tagId?: string, fullTextSearch: boolean }>({ fullTextSearch: true }); // Search parameters
+const notify = ref(0); // Notification counter for tree refresh
+const oldDeptIds = ref<string[]>([]); // Previously selected department IDs
+const checkedKeys = ref<string[]>([]); // Currently checked department keys
 
+/**
+ * Load user departments for association
+ * Fetches existing department associations for a user
+ * @param ids - Array of department IDs to check
+ */
 const loadUserDept = async (ids): Promise<void> => {
   const listParams = {
     filters: [{ key: 'deptId', op: 'IN', value: ids }]
@@ -60,6 +85,11 @@ const loadUserDept = async (ids): Promise<void> => {
   oldDeptIds.value.push(...deptIds);
 };
 
+/**
+ * Load tag departments for association
+ * Fetches existing department associations for a tag
+ * @param ids - Array of department IDs to check
+ */
 const loadTagDept = async (ids): Promise<void> => {
   const listParams = {
     tagId: props.tagId,
@@ -77,6 +107,11 @@ const loadTagDept = async (ids): Promise<void> => {
   oldDeptIds.value.push(...deptIds);
 };
 
+/**
+ * Handle tree node loading completion
+ * Loads existing associations when new departments are loaded
+ * @param options - Array of loaded department options
+ */
 const loaded = (options) => {
   if (!options.length) {
     return;
@@ -95,6 +130,11 @@ const loaded = (options) => {
   }
 };
 
+/**
+ * Handle tag selection change
+ * Updates search parameters when tag filter changes
+ * @param value - Selected tag ID
+ */
 const tagChange = (value) => {
   if (value) {
     params.value.tagId = value;
@@ -106,7 +146,15 @@ const tagChange = (value) => {
   notify.value++;
 };
 
+/**
+ * Tag selection state
+ */
 const selectTagId = ref(undefined);
+
+/**
+ * Computed search parameters for department selection
+ * Includes tag filter if selected
+ */
 const getSearchDeptParams = computed(() => {
   return {
     tagId: selectTagId.value,
@@ -114,7 +162,16 @@ const getSearchDeptParams = computed(() => {
   };
 });
 
+/**
+ * Tree data for department hierarchy display
+ */
 const treeData = ref<DataType[]>([]);
+
+/**
+ * Handle department selection change
+ * Loads department hierarchy and existing associations
+ * @param value - Selected department ID
+ */
 const deptChange = async (value: string) => {
   if (!value) {
     notify.value++;
@@ -130,6 +187,7 @@ const deptChange = async (value: string) => {
 };
 </script>
 <template>
+  <!-- Department association modal -->
   <Modal
     :title="t('department.assocTitle')"
     :visible="props.visible"
@@ -140,8 +198,11 @@ const deptChange = async (value: string) => {
     class="my-modal"
     @cancel="handleCancel"
     @ok="handleOk">
+    
     <div class="-mt-3 pl-3">
+      <!-- Search and filter controls -->
       <div class="flex mb-2">
+        <!-- Department selection dropdown -->
         <Select
           :placeholder="t('department.placeholder.name')"
           :action="`${GM}/dept`"
@@ -152,6 +213,8 @@ const deptChange = async (value: string) => {
           :allowClear="true"
           :fieldNames="{ label: 'name', value: 'id' }"
           @change="deptChange" />
+        
+        <!-- Tag filter dropdown -->
         <Select
           v-model:value="selectTagId"
           :placeholder="t('department.placeholder.tag')"
@@ -163,6 +226,8 @@ const deptChange = async (value: string) => {
           class="w-1/2"
           @change="tagChange" />
       </div>
+      
+      <!-- Table header -->
       <div class="flex py-1 bg-theme-form-head text-theme-title text-3 font-normal">
         <div class="w-1/2 pl-10 mr-2">
           {{ t('department.columns.name') }}
@@ -171,6 +236,8 @@ const deptChange = async (value: string) => {
           {{ t('department.columns.code') }}
         </div>
       </div>
+      
+      <!-- Department tree with checkboxes -->
       <Tree
         v-model:checkedKeys="checkedKeys"
         :action="`${GM}/dept?`"
@@ -182,6 +249,8 @@ const deptChange = async (value: string) => {
         class="-ml-5"
         style="height: 308px;"
         @loaded="loaded">
+        
+        <!-- Custom tree node template -->
         <template #default="item">
           <div class="flex">
             <div class="w-1/2 truncate mr-2" :title="item.name">

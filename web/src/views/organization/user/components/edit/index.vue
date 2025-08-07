@@ -14,45 +14,71 @@ import { FormState } from '../../PropsType';
 
 import { user } from '@/api';
 
+/**
+ * Async component for password strength tips
+ * Loaded only when needed to improve performance
+ */
 const PasswordTip = defineAsyncComponent(() => import('@/views/organization/user/components/passwordTip/index.vue'));
 
+/**
+ * Function type for updating user information
+ * Used for dependency injection pattern
+ */
 type Fuc = (args: Record<string, any>) => void;
 
-// TODO 用户编辑页面和列表表格字体不一致，将UI组件字体大小统一修改成12px吗
+// TODO: User edit page and list table font sizes are inconsistent, should we unify UI component font sizes to 12px?
 
+// Routing and internationalization setup
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 const formRef = ref();
 
-const userId = ref<string>(route.params.id as string);
-const source = ref<'home' | 'detail'>(route.query.source as 'home' | 'detail');
-const formState = ref<FormState>({
-  address: '',
-  avatar: '',
-  country: 'CN',
-  email: '',
-  firstName: '',
-  fullName: '',
-  gender: Gender.UNKNOWN,
-  itc: '86',
-  landline: '',
-  lastName: '',
-  mobile: '',
-  password: '',
-  sysAdmin: false,
-  title: '',
-  username: '',
-  confirmPassword: ''
-});
-const state = reactive<{ length: boolean, chart: boolean }>({ length: false, chart: false });
+/**
+ * Reactive state management for component
+ */
+  const userId = ref<string>(route.params.id as string); // Current user ID for editing
+  const source = ref<'home' | 'detail'>(route.query.source as 'home' | 'detail'); // Source page for navigation
+  const formState = ref<FormState>({
+    address: '',
+    avatar: '',
+    country: 'CN',
+    email: '',
+    firstName: '',
+    fullName: '',
+    gender: Gender.UNKNOWN,
+    itc: '86',
+    landline: '',
+    lastName: '',
+    mobile: null,
+    password: '',
+    sysAdmin: false,
+    title: '',
+    username: '',
+    confirmPassword: undefined
+  });
 
-const loading = ref(false);
+/**
+ * Password strength validation state
+ */
+const state = reactive<{ length: boolean, chart: boolean }>({
+  length: false, // Password length validation status
+  chart: false // Password complexity validation status
+});
+
+const loading = ref(false); // Loading state for form submission
+
+/**
+ * Add new user to system
+ * Handles form validation, API call, and navigation
+ * @param isContinueAdd - Whether to continue adding after successful submission
+ */
 const addUser = async (isContinueAdd?: boolean) => {
   if (loading.value) {
     return;
   }
 
+  // Auto-generate full name from first and last name
   const _firstName = formState.value.firstName;
   const _lastName = formState.value.lastName;
   const _fullName = formState.value.fullName;
@@ -66,10 +92,12 @@ const addUser = async (isContinueAdd?: boolean) => {
     }
   }
 
+  // Handle null mobile number
   if (!formState.value.mobile) {
     formState.value.mobile = null;
   }
 
+  // Remove confirmation password from submission
   delete formState.value.confirmPassword;
   loading.value = true;
   const [error] = await user.addUser(formState.value);
@@ -78,7 +106,8 @@ const addUser = async (isContinueAdd?: boolean) => {
     return;
   }
   notification.success(t('common.messages.addSuccess'));
-  // 继续添加不跳转
+
+  // Continue adding without navigation
   if (isContinueAdd) {
     formRef.value.resetFields();
     return;
@@ -86,17 +115,29 @@ const addUser = async (isContinueAdd?: boolean) => {
   router.push('/organization/user');
 };
 
+/**
+ * Injected function for updating user information
+ * TODO: Entry point not found
+ */
 const updateUserInfo: Fuc | undefined = inject('updateUserInfo'); // TODO 没有找到入口
+
+/**
+ * Update existing user information
+ * Handles form validation, API call, and navigation
+ */
 const patchGroup = async () => {
   if (loading.value) {
     return;
   }
+
+  // Check if form data has changed
   const isEqual = utils.deepCompare(oldDetail.value as FormState, formState.value);
   if (isEqual) {
     router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
     return;
   }
 
+  // Handle password field for updates
   if (formState.value.confirmPassword === '********' || !formState.value.confirmPassword) {
     delete formState.value.confirmPassword;
   }
@@ -105,6 +146,7 @@ const patchGroup = async () => {
     formState.value.mobile = null;
   }
 
+  // Prepare update parameters
   const { password, ...others } = formState.value;
   let params = {};
   if (password === '********' || !password) {
@@ -118,6 +160,7 @@ const patchGroup = async () => {
       id: userId.value
     };
   }
+
   loading.value = true;
   const [error] = await user.updateUser(params);
   loading.value = false;
@@ -125,7 +168,9 @@ const patchGroup = async () => {
     return;
   }
   notification.success(t('common.messages.editSuccess'));
-  if (userId.value && userId.value === appContext.getUser()?.id) {
+
+  // Update current user context if editing own profile
+  if (userId.value && userId.value === appContext.getUser()?.id?.toString()) {
     if (typeof updateUserInfo === 'function') {
       const temp = {
         ...appContext.getUser(),
@@ -137,7 +182,10 @@ const patchGroup = async () => {
   router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
 };
 
-// 提交表单
+/**
+ * Handle form submission
+ * Routes to appropriate function based on whether adding or editing
+ */
 const onFinish = () => {
   if (userId.value) {
     patchGroup();
@@ -146,33 +194,60 @@ const onFinish = () => {
   addUser(false);
 };
 
+/**
+ * Continue adding users after successful submission
+ * Validates form and calls addUser with continue flag
+ */
 const continueAdd = () => {
   formRef.value.validate().then(async () => {
     addUser(true);
   });
 };
 
+/**
+ * Avatar upload configuration and state
+ */
 const uploadParams = {
   bizKey: 'avatar'
 };
-const uploadVisible = ref(false);
+const uploadVisible = ref(false); // Avatar upload modal visibility
+
+/**
+ * Open avatar upload modal
+ */
 const openUploadModal = () => {
   uploadVisible.value = true;
 };
 
-// 上传成功
+/**
+ * Handle successful avatar upload
+ * @param value - Upload response data
+ */
 const uploadSuccess = (value) => {
   formState.value.avatar = value?.data[0]?.url;
   uploadVisible.value = false;
 };
 
+/**
+ * Handle avatar upload error
+ */
 const uploadError = () => {
   uploadVisible.value = false;
 };
 
+/**
+ * Password validation rule configuration
+ * Dynamic validation based on whether editing or creating
+ */
 const passwordRule = ref({
-  required: !userId.value, validator: (rule, value) => passwordValidator(rule, value)
+  required: !userId.value,
+  validator: (rule, value) => passwordValidator(rule, value)
 });
+
+/**
+ * Password validation function
+ * Validates password requirements and strength
+ */
 const passwordValidator = (_rule, value) => {
   if (userId.value && (value === '********' || !value)) {
     return Promise.resolve();
@@ -189,9 +264,18 @@ const passwordValidator = (_rule, value) => {
   return Promise.resolve();
 };
 
+/**
+ * Password confirmation validation rule configuration
+ */
 const confirmPasswordRule = ref({
-  required: !userId.value, validator: (rule, value) => confirmPasswordValidator(rule, value)
+  required: !userId.value,
+  validator: (rule, value) => confirmPasswordValidator(rule, value)
 });
+
+/**
+ * Password confirmation validation function
+ * Ensures confirmation matches password
+ */
 const confirmPasswordValidator = (_rule, value) => {
   if (userId.value && (value === '********' || !formState.value.password || formState.value.password === '********')) {
     return Promise.resolve();
@@ -207,20 +291,24 @@ const confirmPasswordValidator = (_rule, value) => {
   return Promise.resolve();
 };
 
+/**
+ * Watch password changes to update validation rules
+ * Handles dynamic validation for edit mode
+ */
 watch(() => formState.value.password, (newValue) => {
   if (!userId.value) {
     formState.value.confirmPassword = undefined;
     return;
   }
 
-  // 编辑页面下 如果用户输入了密码 开启校验
+  // Enable validation when user enters password in edit mode
   if (newValue !== '********' && newValue) {
     passwordRule.value.required = true;
     confirmPasswordRule.value.required = true;
     formState.value.confirmPassword = undefined;
   }
 
-  // 如果输入为空，认为没有修改，并关闭校验
+  // Disable validation when password is empty or unchanged
   if (!newValue || newValue === '********') {
     passwordRule.value.required = false;
     confirmPasswordRule.value.required = false;
@@ -229,6 +317,10 @@ watch(() => formState.value.password, (newValue) => {
   }
 });
 
+/**
+ * Watch password confirmation changes
+ * Updates validation rules for confirmation field
+ */
 watch(() => formState.value.confirmPassword, () => {
   if (!userId.value || !formState.value.password || formState.value.password === '********') {
     return;
@@ -236,9 +328,18 @@ watch(() => formState.value.confirmPassword, () => {
   confirmPasswordRule.value.required = true;
 });
 
+/**
+ * Email validation rule configuration
+ */
 const emailRule = ref({
-  required: true, validator: (rule, value) => emailValidator(rule, value)
+  required: true,
+  validator: (rule, value) => emailValidator(rule, value)
 });
+
+/**
+ * Email validation function
+ * Validates email format and requirements
+ */
 const emailValidator = (_rule, value) => {
   if (!value) {
     return Promise.reject(new Error(t('user.validation.emailRequired')));
@@ -250,9 +351,18 @@ const emailValidator = (_rule, value) => {
   return Promise.resolve();
 };
 
+/**
+ * Mobile number validation rule configuration
+ */
 const mobileRule = ref({
-  required: false, validator: (rule, value) => mobileValidator(rule, value)
+  required: false,
+  validator: (rule, value) => mobileValidator(rule, value)
 });
+
+/**
+ * Mobile number validation function
+ * Validates phone number format based on country
+ */
 const mobileValidator = (_rule, value) => {
   if (!value) {
     return Promise.resolve();
@@ -262,8 +372,16 @@ const mobileValidator = (_rule, value) => {
   return Promise.resolve();
 };
 
-const userSource = ref();
-const oldDetail = ref<FormState>();
+/**
+ * User source and original data for comparison
+ */
+const userSource = ref(); // User source (LDAP, manual, etc.)
+const oldDetail = ref<FormState>(); // Original form data for change detection
+
+/**
+ * Load user detail information for editing
+ * Populates form with existing user data
+ */
 const loadUserDetail = async () => {
   if (loading.value) {
     return;
@@ -275,6 +393,8 @@ const loadUserDetail = async () => {
     return;
   }
   userSource.value = data.source?.value;
+
+  // Populate form fields with user data
   Object.keys(formState.value).every(item => {
     if (item === 'gender') {
       formState.value[item] = data[item].value;
@@ -289,6 +409,11 @@ const loadUserDetail = async () => {
   oldDetail.value = JSON.parse(JSON.stringify(formState.value));
 };
 
+/**
+ * Analyze password strength and update validation status
+ * Called on password input change
+ * @param e - Input change event
+ */
 const changeStrength = (e: { target: { value: string } }) => {
   const { value = '' } = e.target;
   const valArr = value.split('');
@@ -297,17 +422,34 @@ const changeStrength = (e: { target: { value: string } }) => {
   state.chart = typeNum >= 2;
 };
 
+/**
+ * Handle ITC (International Telephone Code) change
+ * Updates country code when ITC changes
+ * @param value - Selected ITC value
+ */
 const changeItc = (value: string) => {
   formState.value.itc = value;
   const item: { value: string, code: string } | undefined = itc.find((v: { value: string }) => v.value === value);
   formState.value.country = item ? item.code : 'country';
 };
 
+/**
+ * User gender options and loading function
+ */
 const userGender = ref<EnumMessage<Gender>[]>([]);
+
+/**
+ * Load gender enum options
+ */
 const loadUserGender = async () => {
   userGender.value = enumUtils.enumToMessages(Gender);
 };
 
+/**
+ * Handle first name changes with debouncing
+ * Auto-generates full name from first and last name
+ * @param event - Input change event
+ */
 const firstNameChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   const _lastName = formState.value.lastName;
@@ -325,6 +467,11 @@ const firstNameChange = debounce(duration.search, (event: any) => {
   formRef.value.clearValidate('fullName');
 });
 
+/**
+ * Handle last name changes with debouncing
+ * Auto-generates full name from first and last name
+ * @param event - Input change event
+ */
 const lastNameChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   const _firstName = formState.value.firstName;
@@ -342,6 +489,10 @@ const lastNameChange = debounce(duration.search, (event: any) => {
   formRef.value.clearValidate('fullName');
 });
 
+/**
+ * Lifecycle hook - initialize component on mount
+ * Loads user data for editing and gender options
+ */
 onMounted(() => {
   if (userId.value) {
     loadUserDetail();
@@ -352,6 +503,7 @@ onMounted(() => {
 </script>
 <template>
   <PureCard class="p-15 min-h-full">
+    <!-- User edit form -->
     <Form
       ref="formRef"
       size="small"
@@ -360,6 +512,7 @@ onMounted(() => {
       :model="formState"
       @finish="onFinish">
       <div class="flex space-x-10 5xl:space-x-20">
+        <!-- Avatar upload section -->
         <FormItem
           :labelCol="{span: 0}"
           :wrapperCol="{span: 24}"
@@ -381,8 +534,11 @@ onMounted(() => {
             <span>{{ t('user.uploadAvatarTip') }}</span>
           </Button>
         </FormItem>
+        <!-- Form fields section -->
         <div class="flex flex-1 space-x-10 5xl:space-x-20">
+          <!-- Left column - Basic information -->
           <div class="w-2/4 align-top flex-1">
+            <!-- Name fields -->
             <div class="flex flex-1 -mt-0.5 space-x-2">
               <FormItem
                 :label="t('user.profile.firstName')"
@@ -392,7 +548,7 @@ onMounted(() => {
                 <Input
                   v-model:value="formState.firstName"
                   size="small"
-                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                  :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
                   :maxlength="100"
                   :placeholder="t('user.placeholder.firstName')"
                   @change="firstNameChange" />
@@ -405,12 +561,14 @@ onMounted(() => {
                 <Input
                   v-model:value="formState.lastName"
                   size="small"
-                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                  :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
                   :maxlength="100"
                   :placeholder="t('user.placeholder.lastName')"
                   @change="lastNameChange" />
               </FormItem>
             </div>
+
+            <!-- Full name field -->
             <FormItem
               :label="t('user.profile.fullName')"
               :rules="[{ required: true, message: t('user.validation.nameRequired') }]"
@@ -418,10 +576,12 @@ onMounted(() => {
               <Input
                 v-model:value="formState.fullName"
                 size="small"
-                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
                 :maxlength="100"
                 :placeholder="t('user.placeholder.fullName')" />
             </FormItem>
+
+            <!-- Username field -->
             <FormItem
               :label="t('user.profile.username')"
               name="username"
@@ -434,6 +594,8 @@ onMounted(() => {
                 dataType="mixin-en"
                 includes="-_." />
             </FormItem>
+
+            <!-- Mobile phone field -->
             <FormItem
               :label="t('user.profile.mobile')"
               name="mobile"
@@ -442,12 +604,12 @@ onMounted(() => {
                 v-model:value="formState.mobile"
                 size="small"
                 :maxlength="11"
-                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
                 :placeholder="t('user.placeholder.mobile')">
                 <template #addonBefore>
                   <SelectItc
                     :value="formState.itc"
-                    :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                    :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
                     style="width: 100px;"
                     internal
                     size="small"
@@ -455,6 +617,8 @@ onMounted(() => {
                 </template>
               </Input>
             </FormItem>
+
+            <!-- Landline field -->
             <FormItem
               :label="t('user.profile.landline')"
               name="landline">
@@ -464,6 +628,8 @@ onMounted(() => {
                 :maxlength="40"
                 :placeholder="t('user.placeholder.landline')" />
             </FormItem>
+
+            <!-- Email field -->
             <FormItem
               :label="t('user.profile.email')"
               name="email"
@@ -471,10 +637,12 @@ onMounted(() => {
               <Input
                 v-model:value="formState.email"
                 size="small"
-                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
                 :maxlength="100"
                 :placeholder="t('user.placeholder.email')" />
             </FormItem>
+
+            <!-- Form action buttons -->
             <FormItem>
               <Button
                 :loading="loading"
@@ -498,7 +666,10 @@ onMounted(() => {
               </RouterLink>
             </FormItem>
           </div>
+
+          <!-- Right column - Additional information -->
           <div class="inline-block w-2/4 align-top">
+            <!-- Gender selection -->
             <FormItem
               :label="t('user.profile.gender')"
               name="gender">
@@ -511,6 +682,8 @@ onMounted(() => {
                 </Radio>
               </RadioGroup>
             </FormItem>
+
+            <!-- Password field (only for new users) -->
             <FormItem
               v-if="!userId"
               :label="t('user.profile.password')"
@@ -533,6 +706,8 @@ onMounted(() => {
                 </InputPassword>
               </Popover>
             </FormItem>
+
+            <!-- Password confirmation field (only for new users) -->
             <FormItem
               v-if="!userId"
               :label="t('user.profile.confirmPassword')"
@@ -546,6 +721,8 @@ onMounted(() => {
                 :placeholder="t('user.placeholder.confirmPassword')">
               </InputPassword>
             </FormItem>
+
+            <!-- Job title field -->
             <FormItem
               :label="t('user.profile.title')"
               name="title">
@@ -555,6 +732,8 @@ onMounted(() => {
                 :maxlength="100"
                 :placeholder="t('user.placeholder.title')" />
             </FormItem>
+
+            <!-- Address field -->
             <FormItem
               :label="t('user.profile.address')"
               name="address">
@@ -564,6 +743,8 @@ onMounted(() => {
                 :maxlength="200"
                 :placeholder="t('user.placeholder.address')" />
             </FormItem>
+
+            <!-- System admin role selection -->
             <FormItem
               :label="t('user.profile.identity')"
               name="sysAdmin">
@@ -581,7 +762,9 @@ onMounted(() => {
     </Form>
   </PureCard>
 </template>
+
 <style scoped>
+/* Custom styling for input group addon */
 :deep(.ant-input-group-addon) {
   border-color: var(--border-text-box);
 }

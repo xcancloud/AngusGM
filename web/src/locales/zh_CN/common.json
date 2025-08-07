@@ -92,8 +92,10 @@
     "messages": {
       "confirmDelete": "确认是否删除`{name}`?",
       "deleteSuccess": "删除成功",
+      "deleteFailed": "删除失败",
       "addSuccess": "添加成功",
       "editSuccess": "修改成功",
+      "editFailed": "修改失败",
       "confirmEnable": "确定启用`{name}`吗？",
       "enableSuccess": "启用成功",
       "confirmDisable": "确定禁用`{name}`吗？",
@@ -102,6 +104,7 @@
       "unlockTip": "确定解锁`{name}`吗？",
       "lockSuccess": "锁定成功",
       "unlockSuccess": "解锁成功",
+      "unlockFailed": "解锁失败",
       "cancelAdminTip": "确定设置`{name}`为一般用户吗？",
       "setAdminTip": "确定设置`{name}`为系统管理员吗？",
       "copySuccess": "复制成功",

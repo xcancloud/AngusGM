@@ -5,15 +5,25 @@ import { Badge } from 'ant-design-vue';
 
 import { Detail } from './PropsType';
 
+/**
+ * Component props interface
+ * Defines the properties passed to the user detail component
+ */
 interface Props {
-  dataSource: Detail
+  dataSource: Detail // User detail data to display
 }
 
 const props = withDefaults(defineProps<Props>(), {
   dataSource: undefined
 });
 
+// Internationalization setup
 const { t } = useI18n();
+
+/**
+ * Grid columns configuration for user information display
+ * Defines the layout and fields for user info grid
+ */
 const gridColumns = [
   [
     {
@@ -78,17 +88,23 @@ const gridColumns = [
 ];
 </script>
 <template>
+  <!-- User detail information grid -->
   <Grid :columns="gridColumns" :dataSource="props.dataSource">
+    <!-- Enabled status badge -->
     <template #enabled="{text}">
       <Badge
         :status=" text ? 'success' : 'error' "
         :text=" text? t('common.status.enabled') : t('common.status.disabled') " />
     </template>
+    
+    <!-- Locked status badge -->
     <template #locked="{text}">
       <Badge
         :status=" text ? 'error' : 'success' "
         :text=" text ? t('common.status.locked') : t('common.status.unlocked') " />
     </template>
+    
+    <!-- Lock date range display -->
     <template v-if="props.dataSource?.locked" #lockStartDate="{text}">
       <div v-if="props.dataSource?.lockEndDate">
         {{ text }} - {{ props.dataSource?.lockEndDate }}

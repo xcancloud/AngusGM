@@ -92,8 +92,10 @@
     "messages": {
       "confirmDelete": "Are you sure to delete `{name}`?",
       "deleteSuccess": "Delete successfully",
+      "deleteFailed": "Delete failed",
       "addSuccess": "Add successfully",
       "editSuccess": "Edit successfully",
+      "editFailed": "Edit failed",
       "confirmEnable": "Are you sure you want to enable `{name}`?",
       "enableSuccess": "Enable successfully",
       "confirmDisable": "Are you sure you want to disable `{name}`?",
@@ -102,6 +104,7 @@
       "unlockTip": "Are you sure you want to unlock `{name}`?",
       "lockSuccess": "Lock successfully",
       "unlockSuccess": "Unlock successfully",
+      "unlockFailed": "Unlock failed",
       "cancelAdminTip": "Are you sure you want to set `{name}` as a general user?",
       "setAdminTip": "Are you sure you want to set `{name}` as a system administrator?",
       "copySuccess": "Copy successfully",

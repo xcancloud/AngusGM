@@ -11,20 +11,30 @@ import { app, appContext, GM, utils, Enabled, UserSource, SearchCriteria, PageQu
 import { User, UserState, SearchOption } from './PropsType';
 import { user } from '@/api';
 
-// Async component definitions for lazy loading
+/**
+ * Async component definitions for lazy loading
+ * These components are loaded only when needed to improve initial page load performance
+ */
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/components/password/index.vue'));
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 
-// Reactive data and state management
+// Internationalization setup
 const { t } = useI18n();
+
+/**
+ * Reactive state management for component UI and data
+ */
 const showCount = ref(true); // Controls statistics panel visibility
 const loading = ref(false); // Loading state for table operations
 const disabled = ref(false); // Disabled state for buttons during operations
 const total = ref(0); // Total number of users for pagination
 const userList = ref<User[]>([]); // User list data
 
-// Pagination and search parameters
+/**
+ * Pagination and search parameters
+ * Manages current page, page size, filters, and search criteria
+ */
 const params = ref<PageQuery>({
   pageNo: 1,
   pageSize: 10,
@@ -32,14 +42,20 @@ const params = ref<PageQuery>({
   fullTextSearch: true
 });
 
-// Modal state management
+/**
+ * Modal state management
+ * Controls visibility and data for various modals in the component
+ */
 const state = reactive<UserState>({
   updatePasswdVisible: false, // Password reset modal visibility
   lockModalVisible: false, // User lock modal visibility
-  currentUserId: undefined // Currently selected user ID
+  currentUserId: undefined // Currently selected user ID for modal operations
 });
 
-// Computed pagination object for table
+/**
+ * Computed pagination object for table component
+ * Provides reactive pagination data to the table
+ */
 const pagination = computed(() => ({
   current: params.value.pageNo,
   pageSize: params.value.pageSize,
@@ -48,16 +64,17 @@ const pagination = computed(() => ({
 
 /**
  * Check operation permissions based on user's system admin status
+ * Non-system admins cannot modify system administrator accounts
  * @param sysAdmin - Whether the user is a system administrator
- * @returns Whether the operation is disabled
+ * @returns Whether the operation should be disabled
  */
 const getOperationPermissions = (sysAdmin: boolean): boolean => {
   return !appContext.isSysAdmin() && sysAdmin;
 };
 
 /**
- * Load user list from API
- * Handles loading state and error notifications
+ * Load user list from API with error handling
+ * Handles loading state and displays error notifications on failure
  */
 const loadUserList = async (): Promise<void> => {
   try {
@@ -65,14 +82,14 @@ const loadUserList = async (): Promise<void> => {
     const [error, { data = { list: [], total: 0 } }] = await user.getUserList(params.value);
 
     if (error) {
-      notification.error('加载用户列表失败');
+      notification.error('Failed to load user list');
       return;
     }
 
     userList.value = data.list;
     total.value = +data.total;
   } catch (error) {
-    notification.error('加载用户列表失败');
+    notification.error('Failed to load user list');
   } finally {
     loading.value = false;
   }
@@ -80,7 +97,7 @@ const loadUserList = async (): Promise<void> => {
 
 /**
  * Initialize component data
- * Sets disabled state during initialization
+ * Sets disabled state during initialization to prevent user interaction
  */
 const init = async (): Promise<void> => {
   disabled.value = true;
@@ -92,12 +109,12 @@ const init = async (): Promise<void> => {
 };
 
 /**
- * Handle search criteria changes
- * Resets pagination and reloads data with new filters
- * @param data - Search criteria array
+ * Handle search criteria changes from SearchPanel component
+ * Resets pagination to first page and reloads data with new filters
+ * @param data - Search criteria array from SearchPanel
  */
 const searchChange = async (data: SearchCriteria[]): Promise<void> => {
-  params.value.pageNo = 1; // Reset to first page
+  params.value.pageNo = 1; // Reset to first page when search criteria changes
   params.value.filters = data;
   disabled.value = true;
   try {
@@ -109,9 +126,10 @@ const searchChange = async (data: SearchCriteria[]): Promise<void> => {
 
 /**
  * Handle table pagination, sorting, and filtering changes
- * @param _pagination - Pagination object
- * @param _filters - Filter object
- * @param sorter - Sorting object
+ * Updates parameters and reloads data based on table interactions
+ * @param _pagination - Pagination object from table
+ * @param _filters - Filter object from table
+ * @param sorter - Sorting object from table
  */
 const tableChange = async (_pagination: any, _filters: any, sorter: any): Promise<void> => {
   const { current, pageSize } = _pagination;
@@ -130,15 +148,16 @@ const tableChange = async (_pagination: any, _filters: any, sorter: any): Promis
 
 /**
  * Show confirmation modal for setting/canceling system administrator
+ * Provides user confirmation before changing system admin status
  * @param id - User ID
- * @param name - User name
+ * @param name - User name for display in confirmation message
  * @param sysAdmin - Current system admin status
  */
 const setAdminConfirm = (id: string, name: string, sysAdmin: boolean): void => {
   modal.confirm({
     centered: true,
-    title: sysAdmin ? t('cancelAdministrator') : t('setupAdministrator'),
-    content: sysAdmin ? t('userTip2', { name }) : t('userTip3', { name }),
+    title: sysAdmin ? t('user.actions.cancelAdmin') : t('user.actions.setAdmin'),
+    content: sysAdmin ? t('common.messages.cancelAdminTip', { name }) : t('common.messages.setAdminTip', { name }),
     async onOk () {
       await updateSysAdmin(id, sysAdmin);
     }
@@ -147,35 +166,35 @@ const setAdminConfirm = (id: string, name: string, sysAdmin: boolean): void => {
 
 /**
  * Update user's system administrator status
+ * Toggles the system admin flag and refreshes the user list
  * @param id - User ID
  * @param sysAdmin - Current system admin status
  */
 const updateSysAdmin = async (id: string, sysAdmin: boolean): Promise<void> => {
   try {
     const [error] = await user.updateUserSysAdmin({ id, sysAdmin: !sysAdmin });
-
     if (error) {
-      notification.error('修改失败');
+      notification.error(t('common.messages.editFailed'));
       return;
     }
-
     notification.success(t('common.messages.editSuccess'));
     await refreshUserList();
   } catch (error) {
-    notification.error('修改失败');
+    notification.error(t('common.messages.editFailed'));
   }
 };
 
 /**
  * Show confirmation modal for user deletion
+ * Provides user confirmation before deleting a user account
  * @param id - User ID
- * @param name - User name
+ * @param name - User name for display in confirmation message
  */
 const delUserConfirm = (id: string, name: string): void => {
   modal.confirm({
     centered: true,
-    title: t('delUser'),
-    content: t('userTip4', { name }),
+    title: t('user.actions.deleteUser'),
+    content: t('common.messages.confirmDelete', { name }),
     async onOk () {
       await delUser(id);
     }
@@ -184,20 +203,18 @@ const delUserConfirm = (id: string, name: string): void => {
 
 /**
  * Delete user from system
- * Handles pagination recalculation after deletion
- * @param id - User ID
+ * Handles pagination recalculation after deletion to maintain proper page state
+ * @param id - User ID to delete
  */
 const delUser = async (id: string): Promise<void> => {
   try {
     const [error] = await user.deleteUser([id]);
-
     if (error) {
-      notification.error('删除失败');
+      notification.error(t('user.messages.deleteFailed'));
       return;
     }
-
-    notification.success('删除成功');
-    // Recalculate current page after deletion
+    notification.error(t('user.messages.deleteSuccess'));
+    // Recalculate current page after deletion to handle edge cases
     params.value.pageNo = utils.getCurrentPage(
       params.value.pageNo as number,
       params.value.pageSize as number,
@@ -205,21 +222,22 @@ const delUser = async (id: string): Promise<void> => {
     );
     await refreshUserList();
   } catch (error) {
-    notification.error('删除失败');
+    notification.error(t('user.messages.deleteFailed'));
   }
 };
 
 /**
  * Show confirmation modal for enabling/disabling user
+ * Provides user confirmation before changing user enabled status
  * @param id - User ID
- * @param name - User name
+ * @param name - User name for display in confirmation message
  * @param enabled - Current enabled status
  */
 const updateStatusConfirm = (id: string, name: string, enabled: boolean): void => {
   modal.confirm({
     centered: true,
-    title: enabled ? t('disable') : t('enable'),
-    content: enabled ? `确定禁用【${name}】吗？` : `确定启用【${name}】吗？`,
+    title: enabled ? t('common.status.disabled') : t('common.status.enabled'),
+    content: enabled ? t('common.messages.confirmDisable', { name }) : t('common.messages.confirmEnable', { name }),
     async onOk () {
       await updateStatus(id, enabled);
     }
@@ -228,28 +246,28 @@ const updateStatusConfirm = (id: string, name: string, enabled: boolean): void =
 
 /**
  * Toggle user enabled/disabled status
+ * Updates user status and refreshes the user list
  * @param id - User ID
  * @param enabled - Current enabled status
  */
 const updateStatus = async (id: string, enabled: boolean): Promise<void> => {
   try {
     const [error] = await user.toggleUserEnabled([{ id, enabled: !enabled }]);
-
     if (error) {
-      notification.error(enabled ? '禁用失败' : '启用失败');
+      notification.error(t('common.messages.editFailed'));
       return;
     }
-
-    notification.success(enabled ? '禁用成功' : '启用成功');
+    notification.error(t('common.messages.editSuccess'));
     await refreshUserList();
   } catch (error) {
-    notification.error(enabled ? '禁用失败' : '启用失败');
+    notification.error(t('common.messages.editFailed'));
   }
 };
 
 /**
  * Open user lock modal
- * @param id - User ID
+ * Sets the current user ID and shows the lock modal
+ * @param id - User ID to lock
  */
 const openLockedModal = (id: string): void => {
   state.currentUserId = id;
@@ -258,6 +276,7 @@ const openLockedModal = (id: string): void => {
 
 /**
  * Close user lock modal
+ * Hides the lock modal and resets state
  */
 const closeLockModal = (): void => {
   state.lockModalVisible = false;
@@ -265,6 +284,7 @@ const closeLockModal = (): void => {
 
 /**
  * Save lock changes and refresh user list
+ * Called when lock modal is successfully saved
  */
 const saveLock = async (): Promise<void> => {
   state.lockModalVisible = false;
@@ -273,27 +293,26 @@ const saveLock = async (): Promise<void> => {
 
 /**
  * Unlock user with confirmation
+ * Shows confirmation dialog before unlocking a user
  * @param id - User ID
- * @param name - User name
+ * @param name - User name for display in confirmation message
  */
 const unlock = (id: string, name: string): void => {
   modal.confirm({
     centered: true,
-    title: t('unlockUsers'),
-    content: t('userTip7', { name }),
+    title: t('user.actions.unlockUser'),
+    content: t('common.messages.unlockTip', { name }),
     async onOk () {
       try {
         const [error] = await user.toggleUserLocked({ id, locked: false });
-
         if (error) {
-          notification.error('解锁失败');
+          notification.success(t('common.messages.unlockSuccess'));
           return;
         }
-
-        notification.success('解锁成功');
+        notification.success(t('common.messages.unlockSuccess'));
         await refreshUserList();
       } catch (error) {
-        notification.error('解锁失败');
+        notification.error(t('common.messages.unlockFailed'));
       }
     }
   });
@@ -301,7 +320,8 @@ const unlock = (id: string, name: string): void => {
 
 /**
  * Open password reset modal
- * @param id - User ID
+ * Sets the current user ID and shows the password reset modal
+ * @param id - User ID for password reset
  */
 const openUpdatePasswdModal = (id: string): void => {
   state.currentUserId = id;
@@ -310,6 +330,7 @@ const openUpdatePasswdModal = (id: string): void => {
 
 /**
  * Close password reset modal
+ * Hides the password reset modal and resets state
  */
 const closeUpdatePasswdModal = (): void => {
   state.updatePasswdVisible = false;
@@ -317,7 +338,7 @@ const closeUpdatePasswdModal = (): void => {
 
 /**
  * Refresh user list with current parameters
- * Handles loading state during refresh
+ * Handles loading state during refresh operation
  */
 const refreshUserList = async (): Promise<void> => {
   disabled.value = true;
@@ -330,7 +351,7 @@ const refreshUserList = async (): Promise<void> => {
 
 /**
  * Handle refresh button click
- * Prevents multiple simultaneous requests
+ * Prevents multiple simultaneous requests by checking loading state
  */
 const handleRefresh = (): void => {
   if (loading.value) {
@@ -339,7 +360,10 @@ const handleRefresh = (): void => {
   loadUserList();
 };
 
-// Search options configuration for SearchPanel component
+/**
+ * Search options configuration for SearchPanel component
+ * Defines available search fields and their properties
+ */
 const searchOptions = ref<SearchOption[]>([
   {
     placeholder: t('user.placeholder.userId'),
@@ -385,7 +409,10 @@ const searchOptions = ref<SearchOption[]>([
   }
 ]);
 
-// Table columns configuration with custom cell renderers
+/**
+ * Table columns configuration with custom cell renderers
+ * Defines the structure and behavior of each table column
+ */
 const columns = [
   {
     title: 'ID',
@@ -534,25 +561,36 @@ const columns = [
   }
 ];
 
-// Lifecycle hook - initialize component on mount
+/**
+ * Lifecycle hook - initialize component on mount
+ * Loads initial user data when component is mounted
+ */
 onMounted(() => {
   init();
 });
 </script>
 <template>
   <PureCard class="w-full min-h-full p-3.5">
+    <!-- Statistics panel showing user metrics -->
     <Statistics
       :visible="showCount"
       :barTitle="t('statistics.metrics.newUsers')"
       resource="User"
       dateType="YEAR"
       :router="GM" />
+
+    <!-- User management hints and tips -->
     <Hints :text="t('user.tip')" class="mb-1" />
+
+    <!-- Search and action toolbar -->
     <div class="flex items-start my-2 justify-between">
+      <!-- Search panel for filtering users -->
       <SearchPanel
         class="flex-1 mr-2"
         :options="searchOptions"
         @change="searchChange" />
+
+      <!-- Action buttons: Add user, toggle statistics, refresh -->
       <div class="flex items-center space-x-2">
         <ButtonAuth
           code="UserAdd"
@@ -566,6 +604,8 @@ onMounted(() => {
           @click="handleRefresh" />
       </div>
     </div>
+
+    <!-- User data table -->
     <Table
       :dataSource="userList"
       :loading="loading"
@@ -574,7 +614,10 @@ onMounted(() => {
       rowKey="id"
       size="small"
       @change="tableChange">
+
+      <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column,text, record }">
+        <!-- User name with avatar and link to detail page -->
         <template v-if="column.dataIndex === 'fullName'">
           <div class="flex items-center">
             <Image
@@ -595,6 +638,8 @@ onMounted(() => {
               class="cursor-pointer">{{ text }}</span>
           </div>
         </template>
+
+        <!-- User enabled/disabled status badge -->
         <template v-if="column.dataIndex === 'enabled'">
           <Badge
             v-if="record.enabled"
@@ -605,12 +650,18 @@ onMounted(() => {
             status="error"
             :text="t('common.status.disabled')" />
         </template>
+
+        <!-- System admin status display -->
         <template v-if="column.dataIndex === 'sysAdmin'">
           {{ record.sysAdmin ? t('user.profile.systemAdmin') : t('user.profile.generalUser') }}
         </template>
+
+        <!-- Department head status display -->
         <template v-if="column.dataIndex === 'deptHead'">
           {{ record.deptHead ? t('common.status.yes') : t('common.status.no') }}
         </template>
+
+        <!-- User locked status badge -->
         <template v-if="column.dataIndex === 'locked'">
           <Badge
             v-if="record.locked"
@@ -621,6 +672,8 @@ onMounted(() => {
             status="success"
             :text="t('common.status.unlocked')" />
         </template>
+
+        <!-- User online status badge -->
         <template v-if="column.dataIndex === 'online'">
           <Badge
             v-if="record.online"
@@ -631,32 +684,44 @@ onMounted(() => {
             status="error"
             :text="t('common.status.offline')" />
         </template>
+
+        <!-- User source display -->
         <template v-if="column.dataIndex === 'source'">
           {{ record.source?.message }}
         </template>
+
+        <!-- User gender display -->
         <template v-if="column.dataIndex === 'gender'">
           {{ record.gender?.message }}
         </template>
+
+        <!-- Action buttons for each user row -->
         <template v-if="column.dataIndex === 'action'">
           <div class="flex items-center space-x-2.5">
+            <!-- Edit user button -->
             <ButtonAuth
               code="UserModify"
               type="text"
               :href="`/organization/user/edit/${record.id}?source=home`"
               :disabled="getOperationPermissions(record.sysAdmin)"
               icon="icon-shuxie" />
+
+            <!-- Reset password button -->
             <ButtonAuth
               code="ResetPassword"
               type="text"
               :disabled="getOperationPermissions(record.sysAdmin)"
               icon="icon-zhongzhimima"
               @click="openUpdatePasswdModal(record.id)" />
+
+            <!-- Dropdown menu for additional actions -->
             <Dropdown
               placement="bottomRight"
               overlayClassName="ant-dropdown-sm">
               <Icon icon="icon-gengduo" class="cursor-pointer outline-none" />
               <template #overlay>
                 <Menu class="text-3.5 leading-3.5 font-normal">
+                  <!-- Enable/Disable user menu item -->
                   <MenuItem
                     v-if="app.show('UserEnable')"
                     :disabled="getOperationPermissions(record.sysAdmin)||!app.has('UserEnable')"
@@ -666,6 +731,8 @@ onMounted(() => {
                     </template>
                     {{ record.enabled ? app.getName('UserEnable', 1) : app.getName('UserEnable',0) }}
                   </MenuItem>
+
+                  <!-- Delete user menu item -->
                   <MenuItem
                     v-if="app.show('UserDelete')"
                     :disabled="getOperationPermissions(record.sysAdmin) || !app.has('UserDelete')"
@@ -675,6 +742,8 @@ onMounted(() => {
                     </template>
                     {{ app.getName('UserDelete') }}
                   </MenuItem>
+
+                  <!-- Lock user menu item -->
                   <MenuItem
                     v-if="!record.locked && app.show('LockingUser')"
                     :disabled="getOperationPermissions(record.sysAdmin) || !app.has('LockingUser')"
@@ -684,6 +753,8 @@ onMounted(() => {
                     </template>
                     {{ app.getName('LockingUser', 0) }}
                   </MenuItem>
+
+                  <!-- Unlock user menu item -->
                   <MenuItem
                     v-if="record.locked && app.show('LockingUser')"
                     :disabled="getOperationPermissions(record.sysAdmin) || !app.has('LockingUser')"
@@ -693,6 +764,8 @@ onMounted(() => {
                     </template>
                     {{ app.getName('LockingUser', 1) }}
                   </MenuItem>
+
+                  <!-- Set/Cancel system admin menu item -->
                   <MenuItem
                     v-if="appContext.isSysAdmin() && app.show('SetIdentity')"
                     :disabled="getOperationPermissions(record.sysAdmin) || !app.has('SetIdentity')"
@@ -710,6 +783,8 @@ onMounted(() => {
       </template>
     </Table>
   </PureCard>
+
+  <!-- Password reset modal -->
   <AsyncComponent :visible="state.updatePasswdVisible">
     <UpdatePasswd
       v-if="state.updatePasswdVisible"
@@ -717,6 +792,8 @@ onMounted(() => {
       :userId="state.currentUserId"
       @cancel="closeUpdatePasswdModal" />
   </AsyncComponent>
+
+  <!-- User lock modal -->
   <AsyncComponent :visible="state.lockModalVisible">
     <Lock
       v-if="state.lockModalVisible"

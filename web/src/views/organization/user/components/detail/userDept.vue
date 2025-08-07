@@ -8,11 +8,19 @@ import { debounce } from 'throttle-debounce';
 import { SearchParams, UserDept } from './PropsType';
 import { user } from '@/api';
 
+/**
+ * Async component for department modal
+ * Loaded only when needed to improve performance
+ */
 const DeptModal = defineAsyncComponent(() => import('@/components/DeptModal/index.vue'));
 
+/**
+ * Component props interface
+ * Defines the properties passed to the user department component
+ */
 interface Props {
-  userId: string;
-  hasAuth: boolean;
+  userId: string; // User ID for department management
+  hasAuth: boolean; // Whether user has permission to modify departments
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,14 +28,23 @@ const props = withDefaults(defineProps<Props>(), {
   hasAuth: false
 });
 
+// Internationalization setup
 const { t } = useI18n();
-const loading = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
-const total = ref(0);
-const count = ref(0);
 
-const isContUpdate = ref(true);
-const dataList = ref<UserDept[]>([]);
+/**
+ * Reactive state management for component
+ */
+const loading = ref(false); // Loading state for API calls
+const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const total = ref(0); // Total number of departments for pagination
+const count = ref(0); // Current department count for quota display
+const isContUpdate = ref(true); // Whether to update count continuously
+const dataList = ref<UserDept[]>([]); // Department list data
+
+/**
+ * Load user departments from API
+ * Handles loading state and error handling
+ */
 const loadUserDept = async () => {
   loading.value = true;
   const [error, { data = { list: [], total: 0 } }] = await user.getUserDept(props.userId, params.value);
@@ -43,17 +60,42 @@ const loadUserDept = async () => {
   }
 };
 
-// 关联部门
-const deptVisible = ref(false);
+/**
+ * Modal state management for department operations
+ */
+const deptVisible = ref(false); // Department modal visibility
+
+/**
+ * Open department modal for adding new departments
+ */
 const addDept = () => {
   deptVisible.value = true;
 };
 
+/**
+ * Loading state for department update operations
+ */
 const updateLoading = ref(false);
+
+/**
+ * Refresh state flag for modal operations
+ */
 const isRefresh = ref(false);
-const disabled = ref(false); // 刷新按钮禁用旋转
+
+/**
+ * Disabled state for refresh button during operations
+ */
+const disabled = ref(false);
+
+/**
+ * Handle department save from modal
+ * Processes selected department IDs and handles add/delete operations
+ * Note: Delete operations must be performed before add operations
+ * @param addIds - Array of department IDs to add
+ * @param delIds - Array of department IDs to delete
+ */
 const deptSave = async (addIds: string[], delIds: string[]) => {
-  // 注：删除必须放前面
+  // Note: Delete operations must be performed before add operations
   if (delIds.length) {
     await delUserDept(delIds, 'Modal');
   }
@@ -72,7 +114,11 @@ const deptSave = async (addIds: string[], delIds: string[]) => {
   }
 };
 
-// 添加关联的部门
+/**
+ * Add departments to user
+ * Calls API to associate departments with user
+ * @param _addIds - Array of department IDs to add
+ */
 const addUserDept = async (_addIds: string[]) => {
   updateLoading.value = true;
   const [error] = await user.addUserDept(props.userId, _addIds);
@@ -82,7 +128,12 @@ const addUserDept = async (_addIds: string[]) => {
   isRefresh.value = true;
 };
 
-// 删除关联的部门
+/**
+ * Delete departments from user
+ * Calls API to remove department associations
+ * @param _delIds - Array of department IDs to delete
+ * @param type - Operation type ('Modal' or 'Table')
+ */
 const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
   updateLoading.value = true;
   const [error] = await user.deleteUserDept(props.userId, { deptIds: _delIds });
@@ -97,8 +148,10 @@ const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
     isRefresh.value = true;
   }
 
+  // Recalculate current page after deletion
   params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
-  // 要求表格操作不影响刷新图标
+  
+  // Table operations should not affect refresh icon state
   if (type === 'Table') {
     disabled.value = true;
     await loadUserDept();
@@ -106,11 +159,20 @@ const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
   }
 };
 
-// 删除关联的部门
+/**
+ * Cancel/Remove department from user
+ * Calls delete function for table operations
+ * @param id - Department ID to remove
+ */
 const handleCancel = async (id) => {
   delUserDept([id], 'Table');
 };
 
+/**
+ * Handle search input with debouncing
+ * Filters departments by name with end matching
+ * @param event - Input change event
+ */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
@@ -127,6 +189,10 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   disabled.value = false;
 });
 
+/**
+ * Computed pagination object for table component
+ * Provides reactive pagination data to the table
+ */
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -135,6 +201,11 @@ const pagination = computed(() => {
   };
 });
 
+/**
+ * Handle table pagination changes
+ * Updates parameters and reloads data based on table interactions
+ * @param _pagination - Pagination object from table
+ */
 const handleChange = async (_pagination) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -144,10 +215,18 @@ const handleChange = async (_pagination) => {
   disabled.value = false;
 };
 
+/**
+ * Lifecycle hook - initialize component on mount
+ * Loads initial department data
+ */
 onMounted(() => {
   loadUserDept();
 });
 
+/**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
 const columns = [
   {
     title: 'ID',
@@ -196,8 +275,12 @@ const columns = [
 </script>
 <template>
   <div>
+    <!-- User department quota hints -->
     <Hints :text="t('department.userDeptQuotaTip', {num: count})" class="mb-1" />
+    
+    <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">
+      <!-- Department name search input -->
       <Input
         :placeholder="t('department.placeholder.name')"
         class="w-60"
@@ -208,19 +291,26 @@ const columns = [
           <Icon class="text-theme-content text-theme-text-hover text-3 leading-3" icon="icon-sousuo" />
         </template>
       </Input>
+      
+      <!-- Action buttons -->
       <div class="flex space-x-2 items-center">
+        <!-- Add department button -->
         <ButtonAuth
           code="UserDeptAssociate"
           type="primary"
           icon="icon-tianjia"
           :disabled="props.hasAuth || total>=5"
           @click="addDept" />
+        
+        <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
           :disabled="disabled"
           @click="loadUserDept" />
       </div>
     </div>
+    
+    <!-- Department data table -->
     <Table
       size="small"
       rowKey="id"
@@ -229,13 +319,18 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
+      
+      <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column ,text,record }">
+        <!-- Department name with icon -->
         <template v-if="column.dataIndex === 'deptName'">
           <div class="flex items-center">
             <Icon icon="icon-bumen1" class="text-4 mr-2" />
             <div class="w-full truncate" :title="text">{{ text }}</div>
           </div>
         </template>
+        
+        <!-- Action buttons for each department row -->
         <template v-if="column.dataIndex === 'action'">
           <ButtonAuth
             code="UserDeptUnassociate"
@@ -247,6 +342,8 @@ const columns = [
       </template>
     </Table>
   </div>
+  
+  <!-- Department modal for adding new departments -->
   <AsyncComponent :visible="deptVisible">
     <DeptModal
       v-if="deptVisible"
