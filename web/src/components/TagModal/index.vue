@@ -153,7 +153,7 @@ const action = computed(() => {
 </script>
 <template>
   <Modal
-    :title="t('relatedTags')"
+    :title="t('tag.assocTitle')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -164,7 +164,7 @@ const action = computed(() => {
     @ok="handleOk">
     <div class="-mt-3">
       <Input
-        :placeholder="t('tagPlaceholder1')"
+        :placeholder="t('tag.placeholder.name')"
         class="mb-2 w-1/2"
         size="small"
         @change="handleInputChange">
@@ -177,7 +177,7 @@ const action = computed(() => {
           ID
         </div>
         <div class="w-2/3 pl-4">
-          {{ t('name') }}
+          {{ t('tag.columns.userTag.name') }}
         </div>
       </div>
       <Scroll
@@ -214,7 +214,7 @@ const action = computed(() => {
       </Scroll>
       <Divider class="my-2" />
       <Checkbox :indeterminate="indeterminate" @change="onCheckAllChange">
-        {{ t('selectAll') }}
+        {{ t('common.form.selectAll') }}
       </Checkbox>
     </div>
   </Modal>

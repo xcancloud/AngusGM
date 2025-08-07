@@ -107,7 +107,7 @@ const delUserGroup = async (_groupIds: string[], type?: 'Modal' | 'Table') => {
 };
 
 const handleCancel = async (id) => {
-  delUserGroup([id], 'Table');
+  await delUserGroup([id], 'Table');
 };
 
 const handleSearch = debounce(duration.search, async (event: any) => {
@@ -156,21 +156,21 @@ const columns = [
     }
   },
   {
-    title: t('name'),
+    title: t('group.columns.userGroup.name'),
     dataIndex: 'groupName',
     width: '15%'
   },
   {
-    title: t('code'),
+    title: t('group.columns.userGroup.code'),
     dataIndex: 'groupCode',
     width: '15%'
   },
   {
-    title: t('description'),
+    title: t('group.columns.userGroup.remark'),
     dataIndex: 'groupRemark'
   },
   {
-    title: t('associatedTime'),
+    title: t('group.columns.userGroup.createdDate'),
     dataIndex: 'createdDate',
     width: '13%',
     customCell: () => {
@@ -178,25 +178,25 @@ const columns = [
     }
   },
   {
-    title: t('associatedPerson'),
+    title: t('group.columns.userGroup.createdByName'),
     dataIndex: 'createdByName',
     width: '13%'
   },
   {
-    title: t('operation'),
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: '6%',
     align: 'center'
   }
 ];
-const hintTip = computed(() => t(`每个用户最多允许关联200个组，当前用户已关联${count.value}个组。`));
+
 </script>
 <template>
   <div>
-    <Hints :text="hintTip" class="mb-1" />
+    <Hints :text="t('group.userGroupQuotaTip', {num: count})" class="mb-1" />
     <div class="flex items-center justify-between mb-2">
       <Input
-        placeholder="查询组名称"
+        :placeholder="t('group.placeholder.name')"
         class="w-60"
         size="small"
         allowClear

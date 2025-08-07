@@ -33,7 +33,11 @@
       "import": "导入"
     },
     "status": {
+      "yes": "是",
+      "no": "否",
       "validStatus": "有效状态",
+      "valid": "有效",
+      "invalid": "无效",
       "success": "成功",
       "fail": "失败",
       "error": "错误",
@@ -75,30 +79,7 @@
       "nearlyYear": "近一年"
     },
     "form": {
-      "name": "名称",
-      "code": "编码",
-      "type": "类型",
-      "status": "状态",
-      "description": "描述",
-      "remark": "备注",
-      "mobile": "手机号",
-      "email": "邮箱",
-      "address": "地址",
-      "phone": "电话",
-      "landline": "座机号",
-      "password": "密码",
-      "confirmPassword": "确认密码",
-      "verificationCode": "验证码",
-      "invitationCode": "邀请码",
-      "placeholder": {
-        "name": "请输入名称",
-        "code": "请输入编码",
-        "description": "请输入描述",
-        "mobile": "请输入手机号",
-        "email": "请输入邮箱地址",
-        "password": "请输入密码",
-        "verificationCode": "请输入验证码"
-      }
+      "selectAll": "全选"
     },
     "table": {
       "total": "总计",
@@ -137,10 +118,6 @@
     "labels": {
       "source": "来源",
       "association": "关联"
-    },
-    "other": {
-      "yes": "是",
-      "no": "否"
     }
   }
 }

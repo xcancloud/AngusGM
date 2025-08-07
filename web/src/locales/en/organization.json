@@ -50,10 +50,10 @@
       "lastModifiedDate": "Last Modified Date"
     },
     "tab": {
-      "authPolicy": "Authorization Policy",
-      "associatedDepartment": "Belonging Department",
-      "associatedGroup": "Joined Group",
-      "associatedTag": "Associated Tag"
+      "authPolicy": "Authorization Policies",
+      "associatedDepartment": "Belonging Departments",
+      "associatedGroup": "Joined Groups",
+      "associatedTag": "Associated Tags"
     },
     "actions": {
       "setAdmin": "Set as Administrator",
@@ -177,16 +177,74 @@
     }
   },
   "department": {
-    "level": "Level",
-    "level1": "L1",
-    "level2": "L2",
-    "level3": "L3",
-    "level4": "L4",
-    "level5": "L5",
-    "level6": "L6",
-    "level7": "L7",
-    "level8": "L8",
-    "level9": "L9",
-    "level10": "L10"
+    "title": "Department Management",
+    "assocTitle": "Associate Department",
+    "userDeptQuotaTip": "Each user can be associated with at most 5 departments. The current user is associated with {num} departments.",
+    "placeholder": {
+      "name": "Query department name",
+      "tag": "Select tag"
+    },
+    "columns": {
+      "code": "Code",
+      "name": "Name",
+      "userDept": {
+        "code": "Department Code",
+        "name": "Department Name",
+        "head": "Department Head",
+        "createdByName": "Associated By",
+        "createdDate": "Associated Date"
+      }
+    },
+    "level": {
+      "name": "Level",
+      "1": "L1",
+      "2": "L2",
+      "3": "L3",
+      "4": "L4",
+      "5": "L5",
+      "6": "L6",
+      "7": "L7",
+      "8": "L8",
+      "9": "L9",
+      "10": "L10"
+    }
+  },
+  "group": {
+    "title": "Group Management",
+    "assocTitle": "Associate Group",
+    "userGroupQuotaTip": "Each user can be associated with at most 200 groups. The current user is associated with {num} groups.",
+    "placeholder": {
+      "name": "Query department name",
+      "tag": "Select tag"
+    },
+    "columns": {
+      "code": "Code",
+      "name": "Name",
+      "remark": "Remark",
+      "userGroup": {
+        "code": "Group Code",
+        "name": "Group Name",
+        "remark": "Group Remark",
+        "head": "Group Head",
+        "createdByName": "Associated By",
+        "createdDate": "Associated Date"
+      }
+    }
+  },
+  "tag": {
+    "title": "Tag Management",
+    "assocTitle": "Associate Tag",
+    "userTagQuotaTip": "Each user can be associated with at most 10 tags. The current user is associated with {num} tags.",
+    "placeholder": {
+      "name": "Query tag name"
+    },
+    "columns": {
+      "name": "name",
+      "userTag": {
+        "name": "Tag Name",
+        "createdByName": "Associated By",
+        "createdDate": "Associated Date"
+      }
+    }
   }
 }

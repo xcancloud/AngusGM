@@ -1,0 +1,24 @@
+{
+  "permission": {
+    "name": "授权策略",
+    "placeholder": {
+      "policyName": "搜索策略名称"
+    },
+    "columns": {
+      "name": "名称",
+      "code": "编码",
+      "appName": "所属应用"
+    },
+    "authPolicies": {
+      "id": "策略ID",
+      "name": "策略名称",
+      "code": "策略名称",
+      "source": "授权来源",
+      "authByName": "授权人",
+      "authDate": "授权时间",
+      "defaultAuth": "应用默认授权",
+      "openAuth": "开通应用授权",
+      "authTip": "若需取消“应用默认授权” 策略，请进入「权限策略」-「默认权限策略」禁用该策略；若需取消部门或组的关联授权，请进入「组织人员」-「部门」或「组」-「权限策略」操作；对于「开通初始化授权」不支持取消。"
+    }
+  }
+}

@@ -33,7 +33,11 @@
       "import": "Import"
     },
     "status": {
+      "yes": "Yes",
+      "no": "No",
       "validStatus": "Valid Status",
+      "valid": "Valid",
+      "invalid": "Invalid",
       "success": "Success",
       "fail": "Fail",
       "error": "Error",
@@ -75,30 +79,7 @@
       "nearlyYear": "Nearly Year"
     },
     "form": {
-      "name": "Name",
-      "code": "Code",
-      "type": "Type",
-      "status": "Status",
-      "description": "Description",
-      "remark": "Remark",
-      "mobile": "Mobile",
-      "email": "Email",
-      "address": "Address",
-      "phone": "Phone",
-      "landline": "Landline",
-      "password": "Password",
-      "confirmPassword": "Confirm Password",
-      "verificationCode": "Verification Code",
-      "invitationCode": "Invitation Code",
-      "placeholder": {
-        "name": "Please enter name",
-        "code": "Please enter code",
-        "description": "Please enter description",
-        "mobile": "Please enter mobile number",
-        "email": "Please enter email address",
-        "password": "Please enter password",
-        "verificationCode": "Please enter verification code"
-      }
+      "selectAll": "Select All"
     },
     "table": {
       "total": "Total",
@@ -137,10 +118,6 @@
     "labels": {
       "source": "Source",
       "association": "Association"
-    },
-    "other": {
-      "yes": "Yes",
-      "no": "No"
     }
   }
 }

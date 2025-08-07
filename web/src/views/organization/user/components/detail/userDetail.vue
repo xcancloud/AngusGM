@@ -7,12 +7,10 @@ import { Detail } from './PropsType';
 
 interface Props {
   dataSource: Detail
-
 }
 
 const props = withDefaults(defineProps<Props>(), {
   dataSource: undefined
-
 });
 
 const { t } = useI18n();
@@ -55,7 +53,8 @@ const gridColumns = [
     {
       label: t('user.columns.identity'),
       dataIndex: 'sysAdmin',
-      customRender: ({ text }): string => text ? t('user.profile.systemAdmin') : t('user.profile.generalUser')
+      customRender: ({ text }): string =>
+        text ? t('user.profile.systemAdmin') : t('user.profile.generalUser')
     },
     {
       label: t('user.columns.status'),
@@ -64,7 +63,8 @@ const gridColumns = [
     {
       label: t('user.columns.lockedStatus'),
       dataIndex: 'locked',
-      customRender: ({ text }): string => text ? t('common.status.locked') : t('common.status.unlocked')
+      customRender: ({ text }): string =>
+        text ? t('common.status.locked') : t('common.status.unlocked')
     },
     {
       label: t('user.columns.lockStartDate'),
@@ -80,10 +80,22 @@ const gridColumns = [
 <template>
   <Grid :columns="gridColumns" :dataSource="props.dataSource">
     <template #enabled="{text}">
-      <Badge :status=" text ? 'success' : 'error' " :text=" text ? t('common.status.enabled') : t('common.status.disabled') " />
+      <Badge
+        :status=" text ? 'success' : 'error' "
+        :text=" text? t('common.status.enabled') : t('common.status.disabled') " />
     </template>
-    <template #lockStartDate="{text}">
-      {{ text }} - {{ props.dataSource?.lockEndDate }}
+    <template #locked="{text}">
+      <Badge
+        :status=" text ? 'error' : 'success' "
+        :text=" text ? t('common.status.locked') : t('common.status.unlocked') " />
+    </template>
+    <template v-if="props.dataSource?.locked" #lockStartDate="{text}">
+      <div v-if="props.dataSource?.lockEndDate">
+        {{ text }} - {{ props.dataSource?.lockEndDate }}
+      </div>
+      <div v-else>
+        {{ t('user.permanentLock') }}
+      </div>
     </template>
   </Grid>
 </template>

@@ -159,7 +159,7 @@ watch(() => props.tagId, () => {
 </script>
 <template>
   <Modal
-    :title="t('关联组')"
+    :title="t('group.assocTitle')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -171,7 +171,7 @@ watch(() => props.tagId, () => {
     <div class="-mt-3">
       <div class="mb-2 flex space-x-2">
         <Input
-          placeholder="查询组名称"
+          :placeholder="t('group.placeholder.name')"
           class="w-1/2"
           size="small"
           allowClear
@@ -181,7 +181,7 @@ watch(() => props.tagId, () => {
           </template>
         </Input>
         <Select
-          :placeholder="t('tagPlaceholder')"
+          :placeholder="t('group.placeholder.tag')"
           :action="`${GM}/org/tag`"
           :fieldNames="{ label: 'name', value: 'id' }"
           :params="{fullTextSearch: true}"
@@ -195,10 +195,10 @@ watch(() => props.tagId, () => {
           ID
         </div>
         <div class="w-1/3 mr-2 pl-5">
-          {{ t('name') }}
+          {{ t('group.columns.userGroup.name') }}
         </div>
         <div class="w-1/3">
-          {{ t('code') }}
+          {{ t('group.columns.userGroup.code') }}
         </div>
       </div>
       <Scroll
@@ -229,7 +229,7 @@ watch(() => props.tagId, () => {
       </Scroll>
       <Divider class="my-2" />
       <Checkbox :indeterminate="indeterminate" @change="onCheckAllChange">
-        全选
+        {{ t('common.form.selectAll') }}
       </Checkbox>
     </div>
   </Modal>

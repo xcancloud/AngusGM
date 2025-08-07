@@ -638,9 +638,9 @@ const getPieChartWidth = computed(() => {
     case 3:
       return 'width:45%';
     case 2:
-      return 'width:38%';
+      return 'width:25%';
     case 1:
-      return 'width:20%';
+      return 'width:15%';
     default:
       return 'width:100%';
   }

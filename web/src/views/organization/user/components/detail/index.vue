@@ -271,17 +271,17 @@ const userGridColumns = [
             <UserDetail :dataSource="userDetail" />
           </Skeleton>
         </Tabs.TabPane>
-        <Tabs.TabPane key="2" :tab="t('user.tab.authPolicy')">
-          <AuthorizationPolicy :userId="userId" :hasAuth="getOperationPermissions" />
-        </Tabs.TabPane>
-        <Tabs.TabPane key="3" :tab="t('user.tab.associatedDepartment')">
+        <Tabs.TabPane key="2" :tab="t('user.tab.associatedDepartment')">
           <UserDept :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        <Tabs.TabPane key="4" :tab="t('user.tab.associatedGroup')">
+        <Tabs.TabPane key="3" :tab="t('user.tab.associatedGroup')">
           <UserGroup :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
-        <Tabs.TabPane key="5" :tab="t('user.tab.associatedTag')">
+        <Tabs.TabPane key="4" :tab="t('user.tab.associatedTag')">
           <UserTag :userId="userId" :hasAuth="getOperationPermissions" />
+        </Tabs.TabPane>
+        <Tabs.TabPane key="5" :tab="t('user.tab.authPolicy')">
+          <AuthorizationPolicy :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
       </Tabs>
     </PureCard>

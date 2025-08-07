@@ -1,0 +1,24 @@
+{
+  "permission": {
+    "name": "Access Policy",
+    "placeholder": {
+      "policyName": "Search policy name"
+    },
+    "columns": {
+      "name": "Name",
+      "code": "Code",
+      "appName": "Application"
+    },
+    "authPolicies": {
+      "id": "Policy ID",
+      "name": "Policy Name",
+      "code": "Policy Code",
+      "source": "Authorization Source",
+      "authByName": "Authorizer",
+      "authDate": "Authorization Time",
+      "defaultAuth": "Default Authorization",
+      "openAuth": "Open Authorization",
+      "authTip": "If you need to cancel the \"Application Default Authorization\" policy, please go to 「Access Policies」-「Default Permission Policies」to disable it. To cancel the associated authorization for a department or group, go to 「Organization」-「Department」or「Group」-「Authorization Policies」to perform the operation. \"Initial Activation Authorization\" does not support cancellation."
+    }
+  }
+}

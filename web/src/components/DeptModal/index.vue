@@ -126,12 +126,12 @@ const deptChange = async (value: string) => {
   }
   const parentChain = (res.data.parentChain || []).map(item => ({ ...item, hasSubDept: true }));
   treeData.value = [...parentChain, res.data.current];
-  loadUserDept([res.data.current.id]);
+  await loadUserDept([res.data.current.id]);
 };
 </script>
 <template>
   <Modal
-    :title="t('关联部门')"
+    :title="t('department.assocTitle')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -143,6 +143,7 @@ const deptChange = async (value: string) => {
     <div class="-mt-3 pl-3">
       <div class="flex mb-2">
         <Select
+          :placeholder="t('department.placeholder.name')"
           :action="`${GM}/dept`"
           size="small"
           class="w-1/2 mr-2"
@@ -150,11 +151,10 @@ const deptChange = async (value: string) => {
           :params="getSearchDeptParams"
           :allowClear="true"
           :fieldNames="{ label: 'name', value: 'id' }"
-          :placeholder="t('deptPlaceholder')"
           @change="deptChange" />
         <Select
           v-model:value="selectTagId"
-          :placeholder="t('tagPlaceholder')"
+          :placeholder="t('department.placeholder.tag')"
           :action="`${GM}/org/tag`"
           :fieldNames="{ label: 'name', value: 'id' }"
           :params="{fullTextSearch: true}"
@@ -165,10 +165,10 @@ const deptChange = async (value: string) => {
       </div>
       <div class="flex py-1 bg-theme-form-head text-theme-title text-3 font-normal">
         <div class="w-1/2 pl-10 mr-2">
-          {{ t('name') }}
+          {{ t('department.columns.name') }}
         </div>
         <div class="w-1/2">
-          {{ t('code') }}
+          {{ t('department.columns.code') }}
         </div>
       </div>
       <Tree

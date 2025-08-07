@@ -120,7 +120,7 @@ const action = computed(() => {
 </script>
 <template>
   <Modal
-    :title="t('授权策略')"
+    :title="t('permission.name')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -132,7 +132,7 @@ const action = computed(() => {
     <div class="-mt-3">
       <div class="mb-2 flex space-x-2">
         <Input
-          placeholder="查询策略名称"
+          :placeholder="t('permission.placeholder.policyName')"
           size="small"
           class="w-1/2"
           allowClear
@@ -147,13 +147,13 @@ const action = computed(() => {
           ID
         </div>
         <div class="w-40 mr-2">
-          {{ t('name') }}
+          {{ t('permission.columns.name') }}
         </div>
         <div class="w-60 mr-2">
-          {{ t('code') }}
+          {{ t('permission.columns.code') }}
         </div>
         <div class="w-50">
-          {{ t('所属应用') }}
+          {{ t('permission.columns.appName') }}
         </div>
       </div>
       <Scroll
@@ -197,7 +197,7 @@ const action = computed(() => {
       </Scroll>
       <Divider class="my-2" />
       <Checkbox :indeterminate="indeterminate" @change="onCheckAllChange">
-        全选
+        {{ t('common.form.selectAll') }}
       </Checkbox>
     </div>
   </Modal>

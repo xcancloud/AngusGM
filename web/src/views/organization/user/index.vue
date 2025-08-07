@@ -609,7 +609,7 @@ onMounted(() => {
           {{ record.sysAdmin ? t('user.profile.systemAdmin') : t('user.profile.generalUser') }}
         </template>
         <template v-if="column.dataIndex === 'deptHead'">
-          {{ record.deptHead ? t('common.other.yes') : t('common.other.no') }}
+          {{ record.deptHead ? t('common.status.yes') : t('common.status.no') }}
         </template>
         <template v-if="column.dataIndex === 'locked'">
           <Badge

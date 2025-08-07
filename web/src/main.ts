@@ -13,14 +13,16 @@ import 'tailwindcss/utilities.css';
 import enCommon from './locales/en/common.json';
 import enAuth from './locales/en/auth.json';
 import enOrganization from './locales/en/organization.json';
+import enPermission from './locales/en/permission.json';
 import enStatistics from './locales/en/statistics.json';
 
 import zhCommon from './locales/zh_CN/common.json';
 import zhAuth from './locales/zh_CN/auth.json';
 import zhOrganization from './locales/zh_CN/organization.json';
+import zhPermission from './locales/zh_CN/permission.json';
 import zhStatistics from './locales/zh_CN/statistics.json';
 
-import zhEnumCNLocale from '@/enums/locale/zh_CN.json';
+import zhEnumLocale from '@/enums/locale/zh_CN.json';
 import enEnumLocale from '@/enums/locale/en.json';
 import { enumNamespaceMap } from '@/enums/enums';
 
@@ -38,15 +40,17 @@ const bootstrap = async () => {
         ...enCommon,
         ...enAuth,
         ...enOrganization,
+        ...enPermission,
         ...enStatistics,
-        ...zhEnumCNLocale
+        ...enEnumLocale
       },
       zh_CN: {
         ...zhCommon,
         ...zhAuth,
         ...zhOrganization,
+        ...zhPermission,
         ...zhStatistics,
-        ...enEnumLocale
+        ...zhEnumLocale
       }
     };
     const locale = i18n_.getI18nLanguage();

@@ -112,13 +112,13 @@ const handleChange = async (_pagination, _filters, sorter) => {
   disabled.value = false;
 };
 
-const getShowOrgType = (record) => {
+const getAuthorizationType = (record) => {
   const resultArr: string[] = [];
   if (record.currentDefault) {
-    resultArr.push('应用默认授权');
+    resultArr.push(t('permission.authPolicies.defaultAuth'));
   }
   if (record.openAuth) {
-    resultArr.push('开通授权');
+    resultArr.push(t('permission.authPolicies.openAuth'));
   }
   return resultArr.join(',');
 };
@@ -137,7 +137,7 @@ onMounted(() => {
 
 const columns = [
   {
-    title: 'ID',
+    title: t('permission.authPolicies.id'),
     dataIndex: 'id',
     width: '15%',
     customCell: () => {
@@ -145,16 +145,16 @@ const columns = [
     }
   },
   {
-    title: t('name'),
+    title: t('permission.authPolicies.name'),
     dataIndex: 'name',
     width: '15%'
   },
   {
-    title: t('code'),
+    title: t('permission.authPolicies.code'),
     dataIndex: 'code'
   },
   {
-    title: t('授权来源'),
+    title: t('permission.authPolicies.source'),
     dataIndex: 'orgType',
     width: '15%',
     customCell: () => {
@@ -162,12 +162,12 @@ const columns = [
     }
   },
   {
-    title: t('授权人'),
+    title: t('permission.authPolicies.authByName'),
     dataIndex: 'authByName',
     width: '15%'
   },
   {
-    title: t('授权时间'),
+    title: t('permission.authPolicies.authDate'),
     dataIndex: 'authDate',
     width: '13%',
     customCell: () => {
@@ -175,21 +175,20 @@ const columns = [
     }
   },
   {
-    title: t('operation'),
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: '6%',
     align: 'center'
   }
 ];
 
-const hintTip = t('当前只允许取消用户来源授权。如果要取消“应用默认授权”策略，请进入"全局管理"-"权限策略"-"默认权限策略"禁用应用默认策略；取消部门和组关联授权请进入"全局管理"-"组织人员"-"部门"或"组"-"权限策略"取消授权；“开通初始化授权”不可取消。');
 </script>
 <template>
   <div>
-    <Hints :text="hintTip" class="mb-1" />
+    <Hints :text="t('permission.authPolicies.authTip')" class="mb-1" />
     <div class="flex items-center justify-between mb-2">
       <Input
-        :placeholder="t('查询策略名称')"
+        :placeholder="t('permission.placeholder.policyName')"
         class="w-60"
         allowClear
         @change="handleSearch">
@@ -235,18 +234,12 @@ const hintTip = t('当前只允许取消用户来源授权。如果要取消“�
             </Popover>
           </div>
         </template>
-        <template v-if="column.dataIndex === 'openAuth'">
-          {{ text?'是':'否' }}
-        </template>
-        <template v-if="column.dataIndex === 'enabled'">
-          {{ text?'有效':'无效' }}
-        </template>
         <template v-if="column.dataIndex === 'orgType'">
           <template v-if="['USER','DEPT','GROUP'].includes(text?.value)">
             {{ text?.message }}({{ record.orgName }})
           </template>
           <template v-else>
-            {{ getShowOrgType(record) }}
+            {{ getAuthorizationType(record) }}
           </template>
         </template>
         <template v-if="column.dataIndex === 'action'">

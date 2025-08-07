@@ -25,7 +25,7 @@ const loading = ref(false);
 const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 const count = ref(0);
-// 是否更新count 条件查询不更新count
+
 const isContUpdate = ref(true);
 const dataList = ref<UserDept[]>([]);
 const loadUserDept = async () => {
@@ -49,12 +49,6 @@ const addDept = () => {
   deptVisible.value = true;
 };
 
-/**
- * updateLoading说明:
- * 1.updateLoading:是新增和删除接口的loading,即关联弹窗确定按钮的loading,区别列表的loading是
- *   防止新增删除的时候控制影响刷新按钮和表格,防止造成多个地方闪动
- * 2.updateLoading之所以没有在 if(error)之前处理，是因为关联弹窗有可能同时有新增和删除,防止确定按钮loading中断；
- */
 const updateLoading = ref(false);
 const isRefresh = ref(false);
 const disabled = ref(false); // 刷新按钮禁用旋转
@@ -164,22 +158,22 @@ const columns = [
     }
   },
   {
-    title: t('name'),
+    title: t('department.columns.userDept.name'),
     dataIndex: 'deptName'
   },
   {
-    title: t('code'),
+    title: t('department.columns.userDept.code'),
     dataIndex: 'deptCode',
     width: '20%'
   },
   {
-    title: t('是否负责人'),
+    title: t('department.columns.userDept.head'),
     dataIndex: 'deptHead',
-    customRender: ({ text }): string => text ? t('yes') : t('no'),
+    customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no'),
     width: '8%'
   },
   {
-    title: t('associatedTime'),
+    title: t('department.columns.userDept.createdDate'),
     dataIndex: 'createdDate',
     width: '13%',
     customCell: () => {
@@ -187,26 +181,25 @@ const columns = [
     }
   },
   {
-    title: t('associatedPerson'),
+    title: t('department.columns.userDept.createdByName'),
     dataIndex: 'createdByName',
     width: '13%'
   },
   {
-    title: t('operation'),
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: '6%',
     align: 'center'
   }
 ];
 
-const hintTip = computed(() => t(`每个用户最多允许关联5个部门，当前用户已关联${count.value}个部门。`));
 </script>
 <template>
   <div>
-    <Hints :text="hintTip" class="mb-1" />
+    <Hints :text="t('department.userDeptQuotaTip', {num: count})" class="mb-1" />
     <div class="flex items-center justify-between mb-2">
       <Input
-        placeholder="查询部门名称"
+        :placeholder="t('department.placeholder.name')"
         class="w-60"
         size="small"
         allowClear

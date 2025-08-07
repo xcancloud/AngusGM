@@ -105,7 +105,7 @@ const delUserTag = async (_tagIds: string[], type?: 'Modal' | 'Table') => {
 };
 
 const handleCancel = async (id) => {
-  delUserTag([id], 'Table');
+  await delUserTag([id], 'Table');
 };
 
 const handleSearch = debounce(duration.search, async (event: any) => {
@@ -155,12 +155,12 @@ const columns = [
     }
   },
   {
-    title: t('name'),
+    title: t('tag.columns.userTag.name'),
     dataIndex: 'tagName',
     width: '30%'
   },
   {
-    title: t('associatedTime'),
+    title: t('tag.columns.userTag.createdDate'),
     dataIndex: 'createdDate',
     width: '20%',
     customCell: () => {
@@ -168,26 +168,25 @@ const columns = [
     }
   },
   {
-    title: t('associatedPerson'),
+    title: t('tag.columns.userTag.createdByName'),
     dataIndex: 'createdByName',
     width: '20%'
   },
   {
-    title: t('operation'),
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: '10%',
     align: 'center'
   }
 ];
 
-const hintTip = computed(() => t(`每个用户最多允许关联10个标签，当前用户已关联${count.value}个标签。`));
 </script>
 <template>
   <div>
-    <Hints :text="hintTip" class="mb-1" />
+    <Hints :text="t('tag.userTagQuotaTip', {num: count})" class="mb-1" />
     <div class="flex items-center justify-between mb-2">
       <Input
-        placeholder="查询标签名称"
+        :placeholder="t('tag.placeholder.name')"
         class="w-60"
         size="small"
         allowClear

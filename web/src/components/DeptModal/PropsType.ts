@@ -14,11 +14,3 @@ export type Dept = {
   lastModifiedDate: string;
   hasSubDept: boolean;
 }
-
-export type TreeData = Dept & {
-  level: number,
-  mainDept: boolean,
-  pageNo: number,
-  total: number,
-  children: TreeData[]
-}

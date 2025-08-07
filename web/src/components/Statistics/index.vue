@@ -102,18 +102,18 @@ const groupByGroup = ref<PieSetting[]>([
 const deptByGroup = ref<PieSetting[]>([
   {
     key: 'level',
-    value: t('department.level'),
+    value: t('department.level.name'),
     type: [
-      { value: 1, message: t('department.level1') },
-      { value: 2, message: t('department.level2') },
-      { value: 3, message: t('department.level3') },
-      { value: 4, message: t('department.level4') },
-      { value: 5, message: t('department.level5') },
-      { value: 6, message: t('department.level6') },
-      { value: 7, message: t('department.level7') },
-      { value: 8, message: t('department.level8') },
-      { value: 9, message: t('department.level9') },
-      { value: 10, message: t('department.level10') }
+      { value: 1, message: t('department.level.1') },
+      { value: 2, message: t('department.level.2') },
+      { value: 3, message: t('department.level.3') },
+      { value: 4, message: t('department.level.4') },
+      { value: 5, message: t('department.level.5') },
+      { value: 6, message: t('department.level.6') },
+      { value: 7, message: t('department.level.7') },
+      { value: 8, message: t('department.level.8') },
+      { value: 9, message: t('department.level.9') },
+      { value: 10, message: t('department.level.10') }
     ],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
   }
@@ -178,7 +178,7 @@ const serviceGroup = ref<PieSetting[]>([
 ]);
 
 // API statistics configuration
-const apiGroup = ref<PieSetting[]>([ // TODO 
+const apiGroup = ref<PieSetting[]>([ // TODO
   {
     key: 'method',
     value: t('方法'),
