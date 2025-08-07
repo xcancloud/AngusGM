@@ -3,9 +3,9 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils } from '@xcan-angus/infra';
 
-import { SearchParams, UserTag } from './PropsType';
+import { UserTag } from './PropsType';
 import { user } from '@/api';
 
 /**
@@ -35,7 +35,7 @@ const { t } = useI18n();
  * Reactive state management for component
  */
 const loading = ref(false); // Loading state for API calls
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
 const total = ref(0); // Total number of tags for pagination
 const count = ref(0); // Current tag count for quota display
 const isContUpdate = ref(true); // Whether to update count continuously
@@ -268,7 +268,7 @@ const columns = [
   <div>
     <!-- User tag quota hints -->
     <Hints :text="t('tag.userTagQuotaTip', {num: count})" class="mb-1" />
-    
+
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">
       <!-- Tag name search input -->
@@ -282,7 +282,7 @@ const columns = [
           <Icon class="text-theme-content text-theme-text-hover text-3 leading-3" icon="icon-sousuo" />
         </template>
       </Input>
-      
+
       <!-- Action buttons -->
       <div class="flex space-x-2 items-center">
         <!-- Add tag button -->
@@ -292,7 +292,7 @@ const columns = [
           icon="icon-tianjia"
           :disabled="hasAuth || total>=10"
           @click="addTag" />
-        
+
         <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
@@ -300,7 +300,7 @@ const columns = [
           @click="loadUserTag" />
       </div>
     </div>
-    
+
     <!-- Tag data table -->
     <Table
       size="small"
@@ -310,7 +310,7 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
-      
+
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column, record }">
         <!-- Action buttons for each tag row -->
@@ -325,7 +325,7 @@ const columns = [
       </template>
     </Table>
   </div>
-  
+
   <!-- Tag modal for adding new tags -->
   <AsyncComponent :visible="tagVisible">
     <TagModal

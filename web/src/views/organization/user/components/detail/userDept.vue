@@ -2,10 +2,10 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
-import { duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
-import { SearchParams, UserDept } from './PropsType';
+import { UserDept } from './PropsType';
 import { user } from '@/api';
 
 /**
@@ -35,7 +35,7 @@ const { t } = useI18n();
  * Reactive state management for component
  */
 const loading = ref(false); // Loading state for API calls
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
 const total = ref(0); // Total number of departments for pagination
 const count = ref(0); // Current department count for quota display
 const isContUpdate = ref(true); // Whether to update count continuously
@@ -150,7 +150,7 @@ const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
 
   // Recalculate current page after deletion
   params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
-  
+
   // Table operations should not affect refresh icon state
   if (type === 'Table') {
     disabled.value = true;
@@ -277,7 +277,7 @@ const columns = [
   <div>
     <!-- User department quota hints -->
     <Hints :text="t('department.userDeptQuotaTip', {num: count})" class="mb-1" />
-    
+
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">
       <!-- Department name search input -->
@@ -291,7 +291,7 @@ const columns = [
           <Icon class="text-theme-content text-theme-text-hover text-3 leading-3" icon="icon-sousuo" />
         </template>
       </Input>
-      
+
       <!-- Action buttons -->
       <div class="flex space-x-2 items-center">
         <!-- Add department button -->
@@ -301,7 +301,7 @@ const columns = [
           icon="icon-tianjia"
           :disabled="props.hasAuth || total>=5"
           @click="addDept" />
-        
+
         <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
@@ -309,7 +309,7 @@ const columns = [
           @click="loadUserDept" />
       </div>
     </div>
-    
+
     <!-- Department data table -->
     <Table
       size="small"
@@ -319,7 +319,7 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
-      
+
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column ,text,record }">
         <!-- Department name with icon -->
@@ -329,7 +329,7 @@ const columns = [
             <div class="w-full truncate" :title="text">{{ text }}</div>
           </div>
         </template>
-        
+
         <!-- Action buttons for each department row -->
         <template v-if="column.dataIndex === 'action'">
           <ButtonAuth
@@ -342,7 +342,7 @@ const columns = [
       </template>
     </Table>
   </div>
-  
+
   <!-- Department modal for adding new departments -->
   <AsyncComponent :visible="deptVisible">
     <DeptModal

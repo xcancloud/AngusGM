@@ -3,9 +3,9 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils } from '@xcan-angus/infra';
 
-import { SearchParams, UserGroup } from './PropsType';
+import { UserGroup } from './PropsType';
 import { user } from '@/api';
 
 /**
@@ -35,7 +35,7 @@ const { t } = useI18n();
  * Reactive state management for component
  */
 const loading = ref(false); // Loading state for API calls
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
 const total = ref(0); // Total number of groups for pagination
 const count = ref(0); // Current group count for quota display
 const isContUpdate = ref(true); // Whether to update count continuously
@@ -88,7 +88,7 @@ const isRefresh = ref(false);
 /**
  * Disabled state for refresh button during operations
  */
-const disabled = ref(false); // 刷新按钮禁用旋转
+const disabled = ref(false);
 
 /**
  * Handle group save from modal
@@ -277,7 +277,7 @@ const columns = [
   <div>
     <!-- User group quota hints -->
     <Hints :text="t('group.userGroupQuotaTip', {num: count})" class="mb-1" />
-    
+
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">
       <!-- Group name search input -->
@@ -291,7 +291,7 @@ const columns = [
           <Icon class="text-theme-content text-theme-text-hover text-3 leading-3" icon="icon-sousuo" />
         </template>
       </Input>
-      
+
       <!-- Action buttons -->
       <div class="flex space-x-2 items-center">
         <!-- Add group button -->
@@ -301,7 +301,7 @@ const columns = [
           icon="icon-tianjia"
           :disabled="hasAuth || total>=200"
           @click="addGroup" />
-        
+
         <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
@@ -309,7 +309,7 @@ const columns = [
           @click="loadUserGroup" />
       </div>
     </div>
-    
+
     <!-- Group data table -->
     <Table
       size="small"
@@ -319,7 +319,7 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
-      
+
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column,text, record }">
         <!-- Group name with icon -->
@@ -329,7 +329,7 @@ const columns = [
             <div class="w-full truncate" :title="text">{{ text }}</div>
           </div>
         </template>
-        
+
         <!-- Action buttons for each group row -->
         <template v-if="column.dataIndex === 'action'">
           <ButtonAuth
@@ -342,7 +342,7 @@ const columns = [
       </template>
     </Table>
   </div>
-  
+
   <!-- Group modal for adding new groups -->
   <AsyncComponent :visible="groupVisible">
     <GroupModal

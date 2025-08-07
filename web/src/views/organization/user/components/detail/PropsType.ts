@@ -1,18 +1,6 @@
 import { EnumMessage, Gender, UserSource, PasswordStrength } from '@xcan-angus/infra';
 
 /**
- * Search parameters interface for pagination and filtering
- * TODO: Replace references with more specific types
- */
-export type SearchParams = { // TODO 替换引用
-  pageNo: number; // Current page number
-  pageSize: number; // Number of items per page
-  orderBy?: string; // Field to order by
-  orderSort?: 'ASC' | 'DESC'; // Sort direction
-  filters?: { key: string, op: string, value: any }[] // Search filters
-}
-
-/**
  * User group association interface
  * Represents the relationship between a user and a group
  */

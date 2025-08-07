@@ -3,11 +3,10 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover } from 'ant-design-vue';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
-import { duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { auth } from '@/api';
-import { SearchParams } from './PropsType';
 
 /**
  * Async component for policy modal
@@ -37,7 +36,7 @@ const { t } = useI18n();
  */
 const loading = ref(false); // Loading state for API calls
 const disabled = ref(false); // Disabled state for buttons during operations
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
 const total = ref(0); // Total number of policies for pagination
 const dataList = ref([]); // Policy list data
 
@@ -261,7 +260,7 @@ const columns = [
   <div>
     <!-- Authorization policy hints -->
     <Hints :text="t('permission.authPolicies.authTip')" class="mb-1" />
-    
+
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">
       <!-- Policy name search input -->
@@ -274,7 +273,7 @@ const columns = [
           <Icon class="text-theme-content text-theme-text-hover text-3 leading-3" icon="icon-sousuo" />
         </template>
       </Input>
-      
+
       <!-- Action buttons -->
       <div class="flex items-center">
         <!-- Add policy button -->
@@ -285,7 +284,7 @@ const columns = [
           class="mr-2"
           :disabled="props.hasAuth || total>=10"
           @click="addPolicy" />
-        
+
         <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
@@ -293,7 +292,7 @@ const columns = [
           @click="getUserPolicy" />
       </div>
     </div>
-    
+
     <!-- Policy data table -->
     <Table
       size="small"
@@ -303,7 +302,7 @@ const columns = [
       :columns="columns"
       :pagination="pagination"
       @change="handleChange">
-      
+
       <!-- Custom cell renderers for table columns -->
       <template #bodyCell="{ column,text,record }">
         <!-- Policy name with description popover -->
@@ -322,7 +321,7 @@ const columns = [
             </Popover>
           </div>
         </template>
-        
+
         <!-- Organization type display -->
         <template v-if="column.dataIndex === 'orgType'">
           <template v-if="['USER','DEPT','GROUP'].includes(text?.value)">
@@ -332,7 +331,7 @@ const columns = [
             {{ getAuthorizationType(record) }}
           </template>
         </template>
-        
+
         <!-- Action buttons for each policy row -->
         <template v-if="column.dataIndex === 'action'">
           <ButtonAuth
@@ -345,7 +344,7 @@ const columns = [
       </template>
     </Table>
   </div>
-  
+
   <!-- Policy modal for adding new policies -->
   <AsyncComponent :visible="policyVisible">
     <PolicyModal
