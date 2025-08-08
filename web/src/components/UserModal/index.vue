@@ -114,7 +114,7 @@ const loadGroupUserList = async (newList): Promise<void> => {
 };
 
 // 回显部门关联的用户
-const loadDepUsertList = async (newList): Promise<void> => {
+const loadDepUserList = async (newList): Promise<void> => {
   if (loading.value) {
     return;
   }
@@ -159,7 +159,7 @@ const handleChange = (value, newValue) => {
       loadGroupUserList(newValue);
       break;
     case 'Dept':
-      loadDepUsertList(newValue);
+      loadDepUserList(newValue);
       break;
     default:
       checkedList.value = props.relevancyIds;
@@ -207,7 +207,7 @@ const modalTitle = computed(() => {
     @ok="handleOk">
     <div class="mb-3 flex space-x-2">
       <Input
-        placeholder="查询用户名称"
+        :placeholder="t('user.placeholder.name')"
         size="small"
         class="w-1/2"
         @change="handleInputChange">
@@ -216,7 +216,7 @@ const modalTitle = computed(() => {
         </template>
       </Input>
       <Select
-        :placeholder="t('tagPlaceholder')"
+        :placeholder="t('user.placeholder.selectTag')"
         :action="`${GM}/org/tag?fullTextSearch=true`"
         :fieldNames="{ label: 'name', value: 'id' }"
         showSearcht
@@ -230,8 +230,8 @@ const modalTitle = computed(() => {
         :indeterminate="indeterminate"
         @change="onCheckAllChange"></Checkbox>
       <div class="w-50">ID</div>
-      <div class="flex-1 ">{{ t('name') }}</div>
-      <div class="w-15">{{ t('status') }}</div>
+      <div class="flex-1 ">{{ t('user.columns.name') }}</div>
+      <div class="w-15">{{ t('user.columns.status') }}</div>
     </div>
     <Scroll
       v-model="loading"

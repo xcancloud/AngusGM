@@ -3,85 +3,19 @@ import { computed, defineAsyncComponent, reactive, ref, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Dropdown, Menu, MenuItem, TabPane, Tabs, Tag } from 'ant-design-vue';
 import {
-  AsyncComponent,
-  ButtonAuth,
-  Card,
-  Icon,
-  IconCount,
-  IconRefresh,
-  Image,
-  Input,
-  modal,
-  notification,
-  PureCard,
-  Select,
-  Table,
-  Tree
+  AsyncComponent, ButtonAuth, Card, Icon, IconRefresh, Image,
+  Input, modal, notification, PureCard, Select, Table, Tree
 } from '@xcan-angus/vue-ui';
-import { app, duration, GM, utils } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, app, duration, GM, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
-import { DataType, TreeRecordType, UserRecordType } from './PropsType';
+import { DeptState, DeptInfo } from './PropsType';
 import { auth, dept } from '@/api';
-
-// Type definitions for filter operations and search parameters
-type FilterOp =
-  | 'EQUAL'
-  | 'NOT_EQUAL'
-  | 'GREATER_THAN'
-  | 'GREATER_THAN_EQUAL'
-  | 'LESS_THAN'
-  | 'LESS_THAN_EQUAL'
-  | 'CONTAIN'
-  | 'NOT_CONTAIN'
-  | 'MATCH_END'
-  | 'MATCH'
-  | 'IN'
-  | 'NOT_IN';
-
-type Filters = { key: string; value: string; op: FilterOp }[];
-
-interface SearchParams {
-  pageNo?: number;
-  pageSize?: number;
-  filters?: Filters;
-  orderBy?: string;
-  orderSort?: 'ASC' | 'DESC';
-}
-
-// Department state interface
-interface DeptState {
-  sortForm: Record<string, any>;
-  searchForm: any[];
-  loading: boolean;
-  dataSource: DataType[];
-  currentRecord: DataType | undefined;
-  addDeptVisible: boolean;
-  editDeptNameVisible: boolean;
-  userLoading: boolean;
-  userDataSource: UserRecordType[];
-  currentSelectedNode: TreeRecordType;
-  concatUserSource: UserRecordType[];
-}
-
-// Department info interface
-interface DeptInfo {
-  createdByName: string;
-  createdDate: string;
-  tags: { id: string; name: string }[];
-  level: string;
-  name: string;
-  code: string;
-  id: string;
-  lastModifiedDate: string;
-  lastModifiedByName: string;
-}
 
 // Async component definitions
 const SelectTargetModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
 const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/components/add/index.vue'));
 const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/components/edit/index.vue'));
-const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 const MoveDeptModal = defineAsyncComponent(() => import('./components/move/index.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
@@ -89,7 +23,6 @@ const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/
 const { t } = useI18n();
 
 // Reactive state management
-const showCount = ref(true); // Controls statistics panel visibility
 const state = reactive<DeptState>({
   sortForm: {},
   searchForm: [],
@@ -111,7 +44,7 @@ const searchTagId = ref<string>();
 const selectedDept = ref<string>();
 
 // Search parameters and pagination
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 
 // Loading states
@@ -160,7 +93,7 @@ const policyPagination = reactive({
   pageSize: 10,
   total: 0
 });
-const policyFilters = ref<{ key: string; value: string; op: FilterOp }[]>([]);
+const policyFilters = ref<SearchCriteria[]>([]);
 const policyLoading = ref(false);
 
 // Computed properties
@@ -192,25 +125,25 @@ const changeSelect = async (
   info: { id: string | undefined; name: string | undefined; pid: string | undefined }
 ): Promise<void> => {
   const { id, name, pid } = info;
-  
+
   if (selected) {
     state.currentSelectedNode = { id, name, pid };
     params.value.pageNo = 1;
     policyPagination.current = 1;
-    
+
     try {
       userLoadDisabled.value = true;
       await loadUser();
       userLoadDisabled.value = false;
-      
+
       await loadDeptInfo();
-      
+
       policyLoadDisabled.value = true;
       await getDeptPolicy();
       policyLoadDisabled.value = false;
     } catch (error) {
       console.error('Error in changeSelect:', error);
-      notification.error(t('common.messages.operationFailed'));
+      notification.error(t('common.messages.networkError'));
     }
   } else {
     state.currentSelectedNode = { id: undefined, name: undefined, pid: undefined };
@@ -223,7 +156,7 @@ const changeSelect = async (
  */
 const loadUser = async (): Promise<void> => {
   if (!state.currentSelectedNode.id) {
-    notification.warning(t('loadUserWarn'));
+    notification.warning(t('common.messages.queryListFailed'));
     return;
   }
 
@@ -232,18 +165,19 @@ const loadUser = async (): Promise<void> => {
   }
 
   try {
+    userLoading.value = true;
+
     // Prepare filters for search
     if (userSearchName.value && params.value.filters) {
-      params.value.filters.push({ key: 'fullName', op: 'MATCH_END', value: userSearchName.value });
+      params.value.filters.push({ key: 'fullName', op: SearchCriteria.OpEnum.MatchEnd, value: userSearchName.value });
     } else {
       params.value.filters = [];
     }
 
-    userLoading.value = true;
     const [error, res] = await dept.getDeptUsers(state.currentSelectedNode.id, params.value);
-    
+
     if (error) {
-      notification.error(t('common.messages.operationFailed'));
+      notification.error(t('common.messages.queryListFailed'));
       return;
     }
 
@@ -266,13 +200,12 @@ const loadDeptInfo = async (): Promise<void> => {
 
   try {
     const [error, { data = {} }] = await dept.getDeptDetail(state.currentSelectedNode.id);
-    
     if (error) {
-      notification.error(t('common.messages.operationFailed'));
+      notification.error(t('common.messages.queryListFailed'));
       return;
     }
 
-    // Update department info
+    // Update department info with proper type safety
     Object.assign(deptInfo, {
       name: data.name || '',
       code: data.code || '',
@@ -288,6 +221,15 @@ const loadDeptInfo = async (): Promise<void> => {
     console.error('Error loading department info:', error);
     notification.error(t('common.messages.networkError'));
   }
+};
+
+/**
+ * Enhanced error handling for API operations
+ * Provides consistent error messaging and logging
+ */
+const handleApiError = (error: any, operation: string): void => {
+  console.error(`Error in ${operation}:`, error);
+  notification.error(t('common.messages.operationFailed'));
 };
 
 /**
@@ -337,45 +279,43 @@ const saveEditName = (name: string): void => {
 const del = async (): Promise<void> => {
   try {
     const [error, res] = await dept.getDeptCount(currentActionNode.value.id as string);
-    
     if (error) {
-      notification.error(t('common.messages.operationFailed'));
+      handleApiError(error, 'get department count');
       return;
     }
 
     const { subDeptNum, sunUserNum } = res.data;
     const existChildDept = subDeptNum > 0;
     const existUser = sunUserNum > 0;
-    
+
     let content = '';
     if (existChildDept && existUser) {
-      content = t('childAndUserTip', { childNum: subDeptNum, userNum: sunUserNum });
+      content = t('department.messages.deptHasChildAndUserTip', { childNum: subDeptNum, userNum: sunUserNum });
     } else if (existChildDept && !existUser) {
-      content = t('tenantDelChildTip', { childNum: subDeptNum });
+      content = t('department.messages.deptHasChildTip', { childNum: subDeptNum });
     } else if (!existChildDept && existUser) {
-      content = t('tenantDelUserTip', { userNum: sunUserNum });
+      content = t('department.messages.deptHasUserTip', { userNum: sunUserNum });
     }
 
     modal.confirm({
       centered: true,
-      title: t('delDept'),
-      content: t('delDeptTip', { content }),
+      title: t('department.actions.deleteDept'),
+      content: t('department.messages.confirmDelete', { content }),
       onOk: async () => {
         try {
           const [error] = await dept.deleteDept({ ids: [currentActionNode.value.id as string] });
-          
           if (error) {
-            notification.error(t('common.messages.operationFailed'));
+            handleApiError(error, 'delete department');
             return;
           }
 
           notification.success(t('common.messages.deleteSuccess'));
           treeSelect.value.del(currentActionNode.value.id);
-          
+
           if (currentActionNode.value.pid && +currentActionNode.value.pid < 0 && !searchDeptId.value) {
             notify.value += 1;
           }
-          
+
           if (currentActionNode.value.id === state.currentSelectedNode.id) {
             state.currentSelectedNode.id = undefined;
             state.currentSelectedNode.pid = undefined;
@@ -383,14 +323,12 @@ const del = async (): Promise<void> => {
             state.userDataSource = [];
           }
         } catch (error) {
-          console.error('Error deleting department:', error);
-          notification.error(t('common.messages.operationFailed'));
+          handleApiError(error, 'delete department');
         }
       }
     });
   } catch (error) {
-    console.error('Error getting department count:', error);
-    notification.error(t('common.messages.networkError'));
+    handleApiError(error, 'get department count');
   }
 };
 
@@ -411,17 +349,16 @@ const tagSave = async (
     if (_tagIds.length) {
       await dept.addDeptTags({ id: currentActionNode.value.id as string, ids: _tagIds });
     }
-    
+
     // Delete tags
     if (deleteTagIds.length) {
       await dept.deleteDeptTag({ id: currentActionNode.value.id as string, ids: deleteTagIds });
     }
-    
+
     editTagVisible.value = false;
     await loadDeptInfo();
   } catch (error) {
-    console.error('Error saving tags:', error);
-    notification.error(t('common.messages.operationFailed'));
+    handleApiError(error, 'save tags');
   }
 };
 
@@ -436,7 +373,7 @@ const searchLoadUser = debounce(duration.search, () => {
 /**
  * User association handlers
  */
-const concatUser = async (): Promise<void> => {
+const assocUser = async (): Promise<void> => {
   userVisible.value = true;
 };
 
@@ -458,7 +395,7 @@ const userSave = async (
 
     userVisible.value = false;
     userUpdateLoading.value = false;
-    
+
     if (isRefresh.value) {
       userLoadDisabled.value = true;
       await loadUser();
@@ -466,8 +403,7 @@ const userSave = async (
       isRefresh.value = false;
     }
   } catch (error) {
-    console.error('Error saving users:', error);
-    notification.error(t('common.messages.operationFailed'));
+    handleApiError(error, 'save users');
   }
 };
 
@@ -478,16 +414,14 @@ const addDeptUser = async (userIds: string[]): Promise<void> => {
   try {
     userUpdateLoading.value = true;
     const [error] = await dept.createDeptUser(state.currentSelectedNode.id as string, userIds);
-    
     if (error) {
-      notification.error(t('common.messages.operationFailed'));
+      handleApiError(error, 'add users to department');
       return;
     }
-    
+
     isRefresh.value = true;
   } catch (error) {
-    console.error('Error adding users to department:', error);
-    notification.error(t('common.messages.networkError'));
+    handleApiError(error, 'add users to department');
   } finally {
     userUpdateLoading.value = false;
   }
@@ -500,9 +434,8 @@ const delDeptUser = async (userIds: string[], type?: 'Table' | 'Modal'): Promise
   try {
     userUpdateLoading.value = true;
     const [error] = await dept.deleteDeptUser(state.currentSelectedNode.id as string, userIds);
-    
     if (error) {
-      notification.error(t('common.messages.operationFailed'));
+      handleApiError(error, 'remove users from department');
       return;
     }
 
@@ -523,37 +456,39 @@ const delDeptUser = async (userIds: string[], type?: 'Table' | 'Modal'): Promise
       userLoadDisabled.value = false;
     }
   } catch (error) {
-    console.error('Error removing users from department:', error);
-    notification.error(t('common.messages.networkError'));
+    handleApiError(error, 'remove users from department');
   } finally {
     userUpdateLoading.value = false;
   }
 };
 
 /**
- * Department search handlers
+ * Optimized department search with better error handling
  */
 const handleSearchDept = async (value: any): Promise<void> => {
   if (!value) return;
 
   try {
     const [error, res] = await dept.getNavigationByDeptId({ id: value });
-    
     if (error) {
-      notification.error(t('common.messages.operationFailed'));
+      handleApiError(error, 'department search');
       return;
     }
 
     const parentChain = (res.data.parentChain || []).map(item => ({ ...item, hasSubDept: true }));
     const { id, pid, name } = res.data.current;
-    
+
     await nextTick();
     selectedDept.value = id;
-    state.dataSource = [...parentChain, res.data.current];
+    // Ensure all tree data has required properties and filter out undefined values
+    const validParentChain = parentChain.filter(item => item.id && item.name);
+    const validCurrent = res.data.current.id && res.data.current.name ? res.data.current : null;
+    // Filter out items with undefined id or name to ensure ITreeOption compatibility
+    const filteredDataSource = validCurrent ? [...validParentChain, validCurrent] : validParentChain;
+    state.dataSource = filteredDataSource.filter(item => item.id && item.name);
     await changeSelect([id], true, { id, pid, name });
   } catch (error) {
-    console.error('Error searching department:', error);
-    notification.error(t('common.messages.networkError'));
+    handleApiError(error, 'department search');
   }
 };
 
@@ -592,12 +527,12 @@ const openMove = (): void => {
 const confirmMove = async (targetId: string): Promise<void> => {
   try {
     const [error] = await dept.updateDept([{ pid: targetId, id: currentActionNode.value.id }]);
-    
+
     if (error) {
       notification.error(t('common.messages.operationFailed'));
       return;
     }
-    
+
     moveVisible.value = false;
     notify.value += 1;
   } catch (error) {
@@ -613,7 +548,7 @@ const tableChange = async (_pagination: any): Promise<void> => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
-  
+
   userLoadDisabled.value = true;
   await loadUser();
   userLoadDisabled.value = false;
@@ -632,18 +567,18 @@ const getDeptPolicy = async (): Promise<void> => {
   try {
     const { pageSize, current } = policyPagination;
     policyLoading.value = true;
-    
+
     const [error, res] = await auth.getDeptPolicy(state.currentSelectedNode.id as string, {
       pageSize,
       pageNo: current,
       filters: policyFilters.value
     });
-    
+
     if (error) {
       notification.error(t('common.messages.operationFailed'));
       return;
     }
-    
+
     policyData.value = res.data?.list || [];
     policyPagination.total = res.data.total;
   } catch (error) {
@@ -663,12 +598,11 @@ const policySave = async (addIds: string[]): Promise<void> => {
   try {
     policyUpdateLoading.value = true;
     const [error] = await auth.addPolicyByDept(state.currentSelectedNode.id as string, addIds);
-    
     if (error) {
       notification.error(t('common.messages.operationFailed'));
       return;
     }
-    
+
     policyVisible.value = false;
     policyLoadDisabled.value = true;
     await getDeptPolicy();
@@ -684,12 +618,11 @@ const policySave = async (addIds: string[]): Promise<void> => {
 const handleCancel = async (delId: string): Promise<void> => {
   try {
     const [error] = await auth.deletePolicyByDept(state.currentSelectedNode.id as string, [delId]);
-    
     if (error) {
       notification.error(t('common.messages.operationFailed'));
       return;
     }
-    
+
     policyLoadDisabled.value = true;
     await getDeptPolicy();
     policyLoadDisabled.value = false;
@@ -702,7 +635,7 @@ const handleCancel = async (delId: string): Promise<void> => {
 const changePolicyPage = async (page: any): Promise<void> => {
   policyPagination.current = page.current;
   policyPagination.pageSize = page.pageSize;
-  
+
   policyLoadDisabled.value = true;
   await getDeptPolicy();
   policyLoadDisabled.value = false;
@@ -711,13 +644,13 @@ const changePolicyPage = async (page: any): Promise<void> => {
 const policyNameChange = debounce(duration.search, async (event: any): Promise<void> => {
   const value = event.target.value;
   policyPagination.current = 1;
-  
+
   if (value) {
-    policyFilters.value = [{ key: 'name', op: 'MATCH_END', value: value }];
+    policyFilters.value = [{ key: 'name', op: SearchCriteria.OpEnum.MatchEnd, value: value }];
   } else {
     policyFilters.value = [];
   }
-  
+
   policyLoadDisabled.value = true;
   await getDeptPolicy();
   policyLoadDisabled.value = false;
@@ -752,95 +685,89 @@ const rightOpenMove = (selected: any): void => {
 };
 
 // Table column definitions
-const columns = [
+const userColumns = [
   {
+    title: t('user.columns.assocUser.id'),
     key: 'id',
-    title: t('用户ID'),
     dataIndex: 'id',
     width: '22%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
+    title: t('user.columns.assocUser.name'),
     key: 'fullName',
-    title: t('userName1'),
     dataIndex: 'fullName',
+    width: '22%',
     ellipsis: true
   },
   {
+    title: t('user.columns.assocUser.createdByName'),
     key: 'createdByName',
-    title: t('associatedPerson'),
     dataIndex: 'createdByName',
-    width: '20%'
+    width: '22%'
   },
   {
+    title: t('user.columns.assocUser.createdDate'),
     key: 'createdDate',
-    title: t('associatedTime'),
     dataIndex: 'createdDate',
-    width: '20%',
+    width: '22%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
+    title: t('common.actions.operation'),
     key: 'action',
-    title: t('operation'),
     dataIndex: 'action',
-    width: 82,
-    align: 'center'
+    width: '12%',
+    align: 'center' as const
   }
 ];
 
 const policyColumns = [
   {
+    title: t('permission.columns.assocPolicies.id'),
     key: 'id',
-    title: t('策略ID'),
     dataIndex: 'id',
-    width: '12%',
+    width: '16%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
+    title: t('permission.columns.assocPolicies.name'),
     key: 'name',
-    title: t('permissionsStrategy.auth.name'),
     dataIndex: 'name',
-    ellipsis: true
+    ellipsis: true,
+    width: '20%'
   },
   {
+    title: t('permission.columns.assocPolicies.code'),
     key: 'code',
-    title: t('permissionsStrategy.detail.info.code'),
     dataIndex: 'code',
-    width: '11%'
+    width: '20%'
   },
   {
+    title: t('permission.columns.assocPolicies.authByName'),
     key: 'authByName',
-    title: t('授权人'),
     dataIndex: 'authByName',
-    width: '11%'
+    width: '16%'
   },
   {
+    title: t('permission.columns.assocPolicies.authDate'),
     key: 'authDate',
-    title: t('授权时间'),
     dataIndex: 'authDate',
-    width: '11%',
+    width: '16%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
+    title: t('common.actions.operation'),
     key: 'action',
-    title: t('operation'),
     dataIndex: 'action',
-    width: 82,
-    align: 'center'
+    width: '12%',
+    align: 'center' as const
   }
 ];
 </script>
 
 <template>
   <PureCard class="p-3.5 flex flex-col h-full">
-    <!-- Statistics panel -->
-    <Statistics
-      resource="Dept"
-      :barTitle="t('statistics.metrics.newDepartments')"
-      :router="GM"
-      dateType="YEAR"
-      :visible="showCount" />
-    
     <div class="flex space-x-2 flex-1 min-h-0">
       <!-- Department tree panel -->
       <PureCard class="w-100 p-3 h-full overflow-x-hidden dept-tree pr-2 border-r flex flex-col">
@@ -855,7 +782,7 @@ const policyColumns = [
             size="small"
             :allowClear="true"
             :fieldNames="{label: 'name', value: 'id'}"
-            :placeholder="t('deptPlaceholder')"
+            :placeholder="t('department.placeholder.name')"
             @change="handleSearchDept" />
           <Select
             v-model:value="searchTagId"
@@ -864,7 +791,7 @@ const policyColumns = [
             class="w-40"
             size="small"
             showSearch
-            :placeholder="t('tagPlaceholder')"
+            :placeholder="t('department.placeholder.tag')"
             :action="`${GM}/org/tag`"
             @change="handleSearchTag" />
           <ButtonAuth
@@ -877,7 +804,7 @@ const policyColumns = [
             :disabled="refreshDisabled"
             @click="handleRefreshDeptList" />
         </div>
-        
+
         <!-- Department tree -->
         <Tree
           ref="treeSelect"
@@ -889,61 +816,68 @@ const policyColumns = [
           :autoload="!searchDeptId"
           :treeData="state.dataSource"
           :notify="notify"
-          class="flex-1"
+          class="dept-tree-container"
           :style="{height:hasDept ? '' : '0'}"
           :selectFirstOptions="true"
           @loaded="loaded"
           @select="changeSelect">
           <template #default="item">
             <Dropdown :trigger="['contextmenu']" overlayClassName="ant-dropdown-sm">
-              <div class="flex items-center leading-7 truncate text-theme-content" :title="item.name">
-                <Icon icon="icon-bumen" class="mr-1 text-gray-text" />
-                {{ item.name }}
+              <div class="dept-tree-node" :title="item.name">
+                <div class="dept-node-content">
+                  <Icon icon="icon-bumen" class="dept-node-icon" />
+                  <span class="dept-node-text">{{ item.name }}</span>
+                </div>
               </div>
               <template #overlay>
-                <Menu>
+                <Menu class="dept-context-menu">
                   <MenuItem
                     v-if="app.show('DeptModify')"
                     :disabled="!app.has('DeptModify')"
+                    class="dept-menu-item"
                     @click="rightEditDeptName(item)">
                     <template #icon>
-                      <Icon icon="icon-shuxie" />
+                      <Icon icon="icon-shuxie" class="menu-item-icon" />
                     </template>
                     {{ app.getName('DeptModify') }}
                   </MenuItem>
                   <MenuItem
                     v-if="app.show('DeptAdd')"
                     :disabled="!app.has('DeptAdd')"
+                    class="dept-menu-item"
                     @click="rightAddDept(item)">
                     <template #icon>
-                      <Icon icon="icon-tianjia" />
+                      <Icon icon="icon-tianjia" class="menu-item-icon" />
                     </template>
                     {{ app.getName('DeptAdd') }}
                   </MenuItem>
                   <MenuItem
                     v-if="app.show('DeptDelete')"
                     :disabled="!app.has('DeptDelete')"
+                    class="dept-menu-item"
                     @click="rightDel(item)">
                     <template #icon>
-                      <Icon icon="icon-lajitong" />
+                      <Icon icon="icon-lajitong" class="menu-item-icon" />
                     </template>
                     {{ app.getName('DeptDelete') }}
                   </MenuItem>
                   <MenuItem
                     v-if="app.show('DeptTagsAdd')"
                     :disabled="!app.has('DeptTagsAdd')"
+                    class="dept-menu-item"
                     @click="rightEditTag(item)">
                     <template #icon>
-                      <Icon icon="icon-biaoqian2" />
+                      <Icon icon="icon-biaoqian2" class="menu-item-icon" />
                     </template>
                     {{ app.getName('DeptTagsAdd') }}
                   </MenuItem>
                   <MenuItem
                     v-if="app.show('Move')"
                     :disabled="!app.has('Move')"
+                    class="dept-menu-item"
                     @click="rightOpenMove(item)">
                     <template #icon>
-                      <Icon icon="icon-riqiyou" />
+                      <Icon icon="icon-riqiyou" class="menu-item-icon" />
                     </template>
                     {{ app.getName('Move') }}
                   </MenuItem>
@@ -953,26 +887,26 @@ const policyColumns = [
           </template>
         </Tree>
       </PureCard>
-      
+
       <!-- Content panel -->
       <div class="flex-1 flex flex-col overflow-y-auto">
         <!-- Department info card -->
         <Card v-show="state.currentSelectedNode.id" class="mb-2">
           <template #title>
-            <span class="text-3">基本信息</span>
+            <span class="text-3">{{ t('department.basicInfo') }}</span>
           </template>
           <template #rightExtra>
             <div class="flex items-center space-x-2.5">
-              <ButtonAuth
-                code="DeptModify"
-                type="text"
-                icon="icon-shuxie"
-                @click="rightEditDeptName(state.currentSelectedNode)" />
               <ButtonAuth
                 code="DeptAdd"
                 type="text"
                 icon="icon-tianjia"
                 @click="rightAddDept(state.currentSelectedNode)" />
+              <ButtonAuth
+                code="DeptModify"
+                type="text"
+                icon="icon-shuxie"
+                @click="rightEditDeptName(state.currentSelectedNode)" />
               <ButtonAuth
                 code="DeptDelete"
                 type="text"
@@ -989,38 +923,98 @@ const policyColumns = [
                 type="text"
                 icon="icon-riqiyou"
                 @click="rightOpenMove(state.currentSelectedNode)" />
-              <IconCount v-model:value="showCount" />
             </div>
           </template>
-          
+
           <!-- Department information display -->
-          <div v-show="state.currentSelectedNode.id" class="text-3">
-            <div class="flex">
-              <div class="flex-1">{{ t('name') + `: ${deptInfo.name || ''}` }}</div>
-              <div class="flex-1">{{ t('code') + `: ${deptInfo.code || ''}` }}</div>
-              <div class="flex-1">{{ t('ID') + `: ${deptInfo.id}` }}</div>
+          <div v-show="state.currentSelectedNode.id" class="dept-info-display">
+            <!-- Basic Information Row -->
+            <div class="info-row">
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-bumen" class="info-icon" />
+                  {{ t('department.columns.name') }}
+                </div>
+                <div class="info-value">{{ deptInfo.name || '--' }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-a-bianhao1" class="info-icon" />
+                  {{ t('department.columns.code') }}
+                </div>
+                <div class="info-value">{{ deptInfo.code || '--' }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-a-ID1" class="info-icon" />
+                  {{ t('ID') }}
+                </div>
+                <div class="info-value">{{ deptInfo.id || '--' }}</div>
+              </div>
             </div>
-            <div class="flex mt-2">
-              <div class="flex-1">{{ t('founder') + `: ${deptInfo.createdByName || '--'}` }}</div>
-              <div class="flex-1">{{ t('createdDate') + `: ${deptInfo.createdDate || ''}` }}</div>
-              <div class="flex-1">{{ t('level') + `: ${deptInfo.level}` }}</div>
+
+            <!-- Creation Information Row -->
+            <div class="info-row">
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-yonghu" class="info-icon" />
+                  {{ t('department.columns.createdByName') }}
+                </div>
+                <div class="info-value">{{ deptInfo.createdByName || '--' }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-shijianriqi" class="info-icon" />
+                  {{ t('department.columns.createdDate') }}
+                </div>
+                <div class="info-value">{{ deptInfo.createdDate || '--' }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-a-cengji1" class="info-icon" />
+                  {{ t('department.columns.level') }}
+                </div>
+                <div class="info-value">{{ deptInfo.level || '--' }}</div>
+              </div>
             </div>
-            <div class="mt-2 flex">
-              <div class="flex-1">{{ t('最后修改人') + `: ${deptInfo.lastModifiedByName || '--'}` }}</div>
-              <div class="flex-1">{{ t('最后修改时间') + `: ${deptInfo.lastModifiedDate || '--'}` }}</div>
-              <div class="flex-1">
-                <span>{{ t('label') }}: </span>
-                <Tag
-                  v-for="tag in deptInfo.tags"
-                  :key="tag.id"
-                  class="mb-1">
-                  {{ tag.name }}
-                </Tag>
+
+            <!-- Modification Information Row -->
+            <div class="info-row">
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-yonghu" class="info-icon" />
+                  {{ t('department.columns.lastModifiedByName') }}
+                </div>
+                <div class="info-value">{{ deptInfo.lastModifiedByName || '--' }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-shijianriqi" class="info-icon" />
+                  {{ t('department.columns.lastModifiedDate') }}
+                </div>
+                <div class="info-value">{{ deptInfo.lastModifiedDate || '--' }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">
+                  <Icon icon="icon-biaoqian2" class="info-icon" />
+                  {{ t('department.columns.tags') }}
+                </div>
+                <div class="info-value">
+                  <div v-if="deptInfo.tags && deptInfo.tags.length > 0" class="tags-container">
+                    <Tag
+                      v-for="tag in deptInfo.tags"
+                      :key="tag.id"
+                      class="dept-tag">
+                      {{ tag.name }}
+                    </Tag>
+                  </div>
+                  <span v-else class="no-tags">--</span>
+                </div>
               </div>
             </div>
           </div>
         </Card>
-        
+
         <!-- Tab content -->
         <div class="flex-1">
           <PureCard class="px-2 min-h-full">
@@ -1029,11 +1023,11 @@ const policyColumns = [
               class="dept-tab"
               size="small">
               <!-- Users tab -->
-              <TabPane key="user" :tab="t('permissionsStrategy.auth.dept')">
+              <TabPane key="user" :tab="t('department.tab.deptUsers')">
                 <div class="flex item-center justify-between mb-2">
                   <Input
                     v-model:value="userSearchName"
-                    :placeholder="t('searchUserName')"
+                    :placeholder="t('user.placeholder.search')"
                     class="w-50"
                     size="small"
                     allowClear
@@ -1050,22 +1044,24 @@ const policyColumns = [
                       code="DeptUserAssociate"
                       type="primary"
                       icon="icon-tianjia"
-                      @click="concatUser" />
+                      @click="assocUser" />
                     <IconRefresh
                       :loading="userLoading"
                       :disabled="userLoadDisabled"
                       @click="handleRefreshUser" />
                   </div>
                 </div>
-                
+
                 <!-- Users table -->
                 <Table
                   :dataSource="state.userDataSource"
                   rowKey="id"
-                  :columns="columns"
+                  :columns="userColumns"
                   :pagination="pagination"
                   :loading="userLoading"
                   size="small"
+                  :noDataSize="'small'"
+                  :noDataText="t('common.messages.noData')"
                   @change="tableChange">
                   <template #bodyCell="{ column,text, record }">
                     <template v-if="column.dataIndex === 'fullName'">
@@ -1087,12 +1083,12 @@ const policyColumns = [
                   </template>
                 </Table>
               </TabPane>
-              
+
               <!-- Policy tab -->
-              <TabPane key="strategy" :tab="t('authorizationPolicy')">
+              <TabPane key="strategy" :tab="t('department.tab.authPolicy')">
                 <div class="flex items-center justify-between mb-2">
                   <Input
-                    :placeholder="t('查询策略名称')"
+                    :placeholder="t('permission.placeholder.policyName')"
                     class="w-60"
                     allowClear
                     @change="policyNameChange">
@@ -1112,7 +1108,7 @@ const policyColumns = [
                       @click="getDeptPolicy" />
                   </div>
                 </div>
-                
+
                 <!-- Policy table -->
                 <Table
                   :columns="policyColumns"
@@ -1120,13 +1116,12 @@ const policyColumns = [
                   :loading="policyLoading"
                   :dataSource="policyData"
                   :pagination="policyPagination"
+                  :noDataSize="'small'"
+                  :noDataText="t('common.messages.noData')"
                   @change="changePolicyPage">
                   <template #bodyCell="{ column,text,record }">
                     <template v-if="column.dataIndex === 'name'">
                       <div :title="record.description">{{ text }}</div>
-                    </template>
-                    <template v-if="column.dataIndex === 'enabled'">
-                      {{ text?'有效':'无效' }}
                     </template>
                     <template v-if="column.dataIndex === 'action'">
                       <ButtonAuth
@@ -1144,7 +1139,7 @@ const policyColumns = [
       </div>
     </div>
   </PureCard>
-  
+
   <!-- Modal components -->
   <AsyncComponent :visible="addModalVisible">
     <AddDeptModal
@@ -1155,7 +1150,7 @@ const policyColumns = [
       @close="closeAdd()"
       @save="saveAdd" />
   </AsyncComponent>
-  
+
   <AsyncComponent :visible="editModalVisible">
     <EditModal
       :id="currentActionNode.id"
@@ -1164,7 +1159,7 @@ const policyColumns = [
       @close="closeEditName()"
       @save="saveEditName" />
   </AsyncComponent>
-  
+
   <AsyncComponent :visible="editTagVisible">
     <SelectTargetModal
       v-model:visible="editTagVisible"
@@ -1172,7 +1167,7 @@ const policyColumns = [
       type="Dept"
       @change="tagSave" />
   </AsyncComponent>
-  
+
   <AsyncComponent :visible="userVisible">
     <UserModal
       v-if="userVisible"
@@ -1182,7 +1177,7 @@ const policyColumns = [
       :deptId="state.currentSelectedNode.id"
       @change="userSave" />
   </AsyncComponent>
-  
+
   <AsyncComponent :visible="moveVisible">
     <MoveDeptModal
       v-model:visible="moveVisible"
@@ -1190,7 +1185,7 @@ const policyColumns = [
       :defaultPid="currentActionNode.pid"
       @ok="confirmMove" />
   </AsyncComponent>
-  
+
   <AsyncComponent :visible="policyVisible">
     <PolicyModal
       v-model:visible="policyVisible"
@@ -1209,5 +1204,253 @@ const policyColumns = [
 .dept-tab :deep(.ant-tabs-nav::before) {
   @apply mb-1.5;
   display: none;
+}
+
+/* Department information display styling */
+.dept-info-display {
+  padding: 4px 0;
+}
+
+.info-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding: 4px 0
+}
+
+.info-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.info-item {
+  flex: 1;
+  min-width: 0;
+}
+
+.info-label {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  font-weight: 500;
+  padding-left: 20px;
+}
+
+.info-icon {
+  margin-right: 6px;
+  font-size: 12px;
+  color: #1890ff;
+}
+
+.info-value {
+  font-size: 12px;
+  color: #262626;
+  font-weight: 500;
+  word-break: break-word;
+  line-height: 1.4;
+  padding-left: 40px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dept-tag {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  color: #52c41a;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.no-tags {
+  color: #bfbfbf;
+  font-style: italic;
+}
+
+/* Responsive design for department info */
+@media (max-width: 768px) {
+  .info-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-item {
+    flex: none;
+  }
+}
+
+/* Department tree styling */
+.dept-tree-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.dept-tree-node {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin: 2px 0;
+}
+
+.dept-tree-node:hover {
+  background-color: #f5f5f5;
+  transform: translateX(2px);
+}
+
+.dept-tree-node:active {
+  background-color: #e6f7ff;
+  transform: translateX(1px);
+}
+
+.dept-node-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.dept-node-icon {
+  margin-right: 8px;
+  font-size: 12px;
+  color: #1890ff;
+  flex-shrink: 0;
+}
+
+.dept-node-text {
+  color: #262626;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Enhanced tree styling */
+:deep(.ant-tree-node-content-wrapper) {
+  padding: 0 !important;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+:deep(.ant-tree-node-content-wrapper:hover) {
+  background-color: transparent !important;
+}
+
+:deep(.ant-tree-node-content-wrapper.ant-tree-node-selected) {
+  background-color: #e6f7ff !important;
+  border-radius: 6px;
+}
+
+:deep(.ant-tree-node-content-wrapper.ant-tree-node-selected .dept-tree-node) {
+  background-color: #e6f7ff;
+}
+
+:deep(.ant-tree-switcher) {
+  margin-right: 4px;
+  color: #8c8c8c;
+}
+
+:deep(.ant-tree-switcher:hover) {
+  color: #1890ff;
+}
+
+:deep(.ant-tree-indent) {
+  margin-left: 8px;
+}
+
+:deep(.ant-tree-indent-unit) {
+  width: 16px;
+}
+
+/* Context menu styling */
+.dept-context-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #f0f0f0;
+  padding: 4px 0;
+}
+
+.dept-menu-item {
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  margin: 2px 8px;
+}
+
+.dept-menu-item:hover {
+  background-color: #f5f5f5;
+  color: #1890ff;
+}
+
+.dept-menu-item:active {
+  background-color: #e6f7ff;
+}
+
+.menu-item-icon {
+  margin-right: 8px;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.dept-menu-item:hover .menu-item-icon {
+  color: #1890ff;
+}
+
+/* Loading state styling */
+:deep(.ant-tree-loading) {
+  opacity: 0.7;
+}
+
+:deep(.ant-tree-loading .ant-tree-switcher) {
+  color: #1890ff;
+}
+
+/* Empty state styling */
+:deep(.ant-tree-empty) {
+  padding: 24px;
+  text-align: center;
+  color: #8c8c8c;
+}
+
+/* Tree container improvements */
+.dept-tree {
+  border-right: 1px solid #f0f0f0;
+  background-color: #fafafa;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+/* Responsive design for department tree */
+@media (max-width: 768px) {
+  .dept-tree-container {
+    padding: 4px 0;
+  }
+
+  .dept-tree-node {
+    padding: 4px 6px;
+  }
+
+  .dept-node-text {
+    font-size: 12px;
+  }
+
+  .dept-node-icon {
+    font-size: 12px;
+    margin-right: 6px;
+  }
 }
 </style>

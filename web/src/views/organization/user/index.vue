@@ -80,16 +80,15 @@ const loadUserList = async (): Promise<void> => {
   try {
     loading.value = true;
     const [error, { data = { list: [], total: 0 } }] = await user.getUserList(params.value);
-
     if (error) {
-      notification.error('Failed to load user list');
+      notification.error(t('common.messages.queryListFailed'));
       return;
     }
 
     userList.value = data.list;
     total.value = +data.total;
   } catch (error) {
-    notification.error('Failed to load user list');
+    notification.error(t('common.messages.networkError'));
   } finally {
     loading.value = false;
   }
@@ -423,7 +422,8 @@ const columns = [
   {
     title: t('user.columns.name'),
     dataIndex: 'fullName',
-    ellipsis: true
+    ellipsis: true,
+    width: '16%'
   },
   {
     title: t('user.columns.username'),
@@ -433,32 +433,26 @@ const columns = [
   {
     title: t('user.columns.status'),
     dataIndex: 'enabled',
-    width: '6%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.source'),
-    dataIndex: 'source',
     width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('user.columns.lockedStatus'),
     dataIndex: 'locked',
-    width: '6%',
+    width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('user.columns.onlineStatus'),
     dataIndex: 'online',
-    width: '6%',
+    width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('user.columns.mobile'),
     dataIndex: 'mobile',
     groupName: 'contact',
-    width: '8%',
+    width: '10%',
     customRender: ({ text }): string => text || '--',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
@@ -468,7 +462,7 @@ const columns = [
     groupName: 'contact',
     customRender: ({ text }): string => text || '--',
     hide: true,
-    width: '11%',
+    width: '10%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
@@ -477,12 +471,29 @@ const columns = [
     groupName: 'contact',
     customRender: ({ text }): string => text || '--',
     hide: true,
-    width: '15%'
+    width: '10%'
+  },
+  {
+    title: t('user.columns.title'),
+    dataIndex: 'title',
+    groupName: 'other',
+    customRender: ({ text }): string => text || '--',
+    width: '8%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
+  },
+  {
+    title: t('user.columns.source'),
+    dataIndex: 'source',
+    groupName: 'other',
+    hide: true,
+    width: '8%',
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
     title: t('user.columns.gender'),
     dataIndex: 'gender',
     groupName: 'other',
+    hide: true,
     width: '8%',
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
@@ -497,14 +508,6 @@ const columns = [
   {
     title: t('user.columns.deptHead'),
     dataIndex: 'deptHead',
-    groupName: 'other',
-    hide: true,
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.title'),
-    dataIndex: 'title',
     groupName: 'other',
     hide: true,
     width: '8%',
@@ -680,7 +683,7 @@ onMounted(() => {
             :text="t('common.status.online')" />
           <Badge
             v-else
-            status="error"
+            status="default"
             :text="t('common.status.offline')" />
         </template>
 

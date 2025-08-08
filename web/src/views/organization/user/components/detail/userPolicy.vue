@@ -176,10 +176,10 @@ const handleChange = async (_pagination, _filters, sorter) => {
 const getAuthorizationType = (record) => {
   const resultArr: string[] = [];
   if (record.currentDefault) {
-    resultArr.push(t('permission.authPolicies.defaultAuth'));
+    resultArr.push(t('permission.defaultAuth'));
   }
   if (record.openAuth) {
-    resultArr.push(t('permission.authPolicies.openAuth'));
+    resultArr.push(t('permission.openAuth'));
   }
   return resultArr.join(',');
 };
@@ -210,7 +210,7 @@ onMounted(() => {
  */
 const columns = [
   {
-    title: t('permission.authPolicies.id'),
+    title: t('permission.columns.assocPolicies.id'),
     dataIndex: 'id',
     width: '15%',
     customCell: () => {
@@ -218,16 +218,16 @@ const columns = [
     }
   },
   {
-    title: t('permission.authPolicies.name'),
+    title: t('permission.columns.assocPolicies.name'),
     dataIndex: 'name',
     width: '15%'
   },
   {
-    title: t('permission.authPolicies.code'),
+    title: t('permission.columns.assocPolicies.code'),
     dataIndex: 'code'
   },
   {
-    title: t('permission.authPolicies.source'),
+    title: t('permission.columns.assocPolicies.source'),
     dataIndex: 'orgType',
     width: '15%',
     customCell: () => {
@@ -235,12 +235,12 @@ const columns = [
     }
   },
   {
-    title: t('permission.authPolicies.authByName'),
+    title: t('permission.columns.assocPolicies.authByName'),
     dataIndex: 'authByName',
     width: '15%'
   },
   {
-    title: t('permission.authPolicies.authDate'),
+    title: t('permission.columns.assocPolicies.authDate'),
     dataIndex: 'authDate',
     width: '13%',
     customCell: () => {
@@ -259,7 +259,7 @@ const columns = [
 <template>
   <div>
     <!-- Authorization policy hints -->
-    <Hints :text="t('permission.authPolicies.authTip')" class="mb-1" />
+    <Hints :text="t('permission.columns.assocPolicies.authTip')" class="mb-1" />
 
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">

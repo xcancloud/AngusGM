@@ -51,18 +51,6 @@ const COLOR = [
 // User statistics configuration - defines pie chart settings for user data
 const userGroup = ref<PieSetting[]>([
   {
-    key: 'source', // TODO 删除来源饼图
-    value: t('source'),
-    type: [],
-    color: [COLOR[0], COLOR[1], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[1]]
-  },
-  {
-    key: 'sys_admin',
-    value: t('user.profile.identity'),
-    type: [{ value: 0, message: t('user.profile.generalUser') }, { value: 1, message: t('user.profile.systemAdmin') }],
-    color: [COLOR[0], COLOR[6]]
-  },
-  {
     key: 'enabled',
     value: t('common.status.validStatus'),
     type: [{ value: 0, message: t('common.status.disabled') }, { value: 1, message: t('common.status.enabled') }],
@@ -79,6 +67,12 @@ const userGroup = ref<PieSetting[]>([
     value: t('user.profile.gender'),
     type: [],
     color: [COLOR[5], COLOR[6], COLOR[3]]
+  },
+  {
+    key: 'sys_admin',
+    value: t('user.profile.identity'),
+    type: [{ value: 0, message: t('user.profile.generalUser') }, { value: 1, message: t('user.profile.systemAdmin') }],
+    color: [COLOR[0], COLOR[6]]
   }
 ]);
 
@@ -95,27 +89,6 @@ const groupByGroup = ref<PieSetting[]>([
     value: t('common.labels.source'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
-  }
-]);
-
-// Department statistics configuration
-const deptByGroup = ref<PieSetting[]>([
-  {
-    key: 'level',
-    value: t('department.level.name'),
-    type: [
-      { value: 1, message: t('department.level.1') },
-      { value: 2, message: t('department.level.2') },
-      { value: 3, message: t('department.level.3') },
-      { value: 4, message: t('department.level.4') },
-      { value: 5, message: t('department.level.5') },
-      { value: 6, message: t('department.level.6') },
-      { value: 7, message: t('department.level.7') },
-      { value: 8, message: t('department.level.8') },
-      { value: 9, message: t('department.level.9') },
-      { value: 10, message: t('department.level.10') }
-    ],
-    color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[4], COLOR[5], COLOR[6], COLOR[3]]
   }
 ]);
 
@@ -178,7 +151,7 @@ const serviceGroup = ref<PieSetting[]>([
 ]);
 
 // API statistics configuration
-const apiGroup = ref<PieSetting[]>([ // TODO
+const apiGroup = ref<PieSetting[]>([ // TODO 删除图表
   {
     key: 'method',
     value: t('方法'),
@@ -322,11 +295,7 @@ const loadEnums = async (): Promise<void> => {
   try {
     switch (props.resource) {
       case 'User':
-        loadUserSource();
         loadUserGender();
-        hasPieChart.value = true;
-        break;
-      case 'Dept':
         hasPieChart.value = true;
         break;
       case 'Group':
@@ -384,26 +353,14 @@ const loadEnums = async (): Promise<void> => {
 };
 
 /**
- * Load user source enum data
- * Maps enum values to user group configuration
- */
-const loadUserSource = (): void => {
-  try {
-    userGroup.value[0].type = enumUtils.enumToMessages(UserSource);
-  } catch (error) {
-    console.error('Failed to load user source:', error);
-  }
-};
-
-/**
  * Load user gender enum data
  * Maps enum values and assigns colors based on gender
  */
 const loadUserGender = (): void => {
   try {
     const data = enumUtils.enumToMessages(Gender);
-    userGroup.value[4].type = data;
-    userGroup.value[4].color = data.map(item => getUserGenderColor(item.value) || '');
+    userGroup.value[2].type = data;
+    userGroup.value[2].color = data.map(item => getUserGenderColor(item.value) || '');
   } catch (error) {
     console.error('Failed to load user gender:', error);
   }
@@ -432,7 +389,7 @@ const getUserGenderColor = (value: string): string => {
  */
 const loadGroupSource = (): void => {
   try {
-    groupByGroup.value[1].type = enumUtils.enumToMessages(GroupSource); // TODO 英文不生效
+    groupByGroup.value[1].type = enumUtils.enumToMessages(GroupSource);
   } catch (error) {
     console.error('Failed to load group source:', error);
   }
@@ -443,7 +400,7 @@ const loadGroupSource = (): void => {
  */
 const loadOrgTargetType = (): void => {
   try {
-    orgTagGroup.value[0].type = enumUtils.enumToMessages(OrgTargetType); // TODO 英文不生效
+    orgTagGroup.value[0].type = enumUtils.enumToMessages(OrgTargetType);
     console.log(orgTagGroup.value);
   } catch (error) {
     console.error('Failed to load organization target type:', error);
@@ -817,8 +774,6 @@ const pieSetting = computed(() => {
       return groupByGroup.value;
     case 'OrgTagTarget':
       return orgTagGroup.value;
-    case 'Dept':
-      return deptByGroup.value;
     case 'Notice':
       return noticeGroup.value;
     case 'Message':

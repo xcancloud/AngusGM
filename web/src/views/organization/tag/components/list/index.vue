@@ -3,10 +3,10 @@ import { defineAsyncComponent, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Pagination, Tag, Tooltip } from 'ant-design-vue';
 import { AsyncComponent, ButtonAuth, IconRefresh, Input, modal, notification, PureCard, Spin } from '@xcan-angus/vue-ui';
-import { app, duration } from '@xcan-angus/infra';
+import { PageQuery, app, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
-import { OrgTag, SearchParams } from '../../PropsType';
+import { OrgTag } from '../../PropsType';
 
 import { orgTag } from '@/api';
 
@@ -22,7 +22,7 @@ const { t } = useI18n();
 
 const loading = ref(false);
 const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 20, filters: [], fullTextSearch: true });
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 20, filters: [], fullTextSearch: true });
 const total = ref(0);
 const tagList = ref<OrgTag[]>([]);
 const checkedTag = ref<OrgTag | undefined>(undefined); // 选择的标签

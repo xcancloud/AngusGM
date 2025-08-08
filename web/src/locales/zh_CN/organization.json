@@ -9,12 +9,14 @@
     "permanentLock": "永久锁定",
     "uploadAvatarTip": "上传头像",
     "placeholder": {
-      "userId": "查询用户ID",
       "search": "查询用户名称、手机号、职务",
+      "userId": "查询用户ID",
+      "name": "查询用户名称",
       "enabled": "选择状态",
       "source": "选择用户来源",
       "createdDate": "创建时间",
       "tag": "选择或查询标签",
+      "selectTag": "选择标签",
       "username": "输入用户名，{name}最大长度{num},支持字符“{chart}”",
       "fullName": "输入完整姓名",
       "firstName": "输入名字",
@@ -30,7 +32,7 @@
     "columns": {
       "name": "姓名",
       "username": "用户名",
-      "status": "状态",
+      "status": "有效状态",
       "source": "来源",
       "gender": "性别",
       "lockedStatus": "锁定状态",
@@ -47,13 +49,19 @@
       "createdDate": "加入时间",
       "createdByName": "添加人",
       "lastModifiedByName": "最后修改人",
-      "lastModifiedDate": "最后修改时间"
+      "lastModifiedDate": "最后修改时间",
+      "assocUser": {
+        "id": "用户ID",
+        "name": "用户名称",
+        "createdByName": "关联人",
+        "createdDate": "关联时间"
+      }
     },
     "tab": {
-      "authPolicy": "授权策略",
       "associatedDepartment": "所属部门",
       "associatedGroup": "已加入组",
-      "associatedTag": "关联标签"
+      "associatedTag": "关联标签",
+      "authPolicy": "授权策略"
     },
     "actions": {
       "setAdmin": "设为系统管理员",
@@ -84,6 +92,7 @@
     },
     "profile": {
       "basicInfo": "基本信息",
+      "additionalInfo": "扩展信息",
       "security": "安全设置",
       "preference": "偏好设置",
       "messages": "消息",
@@ -168,14 +177,26 @@
   "department": {
     "title": "部门管理",
     "assocTitle": "关联部门",
+    "basicInfo": "基本信息",
     "userDeptQuotaTip": "每个用户最多允许关联5个部门，当前用户已关联{num}个部门。",
     "placeholder": {
       "name": "查询部门名称",
-      "tag": "选择标签"
+      "tag": "选择标签",
+      "nameLengthTip": "长度不超过100字符",
+      "codeLengthTip": "长度不超过80字符",
+      "addNameTip": "请输入部门名称",
+      "addCodeTip": "请输入部门编码"
     },
     "columns": {
       "code": "编码",
       "name": "名称",
+      "parent": "上级",
+      "level": "部门层级",
+      "createdDate": "创建时间",
+      "createdByName": "添加人",
+      "lastModifiedByName": "最后修改人",
+      "lastModifiedDate": "最后修改时间",
+      "tags": "标签",
       "userDept": {
         "code": "部门编码",
         "name": "部门名称",
@@ -184,18 +205,21 @@
         "createdDate": "关联时间"
       }
     },
-    "level": {
-      "name": "部门层级",
-      "1": "一级",
-      "2": "二级",
-      "3": "三级",
-      "4": "四级",
-      "5": "五级",
-      "6": "六级",
-      "7": "七级",
-      "8": "八级",
-      "9": "九级",
-      "10": "十级"
+    "tab": {
+      "deptUsers": "部门用户",
+      "authPolicy": "授权策略"
+    },
+    "actions": {
+      "addDept": "添加部门",
+      "deleteDept": "删除部门",
+      "editName": "编辑名称",
+      "moveDept": "移动部门"
+    },
+    "messages": {
+      "confirmDelete": "{content}，确定删除该部门吗?",
+      "deptHasChildAndUserTip": "部门下存在{childNum}个子部门和{userNum}名用户",
+      "deptHasChildTip": "部门下存在{childNum}个子部门",
+      "deptHasUserTip": "部门下存在{userNum}名用户"
     }
   },
   "group": {

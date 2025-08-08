@@ -112,6 +112,7 @@
       "downloadSuccess": "下载成功",
       "operationSuccess": "操作成功",
       "operationFailed": "操作失败",
+      "queryListFailed": "查询列表数据失败",
       "networkError": "网络错误，请稍后重试",
       "invalidFormat": "格式不正确",
       "requiredField": "此字段为必填项",

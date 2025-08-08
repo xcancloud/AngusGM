@@ -9,12 +9,14 @@
     "permanentLock": "Permanent Lock",
     "uploadAvatarTip": "Upload Avatar",
     "placeholder": {
-      "userId": "Search ID",
       "search": "Search by name, mobile, or title",
+      "userId": "Search ID",
+      "name": "Search user name",
       "enabled": "Select status",
       "source": "Select source",
       "createdDate": "Creation time",
-      "tag": "Select or search tags",
+      "tag": "Select or search tag",
+      "selectTag": "Select tag",
       "username": "{name} has a maximum length of {num} and supports the character \"{chart}\"",
       "fullName": "Enter full name",
       "firstName": "Enter first name",
@@ -30,7 +32,7 @@
     "columns": {
       "name": "Name",
       "username": "Username",
-      "status": "Status",
+      "status": "Valid Status",
       "source": "Source",
       "gender": "Gender",
       "lockedStatus": "Locked",
@@ -47,13 +49,19 @@
       "createdDate": "Join Date",
       "createdByName": "Creator",
       "lastModifiedByName": "Last Modifier",
-      "lastModifiedDate": "Last Modified Date"
+      "lastModifiedDate": "Last Modified Date",
+      "assocUser": {
+        "id": "User ID",
+        "name": "User Name",
+        "createdByName": "Associated By",
+        "createdDate": "Associated Date"
+      }
     },
     "tab": {
-      "authPolicy": "Authorization Policies",
       "associatedDepartment": "Belonging Departments",
       "associatedGroup": "Joined Groups",
-      "associatedTag": "Associated Tags"
+      "associatedTag": "Associated Tags",
+      "authPolicy": "Authorization Policies"
     },
     "actions": {
       "setAdmin": "Set as Administrator",
@@ -84,6 +92,7 @@
     },
     "profile": {
       "basicInfo": "Basic Information",
+      "additionalInfo": "Additional Information",
       "security": "Security Settings",
       "preference": "Preferences",
       "messages": "Messages",
@@ -168,14 +177,26 @@
   "department": {
     "title": "Department Management",
     "assocTitle": "Associate Department",
+    "basicInfo": "Basic Information",
     "userDeptQuotaTip": "Each user can be associated with at most 5 departments. The current user is associated with {num} departments.",
     "placeholder": {
       "name": "Query department name",
-      "tag": "Select tag"
+      "tag": "Select tag",
+      "nameLengthTip": "The length must not exceed 100 characters",
+      "codeLengthTip": "The length must not exceed 80 characters",
+      "addNameTip": "Please enter department name",
+      "addCodeTip": "Please enter department code"
     },
     "columns": {
       "code": "Code",
       "name": "Name",
+      "parent": "Parent",
+      "level": "Level",
+      "createdDate": "Created Date",
+      "createdByName": "Creator",
+      "lastModifiedByName": "Last Modifier",
+      "lastModifiedDate": "Last Modified Date",
+      "tags": "Tags",
       "userDept": {
         "code": "Department Code",
         "name": "Department Name",
@@ -184,18 +205,21 @@
         "createdDate": "Associated Date"
       }
     },
-    "level": {
-      "name": "Level",
-      "1": "L1",
-      "2": "L2",
-      "3": "L3",
-      "4": "L4",
-      "5": "L5",
-      "6": "L6",
-      "7": "L7",
-      "8": "L8",
-      "9": "L9",
-      "10": "L10"
+    "tab": {
+      "deptUsers": "Department Users",
+      "authPolicy": "Authorization Policies"
+    },
+    "actions": {
+      "addDept": "Add Department",
+      "deleteDept": "Delete Department",
+      "editName": "Edit Name",
+      "moveDept": "Move Department"
+    },
+    "messages": {
+      "confirmDelete": "{content}. Are you sure you want to delete this department ?",
+      "deptHasChildAndUserTip": "The department contains {childNum} sub-departments and {userNum} users",
+      "deptHasChildTip": "The department contains {childNum} sub-departments",
+      "deptHasUserTip": "The department contains {userNum} users"
     }
   },
   "group": {

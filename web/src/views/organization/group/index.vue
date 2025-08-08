@@ -3,20 +3,12 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
-  AsyncComponent,
-  ButtonAuth,
-  Icon,
-  IconCount,
-  IconRefresh,
-  modal,
-  notification,
-  PureCard,
-  SearchPanel,
-  Table
+  AsyncComponent, ButtonAuth, Icon, IconCount, IconRefresh, modal, notification,
+  PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { app, GM, utils, Enabled } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, app, GM, utils, Enabled } from '@xcan-angus/infra';
 
-import { _columns, FilterOp, ListGroup, SearchParams } from './PropsType';
+import { ListGroup } from './PropsType';
 import { group } from '@/api';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
@@ -26,7 +18,7 @@ const { t } = useI18n();
 const loading = ref(false);
 const showCount = ref(true);
 const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 const groupList = ref<ListGroup[]>([]);
 
@@ -79,7 +71,7 @@ const updateStatus = async (id: string, enabled: boolean) => {
   disabled.value = false;
 };
 
-const searchChange = async (data: { key: string; value: string; op: FilterOp; }[]) => {
+const searchChange = async (data: SearchCriteria[]) => {
   params.value.pageNo = 1;
   params.value.filters = data;
   disabled.value = true;
@@ -211,6 +203,70 @@ const handleRefresh = () => {
   }
   loadGroupList();
 };
+
+const _columns = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    width: '12%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: 'name',
+    dataIndex: 'name',
+    width: '13%'
+  },
+  {
+    title: 'code',
+    dataIndex: 'code'
+  },
+  {
+    title: 'status',
+    dataIndex: 'enabled',
+    width: '10%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: '来源',
+    dataIndex: 'source',
+    width: '10%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: 'userNumber',
+    dataIndex: 'userNum',
+    width: '10%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: 'createdBy',
+    dataIndex: 'createdByName',
+    width: '10%'
+  },
+  {
+    title: 'createdDate',
+    sorter: true,
+    dataIndex: 'createdDate',
+    width: '11%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: 'operation',
+    dataIndex: 'action',
+    width: 130,
+    align: 'center'
+  }
+];
 
 onMounted(() => {
   init();

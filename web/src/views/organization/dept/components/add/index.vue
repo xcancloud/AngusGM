@@ -42,12 +42,13 @@ const state = reactive<{
 
 const rules = {
   name: [
-    { required: true, message: t('addNameTip'), trigger: 'blur' }
+    { required: true, message: t('department.placeholder.addNameTip'), trigger: 'blur' }
   ],
   code: [
-    { required: true, message: t('addCodeTip'), trigger: 'blur' }
+    { required: true, message: t('department.placeholder.addCodeTip'), trigger: 'blur' }
   ]
 };
+
 const save = () => {
   formRef.value.validate().then(async () => {
     const params = {
@@ -64,7 +65,7 @@ const save = () => {
     }
     const id = data[0].id;
 
-    notification.success(t('addSuccess'));
+    notification.success(t('common.messages.addSuccess'));
     emit('save', { ...params, id });
   });
 };
@@ -78,7 +79,7 @@ const close = () => {
   <Modal
     width="450px"
     destroyOnClose
-    :title="t('addDept')"
+    :title="t('department.actions.addDept')"
     :maskClosable="false"
     :centered="true"
     :keyboard="false"
@@ -92,26 +93,34 @@ const close = () => {
       :rules="rules"
       size="small"
       v-bind="{labelCol: {span: 6}, wrapperCol: {span: 16}}">
-      <FormItem v-if="props.pid !== '-1'" label="上级">
+      <FormItem
+        v-if="props.pid !== '-1'"
+        :label="t('department.columns.parent')">
         <span class="text-3">{{ props.pname }}</span>
       </FormItem>
-      <FormItem :label="t('name')" name="name">
+      <FormItem
+        :label="t('department.columns.name')"
+        name="name">
         <Input
           v-model:value="state.form.name"
           size="small"
           :maxlength="80"
-          :placeholder="t('addNameTip')" />
+          :placeholder="t('department.placeholder.nameLengthTip')" />
       </FormItem>
-      <FormItem :label="t('code')" name="code">
+      <FormItem
+        :label="t('department.columns.code')"
+        name="code">
         <Input
           v-model:value="state.form.code"
           size="small"
           dataType="mixin-en"
           :maxlength="80"
           includes=":_-."
-          :placeholder="t('addCodeTip')" />
+          :placeholder="t('department.placeholder.codeLengthTip')" />
       </FormItem>
-      <FormItem :label="t('label')" name="tags">
+      <FormItem
+        :label="t('department.columns.tags')"
+        name="tags">
         <Select
           v-model:value="state.form.tags"
           size="small"
@@ -120,7 +129,7 @@ const close = () => {
           :fieldNames="{ label: 'name', value: 'id' }"
           :maxTags="10"
           :action="`${GM}/org/tag`"
-          :placeholder="t('tagPlaceholder')"
+          :placeholder="t('department.placeholder.tag')"
           mode="multiple" />
       </FormItem>
     </Form>

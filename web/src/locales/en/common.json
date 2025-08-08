@@ -112,6 +112,7 @@
       "downloadSuccess": "Download successfully",
       "operationSuccess": "Operation successful",
       "operationFailed": "Operation failed",
+      "queryListFailed": "Failed to query list data",
       "networkError": "Network error, please try again later",
       "invalidFormat": "Invalid format",
       "requiredField": "This field is required",

@@ -294,7 +294,7 @@ const getCountData = (group: PieSetting[], data: Record<string, any>): PieData[]
     const res = data[column.key];
 
     // Process enum type data
-    if (['source', 'gender', 'type', 'status', 'real_name_status', 'target_type', 'receive_type', 'scope', 'send_type', 'api_type', 'method', 'send_status', 'push_status'].includes(column.key)) {
+    if (['gender', 'type', 'status', 'real_name_status', 'target_type', 'receive_type', 'scope', 'send_type', 'api_type', 'method', 'send_status', 'push_status'].includes(column.key)) {
       setEnumDatasource(column, res, dataSource);
     }
 
@@ -638,9 +638,9 @@ const getPieChartWidth = computed(() => {
     case 3:
       return 'width:45%';
     case 2:
-      return 'width:25%';
+      return 'margin-left: 5.75rem; width:25%';
     case 1:
-      return 'width:15%';
+      return 'margin-left: 5.75rem; width:15%';
     default:
       return 'width:100%';
   }
@@ -652,7 +652,6 @@ watch(() => pieChartData.value, newValue => {
   if (!props.visible) {
     return;
   }
-
   if (!newValue.length) {
     height = 240;
   }

@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { defineAsyncComponent, inject, onMounted, reactive, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, inject, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, InputPassword, Popover, Radio, RadioGroup } from 'ant-design-vue';
@@ -56,6 +56,16 @@ const formState = ref<FormState>({
   title: '',
   username: '',
   confirmPassword: undefined
+});
+
+/**
+ * Computed property for mobile input to handle null values
+ */
+const mobileValue = computed({
+  get: () => formState.value.mobile || '',
+  set: (value: string) => {
+    formState.value.mobile = value || null;
+  }
 });
 
 /**
@@ -502,49 +512,54 @@ onMounted(() => {
 });
 </script>
 <template>
-  <PureCard class="p-15 min-h-full">
-    <!-- User edit form -->
+  <PureCard class="user-edit-container">
+    <!-- Main form container -->
     <Form
       ref="formRef"
       size="small"
       layout="vertical"
       :scrollToFirstError="true"
       :model="formState"
+      class="user-form"
       @finish="onFinish">
-      <div class="flex space-x-10 5xl:space-x-20">
-        <!-- Avatar upload section -->
-        <FormItem
-          :labelCol="{span: 0}"
-          :wrapperCol="{span: 24}"
-          name="avatar">
-          <Cropper
-            v-model:visible="uploadVisible"
-            :params="uploadParams"
-            @success="uploadSuccess"
-            @error="uploadError" />
-          <Image
-            class="w-25 h-25 rounded-full"
-            type="avatar"
-            :src="formState.avatar" />
-          <Button
-            size="small"
-            class="mt-6 text-3 leading-3 flex items-center mx-auto"
-            @click="openUploadModal">
-            <Icon icon="icon-shangchuan" class="text-3 leading-3 mr-1" />
-            <span>{{ t('user.uploadAvatarTip') }}</span>
-          </Button>
-        </FormItem>
-        <!-- Form fields section -->
-        <div class="flex flex-1 space-x-10 5xl:space-x-20">
-          <!-- Left column - Basic information -->
-          <div class="w-2/4 align-top flex-1">
-            <!-- Name fields -->
-            <div class="flex flex-1 -mt-0.5 space-x-2">
+      <!-- Avatar section with simple styling -->
+      <div class="avatar-section">
+        <div class="avatar-container">
+          <div class="avatar-wrapper">
+            <Cropper
+              v-model:visible="uploadVisible"
+              :params="uploadParams"
+              @success="uploadSuccess"
+              @error="uploadError" />
+            <Image
+              class="avatar-image"
+              type="avatar"
+              :src="formState.avatar" />
+            <div class="avatar-overlay" @click="openUploadModal">
+              <Icon icon="icon-camera" class="camera-icon" />
+              <span class="upload-text">{{ t('user.uploadAvatarTip') }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form content with improved layout -->
+      <div class="form-content">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <Icon icon="icon-jibenxinxi" class="section-icon" />
+            <h3 class="section-title">{{ t('user.profile.basicInfo') }}</h3>
+          </div>
+
+          <div class="form-grid">
+            <!-- Name fields with improved spacing -->
+            <div class="group-fields">
               <FormItem
                 :label="t('user.profile.firstName')"
                 :rules="[{ required: true, message:t('user.validation.firstNameRequired') }]"
                 name="firstName"
-                class="w-1/2">
+                class="name-field">
                 <Input
                   v-model:value="formState.firstName"
                   size="small"
@@ -557,7 +572,7 @@ onMounted(() => {
                 :label="t('user.profile.lastName')"
                 :rules="[{ required: true, message:t('user.validation.lastNameRequired') }]"
                 name="lastName"
-                class="w-1/2">
+                class="name-field">
                 <Input
                   v-model:value="formState.lastName"
                   size="small"
@@ -569,10 +584,12 @@ onMounted(() => {
             </div>
 
             <!-- Full name field -->
+            <div class="group-fields">
             <FormItem
               :label="t('user.profile.fullName')"
               :rules="[{ required: true, message: t('user.validation.nameRequired') }]"
-              name="fullName">
+              name="fullName"
+              class="full-name-field">
               <Input
                 v-model:value="formState.fullName"
                 size="small"
@@ -585,55 +602,103 @@ onMounted(() => {
             <FormItem
               :label="t('user.profile.username')"
               name="username"
-              :rules="[{ required: true, message:t('user.validation.usernameRequired') }]">
+              :rules="[{ required: true, message:t('user.validation.usernameRequired') }]"
+              class="username-field">
               <Input
                 v-model:value="formState.username"
                 size="small"
                 :maxlength="100"
                 :placeholder="t('user.placeholder.username',{name:t('user.profile.username'),num:100,chart:' - _ . '})"
                 dataType="mixin-en"
-                includes="-_." />
-            </FormItem>
+                  includes="-_." />
+              </FormItem>
+            </div>
 
-            <!-- Mobile phone field -->
-            <FormItem
-              :label="t('user.profile.mobile')"
-              name="mobile"
-              :rules="mobileRule">
-              <Input
-                v-model:value="formState.mobile"
-                size="small"
-                :maxlength="11"
-                :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
-                :placeholder="t('user.placeholder.mobile')">
-                <template #addonBefore>
-                  <SelectItc
-                    :value="formState.itc"
-                    :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
-                    style="width: 100px;"
-                    internal
+            <!-- Password fields (only for new users) -->
+            <div v-if="!userId" class="password-fields">
+              <FormItem
+                :label="t('user.profile.password')"
+                :rules="passwordRule"
+                name="password"
+                class="password-field">
+                <Popover placement="leftTop" trigger="focus">
+                  <template #content>
+                    <div v-if="passwordRule.required" class="w-35">
+                      <PasswordTip :length="state.length" :chart="state.chart" />
+                    </div>
+                  </template>
+                  <InputPassword
+                    v-model:value="formState.password"
                     size="small"
-                    @change="changeItc" />
-                </template>
-              </Input>
-            </FormItem>
+                    :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                    :maxlength="50"
+                    :placeholder="t('user.placeholder.password')"
+                    autocomplete="new-password"
+                    @change="changeStrength">
+                  </InputPassword>
+                </Popover>
+              </FormItem>
 
-            <!-- Landline field -->
-            <FormItem
-              :label="t('user.profile.landline')"
-              name="landline">
-              <Input
-                v-model:value="formState.landline"
-                size="small"
-                :maxlength="40"
-                :placeholder="t('user.placeholder.landline')" />
-            </FormItem>
+              <FormItem
+                :label="t('user.profile.confirmPassword')"
+                :rules="confirmPasswordRule"
+                name="confirmPassword"
+                class="password-field">
+                <InputPassword
+                  v-model:value="formState.confirmPassword"
+                  size="small"
+                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
+                  :maxlength="50"
+                  :placeholder="t('user.placeholder.confirmPassword')">
+                </InputPassword>
+              </FormItem>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-fields">
+              <!-- Mobile phone field -->
+              <FormItem
+                :label="t('user.profile.mobile')"
+                name="mobile"
+                :rules="mobileRule"
+                class="contact-field">
+                <Input
+                  v-model:value="mobileValue"
+                  size="small"
+                  :maxlength="11"
+                  :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
+                  :placeholder="t('user.placeholder.mobile')">
+                  <template #addonBefore>
+                    <SelectItc
+                      :value="formState.itc"
+                      :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
+                      style="width: 100px;"
+                      internal
+                      size="small"
+                      @change="changeItc" />
+                  </template>
+                </Input>
+              </FormItem>
+
+              <!-- Landline field -->
+              <FormItem
+                :label="t('user.profile.landline')"
+                name="landline"
+                class="contact-field">
+                <Input
+                  v-model:value="formState.landline"
+                  size="small"
+                  :maxlength="40"
+                  :placeholder="t('user.placeholder.landline')" />
+              </FormItem>
+            </div>
 
             <!-- Email field -->
             <FormItem
               :label="t('user.profile.email')"
               name="email"
-              :rules="emailRule">
+              :rules="emailRule"
+              class="email-field">
               <Input
                 v-model:value="formState.email"
                 size="small"
@@ -641,91 +706,54 @@ onMounted(() => {
                 :maxlength="100"
                 :placeholder="t('user.placeholder.email')" />
             </FormItem>
+          </div>
+        </div>
 
-            <!-- Form action buttons -->
-            <FormItem>
-              <Button
-                :loading="loading"
-                type="primary"
-                size="small"
-                htmlType="submit"
-                class="px-3">
-                {{ t('common.actions.submit') }}
-              </Button>
-              <template v-if="!userId">
-                <Button
-                  :loading="loading"
-                  size="small"
-                  class="ml-5"
-                  @click="continueAdd">
-                  {{ t('common.actions.continueAdding') }}
-                </Button>
-              </template>
-              <RouterLink :to="source === 'home'?'/organization/user':`/organization/user/${userId}`">
-                <Button class="ml-5" size="small">{{ t('common.actions.cancel') }}</Button>
-              </RouterLink>
-            </FormItem>
+        <!-- Additional Information Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <Icon icon="icon-shezhi" class="section-icon" />
+            <h3 class="section-title">{{ t('user.profile.additionalInfo') }}</h3>
           </div>
 
-          <!-- Right column - Additional information -->
-          <div class="inline-block w-2/4 align-top">
-            <!-- Gender selection -->
-            <FormItem
-              :label="t('user.profile.gender')"
-              name="gender">
-              <RadioGroup v-model:value="formState.gender" size="small">
-                <Radio
-                  v-for="item in userGender"
-                  :key="item.value"
-                  :value="item.value">
-                  {{ item.message }}
-                </Radio>
-              </RadioGroup>
-            </FormItem>
+          <div class="form-grid">
+            <!-- Put gender and identity on the same row */ -->
+            <div class="gender-identity-row">
+              <FormItem
+                :label="t('user.profile.gender')"
+                name="gender"
+                class="gender-field">
+                <RadioGroup v-model:value="formState.gender" size="small">
+                  <Radio
+                    v-for="item in userGender"
+                    :key="item.value"
+                    :value="item.value">
+                    {{ item.message }}
+                  </Radio>
+                </RadioGroup>
+              </FormItem>
 
-            <!-- Password field (only for new users) -->
-            <FormItem
-              v-if="!userId"
-              :label="t('user.profile.password')"
-              :rules="passwordRule"
-              name="password">
-              <Popover placement="leftTop" trigger="focus">
-                <template #content>
-                  <div v-if="passwordRule.required" class="w-35">
-                    <PasswordTip :length="state.length" :chart="state.chart" />
-                  </div>
-                </template>
-                <InputPassword
-                  v-model:value="formState.password"
+              <!-- System admin role selection -->
+              <FormItem
+                :label="t('user.profile.identity')"
+                name="sysAdmin"
+                class="role-field">
+                <RadioGroup
+                  v-model:value="formState.sysAdmin"
                   size="small"
-                  :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
-                  :maxlength="50"
-                  :placeholder="t('user.placeholder.password')"
-                  autocomplete="new-password"
-                  @change="changeStrength">
-                </InputPassword>
-              </Popover>
-            </FormItem>
+                  :disabled="!appContext.isSysAdmin()">
+                  <Radio :value="false">{{ t('user.profile.generalUser') }}</Radio>
+                  <Radio :value="true">{{ t('user.profile.systemAdmin') }}</Radio>
+                </RadioGroup>
+              </FormItem>
+            </div>
 
-            <!-- Password confirmation field (only for new users) -->
-            <FormItem
-              v-if="!userId"
-              :label="t('user.profile.confirmPassword')"
-              :rules="confirmPasswordRule"
-              name="confirmPassword">
-              <InputPassword
-                v-model:value="formState.confirmPassword"
-                size="small"
-                :disabled="userId && userSource === UserSource.LDAP_SYNCHRONIZE"
-                :maxlength="50"
-                :placeholder="t('user.placeholder.confirmPassword')">
-              </InputPassword>
-            </FormItem>
-
+            <div class="group-fields">
             <!-- Job title field -->
             <FormItem
               :label="t('user.profile.title')"
-              name="title">
+              name="title"
+              class="title-field">
               <Input
                 v-model:value="formState.title"
                 size="small"
@@ -736,27 +764,42 @@ onMounted(() => {
             <!-- Address field -->
             <FormItem
               :label="t('user.profile.address')"
-              name="address">
+              name="address"
+              class="address-field">
               <Input
                 v-model:value="formState.address"
                 size="small"
                 :maxlength="200"
                 :placeholder="t('user.placeholder.address')" />
             </FormItem>
-
-            <!-- System admin role selection -->
-            <FormItem
-              :label="t('user.profile.identity')"
-              name="sysAdmin">
-              <RadioGroup
-                v-model:value="formState.sysAdmin"
-                size="small"
-                :disabled="!appContext.isSysAdmin()">
-                <Radio :value="false">{{ t('user.profile.generalUser') }}</Radio>
-                <Radio :value="true">{{ t('user.profile.systemAdmin') }}</Radio>
-              </RadioGroup>
-            </FormItem>
+            </div>
           </div>
+        </div>
+
+        <!-- Form action buttons -->
+        <div class="form-actions">
+          <FormItem>
+            <Button
+              :loading="loading"
+              type="primary"
+              size="small"
+              htmlType="submit"
+              class="px-3">
+              {{ t('common.actions.submit') }}
+            </Button>
+            <template v-if="!userId">
+              <Button
+                :loading="loading"
+                size="small"
+                class="ml-5"
+                @click="continueAdd">
+                {{ t('common.actions.continueAdding') }}
+              </Button>
+            </template>
+            <RouterLink :to="source === 'home'?'/organization/user':`/organization/user/${userId}`">
+              <Button class="ml-5" size="small">{{ t('common.actions.cancel') }}</Button>
+            </RouterLink>
+          </FormItem>
         </div>
       </div>
     </Form>
@@ -764,8 +807,199 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* User edit page styling - simplified */
+.user-edit-container {
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* Avatar section styling - simple */
+.avatar-section {
+  padding: 12px;
+  text-align: center;
+}
+
+.avatar-container {
+  display: inline-block;
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  border-radius: 0;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.camera-icon {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.upload-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Form content styling */
+.form-content {
+  padding: 18px;
+}
+
+/* Section styling */
+.form-section {
+  margin-bottom: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-icon {
+  font-size: 16px;
+  color: #1890ff;
+  margin-right: 8px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0;
+}
+
+/* Form grid layout */
+.form-grid {
+  display: grid;
+  gap: 12px;
+}
+/* Put gender and identity on the same row */
+.gender-identity-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Unify spacing for specific form items */
+.title-field,
+.address-field,
+.gender-field,
+.role-field {
+  margin-bottom: 0;
+}
+
+/* Normalize placeholder font size for inputs and password inputs */
+:deep(.ant-input::placeholder),
+:deep(.ant-input-affix-wrapper .ant-input::placeholder) {
+  font-size: 12px;
+}
+
+/* Name fields styling */
+.group-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.name-field {
+  margin-bottom: 0;
+}
+
+.full-name-field {
+  margin-bottom: 0;
+}
+
+/* Contact fields styling */
+.contact-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.contact-field {
+  margin-bottom: 0;
+}
+
+/* Password fields styling */
+.password-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.password-field {
+  margin-bottom: 0;
+}
+
+/* Form actions styling */
+.form-actions {
+  margin-top: 18px;
+  padding-top: 12px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .user-edit-container {
+    padding: 12px;
+  }
+
+  .form-content {
+    padding: 12px;
+  }
+
+  .group-fields,
+  .contact-fields,
+  .password-fields {
+    grid-template-columns: 1fr;
+  }
+  .gender-identity-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Custom styling for input group addon */
 :deep(.ant-input-group-addon) {
   border-color: var(--border-text-box);
+}
+
+/* Normalize password placeholder font size for various browsers */
+:deep(input[type='password']::placeholder) {
+  font-size: 12px;
 }
 </style>

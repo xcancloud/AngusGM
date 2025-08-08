@@ -1,26 +1,3 @@
-export type FilterOp =
-  'EQUAL'
-  | 'NOT_EQUAL'
-  | 'GREATER_THAN'
-  | 'GREATER_THAN_EQUAL'
-  | 'LESS_THAN'
-  | 'LESS_THAN_EQUAL'
-  | 'CONTAIN'
-  | 'NOT_CONTAIN'
-  | 'MATCH_END'
-  | 'MATCH'
-  | 'IN'
-  | 'NOT_IN'
-export type Filters = { key: string, value: string, op: FilterOp }[]
-export type SearchParams = {
-  pageNo?: number;
-  pageSize?: number;
-  orderBy?: string;
-  orderSort?: 'ASC' | 'DESC';
-  fullTextSearch?: boolean;
-  filters?: Filters;
-}
-
 export type TargetType = 'USER' | 'DEPT' | 'GROUP'
 
 export type OrgTag = {
@@ -36,6 +13,7 @@ export type OrgTag = {
   lastModifiedDate: string;
   isEdit: boolean;
 }
+
 export type Target = {
   id: string;
   targetType: TargetType,

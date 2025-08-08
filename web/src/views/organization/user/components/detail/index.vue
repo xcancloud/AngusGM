@@ -15,7 +15,7 @@ import { user } from '@/api';
  */
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 const UserDetail = defineAsyncComponent(() => import('./userDetail.vue'));
-const AuthorizationPolicy = defineAsyncComponent(() => import('./authPolicy.vue'));
+const UserPolicy = defineAsyncComponent(() => import('./userPolicy.vue'));
 const UserDept = defineAsyncComponent(() => import('./userDept.vue'));
 const UserGroup = defineAsyncComponent(() => import('./userGroup.vue'));
 const UserTag = defineAsyncComponent(() => import('./userTag.vue'));
@@ -392,7 +392,7 @@ const userGridColumns = [
 
         <!-- Authorization policy tab -->
         <Tabs.TabPane key="5" :tab="t('user.tab.authPolicy')">
-          <AuthorizationPolicy :userId="userId" :hasAuth="getOperationPermissions" />
+          <UserPolicy :userId="userId" :hasAuth="getOperationPermissions" />
         </Tabs.TabPane>
       </Tabs>
     </PureCard>
