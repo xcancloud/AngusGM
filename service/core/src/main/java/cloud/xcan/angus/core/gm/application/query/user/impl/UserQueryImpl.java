@@ -59,19 +59,18 @@ import org.springframework.data.domain.Pageable;
  * Implementation of user query operations.
  * </p>
  * <p>
- * Manages user retrieval, validation, and association management.
- * Provides comprehensive user querying with full-text search and summary support.
+ * Manages user retrieval, validation, and association management. Provides comprehensive user
+ * querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports user detail retrieval, paginated listing, validation, quota management,
- * and association handling for comprehensive user administration.
+ * Supports user detail retrieval, paginated listing, validation, quota management, and association
+ * handling for comprehensive user administration.
  * </p>
  */
 @Biz
 @Slf4j
 @SummaryQueryRegister(name = "User", table = "user0", topAuthority = TOP_TENANT_ADMIN, ignoreDeleted = true,
-    groupByColumns = {"created_date", "source", "sys_admin", "enabled",
-        "locked", "gender"})
+    groupByColumns = {"created_date", "enabled", "locked", "gender", "sys_admin"})
 public class UserQueryImpl implements UserQuery {
 
   @Resource
@@ -98,8 +97,8 @@ public class UserQueryImpl implements UserQuery {
    * Retrieves detailed user information by ID.
    * </p>
    * <p>
-   * Fetches complete user record with optional association joining.
-   * Enriches user data with OAuth information and associations.
+   * Fetches complete user record with optional association joining. Enriches user data with OAuth
+   * information and associations.
    * </p>
    */
   @SneakyThrow0
@@ -133,8 +132,8 @@ public class UserQueryImpl implements UserQuery {
    * Retrieves users with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated user results with comprehensive data.
+   * Supports full-text search and specification-based filtering. Returns paginated user results
+   * with comprehensive data.
    * </p>
    */
   @SneakyThrow0
@@ -156,8 +155,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates username and returns user ID if exists.
    * </p>
    * <p>
-   * Checks username existence and logs duplicate warnings.
-   * Returns user ID if username exists, null otherwise.
+   * Checks username existence and logs duplicate warnings. Returns user ID if username exists, null
+   * otherwise.
    * </p>
    */
   @Override
@@ -180,8 +179,8 @@ public class UserQueryImpl implements UserQuery {
    * Retrieves system administrators for current tenant.
    * </p>
    * <p>
-   * Returns all system admin users with first admin flag.
-   * Sets first system admin indicator for priority handling.
+   * Returns all system admin users with first admin flag. Sets first system admin indicator for
+   * priority handling.
    * </p>
    */
   @Override
@@ -206,8 +205,7 @@ public class UserQueryImpl implements UserQuery {
    * Retrieves user by ID.
    * </p>
    * <p>
-   * Returns user by user ID without additional validation.
-   * Returns null if user does not exist.
+   * Returns user by user ID without additional validation. Returns null if user does not exist.
    * </p>
    */
   @Override
@@ -220,8 +218,7 @@ public class UserQueryImpl implements UserQuery {
    * Retrieves users by IDs.
    * </p>
    * <p>
-   * Returns users for the specified user IDs.
-   * Returns empty list if no users found.
+   * Returns users for the specified user IDs. Returns empty list if no users found.
    * </p>
    */
   @Override
@@ -234,8 +231,7 @@ public class UserQueryImpl implements UserQuery {
    * Finds users with expired lock.
    * </p>
    * <p>
-   * Returns user IDs that have exceeded lock period.
-   * Used for automatic unlock processing.
+   * Returns user IDs that have exceeded lock period. Used for automatic unlock processing.
    * </p>
    */
   @Override
@@ -248,8 +244,7 @@ public class UserQueryImpl implements UserQuery {
    * Finds users with expired unlock.
    * </p>
    * <p>
-   * Returns user IDs that have exceeded unlock period.
-   * Used for automatic lock processing.
+   * Returns user IDs that have exceeded unlock period. Used for automatic lock processing.
    * </p>
    */
   @Override
@@ -262,8 +257,7 @@ public class UserQueryImpl implements UserQuery {
    * Retrieves tenant detail by ID.
    * </p>
    * <p>
-   * Delegates to tenant query for tenant information.
-   * Returns complete tenant details.
+   * Delegates to tenant query for tenant information. Returns complete tenant details.
    * </p>
    */
   @Override
@@ -276,8 +270,8 @@ public class UserQueryImpl implements UserQuery {
    * Finds signup or first system admin user for tenant.
    * </p>
    * <p>
-   * Returns main system admin user for the specified tenant.
-   * Throws ResourceNotFound if no admin user exists.
+   * Returns main system admin user for the specified tenant. Throws ResourceNotFound if no admin
+   * user exists.
    * </p>
    */
   @Override
@@ -291,8 +285,7 @@ public class UserQueryImpl implements UserQuery {
    * Counts valid system admin users for current tenant.
    * </p>
    * <p>
-   * Returns count of enabled system admin users.
-   * Used for quota and validation purposes.
+   * Returns count of enabled system admin users. Used for quota and validation purposes.
    * </p>
    */
   @Override
@@ -305,8 +298,7 @@ public class UserQueryImpl implements UserQuery {
    * Validates username uniqueness for update.
    * </p>
    * <p>
-   * Ensures username is unique when updating user.
-   * Excludes current user from uniqueness check.
+   * Ensures username is unique when updating user. Excludes current user from uniqueness check.
    * </p>
    */
   @Override
@@ -321,8 +313,7 @@ public class UserQueryImpl implements UserQuery {
    * Validates mobile uniqueness for update.
    * </p>
    * <p>
-   * Ensures mobile is unique when updating user.
-   * Excludes current user from uniqueness check.
+   * Ensures mobile is unique when updating user. Excludes current user from uniqueness check.
    * </p>
    */
   @Override
@@ -337,8 +328,7 @@ public class UserQueryImpl implements UserQuery {
    * Validates email uniqueness for update.
    * </p>
    * <p>
-   * Ensures email is unique when updating user.
-   * Excludes current user from uniqueness check.
+   * Ensures email is unique when updating user. Excludes current user from uniqueness check.
    * </p>
    */
   @Override
@@ -353,8 +343,7 @@ public class UserQueryImpl implements UserQuery {
    * Validates and retrieves user by ID.
    * </p>
    * <p>
-   * Returns user with existence validation.
-   * Throws ResourceNotFound if user does not exist.
+   * Returns user with existence validation. Throws ResourceNotFound if user does not exist.
    * </p>
    */
   @Override
@@ -367,8 +356,7 @@ public class UserQueryImpl implements UserQuery {
    * Validates and retrieves users by IDs.
    * </p>
    * <p>
-   * Returns users with existence validation.
-   * Validates that all requested user IDs exist.
+   * Returns users with existence validation. Validates that all requested user IDs exist.
    * </p>
    */
   @Override
@@ -389,8 +377,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates user addition quota for tenant.
    * </p>
    * <p>
-   * Checks user quota and related association quotas.
-   * Validates department, group, and tag quotas for user addition.
+   * Checks user quota and related association quotas. Validates department, group, and tag quotas
+   * for user addition.
    * </p>
    */
   @Override
@@ -430,8 +418,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates admin operation permissions.
    * </p>
    * <p>
-   * Only allows admin to operate admin users for delete, enable/disable, lock/unlock.
-   * Bypasses validation for internal API, TO user, or tenant system admin.
+   * Only allows admin to operate admin users for delete, enable/disable, lock/unlock. Bypasses
+   * validation for internal API, TO user, or tenant system admin.
    * </p>
    */
   @Override
@@ -450,8 +438,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates signup account uniqueness.
    * </p>
    * <p>
-   * Checks email and mobile uniqueness for signup accounts.
-   * Temporarily disables multi-tenant control for global uniqueness check.
+   * Checks email and mobile uniqueness for signup accounts. Temporarily disables multi-tenant
+   * control for global uniqueness check.
    * </p>
    */
   @Override
@@ -484,8 +472,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates username uniqueness for addition.
    * </p>
    * <p>
-   * Checks username uniqueness across all tenants.
-   * Temporarily disables multi-tenant control for global check.
+   * Checks username uniqueness across all tenants. Temporarily disables multi-tenant control for
+   * global check.
    * </p>
    */
   @Override
@@ -511,8 +499,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates mobile uniqueness for addition.
    * </p>
    * <p>
-   * Checks mobile uniqueness based on user source type.
-   * Handles different validation rules for signup vs add user scenarios.
+   * Checks mobile uniqueness based on user source type. Handles different validation rules for
+   * signup vs add user scenarios.
    * </p>
    */
   @Override
@@ -556,8 +544,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates email uniqueness for addition.
    * </p>
    * <p>
-   * Checks email uniqueness based on user source type.
-   * Handles different validation rules for signup vs add user scenarios.
+   * Checks email uniqueness based on user source type. Handles different validation rules for
+   * signup vs add user scenarios.
    * </p>
    */
   @Override
@@ -601,8 +589,8 @@ public class UserQueryImpl implements UserQuery {
    * Validates user quota for tenant.
    * </p>
    * <p>
-   * Checks if adding users would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding users would exceed tenant quota limits. Throws appropriate exception if quota
+   * would be exceeded.
    * </p>
    */
   @Override
