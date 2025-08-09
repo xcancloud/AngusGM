@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { useI18n } from 'vue-i18n';
-import { Grid } from '@xcan-angus/vue-ui';
+import { Icon } from '@xcan-angus/vue-ui';
 import { Badge } from 'ant-design-vue';
 
 import { Detail } from './PropsType';
@@ -21,97 +21,166 @@ const props = withDefaults(defineProps<Props>(), {
 const { t } = useI18n();
 
 /**
- * Grid columns configuration for user information display
- * Defines the layout and fields for user info grid
+ * Provide safe text for possibly empty values
  */
-const gridColumns = [
-  [
-    {
-      label: 'ID',
-      dataIndex: 'id'
-    },
-    {
-      label: t('user.columns.mobile'),
-      dataIndex: 'mobile',
-      customRender: ({ text }): string => text || '--'
-    },
-    {
-      label: t('user.columns.email'),
-      dataIndex: 'email',
-      customRender: ({ text }): string => text || '--'
-    },
-    {
-      label: t('user.columns.landline'),
-      dataIndex: 'landline'
-    },
-    {
-      label: t('user.columns.gender'),
-      dataIndex: 'gender',
-      customRender: ({ text }): string => text?.message
-    },
-    {
-      label: t('user.columns.source'),
-      dataIndex: 'source',
-      customRender: ({ text }): string => text?.message
-    }
-  ],
-  [
-    {
-      label: t('user.columns.title'),
-      dataIndex: 'title'
-    },
-    {
-      label: t('user.columns.identity'),
-      dataIndex: 'sysAdmin',
-      customRender: ({ text }): string =>
-        text ? t('user.profile.systemAdmin') : t('user.profile.generalUser')
-    },
-    {
-      label: t('user.columns.status'),
-      dataIndex: 'enabled'
-    },
-    {
-      label: t('user.columns.lockedStatus'),
-      dataIndex: 'locked',
-      customRender: ({ text }): string =>
-        text ? t('common.status.locked') : t('common.status.unlocked')
-    },
-    {
-      label: t('user.columns.lockStartDate'),
-      dataIndex: 'lockStartDate'
-    },
-    {
-      label: t('user.columns.address'),
-      dataIndex: 'address'
-    }
-  ]
-];
+const textOrDash = (value?: any): string => (value === undefined || value === null || value === '' ? '--' : String(value));
+
+/**
+ * Resolve an i18n key with a fallback plain text when the key is missing
+ */
+const tt = (key: string, fallback: string): string => {
+  const msg = t(key);
+  return msg === key ? fallback : msg;
+};
+
 </script>
 <template>
-  <!-- User detail information grid -->
-  <Grid :columns="gridColumns" :dataSource="props.dataSource">
-    <!-- Enabled status badge -->
-    <template #enabled="{text}">
-      <Badge
-        :status=" text ? 'success' : 'error' "
-        :text=" text? t('common.status.enabled') : t('common.status.disabled') " />
-    </template>
-
-    <!-- Locked status badge -->
-    <template #locked="{text}">
-      <Badge
-        :status=" text ? 'error' : 'success' "
-        :text=" text ? t('common.status.locked') : t('common.status.unlocked') " />
-    </template>
-
-    <!-- Lock date range display -->
-    <template v-if="props.dataSource?.locked" #lockStartDate="{text}">
-      <div v-if="props.dataSource?.lockEndDate">
-        {{ text }} - {{ props.dataSource?.lockEndDate }}
+  <div class="user-detail">
+    <!-- Basic Information -->
+    <div class="section">
+      <div class="section-title">
+        <Icon icon="icon-jibenxinxi" class="mr-2 text-4 leading-4" />
+        {{ t('user.profile.basicInfo') }}
       </div>
-      <div v-else>
-        {{ t('user.permanentLock') }}
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">ID</div>
+          <div class="info-value" :title="props.dataSource?.id">{{ textOrDash(props.dataSource?.id) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.title') }}</div>
+          <div class="info-value" :title="props.dataSource?.title">{{ textOrDash(props.dataSource?.title) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.gender') }}</div>
+          <div class="info-value">{{ props.dataSource?.gender?.message || '--' }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.identity') }}</div>
+          <div class="info-value">{{ props.dataSource?.sysAdmin ? t('user.profile.systemAdmin') : t('user.profile.generalUser') }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.status') }}</div>
+          <div class="info-value">
+            <Badge :status="props.dataSource?.enabled ? 'success' : 'error'" :text="props.dataSource?.enabled ? t('common.status.enabled') : t('common.status.disabled')" />
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.lockedStatus') }}</div>
+          <div class="info-value">
+            <Badge :status="props.dataSource?.locked ? 'error' : 'success'" :text="props.dataSource?.locked ? t('common.status.locked') : t('common.status.unlocked')" />
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.mobile') }}</div>
+          <div class="info-value" :title="props.dataSource?.mobile">{{ textOrDash(props.dataSource?.mobile) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.landline') }}</div>
+          <div class="info-value" :title="props.dataSource?.landline">{{ textOrDash(props.dataSource?.landline) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.email') }}</div>
+          <div class="info-value" :title="props.dataSource?.email">{{ textOrDash(props.dataSource?.email) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.address') }}</div>
+          <div class="info-value" :title="props.dataSource?.contactAddress">{{ textOrDash(props.dataSource?.contactAddress) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('user.columns.source') }}</div>
+          <div class="info-value">{{ props.dataSource?.source?.message || '--' }}</div>
+        </div>
+        <div v-if="props.dataSource?.locked" class="info-item">
+          <div class="info-label">{{ t('user.columns.lockStartDate') }}</div>
+          <div class="info-value">
+            <template v-if="props.dataSource?.lockEndDate">
+              {{ props.dataSource?.lockStartDate }} - {{ props.dataSource?.lockEndDate }}
+            </template>
+            <template v-else>
+              {{ t('user.permanentLock') }}
+            </template>
+          </div>
+        </div>
       </div>
-    </template>
-  </Grid>
+    </div>
+
+    <!-- Audit Information -->
+    <div class="section">
+      <div class="section-title">
+        <Icon icon="icon-shenjirizhi" class="mr-2 text-4 leading-4" />
+        {{ tt('user.profile.auditInfo', 'Audit Information') }}
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">{{ t('common.columns.createdByName') }}</div>
+          <div class="info-value">{{ textOrDash(props.dataSource?.createdByName) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('common.columns.createdDate') }}</div>
+          <div class="info-value muted">{{ textOrDash(props.dataSource?.createdDate) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('common.columns.lastModifiedByName') }}</div>
+          <div class="info-value">{{ textOrDash(props.dataSource?.lastModifiedByName) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">{{ t('common.columns.lastModifiedDate') }}</div>
+          <div class="info-value muted">{{ textOrDash(props.dataSource?.lastModifiedDate) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.user-detail {
+  padding: 8px 0;
+}
+.section + .section {
+  margin-top: 16px;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--theme-text);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-divider);
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 12px;
+  column-gap: 5px;
+}
+@media (max-width: 1200px) {
+  .info-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .info-grid { grid-template-columns: 1fr; }
+}
+.info-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  column-gap: 16px;
+  align-items: center;
+}
+.info-label {
+  text-align: right;
+  font-weight: 600;
+  color: var(--theme-content);
+}
+.info-value {
+  color: var(--theme-text);
+  font-size: 13px;
+  line-height: 1.65;
+  word-break: break-word;
+}
+.info-value :deep(.ant-badge-status-text) { font-size: 13px; }
+.info-value :deep(.ant-badge) { line-height: 20px; }
+.muted { color: var(--theme-content); }
+</style>

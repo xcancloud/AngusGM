@@ -3,14 +3,17 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Image, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils, SearchCriteria } from '@xcan-angus/infra';
 
-import { SearchParams, User } from './PropsType';
+import { User } from '../../PropsType';
 
 import { group } from '@/api';
 
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 
+/**
+ * Props from parent: current group id and enabled state for operations.
+ */
 interface Props {
   groupId: string;
   enabled: boolean;
@@ -23,14 +26,17 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { t } = useI18n();
 
+/** Loading and query states */
 const loading = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 const count = ref(0);
-// 条件查询不更新count
-const isContUpdate = ref(true);
+const isCountUpdate = ref(true);
 const userList = ref<User[]>([]);
 
+/**
+ * Fetch group associated users list using current pagination/filters.
+ */
 const loadGroupUserList = async (): Promise<void> => {
   if (loading.value) {
     return;
@@ -43,13 +49,13 @@ const loadGroupUserList = async (): Promise<void> => {
   }
   userList.value = data?.list || [];
   total.value = +data?.total;
-  if (isContUpdate.value) {
+  if (isCountUpdate.value) {
     count.value = +data.total;
   }
 };
 
-// 关联用户
 const userVisible = ref(false);
+/** Open user association modal */
 const relevancyUser = () => {
   userVisible.value = true;
 };
@@ -57,13 +63,15 @@ const relevancyUser = () => {
 const updateLoading = ref(false);
 const isRefresh = ref(false);
 const disabled = ref(false);
+
+/**
+ * Handle modal changes: delete first if needed, then add new users, and refresh when flagged.
+ */
 const userSave = async (_userIds: string[], _users: { id: string, fullName: string }[], deleteUserIds: string[]) => {
-  // 如果有删除的用户
   if (deleteUserIds.length) {
     await delGroupUser(deleteUserIds, 'Modal');
   }
 
-  // 如果有新增的用户
   if (_userIds.length) {
     await addGroupUser(_userIds);
   }
@@ -79,7 +87,7 @@ const userSave = async (_userIds: string[], _users: { id: string, fullName: stri
   }
 };
 
-// 添加组关联用户
+/** Add selected users to current group. */
 const addGroupUser = async (_userIds: string[]) => {
   updateLoading.value = true;
   const [error] = await group.addGroupUser(props.groupId, _userIds);
@@ -89,7 +97,7 @@ const addGroupUser = async (_userIds: string[]) => {
   isRefresh.value = true;
 };
 
-// 添删除组关联用户
+/** Delete selected users from current group. */
 const delGroupUser = async (_userIds: string[], type?: 'Table' | 'Modal') => {
   if (loading.value) {
     return;
@@ -108,7 +116,6 @@ const delGroupUser = async (_userIds: string[], type?: 'Table' | 'Modal') => {
 
   params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
 
-  // 要求表格操作不影响刷新图标
   if (type === 'Table') {
     disabled.value = true;
     await loadGroupUserList();
@@ -116,21 +123,25 @@ const delGroupUser = async (_userIds: string[], type?: 'Table' | 'Modal') => {
   }
 };
 
+/**
+ * Debounced search by full name. Keeps count unchanged during condition queries.
+ */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
   if (value) {
-    params.value.filters = [{ key: 'fullName', op: 'MATCH_END', value: value }];
+    params.value.filters = [{ key: 'fullName', op: SearchCriteria.OpEnum.MatchEnd, value: value }];
   } else {
     params.value.filters = [];
   }
   disabled.value = true;
-  isContUpdate.value = false;
+  isCountUpdate.value = false;
   await loadGroupUserList();
-  isContUpdate.value = true;
+  isCountUpdate.value = true;
   disabled.value = false;
 });
 
+/** Pagination object consumed by Table */
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -139,6 +150,7 @@ const pagination = computed(() => {
   };
 });
 
+/** Table pagination change handler */
 const tableChange = async (_pagination) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -148,12 +160,14 @@ const tableChange = async (_pagination) => {
   disabled.value = false;
 };
 
+/** Initial data load */
 onMounted(() => {
   loadGroupUserList();
 });
 const columns = [
   {
-    title: '用户ID',
+    key: 'userId',
+    title: t('user.columns.assocUser.id'),
     dataIndex: 'userId',
     width: '20%',
     customCell: () => {
@@ -161,17 +175,20 @@ const columns = [
     }
   },
   {
-    title: t('userName1'),
+    key: 'fullName',
+    title: t('user.columns.assocUser.name'),
     dataIndex: 'fullName',
     ellipsis: true
   },
   {
-    title: t('associatedPerson'),
+    key: 'createdByName',
+    title: t('user.columns.assocUser.createdByName'),
     dataIndex: 'createdByName',
     width: '20%'
   },
   {
-    title: t('associatedTime'),
+    key: 'createdDate',
+    title: t('user.columns.assocUser.createdDate'),
     dataIndex: 'createdDate',
     width: '20%',
     customCell: () => {
@@ -179,18 +196,19 @@ const columns = [
     }
   },
   {
-    title: t('operation'),
+    key: 'action',
+    title: t('common.actions.operation'),
     dataIndex: 'action',
-    width: 82,
-    align: 'center'
+    width: '15%',
+    align: 'center' as const
   }
 ];
 </script>
 <template>
-  <Hints class="mb-1" :text="t('groupTip1')+t(`每个组最多允许关联200个用户，当前组已关联${count}个用户。`)" />
+  <Hints class="mb-1" :text="t('group.disabledTip') + t('group.groupUserQuotaTip', { num: count })" />
   <div class="flex items-center justify-between mb-2">
     <Input
-      :placeholder="t('groupPlaceholder2')"
+      :placeholder="t('user.placeholder.search')"
       class="w-60"
       allowClear
       @change="handleSearch">
@@ -218,6 +236,8 @@ const columns = [
     :columns="columns"
     :pagination="pagination"
     size="small"
+    :noDataSize="'small'"
+    :noDataText="t('common.messages.noData')"
     @change="tableChange">
     <template #bodyCell="{ column,text, record }">
       <template v-if="column.dataIndex === 'fullName'">

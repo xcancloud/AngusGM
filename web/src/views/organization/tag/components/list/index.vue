@@ -53,8 +53,8 @@ const loadTagList = async (): Promise<void> => {
 const deleteConfirm = (id: string, name: string): void => {
   modal.confirm({
     centered: true,
-    title: t('删除标签'),
-    content: t(`确定删除【${name}】吗?`),
+    title: t('common.actions.delete'),
+    content: t('common.messages.confirmDelete', { name: name }),
     async onOk () {
       await deleteTag(id);
     }
@@ -72,7 +72,7 @@ const deleteTag = async (id: string): Promise<void> => {
   if (checkedTag.value?.id === id) {
     checkedTag.value = undefined;
   }
-  notification.success('删除成功');
+  notification.success(t('common.messages.deleteSuccess'));
   disabled.value = true;
   await loadTagList();
   disabled.value = false;
@@ -81,7 +81,7 @@ const deleteTag = async (id: string): Promise<void> => {
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   if (value) {
-    params.value.filters = [{ key: 'name', value: value, op: 'MATCH_END' }];
+    params.value.filters = [{ key: 'name', value: value, op: 'MATCH_END' as const }];
   } else {
     params.value.filters = [];
   }
@@ -197,7 +197,7 @@ defineExpose({ openEditName });
       <Input
         size="small"
         allowClear
-        :placeholder="t('tagPlaceholder1')"
+        :placeholder="t('tag.placeholder.name')"
         @change="handleSearch" />
       <ButtonAuth
         code="TagAdd"
@@ -221,7 +221,7 @@ defineExpose({ openEditName });
             class="mr-3.5 mb-2"
             size="small"
             style="width: 370px;"
-            :placeholder="t('pubPlaceholder',{name:t('name'),num:100})"
+            :placeholder="t('tag.placeholder.addNameTip')"
             @blur="editName($event,item)"
             @pressEnter="editName($event, item)" />
         </template>

@@ -39,7 +39,7 @@ const handleChange = (event: any) => {
 <template>
   <Modal
     width="540px"
-    :title="t('addTitle',{name:t('label')})"
+    :title="t('tag.actions.addTag')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -49,17 +49,17 @@ const handleChange = (event: any) => {
     <div class="flex items-start">
       <div class="whitespace-nowrap mr-2 pt-1">
         <IconRequired class="mr-1" />
-        {{ t('name') }}
+        {{ t('tag.columns.name') }}
       </div>
       <div class="flex-1">
         <Input
           v-model:value="name"
           :maxlength="100"
-          :placeholder="t('标签名称')"
+          :placeholder="t('tag.placeholder.addNameTip')"
           @change="handleChange" />
         <div class="h-6 text-rule text-3 leading-3 mt-1">
           <template v-if="showRule">
-            {{ t('tagPlaceholder3') }}
+            {{ t('tag.placeholder.addNameTip') }}
           </template>
         </div>
       </div>

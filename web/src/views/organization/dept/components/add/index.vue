@@ -99,7 +99,7 @@ const close = () => {
         <span class="text-3">{{ props.pname }}</span>
       </FormItem>
       <FormItem
-        :label="t('department.columns.name')"
+        :label="t('common.columns.name')"
         name="name">
         <Input
           v-model:value="state.form.name"
@@ -108,7 +108,7 @@ const close = () => {
           :placeholder="t('department.placeholder.nameLengthTip')" />
       </FormItem>
       <FormItem
-        :label="t('department.columns.code')"
+        :label="t('common.columns.code')"
         name="code">
         <Input
           v-model:value="state.form.code"
@@ -119,7 +119,7 @@ const close = () => {
           :placeholder="t('department.placeholder.codeLengthTip')" />
       </FormItem>
       <FormItem
-        :label="t('department.columns.tags')"
+        :label="t('common.columns.tags')"
         name="tags">
         <Select
           v-model:value="state.form.tags"

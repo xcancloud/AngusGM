@@ -2,15 +2,7 @@
 import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
-  AsyncComponent,
-  ButtonAuth,
-  Card,
-  Icon,
-  IconCount,
-  IconRefresh,
-  Input,
-  SelectEnum,
-  Table
+  AsyncComponent, ButtonAuth, Card, Icon, IconCount, IconRefresh, Input, SelectEnum, Table
 } from '@xcan-angus/vue-ui';
 import { app, duration, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
@@ -226,56 +218,61 @@ const toggle = () => {
 const getTargetType = (value: TargetType) => {
   switch (value) {
     case 'USER':
-      return t('user');
+      return t('user.title');
     case 'DEPT':
-      return t('sector');
+      return t('department.title');
     case 'GROUP':
-      return t('group');
+      return t('group.title');
   }
 };
 
 const columns = ref([
   {
-    title: '用户ID',
+    key: 'id',
+    title: t('user.columns.assocUser.id'),
     dataIndex: 'id',
     width: '22%'
   },
   {
-    title: t('userName1'),
+    key: 'targetName',
+    title: t('user.columns.assocUser.name'),
     dataIndex: 'targetName',
     ellipsis: true
   },
   {
-    title: t('associatedTime'),
+    key: 'createdDate',
+    title: t('user.columns.assocUser.createdDate'),
     dataIndex: 'createdDate',
     width: '20%'
   },
   {
-    title: t('associatedPerson'),
+    key: 'createdByName',
+    title: t('user.columns.assocUser.createdByName'),
     dataIndex: 'createdByName',
     width: '20%'
   },
   {
-    title: t('operation'),
+    key: 'action',
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: 82,
-    align: 'center'
+    align: 'center' as const
   }
 ]);
 
 const targetTypeChange = () => {
   switch (targetType.value) {
     case 'USER':
-      columns.value[0].title = t('用户ID');
-      columns.value[1].title = t('userName1');
+      columns.value[0].title = t('user.columns.assocUser.id');
+      columns.value[1].title = t('user.columns.assocUser.name');
       break;
     case 'DEPT':
-      columns.value[0].title = t('部门ID');
-      columns.value[1].title = t('deptName');
+      columns.value[0].title = t('department.columns.userDept.code');
+      columns.value[1].title = t('department.columns.userDept.name');
       break;
     case 'GROUP':
-      columns.value[0].title = t('组ID');
-      columns.value[1].title = t('groupName');
+      columns.value[0].title = t('common.columns.code');
+      columns.value[1].title = t('common.columns.name');
       break;
   }
 };
@@ -283,13 +280,13 @@ const targetTypeChange = () => {
 const placeholder = computed(() => {
   switch (targetType.value) {
     case 'USER':
-      return t('groupPlaceholder2');
+      return t('user.placeholder.search');
     case 'DEPT':
-      return t('groupPlaceholder4');
+      return t('department.placeholder.name');
     case 'GROUP':
-      return t('groupPlaceholder3');
+      return t('group.placeholder.name');
     default:
-      return t('groupPlaceholder2');
+      return t('user.placeholder.search');
   }
 });
 
@@ -363,6 +360,8 @@ const cancelText = {
       :columns="columns"
       :pagination="pagination"
       size="small"
+      :noDataSize="'small'"
+      :noDataText="t('common.messages.noData')"
       @change="tableChange">
       <template #bodyCell="{ column, text,record }">
         <template v-if="column.dataIndex === 'targetType'">

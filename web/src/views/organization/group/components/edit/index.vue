@@ -13,11 +13,27 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 
+/**
+ * Current group identifier from route params.
+ * - Presence indicates Edit mode; absence indicates Add mode.
+ */
 const groupId = route.params.id as string;
+
+/**
+ * From which page user navigated. Used to decide where to go after submit/cancel.
+ */
 const source = route.query.source as string;
+
+/**
+ * Group detail data while editing. Used to hydrate form fields.
+ */
 const groupDetail = ref<Detail>();
+/**
+ * Load group detail by id and sync it into the form state.
+ * Ensures `tagIds` is mapped from tag objects to id array.
+ */
 const loadGroupDetail = async () => {
-  const [error, { data }] = await group.getGroupDetail(groupId, {});
+  const [error, { data }] = await group.getGroupDetail(groupId);
   if (error) {
     return;
   }
@@ -34,10 +50,19 @@ const loadGroupDetail = async () => {
   oldFormState.value = JSON.parse(JSON.stringify(formState.value));
 };
 
+/**
+ * Two snapshots of form data:
+ * - `formState`: current editable fields
+ * - `oldFormState`: original snapshot used to detect changes on save
+ */
 const formState = ref<FormState>({ code: '', name: '', remark: '', tagIds: [] });
 const oldFormState = ref<FormState>({ code: '', name: '', remark: '', tagIds: [] });
 
+/** Global submit/loading guard */
 const loading = ref(false);
+/**
+ * Create a new group by submitting current form state.
+ */
 const addGroup = async () => {
   if (loading.value) {
     return;
@@ -52,6 +77,9 @@ const addGroup = async () => {
   router.push('/organization/group');
 };
 
+/**
+ * Update an existing group when form content actually changed compared to original.
+ */
 const editGroup = async () => {
   if (loading.value) {
     return;
@@ -73,6 +101,9 @@ const editGroup = async () => {
   source === 'home' ? router.push('/organization/group') : router.push(`/organization/group/${groupId}`);
 };
 
+/**
+ * Form submit entry. Dispatch to add or edit according to presence of `groupId`.
+ */
 const onFinish = () => {
   if (groupId) {
     editGroup();
@@ -81,11 +112,18 @@ const onFinish = () => {
   }
 };
 
+/** Navigate back according to `source`. */
 const handleCancel = () => {
   source === 'home' ? router.push('/organization/group') : router.push(`/organization/group/${groupId}`);
 };
 
+/**
+ * The number of tags already associated with the group (used in quota hints).
+ */
 const total = ref(0);
+/**
+ * Fetch tag summary for current group to show quota hints.
+ */
 const loadGroupTagList = async (): Promise<void> => {
   const params = { pageNo: 1, pageSize: 1 };
   const [error, { data }] = await group.getGroupTag(groupId, params);
@@ -96,6 +134,7 @@ const loadGroupTagList = async (): Promise<void> => {
   total.value = +data?.total;
 };
 
+/** Initialize page data on mount for edit mode. */
 onMounted(() => {
   if (groupId) {
     loadGroupDetail();
@@ -109,45 +148,45 @@ onMounted(() => {
     <Form
       :model="formState"
       size="small"
-      class="flex w-150 mx-auto mt-10"
+      class="flex w-180 mx-auto mt-10"
       @finish="onFinish">
-      <div class="text-3 leading-3 text-theme-content">
-        <div class="h-7 leading-7 mb-5">
+      <div class="text-3 leading-3 text-theme-content text-right font-semibold w-28">
+        <div class="h-7 leading-7 mb-5 pr-1.5 text-right">
           <IconRequired class="mr-0.5" />
-          {{ t('name') }}
+          {{ t('common.columns.name') }}
           <Colon />
         </div>
-        <div class="h-7 leading-7 mb-5">
+        <div class="h-7 leading-7 mb-5 pr-1.5 text-right">
           <IconRequired class="mr-0.5" />
-          {{ t('code') }}
+          {{ t('common.columns.code') }}
           <Colon />
         </div>
-        <div class="h-7 leading-7 mb-24 pl-1.5">
-          {{ t('description') }}
+        <div class="h-7 leading-7 mb-24 pr-1.5 text-right">
+          {{ t('group.columns.remark') }}
           <Colon />
         </div>
-        <div class="h-7 leading-7 pl-1.5">
-          {{ t('label') }}
+        <div class="h-7 leading-7 pr-1.5 text-right">
+          {{ t('common.columns.tags') }}
           <Colon />
         </div>
       </div>
-      <div class="flex-1 ml-2">
-        <FormItem name="name" :rules="[{ required: true, message:t('addNameTip') }]">
+      <div class="flex-1 ml-3.5">
+        <FormItem name="name" :rules="[{ required: true, message:t('group.placeholder.addNameTip') }]">
           <Input
             v-model:value="formState.name"
             size="small"
             :maxlength="100"
-            :placeholder="t('pubPlaceholder',{name:t('name'),num:100})" />
+            :placeholder="t('group.placeholder.addNameTip')" />
         </FormItem>
-        <FormItem name="code" :rules="[{ required: true, message:t('addCodeTip') }]">
+        <FormItem name="code" :rules="[{ required: true, message:t('group.placeholder.addCodeTip') }]">
           <Input
             v-model:value="formState.code"
             size="small"
             dataType="mixin-en"
             includes=":_-."
             :maxlength="80"
-            :placeholder="t('pubPlaceholder',{name:t('code'),num:80})"
-            :disabled="groupId" />
+            :placeholder="t('group.placeholder.addCodeTip')"
+            :disabled="!!groupId" />
         </FormItem>
         <FormItem name="remark">
           <Textarea
@@ -155,11 +194,10 @@ onMounted(() => {
             size="small"
             :rows="4"
             :maxlength="200"
-            :placeholder="t('pubPlaceholder',{name:t('description'),num:200})" />
+            :placeholder="t('group.placeholder.remark')" />
         </FormItem>
         <FormItem>
-          <Hints
-            :text="groupId?t(`每个组最多允许关联10个标签，当前组已关联${total}个标签。`):t(`每个组最多允许关联10个标签。`)" />
+          <Hints :text="t('group.groupTagQuotaTip', { num: groupId ? total : 0 })" />
         </FormItem>
         <FormItem name="tagIds" class="-mt-5">
           <Select
@@ -170,7 +208,7 @@ onMounted(() => {
             :fieldNames="{ label: 'name', value: 'id' }"
             :maxTags="10"
             :action="`${GM}/org/tag`"
-            :placeholder="t('tagPlaceholder')"
+            :placeholder="t('tag.placeholder.name')"
             mode="multiple" />
         </FormItem>
         <FormItem>
@@ -180,13 +218,13 @@ onMounted(() => {
             size="small"
             htmlType="submit"
             class="px-3">
-            {{ t('submit') }}
+            {{ t('common.actions.submit') }}
           </Button>
           <Button
             size="small"
             class="ml-5 px-3"
             @click="handleCancel">
-            {{ t('cancel') }}
+            {{ t('common.actions.cancel') }}
           </Button>
         </FormItem>
       </div>

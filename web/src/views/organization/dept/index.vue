@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, reactive, ref, nextTick } from 'vue';
+import { computed, defineAsyncComponent, nextTick, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Dropdown, Menu, MenuItem, TabPane, Tabs, Tag } from 'ant-design-vue';
 import {
-  AsyncComponent, ButtonAuth, Card, Icon, IconRefresh, Image,
-  Input, modal, notification, PureCard, Select, Table, Tree
+  AsyncComponent, ButtonAuth, Card, Icon, IconRefresh, Image, Input,
+  modal, notification, PureCard, Select, Table, Tree
 } from '@xcan-angus/vue-ui';
-import { PageQuery, SearchCriteria, app, duration, GM, utils } from '@xcan-angus/infra';
+import { app, duration, GM, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
+import { OrgTargetType } from '@/enums/enums';
 
-import { DeptState, DeptInfo } from './PropsType';
+import { DeptInfo, DeptState } from './PropsType';
 import { auth, dept } from '@/api';
+import { createAuthPolicyColumns } from '@/views/organization/user/PropsType';
 
 // Async component definitions
 const SelectTargetModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
@@ -722,48 +724,12 @@ const userColumns = [
   }
 ];
 
-const policyColumns = [
-  {
-    title: t('permission.columns.assocPolicies.id'),
-    key: 'id',
-    dataIndex: 'id',
-    width: '16%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('permission.columns.assocPolicies.name'),
-    key: 'name',
-    dataIndex: 'name',
-    ellipsis: true,
-    width: '20%'
-  },
-  {
-    title: t('permission.columns.assocPolicies.code'),
-    key: 'code',
-    dataIndex: 'code',
-    width: '20%'
-  },
-  {
-    title: t('permission.columns.assocPolicies.authByName'),
-    key: 'authByName',
-    dataIndex: 'authByName',
-    width: '16%'
-  },
-  {
-    title: t('permission.columns.assocPolicies.authDate'),
-    key: 'authDate',
-    dataIndex: 'authDate',
-    width: '16%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('common.actions.operation'),
-    key: 'action',
-    dataIndex: 'action',
-    width: '12%',
-    align: 'center' as const
-  }
-];
+/**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
+const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
+
 </script>
 
 <template>
@@ -933,14 +899,14 @@ const policyColumns = [
               <div class="info-item">
                 <div class="info-label">
                   <Icon icon="icon-bumen" class="info-icon" />
-                  {{ t('department.columns.name') }}
+                  {{ t('common.columns.name') }}
                 </div>
                 <div class="info-value">{{ deptInfo.name || '--' }}</div>
               </div>
               <div class="info-item">
                 <div class="info-label">
                   <Icon icon="icon-a-bianhao1" class="info-icon" />
-                  {{ t('department.columns.code') }}
+                  {{ t('common.columns.code') }}
                 </div>
                 <div class="info-value">{{ deptInfo.code || '--' }}</div>
               </div>
@@ -958,14 +924,14 @@ const policyColumns = [
               <div class="info-item">
                 <div class="info-label">
                   <Icon icon="icon-yonghu" class="info-icon" />
-                  {{ t('department.columns.createdByName') }}
+                  {{ t('common.columns.createdByName') }}
                 </div>
                 <div class="info-value">{{ deptInfo.createdByName || '--' }}</div>
               </div>
               <div class="info-item">
                 <div class="info-label">
                   <Icon icon="icon-shijianriqi" class="info-icon" />
-                  {{ t('department.columns.createdDate') }}
+                  {{ t('common.columns.createdDate') }}
                 </div>
                 <div class="info-value">{{ deptInfo.createdDate || '--' }}</div>
               </div>
@@ -997,7 +963,7 @@ const policyColumns = [
               <div class="info-item">
                 <div class="info-label">
                   <Icon icon="icon-biaoqian2" class="info-icon" />
-                  {{ t('department.columns.tags') }}
+                  {{ t('common.columns.tags') }}
                 </div>
                 <div class="info-value">
                   <div v-if="deptInfo.tags && deptInfo.tags.length > 0" class="tags-container">

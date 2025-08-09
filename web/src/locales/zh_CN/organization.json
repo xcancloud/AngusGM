@@ -8,13 +8,14 @@
     "timingLock": "定时锁定",
     "permanentLock": "永久锁定",
     "uploadAvatarTip": "上传头像",
+    "userGroupQuotaTip": "每个用户最多允许关联200个组，当前用户已关联{num}个组。",
     "placeholder": {
       "search": "查询用户名称、手机号、职务",
       "userId": "查询用户ID",
       "name": "查询用户名称",
       "enabled": "选择状态",
       "source": "选择用户来源",
-      "createdDate": "创建时间",
+      "createdDate": "添加时间",
       "tag": "选择或查询标签",
       "selectTag": "选择标签",
       "username": "输入用户名，{name}最大长度{num},支持字符“{chart}”",
@@ -93,6 +94,7 @@
     "profile": {
       "basicInfo": "基本信息",
       "additionalInfo": "扩展信息",
+      "auditInfo": "审计信息",
       "security": "安全设置",
       "preference": "偏好设置",
       "messages": "消息",
@@ -115,7 +117,7 @@
       "generalUser": "一般用户",
       "accountType": "账号类型",
       "status": "状态",
-      "createdDate": "创建时间",
+      "createdDate": "添加时间",
       "lastLogin": "最后登录"
     },
     "security": {
@@ -188,15 +190,12 @@
       "addCodeTip": "请输入部门编码"
     },
     "columns": {
-      "code": "编码",
-      "name": "名称",
       "parent": "上级",
       "level": "部门层级",
-      "createdDate": "创建时间",
+      "createdDate": "添加时间",
       "createdByName": "添加人",
       "lastModifiedByName": "最后修改人",
       "lastModifiedDate": "最后修改时间",
-      "tags": "标签",
       "userDept": {
         "code": "部门编码",
         "name": "部门名称",
@@ -225,15 +224,23 @@
   "group": {
     "title": "组管理",
     "assocTitle": "关联组",
-    "userGroupQuotaTip": "每个用户最多允许关联200个组，当前用户已关联{num}个组。",
+    "basicInfo": "基本信息",
+    "auditInfo": "审计信息",
+    "groupUserQuotaTip": "每个组最多允许关联200个用户，当前组已关联{num}个用户。",
+    "groupTagQuotaTip": "每个组最多允许关联10个标签，当前组已关联{num}个标签。",
+    "disabledTip": "禁用状态下不允许关联用户。",
+    "disabledAuthPolicyTip": "禁用状态下不允许授权策略。",
     "placeholder": {
+      "id": "查询用组ID",
       "name": "查询组名称",
-      "tag": "选择标签"
+      "tag": "选择标签",
+      "addNameTip": "请输入组名称",
+      "addCodeTip": "请输入组编码",
+      "remark": "请输入组说明"
     },
     "columns": {
-      "code": "编码",
-      "name": "名称",
       "remark": "说明",
+      "userNum": "用户数",
       "userGroup": {
         "code": "组编码",
         "name": "组名称",
@@ -241,14 +248,27 @@
         "createdByName": "关联人",
         "createdDate": "关联时间"
       }
+    },
+    "tab": {
+      "groupUsers": "组用户",
+      "authPolicy": "授权策略"
+    },
+    "actions": {
+      "addGroup": "添加组",
+      "deleteGroup": "删除组",
+      "editName": "编辑名称",
+      "moveGroup": "移动组"
     }
   },
   "tag": {
     "title": "标签管理",
     "assocTitle": "关联标签",
+    "basicInfo": "基本信息",
+    "description": "\"标签\"可以帮助您标识有共同点的组织和人员，添加标签并关联组织和人员后，可以方便您在业务使用上更快地查找和选择。例如：\"开发人员、性能测试专家、功能测试人员、头牌销售、商城成员\"等。",
     "userTagQuotaTip": "每个用户最多允许关联10个标签，当前用户已关联{num}个标签。",
     "placeholder": {
-      "name": "查询标签名称"
+      "name": "查询标签名称",
+      "addNameTip": "请输入标签名称"
     },
     "columns": {
       "name": "名称",
@@ -256,6 +276,29 @@
         "name": "标签名称",
         "createdByName": "关联人",
         "createdDate": "关联时间"
+      }
+    },
+    "actions": {
+      "addTag": "添加标签",
+      "deleteTag": "删除标签",
+      "editName": "编辑名称"
+    },
+    "messages": {
+      "confirmDelete": "确定删除该标签吗？"
+    }
+  },
+  "permission": {
+    "title": "权限管理",
+    "placeholder": {
+      "policyName": "查询策略名称"
+    },
+    "columns": {
+      "assocPolicies": {
+        "id": "策略ID",
+        "name": "策略名称",
+        "code": "策略编码",
+        "authByName": "授权人",
+        "authDate": "授权时间"
       }
     }
   }

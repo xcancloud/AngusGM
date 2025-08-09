@@ -3,10 +3,12 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Popover } from 'ant-design-vue';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
-import { PageQuery, duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils, SearchCriteria } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
+import { OrgTargetType } from '@/enums/enums';
 
 import { auth } from '@/api';
+import { createAuthPolicyColumns } from '@/views/organization/user/PropsType';
 
 /**
  * Async component for policy modal
@@ -139,7 +141,7 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
   if (value) {
-    params.value.filters = [{ key: 'name', op: 'MATCH_END', value }];
+    params.value.filters = [{ key: 'name', op: SearchCriteria.OpEnum.MatchEnd, value }];
   } else {
     params.value.filters = [];
   }
@@ -208,52 +210,7 @@ onMounted(() => {
  * Table columns configuration
  * Defines the structure and behavior of each table column
  */
-const columns = [
-  {
-    title: t('permission.columns.assocPolicies.id'),
-    dataIndex: 'id',
-    width: '15%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('permission.columns.assocPolicies.name'),
-    dataIndex: 'name',
-    width: '15%'
-  },
-  {
-    title: t('permission.columns.assocPolicies.code'),
-    dataIndex: 'code'
-  },
-  {
-    title: t('permission.columns.assocPolicies.source'),
-    dataIndex: 'orgType',
-    width: '15%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('permission.columns.assocPolicies.authByName'),
-    dataIndex: 'authByName',
-    width: '15%'
-  },
-  {
-    title: t('permission.columns.assocPolicies.authDate'),
-    dataIndex: 'authDate',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: '6%',
-    align: 'center'
-  }
-];
+const columns = createAuthPolicyColumns(t, OrgTargetType.USER);
 
 </script>
 <template>
@@ -282,7 +239,7 @@ const columns = [
           type="primary"
           icon="icon-tianjia"
           class="mr-2"
-          :disabled="props.hasAuth || total>=10"
+          :disabled="props.hasAuth"
           @click="addPolicy" />
 
         <!-- Refresh button -->

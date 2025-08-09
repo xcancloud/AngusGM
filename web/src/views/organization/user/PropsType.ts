@@ -1,4 +1,5 @@
 import { Gender, UserSource, EnumMessage, SearchCriteria } from '@xcan-angus/infra';
+import { OrgTargetType } from '@/enums/enums';
 
 /**
  * User entity interface representing a user in the system
@@ -136,3 +137,61 @@ export interface SearchOption {
   showSearch?: boolean; // Whether to show search functionality in dropdown
   lazy?: boolean; // Whether to load options lazily
 }
+
+/**
+ * Factory to create i18n-aware columns inside component setup.
+ * Must be called within Vue component `setup` where `t` is available.
+ */
+export const createAuthPolicyColumns = (t: (key: string) => string, orgTargetType?: OrgTargetType) => {
+  const columns = [
+    {
+      title: t('permission.columns.assocPolicies.id'),
+      dataIndex: 'id',
+      width: '15%',
+      customCell: () => ({ style: 'white-space:nowrap;' })
+    },
+    {
+      title: t('permission.columns.assocPolicies.name'),
+      dataIndex: 'name',
+      width: '15%'
+    },
+    {
+      title: t('permission.columns.assocPolicies.code'),
+      dataIndex: 'code'
+    }
+  ] as const;
+
+  // Conditionally include orgType column: exclude when target type is DEPT or GROUP
+  const result: any[] = [...(columns as unknown as any[])];
+  const shouldHideOrgType = orgTargetType === OrgTargetType.DEPT || orgTargetType === OrgTargetType.GROUP;
+  if (!shouldHideOrgType) {
+    result.push({
+      title: t('permission.columns.assocPolicies.source'),
+      dataIndex: 'orgType',
+      width: '15%',
+      customCell: () => ({ style: 'white-space:nowrap;' })
+    });
+  }
+
+  result.push(
+    {
+      title: t('permission.columns.assocPolicies.authByName'),
+      dataIndex: 'authByName',
+      width: '15%'
+    },
+    {
+      title: t('permission.columns.assocPolicies.authDate'),
+      dataIndex: 'authDate',
+      width: '13%',
+      customCell: () => ({ style: 'white-space:nowrap;' })
+    },
+    {
+      title: t('common.actions.operation'),
+      dataIndex: 'action',
+      width: '10%',
+      align: 'center' as const
+    }
+  );
+
+  return result;
+};

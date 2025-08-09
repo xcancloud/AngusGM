@@ -93,7 +93,6 @@ const toSignin = async () => {
   const params = { account, password, scope, signinType, userId };
   const clientId = appContext.getContext().env.oauthClientId || '';
   const clientSecret = appContext.getContext().env.oauthClientSecret || '';
-  debugger;
   const [err, res] = await login.signin({ ...params, clientSecret, clientId });
 
   if (err) {

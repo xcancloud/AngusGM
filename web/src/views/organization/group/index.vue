@@ -51,8 +51,8 @@ const loadGroupList = async (): Promise<void> => {
 const updateStatusConfirm = (id: string, name: string, enabled: boolean) => {
   modal.confirm({
     centered: true,
-    title: enabled ? t('disable') : t('enable'),
-    content: enabled ? t('userTip6', { name: name }) : t('userTip5', { name: name }),
+    title: enabled ? t('common.actions.disable') : t('common.actions.enable'),
+    content: enabled ? t('common.messages.confirmDisable', { name: name }) : t('common.messages.confirmEnable', { name: name }),
     async onOk () {
       await updateStatus(id, enabled);
     }
@@ -65,7 +65,7 @@ const updateStatus = async (id: string, enabled: boolean) => {
   if (error) {
     return;
   }
-  notification.success(enabled ? '禁用成功' : '启用成功');
+  notification.success(enabled ? t('common.messages.disableSuccess') : t('common.messages.enableSuccess'));
   disabled.value = true;
   await loadGroupList();
   disabled.value = false;
@@ -93,8 +93,8 @@ const tableChange = async (_pagination, _filters, sorter) => {
 const delGroupConfirm = (id: string, name: string) => {
   modal.confirm({
     centered: true,
-    title: t('删除组'),
-    content: t('userTip4', { name: name }),
+    title: t('common.actions.delete'),
+    content: t('common.messages.confirmDelete', { name: name }),
     async onOk () {
       await delGroup(id);
     }
@@ -106,7 +106,7 @@ const delGroup = async (id: string) => {
   if (error) {
     return;
   }
-  notification.success('删除成功');
+  notification.success(t('common.messages.deleteSuccess'));
   params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
   disabled.value = true;
   await loadGroupList();
@@ -162,29 +162,29 @@ const delGroupUser = async (_userIds: string[]) => {
 
 const searchOptions = ref([
   {
-    placeholder: t('查询组ID'),
+    placeholder: t('group.placeholder.id'),
     valueKey: 'id',
-    type: 'input',
-    op: 'EQUAL',
+    type: 'input' as const,
+    op: 'EQUAL' as const,
     allowClear: true
   },
   {
-    placeholder: t('groupPlaceholder1'),
+    placeholder: t('group.placeholder.name'),
     valueKey: 'name',
-    type: 'input',
+    type: 'input' as const,
     allowClear: true
   },
   {
-    placeholder: t('selectState'),
+    placeholder: t('common.status.validStatus'),
     valueKey: 'enabled',
-    type: 'select-enum',
+    type: 'select-enum' as const,
     enumKey: Enabled,
     allowClear: true
   },
   {
-    placeholder: t('tagPlaceholder'),
+    placeholder: t('tag.placeholder.name'),
     valueKey: 'tagId',
-    type: 'select',
+    type: 'select' as const,
     action: `${GM}/org/tag`,
     fieldNames: { label: 'name', value: 'id' },
     showSearch: true,
@@ -206,6 +206,7 @@ const handleRefresh = () => {
 
 const _columns = [
   {
+    key: 'id',
     title: 'ID',
     dataIndex: 'id',
     width: '12%',
@@ -214,16 +215,19 @@ const _columns = [
     }
   },
   {
-    title: 'name',
+    key: 'name',
+    title: t('common.columns.name'),
     dataIndex: 'name',
     width: '13%'
   },
   {
-    title: 'code',
+    key: 'code',
+    title: t('common.columns.code'),
     dataIndex: 'code'
   },
   {
-    title: 'status',
+    key: 'enabled',
+    title: t('common.status.validStatus'),
     dataIndex: 'enabled',
     width: '10%',
     customCell: () => {
@@ -231,7 +235,8 @@ const _columns = [
     }
   },
   {
-    title: '来源',
+    key: 'source',
+    title: t('common.labels.source'),
     dataIndex: 'source',
     width: '10%',
     customCell: () => {
@@ -239,7 +244,8 @@ const _columns = [
     }
   },
   {
-    title: 'userNumber',
+    key: 'userNum',
+    title: t('group.columns.userNum'),
     dataIndex: 'userNum',
     width: '10%',
     customCell: () => {
@@ -247,12 +253,14 @@ const _columns = [
     }
   },
   {
-    title: 'createdBy',
+    key: 'createdByName',
+    title: t('common.columns.createdByName'),
     dataIndex: 'createdByName',
     width: '10%'
   },
   {
-    title: 'createdDate',
+    key: 'createdDate',
+    title: t('common.columns.createdDate'),
     sorter: true,
     dataIndex: 'createdDate',
     width: '11%',
@@ -261,10 +269,11 @@ const _columns = [
     }
   },
   {
-    title: 'operation',
+    key: 'action',
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     width: 130,
-    align: 'center'
+    align: 'center' as const
   }
 ];
 
@@ -303,6 +312,8 @@ onMounted(() => {
       :pagination="pagination"
       rowKey="id"
       size="small"
+      :noDataSize="'small'"
+      :noDataText="t('common.messages.noData')"
       @change="tableChange">
       <template #bodyCell="{ column,text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -318,11 +329,11 @@ onMounted(() => {
           <Badge
             v-if="record.enabled"
             status="success"
-            :text="t('enable')" />
+            :text="t('common.actions.enable')" />
           <Badge
             v-else
             status="error"
-            :text="t('disable')" />
+            :text="t('common.actions.disable')" />
         </template>
         <template v-if="column.dataIndex === 'createdByName'">
           {{ text || '--' }}

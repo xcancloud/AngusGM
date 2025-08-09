@@ -1,22 +1,19 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { Popover } from 'ant-design-vue';
-import { ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
-import { debounce } from 'throttle-debounce';
-import { duration, utils } from '@xcan-angus/infra';
+import {computed, defineAsyncComponent, onMounted, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {Popover} from 'ant-design-vue';
+import {ButtonAuth, Hints, Icon, IconRefresh, Input, Table} from '@xcan-angus/vue-ui';
+import {debounce} from 'throttle-debounce';
+import {duration, PageQuery, SearchCriteria, utils} from '@xcan-angus/infra';
+import {OrgTargetType} from '@/enums/enums';
 
-import { auth } from '@/api';
-import { SearchParams } from './PropsType';
+import {auth} from '@/api';
+import {createAuthPolicyColumns} from '@/views/organization/user/PropsType';
+import {Props} from '../../PropsType';
+
+const { t } = useI18n();
 
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
-
-interface Props {
-  groupId: string;
-  notify: number;
-  enabled: boolean;
-  policyName: string;
-}
 
 const props = withDefaults(defineProps<Props>(), {
   groupId: '',
@@ -25,12 +22,14 @@ const props = withDefaults(defineProps<Props>(), {
   policyName: ''
 });
 
-const { t } = useI18n();
-
+/** Loading flags and data states */
 const loading = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 
+/**
+ * Table pagination computed from current params + backend total.
+ */
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -39,6 +38,9 @@ const pagination = computed(() => {
   };
 });
 
+/**
+ * Handle table pagination/sort changes and requery.
+ */
 const handleChange = async (_pagination, _filters, sorter) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -48,8 +50,12 @@ const handleChange = async (_pagination, _filters, sorter) => {
   await getGroupPolicy();
 };
 
+/** Table dataset */
 const dataList = ref([]);
 
+/**
+ * Fetch policies authorized to the group.
+ */
 const getGroupPolicy = async () => {
   if (loading.value) {
     return;
@@ -67,7 +73,6 @@ const getGroupPolicy = async () => {
   total.value = data.total;
 };
 
-// 关联策略
 const policyVisible = ref(false);
 const addPolicy = () => {
   policyVisible.value = true;
@@ -75,6 +80,8 @@ const addPolicy = () => {
 
 const updateLoading = ref(false);
 const disabled = ref(false);
+
+/** Save newly selected policies then refresh list. */
 const policySave = async (addIds: string[]) => {
   if (addIds.length) {
     await addGroupPolicy(addIds);
@@ -82,7 +89,7 @@ const policySave = async (addIds: string[]) => {
   policyVisible.value = false;
 };
 
-// 添加策略
+/** Add policies to current group. */
 const addGroupPolicy = async (_addIds: string[]) => {
   updateLoading.value = true;
   const [error] = await auth.addGroupPolicy(props.groupId, _addIds);
@@ -93,6 +100,7 @@ const addGroupPolicy = async (_addIds: string[]) => {
   await getGroupPolicy();
 };
 
+/** Remove a policy authorization from the group and keep table page valid. */
 const cancelLoading = ref(false);
 const handleCancel = async (id) => {
   if (cancelLoading.value) {
@@ -108,74 +116,37 @@ const handleCancel = async (id) => {
   await getGroupPolicy();
 };
 
+/**
+ * Debounced search by policy name. Updates filters and reloads list.
+ */
 const handleSearch = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
   if (value) {
-    params.value.filters = [{ key: 'name', op: 'MATCH_END', value: value }];
+    params.value.filters = [{ key: 'name', op: SearchCriteria.OpEnum.MatchEnd, value: value }];
   } else {
     params.value.filters = [];
   }
   getGroupPolicy();
 });
 
+/** Initial load */
 onMounted(() => {
   getGroupPolicy();
 });
 
-const columns = [
-  {
-    title: '策略ID',
-    dataIndex: 'id',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('策略名称'),
-    dataIndex: 'name',
-    ellipsis: true
-  },
-  {
-    title: t('策略编码'),
-    dataIndex: 'code',
-    width: '22%'
-  },
-  {
-    title: t('授权来源'),
-    dataIndex: 'grantStage',
-    width: '10%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('授权人'),
-    dataIndex: 'authByName',
-    width: '13%'
-  },
-  {
-    title: t('授权时间'),
-    dataIndex: 'authDate',
-    width: '19%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('operation'),
-    dataIndex: 'action',
-    width: 82,
-    align: 'center'
-  }
-];
+/**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
+const columns = createAuthPolicyColumns(t, OrgTargetType.GROUP);
+
 </script>
 <template>
-  <Hints class="mb-1" :text="t('禁用状态下不允许关联策略。')" />
+  <Hints class="mb-1" :text="t('group.disabledAuthPolicyTip')" />
   <div class="flex items-center justify-between mb-2">
     <Input
-      :placeholder="t('查询策略名称')"
+      :placeholder="t('permission.placeholder.policyName')"
       class="w-60"
       allowClear
       @change="handleSearch">
@@ -200,9 +171,11 @@ const columns = [
     size="small"
     :loading="loading"
     :dataSource="dataList"
-    :rowKey="(record: any) => record.id"
+    rowKey="id"
     :columns="columns"
     :pagination="pagination"
+    :noDataSize="'small'"
+    :noDataText="t('common.messages.noData')"
     @change="handleChange">
     <template #bodyCell="{ column,text,record }">
       <template v-if="column.dataIndex === 'name'">

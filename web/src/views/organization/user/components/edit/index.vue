@@ -585,31 +585,31 @@ onMounted(() => {
 
             <!-- Full name field -->
             <div class="group-fields">
-            <FormItem
-              :label="t('user.profile.fullName')"
-              :rules="[{ required: true, message: t('user.validation.nameRequired') }]"
-              name="fullName"
-              class="full-name-field">
-              <Input
-                v-model:value="formState.fullName"
-                size="small"
-                :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
-                :maxlength="100"
-                :placeholder="t('user.placeholder.fullName')" />
-            </FormItem>
+              <FormItem
+                :label="t('user.profile.fullName')"
+                :rules="[{ required: true, message: t('user.validation.nameRequired') }]"
+                name="fullName"
+                class="full-name-field">
+                <Input
+                  v-model:value="formState.fullName"
+                  size="small"
+                  :disabled="!!(userId && userSource === UserSource.LDAP_SYNCHRONIZE)"
+                  :maxlength="100"
+                  :placeholder="t('user.placeholder.fullName')" />
+              </FormItem>
 
-            <!-- Username field -->
-            <FormItem
-              :label="t('user.profile.username')"
-              name="username"
-              :rules="[{ required: true, message:t('user.validation.usernameRequired') }]"
-              class="username-field">
-              <Input
-                v-model:value="formState.username"
-                size="small"
-                :maxlength="100"
-                :placeholder="t('user.placeholder.username',{name:t('user.profile.username'),num:100,chart:' - _ . '})"
-                dataType="mixin-en"
+              <!-- Username field -->
+              <FormItem
+                :label="t('user.profile.username')"
+                name="username"
+                :rules="[{ required: true, message:t('user.validation.usernameRequired') }]"
+                class="username-field">
+                <Input
+                  v-model:value="formState.username"
+                  size="small"
+                  :maxlength="100"
+                  :placeholder="t('user.placeholder.username',{name:t('user.profile.username'),num:100,chart:' - _ . '})"
+                  dataType="mixin-en"
                   includes="-_." />
               </FormItem>
             </div>
@@ -749,29 +749,29 @@ onMounted(() => {
             </div>
 
             <div class="group-fields">
-            <!-- Job title field -->
-            <FormItem
-              :label="t('user.profile.title')"
-              name="title"
-              class="title-field">
-              <Input
-                v-model:value="formState.title"
-                size="small"
-                :maxlength="100"
-                :placeholder="t('user.placeholder.title')" />
-            </FormItem>
+              <!-- Job title field -->
+              <FormItem
+                :label="t('user.profile.title')"
+                name="title"
+                class="title-field">
+                <Input
+                  v-model:value="formState.title"
+                  size="small"
+                  :maxlength="100"
+                  :placeholder="t('user.placeholder.title')" />
+              </FormItem>
 
-            <!-- Address field -->
-            <FormItem
-              :label="t('user.profile.address')"
-              name="address"
-              class="address-field">
-              <Input
-                v-model:value="formState.address"
-                size="small"
-                :maxlength="200"
-                :placeholder="t('user.placeholder.address')" />
-            </FormItem>
+              <!-- Address field -->
+              <FormItem
+                :label="t('user.profile.address')"
+                name="address"
+                class="address-field">
+                <Input
+                  v-model:value="formState.address"
+                  size="small"
+                  :maxlength="200"
+                  :placeholder="t('user.placeholder.address')" />
+              </FormItem>
             </div>
           </div>
         </div>
@@ -892,13 +892,13 @@ onMounted(() => {
 }
 
 .section-icon {
-  font-size: 16px;
+  font-size: 14px;
   color: #1890ff;
   margin-right: 8px;
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #262626;
   margin: 0;

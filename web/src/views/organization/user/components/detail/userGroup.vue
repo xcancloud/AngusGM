@@ -276,7 +276,7 @@ const columns = [
 <template>
   <div>
     <!-- User group quota hints -->
-    <Hints :text="t('group.userGroupQuotaTip', {num: count})" class="mb-1" />
+    <Hints :text="t('user.userGroupQuotaTip', {num: count})" class="mb-1" />
 
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-2">

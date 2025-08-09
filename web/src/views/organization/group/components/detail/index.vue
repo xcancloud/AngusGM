@@ -7,8 +7,8 @@ import { modal, notification } from '@xcan-angus/vue-ui';
 import { Detail } from '../../PropsType';
 import { group } from '@/api';
 
-const DetailCard = defineAsyncComponent(() => import('./card.vue'));
-const Associations = defineAsyncComponent(() => import('@/views/organization/group/components/association/index.vue'));
+const DetailCard = defineAsyncComponent(() => import('./detailCard.vue'));
+const Associations = defineAsyncComponent(() => import('../association/index.vue'));
 
 const { t } = useI18n();
 const groupDetail = ref<Detail>();
@@ -27,23 +27,24 @@ const loadGroupDetail = async () => {
   if (error) {
     return;
   }
-
   groupDetail.value = data;
 };
 
-// 禁用启用弹框
 const updateStatusConfirm = () => {
   modal.confirm({
     centered: true,
-    title: groupDetail.value?.enabled ? t('disable') : t('enable'),
-    content: groupDetail.value?.enabled ? t('userTip6', { name: groupDetail.value?.name }) : t('userTip5', { name: groupDetail.value?.name }),
+    title: groupDetail.value?.enabled
+      ? t('common.actions.disable')
+      : t('common.actions.enable'),
+    content: groupDetail.value?.enabled
+      ? t('common.messages.confirmDisable', { name: groupDetail.value?.name })
+      : t('common.messages.confirmEnable', { name: groupDetail.value?.name }),
     async onOk () {
       await updateStatus();
     }
   });
 };
 
-// 禁用启用请求
 const updateStatus = async () => {
   if (!groupDetail.value) {
     return;
@@ -53,8 +54,12 @@ const updateStatus = async () => {
   if (error) {
     return;
   }
-  notification.success(groupDetail.value.enabled ? '禁用成功' : '启用成功');
-  loadGroupDetail();
+  notification.success(
+    groupDetail.value.enabled
+      ? t('common.messages.disableSuccess')
+      : t('common.messages.enableSuccess')
+  );
+  await loadGroupDetail();
 };
 
 const editSuccess = () => {
@@ -65,6 +70,7 @@ onMounted(() => {
   loadGroupDetail();
 });
 </script>
+
 <template>
   <div class="flex space-x-2 min-h-full">
     <DetailCard

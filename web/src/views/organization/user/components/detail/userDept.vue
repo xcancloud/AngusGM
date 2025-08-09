@@ -165,7 +165,7 @@ const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
  * @param id - Department ID to remove
  */
 const handleCancel = async (id) => {
-  delUserDept([id], 'Table');
+  await delUserDept([id], 'Table');
 };
 
 /**

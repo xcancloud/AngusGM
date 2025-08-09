@@ -8,6 +8,7 @@
     "timingLock": "Timed Lock",
     "permanentLock": "Permanent Lock",
     "uploadAvatarTip": "Upload Avatar",
+    "userGroupQuotaTip": "Each user can be associated with at most 200 Groups. The current user is associated with {num} Groups.",
     "placeholder": {
       "search": "Search by name, mobile, or title",
       "userId": "Search ID",
@@ -93,6 +94,7 @@
     "profile": {
       "basicInfo": "Basic Information",
       "additionalInfo": "Additional Information",
+      "auditInfo": "Audit Information",
       "security": "Security Settings",
       "preference": "Preferences",
       "messages": "Messages",
@@ -188,15 +190,12 @@
       "addCodeTip": "Please enter department code"
     },
     "columns": {
-      "code": "Code",
-      "name": "Name",
       "parent": "Parent",
       "level": "Level",
       "createdDate": "Created Date",
       "createdByName": "Creator",
       "lastModifiedByName": "Last Modifier",
       "lastModifiedDate": "Last Modified Date",
-      "tags": "Tags",
       "userDept": {
         "code": "Department Code",
         "name": "Department Name",
@@ -225,38 +224,81 @@
   "group": {
     "title": "Group Management",
     "assocTitle": "Associate Group",
-    "userGroupQuotaTip": "Each user can be associated with at most 200 groups. The current user is associated with {num} groups.",
+    "basicInfo": "Basic Information",
+    "auditInfo": "Audit Information",
+    "groupUserQuotaTip": "Each group can be associated with at most 200 users. The current group is associated with {num} users.",
+    "groupTagQuotaTip": "Each group can be associated with at most 10 tags. The current group is associated with {num} tags.",
+    "disabledTip": "Associating users is not allowed in the disabled status.",
+    "disabledAuthPolicyTip": "Authorizing policies is not allowed in the disabled status.",
     "placeholder": {
-      "name": "Query department name",
-      "tag": "Select tag"
+      "id": "Query group ID",
+      "name": "Query group name",
+      "tag": "Select tag",
+      "addNameTip": "Please enter group name",
+      "addCodeTip": "Please enter group code",
+      "remark": "Please enter group description"
     },
     "columns": {
-      "code": "Code",
-      "name": "Name",
       "remark": "Remark",
+      "userNum": "User Count",
       "userGroup": {
         "code": "Group Code",
         "name": "Group Name",
         "remark": "Group Remark",
-        "head": "Group Head",
         "createdByName": "Associated By",
         "createdDate": "Associated Date"
       }
+    },
+    "tab": {
+      "groupUsers": "Group Users",
+      "authPolicy": "Authorization Policies"
+    },
+    "actions": {
+      "addGroup": "Add Group",
+      "deleteGroup": "Delete Group",
+      "editName": "Edit Name",
+      "moveGroup": "Move Group"
     }
   },
   "tag": {
     "title": "Tag Management",
     "assocTitle": "Associate Tag",
+    "basicInfo": "Basic Information",
+    "description": "\"Tags\" can help you identify organizations and people with common points. After adding tags and associating organizations and people, you can quickly find and select them in business use. For example: \"Developers, Performance Test Experts, Functional Testers, Top Sales, Mall Members\", etc.",
     "userTagQuotaTip": "Each user can be associated with at most 10 tags. The current user is associated with {num} tags.",
     "placeholder": {
-      "name": "Query tag name"
+      "name": "Query tag name",
+      "addNameTip": "Please enter tag name"
     },
     "columns": {
-      "name": "name",
+      "name": "Name",
       "userTag": {
         "name": "Tag Name",
         "createdByName": "Associated By",
         "createdDate": "Associated Date"
+      }
+    },
+    "actions": {
+      "addTag": "Add Tag",
+      "deleteTag": "Delete Tag",
+      "editName": "Edit Name"
+    },
+    "messages": {
+      "confirmDelete": "Are you sure you want to delete this tag?"
+    }
+  },
+  "permission": {
+    "title": "Permission Management",
+    "placeholder": {
+      "policyName": "Query policy name"
+    },
+    "columns": {
+      "assocPolicies": {
+        "id": "Policy ID",
+        "name": "Policy Name",
+        "code": "Policy Code",
+        "authByName": "Authorized By",
+        "authDate": "Authorization Date"
       }
     }
   }

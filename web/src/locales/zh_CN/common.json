@@ -81,6 +81,15 @@
     "form": {
       "selectAll": "全选"
     },
+    "columns": {
+      "name": "名称",
+      "code": "编码",
+      "createdDate": "添加时间",
+      "createdByName": "添加人",
+      "lastModifiedByName": "最后修改人",
+      "lastModifiedDate": "最后修改时间",
+      "tags": "标签"
+    },
     "table": {
       "total": "总计",
       "page": "页",
@@ -117,7 +126,8 @@
       "invalidFormat": "格式不正确",
       "requiredField": "此字段为必填项",
       "passwordNotMatch": "密码不匹配",
-      "verificationCodeError": "验证码格式不正确"
+      "verificationCodeError": "验证码格式不正确",
+      "noData": "暂无数据"
     },
     "labels": {
       "source": "来源",

@@ -81,7 +81,7 @@ const save = async (): Promise<void> => {
   try {
     // Validate form before submission
     await formRef.value.validate();
-    
+
     const params = {
       id: props.id,
       name: form.name
@@ -95,7 +95,7 @@ const save = async (): Promise<void> => {
 
     state.confirmLoading = true;
     const [error] = await dept.updateDept([params]);
-    
+
     if (error) {
       handleApiError(error, 'update department');
       return;
@@ -159,8 +159,8 @@ watch(() => props.name, (newName) => {
       layout="horizontal"
       :labelCol="{ span: 6 }"
       :wrapperCol="{ span: 18 }">
-      <FormItem 
-        :label="t('department.columns.name')" 
+      <FormItem
+        :label="t('common.columns.name')"
         name="name"
         :rules="[
           { required: true, message: t('department.validation.nameRequired'), trigger: 'blur' },
