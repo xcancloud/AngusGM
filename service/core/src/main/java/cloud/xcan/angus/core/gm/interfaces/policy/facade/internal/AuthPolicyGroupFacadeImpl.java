@@ -93,6 +93,7 @@ public class AuthPolicyGroupFacadeImpl implements AuthPolicyGroupFacade {
     return buildVoPageResult(page, AuthPolicyAssembler::toAuthPolicyVo);
   }
 
+  @NameJoin
   @Override
   public PageResult<PolicyUnauthVo> groupUnauthPolicyList(Long groupId, UnAuthPolicyFindDto dto) {
     dto.setOrgId(groupId).setOrgType(AuthOrgType.GROUP).setIgnoreAuthOrg(true);
