@@ -47,7 +47,7 @@ const handleEdit = () => {
     <div class="detail-info mt-4">
       <div class="section">
         <div class="section-title">
-          <Icon icon="icon-jibenxinxi1" class="section-icon" />
+          <Icon icon="icon-jibenxinxi1" class="info-icon" />
           {{ t('group.basicInfo') }}
         </div>
         <div class="info-grid one-col">
@@ -99,7 +99,7 @@ const handleEdit = () => {
 
       <div class="section mt-4">
         <div class="section-title">
-          <Icon icon="icon-shenjirizhi" class="section-icon" />
+          <Icon icon="icon-shenjirizhi" class="info-icon" />
           {{ t('group.auditInfo') }}
         </div>
         <div class="info-grid one-col">
@@ -124,22 +124,20 @@ const handleEdit = () => {
 
       <div class="section mt-4">
         <div class="section-title">
-          <Icon icon="icon-biaoqian" class="section-icon" />
+          <Icon icon="icon-biaoqian" class="info-icon" />
           {{ t('common.columns.tags') }}
         </div>
-        <div class="info-grid one-col">
-          <div class="info-item tags">
-            <div class="info-value tags-wrap">
-              <template v-if="props.dataSource?.tags?.length">
-                <Tag
-                  v-for="(tag, tagIndex) in props.dataSource?.tags"
-                  :key="tagIndex"
-                  class="mb-1">
-                  {{ tag.name }}
-                </Tag>
-              </template>
-              <span v-else>--</span>
-            </div>
+        <div class="info-item">
+          <div class="info-value tags-container">
+            <template v-if="props.dataSource?.tags?.length">
+              <Tag
+                v-for="(tag, tagIndex) in props.dataSource?.tags"
+                :key="tagIndex"
+                class="tag">
+                {{ tag.name }}
+              </Tag>
+            </template>
+            <span v-else>--</span>
           </div>
         </div>
       </div>
@@ -162,9 +160,6 @@ const handleEdit = () => {
   display: inline-flex;
   align-items: center;
 }
-.section-icon {
-  margin-right: 6px;
-}
 
 .detail-info {
   width: 100%;
@@ -185,6 +180,7 @@ const handleEdit = () => {
   grid-template-columns: 120px 1fr;
   align-items: start;
   column-gap: 5px;
+  margin-left: 15px;
 }
 
 @media (max-width: 720px) {
@@ -203,6 +199,12 @@ const handleEdit = () => {
 .info-value {
   color: var(--text-primary);
   font-size: 12px;
+}
+
+.info-icon {
+  margin-right: 6px;
+  font-size: 12px;
+  color: #1890ff;
 }
 
 .value-strong {
@@ -226,9 +228,20 @@ const handleEdit = () => {
   overflow: hidden;
 }
 
-.tags-wrap {
+.tags-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 8px;
+  gap: 4px;
 }
+
+.tag {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  color: #52c41a;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 0;
+}
+
 </style>

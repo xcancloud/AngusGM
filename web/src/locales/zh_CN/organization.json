@@ -70,7 +70,8 @@
       "resetPassword": "重置密码",
       "lockUser": "锁定用户",
       "unlockUser": "解锁用户",
-      "deleteUser": "删除用户"
+      "deleteUser": "删除用户",
+      "assocUsers": "关联用户"
     },
     "validation": {
       "passwordRequired": "请输入密码",
@@ -212,7 +213,8 @@
       "addDept": "添加部门",
       "deleteDept": "删除部门",
       "editName": "编辑名称",
-      "moveDept": "移动部门"
+      "moveDept": "移动部门",
+      "assocDepts": "关联部门"
     },
     "messages": {
       "confirmDelete": "{content}，确定删除该部门吗?",
@@ -241,7 +243,7 @@
     "columns": {
       "remark": "说明",
       "userNum": "用户数",
-      "userGroup": {
+      "assocGroup": {
         "code": "组编码",
         "name": "组名称",
         "remark": "组说明",
@@ -257,14 +259,16 @@
       "addGroup": "添加组",
       "deleteGroup": "删除组",
       "editName": "编辑名称",
-      "moveGroup": "移动组"
+      "moveGroup": "移动组",
+      "assocGroups": "关联组"
     }
   },
   "tag": {
     "title": "标签管理",
     "assocTitle": "关联标签",
+    "assocOrg": "关联组织",
     "basicInfo": "基本信息",
-    "description": "\"标签\"可以帮助您标识有共同点的组织和人员，添加标签并关联组织和人员后，可以方便您在业务使用上更快地查找和选择。例如：\"开发人员、性能测试专家、功能测试人员、头牌销售、商城成员\"等。",
+    "description": "标签可以帮助您标识有共同点的组织和人员，添加标签并关联组织和人员后，可以方便您在业务使用上更快地查找和选择。",
     "userTagQuotaTip": "每个用户最多允许关联10个标签，当前用户已关联{num}个标签。",
     "placeholder": {
       "name": "查询标签名称",

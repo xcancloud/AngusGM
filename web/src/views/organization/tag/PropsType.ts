@@ -1,4 +1,4 @@
-export type TargetType = 'USER' | 'DEPT' | 'GROUP'
+import { OrgTargetType } from '@/enums/enums';
 
 export type OrgTag = {
   id: string;
@@ -16,7 +16,7 @@ export type OrgTag = {
 
 export type Target = {
   id: string;
-  targetType: TargetType,
+  targetType: OrgTargetType,
   targetId: string;
   targetName: string;
   tagId: string;

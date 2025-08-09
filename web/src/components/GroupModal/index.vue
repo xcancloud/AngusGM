@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Checkbox, CheckboxGroup, Divider } from 'ant-design-vue';
+import { Badge, Checkbox, CheckboxGroup } from 'ant-design-vue';
 import { Icon, Input, Modal, Scroll, Select } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, GM } from '@xcan-angus/infra';
@@ -49,15 +49,27 @@ const { t } = useI18n();
  */
 const params = ref<{
   filters: { key: 'name', op: 'MATCH_END', value: string | undefined }[],
-  enabled: boolean,
+  enabled?: boolean,
   tagId?: string,
   fullTextSearch: boolean
-}>({ filters: [], enabled: true, fullTextSearch: true }); // Search parameters
-const dataList = ref<{ id: string, name: string, code: string }[]>([]); // All available groups
+}>({ filters: [], fullTextSearch: true }); // Search parameters
+const dataList = ref<{ id: string, name: string, code: string, enabled: boolean }[]>([]); // All available groups
 const checkedList = ref<string[]>([]); // Currently checked group IDs
 const indeterminate = ref<boolean>(false); // Indeterminate state for select all checkbox
 const oldCheckedList = ref<string[]>([]); // Previously associated groups from backend
 const loading = ref(false); // Loading state for API calls
+
+/**
+ * Double-click a row to toggle selection
+ */
+const handleRowDblClick = (id: string): void => {
+  const idx = checkedList.value.indexOf(id);
+  if (idx >= 0) {
+    checkedList.value = checkedList.value.filter(k => k !== id);
+  } else {
+    checkedList.value = [...checkedList.value, id];
+  }
+};
 
 /**
  * Handle select all checkbox change
@@ -227,7 +239,6 @@ watch(() => props.tagId, () => {
     class="my-modal"
     @cancel="handleCancel"
     @ok="handleOk">
-    
     <div class="-mt-3">
       <!-- Search and filter controls -->
       <div class="mb-2 flex space-x-2">
@@ -242,7 +253,7 @@ watch(() => props.tagId, () => {
             <Icon icon="icon-sousuo" class="text-3.5 leading-3.5" />
           </template>
         </Input>
-        
+
         <!-- Tag filter dropdown -->
         <Select
           :placeholder="t('group.placeholder.tag')"
@@ -254,20 +265,18 @@ watch(() => props.tagId, () => {
           class="w-1/2"
           @change="tagChange" />
       </div>
-      
+
       <!-- Table header -->
-      <div class="flex py-1 bg-theme-form-head text-theme-title text-3 font-normal mb-1">
-        <div class="w-1/3 pl-11 mr-2">
-          ID
-        </div>
-        <div class="w-1/3 mr-2 pl-5">
-          {{ t('group.columns.userGroup.name') }}
-        </div>
-        <div class="w-1/3">
-          {{ t('group.columns.userGroup.code') }}
-        </div>
+      <div class="flex items-center h-8 leading-5 px-2 space-x-2 mb-1 rounded bg-theme-form-head text-theme-title">
+        <Checkbox
+          class="w-4"
+          :indeterminate="indeterminate"
+          @change="onCheckAllChange" />
+        <div class="flex-1 min-w-60">{{ t('common.columns.name') }}</div>
+        <div class="w-60">{{ t('common.columns.code') }}</div>
+        <div class="w-25">{{ t('common.status.validStatus') }}</div>
       </div>
-      
+
       <!-- Scrollable group list with checkboxes -->
       <Scroll
         :action="`${GM}/group`"
@@ -277,41 +286,46 @@ watch(() => props.tagId, () => {
         :params="params"
         :notify="notify"
         @change="handleChange">
-        
         <CheckboxGroup
           v-model:value="checkedList"
           style="width: 100%;"
-          class="space-y-2">
-          
-          <!-- Group list items -->
+          class="space-y-1 px-2">
           <div
-            v-for="item, index in dataList"
+            v-for="item in dataList"
             :key="item.id"
-            class="flex-1 items-end flex text-3 text-theme-content"
-            :calss="{ 'mt-2': index > 0 }">
-            
+            class="flex-1 items-center flex leading-5 h-7 space-x-2 text-theme-content"
+            @dblclick.stop="handleRowDblClick(item.id)">
             <!-- Group checkbox with icon -->
             <Checkbox :value="item.id">
               <Icon icon="icon-zu1" class="-mt-0.75 text-4" />
             </Checkbox>
-            
+
             <!-- Group ID -->
-            <div class="truncate -ml-1 w-1/3">{{ item.id }}</div>
-            
+            <!-- <div class="flex-shrink-0 w-50 ">
+              <div class="pt-0.5">{{ item.id }}</div>
+            </div>-->
+
             <!-- Group name -->
-            <div class="truncate w-1/3" :title="item.name">{{ item.name }}</div>
-            
+            <div class="truncate flex-1 min-w-60 ">
+              <div class="pt-0.5">{{ item.name }}</div>
+            </div>
+
             <!-- Group code -->
-            <div class="truncate w-1/3" :title="item.code">{{ item.code }}</div>
+            <div class="truncate flex-shrink-0 w-60 ">
+              <div class="pt-0.5">{{ item.code }}</div>
+            </div>
+
+            <!-- Group code -->
+            <div class="flex-shrink-0 w-25">
+              <Badge
+                :status="item.enabled ? 'success' : 'error'"
+                :text="item.enabled ? t('common.status.enabled') : t('common.status.disabled')" />
+            </div>
           </div>
         </CheckboxGroup>
       </Scroll>
-      
-      <!-- Select all checkbox -->
-      <Divider class="my-2" />
-      <Checkbox :indeterminate="indeterminate" @change="onCheckAllChange">
-        {{ t('common.form.selectAll') }}
-      </Checkbox>
+
+
     </div>
   </Modal>
 </template>

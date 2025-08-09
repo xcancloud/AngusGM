@@ -70,7 +70,8 @@
       "resetPassword": "Reset Password",
       "lockUser": "Lock User",
       "unlockUser": "Unlock User",
-      "deleteUser": "Delete User"
+      "deleteUser": "Delete User",
+      "assocUsers": "Associate Users"
     },
     "validation": {
       "passwordRequired": "Please enter your password",
@@ -212,7 +213,8 @@
       "addDept": "Add Department",
       "deleteDept": "Delete Department",
       "editName": "Edit Name",
-      "moveDept": "Move Department"
+      "moveDept": "Move Department",
+      "assocDepts": "Associate Departments"
     },
     "messages": {
       "confirmDelete": "{content}. Are you sure you want to delete this department ?",
@@ -241,7 +243,7 @@
     "columns": {
       "remark": "Remark",
       "userNum": "User Count",
-      "userGroup": {
+      "assocGroup": {
         "code": "Group Code",
         "name": "Group Name",
         "remark": "Group Remark",
@@ -257,14 +259,16 @@
       "addGroup": "Add Group",
       "deleteGroup": "Delete Group",
       "editName": "Edit Name",
-      "moveGroup": "Move Group"
+      "moveGroup": "Move Group",
+      "assocGroups": "Associate Groups"
     }
   },
   "tag": {
     "title": "Tag Management",
-    "assocTitle": "Associate Tag",
+    "assocTitle": "Associated Tags",
+    "assocOrg": "Associated Organizations",
     "basicInfo": "Basic Information",
-    "description": "\"Tags\" can help you identify organizations and people with common points. After adding tags and associating organizations and people, you can quickly find and select them in business use. For example: \"Developers, Performance Test Experts, Functional Testers, Top Sales, Mall Members\", etc.",
+    "description": "Tag can help you identify organizations and people with common points. After adding tags and associating organizations and people, you can quickly find and select them in business use.",
     "userTagQuotaTip": "Each user can be associated with at most 10 tags. The current user is associated with {num} tags.",
     "placeholder": {
       "name": "Query tag name",

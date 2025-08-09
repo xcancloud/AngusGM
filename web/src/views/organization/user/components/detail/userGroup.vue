@@ -238,21 +238,21 @@ const columns = [
     }
   },
   {
-    title: t('group.columns.userGroup.name'),
+    title: t('group.columns.assocGroup.name'),
     dataIndex: 'groupName',
     width: '15%'
   },
   {
-    title: t('group.columns.userGroup.code'),
+    title: t('group.columns.assocGroup.code'),
     dataIndex: 'groupCode',
     width: '15%'
   },
   {
-    title: t('group.columns.userGroup.remark'),
+    title: t('group.columns.assocGroup.remark'),
     dataIndex: 'groupRemark'
   },
   {
-    title: t('group.columns.userGroup.createdDate'),
+    title: t('group.columns.assocGroup.createdDate'),
     dataIndex: 'createdDate',
     width: '13%',
     customCell: () => {
@@ -260,7 +260,7 @@ const columns = [
     }
   },
   {
-    title: t('group.columns.userGroup.createdByName'),
+    title: t('group.columns.assocGroup.createdByName'),
     dataIndex: 'createdByName',
     width: '13%'
   },

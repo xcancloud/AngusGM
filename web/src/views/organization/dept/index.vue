@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, nextTick, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Dropdown, Menu, MenuItem, TabPane, Tabs, Tag } from 'ant-design-vue';
+import { Dropdown, Menu, MenuItem, TabPane, Tabs } from 'ant-design-vue';
 import {
-  AsyncComponent, ButtonAuth, Card, Icon, IconRefresh, Image, Input,
+  AsyncComponent, ButtonAuth, IconRefresh, Image, Input,
   modal, notification, PureCard, Select, Table, Tree
 } from '@xcan-angus/vue-ui';
 import { app, duration, GM, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
@@ -15,7 +15,8 @@ import { auth, dept } from '@/api';
 import { createAuthPolicyColumns } from '@/views/organization/user/PropsType';
 
 // Async component definitions
-const SelectTargetModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
+const Info = defineAsyncComponent(() => import('./components/info/index.vue'));
+const SelectTagModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
 const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/components/add/index.vue'));
 const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/components/edit/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
@@ -857,130 +858,14 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
       <!-- Content panel -->
       <div class="flex-1 flex flex-col overflow-y-auto">
         <!-- Department info card -->
-        <Card v-show="state.currentSelectedNode.id" class="mb-2">
-          <template #title>
-            <span class="text-3">{{ t('department.basicInfo') }}</span>
-          </template>
-          <template #rightExtra>
-            <div class="flex items-center space-x-2.5">
-              <ButtonAuth
-                code="DeptAdd"
-                type="text"
-                icon="icon-tianjia"
-                @click="rightAddDept(state.currentSelectedNode)" />
-              <ButtonAuth
-                code="DeptModify"
-                type="text"
-                icon="icon-shuxie"
-                @click="rightEditDeptName(state.currentSelectedNode)" />
-              <ButtonAuth
-                code="DeptDelete"
-                type="text"
-                icon="icon-lajitong"
-                @click="rightDel(state.currentSelectedNode)" />
-              <ButtonAuth
-                code="DeptTagsAdd"
-                type="text"
-                icon="icon-biaoqian2"
-                @click="rightEditTag(state.currentSelectedNode)" />
-              <ButtonAuth
-                v-if="false"
-                code="Move"
-                type="text"
-                icon="icon-riqiyou"
-                @click="rightOpenMove(state.currentSelectedNode)" />
-            </div>
-          </template>
-
-          <!-- Department information display -->
-          <div v-show="state.currentSelectedNode.id" class="dept-info-display">
-            <!-- Basic Information Row -->
-            <div class="info-row">
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-bumen" class="info-icon" />
-                  {{ t('common.columns.name') }}
-                </div>
-                <div class="info-value">{{ deptInfo.name || '--' }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-a-bianhao1" class="info-icon" />
-                  {{ t('common.columns.code') }}
-                </div>
-                <div class="info-value">{{ deptInfo.code || '--' }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-a-ID1" class="info-icon" />
-                  {{ t('ID') }}
-                </div>
-                <div class="info-value">{{ deptInfo.id || '--' }}</div>
-              </div>
-            </div>
-
-            <!-- Creation Information Row -->
-            <div class="info-row">
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-yonghu" class="info-icon" />
-                  {{ t('common.columns.createdByName') }}
-                </div>
-                <div class="info-value">{{ deptInfo.createdByName || '--' }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-shijianriqi" class="info-icon" />
-                  {{ t('common.columns.createdDate') }}
-                </div>
-                <div class="info-value">{{ deptInfo.createdDate || '--' }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-a-cengji1" class="info-icon" />
-                  {{ t('department.columns.level') }}
-                </div>
-                <div class="info-value">{{ deptInfo.level || '--' }}</div>
-              </div>
-            </div>
-
-            <!-- Modification Information Row -->
-            <div class="info-row">
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-yonghu" class="info-icon" />
-                  {{ t('department.columns.lastModifiedByName') }}
-                </div>
-                <div class="info-value">{{ deptInfo.lastModifiedByName || '--' }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-shijianriqi" class="info-icon" />
-                  {{ t('department.columns.lastModifiedDate') }}
-                </div>
-                <div class="info-value">{{ deptInfo.lastModifiedDate || '--' }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">
-                  <Icon icon="icon-biaoqian2" class="info-icon" />
-                  {{ t('common.columns.tags') }}
-                </div>
-                <div class="info-value">
-                  <div v-if="deptInfo.tags && deptInfo.tags.length > 0" class="tags-container">
-                    <Tag
-                      v-for="tag in deptInfo.tags"
-                      :key="tag.id"
-                      class="dept-tag">
-                      {{ tag.name }}
-                    </Tag>
-                  </div>
-                  <span v-else class="no-tags">--</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
+        <Info
+          :node="state.currentSelectedNode"
+          :deptInfo="deptInfo"
+          @add="rightAddDept"
+          @editName="rightEditDeptName"
+          @delete="rightDel"
+          @editTag="rightEditTag"
+          @move="rightOpenMove" />
         <!-- Tab content -->
         <div class="flex-1">
           <PureCard class="px-2 min-h-full">
@@ -1127,7 +1012,7 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
   </AsyncComponent>
 
   <AsyncComponent :visible="editTagVisible">
-    <SelectTargetModal
+    <SelectTagModal
       v-model:visible="editTagVisible"
       :deptId="currentActionNode.id"
       type="Dept"
@@ -1170,86 +1055,6 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
 .dept-tab :deep(.ant-tabs-nav::before) {
   @apply mb-1.5;
   display: none;
-}
-
-/* Department information display styling */
-.dept-info-display {
-  padding: 4px 0;
-}
-
-.info-row {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 4px;
-  padding: 4px 0
-}
-
-.info-row:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.info-item {
-  flex: 1;
-  min-width: 0;
-}
-
-.info-label {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 4px;
-  font-weight: 500;
-  padding-left: 20px;
-}
-
-.info-icon {
-  margin-right: 6px;
-  font-size: 12px;
-  color: #1890ff;
-}
-
-.info-value {
-  font-size: 12px;
-  color: #262626;
-  font-weight: 500;
-  word-break: break-word;
-  line-height: 1.4;
-  padding-left: 40px;
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.dept-tag {
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-  color: #52c41a;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin: 0;
-}
-
-.no-tags {
-  color: #bfbfbf;
-  font-style: italic;
-}
-
-/* Responsive design for department info */
-@media (max-width: 768px) {
-  .info-row {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .info-item {
-    flex: none;
-  }
 }
 
 /* Department tree styling */

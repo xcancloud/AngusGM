@@ -548,7 +548,7 @@ onMounted(() => {
         <!-- Basic Information Section -->
         <div class="form-section">
           <div class="section-header">
-            <Icon icon="icon-jibenxinxi" class="section-icon" />
+            <Icon icon="icon-jibenxinxi" class="info-icon" />
             <h3 class="section-title">{{ t('user.profile.basicInfo') }}</h3>
           </div>
 
@@ -712,7 +712,7 @@ onMounted(() => {
         <!-- Additional Information Section -->
         <div class="form-section">
           <div class="section-header">
-            <Icon icon="icon-shezhi" class="section-icon" />
+            <Icon icon="icon-shezhi" class="info-icon" />
             <h3 class="section-title">{{ t('user.profile.additionalInfo') }}</h3>
           </div>
 
@@ -891,10 +891,10 @@ onMounted(() => {
   border-bottom: 1px solid #f0f0f0;
 }
 
-.section-icon {
-  font-size: 14px;
+.info-icon {
+  margin-right: 6px;
+  font-size: 12px;
   color: #1890ff;
-  margin-right: 8px;
 }
 
 .section-title {

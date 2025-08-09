@@ -1,22 +1,48 @@
 <script setup lang='ts'>
-import { defineAsyncComponent, ref } from 'vue';
-import { Card, Hints, Icon, PureCard } from '@xcan-angus/vue-ui';
+import { computed, defineAsyncComponent, ref } from 'vue';
+import { Hints, PureCard } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { app, GM } from '@xcan-angus/infra';
 
 import { OrgTag } from './PropsType';
 
+// Async components
 const List = defineAsyncComponent(() => import('@/views/organization/tag/components/list/index.vue'));
 const Table = defineAsyncComponent(() => import('@/views/organization/tag/components/table/index.vue'));
+const Info = defineAsyncComponent(() => import('@/views/organization/tag/components/info/index.vue'));
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 
 const { t } = useI18n();
-const tag = ref<OrgTag>();
-const tenantName = ref('');
-const visible = ref(true);
 
-const listRef = ref();
-const editTagName = () => {
+/**
+ * Currently selected tag details from the left list.
+ */
+const tag = ref<OrgTag>();
+
+/**
+ * Tenant name echoed from the left list; passed down to the table area.
+ */
+const tenantName = ref<string>('');
+
+/**
+ * Visibility flag for the right-side content panel (statistics/table).
+ */
+const visible = ref<boolean>(true);
+
+/**
+ * Reference to List component for invoking its public methods (e.g., openEditName).
+ */
+const listRef = ref<any>();
+
+/**
+ * Whether current user has permission to modify tag name.
+ */
+const canModify = computed<boolean>(() => app.has('TagModify'));
+
+/**
+ * Open the edit-name flow in child List component, using current selected tag.
+ */
+const editTagName = (): void => {
   listRef.value?.openEditName(tag.value);
 };
 </script>
@@ -38,32 +64,10 @@ const editTagName = () => {
         v-model:tenantName="tenantName"
         :visible="visible" />
       <div class="flex-1 flex flex-col overflow-y-auto">
-        <Card v-show="tag?.id" class="mb-2">
-          <template #title>
-            <span class="text-3">{{ t('tag.basicInfo') }}</span>
-          </template>
-          <div class="text-3 flex w-full space-x-5">
-            <div class="w-1/3">
-              <div class="flex items-center space-x-2">
-                <div class="truncate">{{ t('tag.columns.name') + `: ${tag?.name || ''}` }}</div>
-                <Icon
-                  v-if="app.has('TagModify')"
-                  icon="icon-shuxie"
-                  class="flex-none text-text-link cursor-pointer hover:text-text-link-hover"
-                  @click="editTagName" />
-              </div>
-              <div class="mt-2">{{ t('common.columns.createdDate') + `: ${tag?.createdDate || ''}` }}</div>
-            </div>
-            <div class="w-1/3">
-              <div>{{ t('ID') + `: ${tag?.id}` }}</div>
-              <div class=" truncate mt-2">{{ t('department.columns.lastModifiedByName') + `: ${tag?.lastModifiedByName || '--'}` }}</div>
-            </div>
-            <div class="w-1/3">
-              <div class=" truncate">{{ t('common.columns.createdByName') + `: ${tag?.createdByName || '--'}` }}</div>
-              <div class="mt-2">{{ t('department.columns.lastModifiedDate') + `: ${tag?.lastModifiedDate || '--'}` }}</div>
-            </div>
-          </div>
-        </Card>
+        <Info
+          :tag="tag"
+          :canModify="canModify"
+          @editName="editTagName" />
         <Table
           v-model:visible="visible"
           :tagId="tag?.id"
@@ -72,12 +76,3 @@ const editTagName = () => {
     </div>
   </PureCard>
 </template>
-<style scoped>
-.count-title {
-  background-color: rgba(82, 196, 26, 30%);
-}
-
-.count-content {
-  background-image: linear-gradient(to top, rgba(103, 215, 255, 60%), #fff);
-}
-</style>

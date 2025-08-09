@@ -8,7 +8,7 @@ import { app, duration, utils } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 import { OrgTargetType } from '@/enums/enums';
 
-import { Target, TargetType } from '../../PropsType';
+import { Target } from '../../PropsType';
 import { orgTag } from '@/api';
 
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
@@ -33,7 +33,7 @@ const disabled = ref(false);
 const params = ref<{ pageNo: number, pageSize: number, filters: any[] }>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 const targetList = ref<Target[]>([]);
-const targetType = ref<TargetType>('USER');
+const targetType = ref<OrgTargetType>(OrgTargetType.USER);
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -152,7 +152,7 @@ const groupSave = async (_groupIds: string[], groups: { id: string, name: string
   }
 };
 
-const addTagTarget = async (targetList: { targetId: string, targetType: TargetType }[]) => {
+const addTagTarget = async (targetList: { targetId: string, targetType: OrgTargetType }[]) => {
   updateLoading.value = true;
   const [error] = await orgTag.addTagTarget(props.tagId, targetList);
   if (error) {
@@ -215,13 +215,13 @@ const toggle = () => {
   emit('update:visible', !props.visible);
 };
 
-const getTargetType = (value: TargetType) => {
+const getTargetType = (value: OrgTargetType) => {
   switch (value) {
-    case 'USER':
+    case OrgTargetType.USER:
       return t('user.title');
-    case 'DEPT':
+    case OrgTargetType.DEPT:
       return t('department.title');
-    case 'GROUP':
+    case OrgTargetType.GROUP:
       return t('group.title');
   }
 };
@@ -231,7 +231,7 @@ const columns = ref([
     key: 'id',
     title: t('user.columns.assocUser.id'),
     dataIndex: 'id',
-    width: '22%'
+    width: '20%'
   },
   {
     key: 'targetName',
@@ -255,7 +255,7 @@ const columns = ref([
     key: 'action',
     title: t('common.actions.operation'),
     dataIndex: 'action',
-    width: 82,
+    width: '15%',
     align: 'center' as const
   }
 ]);
@@ -271,8 +271,8 @@ const targetTypeChange = () => {
       columns.value[1].title = t('department.columns.userDept.name');
       break;
     case 'GROUP':
-      columns.value[0].title = t('common.columns.code');
-      columns.value[1].title = t('common.columns.name');
+      columns.value[0].title = t('group.columns.assocGroup.code');
+      columns.value[1].title = t('group.columns.assocGroup.name');
       break;
   }
 };
@@ -304,6 +304,9 @@ const cancelText = {
 </script>
 <template>
   <Card class="flex-1">
+    <template #title>
+      <span class="text-3">{{ t('tag.assocOrg') }}</span>
+    </template>
     <div class="flex justify-between mb-2">
       <div class="flex items-center space-x-2">
         <SelectEnum

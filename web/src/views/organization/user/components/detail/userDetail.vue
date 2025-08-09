@@ -39,7 +39,7 @@ const tt = (key: string, fallback: string): string => {
     <!-- Basic Information -->
     <div class="section">
       <div class="section-title">
-        <Icon icon="icon-jibenxinxi" class="mr-2 text-4 leading-4" />
+        <Icon icon="icon-jibenxinxi" class="info-icon" />
         {{ t('user.profile.basicInfo') }}
       </div>
       <div class="info-grid">
@@ -57,18 +57,21 @@ const tt = (key: string, fallback: string): string => {
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.identity') }}</div>
-          <div class="info-value">{{ props.dataSource?.sysAdmin ? t('user.profile.systemAdmin') : t('user.profile.generalUser') }}</div>
+          <div class="info-value">{{ props.dataSource?.sysAdmin ? t('user.profile.systemAdmin') :
+            t('user.profile.generalUser') }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.status') }}</div>
           <div class="info-value">
-            <Badge :status="props.dataSource?.enabled ? 'success' : 'error'" :text="props.dataSource?.enabled ? t('common.status.enabled') : t('common.status.disabled')" />
+            <Badge :status="props.dataSource?.enabled ? 'success' : 'error'"
+              :text="props.dataSource?.enabled ? t('common.status.enabled') : t('common.status.disabled')" />
           </div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.lockedStatus') }}</div>
           <div class="info-value">
-            <Badge :status="props.dataSource?.locked ? 'error' : 'success'" :text="props.dataSource?.locked ? t('common.status.locked') : t('common.status.unlocked')" />
+            <Badge :status="props.dataSource?.locked ? 'error' : 'success'"
+              :text="props.dataSource?.locked ? t('common.status.locked') : t('common.status.unlocked')" />
           </div>
         </div>
 
@@ -86,7 +89,8 @@ const tt = (key: string, fallback: string): string => {
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.address') }}</div>
-          <div class="info-value" :title="props.dataSource?.contactAddress">{{ textOrDash(props.dataSource?.contactAddress) }}</div>
+          <div class="info-value" :title="props.dataSource?.contactAddress">{{
+            textOrDash(props.dataSource?.contactAddress) }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.source') }}</div>
@@ -109,7 +113,7 @@ const tt = (key: string, fallback: string): string => {
     <!-- Audit Information -->
     <div class="section">
       <div class="section-title">
-        <Icon icon="icon-shenjirizhi" class="mr-2 text-4 leading-4" />
+        <Icon icon="icon-shenjirizhi" class="info-icon" />
         {{ tt('user.profile.auditInfo', 'Audit Information') }}
       </div>
       <div class="info-grid">
@@ -138,9 +142,11 @@ const tt = (key: string, fallback: string): string => {
 .user-detail {
   padding: 8px 0;
 }
-.section + .section {
+
+.section+.section {
   margin-top: 16px;
 }
+
 .section-title {
   display: flex;
   align-items: center;
@@ -151,36 +157,61 @@ const tt = (key: string, fallback: string): string => {
   padding-bottom: 6px;
   border-bottom: 1px solid var(--border-divider);
 }
+
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   row-gap: 12px;
   column-gap: 5px;
 }
+
+.info-icon {
+  margin-right: 6px;
+  font-size: 12px;
+  color: #1890ff;
+}
+
 @media (max-width: 1200px) {
-  .info-grid { grid-template-columns: 1fr 1fr; }
+  .info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
+
 @media (max-width: 720px) {
-  .info-grid { grid-template-columns: 1fr; }
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
 }
+
 .info-item {
   display: grid;
   grid-template-columns: 100px 1fr;
   column-gap: 16px;
   align-items: center;
 }
+
 .info-label {
   text-align: right;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--theme-content);
 }
+
 .info-value {
   color: var(--theme-text);
   font-size: 13px;
   line-height: 1.65;
   word-break: break-word;
 }
-.info-value :deep(.ant-badge-status-text) { font-size: 13px; }
-.info-value :deep(.ant-badge) { line-height: 20px; }
-.muted { color: var(--theme-content); }
+
+.info-value :deep(.ant-badge-status-text) {
+  font-size: 13px;
+}
+
+.info-value :deep(.ant-badge) {
+  line-height: 20px;
+}
+
+.muted {
+  color: var(--theme-content);
+}
 </style>

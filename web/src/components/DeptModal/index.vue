@@ -60,10 +60,24 @@ const handleCancel = () => {
 /**
  * Reactive state management for component
  */
-const params = ref<{ tagId?: string, fullTextSearch: boolean }>({ fullTextSearch: true }); // Search parameters
+const params = ref<{ tagId?: string, fullTextSearch: boolean, pageSize: number }>({ fullTextSearch: true, pageSize: 100 }); // Search parameters
 const notify = ref(0); // Notification counter for tree refresh
 const oldDeptIds = ref<string[]>([]); // Previously selected department IDs
 const checkedKeys = ref<string[]>([]); // Currently checked department keys
+
+/**
+ * Double-click a row to toggle its selection state in the tree
+ */
+const handleNodeDblClick = (item: { id: string }): void => {
+  const id = String(item?.id ?? '');
+  if (!id) return;
+  const index = checkedKeys.value.indexOf(id);
+  if (index >= 0) {
+    checkedKeys.value = checkedKeys.value.filter(k => k !== id);
+  } else {
+    checkedKeys.value = [...checkedKeys.value, id];
+  }
+};
 
 /**
  * Load user departments for association
@@ -172,7 +186,7 @@ const treeData = ref<DataType[]>([]);
  * Loads department hierarchy and existing associations
  * @param value - Selected department ID
  */
-const deptChange = async (value: string) => {
+const deptChange = async (value: any) => {
   if (!value) {
     notify.value++;
     return;
@@ -185,6 +199,19 @@ const deptChange = async (value: string) => {
   treeData.value = [...parentChain, res.data.current];
   await loadUserDept([res.data.current.id]);
 };
+
+/**
+ * Build tree options with required id/name as string, filtering invalid nodes
+ */
+const treeOptions = computed(() => {
+  return treeData.value
+    .filter(item => item?.id && item?.name)
+    .map(item => ({
+      ...item,
+      id: String(item.id),
+      name: String(item.name)
+    }));
+});
 </script>
 <template>
   <!-- Department association modal -->
@@ -198,7 +225,6 @@ const deptChange = async (value: string) => {
     class="my-modal"
     @cancel="handleCancel"
     @ok="handleOk">
-    
     <div class="-mt-3 pl-3">
       <!-- Search and filter controls -->
       <div class="flex mb-2">
@@ -213,7 +239,7 @@ const deptChange = async (value: string) => {
           :allowClear="true"
           :fieldNames="{ label: 'name', value: 'id' }"
           @change="deptChange" />
-        
+
         <!-- Tag filter dropdown -->
         <Select
           v-model:value="selectTagId"
@@ -226,33 +252,32 @@ const deptChange = async (value: string) => {
           class="w-1/2"
           @change="tagChange" />
       </div>
-      
+
       <!-- Table header -->
       <div class="flex py-1 bg-theme-form-head text-theme-title text-3 font-normal">
         <div class="w-1/2 pl-10 mr-2">
-          {{ t('department.columns.name') }}
+          {{ t('common.columns.name') }}
         </div>
-        <div class="w-1/2">
-          {{ t('department.columns.code') }}
+        <div class="w-1/2 pl-10 mr-2">
+          {{ t('common.columns.code') }}
         </div>
       </div>
-      
+
       <!-- Department tree with checkboxes -->
       <Tree
         v-model:checkedKeys="checkedKeys"
         :action="`${GM}/dept?`"
-        :fieldNames="{ children: 'hasSubDept' }"
+        :fieldNames="{ title: 'name', key: 'id', children: 'hasSubDept' }"
         :checkable="true"
         :params="params"
         :notify="notify"
-        :treeData="treeData"
+        :treeData="treeOptions as any"
         class="-ml-5"
         style="height: 308px;"
         @loaded="loaded">
-        
         <!-- Custom tree node template -->
         <template #default="item">
-          <div class="flex">
+          <div class="flex" @dblclick.stop="handleNodeDblClick(item)">
             <div class="w-1/2 truncate mr-2" :title="item.name">
               <Icon icon="icon-bumen1" class="mr-1 -mt-0.5" />
               {{ item.name }}

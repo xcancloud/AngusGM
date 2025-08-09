@@ -3,7 +3,7 @@ import { defineAsyncComponent, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Pagination, Tag, Tooltip } from 'ant-design-vue';
 import { AsyncComponent, ButtonAuth, IconRefresh, Input, modal, notification, PureCard, Spin } from '@xcan-angus/vue-ui';
-import { PageQuery, app, duration } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, app, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { OrgTag } from '../../PropsType';
@@ -81,7 +81,7 @@ const deleteTag = async (id: string): Promise<void> => {
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   if (value) {
-    params.value.filters = [{ key: 'name', value: value, op: 'MATCH_END' as const }];
+    params.value.filters = [{ key: 'name', value: value, op: SearchCriteria.OpEnum.MatchEnd }];
   } else {
     params.value.filters = [];
   }
@@ -228,8 +228,11 @@ defineExpose({ openEditName });
         <template v-else>
           <Tag
             :closable="app.has('TagDelete')"
-            class="mb-0.75 truncate cursor-pointer"
-            :class="{'border-theme-divider-selected':item.id === checkedTag?.id}"
+            class="tag truncate cursor-pointer"
+            :class="{
+              'border-theme-divider-selected': item.id === checkedTag?.id,
+              'selected': item.id === checkedTag?.id
+            }"
             style="max-width: 372px;"
             @close.prevent="deleteConfirm(item.id,item.name)"
             @click="selectTag(item)"
@@ -272,6 +275,22 @@ defineExpose({ openEditName });
 <style scoped>
 .border-theme-divider-selected {
   border-color: var(--border-divider-selected);
+}
+
+.tag {
+  background: #e6f7ff; /* light blue */
+  border: 1px solid #91d5ff; /* blue border */
+  color: #1890ff; /* primary blue text */
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+/* Selected visual state */
+.tag.selected {
+  background: #bae7ff; /* deeper blue hint */
+  border-color: #1890ff;
 }
 
 @keyframes circle {
