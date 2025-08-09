@@ -218,7 +218,7 @@ const _columns = [
     key: 'name',
     title: t('common.columns.name'),
     dataIndex: 'name',
-    width: '13%'
+    width: '18%'
   },
   {
     key: 'code',
@@ -229,7 +229,7 @@ const _columns = [
     key: 'enabled',
     title: t('common.status.validStatus'),
     dataIndex: 'enabled',
-    width: '10%',
+    width: '7%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
@@ -238,7 +238,7 @@ const _columns = [
     key: 'source',
     title: t('common.labels.source'),
     dataIndex: 'source',
-    width: '10%',
+    width: '8%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
@@ -247,7 +247,7 @@ const _columns = [
     key: 'userNum',
     title: t('group.columns.userNum'),
     dataIndex: 'userNum',
-    width: '10%',
+    width: '7%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
