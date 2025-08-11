@@ -2,12 +2,21 @@
 import { useI18n } from 'vue-i18n';
 import { Grid } from '@xcan-angus/vue-ui';
 
-import type { DetailType } from './PropTypes';
+import type { PolicyDetailType } from '../PropsType';
 
+/**
+ * Props interface for BaseInfo component
+ * @interface Props
+ * @property {PolicyDetailType} detail - Policy detail information to display
+ */
 interface Props {
-  detail: DetailType
+  detail: PolicyDetailType
 }
 
+/**
+ * Component props with default values
+ * Provides fallback values for all detail properties to prevent rendering errors
+ */
 const props = withDefaults(defineProps<Props>(), {
   detail: () => ({
     id: undefined,
@@ -22,58 +31,66 @@ const props = withDefaults(defineProps<Props>(), {
     description: undefined
   })
 });
+
 const { t } = useI18n();
+
+/**
+ * Grid column configuration for displaying policy information
+ * Organized in two rows for better layout and readability
+ * First row: Basic policy information (name, type, code, enabled status, creator, description)
+ * Second row: Application and authorization details (app name, global scope, grant stage, default policy, creation date)
+ */
 const columns = [
   [
     {
-      label: t('permissionsStrategy.detail.info.name'),
+      label: t('common.columns.name'),
       dataIndex: 'name'
     },
     {
-      label: t('type'),
+      label: t('common.columns.type'),
       dataIndex: 'type',
       customRender: ({ text }) => text?.message
     },
     {
-      label: t('permissionsStrategy.detail.info.code'),
+      label: t('common.columns.code'),
       dataIndex: 'code'
     },
     {
-      label: t('permissionsStrategy.detail.info.enabled'),
+      label: t('common.status.validStatus'),
       dataIndex: 'enabled',
-      customRender: ({ text }) => text ? t('enable') : t('disable')
+      customRender: ({ text }) => text ? t('common.status.enabled') : t('common.status.disabled')
     },
     {
-      label: t('permissionsStrategy.detail.info.fullName'),
+      label: t('common.columns.createdByName'),
       dataIndex: 'createdByName'
     },
     {
-      label: t('permissionsStrategy.detail.info.desc'),
+      label: t('common.columns.description'),
       dataIndex: 'description'
     }
   ],
   [
     {
-      label: t('permissionsStrategy.detail.info.appName'),
+      label: t('permission.policy.added.columns.appName'),
       dataIndex: 'appName'
     },
     {
-      label: t('授权账号'),
+      label: t('permission.policy.detail.info.globalAccount'),
       dataIndex: 'global',
-      customRender: ({ text }) => text ? t('permissionsStrategy.form.all') : props.detail.tenantName
+      customRender: ({ text }) => text ? t('common.labels.all') : t('common.labels.tenant')
     },
     {
-      label: t('授权初始化阶段'),
+      label: t('permission.policy.detail.info.grantStage'),
       dataIndex: 'grantStage',
       customRender: ({ text }) => text?.message
     },
     {
-      label: t('默认授权策略'),
+      label: t('permission.policy.detail.info.defaultPolicy'),
       dataIndex: 'default0',
-      customRender: ({ text }) => text ? t('yes') : t('no')
+      customRender: ({ text }) => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('permissionsStrategy.detail.info.createdDate'),
+      label: t('common.columns.createdDate'),
       dataIndex: 'createdDate'
     }
   ]
@@ -81,8 +98,9 @@ const columns = [
 </script>
 
 <template>
+  <!-- Policy basic information display grid -->
   <Grid
     class="w-full"
     :columns="columns"
-    :dataSource="detail" />
+    :dataSource="props.detail" />
 </template>

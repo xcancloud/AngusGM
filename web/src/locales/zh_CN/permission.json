@@ -3,6 +3,9 @@
     "name": "授权策略",
     "defaultAuth": "应用默认授权",
     "openAuth": "开通应用授权",
+    "policyTip": "“权限策略”可对应用下菜单、按钮、面板功能及接口资源进行细粒度权限控制，给用户、部门、组授权“权限策略”后，用户(包括授权部门、组中用户)会获得相应的功能和接口权限。其中“系统管理员”拥有所有应用全部权限，“应用管理员”拥有对应应用全部权限。",
+    "defaultPolicyTip": "默认情况下，如果用户未修改默认设置，系统会为所有用户设置“一般用户”或“访客”作为应用默认访问权限；设置应用默认访问权限后新加入用户会自动被授权；如果想改变用户默认访问权限，请修改下面应用默认访问策略，如果想禁止应用默认访问权限通过手动来授权，请选择“禁止访问”。",
+    "notControlled": "不受权限控制",
     "placeholder": {
       "policyName": "搜索策略名称"
     },
@@ -17,7 +20,117 @@
         "source": "授权来源",
         "authByName": "授权人",
         "authDate": "授权时间",
-        "authTip": "若需取消“应用默认授权” 策略，请进入「权限策略」-「默认权限策略」禁用该策略；若需取消部门或组的关联授权，请进入「组织人员」-「部门」或「组」-「权限策略」操作；对于「开通初始化授权」不支持取消。"
+        "authTip": "若需取消\"应用默认授权\" 策略，请进入「权限策略」-「默认权限策略」禁用该策略；若需取消部门或组的关联授权，请进入「组织人员」-「部门」或「组」-「权限策略」操作；对于「开通初始化授权」不支持取消。"
+      }
+    },
+    "check": {
+      "user": "用户",
+      "dept": "部门",
+      "group": "组",
+      "searchPlaceholder": "搜索{name}",
+      "deleteConfirm": "确定要取消该{name}的授权吗？",
+      "deleteSuccess": "取消授权成功"
+    },
+    "view": {
+      "userTitle": "授权用户",
+      "deptTitle": "授权部门",
+      "groupTitle": "授权组",
+      "userPlaceholder": "请选择用户",
+      "deptPlaceholder": "请选择部门",
+      "groupPlaceholder": "请选择组",
+      "selectPolicy": "选择策略",
+      "appPlaceholder": "请选择应用",
+      "tenant": {
+        "defaultAuth": "应用默认授权",
+        "openAuth": "开通授权"
+      }
+    },
+    "policy": {
+      "tip": "权限策略用于定义用户、部门、组对应用的访问权限。策略包含应用功能权限和菜单权限，支持按需授权和批量授权。",
+      "add": {
+        "title": "权限策略",
+        "nameLabel": "策略名称",
+        "namePlaceholder": "请输入策略名称",
+        "nameRule": "请输入策略名称",
+        "codeLabel": "策略编码",
+        "codePlaceholder": "请输入策略编码",
+        "codeRule": "请输入策略编码",
+        "appLabel": "应用",
+        "appPlaceholder": "请选择应用",
+        "appRule": "请选择应用",
+        "funcLabel": "功能权限",
+        "funcLeft": "菜单树",
+        "funcRight": "功能列表",
+        "funcRule": "请选择功能权限",
+        "defaultPolicy": "默认策略",
+        "defaultPolicyTip": "设置后该策略可用于\"默认权限策略\"选项。",
+        "descLabel": "描述",
+        "descPlaceholder": "请输入描述信息"
+      },
+      "default": {
+        "title": "应用默认权限策略",
+        "tip": "设置应用的默认权限策略，新用户将自动获得该策略的权限",
+        "disableTip": "禁用当前\"应用默认授权\"会导致系统中用户授权\"{policyName}\"策略对应权限失效，新用户将被禁止访问应用，是否继续确认？",
+        "authTip": "修改后会授权\"{policyName}\"策略给所有用户，是否继续确认？",
+        "cancelDefault": "取消默认",
+        "setDefault": "设为默认",
+        "forbidAccess": "禁止访问",
+        "other": "其他",
+        "placeholder": "请选择策略",
+        "columns": {
+          "appName": "应用名称",
+          "polices": "默认策略"
+        }
+      },
+      "added": {
+        "title": "已添加权限策略",
+        "searchPlaceholder": "搜索策略名称",
+        "columns": {
+          "name": "策略名称",
+          "code": "策略编码",
+          "appName": "所属应用"
+        }
+      },
+      "detail": {
+        "basicInfo": "基本信息",
+        "authFunctions": "授权功能",
+        "authObjects": "授权对象",
+        "defaultPolicyHint": "当前策略已被设置为用户应用初始\"默认权限策略\"，无需重复授权；如重新授权，取消授权需要同时取消\"应用默认授权\"设置和当前重复关联授权；仅取消\"应用默认授权\"设置不会移除当前重复授权。",
+        "info": {
+          "globalAccount": "授权账号",
+          "grantStage": "授权初始化阶段",
+          "defaultPolicy": "默认授权策略",
+          "createdDate": "创建时间"
+        },
+        "target": {
+          "title": "{name}授权管理",
+          "user": "用户",
+          "dept": "部门",
+          "group": "组",
+          "placeholder": "请选择{name}",
+          "addWarn": "请选择要添加的{name}",
+          "addSuccess": "添加成功",
+          "deleteConfirm": "确定要取消该{name}的授权吗？",
+          "deleteSuccess": "取消授权成功",
+          "noData": "暂无{name}数据"
+        }
+      },
+      "auth": {
+        "name": "策略名称",
+        "targetType": "目标类型",
+        "user": "用户",
+        "dept": "部门",
+        "group": "组",
+        "userLabel": "选择用户",
+        "userPlaceholder": "请选择用户",
+        "deptLabel": "选择部门",
+        "deptPlaceholder": "请选择部门",
+        "groupLabel": "选择组",
+        "groupPlaceholder": "请选择组",
+        "rule": "请选择目标",
+        "success": "授权成功",
+        "auth": "授权",
+        "cancel": "取消"
       }
     }
   }

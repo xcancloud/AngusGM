@@ -6,25 +6,26 @@ import { Button, Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 import { Input, notification, PureCard, SelectDept, SelectGroup, SelectUser } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
-
-interface FormType {
-  id: string,
-  name: string,
-  appId: string,
-  targetType: 'USER' | 'DEPT' | 'GROUP',
-  targetId: string[]
-}
+import { AuthFormType } from '../PropsType';
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 
+/**
+ * Reference to the form component
+ * Used for form validation
+ */
 const formRef = ref();
 
+/**
+ * Component reactive state
+ * Manages loading states, form data, and validation rules
+ */
 const state = reactive<{
   loading: boolean,
   saving: boolean,
-  form: FormType,
+  form: AuthFormType,
   rules: Record<string, Array<any>>
 }>({
   loading: false,
@@ -38,12 +39,19 @@ const state = reactive<{
   },
   rules: {
     targetId: [
-      { required: true, message: t('permissionsStrategy.auth.rule'), trigger: 'change' }
+      {
+        required: true,
+        message: t('permission.policy.auth.rule'),
+        trigger: 'change'
+      }
     ]
   }
 });
 
-// 查询策略详情
+/**
+ * Load policy details for authorization
+ * Fetches policy information to populate the form
+ */
 const load = async () => {
   state.loading = true;
   const [error, res] = await auth.getPolicyDetail(route.params.id as string);
@@ -57,17 +65,27 @@ const load = async () => {
   state.form.appId = res.data.appId;
 };
 
-// 授权对象发生变化
+/**
+ * Handle target selection changes
+ * Updates the form with selected target identifiers
+ * @param {string[]} value - Array of selected target IDs
+ */
 const targetChange = (value: string[]) => {
   state.form.targetId = value;
 };
 
-// 取消
+/**
+ * Navigate back to policy list
+ * Redirects user to the main policy management page
+ */
 const linkToList = () => {
   router.push('/permissions/policy');
 };
 
-// 保存
+/**
+ * Save authorization changes
+ * Validates form and submits authorization request based on target type
+ */
 const save = () => {
   formRef.value.validate().then(async () => {
     let res: [Error | null, any];
@@ -87,86 +105,103 @@ const save = () => {
       return;
     }
 
-    notification.success(t('permissionsStrategy.auth.success'));
+    notification.success(t('permission.policy.auth.success'));
     linkToList();
   });
 };
 
+/**
+ * Initialize component data on mount
+ * Loads policy details when component is mounted
+ */
 onMounted(() => {
   load();
 });
 </script>
 
 <template>
+  <!-- Authorization management page for policy targets -->
   <PureCard class="flex-1 py-10">
+    <!-- Authorization form -->
     <Form
       ref="formRef"
       class="w-1/2 my-0 mx-auto"
       :model="state.form"
       :rules="state.rules"
       v-bind="{labelCol: {span: 5}, wrapperCol: {span: 18}}">
-      <FormItem :label="t('permissionsStrategy.auth.name')" name="name">
+      <!-- Policy name display (read-only) -->
+      <FormItem :label="t('permission.policy.auth.name')" name="name">
         <Input
           disabled
           :value="state.form.name"
           size="small" />
       </FormItem>
-      <FormItem :label="t('permissionsStrategy.auth.targetType')" name="targetType">
+
+      <!-- Target type selection -->
+      <FormItem :label="t('permission.policy.auth.targetType')" name="targetType">
         <RadioGroup v-model:value="state.form.targetType">
-          <Radio value="USER">{{ t('permissionsStrategy.auth.user') }}</Radio>
-          <Radio value="DEPT">{{ t('permissionsStrategy.auth.dept') }}</Radio>
-          <Radio value="GROUP">{{ t('permissionsStrategy.auth.group') }}</Radio>
+          <Radio value="USER">{{ t('permission.policy.auth.user') }}</Radio>
+          <Radio value="DEPT">{{ t('permission.policy.auth.dept') }}</Radio>
+          <Radio value="GROUP">{{ t('permission.policy.auth.group') }}</Radio>
         </RadioGroup>
       </FormItem>
+
+      <!-- User selection (conditional) -->
       <FormItem
         v-if="state.form.targetType === 'USER'"
-        :label="t('permissionsStrategy.auth.userLabel')"
+        :label="t('permission.policy.auth.userLabel')"
         name="targetId">
         <SelectUser
-          :placeholder="t('permissionsStrategy.auth.userPlaceholder')"
+          :placeholder="t('permission.policy.auth.userPlaceholder')"
           :allowClear="false"
           :internal="true"
           mode="multiple"
           size="small"
           @change="targetChange" />
       </FormItem>
+
+      <!-- Department selection (conditional) -->
       <FormItem
         v-if="state.form.targetType === 'DEPT'"
-        :label="t('permissionsStrategy.auth.deptLabel')"
+        :label="t('permission.policy.auth.deptLabel')"
         name="targetId">
         <SelectDept
-          :placeholder="t('permissionsStrategy.auth.deptPlaceholder')"
+          :placeholder="t('permission.policy.auth.deptPlaceholder')"
           :allowClear="false"
           :internal="true"
           mode="multiple"
           size="small"
           @change="targetChange" />
       </FormItem>
+
+      <!-- Group selection (conditional) -->
       <FormItem
         v-if="state.form.targetType === 'GROUP'"
-        :label="t('permissionsStrategy.auth.groupLabel')"
+        :label="t('permission.policy.auth.groupLabel')"
         name="targetId">
         <SelectGroup
-          :placeholder="t('permissionsStrategy.auth.groupPlaceholder')"
+          :placeholder="t('permission.policy.auth.groupPlaceholder')"
           :allowClear="false"
           :internal="true"
           mode="multiple"
           size="small"
           @change="targetChange" />
       </FormItem>
+
+      <!-- Action buttons -->
       <FormItem label=" " :colon="false">
         <Button
           size="small"
           type="primary"
           :loading="state.saving"
           @click="save">
-          {{ t('permissionsStrategy.auth.auth') }}
+          {{ t('permission.policy.auth.auth') }}
         </Button>
         <Button
           size="small"
           class="ml-5"
           @click="linkToList">
-          {{ t('permissionsStrategy.auth.cancel') }}
+          {{ t('permission.policy.auth.cancel') }}
         </Button>
       </FormItem>
     </Form>

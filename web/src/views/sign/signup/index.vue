@@ -9,12 +9,23 @@ import { useI18n } from 'vue-i18n';
 import Tab from '@/components/SignTab/index.vue';
 import Form from './form.vue';
 
-const preventDefaultListener = (e) => {
+/**
+ * Prevent default browser behavior for image interactions
+ * Disables context menu, drag, and touch events on images
+ */
+const preventDefaultListener = (e: Event) => {
   e.preventDefault();
 };
 
 const { t } = useI18n();
-const activeValue = ref('mobile');
+
+// Active tab selection for registration type
+const activeValue = ref<'mobile' | 'email'>('mobile');
+
+/**
+ * Tab list for registration methods
+ * Supports both mobile and email registration
+ */
 const tabList = [
   { label: t('register-mobile'), value: 'mobile' },
   { label: t('register-email'), value: 'email' }
@@ -23,13 +34,17 @@ const tabList = [
 
 <template>
   <div class="layout-container">
+    <!-- Header with logo and official links -->
     <div class="layout-header">
       <Logo />
       <div class="layout-header-right">
         <OfficialLink />
+        <!-- Language selector commented out for now -->
         <!-- <Language /> -->
       </div>
     </div>
+    
+    <!-- Main content area with decorative images -->
     <div class="layout-inner-container">
       <img
         class="img-front"
@@ -37,10 +52,13 @@ const tabList = [
         @contextmenu="preventDefaultListener"
         @dragstart="preventDefaultListener"
         @touchstart="preventDefaultListener">
+      
+      <!-- Registration form container -->
       <div class="main-content-container">
         <Tab v-model:activeKey="activeValue" :tabList="tabList" />
         <Form :type="activeValue" />
       </div>
+      
       <img
         class="img-end"
         src="./assets/inner.png"
@@ -48,6 +66,8 @@ const tabList = [
         @dragstart="preventDefaultListener"
         @touchstart="preventDefaultListener">
     </div>
+    
+    <!-- Footer copyright -->
     <Records class="layout-footer" />
   </div>
 </template>
@@ -127,6 +147,7 @@ const tabList = [
   flex: 1 1 0;
 }
 
+/* Responsive design for different screen sizes */
 @media (width <= 1350px) {
   .img-front {
     margin-left: 8%;

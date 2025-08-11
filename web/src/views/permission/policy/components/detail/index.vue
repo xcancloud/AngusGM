@@ -1,27 +1,38 @@
 <script setup lang='ts'>
-import { onMounted, reactive, ref } from 'vue';
+import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Skeleton } from 'ant-design-vue';
 
 import { auth } from '@/api';
-import type { DetailType } from './PropTypes';
-import BaseInfo from './baseInfo.vue';
-import TargetPanel from './targetPanel.vue';
-import MenuAuth from './menuAuth.vue';
+import type { PolicyDetailType } from '../PropsType';
 import { Card, Hints } from '@xcan-angus/vue-ui';
+
+/**
+ * Async component imports for better performance
+ * Lazy loading components to improve initial page load time
+ */
+const BaseInfo = defineAsyncComponent(() => import('./baseInfo.vue'));
+const AuthObjects = defineAsyncComponent(() => import('./authObjects.vue'));
+const MenuAuth = defineAsyncComponent(() => import('./menuAuth.vue'));
 
 const { t } = useI18n();
 const route = useRoute();
-const TAB_LIST = [{ key: '1', tab: t('permissionsStrategy.detail.tab1') }, { key: '3', tab: t('菜单权限') }, {
-  key: '2',
-  tab: t('permissionsStrategy.detail.tab2')
-}];
+
+/**
+ * Currently active tab key
+ * Controls which detail section is displayed
+ */
 const activeKey = ref('1');
+
+/**
+ * Component reactive state
+ * Manages tab state, loading status, and policy detail data
+ */
 const state = reactive<{
   tab: '1' | '2',
   loading: boolean,
-  detail: DetailType
+  detail: PolicyDetailType
 }>({
   tab: '1',
   loading: false,
@@ -39,11 +50,19 @@ const state = reactive<{
   }
 });
 
+/**
+ * Flag to track if this is the first data load
+ * Used to show skeleton loading state only on initial load
+ */
 const firstLoad = ref(true);
-// 查询策略详情
+
+/**
+ * Load policy detail information
+ * Fetches complete policy data based on route parameter ID
+ */
 const load = async () => {
   state.loading = true;
-  const [error, res] = await auth.getPolicyDetail(route.params.id);
+  const [error, res] = await auth.getPolicyDetail(route.params.id as string);
   state.loading = false;
   firstLoad.value = false;
   if (error) {
@@ -53,8 +72,16 @@ const load = async () => {
   state.detail = res.data || {};
 };
 
+/**
+ * List of default policy IDs
+ * Tracks which policies are set as tenant default policies
+ */
 const defaultPolicies = ref<string[]>([]);
 
+/**
+ * Load tenant default policies
+ * Fetches and processes default policy configuration for the current tenant
+ */
 const loadDefaults = async () => {
   const [error, res] = await auth.getTenantDefaultPolicy();
   if (error) {
@@ -69,6 +96,20 @@ const loadDefaults = async () => {
   });
 };
 
+/**
+ * Tab configuration for policy detail views
+ * Defines the three main sections: basic info, target authorization, and menu permissions
+ */
+const TAB_LIST = [
+  { key: '1', tab: t('permission.policy.detail.basicInfo') },
+  { key: '3', tab: t('permission.policy.detail.authFunctions') },
+  { key: '2', tab: t('permission.policy.detail.authObjects') }
+];
+
+/**
+ * Initialize component data on mount
+ * Loads both default policies and current policy details
+ */
 onMounted(() => {
   loadDefaults();
   load();
@@ -76,11 +117,13 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- Policy detail management interface with tabbed navigation -->
   <Card
     v-model:value="activeKey"
     :tabList="TAB_LIST"
     class="min-h-full flex flex-col text-3"
     bodyClass="flex p-3.5  flex-col flex-1">
+    <!-- Tab 1: Basic policy information -->
     <template v-if="activeKey ==='1'">
       <Skeleton
         active
@@ -90,29 +133,36 @@ onMounted(() => {
         <BaseInfo :detail="state.detail" class="ml-3 mr-3 mt-2" />
       </Skeleton>
     </template>
+
+    <!-- Tab 3: Menu permissions management -->
     <template v-if="activeKey==='3'">
       <div class="flex flex-1">
         <MenuAuth :detail="state.detail" />
       </div>
     </template>
+
+    <!-- Tab 2: Target authorization management -->
     <template v-if="activeKey ==='2'">
-      <template v-if="defaultPolicies.includes(route.params.id)">
+      <!-- Warning hint for default policy strategies -->
+      <template v-if="defaultPolicies.includes(route.params.id as string)">
         <Hints
           class="mb-1"
-          text="当前策略已经被设置为用户应用初始“默认权限策略”，无需重复授权；如果再次重复授权，取消授权时需要同时取消“应用默认授权”设置和当前重复关联授权；只取消“应用默认授权”设置时不会去掉当前重复授权。" />
+          :text="t('permission.policy.detail.defaultPolicyHint')" />
       </template>
+
+      <!-- Target authorization panels for users, departments, and groups -->
       <div class="flex flex-1">
-        <TargetPanel
+        <AuthObjects
           key="USER"
           type="USER"
           :policyId="state.detail.id"
           :appId="state.detail.appId" />
-        <TargetPanel
+        <AuthObjects
           key="DEPT"
           class="ml-3"
           type="DEPT"
           :policyId="state.detail.id" />
-        <TargetPanel
+        <AuthObjects
           key="GROUP"
           class="ml-3"
           type="GROUP"

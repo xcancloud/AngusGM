@@ -4,50 +4,27 @@ import { useI18n } from 'vue-i18n';
 import { Button, Checkbox, Form, FormItem, Textarea, Tree } from 'ant-design-vue';
 import { ButtonAuth, Card, Icon, Input, NoData, notification, Select } from '@xcan-angus/vue-ui';
 import { appContext, GM } from '@xcan-angus/infra';
-
 import { auth } from '@/api';
-
-interface FormType {
-  id: string,
-  appId: string,
-  appName: string,
-  name: string,
-  description: string,
-  funcIds: string[],
-  code?: string,
-  default0: boolean
-}
-
-interface ApisType {
-  id: string,
-  code: string,
-  name: string,
-  resourceName: string
-}
-
-interface DataRecordType {
-  id: string,
-  showName: string,
-  pid: string,
-  type: { value: 'BUTTON' | 'MENU' | 'PANEL', message: string },
-  apis: ApisType[],
-  children: DataRecordType[]
-}
+import { FormType, DataRecordType, ApisType } from '../PropsType';
 
 const { t } = useI18n();
+
+// Regular expression to filter out certain resource names
 const endReg = /.*(Door|pub)$/g;
 
 const emit = defineEmits<{(e: 'reload'): void }>();
 
-// 添加权限策略面板折叠状态
+// Collapsible state for the permission policy panel
 const isCollapse = ref(true);
 
-// 改变权限策略面板折叠状态
+/**
+ * Toggle the collapse state of the permission policy panel
+ */
 const changeCollapse = () => {
   isCollapse.value = !isCollapse.value;
 };
 
-// 添加权限策略表单数据
+// Reactive state for the component
 const state = reactive<{
   saving: boolean,
   globalAppId: string,
@@ -57,10 +34,10 @@ const state = reactive<{
   dataSource: DataRecordType[],
   showFuncsObj: { [key: string]: Array<ApisType> }
 }>({
-  saving: false, // 保存按钮状态
-  globalAppId: '', // 全局管理应用的Id
-  globalAppName: '', // 全局管理应用的Name
-  form: { // 添加策略表单
+  saving: false, // Save button loading state
+  globalAppId: '', // Global management application ID
+  globalAppName: '', // Global management application name
+  form: { // Policy form data
     id: '',
     appId: undefined,
     appName: '',
@@ -70,72 +47,88 @@ const state = reactive<{
     code: undefined,
     default0: false
   },
-  checkedNodes: [], // 当前复选框选中的节点
-  dataSource: [], // 功能树数据
-  showFuncsObj: {}
+  checkedNodes: [], // Currently checked tree nodes
+  dataSource: [], // Function tree data source
+  showFuncsObj: {} // Processed function display object
 });
 
-// 添加权限策略表单实例
+// Form reference for validation
 const formRef = ref();
 
-// 策略功能校验
-const validFuncs = () => {
+/**
+ * Validate that at least one function is selected
+ */
+const validFunctions = () => {
   if (state.form.funcIds.length === 0) {
-    return Promise.reject(new Error(t('permissionsStrategy.add.funcsRule')));
+    return Promise.reject(new Error(t('permission.policy.add.funcRule')));
   }
   return Promise.resolve();
 };
 
-// 表单校验规则
+// Form validation rules
 const rules = {
   name: [
-    { required: true, message: t('permissionsStrategy.add.nameRule'), trigger: 'blur' }
+    { required: true, message: t('permission.policy.add.nameRule'), trigger: 'blur' }
   ],
   appId: [
-    { required: true, message: t('permissionsStrategy.add.appRule'), trigger: 'change' }
+    { required: true, message: t('permission.policy.add.appRule'), trigger: 'change' }
   ],
   code: [
-    { required: true, message: t('请输入编码'), trigger: 'blur' }
+    { required: true, message: t('permission.policy.add.codeRule'), trigger: 'blur' }
   ],
   funcIds: [
-    { required: true, validator: validFuncs, trigger: 'change' }
+    { required: true, validator: validFunctions, trigger: 'change' }
   ]
 };
 
-// 查询父级
+/**
+ * Find parent paths for selected nodes
+ * @param oldList - Previously selected nodes
+ * @param pid - Parent ID to search for
+ * @returns Array of parent nodes
+ */
 const findParentPath = (oldList: DataRecordType[], pid: string) => {
   const parentPaths: DataRecordType[] = [];
-  // 转为扁平数组
-  const fn = (list: DataRecordType[]) => {
+
+  // Convert tree to flat array
+  const flattenTree = (list: DataRecordType[]) => {
     const res: DataRecordType[] = [];
     list.forEach(item => {
       res.push(item);
-      item.children && res.push(...fn(item.children));
+      item.children && res.push(...flattenTree(item.children));
     });
     return res;
   };
-  const tempList = fn(state.dataSource);
-  // 查询父级id
-  const pFn = (parentId: string) => {
+
+  const tempList = flattenTree(state.dataSource);
+
+  // Find parent by ID recursively
+  const findParent = (parentId: string) => {
     const item = tempList.find(v => v.id === parentId);
     if (item) {
-      // 已存在或者是自己时, 不添加
+      // Don't add if already exists or is self
       if (!oldList.find(v => v.id === item.id) && item.pid !== pid) {
         parentPaths.unshift(item);
       }
       if (`${item.pid}` !== '-1') {
-        pFn(item.pid);
+        findParent(item.pid);
       }
     }
   };
-  pFn(pid);
+
+  findParent(pid);
   return parentPaths;
 };
 
-// 复选框勾选变化
+/**
+ * Handle checkbox selection changes
+ * @param _keys - Selected keys
+ * @param info - Selection information with checked nodes
+ */
 const onCheck = (_keys, info: { checkedNodes: DataRecordType[] }) => {
   state.checkedNodes = info.checkedNodes;
-  // 处理父级
+
+  // Handle parent nodes
   if (info.checkedNodes.length > 0) {
     const lastCheckedItem = info.checkedNodes[info.checkedNodes.length - 1];
     if (`${lastCheckedItem.pid}` !== '-1') {
@@ -144,72 +137,99 @@ const onCheck = (_keys, info: { checkedNodes: DataRecordType[] }) => {
     }
   }
 
-  // 把勾选的值同步到表单中
+  // Sync selected values to form
   state.form.funcIds = state.checkedNodes.map(item => item.id);
   formRef.value.validateFields(['funcIds']);
 };
 
-// 根据应用Id查询应用下的功能资源
+/**
+ * Load resource functions by application ID
+ */
 const loadResourceByAppId = async () => {
   if (!state.form.appId) {
     return;
   }
 
-  const [error, res] = await auth.getUserAppFunctionTree(appContext.getUser()?.id, state.form.appId);
+  const userId = appContext.getUser()?.id;
+  if (!userId) {
+    return;
+  }
+
+  const [error, res] = await auth.getUserAppFunctionTree(userId, String(state.form.appId));
   if (error) {
     return;
   }
-  state.dataSource = handleAppFuncs(res.data.appFuncs || []);
+  state.dataSource = handleAppFunctions(res.data.appFuncs || []);
 };
 
-const handleAppFuncs = (funcs = []) => {
+/**
+ * Process application functions and set disabled state
+ * @param funcs - Raw function data
+ * @returns Processed function tree
+ */
+const handleAppFunctions = (funcs = []) => {
   if (!funcs.length) {
     return [];
   }
 
-  function travelTree (data) {
+  function processTree (data) {
     return data.map(item => {
       return {
         ...item,
         disabled: !item.authCtrl,
-        children: travelTree(item.children || [])
+        children: processTree(item.children || [])
       };
     });
   }
 
-  return travelTree(funcs);
+  return processTree(funcs);
 };
 
-// 所选择的应用发生变化
-const selectedAppChange = (_value: string, option: { appName: string, appId: string }) => {
-  state.form.appId = option.appId;
-  state.form.appName = option.appName;
-  state.checkedNodes = [];
-  state.form.funcIds = [];
-  loadResourceByAppId();
+/**
+ * Handle application selection change
+ * @param _value - Selected value
+ * @param option - Selected option with appName and appId
+ */
+const selectedAppChange = (_value: any, option: any) => {
+  if (option && option.appName && option.appId) {
+    state.form.appId = option.appId;
+    state.form.appName = option.appName;
+    state.checkedNodes = [];
+    state.form.funcIds = [];
+    loadResourceByAppId();
+  }
 };
 
-// 编辑(查询策略详情、功能树进行回显)
-const editPolicy = (item: { appId: string, policyId: string }) => {
+/**
+ * Edit policy - load policy details and function tree for display
+ * @param item - Object containing appId and policyId
+ */
+const editPolicy = (item: { appId: string | number, policyId: string | number }) => {
   const reqList = [
-    auth.getPolicyDetail(item.policyId),
-    auth.getPolicyFunctionsById(item.policyId)
+    auth.getPolicyDetail(String(item.policyId)),
+    auth.getPolicyFunctionsById(String(item.policyId))
   ];
+
   Promise.all(reqList).then(([[, detailRes], [, treeRes]]) => {
     const detailData = detailRes.data;
     const treeData = treeRes.data || [];
+
+    // Update form with policy details
     state.form = {
-      id: detailData?.id,
-      appId: detailData?.appId,
-      appName: detailData?.appName,
-      name: detailData?.name,
-      description: detailData?.description,
-      code: detailData?.code,
-      default0: detailData?.default0,
+      id: detailData?.id || '',
+      appId: detailData?.appId || '',
+      appName: detailData?.appName || '',
+      name: detailData?.name || '',
+      description: detailData?.description || '',
+      code: detailData?.code || '',
+      default0: detailData?.default0 || false,
       funcIds: []
     };
+
     loadResourceByAppId();
     state.checkedNodes = [];
+
+    // Find and mark selected functions
     const findFunctions = (list: DataRecordType[]) => {
       list.forEach(v => {
         state.checkedNodes.push(v);
@@ -218,10 +238,11 @@ const editPolicy = (item: { appId: string, policyId: string }) => {
         }
       });
     };
+
     findFunctions(treeData);
     state.form.funcIds = state.checkedNodes.map(i => i.id);
 
-    // 把滚动条滚动到顶部
+    // Scroll to top
     const dom = document.querySelector('#scrollMain');
     dom?.firstElementChild?.scrollTo(0, 0);
   }, (err: { message: string }) => {
@@ -229,12 +250,14 @@ const editPolicy = (item: { appId: string, policyId: string }) => {
   });
 };
 
-// 保存
+/**
+ * Save policy - create new or update existing
+ */
 const save = () => {
   formRef.value.validate().then(async () => {
     const params = {
       name: state.form.name,
-      appId: state.form.appId,
+      appId: String(state.form.appId),
       description: state.form.description,
       funcIds: state.form.funcIds,
       code: state.form.code,
@@ -243,28 +266,39 @@ const save = () => {
       type: 'USER_DEFINED',
       id: state.form.id || undefined
     };
+
     state.saving = true;
     let res: [Error | null, any];
     let successTip = '';
+
     if (state.form.id) {
-      successTip = t('permissionsStrategy.add.editSuccess');
+      // Update existing policy
+      successTip = t('common.messages.editSuccess');
       res = await auth.updatePolicy([params]);
     } else {
-      successTip = '添加策略成功';
+      // Create new policy
+      successTip = t('common.messages.addSuccess');
       res = await auth.addPolicy([params]);
     }
+
     const [error] = res;
     state.saving = false;
+
     if (error) {
       return;
     }
+
     notification.success(successTip);
     emit('reload');
-    // 成功后初始化表单、功能树等参数
+
+    // Reset form after successful save
     resetForm();
   });
 };
 
+/**
+ * Reset form to initial state
+ */
 const resetForm = () => {
   state.form = {
     id: '',
@@ -280,12 +314,13 @@ const resetForm = () => {
   state.dataSource = [];
 };
 
-// 这里用于处理功能的展示的数据格式
+// Watch checked nodes to process function display data
 watch(() => state.checkedNodes, (val) => {
   const resultMap: { [key: string]: Array<ApisType> } = {};
+
   val.forEach((item: DataRecordType) => {
     (item.apis || []).forEach(childItem => {
-      // 按照api的id去重
+      // Deduplicate by API ID
       if (resultMap[childItem.resourceName]) {
         if (!resultMap[childItem.resourceName].find(v => v.id === childItem.id)) {
           resultMap[childItem.resourceName].push(childItem);
@@ -295,6 +330,7 @@ watch(() => state.checkedNodes, (val) => {
       }
     });
   });
+
   state.showFuncsObj = resultMap;
 }, { deep: true });
 
@@ -308,19 +344,22 @@ defineExpose({
 </script>
 
 <template>
-  <Card :title="t('permissionsStrategy.add.title')" :bodyClass="isCollapse ? 'px-8 py-5' : 'p-0'">
+  <Card :title="t('permission.policy.add.title')" :bodyClass="isCollapse ? 'px-8 py-5' : 'p-0'">
     <template #rightExtra>
       <a
         href="javascript:;"
         class="text-3 leading-3 text-theme-special text-theme-text-hover"
         @click="changeCollapse">
-        <span class="inline-block text-3 leading-3 transition-all">{{ isCollapse ? t('permissionsStrategy.add.collapse') : t('permissionsStrategy.add.expand') }}</span>
+        <span class="inline-block text-3 leading-3 transition-all">
+          {{ isCollapse ? t('common.form.collapse') : t('common.form.expand') }}
+        </span>
         <Icon
           icon="icon-xiala"
           :class="!isCollapse ? '' : 'collapse-rotate'"
           class="inline-block ml-1.5 text-3 leading-3 transition-all transform" />
       </a>
     </template>
+
     <template v-if="isCollapse">
       <div class="transition-all transform duration-1000">
         <Form
@@ -330,31 +369,36 @@ defineExpose({
           :model="state.form"
           :rules="rules"
           v-bind="{ labelCol: { style: { width: '120px' } } }">
+          <!-- Policy Name Field -->
           <FormItem
-            :label="t('permissionsStrategy.add.nameLabel')"
+            :label="t('permission.policy.add.nameLabel')"
             name="name"
             class="w-1/2">
             <Input
               v-model:value="state.form.name"
               :maxlength="100"
-              :placeholder="t('permissionsStrategy.add.namePlaceholder')"
+              :placeholder="t('permission.policy.add.namePlaceholder')"
               size="small" />
           </FormItem>
+
+          <!-- Policy Code Field -->
           <FormItem
-            :label="t('permissionsStrategy.add.codeLabel')"
+            :label="t('permission.policy.add.codeLabel')"
             name="code"
             class="w-1/2">
             <Input
               v-model:value="state.form.code"
               :disabled="!!state.form.id"
               :maxlength="80"
-              :placeholder="t('支持输入数字字母:_-.,最大80个字符')"
+              :placeholder="t('permission.policy.add.codePlaceholder')"
               size="small"
               dataType="mixin-en"
               includes=":_-." />
           </FormItem>
+
+          <!-- Application Selection Field -->
           <FormItem
-            :label="t('permissionsStrategy.add.appLabel')"
+            :label="t('permission.policy.add.appLabel')"
             name="appId"
             class="w-1/2">
             <Select
@@ -362,31 +406,34 @@ defineExpose({
               showSearch
               :action="`${GM}/appopen/list?tenantId=${appContext.getUser()?.tenantId}&clientId=xcan_tp`"
               :disabled="!!state.form.id"
-              :placeholder="t('permissionsStrategy.add.appPlaceholder')"
+              :placeholder="t('permission.policy.add.appPlaceholder')"
               :lazy="false"
               :fieldNames="{label: 'appName', value: 'appId'}"
               internal
               size="small"
               @change="selectedAppChange" />
           </FormItem>
+
+          <!-- Function Permissions Field -->
           <FormItem
             v-if="state.form.appId"
-            :label="t('permissionsStrategy.add.funcsLabel')"
+            :label="t('permission.policy.add.funcLabel')"
             name="funcIds">
             <div class="w-full h-82.5 border border-solid border-theme-divider rounded">
+              <!-- Function selection header -->
               <div class="flex w-full h-8 bg-theme-container border-b border-solid border-theme-divider">
                 <div class="flex items-center justify-center w-75 h-full text-3 leading-3 text-theme-title">
-                  {{
-                    t('permissionsStrategy.add.funcsLeft') }}
+                  {{ t('permission.policy.add.funcLeft') }}
                 </div>
                 <div
                   class="flex items-center justify-center funcs-right-width h-full text-3 leading-3 text-theme-title">
-                  {{
-                    t('permissionsStrategy.add.funcsRight') }}
+                  {{ t('permission.policy.add.funcRight') }}
                 </div>
               </div>
+
+              <!-- Function selection content -->
               <div class="flex w-full h-72.5 py-6">
-                <!-- 菜单树 -->
+                <!-- Menu tree panel -->
                 <div class="flex w-100 h-full px-3 overflow-auto border-r border-solid border-theme-divider">
                   <Tree
                     v-if="state.dataSource.length"
@@ -402,8 +449,10 @@ defineExpose({
                     @check="onCheck">
                     <template #title="item">
                       <div class="whitespace-nowrap" :class="{'text-gray-text': item.disabled}">
-                        {{ item.name }} <span
-                          class="text-gray-text">（{{ `${item.type?.message}${item.disabled ? '、不受权限控制' : '' }` }}）</span>
+                        {{ item.name }}
+                        <span class="text-gray-text">
+                          （{{ `${item.type?.message}${item.disabled ? '、' + t('permission.notControlled') : '' }` }}）
+                        </span>
                       </div>
                     </template>
                   </Tree>
@@ -411,7 +460,8 @@ defineExpose({
                     v-else
                     class="h-full w-full" />
                 </div>
-                <!-- 功能列表 -->
+
+                <!-- Function list panel -->
                 <div class="funcs-right-width h-full px-8 overflow-x-hidden overflow-y-auto break-all">
                   <div
                     v-for="(api, resourceName ) in state.showFuncsObj"
@@ -429,7 +479,7 @@ defineExpose({
                         class="inline-block px-2 py-1.5 mr-1 mb-1 border border-solid border-theme-divider text-3 leading-3 text-theme-content">
                         {{ apiItem?.name }}({{ apiItem.code }})
                       </span>
-                      <span v-if="api.length === 0">--</span>
+                      <span v-if="api.length === 0">{{ t('common.table.noData') }}</span>
                     </div>
                   </div>
                   <NoData v-if="Object.keys(state.showFuncsObj).length === 0" class="h-full w-full" />
@@ -437,26 +487,32 @@ defineExpose({
               </div>
             </div>
           </FormItem>
+
+          <!-- Default Policy Checkbox -->
           <FormItem
-            :label="t('默认策略')"
+            :label="t('permission.policy.add.defaultPolicy')"
             name="default0"
             class="w-1/2">
             <Checkbox v-model:checked="state.form.default0">
-              设置后该策略可用于“默认权限策略”选项。
+              {{ t('permission.policy.add.defaultPolicyTip') }}
             </Checkbox>
           </FormItem>
+
+          <!-- Description Field -->
           <FormItem
-            :label="t('permissionsStrategy.add.descLabel')"
+            :label="t('permission.policy.add.descLabel')"
             name="description"
             class="w-1/2">
             <Textarea
               v-model:value="state.form.description"
               :maxlength="200"
-              :placeholder="t('permissionsStrategy.add.descPlaceholder')"
+              :placeholder="t('permission.policy.add.descPlaceholder')"
               showCount
               size="small"
               class="h-15" />
           </FormItem>
+
+          <!-- Action Buttons -->
           <FormItem label=" " :colon="false">
             <ButtonAuth
               v-if="!state.form.id"
@@ -476,7 +532,7 @@ defineExpose({
                 class="ml-2"
                 @click="resetForm">
                 <Icon icon="icon-quxiao" class="mr-1 text-3" />
-                {{ t('cancel') }}
+                {{ t('common.actions.cancel') }}
               </Button>
             </template>
           </FormItem>

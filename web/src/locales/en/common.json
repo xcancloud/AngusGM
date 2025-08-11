@@ -81,14 +81,19 @@
     "columns": {
       "name": "Name",
       "code": "Code",
+      "type": "Type",
+      "description": "Description",
       "createdDate": "Created Date",
       "createdByName": "Creator",
       "lastModifiedByName": "Last Modifier",
       "lastModifiedDate": "Last Modified Date",
-      "tags": "Tags"
+      "tags": "Tags",
+      "tenantName": "Tenant Name"
     },
     "form": {
-      "selectAll": "Select All"
+      "selectAll": "Select All",
+      "collapse": "Collapse",
+      "expand": "Expand"
     },
     "table": {
       "total": "Total",
@@ -130,6 +135,8 @@
       "noData": "No data"
     },
     "labels": {
+      "all": "All",
+      "tenant": "Tenant",
       "source": "Source",
       "association": "Association"
     }

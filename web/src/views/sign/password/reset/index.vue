@@ -11,20 +11,38 @@ import Form from './form.vue';
 
 const { t } = useI18n();
 
-const isPrivate = ref();
+// Track if this is a private edition
+const isPrivate = ref<boolean>();
 
+// Active tab selection
 const activeValue = ref<'mobile' | 'email'>('email');
+
+/**
+ * Computed tab list based on edition type
+ * Shows SMS verification only for non-private editions
+ */
 const tabList = computed(() => {
-  return [
+  const tabs = [
     {
-      label: t('email-verification'), value: 'email'
-    },
-    !isPrivate.value && {
-      label: t('sms-verification'), value: 'mobile'
+      label: t('email-verification'),
+      value: 'email'
     }
-  ].filter(Boolean);
+  ];
+  
+  // Add SMS verification tab for non-private editions
+  if (!isPrivate.value) {
+    tabs.push({
+      label: t('sms-verification'),
+      value: 'mobile'
+    });
+  }
+  
+  return tabs;
 });
 
+/**
+ * Initialize component and determine edition type
+ */
 onMounted(async () => {
   isPrivate.value = await appContext.isPrivateEdition();
 });
@@ -32,13 +50,17 @@ onMounted(async () => {
 
 <template>
   <div class="outer-container-f w-full pt-7.5">
+    <!-- Header with logo and official links -->
     <div class="flex items-center justify-between px-10">
       <Logo type="white" />
       <div class="flex justify-end items-center text-4 leading-5">
         <OfficialLink />
+        <!-- Language selector commented out for now -->
         <!-- <Language class="ml-8 mr-5" /> -->
       </div>
     </div>
+    
+    <!-- Main content area -->
     <div class="main-content-col flex items-center justify-center">
       <div class="w-115 p-10 rounded-3xl shadow-big bg-white">
         <Tab
@@ -47,6 +69,8 @@ onMounted(async () => {
         <Form :type="activeValue" />
       </div>
     </div>
+    
+    <!-- Footer copyright -->
     <Records class="justify-center pb-3" />
   </div>
 </template>

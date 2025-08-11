@@ -16,8 +16,12 @@ import MobileInput from '@/components/MobileInput/index.vue';
 
 import { privacyPolicy, termsAndConditions } from './config';
 
+/**
+ * Component props interface
+ * Defines the registration type (mobile or email)
+ */
 interface Props {
-  type: string
+  type: 'mobile' | 'email';
 }
 
 const { t } = useI18n();
@@ -26,38 +30,50 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'mobile'
 });
 
+// Form state management
 const error = ref(false);
-const errorMessage = ref(); // 注册的错误提示信息
-const loading = ref(false); // 注册请求发送中
-const checked = ref(false); // 注册必选条件是否已经全选
+const errorMessage = ref<string>(); // Registration error message
+const loading = ref(false); // Registration request loading state
+const checked = ref(false); // Terms and conditions acceptance status
 
+/**
+ * Email registration form data
+ * Contains all fields needed for email-based registration
+ */
 const emailForm = reactive({
-  account: undefined,
-  invitationCode: undefined,
-  password: undefined,
-  confirmPassword: undefined,
+  account: undefined as string | undefined,
+  invitationCode: undefined as string | undefined,
+  password: undefined as string | undefined,
+  confirmPassword: undefined as string | undefined,
   signupType: 'EMAIL',
-  socialCode: undefined,
-  verificationCode: undefined
-});
-const mobileForm = reactive({
-  account: undefined,
-  country: 'CN',
-  invitationCode: undefined,
-  itc: '86',
-  password: undefined,
-  confirmPassword: undefined,
-  signupType: 'MOBILE',
-  socialCode: undefined,
-  verificationCode: undefined
+  socialCode: undefined as string | undefined,
+  verificationCode: undefined as string | undefined
 });
 
+/**
+ * Mobile registration form data
+ * Contains all fields needed for mobile-based registration
+ */
+const mobileForm = reactive({
+  account: undefined as string | undefined,
+  country: 'CN',
+  invitationCode: undefined as string | undefined,
+  itc: '86',
+  password: undefined as string | undefined,
+  confirmPassword: undefined as string | undefined,
+  signupType: 'MOBILE',
+  socialCode: undefined as string | undefined,
+  verificationCode: undefined as string | undefined
+});
+
+// Terms and privacy policy state
 const terms = ref();
 const privacy = ref();
-const termsContent = ref();
+const termsContent = ref<string>('');
 const visible = ref(false);
 const modelTitle = ref('');
 
+// Component references for validation
 const mobileRef = ref();
 const emailRef = ref();
 const mobileVerificationRef = ref();
@@ -67,15 +83,24 @@ const emailConfirmpassRef = ref();
 const emailPassRef = ref();
 const emailVeriRef = ref();
 
+// Validation state
 const validateData = ref(false);
 
+/**
+ * Check if current registration type is mobile
+ */
 const isMobile = computed(() => {
   return props.type === 'mobile';
 });
+
+/**
+ * Watch for type changes and reset error state
+ */
 watch(() => props.type, () => {
   error.value = false;
 });
 
+// Terms and conditions loading (commented out for now)
 // const loadTerms = () => {
 //   http.get(`${PUB_ESS}/content/setting/termsAndConditions`)
 //     .then(([error, resp]) => {
@@ -93,7 +118,11 @@ watch(() => props.type, () => {
 //     });
 // };
 
-const openModal = (key) => {
+/**
+ * Open modal for terms or privacy policy
+ * Sets appropriate title and content based on key
+ */
+const openModal = (key: string) => {
   if (key === 'termsVisible') {
     modelTitle.value = t('xcan_cloud') + t('terms_cloud');
     termsContent.value = termsAndConditions;
@@ -104,63 +133,89 @@ const openModal = (key) => {
   visible.value = !visible.value;
 };
 
+/**
+ * Close modal dialog
+ */
 const closeModel = () => {
   visible.value = !visible.value;
 };
 
+/**
+ * Validate mobile account input
+ */
 const validateAccount = () => {
   if (mobileRef.value?.validateData) {
-    return mobileRef.value?.validateData();
+    return mobileRef.value.validateData();
   }
+  return false;
 };
 
+/**
+ * Validate email account input
+ */
 const validateEmail = () => {
-  if (emailRef.value.validateData) {
+  if (emailRef.value?.validateData) {
     return emailRef.value.validateData();
   }
+  return false;
 };
 
+/**
+ * Validate mobile form inputs
+ * @returns {boolean} true if validation fails
+ */
 const validateMobileForm = () => {
-  let flag = 0;// 校验失败累加1
+  let validationErrors = 0; // Count validation failures
+  
   if (!mobileRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!mobileVerificationRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!mobilePassRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!mobileConfirmpassRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
-  return !!flag;
+  return validationErrors > 0;
 };
 
+/**
+ * Validate email form inputs
+ * @returns {boolean} true if validation fails
+ */
 const validateEmailForm = () => {
-  let flag = 0;// 校验失败累加1
+  let validationErrors = 0; // Count validation failures
+  
   if (!emailRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!emailVeriRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!emailPassRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!emailConfirmpassRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
-  return !!flag;
+  return validationErrors > 0;
 };
+
+/**
+ * Main registration function
+ * Validates form, submits registration request, and handles response
+ */
 const signup = async () => {
   let isInvalid = false;
   if (isMobile.value) {
@@ -169,33 +224,42 @@ const signup = async () => {
     isInvalid = validateEmailForm();
   }
 
-  // 校验不通过
+  // Validation failed or terms not accepted
   if (isInvalid || !checked.value) {
     validateData.value = true;
     return;
   }
+  
   loading.value = true;
   error.value = false;
-  const params = isMobile.value ? mobileForm : emailForm;
-  const [err] = await login.signup(params);
-  loading.value = false;
-  validateData.value = false;
-  if (err) {
-    error.value = true;
-    errorMessage.value = err.message;
-    return;
+  
+  try {
+    const params = isMobile.value ? mobileForm : emailForm;
+    const [err] = await login.signup(params);
+    
+    if (err) {
+      error.value = true;
+      errorMessage.value = err.message;
+      return;
+    }
+    
+    notification.success('注册成功');
+    router.push('/signin');
+  } finally {
+    loading.value = false;
+    validateData.value = false;
   }
-  notification.success('注册成功');
-  router.push('/signin');
 };
 
+// Load terms on mount (commented out for now)
 // onMounted(() => {
-// loadTerms();
+//   loadTerms();
 // });
-
 </script>
+
 <template>
   <div>
+    <!-- Mobile registration form -->
     <template v-if="isMobile">
       <MobileInput
         ref="mobileRef"
@@ -227,6 +291,8 @@ const signup = async () => {
         v-model:value="mobileForm.invitationCode"
         class="input-container block-fixed" />
     </template>
+    
+    <!-- Email registration form -->
     <template v-else>
       <EmailInput
         ref="emailRef"
@@ -256,10 +322,12 @@ const signup = async () => {
         class="input-container block-fixed" />
       <InvitationCodeInput
         key="email-invite"
-        v-model:value="emailForm.verificationCode"
+        v-model:value="emailForm.invitationCode"
         class="input-container block-fixed" />
     </template>
-    <div :class="{'error':error}" class="error-container block-fixed">
+    
+    <!-- Submit button and error display -->
+    <div :class="{'error': error}" class="error-container block-fixed">
       <Button
         :loading="loading"
         class="form-btn"
@@ -270,21 +338,29 @@ const signup = async () => {
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
+    
+    <!-- Sign in link -->
     <div class="link-container">
       <RouterLink class="link" to="/signin">{{ t('account-signin') }}</RouterLink>
     </div>
+    
+    <!-- Terms and privacy policy links -->
     <div class="text-group">
       <em class="require">*</em>
       <span>{{ t('xcan_cloud') }}</span>
       <span class="link" @click="openModal('termsVisible')">{{ t('terms_cloud') }}</span>
       <span class="link" @click="openModal('prvacyVisible')">{{ t('privacy_cloud') }}</span>
     </div>
+    
+    <!-- Terms acceptance checkbox -->
     <div class="flex items-center">
       <Checkbox v-model:checked="checked" class="checkbox-container">
         {{ t('clause') }}
       </Checkbox>
       <span class="error-message !px-1" :class="{'!block': !checked && validateData}">请勾选阅读并同意</span>
     </div>
+    
+    <!-- Terms and privacy policy modal -->
     <Modal
       key="termsVisible"
       v-model:visible="visible"

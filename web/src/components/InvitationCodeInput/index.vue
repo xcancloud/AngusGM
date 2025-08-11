@@ -4,11 +4,11 @@ import { ref, watch } from 'vue';
 import { Input } from '@xcan-angus/vue-ui';
 
 interface Props {
-  value: boolean;
+  value: string | undefined;
 }
 
 withDefaults(defineProps<Props>(), {
-  value: false
+  value: undefined
 });
 
 // eslint-disable-next-line func-call-spacing

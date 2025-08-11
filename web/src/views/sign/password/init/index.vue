@@ -11,74 +11,103 @@ import PasswordConfirmInput from '@/components/PasswordConfirmInput/index.vue';
 
 const router = useRouter();
 
+// Form references for validation
 const passwordRef = ref();
 const confirmPasswordRef = ref();
+
+// State management
 const error = ref(false);
 const errorMessage = ref<string>();
 const loading = ref(false);
 const password = ref<string>();
 const confirmPassword = ref<string>();
 
+/**
+ * Initialize component and check if user needs password setup
+ * Redirects to signin if password already exists
+ */
 const init = () => {
   if (sessionStorage.getItem('hasPassword') !== 'false') {
     router.push('/signin');
   }
 };
 
+/**
+ * Validate form inputs
+ * @returns {boolean} true if validation fails, false if passes
+ */
 const validate = () => {
-  let flag = 0;
+  let validationErrors = 0;
+  
   if (!passwordRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!confirmPasswordRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
-  return !!flag;
+  return validationErrors > 0;
 };
 
+/**
+ * Handle password initialization submission
+ * Updates user's initial password and redirects on success
+ */
 const confirm = async () => {
   if (validate()) {
     return;
   }
 
-  error.value = false;
-  loading.value = true;
-  const [err] = await auth.updateUserInitPassword({ newPassword: password.value });
-  loading.value = false;
-  if (err) {
-    error.value = true;
-    errorMessage.value = err.message;
-    return;
+  try {
+    error.value = false;
+    loading.value = true;
+    
+    const [err] = await auth.updateUserInitPassword({ newPassword: password.value });
+    
+    if (err) {
+      error.value = true;
+      errorMessage.value = err.message;
+      return;
+    }
+    
+    // Clear session storage and show success message
+    sessionStorage.removeItem('hasPassword');
+    notification.success('设置密码成功');
+    await redirectTo();
+  } finally {
+    loading.value = false;
   }
-  sessionStorage.removeItem('hasPassword');
-  notification.success('设置密码成功');
-  await redirectTo();
 };
 
 onMounted(() => {
   init();
 });
-
 </script>
 
 <template>
+  <!-- Password initialization description -->
   <div class="flex flex-no-wrap items-start mb-8 text-gray-content">
     <img class="relative top-0.25 w-4 h-4 flex-shrink-0 flex-grow-0 mr-2" src="./assets/warning.png">
     <span>{{ $t('init-pass-desc') }}</span>
   </div>
+  
+  <!-- Password input field -->
   <PasswordInput
     ref="passwordRef"
     v-model:value="password"
     :placeholder="$t('enter-pass')"
     class="mb-7.5 absolute-fixed" />
+  
+  <!-- Password confirmation field -->
   <PasswordConfirmInput
     ref="confirmPasswordRef"
     v-model:value="confirmPassword"
     :password="password"
     :placeholder="$t('confirm-pass')"
     class="mb-7.5 absolute-fixed" />
+  
+  <!-- Submit button with error handling -->
   <div :class="{ 'error': error }" class="absolute-fixed relative">
     <Button
       :loading="loading"

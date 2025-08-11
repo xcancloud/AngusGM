@@ -14,7 +14,7 @@ export default class Auth {
     return http.patch(`${baseUrl}/user/password/current`, params);
   }
 
-  getUserAppFunctionTree (userId: string, appIdOrCode: string): Promise<[Error | null, any]> {
+  getUserAppFunctionTree (userId: number, appIdOrCode: string): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/user/${userId}/app/${appIdOrCode}/func/tree`, { joinApi: true });
   }
 

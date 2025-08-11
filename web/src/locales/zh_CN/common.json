@@ -79,16 +79,21 @@
       "nearlyYear": "近一年"
     },
     "form": {
-      "selectAll": "全选"
+      "selectAll": "全选",
+      "collapse": "收起",
+      "expand": "展开"
     },
     "columns": {
       "name": "名称",
       "code": "编码",
+      "type": "类型",
+      "description": "描述",
       "createdDate": "添加时间",
       "createdByName": "添加人",
       "lastModifiedByName": "最后修改人",
       "lastModifiedDate": "最后修改时间",
-      "tags": "标签"
+      "tags": "标签",
+      "tenantName": "租户名称"
     },
     "table": {
       "total": "总计",
@@ -99,6 +104,7 @@
       "pageShowTotal": "共{total}条记录，第{pageNo} / {totalPage}页"
     },
     "messages": {
+      "confirmTitle": "确认",
       "confirmDelete": "确认是否删除`{name}`?",
       "deleteSuccess": "删除成功",
       "deleteFailed": "删除失败",
@@ -130,6 +136,8 @@
       "noData": "暂无数据"
     },
     "labels": {
+      "all": "全部",
+      "tenant": "租户",
       "source": "来源",
       "association": "关联"
     }

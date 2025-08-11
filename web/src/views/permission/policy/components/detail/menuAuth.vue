@@ -5,34 +5,24 @@ import { useI18n } from 'vue-i18n';
 import { NoData } from '@xcan-angus/vue-ui';
 import { Tree } from 'ant-design-vue';
 
-import type { DetailType } from './PropTypes';
+import type { PolicyDetailType, ApisType, DataRecordType } from '../PropsType';
 import { auth } from '@/api';
 
 const { t } = useI18n();
 
+/**
+ * Props interface for MenuAuth component
+ * @interface Props
+ * @property {PolicyDetailType} detail - Policy detail information
+ */
 interface Props {
-  detail: DetailType
+  detail: PolicyDetailType
 }
 
-interface ApisType {
-  id: string,
-  code: string,
-  name: string,
-  resourceName: string
-}
-
-interface DataRecordType {
-  id: string | number | undefined,
-  showName: string,
-  pid: string | number | undefined,
-  type: { value: 'BUTTON' | 'MENU' | 'PANEL' | undefined, message: string | undefined },
-  apis: ApisType[],
-  auth: boolean,
-  children: DataRecordType[],
-  disabled?: boolean,
-  disableCheckbox?: boolean
-}
-
+/**
+ * Component props with default values
+ * Provides fallback values for all detail properties to prevent rendering errors
+ */
 const props = withDefaults(defineProps<Props>(), {
   detail: () => ({
     id: undefined,
@@ -47,17 +37,25 @@ const props = withDefaults(defineProps<Props>(), {
     description: undefined
   })
 });
+
+/**
+ * Component reactive state
+ * Manages checked nodes, data source, and function display objects
+ */
 const state = reactive<{
   checkedNodes: DataRecordType[],
   dataSource: DataRecordType[],
   showFuncsObj: { [key: string]: Array<ApisType> }
 }>({
-  checkedNodes: [], // 当前复选框选中的节点
-  dataSource: [], // 功能树数据
+  checkedNodes: [], // Currently checked checkbox nodes
+  dataSource: [], // Function tree data
   showFuncsObj: {}
 });
 
-// 查询授权的功能树
+/**
+ * Load authorized function tree for the policy
+ * Fetches function permissions based on policy ID and application ID
+ */
 const load = async () => {
   if (!props.detail.appId) {
     return;
@@ -73,7 +71,18 @@ const load = async () => {
   state.dataSource = data;
 };
 
+/**
+ * Selected API identifiers
+ * Tracks which APIs are currently selected in the tree
+ */
 const selectApis = ref<string[]>([]);
+
+/**
+ * Handle tree node selection
+ * Updates the selected APIs when a tree node is selected
+ * @param {string[]} id - Selected node IDs
+ * @param {any} funcs - Function data containing API information
+ */
 const handleSelect = (id: string[], funcs) => {
   if (id.length) {
     selectApis.value = (funcs.node.apis || []).map(api => api.id);
@@ -82,7 +91,11 @@ const handleSelect = (id: string[], funcs) => {
   }
 };
 
-// 处理数据, 禁用输入框的勾选操作
+/**
+ * Process data source to disable checkbox operations
+ * Recursively processes the tree data to set appropriate disabled states
+ * @param {DataRecordType[]} data - Tree data to process
+ */
 const handlerDataSource = (data: DataRecordType[]) => {
   const fn = (list: DataRecordType[]) => {
     list.forEach((item) => {
@@ -94,6 +107,11 @@ const handlerDataSource = (data: DataRecordType[]) => {
   };
   fn(data);
 };
+
+/**
+ * Watch for changes in application ID
+ * Reloads function tree when the application changes
+ */
 watch(() => props.detail.appId, (val: string | number | undefined) => {
   if (val) {
     load();
@@ -102,20 +120,23 @@ watch(() => props.detail.appId, (val: string | number | undefined) => {
   immediate: true
 });
 </script>
+
 <template>
+  <!-- Menu authorization management interface -->
   <div class="w-full border border-solid border-theme-divider rounded flex flex-col">
+    <!-- Header section with column titles -->
     <div class="flex w-full h-10 bg-theme-container border-b border-solid border-theme-divider">
       <div class="flex items-center justify-center w-75 h-full text-3 leading-3 text-theme-title">
-        {{
-          t('permissionsStrategy.add.funcsLeft') }}
+        {{ t('permission.policy.add.funcLeft') }}
       </div>
       <div class="flex items-center justify-center funcs-right-width h-full text-3 leading-3 text-theme-title">
-        {{
-          t('permissionsStrategy.add.funcsRight') }}
+        {{ t('permission.policy.add.funcRight') }}
       </div>
     </div>
+
+    <!-- Main content area with menu tree and function list -->
     <div class="flex-1 flex">
-      <!-- 菜单树 -->
+      <!-- Menu tree section -->
       <div class="flex w-75 h-full p-3 overflow-x-hidden overflow-y-auto border-r border-solid border-theme-divider">
         <Tree
           v-if="state.dataSource.length"
@@ -138,7 +159,8 @@ watch(() => props.detail.appId, (val: string | number | undefined) => {
           v-else
           class="h-full w-full" />
       </div>
-      <!-- 功能列表 -->
+
+      <!-- Function list section -->
       <div class="funcs-right-width h-full px-8 overflow-x-hidden overflow-y-auto break-all flex-1">
         <template v-if="state.checkedNodes.length">
           <div

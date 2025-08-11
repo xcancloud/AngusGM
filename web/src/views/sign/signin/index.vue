@@ -7,28 +7,47 @@ import Tab from '@/components/SignTab/index.vue';
 import Form from './form.vue';
 
 const { t } = useI18n();
-const otherAccount = ref();
-const activeValue = ref('account');
 
+// Track other account state
+const otherAccount = ref<boolean>();
+
+// Active tab selection
+const activeValue = ref<'account' | 'mobile'>('account');
+
+// Store edition type for conditional rendering
 const editionType = ref<string>();
+
+/**
+ * Initialize component and determine edition type
+ * Sets up conditional tab rendering based on edition
+ */
 onMounted(async () => {
   editionType.value = appContext.getEditionType();
 });
 
+/**
+ * Computed tab list based on edition type
+ * Shows SMS verification only for cloud service editions
+ */
 const tabList = computed(() => {
   if (editionType.value === EditionType.CLOUD_SERVICE) {
-    return [{ label: t('signin-account'), value: 'account' }, { label: t('signin-sms'), value: 'mobile' }];
+    return [
+      { label: t('signin-account'), value: 'account' },
+      { label: t('signin-sms'), value: 'mobile' }
+    ];
   }
 
   return [{ label: t('signin-account'), value: 'account' }];
 });
 </script>
+
 <template>
   <template v-if="!otherAccount">
     <Tab v-model:activeKey="activeValue" :tabList="tabList" />
     <Form :type="activeValue" />
   </template>
 </template>
+
 <style scoped>
 .divider {
   display: flex;

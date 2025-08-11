@@ -12,6 +12,9 @@ import EmailInput from '@/components/EmailInput/index.vue';
 import MobileInput from '@/components/MobileInput/index.vue';
 import AccountSelect from '@/components/AccountSelect/index.vue';
 
+/**
+ * Form parameters interface for password reset
+ */
 interface IFormParams {
   account: string;
   newPassword: string;
@@ -24,19 +27,21 @@ interface IFormParams {
 }
 
 interface Props {
-  type: string;
+  type: 'mobile' | 'email';
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: 'mobile'
+  type: 'email'
 });
 
 const router = useRouter();
 
+// Loading and error states
 const loading = ref(false);
 const error = ref(false);
 const errorMessage = ref<string>();
 
+// Component references for validation
 const mobileRef = ref();
 const mobileVeriRef = ref();
 const mobilePassRef = ref();
@@ -48,7 +53,10 @@ const emailPassRef = ref();
 const emailConfirmRef = ref();
 const emailSelectRef = ref();
 
+// Account list for multiple account scenarios
 const accountList = ref<Record<string, any>[]>([]);
+
+// Form data for email verification
 const emailForm = ref<IFormParams>({
   account: '',
   newPassword: '',
@@ -60,6 +68,7 @@ const emailForm = ref<IFormParams>({
   passwordDisabled: false
 });
 
+// Form data for mobile verification
 const mobileForm = ref<IFormParams>({
   account: '',
   newPassword: '',
@@ -71,12 +80,20 @@ const mobileForm = ref<IFormParams>({
   passwordDisabled: false
 });
 
+/**
+ * Check if current verification type is mobile
+ */
 const isMobile = computed(() => {
   return props.type === 'mobile';
 });
 
+/**
+ * Watch for type changes and reset forms
+ */
 watch(() => props.type, () => {
   error.value = false;
+  
+  // Reset email form
   emailForm.value = {
     account: '',
     newPassword: '',
@@ -88,6 +105,7 @@ watch(() => props.type, () => {
     passwordDisabled: false
   };
 
+  // Reset mobile form
   mobileForm.value = {
     account: '',
     newPassword: '',
@@ -102,7 +120,13 @@ watch(() => props.type, () => {
   accountList.value = [];
 });
 
-const accountChange = (id: string) => {
+/**
+ * Handle account selection change
+ * Updates form with selected account's userId and linkSecret
+ */
+const accountChange = (id: string | undefined) => {
+  if (!id) return;
+  
   const accountInfo = accountList.value.find(item => item.userId === id);
   if (!accountInfo) {
     return;
@@ -112,66 +136,88 @@ const accountChange = (id: string) => {
   if (isMobile.value) {
     mobileForm.value.userId = userId;
     mobileForm.value.linkSecret = linkSecret;
-    return;
+  } else {
+    emailForm.value.userId = userId;
+    emailForm.value.linkSecret = linkSecret;
   }
-
-  emailForm.value.userId = userId;
-  emailForm.value.linkSecret = linkSecret;
 };
+
+/**
+ * Validate mobile account input
+ */
 const validateAccount = () => {
-  if (mobileRef.value.validateData) {
+  if (mobileRef.value?.validateData) {
     return mobileRef.value.validateData();
   }
+  return false;
 };
 
+/**
+ * Validate email account input
+ */
 const validateEmail = () => {
-  if (emailRef.value.validateData) {
+  if (emailRef.value?.validateData) {
     return emailRef.value.validateData();
   }
+  return false;
 };
 
+/**
+ * Validate mobile form inputs
+ * @returns {boolean} true if validation fails
+ */
 const validateMobileForm = () => {
-  let flag = 0;
+  let validationErrors = 0;
+  
   if (!mobileRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!mobileVeriRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!mobilePassRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!mobileConfirmRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
-  return !!flag;
+  return validationErrors > 0;
 };
 
+/**
+ * Validate email form inputs
+ * @returns {boolean} true if validation fails
+ */
 const validateEmailForm = () => {
-  let flag = 0;
+  let validationErrors = 0;
+  
   if (!emailRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!emailVeriRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!emailPassRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
   if (!emailConfirmRef.value?.validateData()) {
-    flag++;
+    validationErrors++;
   }
 
-  return !!flag;
+  return validationErrors > 0;
 };
 
+/**
+ * Get account information based on verification type
+ * @returns Promise with account data or error
+ */
 const getAccount = () => {
   if (isMobile.value) {
     const params = {
@@ -190,20 +236,30 @@ const getAccount = () => {
   return login.checkUserEmaillCode(params);
 };
 
+/**
+ * Update password with reset credentials
+ */
 const toUpdate = async () => {
   const { userId, newPassword, linkSecret } = isMobile.value ? mobileForm.value : emailForm.value;
   const [err] = await login.resetPassword({ id: userId, newPassword, linkSecret });
   loading.value = false;
+  
   if (err) {
     error.value = true;
     errorMessage.value = err.message;
     return;
   }
+  
   notification.success('重置密码成功');
   router.push('/signin');
 };
 
+/**
+ * Main confirmation handler for password reset
+ * Validates form, gets account info, and proceeds with password update
+ */
 const confirm = async () => {
+  // Handle multiple account scenario
   if (accountList.value.length > 1) {
     let isValid = false;
     if (isMobile.value) {
@@ -220,6 +276,7 @@ const confirm = async () => {
     return;
   }
 
+  // Validate form inputs
   let isInvalid = false;
   if (isMobile.value) {
     isInvalid = validateMobileForm();
@@ -234,39 +291,43 @@ const confirm = async () => {
   loading.value = true;
   error.value = false;
 
-  // 获取账户的用户信息
-  const [e1, res] = await getAccount();
-  if (e1) {
-    loading.value = false;
-    error.value = true;
-    errorMessage.value = e1.message;
-    accountList.value = [];
-    return;
-  }
-
-  loading.value = false;
-  const data = res.data || [];
-  accountList.value = data;
-  if (data.length === 1) {
-    const { userId, linkSecret } = data[0];
-    if (isMobile.value) {
-      mobileForm.value.userId = userId;
-      mobileForm.value.linkSecret = linkSecret;
-      mobileForm.value.accountDisabled = true;
-      mobileForm.value.passwordDisabled = true;
-    } else {
-      emailForm.value.userId = userId;
-      emailForm.value.linkSecret = linkSecret;
-      emailForm.value.accountDisabled = true;
-      emailForm.value.passwordDisabled = true;
+  try {
+    // Get account information for password reset
+    const [err, res] = await getAccount();
+    if (err) {
+      error.value = true;
+      errorMessage.value = err.message;
+      accountList.value = [];
+      return;
     }
-    toUpdate();
+
+    const data = res.data || [];
+    accountList.value = data;
+    
+    if (data.length === 1) {
+      const { userId, linkSecret } = data[0];
+      if (isMobile.value) {
+        mobileForm.value.userId = userId;
+        mobileForm.value.linkSecret = linkSecret;
+        mobileForm.value.accountDisabled = true;
+        mobileForm.value.passwordDisabled = true;
+      } else {
+        emailForm.value.userId = userId;
+        emailForm.value.linkSecret = linkSecret;
+        emailForm.value.accountDisabled = true;
+        emailForm.value.passwordDisabled = true;
+      }
+      toUpdate();
+    }
+  } finally {
+    loading.value = false;
   }
 };
 </script>
 
 <template>
   <div>
+    <!-- Mobile verification form -->
     <template v-if="isMobile">
       <MobileInput
         ref="mobileRef"
@@ -297,7 +358,9 @@ const confirm = async () => {
         :password="mobileForm.newPassword"
         :placeholder="$t('confirm-pass')"
         class="mb-5 block-fixed" />
-      <template v-if="accountList.length>1">
+      
+      <!-- Account selection for multiple accounts -->
+      <template v-if="accountList.length > 1">
         <AccountSelect
           ref="mobileSelectRef"
           key="mobile-account"
@@ -307,6 +370,8 @@ const confirm = async () => {
           @change="accountChange" />
       </template>
     </template>
+    
+    <!-- Email verification form -->
     <template v-else>
       <EmailInput
         ref="emailRef"
@@ -338,7 +403,9 @@ const confirm = async () => {
         :password="emailForm.newPassword"
         :placeholder="$t('confirm-pass')"
         class="mb-5 block-fixed" />
-      <template v-if="accountList.length>1">
+      
+      <!-- Account selection for multiple accounts -->
+      <template v-if="accountList.length > 1">
         <AccountSelect
           ref="emailSelectRef"
           key="email-account"
@@ -348,7 +415,9 @@ const confirm = async () => {
           @change="accountChange" />
       </template>
     </template>
-    <div :class="{'error':error}" class="relative mb-4 block-fixed">
+    
+    <!-- Submit button with error handling -->
+    <div :class="{'error': error}" class="relative mb-4 block-fixed">
       <Button
         :loading="loading"
         class="rounded-full w-full"
@@ -359,6 +428,8 @@ const confirm = async () => {
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
+    
+    <!-- Return to login link -->
     <RouterLink
       class="select-none whitespace-nowrap flex justify-center items-center mt-6 text-4 leading-4 text-blue-tab-active"
       to="/signin">

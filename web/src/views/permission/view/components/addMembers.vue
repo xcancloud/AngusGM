@@ -6,6 +6,12 @@ import { Grid, Modal, Select, SelectUser } from '@xcan-angus/vue-ui';
 
 import { app } from '@/api';
 
+/**
+ * Component Props Interface
+ *
+ * Defines the required properties for the modal functionality,
+ * including visibility state, application context, and entity type
+ */
 interface Props {
   visible: boolean;
   appId: string;
@@ -22,20 +28,52 @@ const emit = defineEmits<{(e: 'update', refresh: boolean): void }>();
 
 const { t } = useI18n();
 
-const selectedUserIds = ref();
+/**
+ * User Selection State Management
+ *
+ * Manages the state of selected user IDs and validation errors
+ * for the user selection component
+ */
+const selectedUserIds = ref<any>();
 const userError = ref(false);
-const userChange = (value) => {
-  userError.value = !value;
+
+/**
+ * Handle User Selection Changes
+ *
+ * Updates error state based on whether users are selected
+ * to provide real-time validation feedback
+ */
+const userChange = (value: any) => {
+  userError.value = !value || value.length === 0;
 };
 
-const selectedPolicyIds = ref([]);
+/**
+ * Policy Selection State Management
+ *
+ * Manages the state of selected policy IDs and validation errors
+ * for the policy selection component
+ */
+const selectedPolicyIds = ref<string[]>([]);
 const policyError = ref(false);
-const policyChange = (value) => {
-  policyError.value = !value.length;
+
+/**
+ * Handle Policy Selection Changes
+ *
+ * Updates error state based on whether policies are selected
+ * to provide real-time validation feedback
+ */
+const policyChange = (value: any) => {
+  policyError.value = !value || value.length === 0;
 };
 
+/**
+ * Handle Form Submission
+ *
+ * Validates form inputs and routes to appropriate API calls
+ * based on the selected entity type
+ */
 const handleOk = () => {
-  if (!selectedUserIds.value) {
+  if (!selectedUserIds.value || selectedUserIds.value.length === 0) {
     userError.value = true;
     return;
   }
@@ -43,7 +81,10 @@ const handleOk = () => {
     policyError.value = true;
     return;
   }
+
   const params = { orgIds: selectedUserIds.value, policyIds: selectedPolicyIds.value };
+
+  // Route to appropriate API based on entity type
   if (props.type === 'USER') {
     addUserAuth(params);
   } else if (props.type === 'DEPT') {
@@ -53,63 +94,120 @@ const handleOk = () => {
   }
 };
 
+/**
+ * Add Department Authorization
+ *
+ * Calls the API to add department authorization for the selected
+ * departments and policies
+ */
 const addDeptAuth = async (params: { orgIds: string[], policyIds: string[] }): Promise<void> => {
-  const [err] = await app.addDeptAuth(props.appId, params);
-  if (err) {
-    emit('update', false);
-    return;
-  }
+  try {
+    const [err] = await app.addDeptAuth(props.appId, params);
+    if (err) {
+      emit('update', false);
+      return;
+    }
 
-  emit('update', true);
+    emit('update', true);
+  } catch (error) {
+    console.error('Failed to add department authorization:', error);
+    emit('update', false);
+  }
 };
 
+/**
+ * Add User Authorization
+ *
+ * Calls the API to add user authorization for the selected
+ * users and policies
+ */
 const addUserAuth = async (params: { orgIds: string[], policyIds: string[] }): Promise<void> => {
-  const [err] = await app.addUserAuth(props.appId, params);
-  if (err) {
-    emit('update', false);
-    return;
-  }
+  try {
+    const [err] = await app.addUserAuth(props.appId, params);
+    if (err) {
+      emit('update', false);
+      return;
+    }
 
-  emit('update', true);
+    emit('update', true);
+  } catch (error) {
+    console.error('Failed to add user authorization:', error);
+    emit('update', false);
+  }
 };
 
+/**
+ * Add Group Authorization
+ *
+ * Calls the API to add group authorization for the selected
+ * groups and policies
+ */
 const addGroupAuth = async (params: { orgIds: string[], policyIds: string[] }): Promise<void> => {
-  const [err] = await app.addGroupAuth(props.appId, params);
-  if (err) {
-    emit('update', false);
-    return;
-  }
+  try {
+    const [err] = await app.addGroupAuth(props.appId, params);
+    if (err) {
+      emit('update', false);
+      return;
+    }
 
-  emit('update', true);
+    emit('update', true);
+  } catch (error) {
+    console.error('Failed to add group authorization:', error);
+    emit('update', false);
+  }
 };
 
+/**
+ * Handle Modal Cancellation
+ *
+ * Emits update event to close modal without refreshing
+ * the parent component data
+ */
 const handleCancel = () => {
   emit('update', false);
 };
 
+/**
+ * Compute Modal Title
+ *
+ * Generates the appropriate title for the modal based on
+ * the selected entity type
+ */
 const title = computed(() => {
   if (props.type === 'USER') {
-    return t('授权用户');
+    return t('permission.view.userTitle');
   }
   if (props.type === 'DEPT') {
-    return t('授权部门');
+    return t('permission.view.deptTitle');
   }
-  return t('授权组');
+  return t('permission.view.groupTitle');
 });
 
+/**
+ * Compute Selection Placeholder
+ *
+ * Generates the appropriate placeholder text for the member
+ * selection component based on entity type
+ */
 const placeholder = computed(() => {
   if (props.type === 'USER') {
-    return t('请选择用户');
+    return t('permission.view.userPlaceholder');
   }
   if (props.type === 'DEPT') {
-    return t('请选择部门');
+    return t('permission.view.deptPlaceholder');
   }
-  return t('请选择组');
+  return t('permission.view.groupPlaceholder');
 });
 
+/**
+ * Compute Unauthorized Organization API Action
+ *
+ * Generates the appropriate API endpoint for fetching unauthorized
+ * organizations based on entity type
+ * TODO: Migrate path information to API routing
+ */
 const selectAppUnAuthOrgAction = computed(() => {
   switch (props.type) {
-    // TODO 路径信息迁移到 api 路由
     case 'USER' :
       return `${GM}/app/${props.appId}/unauth/user`;
     case 'DEPT' :
@@ -121,11 +219,22 @@ const selectAppUnAuthOrgAction = computed(() => {
   }
 });
 
-// TODO 路径信息迁移到 api 路由
+/**
+ * Compute User Authorization Policy API Action
+ *
+ * Generates the API endpoint for fetching user authorization policies
+ * TODO: Migrate path information to API routing
+ */
 const selectUserAuthPolicyAction = computed(() => {
   return `${GM}/auth/user/${appContext.getUser()?.id}/policy/associated?appId=${props.appId}&adminFullAssociated=true`;
 });
 
+/**
+ * Compute Field Names for Selection Components
+ *
+ * Determines the appropriate field names for label and value
+ * based on the entity type for proper data binding
+ */
 const fieldNames = computed(() => {
   switch (props.type) {
     case 'USER' :
@@ -139,16 +248,28 @@ const fieldNames = computed(() => {
   }
 });
 
+/**
+ * Compute Selection Label
+ *
+ * Generates the appropriate label for the member selection
+ * component based on entity type
+ */
 const selectLabel = computed(() => {
   if (props.type === 'USER') {
-    return t('选择用户');
+    return t('permission.view.userPlaceholder');
   }
   if (props.type === 'DEPT') {
-    return t('选择部门');
+    return t('permission.view.deptPlaceholder');
   }
-  return t('选择组');
+  return t('permission.view.groupPlaceholder');
 });
 
+/**
+ * Grid Column Configuration
+ *
+ * Defines the layout structure for the form grid,
+ * including labels and data binding for each section
+ */
 const gridColumns = [
   [
     {
@@ -157,15 +278,20 @@ const gridColumns = [
       offset: true
     },
     {
-      label: t('选择策略'),
+      label: t('permission.view.selectPolicy'),
       dataIndex: 'polices',
       offset: true
     }
   ]
 ];
 
+/**
+ * Policy selection parameters for filtering available policies
+ * Ensures only enabled and admin-accessible policies are shown
+ */
 const policyParams = { enabled: true, adminFullAssociated: true };
 </script>
+
 <template>
   <Modal
     :title="title"
@@ -175,7 +301,9 @@ const policyParams = { enabled: true, adminFullAssociated: true };
     :width="600"
     @cancel="handleCancel"
     @ok="handleOk">
+    <!-- Form Grid Layout -->
     <Grid :columns="gridColumns" :colon="false">
+      <!-- Member Selection Section -->
       <template #users>
         <SelectUser
           v-model:value="selectedUserIds"
@@ -190,10 +318,12 @@ const policyParams = { enabled: true, adminFullAssociated: true };
           optionLabelProp="label"
           @change="userChange" />
       </template>
+
+      <!-- Policy Selection Section -->
       <template #polices>
         <Select
           v-model:value="selectedPolicyIds"
-          placeholder="选择策略"
+          placeholder="permission.view.selectPolicy"
           :params="policyParams"
           class="w-full"
           mode="multiple"
@@ -207,7 +337,12 @@ const policyParams = { enabled: true, adminFullAssociated: true };
     </Grid>
   </Modal>
 </template>
+
 <style scoped>
+/**
+ * Custom styling for tab borders
+ * Uses CSS variable for consistent theming
+ */
 .my-tabs-bordr {
   border-color: var(--content-special-text);
 }
