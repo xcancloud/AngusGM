@@ -219,21 +219,21 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/stores/priv/license/index.vue')
       },
       {
-        path: '/messages/notice',
+        path: '/messages/notification',
         component: () => import('@/views/message/notice/index.vue')
       },
       {
-        path: '/messages/notice/:id',
+        path: '/messages/notification/:id',
         component: () => import('@/views/message/notice/components/detail/index.vue'),
         meta: {
           breadcrumb: [
-            { name: '公告', path: '/messages/notice' },
+            { name: '公告', path: '/messages/notification' },
             { name: '详情' }
           ]
         }
       },
       {
-        path: '/messages/notice/send',
+        path: '/messages/notification/send',
         component: () => import('@/views/message/notice/components/add/index.vue')
       },
       {

@@ -1,5 +1,6 @@
 {
   "permission": {
+    "title": "Permission Management",
     "name": "Authorization Policy",
     "defaultAuth": "Application Default Authorization",
     "openAuth": "Enable Application Authorization",

@@ -105,10 +105,11 @@
     },
     "messages": {
       "confirmTitle": "确认",
-      "confirmDelete": "确认是否删除`{name}`?",
+      "confirmDelete": "确认删除`{name}`?",
       "deleteSuccess": "删除成功",
       "deleteFailed": "删除失败",
       "addSuccess": "添加成功",
+      "submitSuccess": "提交成功",
       "editSuccess": "修改成功",
       "editFailed": "修改失败",
       "confirmEnable": "确定启用`{name}`吗？",

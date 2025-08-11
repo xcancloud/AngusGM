@@ -15,12 +15,14 @@ import enAuth from './locales/en/auth.json';
 import enOrganization from './locales/en/organization.json';
 import enPermission from './locales/en/permission.json';
 import enStatistics from './locales/en/statistics.json';
+import enMessages from './locales/en/messages.json';
 
 import zhCommon from './locales/zh_CN/common.json';
 import zhAuth from './locales/zh_CN/auth.json';
 import zhOrganization from './locales/zh_CN/organization.json';
 import zhPermission from './locales/zh_CN/permission.json';
 import zhStatistics from './locales/zh_CN/statistics.json';
+import zhMessages from './locales/zh_CN/messages.json';
 
 import zhEnumLocale from '@/enums/locale/zh_CN.json';
 import enEnumLocale from '@/enums/locale/en.json';
@@ -42,7 +44,8 @@ const bootstrap = async () => {
         ...enOrganization,
         ...enPermission,
         ...enStatistics,
-        ...enEnumLocale
+        ...enEnumLocale,
+        ...enMessages
       },
       zh_CN: {
         ...zhCommon,
@@ -50,7 +53,8 @@ const bootstrap = async () => {
         ...zhOrganization,
         ...zhPermission,
         ...zhStatistics,
-        ...zhEnumLocale
+        ...zhEnumLocale,
+        ...zhMessages
       }
     };
     const locale = i18n_.getI18nLanguage();

@@ -2,121 +2,18 @@
 import { onMounted, reactive, ref, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import {
-  modal,
-  Table,
-  PureCard,
-  SearchPanel,
-  notification,
-  Hints,
-  IconCount,
-  IconRefresh,
-  ButtonAuth
-} from '@xcan-angus/vue-ui';
+import { modal, Table, PureCard, SearchPanel, notification, Hints, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { app, GM } from '@xcan-angus/infra';
 import { NoticeScope, SentType } from '@/enums/enums';
 import { Tooltip } from 'ant-design-vue';
 
 import { notice } from '@/api';
-import type { FormDataType } from './interface';
+import type { NoticeDataType } from './PropsType';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 
 const router = useRouter();
 const { t } = useI18n();
-
-const columns = [
-  {
-    key: 'id',
-    dataIndex: 'id',
-    title: 'ID',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'content',
-    dataIndex: 'content',
-    title: t('noticeContent'),
-    ellipsis: true
-  },
-  {
-    key: 'scope',
-    dataIndex: 'scope',
-    title: t('noticeScope'),
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'sendType',
-    dataIndex: 'sendType',
-    title: t('sendType'),
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'timingDate',
-    dataIndex: 'timingDate',
-    title: t('timingDate'),
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'createdByName',
-    dataIndex: 'createdByName',
-    title: t('sender'),
-    width: '14%'
-  },
-  {
-    key: 'createdDate',
-    dataIndex: 'createdDate',
-    title: t('createdDate'),
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'action',
-    dataIndex: 'action',
-    title: t('operation'),
-    width: '5%',
-    align: 'center'
-  }
-];
-
-const searchOpt = [
-  {
-    type: 'input',
-    allowClear: true,
-    valueKey: 'content',
-    placeholder: t('noticeContentPlaceholder')
-  },
-  {
-    type: 'select-enum',
-    allowClear: true,
-    valueKey: 'scope',
-    enumKey: NoticeScope,
-    placeholder: t('noticeScope')
-  },
-  {
-    type: 'select-enum',
-    allowClear: true,
-    valueKey: 'sendType',
-    enumKey: SentType,
-    placeholder: t('sendType')
-  }
-];
-
-const showCount = ref(true);
-const searchParams = ref([]);
 
 const pagination = reactive({
   pageSize: 10,
@@ -124,9 +21,13 @@ const pagination = reactive({
   total: 0
 });
 
-const dataSource = ref<FormDataType[]>([]);
+const showCount = ref(true);
+const searchParams = ref([]);
+const loading = ref(false);
+const disabled = ref(false);
+const noticeData = ref<NoticeDataType[]>([]);
 
-const getParams = () => {
+const getQueryParams = () => {
   const { pageSize, current } = pagination;
   return {
     pageSize,
@@ -136,25 +37,23 @@ const getParams = () => {
   };
 };
 
-const loading = ref(false);
-const disabled = ref(false);
-
 const getNoticeList = async () => {
   if (loading.value) {
     return;
   }
-  const params = getParams();
+  const params = getQueryParams();
   loading.value = true;
   const [error, res] = await notice.getNoticeList(params);
   loading.value = false;
   if (error) {
     return;
   }
-  dataSource.value = res.data?.list || [];
-  pagination.total = res.data.total;
+
+  pagination.total = Number(res.data.total || 0);
+  noticeData.value = res.data?.list || [];
 };
 
-const pageChange = async (page) => {
+const changePage = async (page) => {
   const { pageSize, current } = page;
   pagination.pageSize = pageSize;
   pagination.current = current;
@@ -163,7 +62,7 @@ const pageChange = async (page) => {
   disabled.value = false;
 };
 
-const changePanel = async (value) => {
+const changeSearchPanel = async (value) => {
   searchParams.value = value;
   pagination.current = 1;
   disabled.value = true;
@@ -172,21 +71,21 @@ const changePanel = async (value) => {
 };
 
 const toSendNotice = () => {
-  router.push('/messages/notice/send');
+  router.push('/messages/notification/send');
 };
 
-const delNotice = (item: FormDataType) => {
+const deleteNotice = (item: NoticeDataType) => {
   modal.confirm({
     centered: true,
-    title: t('deleteNotice'),
-    content: t('delNoticeTip'),
+    title: t('common.messages.delete'),
+    content: t('notification.messages.confirmDelete'),
     async onOk () {
       const [error] = await notice.deleteNotice([item.id as string]);
       if (error) {
         notification.error(error.message);
       }
-      notification.success('删除成功');
-      if (pagination.current > 1 && dataSource.value.length === 1) {
+      notification.success('common.messages.deleteSuccess');
+      if (pagination.current > 1 && noticeData.value.length === 1) {
         pagination.current = pagination.current - 1;
       }
       disabled.value = true;
@@ -196,6 +95,87 @@ const delNotice = (item: FormDataType) => {
   });
 };
 
+const searchOptions = [
+  {
+    type: 'input',
+    allowClear: true,
+    valueKey: 'content',
+    placeholder: t('notification.placeholder.content')
+  },
+  {
+    type: 'select-enum',
+    allowClear: true,
+    valueKey: 'scope',
+    enumKey: NoticeScope,
+    placeholder: t('notification.placeholder.scope')
+  },
+  {
+    type: 'select-enum',
+    allowClear: true,
+    valueKey: 'sendType',
+    enumKey: SentType,
+    placeholder: t('notification.placeholder.sendType')
+  }
+];
+
+const columns = [
+  {
+    title: t('notification.columns.content'),
+    key: 'content',
+    dataIndex: 'content',
+    ellipsis: true
+  },
+  {
+    title: t('notification.columns.scope'),
+    key: 'scope',
+    dataIndex: 'scope',
+    width: '8%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: t('notification.columns.sendType'),
+    key: 'sendType',
+    dataIndex: 'sendType',
+    width: '8%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: t('notification.columns.timingDate'),
+    key: 'timingDate',
+    dataIndex: 'timingDate',
+    width: '12%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: t('common.columns.createdByName'),
+    key: 'createdByName',
+    dataIndex: 'createdByName',
+    width: '14%'
+  },
+  {
+    title: t('common.columns.createdDate'),
+    key: 'createdDate',
+    dataIndex: 'createdDate',
+    width: '12%',
+    customCell: () => {
+      return { style: 'white-space:nowrap;' };
+    }
+  },
+  {
+    title: t('common.actions.operation'),
+    key: 'action',
+    dataIndex: 'action',
+    width: '5%',
+    align: 'center'
+  }
+];
+
 onMounted(() => {
   getNoticeList();
 });
@@ -203,19 +183,19 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col min-h-full">
-    <Hints :text="t('globalNoticeTip')" class="mb-1" />
+    <Hints :text="t('notification.globalTip')" class="mb-1" />
     <PureCard class="p-3.5 flex-1">
       <Statistics
         resource="Notice"
         :barTitle="t('statistics.metrics.newNotification')"
         :router="GM"
-        dateType="MONTH"
+        dateType="YEAR"
         :visible="showCount" />
       <div class="flex items-start my-2 justify-between">
         <SearchPanel
-          :options="searchOpt"
+          :options="searchOptions"
           class="flex-1"
-          @change="changePanel" />
+          @change="changeSearchPanel" />
         <div class="flex items-center space-x-2">
           <ButtonAuth
             code="NoticePublish"
@@ -232,9 +212,11 @@ onMounted(() => {
       <Table
         :columns="columns"
         :loading="loading"
-        :dataSource="dataSource"
+        :dataSource="noticeData"
         :pagination="pagination"
-        @change="pageChange">
+        rowKey="id"
+        size="small"
+        @change="changePage">
         <template #bodyCell="{record, column, text}">
           <template v-if="column.dataIndex === 'content'">
             <Tooltip :title="text" placement="topLeft">
@@ -246,7 +228,7 @@ onMounted(() => {
               code="NoticeDelete"
               type="text"
               icon="icon-lajitong"
-              @click="delNotice(record)" />
+              @click="deleteNotice(record)" />
           </template>
           <template v-if="column.key === 'sendType'">
             {{ record.sendType.message }}
@@ -257,14 +239,13 @@ onMounted(() => {
           <template v-if="column.key === 'id'">
             <RouterLink
               v-if="app.has('NoticeDetail')"
-              :to="`/messages/notice/${record.id}`"
+              :to="`/messages/notification/${record.id}`"
               class="text-theme-special text-theme-text-hover whitespace-nowrap">
               {{ record.id }}
             </RouterLink>
           </template>
-          <!-- 定时发送 -->
           <template v-if="column.key==='timingDate'">
-            {{ record.sendType?.value === 'TIMING_SEND' ? record.timingDate : '--' }}
+            {{ record.sendType?.value === SentType.TIMING_SEND ? record.timingDate : '--' }}
           </template>
         </template>
       </Table>

@@ -1,5 +1,6 @@
 {
   "permission": {
+    "title": "权限管理",
     "name": "授权策略",
     "defaultAuth": "应用默认授权",
     "openAuth": "开通应用授权",

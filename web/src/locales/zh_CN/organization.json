@@ -290,20 +290,5 @@
     "messages": {
       "confirmDelete": "确定删除该标签吗？"
     }
-  },
-  "permission": {
-    "title": "权限管理",
-    "placeholder": {
-      "policyName": "查询策略名称"
-    },
-    "columns": {
-      "assocPolicies": {
-        "id": "策略ID",
-        "name": "策略名称",
-        "code": "策略编码",
-        "authByName": "授权人",
-        "authDate": "授权时间"
-      }
-    }
   }
 }

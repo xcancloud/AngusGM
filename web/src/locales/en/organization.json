@@ -290,20 +290,5 @@
     "messages": {
       "confirmDelete": "Are you sure you want to delete this tag?"
     }
-  },
-  "permission": {
-    "title": "Permission Management",
-    "placeholder": {
-      "policyName": "Query policy name"
-    },
-    "columns": {
-      "assocPolicies": {
-        "id": "Policy ID",
-        "name": "Policy Name",
-        "code": "Policy Code",
-        "authByName": "Authorized By",
-        "authDate": "Authorization Date"
-      }
-    }
   }
 }

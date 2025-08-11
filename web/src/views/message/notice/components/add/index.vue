@@ -1,56 +1,72 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Button, Form, FormItem, RadioGroup, Radio, Textarea } from 'ant-design-vue';
-import { notification, DatePicker, Select, SelectEnum, PureCard, Hints } from '@xcan-angus/vue-ui';
-import { enumUtils, appContext, GM } from '@xcan-angus/infra';
-import { SentType, NoticeScope } from '@/enums/enums';
+import { Button, Form, FormItem, Radio, RadioGroup, Textarea } from 'ant-design-vue';
+import { DatePicker, Hints, notification, PureCard, Select, SelectEnum } from '@xcan-angus/vue-ui';
+import { appContext, enumUtils, GM } from '@xcan-angus/infra';
+import { NoticeScope, SentType } from '@/enums/enums';
 import { useRouter } from 'vue-router';
 
-import type { FormDataType } from '../../interface';
+import type { NoticeDataType } from '../../PropsType';
 import { notice } from '@/api';
 
 const { t } = useI18n();
 const router = useRouter();
 
-const form: FormDataType = reactive({
+const labelCol = { span: 8 };
+const wrapperCol = { span: 16 };
+
+const formRef = ref();
+
+const form: NoticeDataType = reactive({
   content: '',
-  scope: 'GLOBAL',
+  scope: NoticeScope.GLOBAL,
   appCode: undefined,
   appName: undefined,
   editionType: undefined,
   appId: undefined,
-  sendType: 'SEND_NOW',
+  sendType: SentType.SEND_NOW,
   sendTimingDate: undefined,
   expirationDate: undefined
 });
 
+const resetForm = () => {
+  formRef.value.resetFields();
+  form.content = '';
+  form.scope = NoticeScope.GLOBAL;
+  form.sendType = SentType.SEND_NOW;
+  form.sendTimingDate = undefined;
+  form.expirationDate = undefined;
+  form.appCode = undefined;
+  form.appName = undefined;
+};
+
 const validateSendTime = () => {
   if (!form.sendTimingDate) {
-    return Promise.reject(new Error(t('sendTimeRequired')));
+    return Promise.reject(new Error(t('notification.messages.selectApplication')));
   }
   if (new Date(form.sendTimingDate as string) < new Date()) {
-    return Promise.reject(new Error(t('sendTimeMoreThanNow')));
+    return Promise.reject(new Error(t('notification.messages.sendTimeMoreThanNow')));
   }
   if (new Date(form.sendTimingDate as string) > new Date(form.expirationDate || '')) {
-    return Promise.reject(new Error(t('sendTimeMoreExpriedDate')));
+    return Promise.reject(new Error(t('notification.messages.sendTimeMoreExpiredDate')));
   }
   return Promise.resolve();
 };
 
 const validateExpirationDate = () => {
   if (!form.expirationDate) {
-    return Promise.reject(new Error(t('expriedDateRequired')));
+    return Promise.reject(new Error(t('notification.messages.expiredDateRequired')));
   }
   if (new Date(form.expirationDate as string) < new Date()) {
-    return Promise.reject(new Error(t('expriedDateMoreThanNow')));
+    return Promise.reject(new Error(t('notification.messages.expiredDateMoreThanNow')));
   }
   return Promise.resolve();
 };
 
 const formRules: any = reactive({
   content: [
-    { required: true, message: t('noticeContentRequired'), trigger: 'change' }
+    { required: true, message: t('notification.messages.noticeContentRequired'), trigger: 'change' }
   ],
   sendTimingDate: [
     { required: true, validator: validateSendTime, type: 'string' }
@@ -59,22 +75,12 @@ const formRules: any = reactive({
     { required: true, validator: validateExpirationDate, type: 'string' }
   ],
   appId: [
-    { required: true, message: t('applyRequired'), type: 'string' }
+    { required: true, message: t('notification.messages.selectApplication'), type: 'string' }
   ],
   scope: [
     { required: true }
   ]
 });
-
-const labelCol = {
-  span: 8
-};
-
-const wrapperCol = {
-  span: 16
-};
-
-const formRef = ref();
 
 const handleDateChange = (value: string): void => {
   form.sendTimingDate = value;
@@ -84,9 +90,8 @@ const handleExpirationDate = (value: string): void => {
   form.expirationDate = value;
 };
 
-// 公告时间改变
 const handleScopeChange = (item: string) => {
-  if (item === 'GLOBAL') {
+  if (item === NoticeScope.GLOBAL) {
     form.appCode = undefined;
     form.appName = undefined;
     form.appId = undefined;
@@ -94,9 +99,8 @@ const handleScopeChange = (item: string) => {
   }
 };
 
-// 发送方式改变
 const handleSendTypeChange = (item: string) => {
-  if (item === 'SEND_NOW') {
+  if (item === SentType.SEND_NOW) {
     form.sendTimingDate = undefined;
   }
 };
@@ -110,55 +114,36 @@ const handleChange = (_value, options) => {
 
 const cancel = () => {
   resetForm();
-  router.push('/messages/notice');
+  router.push('/messages/notification');
 };
 
-// 提交功能
 const submitForm = () => {
   formRef.value
     .validate()
     .then(async () => {
-      const params: FormDataType = {
+      const params: NoticeDataType = {
         ...form
       };
       const [error] = await notice.addNotice(params);
       if (error) {
         return;
       }
-      notification.success(t('successSubmit'));
+      notification.success(t('common.messages.submitSuccess'));
       resetForm();
-      router.push('/messages/notice');
+      await router.push('/messages/notification');
     });
 };
 
-// 取消功能
-const resetForm = () => {
-  formRef.value.resetFields();
-  form.content = '';
-  form.scope = 'GLOBAL';
-  form.sendType = 'SEND_NOW';
-  form.sendTimingDate = undefined;
-  form.expirationDate = undefined;
-  form.appCode = undefined;
-  form.appName = undefined;
-};
-
-// 字典常量
 const enumsList: {
   noticeScopeList: Array<any>
   SentTypeList: Array<any>
 } = reactive({
-  noticeScopeList: [], // 公告范围
-  SentTypeList: [] // 发送方式
+  noticeScopeList: [],
+  SentTypeList: []
 });
 
-// 获取字典
-const getDirectory = async () => {
-  enumsList.SentTypeList = enumUtils.enumToMessages(SentType);
-};
-
 onMounted(() => {
-  getDirectory();
+  enumsList.SentTypeList = enumUtils.enumToMessages(SentType);
 });
 </script>
 <template>
@@ -173,22 +158,22 @@ onMounted(() => {
       size="small">
       <FormItem
         colon
-        :label="t('noticeDescription')"
+        :label="t('notification.columns.content')"
         name="content">
         <Textarea
           v-model:value="form.content"
-          :placeholder="t('noticeContentPlace')"
+          :placeholder="t('notification.placeholder.inputContent')"
           :rows="4"
           :maxlength="200"
           size="small" />
       </FormItem>
       <FormItem
         colon
-        :label="t('noticeScope')"
+        :label="t('notification.columns.scope')"
         name="scope">
         <SelectEnum
           v-model:value="form.scope"
-          :placeholder="t('noticeScopePlaceholder')"
+          :placeholder="t('notification.placeholder.scope')"
           internal
           size="small"
           :enumKey="NoticeScope"
@@ -196,9 +181,9 @@ onMounted(() => {
           @change="handleScopeChange" />
       </FormItem>
       <div class="text-3 pl-1/3 -mt-4">
-        <Hints :text="t('globalNoticeTip')" class="w-150 mb-1" />
+        <Hints :text="t('notification.globalTip')" class="w-150 mb-1" />
       </div>
-      <template v-if="form.scope === 'APP'">
+      <template v-if="form.scope === NoticeScope.APP">
         <FormItem
           colon
           :label="t('selectApply')"
@@ -218,7 +203,9 @@ onMounted(() => {
           </Select>
         </FormItem>
       </template>
-      <FormItem :label="t('expirationDate') + ':'" name="expirationDate">
+      <FormItem
+        :label="t('notification.columns.expiredDate') + ':'"
+        name="expirationDate">
         <DatePicker
           v-model:value="form.expirationDate"
           class="w-full"
@@ -228,7 +215,7 @@ onMounted(() => {
       </FormItem>
       <FormItem
         colon
-        :label="t('sendType')"
+        :label="t('notification.columns.sendType')"
         name="sendType">
         <RadioGroup v-model:value="form.sendType" size="small">
           <Radio
@@ -241,10 +228,10 @@ onMounted(() => {
         </RadioGroup>
       </FormItem>
       <FormItem
-        v-if="form.sendType === 'TIMING_SEND'"
+        v-if="form.sendType === SentType.TIMING_SEND"
         :label="t('sendDate')"
         class="sendTimingDate"
-        :name="(form.sendType === 'TIMING_SEND' ? 'sendTimingDate' : '')">
+        :name="(form.sendType === SentType.TIMING_SEND ? 'sendTimingDate' : '')">
         <DatePicker
           v-model:value="form.sendTimingDate"
           :placeholder="t('selectTime')"
@@ -258,13 +245,13 @@ onMounted(() => {
           size="small"
           type="primary"
           @click="submitForm">
-          {{ t('sure') }}
+          {{ t('common.actions.ok') }}
         </Button>
         <Button
           size="small"
           class="ml-5"
           @click="cancel">
-          {{ t('cancel') }}
+          {{ t('common.actions.cancel') }}
         </Button>
       </FormItem>
     </Form>

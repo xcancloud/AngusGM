@@ -2,28 +2,22 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
-  Grid,
-  Hints,
-  Icon,
-  IconRequired,
-  Image,
-  Input,
-  NoData,
-  notification,
-  PureCard,
-  SelectEnum,
-  Spin
+  Grid, Hints, Icon, IconRequired, Image, Input, NoData, notification, PureCard, SelectEnum, Spin
 } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, ReceiveObjectType } from '@xcan-angus/infra';
 import { Checkbox, CheckboxGroup, Divider, Pagination, Popover, Tooltip, Tree } from 'ant-design-vue';
 import { dept, group, user } from '@/api';
 
+/**
+ * Component props interface
+ * Defines the properties passed from parent component
+ */
 interface Props {
   receiveObjectType: ReceiveObjectType;
-  userList: { id: string, fullName: string }[];
-  deptList: { id: string, name: string }[];
-  groupList: { id: string, name: string }[];
+  userList: { id: number, fullName: string }[];
+  deptList: { id: number, name: string }[];
+  groupList: { id: number, name: string }[];
 }
 
 withDefaults(defineProps<Props>(), {
@@ -32,66 +26,127 @@ withDefaults(defineProps<Props>(), {
   groupList: () => []
 });
 
+/**
+ * Component emits interface
+ * Defines the events that this component can emit to parent
+ */
 const emit = defineEmits<{
   (e: 'update:receiveObjectType', value: ReceiveObjectType): void,
-  (e: 'update:userList', value: { id: string, name: string }[]): void,
-  (e: 'update:groupList', value: { id: string, name: string }[]): void,
-  (e: 'update:deptList', value: { id: string, name: string }[]): void,
+  (e: 'update:userList', value: { id: number, name: string }[]): void,
+  (e: 'update:groupList', value: { id: number, name: string }[]): void,
+  (e: 'update:deptList', value: { id: number, name: string }[]): void,
 }>();
 
 const { t } = useI18n();
 
+/**
+ * Current recipient object type
+ * Determines which type of recipients to display and manage
+ */
 const receiveType = ref<ReceiveObjectType>(ReceiveObjectType.USER);
 
-const excludes = ({ value }) => {
-  return ['TO_POLICY', 'POLICY', 'ALL'].includes(value);
-};
-
+/**
+ * Tenant selection disabled state
+ * Prevents tenant selection for certain recipient types
+ */
 const tenantDisabled = ref(false);
 
+/**
+ * First load flag for loading states
+ * Used to show appropriate loading indicators
+ */
 const isFirstLoad = ref(true);
+
+/**
+ * Loading state for API operations
+ * Shows loading spinner during data fetching
+ */
 const loading = ref(false);
+
+/**
+ * Total count of available items
+ * Used for pagination calculations
+ */
 const total = ref(0);
-// 用户列表
-const userDataList = ref<{ id: string, fullName: string, avatar?: '', isEdit?: boolean }[]>([]);
+
+/**
+ * Check if recipient type should be excluded
+ * Filters out certain recipient types from selection
+ */
+const excludes = ({ value }: { value: any }) => {
+  return [ReceiveObjectType.TO_POLICY, ReceiveObjectType.POLICY, ReceiveObjectType.ALL].includes(value);
+};
+
+/**
+ * User data list for display
+ * Contains user information for recipient selection
+ */
+const userDataList = ref<{ id: number, fullName: string, avatar?: '', isEdit?: boolean }[]>([]);
+
+/**
+ * Search and pagination parameters
+ * Manages API request parameters for data fetching
+ */
 const params = ref<{ pageNo: number, pageSize: number, filters: any[], fullTextSearch: boolean }>({
   pageNo: 1,
   pageSize: 30,
   filters: [],
   fullTextSearch: true
 });
-const loadUserList = async () => {
-  loading.value = true;
-  const [error, { data }] = await user.getUserList(params.value);
-  loading.value = false;
-  isFirstLoad.value = false;
 
-  if (error) {
-    return;
+/**
+ * Fetch user list from API
+ * Retrieves paginated user data for recipient selection
+ */
+const getUserList = async () => {
+  loading.value = true;
+
+  try {
+    const [error, { data }] = await user.getUserList(params.value);
+
+    if (error) {
+      return;
+    }
+
+    userDataList.value = data.list;
+    total.value = +data.total;
+  } finally {
+    loading.value = false;
+    isFirstLoad.value = false;
   }
-  loading.value = false;
-  userDataList.value = data.list;
-  total.value = +data.total;
 };
 
+/**
+ * Handle pagination changes
+ * Updates page parameters and fetches corresponding data
+ */
 const paginationChange = (page: number, size: number) => {
   params.value.pageNo = page;
   params.value.pageSize = size;
-  // checkedList.value = [];
+
   switch (receiveType.value) {
-    case 'USER':
-      loadUserList();
+    case ReceiveObjectType.USER:
+      getUserList();
       break;
-    case 'GROUP':
-      loadGroupList();
+    case ReceiveObjectType.GROUP:
+      getGroupList();
       break;
-    case 'DEPT':
-      loadDeptList();
+    case ReceiveObjectType.DEPT:
+      getDeptList();
       break;
   }
 };
 
+/**
+ * Selected recipients list
+ * Tracks which recipients are currently selected
+ */
 const checkedList = ref<{ id: string, name: string }[]>([]);
+
+/**
+ * Handle recipient object type change
+ * Resets data and fetches new recipient list when type changes
+ */
 const receiveObjectTypeChange = (value: ReceiveObjectType) => {
   params.value.pageNo = 1;
   checkedList.value = [];
@@ -101,17 +156,19 @@ const receiveObjectTypeChange = (value: ReceiveObjectType) => {
   deptDataList.value = [];
   deptTreeData.value = [];
   groupDataList.value = [];
-  if (!['TENANT'].includes(value)) {
+
+  if (![ReceiveObjectType.TENANT].includes(value)) {
     tenantDisabled.value = false;
+
     switch (value) {
-      case 'USER':
-        loadUserList();
+      case ReceiveObjectType.USER:
+        getUserList();
         break;
-      case 'GROUP':
-        loadGroupList();
+      case ReceiveObjectType.GROUP:
+        getGroupList();
         break;
-      case 'DEPT':
-        loadDeptList();
+      case ReceiveObjectType.DEPT:
+        getDeptList();
         break;
     }
   }
@@ -119,40 +176,84 @@ const receiveObjectTypeChange = (value: ReceiveObjectType) => {
   emit('update:receiveObjectType', value);
 };
 
+/**
+ * Expanded tree node keys
+ * Tracks which tree nodes are expanded in department tree
+ */
 const expandedKeys = ref<string[]>([]);
 
+/**
+ * Group data list for display
+ * Contains group information for recipient selection
+ */
 const groupDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
-const loadGroupList = async () => {
+
+/**
+ * Fetch group list from API
+ * Retrieves paginated group data for recipient selection
+ */
+const getGroupList = async () => {
   loading.value = true;
-  const [error, { data }] = await group.getGroupList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
+
+  try {
+    const [error, { data }] = await group.getGroupList(params.value);
+
+    if (error) {
+      return;
+    }
+
+    groupDataList.value = data.list;
+    total.value = +data.total;
+  } finally {
+    loading.value = false;
   }
-  groupDataList.value = data.list;
-  total.value = +data.total;
 };
 
+/**
+ * Department tree data structure
+ * Hierarchical representation of departments for tree display
+ */
 const deptTreeData = ref<any[]>([]);
+
+/**
+ * Department data list for display
+ * Contains department information for recipient selection
+ */
 const deptDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
-const loadDeptList = async () => {
+
+/**
+ * Fetch department list from API
+ * Retrieves paginated department data and builds tree structure
+ */
+const getDeptList = async () => {
   loading.value = true;
-  const [error, { data }] = await dept.getDeptList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
+
+  try {
+    const [error, { data }] = await dept.getDeptList(params.value);
+    if (error) {
+      return;
+    }
+
+    deptDataList.value = data.list;
+    deptTreeData.value = buildTree(data.list);
+    total.value = +data.total;
+  } finally {
+    loading.value = false;
   }
-  deptDataList.value = data.list;
-  deptTreeData.value = buildTree(data.list);
-  total.value = +data.total;
 };
 
-const buildTree = (_treeData) => {
+/**
+ * Build hierarchical tree structure from flat list
+ * Converts flat department list to nested tree structure
+ */
+const buildTree = (_treeData: any[]) => {
   if (!_treeData?.length) {
     return [];
   }
+
   const result: any[] = [];
-  const itemMap = {};
+  const itemMap: any = {};
+
   for (const item of _treeData) {
     const id = item.id;
     const pid = item.pid;
@@ -181,11 +282,17 @@ const buildTree = (_treeData) => {
       itemMap[pid].children.push(treeItem);
     }
   }
+
   return result;
 };
 
+/**
+ * Handle individual item checkbox change
+ * Updates selected items list when checkbox is toggled
+ */
 const handleCheck = (event: InputEvent, obj: { id: string; name: string }) => {
-  const checked = event.target.checked;
+  const checked = (event.target as HTMLInputElement).checked;
+
   if (checked) {
     checkedList.value.push(obj);
   } else {
@@ -193,9 +300,14 @@ const handleCheck = (event: InputEvent, obj: { id: string; name: string }) => {
   }
 };
 
+/**
+ * Handle department tree checkbox change
+ * Updates selected items list when department tree checkbox is toggled
+ */
 const handleCheckDept = (_checkIds: string[], e: { checked: boolean, node: { id: string, name: string } }) => {
   const checked = e.checked;
   const obj = { id: e.node.id, name: e.node.name };
+
   if (checked) {
     checkedList.value.push(obj);
   } else {
@@ -203,150 +315,203 @@ const handleCheckDept = (_checkIds: string[], e: { checked: boolean, node: { id:
   }
 };
 
+/**
+ * Computed disabled state
+ * Determines if recipient selection should be disabled
+ */
 const disabled = computed(() => {
-  return ['TENANT', 'ALL'].includes(receiveType.value);
+  return [ReceiveObjectType.TENANT, ReceiveObjectType.ALL].includes(receiveType.value);
 });
 
+/**
+ * Handle search input changes with debouncing
+ * Filters recipient data based on search input
+ */
 const searchChange = debounce(duration.search, (event: any): void => {
   const value = event.target.value;
   checkedList.value = [];
-  if (receiveType.value === 'USER') {
+
+  if (receiveType.value === ReceiveObjectType.USER) {
     params.value.filters = value ? [{ key: 'fullName', op: 'MATCH_END', value: value }] : [];
-    loadUserList();
+    getUserList();
   } else {
-    if (['DEPT', 'GROUP'].includes(receiveType.value)) {
+    if ([ReceiveObjectType.DEPT, ReceiveObjectType.GROUP].includes(receiveType.value)) {
       params.value.filters = value ? [{ key: 'name', op: 'MATCH_END', value: value }] : [];
-      receiveType.value === 'DEPT' ? loadDeptList() : loadGroupList();
+      receiveType.value === ReceiveObjectType.DEPT ? getDeptList() : getGroupList();
     }
   }
 });
 
-watch(() => checkedList.value, () => {
-  if (receiveType.value === 'USER') {
-    emit('update:userList', checkedList.value);
+/**
+ * Get popup container for tooltips and popovers
+ * Ensures proper positioning of overlay elements
+ */
+const getPopupContainer = (node: HTMLElement): HTMLElement => {
+  if (node) {
+    return node.parentNode as HTMLElement;
   }
+  return document.body;
+};
 
-  if (receiveType.value === 'DEPT') {
-    emit('update:deptList', checkedList.value);
-  }
+/**
+ * Grid columns configuration for user details
+ * Defines layout for user information display in popover
+ */
+const columns = [
+  [{ label: t('common.columns.name'), dataIndex: 'fullName' }, { label: 'ID', dataIndex: 'id' }]
+];
 
-  if (receiveType.value === 'GROUP') {
-    emit('update:groupList', checkedList.value);
-  }
-}, {
-  immediate: true
-});
+/**
+ * Tree field mapping configuration
+ * Maps data fields to tree component expected properties
+ */
+const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
 
+/**
+ * Computed checked item IDs
+ * Extracts IDs from selected items for checkbox state management
+ */
 const checkedIds = computed(() => {
   return checkedList.value.map(i => i.id);
 });
 
-// 当前页全选
+/**
+ * Indeterminate checkbox state
+ * Indicates partial selection state for select all functionality
+ */
 const indeterminate = ref<boolean>(false);
+
+/**
+ * Computed select all state
+ * Determines if all visible items are currently selected
+ */
 const checkedAll = computed(() => {
-  if (receiveType.value === 'USER') {
+  if (receiveType.value === ReceiveObjectType.USER) {
     return userDataList.value.every(item => {
       return checkedIds.value.includes(item.id);
     });
   }
-  if (receiveType.value === 'GROUP') {
+  if (receiveType.value === ReceiveObjectType.GROUP) {
     return groupDataList.value.every(item => {
       return checkedIds.value.includes(item.id);
     });
   }
-  if (receiveType.value === 'DEPT') {
+  if (receiveType.value === ReceiveObjectType.DEPT) {
     return deptDataList.value.every(item => {
       return checkedIds.value.includes(item.id);
     });
   }
   return false;
 });
-const onCheckAllChange = e => {
+
+/**
+ * Handle select all checkbox change
+ * Selects or deselects all visible items based on checkbox state
+ */
+const onCheckAllChange = (e: any) => {
   if (checkedList.value.length >= 500 || deptDataList.value.length >= 500) {
-    notification.error('最多选中500条数据');
+    notification.error(t('messages.messages.receiveObjectLimit'));
     return;
   }
+
   if (e.target.checked) {
     indeterminate.value = false;
+
     switch (receiveType.value) {
-      case 'USER':
-        // checkedList.value = userDataList.value.map(item => item.id);
+      case ReceiveObjectType.USER:
         userDataList.value.forEach(item => {
           if (!checkedIds.value.includes(item.id)) {
             checkedList.value.push({ id: item.id, name: item.fullName });
           }
         });
         break;
-      case 'GROUP':
-        // checkedList.value = groupDataList.value.map(item => item.id);
+      case ReceiveObjectType.GROUP:
         groupDataList.value.forEach(item => {
           if (!checkedIds.value.includes(item.id)) {
             checkedList.value.push({ id: item.id, name: item.name });
           }
         });
         break;
-      case 'DEPT':
+      case ReceiveObjectType.DEPT:
         deptDataList.value.forEach(item => {
           if (!checkedIds.value.includes(item.id)) {
             checkedList.value.push({ id: item.id, name: item.name });
           }
         });
-        // checkedList.value = deptDataList.value.map(item => item.id);
         break;
     }
   } else {
     switch (receiveType.value) {
-      case 'USER':
-        checkedList.value = checkedList.value.filter(checked => !userDataList.value.map(item => item.id).includes(checked.id));
+      case ReceiveObjectType.USER:
+        checkedList.value = checkedList.value
+          .filter(checked => !userDataList.value.map(item => item.id).includes(checked.id));
         break;
-      case 'GROUP':
-        checkedList.value = checkedList.value.filter(checked => !groupDataList.value.map(item => item.id).includes(checked.id));
+      case ReceiveObjectType.GROUP:
+        checkedList.value = checkedList.value
+          .filter(checked => !groupDataList.value.map(item => item.id).includes(checked.id));
         break;
-      case 'DEPT':
-        checkedList.value = checkedList.value.filter(checked => !deptDataList.value.map(item => item.id).includes(checked.id));
+      case ReceiveObjectType.DEPT:
+        checkedList.value = checkedList.value
+          .filter(checked => !deptDataList.value.map(item => item.id).includes(checked.id));
         break;
     }
     indeterminate.value = false;
   }
 };
 
-// 显示全选
+/**
+ * Computed show select all state
+ * Determines if select all checkbox should be visible
+ */
 const showAllSelect = computed(() => {
   switch (receiveType.value) {
-    case 'USER':
+    case ReceiveObjectType.USER:
       return !!userDataList.value.length;
-    case 'GROUP':
+    case ReceiveObjectType.GROUP:
       return !!groupDataList.value.length;
-    case 'DEPT':
+    case ReceiveObjectType.DEPT:
       return !!deptDataList.value.length;
   }
   return false;
 });
 
-onMounted(() => {
-  emit('update:receiveObjectType', receiveType.value);
-  loadUserList();
-});
-
-const getPopupContainer = (node: HTMLElement): HTMLElement => {
-  if (node) {
-    return node.parentNode as HTMLElement;
+/**
+ * Watch selected items changes
+ * Synchronizes selected items with parent component
+ */
+watch(() => checkedList.value, () => {
+  if (receiveType.value === ReceiveObjectType.USER) {
+    emit('update:userList', checkedList.value);
   }
 
-  return document.body;
-};
-const columns = [
-  [{ label: '名称', dataIndex: 'fullName' }, { label: 'ID', dataIndex: 'id' }]
-];
+  if (receiveType.value === ReceiveObjectType.DEPT) {
+    emit('update:deptList', checkedList.value);
+  }
 
-const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
+  if (receiveType.value === ReceiveObjectType.GROUP) {
+    emit('update:groupList', checkedList.value);
+  }
+}, {
+  immediate: true
+});
+
+/**
+ * Initialize component on mount
+ * Sets up initial recipient type and loads user data
+ */
+onMounted(() => {
+  emit('update:receiveObjectType', receiveType.value);
+  getUserList();
+});
 </script>
+
 <template>
   <PureCard class="w-100 h-full">
     <Spin class="h-full p-2 text-3 leading-3 flex flex-col" :spinning="loading">
+      <!-- Recipient Type Selection Header -->
       <div class="flex items-center whitespace-nowrap">
         <IconRequired class="mr-1" />
-        {{ t('recipient') }}
+        {{ t('messages.columns.recipient') }}
         <SelectEnum
           v-model:value="receiveType"
           class="w-full ml-2"
@@ -355,21 +520,28 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
           @change="receiveObjectTypeChange">
         </SelectEnum>
       </div>
+
       <Divider />
-      <template v-if="receiveType !=='TENANT'">
+
+      <!-- Recipient Selection Content -->
+      <template v-if="receiveType !== ReceiveObjectType.TENANT">
+        <!-- Search Input -->
         <Input
           :disabled="disabled"
-          :placeholder="t('appName')"
+          :placeholder="t('messages.placeholder.name')"
           allowClear
           @change="searchChange" />
+
+        <!-- Recipient List Container -->
         <div class="flex-1 overflow-y-auto -mr-2 pt-2">
+          <!-- Group Recipients -->
           <template v-if="receiveType === 'GROUP'">
             <template v-if="groupDataList.length">
               <CheckboxGroup
                 :value="checkedIds"
                 class="space-y-2">
                 <div
-                  v-for="item, in groupDataList"
+                  v-for="item in groupDataList"
                   :key="item.id"
                   class="flex-1 flex items-center">
                   <Checkbox
@@ -397,7 +569,9 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
               </template>
             </template>
           </template>
-          <template v-if="receiveType === 'USER'">
+
+          <!-- User Recipients -->
+          <template v-if="receiveType === ReceiveObjectType.USER">
             <template v-if="userDataList.length">
               <CheckboxGroup
                 :value="checkedIds"
@@ -440,7 +614,9 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
               </template>
             </template>
           </template>
-          <template v-if="receiveType === 'DEPT'">
+
+          <!-- Department Recipients -->
+          <template v-if="receiveType === ReceiveObjectType.DEPT">
             <template v-if="deptTreeData.length">
               <Tree
                 v-model:expandedKeys="expandedKeys"
@@ -464,6 +640,8 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
             </template>
           </template>
         </div>
+
+        <!-- Pagination -->
         <Pagination
           :current="params.pageNo"
           :pageSize="params.pageSize"
@@ -475,15 +653,17 @@ const treeFieldNames = { title: 'name', key: 'id', children: 'children' };
           size="small"
           class="mt-2 mr-2"
           @change="paginationChange" />
+
+        <!-- Select All Section -->
         <template v-if="showAllSelect">
           <div class="border-t border-theme-divider mt-2 py-1 flex items-center">
             <Checkbox
               :checked="checkedAll"
               class="text-3 leading-3"
               @change="onCheckAllChange">
-              {{ t('当前页全选') }}
+              {{ t('common.form.selectAll') }}
             </Checkbox>
-            <Hints :text="t('sendTips')" class="mt-1.5" />
+            <Hints :text="t('messages.messages.receiveObjectLimit')" class="mt-1.5" />
           </div>
         </template>
       </template>

@@ -108,6 +108,7 @@
       "deleteSuccess": "Delete successful",
       "deleteFailed": "Delete failed",
       "addSuccess": "Add successful",
+      "submitSuccess": "Submit successful",
       "editSuccess": "Edit successful",
       "editFailed": "Edit failed",
       "confirmEnable": "Are you sure you want to enable `{name}`?",

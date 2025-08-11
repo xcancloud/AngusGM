@@ -1,11 +1,12 @@
 import type { Dayjs } from 'dayjs';
+import { NoticeScope, SentType } from '@/enums/enums';
 
-export interface FormDataType {
+export interface NoticeDataType {
   content: string;
-  scope: string;
+  scope: NoticeScope;
   appCode?: string | undefined;
   appName?: string | undefined;
-  sendType: string;
+  sendType: SentType;
   sendTimingDate?: Dayjs | string | undefined;
 
   [key: string]: unknown;

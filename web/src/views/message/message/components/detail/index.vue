@@ -7,80 +7,106 @@ import { Card, Grid, Image } from '@xcan-angus/vue-ui';
 import RichEditor from '@/components/RichEditor/index.vue';
 
 import { message } from '@/api';
-import { ContentType, ReceiveObjectDataType } from './PropsType';
-
-// import RichBrowser from '@xcan/browser';
+import { ReceiveObjectData, ReceiveObjectDataType } from '../PropsType';
 
 const { t } = useI18n();
 
 const route = useRoute();
-const content: ContentType = reactive({});
 
+/**
+ * Message content data structure
+ * Stores all message details including metadata and recipient information
+ */
+const content: ReceiveObjectData = reactive({});
+
+/**
+ * Flag to track if this is the first data load
+ * Used to show skeleton loading state only on initial load
+ */
 const firstLoad = ref(true);
 
+/**
+ * Fetch message detail from API
+ * Retrieves complete message information including recipients and content
+ */
 const getMessageDetail = async () => {
   const id = route.params.id as string;
-  const [error, res] = await message.getMessageDetail(id);
-  firstLoad.value = false;
 
-  if (error) {
-    return;
+  try {
+    const [error, res] = await message.getMessageDetail(id);
+
+    if (error) {
+      return;
+    }
+
+    // Update content with message details
+    content.readNum = res.data.readNum;
+    content.sentNum = res.data.sentNum;
+    content.status = res.data.status;
+    content.timingDate = res.data.timingDate;
+    content.fullName = res.data.createdByName;
+    content.title = res.data.title;
+    content.receiveObjectType = res.data.receiveObjectType;
+    content.receiveObjectData = res.data.receiveObjects;
+    content.content = res.data.content;
+    content.receiveObjectDataLength = res.data.sentNum;
+    content.sentType = res.data.sentType.message;
+    content.receiveType = res.data.receiveType.message;
+
+    // Extract recipient names for display
+    const arr: Array<string> = [];
+    (res.data.receiveObjects || []).forEach((ele: ReceiveObjectDataType) => {
+      arr.push(ele.name);
+    });
+    content.receiveObjectDataName = res.data.receiveTenantName || t('messages.allUsers');
+  } finally {
+    firstLoad.value = false;
   }
-
-  content.readNum = res.data.readNum;
-  content.sentNum = res.data.sentNum;
-  content.status = res.data.status;
-  content.timingDate = res.data.timingDate;
-  content.fullName = res.data.createdByName;
-  content.title = res.data.title;
-  content.receiveObjectType = res.data.receiveObjectType;
-  content.receiveObjectData = res.data.receiveObjects;
-  content.content = res.data.content;
-  content.receiveObjectDataLength = res.data.sentNum;
-  content.sentType = res.data.sentType.message;
-  content.receiveType = res.data.receiveType.message;
-  const arr: Array<string> = [];
-  (res.data.receiveObjects || []).forEach((ele: ReceiveObjectDataType) => {
-    arr.push(ele.name);
-  });
-  content.receiveObjectDataName = res.data.receiveTenantName || t('allUser');
 };
 
+/**
+ * Grid column configuration for basic message information
+ * Organized in two rows for better layout and readability
+ */
 const gridColumns = [
   [
     {
-      label: t('sender'),
+      label: t('messages.columns.createdByName'),
       dataIndex: 'fullName'
     },
     {
-      label: t('sendMethod'),
+      label: t('messages.columns.sendType'),
       dataIndex: 'sentType'
     },
     {
-      label: t('receivingMethod'),
+      label: t('messages.columns.receiveType'),
       dataIndex: 'receiveType'
     },
     {
-      label: t('sendDate'),
+      label: t('messages.columns.timingDate'),
       dataIndex: 'timingDate'
     }
   ],
   [
     {
-      label: t('receiveNum'),
+      label: t('messages.columns.sentNum'),
       dataIndex: 'sentNum'
     },
     {
-      label: t('receiveRead'),
+      label: t('messages.columns.readNum'),
       dataIndex: 'readNum'
     },
     {
-      label: t('status'),
+      label: t('messages.columns.status'),
       dataIndex: 'status'
     }
   ]
 ];
 
+/**
+ * Status color mapping for message status badges
+ * Maps status values to appropriate badge colors for visual feedback
+ */
 const obj: {
   [key: string]: string
 } = {
@@ -89,47 +115,51 @@ const obj: {
   FAILURE: 'error'
 };
 
+/**
+ * Get status color for a given status key
+ * Returns the appropriate color for status badge display
+ */
 const getStatusText = (key: string): string => {
   return obj[key];
 };
 
+/**
+ * Initialize component on mount
+ * Loads message detail data when component is mounted
+ */
 onMounted(() => {
   getMessageDetail();
 });
 </script>
+
 <template>
   <div class="flex flex-col min-h-full space-y-2">
-    <Card bodyClass="px-8 py-5" :title="t('basicInformation')">
+    <!-- Basic Message Information Card -->
+    <Card bodyClass="px-8 py-5" :title="t('messages.basicInfo')">
       <Skeleton
         active
         :loading="firstLoad"
         :title="false"
         :paragraph="{ rows: 4 }">
         <Grid :columns="gridColumns" :dataSource="content">
+          <!-- Status Badge Template -->
           <template #status="{text}">
             <Badge :status="getStatusText(text?.value)" :text="text?.message" />
           </template>
+          <!-- Sent Number Template -->
           <template #sentNum="{text}">
             {{ +text > -1 ? text : '--' }}
           </template>
         </Grid>
       </Skeleton>
     </Card>
+
+    <!-- Message Content Card -->
     <Card
       class="flex-1"
       bodyClass="px-5 py-5"
-      :title="t('messageContent')">
+      :title="t('messages.columns.content')">
       <div class="text-center text-4 leading-4 text-theme-title">{{ content.title }}</div>
-      <div class="mt-2 text-center text-theme-sub-content mb-4 text-3">
-        <Skeleton
-          active
-          :loading="firstLoad"
-          :title="false"
-          :paragraph="{ rows: 2 }">
-          <span class="mr-2">{{ content.fullName }}</span>
-          <span>{{ content.timingDate }}</span>
-        </Skeleton>
-      </div>
       <Skeleton
         active
         :loading="firstLoad"
@@ -138,10 +168,12 @@ onMounted(() => {
         <RichEditor :value="content?.content" mode="view" />
       </Skeleton>
     </Card>
+
+    <!-- Recipients Information Card -->
     <Card class="flex-1 text-3" bodyClass="p-3 overflow-auto body-h">
       <template #title>
         <div>
-          <span class="mr-1">{{ t('recipient') }}:</span>
+          <span class="mr-1">{{ t('messages.columns.recipient') }}:</span>
           <span>{{ content.receiveObjectType?.message }}</span>
         </div>
       </template>
@@ -151,7 +183,8 @@ onMounted(() => {
           :loading="firstLoad"
           :title="false"
           :paragraph="{ rows: 20 }">
-          <template v-if="content.receiveObjectType?.value == 'USER'">
+          <!-- User Recipients Display -->
+          <template v-if="content.receiveObjectType?.value === 'USER'">
             <div
               v-for="item in content.receiveObjectData"
               :key="item.id"
@@ -164,6 +197,7 @@ onMounted(() => {
               <div class="text-theme-content">{{ item.mobile }}</div>
             </div>
           </template>
+          <!-- Non-User Recipients Display -->
           <template v-else>
             <Tag
               v-for="(item) in content.receiveObjectData"
@@ -179,12 +213,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/**
+ * Custom styling for card body height
+ * Ensures proper layout and scrolling for recipient information
+ */
 :deep(.body-h) {
   height: calc(100% - 48px);
 }
 
+/**
+ * Custom styling for receiver tags
+ * Provides consistent padding and spacing for tag elements
+ */
 .receiver :deep(.ant-tag) {
   @apply px-4.5 py-3;
 }
-
 </style>
