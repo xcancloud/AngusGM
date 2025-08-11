@@ -97,14 +97,14 @@ onMounted(() => {
 
 const searchOptions = [
   {
-    placeholder: t('onLinePlaceHolder'),
+    placeholder: t('online.placeholder.searchNameIp'),
     valueKey: 'fullName',
     type: 'input',
     op: 'EQUAL',
     allowClear: true
   },
   {
-    placeholder: t('查询设备ID'),
+    placeholder: t('online.placeholder.searchDeviceId'),
     valueKey: 'deviceId',
     type: 'input',
     op: 'EQUAL',
@@ -113,36 +113,36 @@ const searchOptions = [
   {
     valueKey: 'onlineDate',
     type: 'date-range',
-    placeholder: [t('上线时间从'), t('上线时间截止')],
+    placeholder: [t('online.placeholder.onlineTimeFrom'), t('online.placeholder.onlineTimeTo')],
     allowClear: true
   },
   {
     valueKey: 'offlineDate',
     type: 'date-range',
-    placeholder: [t('离线时间从'), t('离线时间截止')],
+    placeholder: [t('online.placeholder.offlineTimeFrom'), t('online.placeholder.offlineTimeTo')],
     allowClear: true
   }
 ];
 
 const columns = [
   {
-    title: t('ID'),
+    title: t('online.columns.id'),
     dataIndex: 'id',
     hide: true
   },
   {
-    title: t('用户'),
+    title: t('online.columns.user'),
     dataIndex: 'fullName',
     width: '10%',
     sorter: true
   },
   {
-    title: t('onlineStatus'),
+    title: t('online.columns.onlineStatus'),
     dataIndex: 'online',
     width: '8%'
   },
   {
-    title: t('upTime'),
+    title: t('online.columns.upTime'),
     dataIndex: 'onlineDate',
     key: 'onlineDate',
     width: '12%',
@@ -152,7 +152,7 @@ const columns = [
     }
   },
   {
-    title: '离线时间',
+    title: t('online.columns.offlineTime'),
     dataIndex: 'offlineDate',
     key: 'offlineDate',
     width: '12%',
@@ -162,14 +162,14 @@ const columns = [
     }
   },
   {
-    title: t('terminalEquipment'),
+    title: t('online.columns.terminalEquipment'),
     dataIndex: 'userAgent',
     width: '42%',
     groupName: 'userAgent',
     customRender: ({ text }) => text || '--'
   },
   {
-    title: t('设备ID'),
+    title: t('online.columns.deviceId'),
     dataIndex: 'deviceId',
     width: '42%',
     hide: true,
@@ -177,12 +177,12 @@ const columns = [
     customRender: ({ text }) => text || '--'
   },
   {
-    title: 'IP',
+    title: t('online.columns.ip'),
     dataIndex: 'remoteAddress',
     width: '8%'
   },
   {
-    title: t('logOut'),
+    title: t('online.columns.logOut'),
     dataIndex: 'option',
     width: '8%',
     align: 'center'
@@ -227,7 +227,7 @@ const indicator = h(LoadingOutlined, {
           </div>
         </template>
         <template v-if="column.dataIndex === 'online'">
-          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online1'): t('offline1')" />
+          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online.messages.online'): t('online.messages.offline')" />
         </template>
         <template v-if="column.dataIndex === 'option' && app.show('SignOut')">
           <template v-if="record.loading">

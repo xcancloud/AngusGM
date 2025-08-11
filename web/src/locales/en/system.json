@@ -209,8 +209,30 @@
   "audit": {
 
   },
-  "onlineUser": {
-
+  "online": {
+    "columns": {
+      "id": "ID",
+      "user": "User",
+      "onlineStatus": "Online Status",
+      "upTime": "Online Time",
+      "offlineTime": "Offline Time",
+      "terminalEquipment": "Terminal Equipment",
+      "deviceId": "Device ID",
+      "ip": "IP",
+      "logOut": "Logout"
+    },
+    "placeholder": {
+      "searchNameIp": "Search by name, IP",
+      "searchDeviceId": "Search by device ID",
+      "onlineTimeFrom": "Online time from",
+      "onlineTimeTo": "Online time to",
+      "offlineTimeFrom": "Offline time from",
+      "offlineTimeTo": "Offline time to"
+    },
+    "messages": {
+      "online": "Online",
+      "offline": "Offline"
+    }
   },
   "systemToken": {
 

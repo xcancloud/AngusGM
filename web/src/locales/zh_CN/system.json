@@ -209,8 +209,30 @@
   "audit": {
 
   },
-  "onlineUser": {
-
+  "online": {
+    "columns": {
+      "id": "ID",
+      "user": "用户",
+      "onlineStatus": "在线状态",
+      "upTime": "上线时间",
+      "offlineTime": "离线时间",
+      "terminalEquipment": "终端设备",
+      "deviceId": "设备ID",
+      "ip": "IP",
+      "logOut": "退出登录"
+    },
+    "placeholder": {
+      "searchNameIp": "查询姓名、IP",
+      "searchDeviceId": "查询设备ID",
+      "onlineTimeFrom": "上线时间从",
+      "onlineTimeTo": "上线时间截止",
+      "offlineTimeFrom": "离线时间从",
+      "offlineTimeTo": "离线时间截止"
+    },
+    "messages": {
+      "online": "上线",
+      "offline": "下线"
+    }
   },
   "systemToken": {
 
