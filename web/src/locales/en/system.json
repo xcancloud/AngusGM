@@ -1,0 +1,130 @@
+{
+  "version": {
+    "columns": {
+      "editionType": "Edition Type",
+      "goodsCode": "Application Code",
+      "goodsVersion": "Application Version",
+      "provider": "Provider",
+      "publisher": "Publisher",
+      "holder": "Holder",
+      "licenseNo": "License Number",
+      "beginDate": "Release Date",
+      "endDate": "Expiration Date",
+      "signature": "MD5 Signature",
+      "introduction": "Version Introduction",
+      "features": "Features",
+      "currentVersion": "Current Version"
+    },
+    "placeholder": {
+      "remainingDays": "Remaining {days} days"
+    },
+    "messages": {
+      "copy": "Click to Copy",
+      "copySuccess": "Copy Success",
+      "copyFailure": "Copy Failed",
+      "networkError": "Network or request exception, failed to get!",
+      "latestVersion": "Latest Version",
+      "upgradableVersion": "Upgradable Version",
+      "versionIntroduction": "Version Introduction",
+      "alreadyLatestVersion": "Current version is already the latest version.",
+      "remainingDays": "Remaining {days} days"
+    },
+    "titles": {
+      "systemVersion": "System Version Information",
+      "latestVersion": "Latest Version",
+      "upgradableVersion": "Upgradable Version",
+      "versionIntroduction": "Version Introduction"
+    }
+  },
+  "realname": {
+    "columns": {
+      "name": "Name",
+      "realName": "Real Name",
+      "idCard": "ID Card Number",
+      "enterpriseName": "Enterprise Name",
+      "creditCode": "Business Registration Number",
+      "legalName": "Legal Representative Name",
+      "legalIdCard": "Legal Representative ID Card",
+      "orgName": "Organization Name",
+      "orgCode": "Organization Code",
+      "certFront": "ID Card Front Side",
+      "certBack": "ID Card Back Side",
+      "businessLicense": "Business License",
+      "orgCertificate": "Organization Certificate"
+    },
+    "placeholder": {
+      "inputRealName": "Enter real name",
+      "inputLegalName": "Enter legal representative name",
+      "inputOrgName": "Enter organization name",
+      "inputIdCard": "Please enter valid ID card number",
+      "inputLegalIdCard": "Please enter legal representative ID card number",
+      "inputEnterpriseName": "Please enter enterprise name",
+      "inputCreditCode": "Please enter business registration number",
+      "inputOrgCode": "Please enter organization code",
+      "uploadIdCardFront": "Please upload personal ID card front side",
+      "uploadIdCardBack": "Please upload personal ID card back side",
+      "uploadLegalIdCardFront": "Please upload legal representative ID card front side",
+      "uploadLegalIdCardBack": "Please upload legal representative ID card back side",
+      "uploadBusinessLicense": "Please upload business license",
+      "uploadOrgCertificate": "Please upload organization certificate"
+    },
+    "messages": {
+      "personalAuthDesc": "Applicable to individual users, account belongs to individual;",
+      "personalAuthDesc2": "Does not support VAT special invoice;",
+      "personalAuthDesc3": "Certification personnel must be 18 years or older;",
+      "personalAuthDesc4": "One document can only be used to authenticate one account.",
+      "enterpriseAuthDesc": "Applicable to enterprise users, account belongs to enterprise;",
+      "enterpriseAuthDesc2": "Supports VAT special invoice;",
+      "enterpriseAuthDesc3": "One document can only be used to authenticate one account.",
+      "governmentAuthDesc": "Applicable to party and government agencies, public institutions, private non-enterprise units, social organizations, individual businesses and other users, account belongs to government and public institutions;",
+      "governmentAuthDesc2": "Supports VAT special invoice;",
+      "governmentAuthDesc3": "One document can only be used to authenticate one account.",
+      "idCardFormatError": "Please enter correct ID card number",
+      "uploadLegalIdCard": "Please upload legal representative ID card",
+      "uploadIdCard": "Please upload identity document",
+      "registerAccountDefaultAdmin": "Registered accounts default to system administrator",
+      "successSubmit": "Submitted successfully"
+    },
+    "titles": {
+      "personalAuth": "Personal Authentication",
+      "enterpriseAuth": "Enterprise Authentication",
+      "governmentAuth": "Government and Public Institution Authentication",
+      "personalAuthDetails": "Personal Authentication Details",
+      "enterpriseAuthDetails": "Enterprise Authentication Details",
+      "governmentAuthDetails": "Government and Public Institution Authentication Details"
+    },
+    "validation": {
+      "idCardRequired": "Please enter valid ID card number",
+      "legalIdCardRequired": "Please enter legal representative ID card number",
+      "companyNameRequired": "Please enter company name",
+      "orgNameRequired": "Please enter organization name",
+      "realNameRequired": "Please enter name",
+      "enterpriseNameRequired": "Please enter enterprise name",
+      "orgCodeRequired": "Please enter organization code",
+      "businessLicenseRequired": "Please upload business license",
+      "orgCertificateRequired": "Please upload organization certificate"
+    },
+    "buttons": {
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
+  },
+  "security": {
+
+  },
+  "event": {
+
+  },
+  "quota": {
+
+  },
+  "audit": {
+
+  },
+  "onlineUser": {
+
+  },
+  "systemToken": {
+
+  }
+}

@@ -107,7 +107,7 @@ export default {
   cardFront: '身份证人像面',
   cardBack: '身份证国徽面',
   businessCard: '营业执照',
-  govermentCard: '组织机构代码证',
+  governmentCard: '组织机构代码证',
   idCardTip1: '请上传个人身份证人像面',
   idCardTip2: '请上传个人身份证国徽面',
   legalCertLabel: '上传法人身份证',

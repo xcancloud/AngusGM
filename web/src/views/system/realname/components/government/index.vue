@@ -16,8 +16,10 @@ const props = withDefaults(defineProps<Props>(), {
   data: () => ({})
 });
 
+// Audit status types that require status display
 const auditType = ['AUDITING', 'FAILED_AUDIT'];
 
+// Government organization certification form data
 const form = ref({
   name: '',
   orgCode: '',
@@ -26,7 +28,7 @@ const form = ref({
   reason: ''
 });
 
-// 状态组件展示
+// Status component display options
 const statusOption = reactive({
   visible: false,
   status: 'error',
@@ -37,50 +39,64 @@ onMounted(() => {
   start(props.data);
 });
 
+/**
+ * Initialize government organization certification form data
+ * @param data - Government certification data from API
+ */
 function start (data: any) {
   form.value = { ...data.governmentCert, status: data.status.value, reason: data?.auditRecord?.reason };
   statusOption.visible = auditType.includes(form.value.status);
   statusOption.reason = form.value.reason;
 }
 
+// Government organization authentication content descriptions
 const contents = [
-  t('适用于党政及国家机关、事业单位、民 办非企业单位、社会团体、个体工商户 等用户，账号归属于政府及事业单位；'),
-  t('支持开增值税专用发票；'),
-  t('一个证件只允许认证一个账号。')
+  t('realname.messages.governmentAuthDesc'),
+  t('realname.messages.governmentAuthDesc2'),
+  t('realname.messages.governmentAuthDesc3')
 ];
 
 </script>
+
 <template>
   <div class="flex space-x-2 flex-1">
+    <!-- Government organization authentication summary card -->
     <PageCard
-      :pageTitle="t('政府及事业单位认证')"
+      :pageTitle="t('realname.titles.governmentAuth')"
       icon="icon-shiyedanweirenzheng"
       :contents="contents"
       :count="3"
       :success="form.status === 'AUDITED'" />
+
+    <!-- Government organization certification details card -->
     <Card
-      :title="t('政府及事业单位认证')"
+      :title="t('realname.titles.governmentAuth')"
       class=" flex-1"
       bodyClass="px-8 py-5">
+      <!-- Organization name field -->
       <div class="flex py-3.75">
         <div class="text-black-content w-28 mr-7.5">
-          {{ t('单位名称') }}
+          {{ t('realname.columns.orgName') }}
         </div>
         <div>{{ form.name }}</div>
       </div>
+
+      <!-- Organization code field -->
       <div class="flex py-3.75">
         <div class="text-black-content w-28 mr-7.5">
-          {{ t('orgName') }}
+          {{ t('realname.columns.orgCode') }}
         </div>
         <div>{{ form.orgCode }}</div>
       </div>
+
+      <!-- Organization certificate image -->
       <div class="flex mt-8.75">
         <div class="mr-7.5">
           <div class="w-90 h-56  rounded overflow-hidden flex items-center justify-center border-theme-divider border">
             <img :src="orgCertPicUrl" class="w-full" />
           </div>
           <p class="text-center text-black-content mt-3">
-            {{ t('govermentCard') }}
+            {{ t('realname.columns.orgCertificate') }}
           </p>
         </div>
       </div>

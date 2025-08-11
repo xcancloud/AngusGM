@@ -36,8 +36,78 @@
       "versionIntroduction": "版本介绍"
     }
   },
-  "realName": {
-
+  "realname": {
+    "columns": {
+      "name": "姓名",
+      "realName": "真实姓名",
+      "idCard": "身份证号",
+      "enterpriseName": "企业名称",
+      "creditCode": "工商注册号",
+      "legalName": "法人姓名",
+      "legalIdCard": "法人身份证号",
+      "orgName": "单位名称",
+      "orgCode": "组织机构代码",
+      "certFront": "身份证人像面",
+      "certBack": "身份证国徽面",
+      "businessLicense": "营业执照",
+      "orgCertificate": "组织机构代码证"
+    },
+    "placeholder": {
+      "inputRealName": "输入真实姓名",
+      "inputLegalName": "输入法人姓名",
+      "inputOrgName": "输入组织名称",
+      "inputIdCard": "请输入二代有效身份证号",
+      "inputLegalIdCard": "请输入法人身份证号",
+      "inputEnterpriseName": "请输入企业名称",
+      "inputCreditCode": "请输入工商注册号",
+      "inputOrgCode": "请输入组织机构代码",
+      "uploadIdCardFront": "请上传个人身份证人像面",
+      "uploadIdCardBack": "请上传个人身份证国徽面",
+      "uploadLegalIdCardFront": "请上传法人身份证人像面",
+      "uploadLegalIdCardBack": "请上传法人身份证国徽面",
+      "uploadBusinessLicense": "请上传营业执照",
+      "uploadOrgCertificate": "请上传组织机构代码证"
+    },
+    "messages": {
+      "personalAuthDesc": "适用于个人用户，账号归属于个人；",
+      "personalAuthDesc2": "不支持开增值税专用发票；",
+      "personalAuthDesc3": "认证人员需年满18周岁；",
+      "personalAuthDesc4": "一个证件只允许认证一个账号。",
+      "enterpriseAuthDesc": "适用于企业用户，账号归属于企业；",
+      "enterpriseAuthDesc2": "支持开增值税专用发票；",
+      "enterpriseAuthDesc3": "一个证件只允许认证一个账号。",
+      "governmentAuthDesc": "适用于党政及国家机关、事业单位、民办非企业单位、社会团体、个体工商户等用户，账号归属于政府及事业单位；",
+      "governmentAuthDesc2": "支持开增值税专用发票；",
+      "governmentAuthDesc3": "一个证件只允许认证一个账号。",
+      "idCardFormatError": "请输入正确的身份证号",
+      "uploadLegalIdCard": "请上传法人身份证",
+      "uploadIdCard": "请上传身份证明",
+      "registerAccountDefaultAdmin": "注册账号默认为系统管理员",
+      "successSubmit": "提交成功"
+    },
+    "titles": {
+      "personalAuth": "个人认证",
+      "enterpriseAuth": "企业认证",
+      "governmentAuth": "政府及事业单位认证",
+      "personalAuthDetails": "个人认证详情",
+      "enterpriseAuthDetails": "企业认证详情",
+      "governmentAuthDetails": "政府及事业单位认证详情"
+    },
+    "validation": {
+      "idCardRequired": "请输入二代有效身份证号",
+      "legalIdCardRequired": "请输入法人身份证号",
+      "companyNameRequired": "请输入企业名称",
+      "orgNameRequired": "请输入单位名称",
+      "realNameRequired": "请输入名称",
+      "enterpriseNameRequired": "请输入企业名称",
+      "orgCodeRequired": "请输入组织机构代码",
+      "businessLicenseRequired": "请上传营业执照",
+      "orgCertificateRequired": "请上传组织机构代码证"
+    },
+    "buttons": {
+      "confirm": "确定",
+      "cancel": "取消"
+    }
   },
   "security": {
 

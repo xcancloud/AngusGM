@@ -1,85 +1,99 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from 'vue';
+import { TenantType, TenantRealNameStatus } from '@xcan-angus/infra';
 
 import { tenant } from '@/api';
 
-// 未认证
+// Async components for different authentication states
 const Unauthorized = defineAsyncComponent(() => import('@/views/system/realname/components/unauthorized/index.vue'));
 const unauthorizedVisible = ref(false);
 
-// 已提交 、认证失败
+// Audit status component for submitted and failed authentication
 const AuditStatus = defineAsyncComponent(() => import('@/components/AuditStatus/index.vue'));
 const auditStatusVisible = ref(false);
 
-// 已认证 - 个人
+// Personal authentication component
 const PersonalAuth = defineAsyncComponent(() => import('@/views/system/realname/components/personal/index.vue'));
 const personalAuthVisible = ref(false);
 
-// 已认证 - 公司
+// Enterprise authentication component
 const EnterpriseAuth = defineAsyncComponent(() => import('@/views/system/realname/components/enterprise/index.vue'));
 const enterpriseAuthVisible = ref(false);
 
-// 已认证 - 政府组织机构
+// Government organization authentication component
 const GovernmentAuth = defineAsyncComponent(() => import('@/views/system/realname/components/government/index.vue'));
 const governmentAuthVisible = ref(false);
 
-// 认证表单
+// Authentication form component
 const AuthForm = defineAsyncComponent(() => import('@/views/system/realname/components/authForm/index.vue'));
 const authFormVisible = ref(false);
 
-const formType = ref<'PERSONAL' | 'ENTERPRISE' | 'GOVERNMENT'>();
+// Form type for authentication
+const formType = ref<TenantType>();
 
+// Authentication status and data
 const _status = ref();
 const message = ref();
 const data = ref({});
 
-// const firstLoad = ref(true);
+/**
+ * Initialize authentication status and show appropriate component
+ * Handles routing logic based on certification audit status
+ */
 async function start () {
-  // 类型判断跳转路由写这里
   const [error, res] = await tenant.getCertAudit();
-  // firstLoad.value = true;
   if (error) {
     return;
   }
+
   if (!res.data) {
     unauthorizedVisible.value = true;
     return;
   }
 
   const status = res.data?.status?.value;
-  if (status === 'NOT_SUBMITTED') {
+
+  // Handle different authentication statuses
+  if (status === TenantRealNameStatus.NOT_SUBMITTED) {
     unauthorizedVisible.value = true;
     return;
   }
-  if (status === 'AUDITING') {
+
+  if (status === TenantRealNameStatus.AUDITING) {
     _status.value = status;
     auditStatusVisible.value = true;
     return;
   }
-  if (status === 'FAILED_AUDIT') {
+
+  if (status === TenantRealNameStatus.FAILED_AUDIT) {
     _status.value = status;
     message.value = res.data?.auditRecord?.reason;
     auditStatusVisible.value = true;
     return;
   }
 
-  if (status === 'AUDITED') {
+  if (status === TenantRealNameStatus.AUDITED) {
     const type = res.data?.type?.value;
     data.value = res.data;
-    if (type === 'PERSONAL') {
+
+    // Show appropriate component based on authentication type
+    if (type === TenantType.PERSONAL) {
       personalAuthVisible.value = true;
       return;
     }
-    if (type === 'ENTERPRISE') {
+    if (type === TenantType.ENTERPRISE) {
       enterpriseAuthVisible.value = true;
       return;
     }
-    if (type === 'GOVERNMENT') {
+    if (type === TenantType.GOVERNMENT) {
       governmentAuthVisible.value = true;
     }
   }
 }
 
+/**
+ * Reset all component visibility states
+ */
 const resetVisible = () => {
   unauthorizedVisible.value = false;
   auditStatusVisible.value = false;
@@ -87,37 +101,52 @@ const resetVisible = () => {
   enterpriseAuthVisible.value = false;
   authFormVisible.value = false;
 };
-// 重新认证
+
+/**
+ * Handle re-authentication request
+ */
 const reAudit = () => {
   resetVisible();
   unauthorizedVisible.value = true;
 };
-// 立即认证
-const toAuditForm = (type: 'PERSONAL' | 'ENTERPRISE' | 'GOVERNMENT') => {
+
+/**
+ * Navigate to authentication form
+ * @param type - Authentication type (PERSONAL, ENTERPRISE, GOVERNMENT)
+ */
+const toAuditForm = (type: TenantType) => {
   resetVisible();
   authFormVisible.value = true;
   formType.value = type;
 };
 
-// 回到未认证页面
+/**
+ * Return to unauthorized state
+ */
 const toUnauthorized = () => {
   resetVisible();
   unauthorizedVisible.value = true;
 };
 
-// 提交后
+/**
+ * Handle post-submission state
+ */
 const toSubmitted = () => {
   resetVisible();
   auditStatusVisible.value = true;
-  _status.value = 'AUDITING';
+  _status.value = TenantRealNameStatus.AUDITING;
 };
+
 onMounted(() => {
   start();
 });
 </script>
+
 <template>
+  <!-- Unauthorized state - show authentication options -->
   <Unauthorized v-if="unauthorizedVisible" @clickAuth="toAuditForm" />
 
+  <!-- Audit status - show current audit state -->
   <AuditStatus
     v-if="auditStatusVisible"
     :status="_status"
@@ -125,16 +154,20 @@ onMounted(() => {
     @reAudit="reAudit">
   </AuditStatus>
 
+  <!-- Personal authentication details -->
   <PersonalAuth v-if="personalAuthVisible" :data="data" />
 
+  <!-- Enterprise authentication details -->
   <EnterpriseAuth v-if="enterpriseAuthVisible" :data="data" />
 
+  <!-- Government organization authentication details -->
   <GovernmentAuth v-if="governmentAuthVisible" :data="data" />
 
+  <!-- Authentication form -->
   <AuthForm
     v-if="authFormVisible"
     :type="formType"
     @cancel="toUnauthorized"
-    @confrimed="toSubmitted">
+    @confirmed="toSubmitted">
   </AuthForm>
 </template>

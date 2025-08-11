@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Form, FormItem } from 'ant-design-vue';
 import { Card, Hints, Input, notification } from '@xcan-angus/vue-ui';
-import { regexpUtils } from '@xcan-angus/infra';
+import { TenantType, regexpUtils } from '@xcan-angus/infra';
 
 import UploadImage from './uploadImage.vue';
 import AuditStatus from '@/components/AuditStatus/index.vue';
@@ -12,12 +12,14 @@ import ButtonGroup from './buttonGroup.vue';
 
 import { tenant } from '@/api';
 
+// Enterprise certification data interface
 interface EnterpriseCertDataInfo {
   businessLicensePicUrl: string,
   name: string,
   creditCode: string
 }
 
+// Legal person certification data interface
 interface LegalCertDataInfo {
   certBackPicUrl: string,
   certFrontPicUrl: string,
@@ -25,12 +27,14 @@ interface LegalCertDataInfo {
   name: string
 }
 
+// Organization certification data interface
 interface OrgCertDataInfo {
   name: string,
   orgCode: string,
   orgCertPicUrl: string
 }
 
+// User certification data interface
 interface UserCertDataInfo {
   certBackPicUrl: string,
   certFrontPicUrl: string,
@@ -38,6 +42,7 @@ interface UserCertDataInfo {
   name: string
 }
 
+// New form data interface
 interface NewForm {
   enterpriseCert?: EnterpriseCertDataInfo,
   enterpriseLegalPersonCert?: LegalCertDataInfo,
@@ -46,6 +51,7 @@ interface NewForm {
   personalCert?: UserCertDataInfo
 }
 
+// Form state interface
 interface FormState {
   id: string,
   autoAudit: boolean,
@@ -60,12 +66,10 @@ interface Props {
   type: string
 }
 
-// const router = useRouter();
 const route = useRoute();
 const query = route.query;
 
-// const emit = defineEmits(['confirm']);
-const emit = defineEmits<{(e: 'cancel'): void, (e: 'confrimed'): void }>();
+const emit = defineEmits<{(e: 'cancel'): void, (e: 'confirmed'): void }>();
 
 const props = withDefaults(defineProps<Props>(), {
   type: ''
@@ -73,45 +77,44 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { t } = useI18n();
 
-const confimLoading = ref(false);
+const confirmLoading = ref(false);
 
 const formRef = ref();
 
-// 审核中提示
+// Audit in progress indicator
 const unding = ref(false);
 
-// 上传组件的错误状态
+// Upload component error states
 const errorUpload = ref<number[]>([]);
 
-/* PERSONAL ENTERPRISE GOVERNMENT  */
+/* Authentication types: PERSONAL, ENTERPRISE, GOVERNMENT */
 
-const auth = 'systemAuth.';
 
-// 真实姓名
+// Form data structure
 const form = ref<FormState>({
   id: String(query.q),
   autoAudit: false,
-  // 企业
+  // Enterprise certification data
   enterpriseCert: {
     businessLicensePicUrl: '',
     name: '',
     creditCode: ''
   },
-  // 企业
+  // Enterprise legal person certification data
   enterpriseLegalPersonCert: {
     certBackPicUrl: '',
     certFrontPicUrl: '',
     certNo: '',
     name: ''
   },
-  // 单位
+  // Government organization certification data
   governmentCert: {
     name: '',
     orgCode: '',
     orgCertPicUrl: ''
   },
   type: props.type,
-  // 个人
+  // Personal certification data
   personalCert: {
     certBackPicUrl: '',
     certFrontPicUrl: '',
@@ -120,88 +123,104 @@ const form = ref<FormState>({
   }
 });
 
+/**
+ * Validate ID card number based on authentication type
+ */
 const validateId = () => {
-  if (props.type === 'PERSONAL') {
+  if (props.type === TenantType.PERSONAL) {
     if (!form.value.personalCert.certNo.trim()) {
-      return Promise.reject(new Error(t('idCardRequiredTip')));
+      return Promise.reject(new Error(t('realname.validation.idCardRequired')));
     }
     if (!regexpUtils.isId(form.value.personalCert.certNo)) {
-      return Promise.reject(new Error('请输入正确的身份证号'));
+      return Promise.reject(new Error(t('realname.messages.idCardFormatError')));
     }
     return Promise.resolve();
   }
-  if (props.type === 'ENTERPRISE') {
+  if (props.type === TenantType.ENTERPRISE) {
     if (!form.value.enterpriseLegalPersonCert.certNo.trim()) {
-      return Promise.reject(new Error(t('legalIdCardRequiredTip')));
+      return Promise.reject(new Error(t('realname.validation.legalIdCardRequired')));
     }
     if (!regexpUtils.isId(form.value.enterpriseLegalPersonCert.certNo)) {
-      return Promise.reject(new Error('请输入正确的身份证号'));
+      return Promise.reject(new Error(t('realname.messages.idCardFormatError')));
     }
     return Promise.resolve();
   }
   return Promise.resolve();
 };
 
+// Form validation rules
 const rules = {
-  // 企业
+  // Enterprise certification rules
   enterpriseCert: {
     businessLicensePicUrl: [{
       required: true,
-      message: t('businessLcene'),
+      message: t('realname.validation.businessLicenseRequired'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 3)
     }],
-    name: [{ required: true, messge: t('companyNameRequiredTip'), trigger: 'change' }],
-    creditCode: [{ required: true, message: t('businessNumberRequiredTip'), trigger: 'change' }]
+    name: [{ required: true, messge: t('realname.validation.companyNameRequired'), trigger: 'change' }],
+    creditCode: [{ required: true, message: t('realname.validation.enterpriseNameRequired'), trigger: 'change' }]
   },
-  // 企业
+  // Enterprise legal person certification rules
   enterpriseLegalPersonCert: {
     certFrontPicUrl: [{
       required: true,
-      message: t('请上传法人身份证'),
+      message: t('realname.messages.uploadLegalIdCard'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 1)
     }],
     certNo: [{ required: true, validator: validateId, trigger: 'blur' }],
-    name: [{ required: true, message: t('输入法人姓名'), trigger: 'change' }]
+    name: [{ required: true, message: t('realname.placeholder.inputLegalName'), trigger: 'change' }]
   },
-  // 单位
+  // Government organization certification rules
   governmentCert: {
-    name: [{ required: true, message: t('输入组织名称'), trigger: 'change' }],
-    orgCode: [{ required: true, message: t('orgNumberRequiredTip'), trigger: 'change' }],
+    name: [{ required: true, message: t('realname.placeholder.inputOrgName'), trigger: 'change' }],
+    orgCode: [{ required: true, message: t('realname.validation.orgCodeRequired'), trigger: 'change' }],
     orgCertPicUrl: [{
       required: true,
-      message: t('orgCard'),
+      message: t('realname.validation.orgCertificateRequired'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 3)
     }]
   },
-  // 个人
+  // Personal certification rules
   personalCert: {
     certFrontPicUrl: [{
       required: true,
-      message: t('请上传身份证明'),
+      message: t('realname.messages.uploadIdCard'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 1)
     }],
     certNo: [{ required: true, validator: validateId, trigger: 'blur' }],
-    name: [{ required: true, message: t('输入真实姓名'), trigger: 'change' }]
+    name: [{ required: true, message: t('realname.placeholder.inputRealName'), trigger: 'change' }]
   }
 };
 
+/**
+ * Remove error code from upload error array
+ * @param code - Error code to remove
+ */
 const deleteCode = function (code: number) {
   errorUpload.value = errorUpload.value.filter(item => item !== code);
 };
 
+/**
+ * Custom validation rules for upload components
+ * @param rules - Validation rules object
+ * @param errCode - Error code for specific validation
+ */
 async function errorRules (rules: { message: string }, errCode: number) {
-  // 获取延时
+  // Add delay for validation
   await new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();
     }, 1000);
   });
+
   if (errCode === 3) {
-    const rules3 = form.value.enterpriseCert.businessLicensePicUrl === '' && form.value.governmentCert.orgCertPicUrl === '';
+    // Business license or organization certificate validation
+    const rules3 = form.value.enterpriseCert.businessLicensePicUrl === '' &&
+      form.value.governmentCert.orgCertPicUrl === '';
     if (rules3) {
       errorUpload.value.push(errCode);
       return Promise.reject(new Error(rules.message));
@@ -209,8 +228,12 @@ async function errorRules (rules: { message: string }, errCode: number) {
     deleteCode(errCode);
     return Promise.resolve();
   } else {
-    const rules1 = form.value.personalCert.certFrontPicUrl === '' && form.value.enterpriseLegalPersonCert.certFrontPicUrl === '';
-    const rules2 = form.value.personalCert.certBackPicUrl === '' && form.value.enterpriseLegalPersonCert.certBackPicUrl === '';
+    // ID card front and back validation
+    const rules1 = form.value.personalCert.certFrontPicUrl === '' &&
+      form.value.enterpriseLegalPersonCert.certFrontPicUrl === '';
+    const rules2 = form.value.personalCert.certBackPicUrl === '' &&
+      form.value.enterpriseLegalPersonCert.certBackPicUrl === '';
+
     if (rules1 && rules2) {
       errorUpload.value.push(1);
       errorUpload.value.push(2);
@@ -231,71 +254,76 @@ async function errorRules (rules: { message: string }, errCode: number) {
   }
 }
 
-// 取消事件
+/**
+ * Handle cancel event
+ */
 const cancel = function () {
   emit('cancel');
 };
 
-// 确认事件
+/**
+ * Handle form confirmation and submission
+ */
 const confirm = function () {
-  confimLoading.value = true;
+  confirmLoading.value = true;
   formRef.value.validate()
     .then(async () => {
       const newForm: NewForm = {
         type: form.value.type
       };
-      /* PERSONAL ENTERPRISE GOVERNMENT  */
-      if (props.type === 'PERSONAL') {
+
+      /* Build form data based on authentication type */
+      if (props.type === TenantType.PERSONAL) {
         newForm.personalCert = form.value.personalCert;
-      } else if (props.type === 'ENTERPRISE') {
+      } else if (props.type === TenantType.ENTERPRISE) {
         newForm.enterpriseCert = form.value.enterpriseCert;
         newForm.enterpriseLegalPersonCert = form.value.enterpriseLegalPersonCert;
       } else {
         newForm.governmentCert = form.value.governmentCert;
       }
+
       const [error] = await tenant.submitCertAudit(newForm);
-      confimLoading.value = false;
+      confirmLoading.value = false;
 
       if (error) {
         return;
       }
 
-      notification.success(t('successSubmit'));
-      // if (query.l !== 'logined') {
-      //   router.push('/system/auth');
-      // } else {
-      //   unding.value = true;
-      // }
-      emit('confrimed');
+      notification.success(t('realname.messages.successSubmit'));
+      emit('confirmed');
     }).catch(() => {
-      confimLoading.value = false;
+      confirmLoading.value = false;
     });
 };
 
-// 文件上传后回调
+/**
+ * Handle file upload change events
+ * @param label - Upload component identifier
+ * @param value - Uploaded file ID or URL
+ */
 const loadChange = function (label: string, value: any) {
-  /* 接收图片的id或地址 */
-  /* PERSONAL ENTERPRISE GOVERNMENT  */
+  /* Process uploaded image ID or URL */
+  /* Handle different authentication types: PERSONAL, ENTERPRISE, GOVERNMENT */
   switch (label) {
     case '0':
-      /* 身份证正面 */
-      if (props.type === 'PERSONAL') {
+      /* ID card front side */
+      if (props.type === TenantType.PERSONAL) {
         form.value.personalCert.certFrontPicUrl = value;
       } else {
         form.value.enterpriseLegalPersonCert.certFrontPicUrl = value;
       }
       break;
     case '1':
-      /* 身份证反面 */
-      if (props.type === 'PERSONAL') {
+      /* ID card back side */
+      if (props.type === TenantType.PERSONAL) {
         form.value.personalCert.certBackPicUrl = value;
       } else {
         form.value.enterpriseLegalPersonCert.certBackPicUrl = value;
       }
       break;
     default:
-      /* 其他证书 */
-      if (props.type === 'ENTERPRISE') {
+      /* Other certificates */
+      if (props.type === TenantType.ENTERPRISE) {
         form.value.enterpriseCert.businessLicensePicUrl = value;
       } else {
         form.value.governmentCert.orgCertPicUrl = value;
@@ -321,110 +349,110 @@ const trimValue = (type, key) => {
         :rules="rules"
         :labelCol="{ span: 7 }"
         :wrapperCol="{ span: 17 }">
-        <template v-if="props.type === 'PERSONAL'">
+        <template v-if="props.type === TenantType.PERSONAL">
           <FormItem
-            :label="t('realName')"
+            :label="t('realname.columns.realName')"
             :name="['personalCert','name']"
             :colon="false">
             <Input
               v-model:value="form.personalCert.name"
               :maxlength="80"
-              :placeholder="t('输入真实姓名')"
+              :placeholder="t('realname.placeholder.inputRealName')"
               @blur="trimValue('personalCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('idCardLabel')"
+            :label="t('realname.columns.idCard')"
             :name="['personalCert','certNo']"
             :colon="false">
             <Input
               v-model:value="form.personalCert.certNo"
               :maxlenth="50"
-              :placeholder="t('idCardRequiredTip')"
+              :placeholder="t('realname.validation.idCardRequired')"
               @blur="trimValue('personalCert', 'certNo')" />
           </FormItem>
           <FormItem
-            :label="t('userCertFrontPicUrlLabel')"
+            :label="t('realname.columns.certFront')"
             :name="['enterpriseLegalPersonCert','certFrontPicUrl']"
             :colon="false">
             <UploadImage
               type="1"
-              :mess="t('idCardTip1')"
+              :mess="t('realname.placeholder.uploadIdCardFront')"
               class="mr-8 inline-block"
               :error="errorUpload.includes(1)"
               @change="(value)=> loadChange('0', value)" />
             <UploadImage
               type="1"
               class="inline-block"
-              :mess="t('idCardTip2')"
+              :mess="t('realname.placeholder.uploadIdCardBack')"
               :error="errorUpload.includes(2)"
               @change="(value)=> loadChange('1', value)" />
           </FormItem>
         </template>
-        <template v-else-if="props.type === 'ENTERPRISE'">
+        <template v-else-if="props.type === TenantType.ENTERPRISE">
           <FormItem
-            :label="t('enterpriseLabel')"
+            :label="t('realname.columns.enterpriseName')"
             :name="['enterpriseCert','name']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseCert.name"
               :maxlength="30"
-              :placeholder="t('companyNameRequiredTip')"
+              :placeholder="t('realname.placeholder.inputEnterpriseName')"
               @blur="trimValue('enterpriseCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('enterpriseCreditCode')"
+            :label="t('realname.columns.creditCode')"
             :name="['enterpriseCert','creditCode']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseCert.creditCode"
               :maxlength="50"
-              :placeholder="t('businessNumberRequiredTip')" />
+              :placeholder="t('realname.placeholder.inputCreditCode')" />
           </FormItem>
           <FormItem
-            :label="t('legalName')"
+            :label="t('realname.columns.legalName')"
             :name="['enterpriseLegalPersonCert','name']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseLegalPersonCert.name"
-              :placeholder="t('输入法人姓名')"
+              :placeholder="t('realname.placeholder.inputLegalName')"
               :maxlenth="50"
               @blur="trimValue('enterpriseLegalPersonCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('legalIdCard')"
+            :label="t('realname.columns.legalIdCard')"
             :name="['enterpriseLegalPersonCert','certNo']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseLegalPersonCert.certNo"
-              :placeholder="t('legalIdCardRequiredTip')"
+              :placeholder="t('realname.validation.legalIdCardRequired')"
               :maxlenth="50"
               @blur="trimValue('enterpriseLegalPersonCert', 'certNo')" />
           </FormItem>
           <FormItem
-            :label="t('legalCertLabel')"
+            :label="t('realname.columns.certFront')"
             :name="['enterpriseLegalPersonCert','certFrontPicUrl']"
             :colon="false">
             <div class="flex">
               <UploadImage
                 type="1"
-                :mess="t('legalIdCard1')"
+                :mess="t('realname.placeholder.uploadLegalIdCardFront')"
                 class="mr-5"
                 :error="errorUpload.includes(1)"
                 @change="(value)=> loadChange('0', value)" />
               <UploadImage
                 type="1"
-                :mess="t('legalIdCard1')"
+                :mess="t('realname.placeholder.uploadLegalIdCardBack')"
                 :error="errorUpload.includes(2)"
                 @change="(value)=> loadChange('1', value)" />
             </div>
           </FormItem>
           <FormItem
-            :label="t('businessLabel')"
+            :label="t('realname.columns.businessLicense')"
             :name="['enterpriseCert','businessLicensePicUrl']"
             :colon="false">
             <UploadImage
               type="2"
-              :mess="t(auth + 'cate-id-1')"
+              :mess="t('realname.placeholder.uploadBusinessLicense')"
               :error="errorUpload.includes(3)"
               class="mr-5"
               @change="(value)=> loadChange('2', value)" />
@@ -432,46 +460,44 @@ const trimValue = (type, key) => {
         </template>
         <template v-else>
           <FormItem
-            :label="t('nameOfAssociation')"
+            :label="t('realname.columns.orgName')"
             :maxlength="30"
             :name="['governmentCert','name']"
             :colon="false">
             <Input
               v-model:value="form.governmentCert.name"
-              :placeholder="t('输入组织名称')"
+              :placeholder="t('realname.placeholder.inputOrgName')"
               :maxlenth="80"
               @blur="trimValue('governmentCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('orgName')"
+            :label="t('realname.columns.orgCode')"
             :name="['governmentCert','orgCode']"
             :colon="false">
             <Input
               v-model:value="form.governmentCert.orgCode"
               :maxlength="50"
-              :placeholder="t('orgNumberRequiredTip')"
+              :placeholder="t('realname.placeholder.inputOrgCode')"
               @blur="trimValue('governmentCert', 'orgCode')" />
           </FormItem>
           <FormItem
-            :label="t('govermentCard')"
+            :label="t('realname.columns.orgCertificate')"
             :name="['governmentCert','orgCertPicUrl']"
             :colon="false">
             <UploadImage
               type="2"
-              :mess="t('idCardTip1')"
+              :mess="t('realname.placeholder.uploadOrgCertificate')"
               class="mr-5"
               @change="(value)=> loadChange('2', value)" />
           </FormItem>
         </template>
       </Form>
-      <!-- 横线 -->
       <div class="w-250 h-0.25 bg-gray-border -ml-60 mt-9"></div>
-      <!-- 提示信息 -->
-      <Hints :text="t('注册账号默认为系统管理员')" class="ml-40 mt-10" />
+      <Hints :text="t('realname.messages.registerAccountDefaultAdmin')" class="ml-40 mt-10" />
     </div>
     <ButtonGroup
       class="my-7.5"
-      :confimLoading="confimLoading"
+      :confirmLoading="confirmLoading"
       @cancel="cancel"
       @confirm="confirm" />
   </Card>
