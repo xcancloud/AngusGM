@@ -81,7 +81,10 @@ export type PolicyDetailType = {
   createdDate: string | undefined,
   type: { value: 'OPEN_GRANT' | 'PRE_DEFINED' | 'USER_DEFINED' | undefined, message: string | undefined },
   enabled: boolean,
-  description: string | undefined
+  description: string | undefined,
+  global: boolean,
+  default0: boolean,
+  grantStage: any
 }
 
 /**

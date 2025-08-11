@@ -185,7 +185,7 @@ const tt = (key: string, fallback: string): string => {
 
 .info-item {
   display: grid;
-  grid-template-columns: 100px 1fr;
+  grid-template-columns: 130px 1fr;
   column-gap: 16px;
   align-items: center;
 }

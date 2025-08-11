@@ -93,12 +93,13 @@
       },
       "detail": {
         "basicInfo": "Basic Information",
+        "authInfo": "Application & Authorization",
         "authFunctions": "Authorized Functions",
         "authObjects": "Authorized Objects",
         "defaultPolicyHint": "This policy is currently set as the initial \"Default Permission Policy\" for users. No additional authorization needed. To revoke: You must disable both the \"Application Default Authorization\" setting AND any duplicate explicit authorizations. Disabling only the default setting won't remove existing duplicate authorizations.",
         "info": {
           "globalAccount": "Authorized Account",
-          "grantStage": "Authorization Initialization Phase",
+          "grantStage": "Authorization Phase",
           "defaultPolicy": "Default Authorization Policy",
           "createdDate": "Creation Date"
         },
