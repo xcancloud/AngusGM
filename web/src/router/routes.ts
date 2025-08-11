@@ -268,7 +268,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/system/auth',
         name: 'Auth',
-        component: () => import('@/views/system/auth/index.vue')
+        component: () => import('@/views/system/realname/index.vue')
       },
       {
         path: '/system/ldap',

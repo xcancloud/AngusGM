@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { app } from '@xcan-angus/infra';
 
-import AuthList from '@/views/system/auth/components/authList/index.vue';
+import AuthList from '@/views/system/realname/components/authList/index.vue';
 import { tenant } from '@/api';
 
 const { t } = useI18n();

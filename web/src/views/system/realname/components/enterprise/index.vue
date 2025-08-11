@@ -6,7 +6,7 @@ import certFrontPicUrl from '../../images/idCardFront.png';
 import certBackPicUrl from '../../images/idCardBack.png';
 import businessCertPicUrl from '../../images/businessCert.png';
 
-import PageCard from '@/views/system/auth/components/cardPage/index.vue';
+import PageCard from '@/views/system/realname/components/cardPage/index.vue';
 
 const { t } = useI18n();
 

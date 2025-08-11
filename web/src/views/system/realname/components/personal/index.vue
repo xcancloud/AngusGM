@@ -5,7 +5,7 @@ import { Card } from '@xcan-angus/vue-ui';
 import certFrontPicUrl from '../../images/idCardFront.png';
 import certBackPicUrl from '../../images/idCardBack.png';
 
-import PageCard from '@/views/system/auth/components/cardPage/index.vue';
+import PageCard from '@/views/system/realname/components/cardPage/index.vue';
 
 interface Form {
   certBackPicUrl: string

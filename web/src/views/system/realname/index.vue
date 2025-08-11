@@ -4,7 +4,7 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { tenant } from '@/api';
 
 // 未认证
-const Unauthorized = defineAsyncComponent(() => import('@/views/system/auth/components/unauthorized/index.vue'));
+const Unauthorized = defineAsyncComponent(() => import('@/views/system/realname/components/unauthorized/index.vue'));
 const unauthorizedVisible = ref(false);
 
 // 已提交 、认证失败
@@ -12,19 +12,19 @@ const AuditStatus = defineAsyncComponent(() => import('@/components/AuditStatus/
 const auditStatusVisible = ref(false);
 
 // 已认证 - 个人
-const PersonalAuth = defineAsyncComponent(() => import('@/views/system/auth/components/personal/index.vue'));
+const PersonalAuth = defineAsyncComponent(() => import('@/views/system/realname/components/personal/index.vue'));
 const personalAuthVisible = ref(false);
 
 // 已认证 - 公司
-const EnterpriseAuth = defineAsyncComponent(() => import('@/views/system/auth/components/enterprise/index.vue'));
+const EnterpriseAuth = defineAsyncComponent(() => import('@/views/system/realname/components/enterprise/index.vue'));
 const enterpriseAuthVisible = ref(false);
 
 // 已认证 - 政府组织机构
-const GovernmentAuth = defineAsyncComponent(() => import('@/views/system/auth/components/government/index.vue'));
+const GovernmentAuth = defineAsyncComponent(() => import('@/views/system/realname/components/government/index.vue'));
 const governmentAuthVisible = ref(false);
 
 // 认证表单
-const AuthForm = defineAsyncComponent(() => import('@/views/system/auth/components/authForm/index.vue'));
+const AuthForm = defineAsyncComponent(() => import('@/views/system/realname/components/authForm/index.vue'));
 const authFormVisible = ref(false);
 
 const formType = ref<'PERSONAL' | 'ENTERPRISE' | 'GOVERNMENT'>();

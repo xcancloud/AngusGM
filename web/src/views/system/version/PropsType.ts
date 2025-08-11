@@ -1,37 +1,45 @@
-export type InstallVesion = {
-  goodsId: string;
+/**
+ * Installed edition information interface
+ * Contains complete details about the currently installed software edition
+ */
+export type InstallEdition = {
+  goodsId: string, // Unique identifier for the goods/product
   goodsType: {
-    value: string;
-    message: string;
+    value: string, // Goods type value (e.g., 'SOFTWARE', 'SERVICE')
+    message: string, // Human-readable goods type description
   },
-  goodsCode: string;
-  goodsName: string;
+  goodsCode: string, // Product code identifier
+  goodsName: string, // Product name
   editionType: {
-    value: string;
-    message: string;
+    value: string, // Edition type value (e.g., 'ENTERPRISE', 'COMMUNITY')
+    message: string, // Human-readable edition type description
   },
-  provider: string;
-  issuer: string;
-  holderId: string;
-  holder: string;
-  licenseNo: string;
-  info: string;
-  signature: string;
-  issuedDate: string;
-  beginDate: string;
-  endDate: string;
-  goodsVersion: string;
+  provider: string, // Software provider/vendor name
+  issuer: string, // License issuer name
+  holderId: string, // License holder identifier
+  holder: string, // License holder name
+  licenseNo: string, // License number
+  info: string, // Additional license information
+  signature: string, // MD5 signature for license validation
+  issuedDate: string, // Date when license was issued
+  beginDate: string, // License validity start date
+  endDate: string, // License expiration date
+  goodsVersion: string, // Current installed version
 }
 
+/**
+ * Upgradeable version information interface
+ * Contains details about available version upgrades
+ */
 export type UpgradeableVersion = {
-  goodsId: string;
-  name: string;
-  code: string;
-  version: string;
-  iconUrl: string;
-  introduction: string;
-  information: string;
-  features: string[];
-  releaseDate: string;
-  upgradeable: boolean | null;
+  goodsId: string, // Unique identifier for the goods/product
+  name: string, // Product name
+  code: string, // Product code
+  version: string, // Available version number
+  iconUrl: string, // Product icon URL
+  introduction: string, // Version introduction/description
+  information: string, // Additional version information
+  features: string[], // List of new features in this version
+  releaseDate: string, // Version release date
+  upgradeable: boolean | null, // Whether upgrade is available
 }

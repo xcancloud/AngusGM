@@ -1,0 +1,60 @@
+{
+  "version": {
+    "columns": {
+      "editionType": "版本类型",
+      "goodsCode": "应用编码",
+      "goodsVersion": "应用版本",
+      "provider": "提供者",
+      "publisher": "发行者",
+      "holder": "持有者",
+      "licenseNo": "许可编号",
+      "beginDate": "发行日期",
+      "endDate": "过期日期",
+      "signature": "MD5签名",
+      "introduction": "版本介绍",
+      "features": "特性",
+      "currentVersion": "当前版本"
+    },
+    "placeholder": {
+      "remainingDays": "剩余{days}天"
+    },
+    "messages": {
+      "copy": "点击复制",
+      "copySuccess": "复制成功",
+      "copyFailure": "复制失败",
+      "networkError": "网络或者请求异常，获取失败！",
+      "latestVersion": "最新版本",
+      "upgradableVersion": "可升级版本",
+      "versionIntroduction": "版本介绍",
+      "alreadyLatestVersion": "当前版本已经是最新版本。",
+      "remainingDays": "剩余{days}天"
+    },
+    "titles": {
+      "systemVersion": "系统版本信息",
+      "latestVersion": "最新版本",
+      "upgradableVersion": "可升级版本",
+      "versionIntroduction": "版本介绍"
+    }
+  },
+  "realName": {
+
+  },
+  "security": {
+
+  },
+  "event": {
+
+  },
+  "quota": {
+
+  },
+  "audit": {
+
+  },
+  "onlineUser": {
+
+  },
+  "systemToken": {
+
+  }
+}

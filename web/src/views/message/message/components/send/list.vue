@@ -141,7 +141,7 @@ const paginationChange = (page: number, size: number) => {
  * Selected recipients list
  * Tracks which recipients are currently selected
  */
-const checkedList = ref<{ id: string, name: string }[]>([]);
+const checkedList = ref<{ id: number, name: string }[]>([]);
 
 /**
  * Handle recipient object type change
@@ -186,7 +186,7 @@ const expandedKeys = ref<string[]>([]);
  * Group data list for display
  * Contains group information for recipient selection
  */
-const groupDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
+const groupDataList = ref<{ id: number, name: string, avatar?: '' }[]>([]);
 
 /**
  * Fetch group list from API
@@ -219,7 +219,7 @@ const deptTreeData = ref<any[]>([]);
  * Department data list for display
  * Contains department information for recipient selection
  */
-const deptDataList = ref<{ id: string, name: string, avatar?: '' }[]>([]);
+const deptDataList = ref<{ id: number, name: string, avatar?: '' }[]>([]);
 
 /**
  * Fetch department list from API
@@ -290,7 +290,7 @@ const buildTree = (_treeData: any[]) => {
  * Handle individual item checkbox change
  * Updates selected items list when checkbox is toggled
  */
-const handleCheck = (event: InputEvent, obj: { id: string; name: string }) => {
+const handleCheck = (event: InputEvent, obj: { id: number; name: string }) => {
   const checked = (event.target as HTMLInputElement).checked;
 
   if (checked) {
@@ -304,7 +304,7 @@ const handleCheck = (event: InputEvent, obj: { id: string; name: string }) => {
  * Handle department tree checkbox change
  * Updates selected items list when department tree checkbox is toggled
  */
-const handleCheckDept = (_checkIds: string[], e: { checked: boolean, node: { id: string, name: string } }) => {
+const handleCheckDept = (_checkIds: number[], e: { checked: boolean, node: { id: number, name: string } }) => {
   const checked = e.checked;
   const obj = { id: e.node.id, name: e.node.name };
 

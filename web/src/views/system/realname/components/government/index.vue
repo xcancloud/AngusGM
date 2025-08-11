@@ -2,7 +2,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import PageCard from '@/views/system/auth/components/cardPage/index.vue';
+import PageCard from '@/views/system/realname/components/cardPage/index.vue';
 import { Card } from '@xcan-angus/vue-ui';
 import orgCertPicUrl from '../../images/orgCert.png';
 

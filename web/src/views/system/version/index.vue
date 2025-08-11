@@ -4,186 +4,240 @@ import { useI18n } from 'vue-i18n';
 import clipboard from 'vue-clipboard3';
 import { Skeleton, Tooltip } from 'ant-design-vue';
 import { Card, Grid, Icon } from '@xcan-angus/vue-ui';
-import { appContext } from '@xcan-angus/infra';
+import { EditionType, appContext } from '@xcan-angus/infra';
 import dayjs from 'dayjs';
 
 import { edition } from '@/api';
-import { InstallVesion } from './PropsType';
+import { InstallEdition } from './PropsType';
 import UpdatedVersion from './components/updatableVersion.vue';
-import darkImg from './images/dark1.png';
 import grayImg from './images/gray1.png';
 
 const { t } = useI18n();
-const loading = ref<boolean>(true);
-const copyContent = ref<string>('version.copy');
 
-const installVersion = ref<InstallVesion>();
+/**
+ * Loading state for component initialization
+ * Shows skeleton loading while fetching data
+ */
+const loading = ref<boolean>(true);
+/**
+ * Copy button text content
+ * Changes based on copy operation result
+ */
+const copyContent = ref<string>('version.messages.copy');
+/**
+ * Currently installed edition information
+ * Contains all details about the installed software
+ */
+const installEdition = ref<InstallEdition>();
+/**
+ * Current edition type
+ * Determines which column configuration to use
+ */
 const editionType = ref<string>();
 
-const gridColumnsCloud = [
+/**
+ * Grid columns configuration for cloud service edition
+ * Defines the layout and fields for cloud service version display
+ */
+const cloudEditionColumns = [
   [
     {
-      label: t('版本类型'),
+      label: t('version.columns.editionType'),
       dataIndex: 'editionType'
     },
     {
-      label: t('应用编码'),
+      label: t('version.columns.goodsCode'),
       dataIndex: 'goodsCode'
     },
     {
-      label: t('应用版本'),
+      label: t('version.columns.goodsVersion'),
       dataIndex: 'goodsVersion'
     },
     {
-      label: t('systemVersion.provider'),
+      label: t('version.columns.provider'),
       dataIndex: 'provider'
     },
     {
-      label: t('systemVersion.publisher'),
+      label: t('version.columns.publisher'),
       dataIndex: 'issuer'
     },
     {
-      label: t('systemVersion.holder'),
+      label: t('version.columns.holder'),
       dataIndex: 'holder'
     },
     {
-      label: t('发行日期'),
+      label: t('version.columns.beginDate'),
       dataIndex: 'beginDate'
     },
     {
-      label: t('过期日期'),
+      label: t('version.columns.endDate'),
       dataIndex: 'endDate'
     }
   ]
 ];
 
-const gridColumnsPriv = [
+/**
+ * Grid columns configuration for private edition
+ * Defines the layout and fields for private version display
+ * Includes additional fields like license number and MD5 signature
+ */
+const privateEditionColumns = [
   [
     {
-      label: t('版本类型'),
+      label: t('version.columns.editionType'),
       dataIndex: 'editionType'
     },
     {
-      label: t('应用编码'),
+      label: t('version.columns.goodsCode'),
       dataIndex: 'goodsCode'
     },
     {
-      label: t('应用版本'),
+      label: t('version.columns.goodsVersion'),
       dataIndex: 'goodsVersion'
     },
     {
-      label: t('systemVersion.provider'),
+      label: t('version.columns.provider'),
       dataIndex: 'provider'
     },
     {
-      label: t('systemVersion.publisher'),
+      label: t('version.columns.publisher'),
       dataIndex: 'issuer'
     },
     {
-      label: t('systemVersion.holder'),
+      label: t('version.columns.holder'),
       dataIndex: 'holder'
     },
     {
-      label: t('许可编号'),
+      label: t('version.columns.licenseNo'),
       dataIndex: 'licenseNo'
     },
     {
-      label: t('发行日期'),
+      label: t('version.columns.beginDate'),
       dataIndex: 'beginDate'
     },
     {
-      label: t('过期日期'),
+      label: t('version.columns.endDate'),
       dataIndex: 'endDate'
     },
     {
-      label: t('MD5签名'),
+      label: t('version.columns.signature'),
       dataIndex: 'signature'
     }
   ]
 ];
 
-const init = async () => {
-  editionType.value = appContext.getEditionType();
-  loadInstalledVersion();
-};
-
-const loadInstalledVersion = async (): Promise<void> => {
-  const [error, { data }] = await edition.getEditionInstalled('AngusGM');
-  loading.value = false;
-  if (error) {
-    return;
-  }
-  installVersion.value = data;
-};
-
-const getVersionTypeIcon = (key: string) => {
+/**
+ * Get edition type icon based on edition type key
+ * Returns appropriate icon class for different edition types
+ */
+const getEditionTypeIcon = (key: string) => {
   switch (key) {
-    case 'DATACENTER':
+    case EditionType.DATACENTER:
       return 'icon-shujuzhongxin';
-    case 'CLOUD_SERVICE':
+    case EditionType.CLOUD_SERVICE:
       return 'icon-yunfuwu';
-    case 'ENTERPRISE':
+    case EditionType.ENTERPRISE:
       return 'icon-qiye';
-    case 'COMMUNITY':
+    case EditionType.COMMUNITY:
       return 'icon-shequ';
   }
 };
 
+/**
+ * Copy license number to clipboard
+ * Copies the license number and updates copy button text
+ */
 const copy = async () => {
   const { toClipboard } = clipboard();
 
   try {
-    if (!installVersion.value) {
+    if (!installEdition.value) {
       return;
     }
-    await toClipboard(installVersion.value.licenseNo);
-    copyContent.value = 'systemVersion.copyRes';
+
+    await toClipboard(installEdition.value.licenseNo);
+    copyContent.value = 'version.messages.copySuccess';
   } catch (error) {
-    copyContent.value = 'systemVersion.copyRes1';
+    copyContent.value = 'version.messages.copyFailure';
   }
 };
 
+/**
+ * Reset copy button text on mouse enter
+ * Restores original copy button text when hovering
+ */
 const moveIn = () => {
-  copyContent.value = 'systemVersion.copy';
+  copyContent.value = 'version.messages.copy';
 };
 
-const getImg = computed(() => {
-  const theme = document.body.className;
-  switch (theme) {
-    case 'dark-theme':
-      return darkImg;
-    case 'gray-theme' || 'light-theme':
-      return grayImg;
-    default:
-      return grayImg;
-  }
-});
-
+/**
+ * Computed tooltip title
+ * Dynamically displays copy button tooltip text
+ */
 const tooltipTitle = computed(() => {
   return t(copyContent.value);
 });
 
+/**
+ * Computed columns configuration
+ * Returns appropriate column configuration based on edition type
+ */
+const columns = computed(() => {
+  if (editionType.value === EditionType.CLOUD_SERVICE) {
+    return cloudEditionColumns;
+  }
+  return privateEditionColumns;
+});
+
+/**
+ * Initialize component
+ * Sets up edition type and loads installed version data
+ */
+const init = async () => {
+  editionType.value = appContext.getEditionType();
+  await loadInstalledVersion();
+};
+
+/**
+ * Load installed version information
+ * Fetches current installation details from API
+ */
+const loadInstalledVersion = async (): Promise<void> => {
+  try {
+    const [error, { data }] = await edition.getEditionInstalled('AngusGM');
+    if (error) {
+      return;
+    }
+
+    installEdition.value = data;
+  } finally {
+    loading.value = false;
+  }
+};
+
+/**
+ * Initialize component on mount
+ * Loads initial data when component is mounted
+ */
 onMounted(() => {
   init();
 });
-
-const columns = computed(() => {
-  if (editionType.value === 'CLOUD_SERVICE') {
-    return gridColumnsCloud;
-  }
-
-  return gridColumnsPriv;
-});
 </script>
+
 <template>
-  <Card :title="t('systemVersion.systemVersion')" bodyClass="flex px-8 py-5 items-center space-x-20 pr-30">
-    <img :src="getImg" class="w-60 h-60" />
+  <!-- System Version Information Card -->
+  <Card :title="t('version.titles.systemVersion')" bodyClass="flex px-8 py-5 items-center space-x-20 pr-30">
+    <!-- Version Icon Image -->
+    <img :src="grayImg" class="w-60 h-60" />
+
+    <!-- Version Information Grid -->
     <Skeleton
       active
       :loading="loading"
       :title="false"
       :paragraph="{ rows: 9 }">
-      <Grid :columns="columns" :dataSource="installVersion">
+      <Grid :columns="columns" :dataSource="installEdition">
+        <!-- License Number with Copy Functionality -->
         <template #licenseNo="{text}">
           {{ text }}
           <Tooltip :title="tooltipTitle">
@@ -195,21 +249,29 @@ const columns = computed(() => {
               @click="copy" />
           </Tooltip>
         </template>
+
+        <!-- Edition Type with Icon -->
         <template #editionType="{text}">
-          <Icon :icon="getVersionTypeIcon(text?.value)" class="text-4 -mt-0.5" />
+          <Icon :icon="getEditionTypeIcon(text?.value)" class="text-4 -mt-0.5" />
           {{ text?.message }}
         </template>
+
+        <!-- Goods Type Display -->
         <template #goodsType="{text}">
           {{ text?.message }}
         </template>
+
+        <!-- End Date with Remaining Days -->
         <template #endDate="{text}">
-          {{ text }} ( 剩余{{ dayjs(text).diff(dayjs().format(),'day') }}天 )
+          {{ text }} ( {{ t('version.messages.remainingDays', { days: dayjs(text).diff(dayjs().format(),'day') }) }} )
         </template>
       </Grid>
     </Skeleton>
   </Card>
+
+  <!-- Updatable Version Component -->
   <UpdatedVersion
     class="mt-2"
-    :currVersion="installVersion?.goodsVersion"
-    :installGoodsCode="installVersion?.goodsCode" />
+    :currentVersion="installEdition?.goodsVersion"
+    :installGoodsCode="installEdition?.goodsCode" />
 </template>
