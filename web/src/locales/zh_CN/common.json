@@ -141,6 +141,9 @@
       "tenant": "租户",
       "source": "来源",
       "association": "关联"
+    },
+    "quota": {
+      "selectApp": "选择应用"
     }
   }
 }

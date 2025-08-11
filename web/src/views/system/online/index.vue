@@ -2,7 +2,7 @@
 import { computed, h, onMounted, ref } from 'vue';
 import { Badge, Spin } from 'ant-design-vue';
 import { Icon, IconRefresh, Image, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, app } from '@xcan-angus/infra';
 import { LoadingOutlined } from '@ant-design/icons-vue';
 
 import { useI18n } from 'vue-i18n';
@@ -21,37 +21,14 @@ type Online = {
   loading: boolean;
 }
 
-type FilterOp =
-  'EQUAL'
-  | 'NOT_EQUAL'
-  | 'GREATER_THAN'
-  | 'GREATER_THAN_EQUAL'
-  | 'LESS_THAN'
-  | 'LESS_THAN_EQUAL'
-  | 'CONTAIN'
-  | 'NOT_CONTAIN'
-  | 'MATCH_END'
-  | 'MATCH'
-  | 'IN'
-  | 'NOT_IN'
-type Filters = { key: string, value: string, op: FilterOp }[]
-type SearchParams = {
-  pageNo?: number;
-  pageSize?: number;
-  orderBy?: string;
-  orderSort?: 'ASC' | 'DESC';
-  fullTextSearch?: boolean;
-  filters?: Filters;
-}
-
 const { t } = useI18n();
 
-const params = ref<SearchParams>({
+const params = ref<PageQuery>({
   pageNo: 1,
   pageSize: 10,
   filters: [],
   orderBy: 'id',
-  orderSort: 'DESC',
+  orderSort: PageQuery.OrderSort.Desc,
   fullTextSearch: true
 });
 const total = ref(0);
@@ -85,7 +62,7 @@ const handleLogOut = async function (item: Online) {
 
 const tableChange = async (_pagination, _filters, sorter: {
   orderBy: string;
-  orderSort: 'DESC' | 'ASC'
+  orderSort: PageQuery.OrderSort
 }) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -106,7 +83,7 @@ const pagination = computed(() => {
   };
 });
 
-const searchChange = async (data: { key: string; value: string; op: FilterOp; }[]) => {
+const searchChange = async (data: { key: string; value: string; op: SearchCriteria.OpEnum; }[]) => {
   params.value.pageNo = 1;
   params.value.filters = data;
   disabled.value = true;

@@ -174,10 +174,36 @@
       "verificationCode": "Verification Code"
     }
   },
-  "event": {
-
-  },
   "quota": {
+    "columns": {
+      "resourceName": "Resource Name",
+      "quotaDescription": "Quota Description",
+      "appCode": "Application Code",
+      "currentQuota": "Current Quota",
+      "defaultQuota": "Default Quota",
+      "allowUpperLimit": "Allow Upper Limit",
+      "quotaKey": "Quota Key",
+      "allowChange": "Allow Change",
+      "operation": "Operation"
+    },
+    "placeholder": {
+      "selectApp": "Select Application",
+      "quotaRange": "{min}~{max}"
+    },
+    "messages": {
+      "modifyQuota": "Modify Quota",
+      "allowMinQuota": "Allow Minimum Quota",
+      "allowMaxQuota": "Allow Maximum Quota",
+      "currentQuota": "Current Quota",
+      "quotaRangeTip": "If you have requirements for extending resource quotas, you can",
+      "submitTicket": "Submit Ticket",
+      "contactEngineer": "contact the ticket engineer to help you process!"
+    },
+    "titles": {
+      "quotaManagement": "Quota Management"
+    }
+  },
+  "event": {
 
   },
   "audit": {

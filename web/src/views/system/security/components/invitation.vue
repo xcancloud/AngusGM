@@ -13,13 +13,13 @@ const { t } = useI18n();
 
 interface Props {
   signupAllow: SignupAllow;
-  registSwitchLoading: boolean;
+  signupSwitchLoading: boolean;
   resetButtonLoading: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   signupAllow: undefined,
-  registSwitchLoading: false,
+  signupSwitchLoading: false,
   resetButtonLoading: false
 });
 
@@ -74,7 +74,7 @@ watch(() => props.signupAllow, (newValue) => {
         <span>{{ t('security.titles.allowRegistration') }}</span>
         <Switch
           v-model:checked="currEnabled"
-          :loading="props.registSwitchLoading"
+          :loading="props.signupSwitchLoading"
           size="small"
           class="ml-6 mt-0.5"
           @change="enabledChange" />

@@ -79,7 +79,7 @@ const editSuccess = async () => {
   disabled.value = false;
 };
 
-const options = ref<string[]>([]);
+const options = ref<{ label: string; value: string }[]>([]);
 const loadAppList = async () => {
   const [, { data = [] }] = await setting.getTenantQuotaApp();
   options.value = data?.map(item => ({ label: item, value: item }));
@@ -92,31 +92,37 @@ onMounted(() => {
 
 const columnsCloud = [
   {
-    title: '资源名称',
+    key: 'value',
+    title: t('quota.columns.resourceName'),
     dataIndex: 'value',
     width: '20%'
   },
   {
-    title: '配额描述',
+    key: 'name',
+    title: t('quota.columns.quotaDescription'),
     dataIndex: 'name'
   },
   {
-    title: '应用编码',
+    key: 'appCode',
+    title: t('quota.columns.appCode'),
     dataIndex: 'appCode',
     width: '10%'
   },
   {
-    title: '当前配额',
+    key: 'quota',
+    title: t('quota.columns.currentQuota'),
     dataIndex: 'quota',
     width: '10%'
   },
   {
-    title: '默认配额',
+    key: 'default0',
+    title: t('quota.columns.defaultQuota'),
     dataIndex: 'default0',
     width: '10%'
   },
   {
-    title: '允许上限',
+    key: 'max',
+    title: t('quota.columns.allowUpperLimit'),
     dataIndex: 'max',
     width: '10%'
   }
@@ -124,42 +130,50 @@ const columnsCloud = [
 
 const columnsPrivate = [
   {
-    title: '资源名称',
+    key: 'name',
+    title: t('quota.columns.resourceName'),
     dataIndex: 'name',
     width: '20%'
   },
   {
-    title: '配额Key',
+    key: 'value',
+    title: t('quota.columns.quotaKey'),
     dataIndex: 'value',
     width: '20%'
   },
   {
-    title: '应用编码',
+    key: 'appCode',
+    title: t('quota.columns.appCode'),
     dataIndex: 'appCode',
     width: '10%'
   },
   {
-    title: '当前配额',
+    key: 'quota',
+    title: t('quota.columns.currentQuota'),
     dataIndex: 'quota',
     width: '10%'
   },
   {
-    title: '默认配额',
+    key: 'default0',
+    title: t('quota.columns.defaultQuota'),
     dataIndex: 'default0',
     width: '10%'
   },
   {
-    title: '允许上限',
+    key: 'max',
+    title: t('quota.columns.allowUpperLimit'),
     dataIndex: 'max',
     width: '10%'
   },
   {
-    title: '是否可修改',
+    key: 'allowChange',
+    title: t('quota.columns.allowChange'),
     dataIndex: 'allowChange',
     width: '10%'
   },
   {
-    title: '操作',
+    key: 'action',
+    title: t('quota.columns.operation'),
     dataIndex: 'action',
     width: '10%'
   }
@@ -180,7 +194,7 @@ const columns = computed(() => {
         v-model:value="appCode"
         showSearch
         allowClear
-        :placeholder="t('选择应用')"
+        :placeholder="t('quota.placeholder.selectApp')"
         :options="options"
         internal
         size="small"
@@ -208,7 +222,7 @@ const columns = computed(() => {
           {{ record.name.value }}
         </template>
         <template v-if="column.dataIndex === 'allowChange'">
-          {{ text?'是':'否' }}
+          {{ text ? t('common.status.yes') : t('common.status.no') }}
         </template>
         <template v-if="column.dataIndex === 'action'">
           <template v-if="record.allowChange && app.has('ResourceQuotaModify')">

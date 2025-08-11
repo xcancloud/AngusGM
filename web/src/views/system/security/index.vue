@@ -34,7 +34,7 @@ const getTenantSafetyConfig = async function () {
 // Loading states for different security setting operations
 const updateLoading = ref({
   signinSwitchLoading: false, // Login restrictions switch loading
-  registSwitchLoading: false, // Registration switch loading
+  signupSwitchLoading: false, // Registration switch loading
   earlySwitchLoading: false, // Security alert switch loading
   resetButtonLoading: false, // Registration reset button loading
   safetyCheckBoxLoading: false // Security alert checkbox loading
@@ -55,7 +55,7 @@ const updateTenantSafetyConfig = async function (params, operation ?: Operation)
       updateLoading.value.signinSwitchLoading = true;
       break;
     case 'registSwitch':
-      updateLoading.value.registSwitchLoading = true;
+      updateLoading.value.signupSwitchLoading = true;
       break;
     case 'earlySwitch':
       updateLoading.value.earlySwitchLoading = true;
@@ -76,7 +76,7 @@ const updateTenantSafetyConfig = async function (params, operation ?: Operation)
       updateLoading.value.signinSwitchLoading = false;
       break;
     case 'registSwitch':
-      updateLoading.value.registSwitchLoading = false;
+      updateLoading.value.signupSwitchLoading = false;
       break;
     case 'earlySwitch':
       updateLoading.value.earlySwitchLoading = false;
@@ -224,7 +224,7 @@ onMounted(async () => {
   <Invitation
     class="mb-2"
     :signupAllow="safetyConfig?.signupAllow"
-    :registSwitchLoading="updateLoading.registSwitchLoading"
+    :registSwitchLoading="updateLoading.signupSwitchLoading"
     :resetButtonLoading="updateLoading.resetButtonLoading"
     @change="registrationChange" />
   <PasswordPolicy

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Icon, IconRequired, Input, Modal } from '@xcan-angus/vue-ui';
 
 import { setting } from '@/api';
+
+const { t } = useI18n();
 
 interface Props {
   visible: boolean;
@@ -41,7 +44,7 @@ const handleCancel = () => {
 </script>
 <template>
   <Modal
-    title="修改配额"
+    :title="t('quota.messages.modifyQuota')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -50,20 +53,20 @@ const handleCancel = () => {
     @ok="handleOk">
     <div class="text-3 leading-3 text-theme-sub-content mb-4 flex items-center">
       <Icon class="text-blue-tips text-3.5 mr-1" icon="icon-tishi1" />
-      允许最小配额<em class="not-italic mr-1">:</em>
+      {{ t('quota.messages.allowMinQuota') }}<em class="not-italic mr-1">:</em>
       <span class="text-theme-content">{{ props.min }}</span>
       <Icon class="text-blue-tips text-3.5 ml-5 mr-1" icon="icon-tishi1" />
-      允许最大配额<em class="not-italic mr-1">:</em>
+      {{ t('quota.messages.allowMaxQuota') }}<em class="not-italic mr-1">:</em>
       <span class="text-theme-content">{{ props.max }}</span>
     </div>
     <div class="flex items-center space-x-2 whitespace-nowrap text-3 leading-3">
       <IconRequired class="mr-1" />
-      <span>当前配额</span>
+      <span>{{ t('quota.messages.currentQuota') }}</span>
       <Input
         v-model:value="newQuota"
         dataType="number"
         :class="{'border-err':!newQuota}"
-        :placeholder="`${props.min}~${props.max}`"
+        :placeholder="t('quota.placeholder.quotaRange', { min: props.min, max: props.max })"
         :min="props.min"
         :max="props.max" />
     </div>

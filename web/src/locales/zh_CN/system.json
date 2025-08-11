@@ -174,10 +174,36 @@
       "verificationCode": "验证码"
     }
   },
-  "event": {
-
-  },
   "quota": {
+    "columns": {
+      "resourceName": "资源名称",
+      "quotaDescription": "配额描述",
+      "appCode": "应用编码",
+      "currentQuota": "当前配额",
+      "defaultQuota": "默认配额",
+      "allowUpperLimit": "允许上限",
+      "quotaKey": "配额Key",
+      "allowChange": "是否可修改",
+      "operation": "操作"
+    },
+    "placeholder": {
+      "selectApp": "选择应用",
+      "quotaRange": "{min}~{max}"
+    },
+    "messages": {
+      "modifyQuota": "修改配额",
+      "allowMinQuota": "允许最小配额",
+      "allowMaxQuota": "允许最大配额",
+      "currentQuota": "当前配额",
+      "quotaRangeTip": "若您有扩展资源配额的需求，可以",
+      "submitTicket": "提交工单",
+      "contactEngineer": "联系工单工程师帮您处理！"
+    },
+    "titles": {
+      "quotaManagement": "配额管理"
+    }
+  },
+  "event": {
 
   },
   "audit": {
