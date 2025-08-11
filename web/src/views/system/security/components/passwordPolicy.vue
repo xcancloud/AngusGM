@@ -2,8 +2,11 @@
 import { Card, Input } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
+import { useI18n } from 'vue-i18n';
 
 import { PasswordPolicy } from '../PropsType';
+
+const { t } = useI18n();
 
 interface Props {
   passwordPolicy: PasswordPolicy;
@@ -17,6 +20,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'change', value: string, type: string): void }>();
 
+/**
+ * Handle minimum password length change with debounce
+ * Validates input value and emits change event
+ * @param event - Input change event
+ */
 const minLengthChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   if (!value || value === props.passwordPolicy?.minLength || +value < 6 || +value > 50) {
@@ -28,24 +36,23 @@ const minLengthChange = debounce(duration.search, (event: any) => {
 <template>
   <Card bodyClass="px-8 py-5">
     <template #title>
-      <span>密码策略</span>
+      <span>{{ t('security.titles.passwordPolicy') }}</span>
     </template>
     <div class="flex items-center text-3 leading-3 text-theme-content">
-      密码最小长度
+      {{ t('security.labels.minimumPasswordLength') }}
       <Input
         class="w-20 mx-2"
         size="small"
         dataType="number"
-        :value="(+props.passwordPolicy?.minLength)|| '6'"
+        :value="String((+props.passwordPolicy?.minLength) || '6')"
         :min="6"
         :max="50"
         :disabled="props.loading"
         @change="minLengthChange" />
-      位，密码长度范围允许为6-50位。
+      {{ t('security.labels.characters') }}，{{ t('security.labels.passwordLengthRangeAllowed') }}6-50{{ t('security.labels.characters') }}
     </div>
     <div class="flex items-center text-3 leading-3 text-theme-content mt-5">
-      强制要求密码字符类型至少包含“大写字母、小写字母、数字、特殊符号”中的两种组合，其中特殊符号包括“-=[];',./~!@#$%^&*()_+{}:"&lt;
-      >?”。
+      {{ t('security.messages.passwordPolicyRule') }}
     </div>
   </Card>
 </template>

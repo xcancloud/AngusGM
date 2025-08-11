@@ -89,7 +89,6 @@ const errorUpload = ref<number[]>([]);
 
 /* Authentication types: PERSONAL, ENTERPRISE, GOVERNMENT */
 
-
 // Form data structure
 const form = ref<FormState>({
   id: String(query.q),

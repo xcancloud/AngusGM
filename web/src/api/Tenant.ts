@@ -6,7 +6,7 @@ export default class Tenant {
     baseUrl = prefix + '/tenant';
   }
 
-  getTenantDetail (tenantId: string): Promise<[Error | null, any]> {
+  getTenantDetail (tenantId: number): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/${tenantId}`);
   }
 

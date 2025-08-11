@@ -3,15 +3,25 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { AsyncComponent, Card, notification } from '@xcan-angus/vue-ui';
 import { Switch } from 'ant-design-vue';
 import { appContext } from '@xcan-angus/infra';
+import { useI18n } from 'vue-i18n';
 
 import { tenant } from '@/api';
 
+const { t } = useI18n();
+
+// Async component for account cancellation confirmation modal
 const CancellationModal = defineAsyncComponent(() => import('./cancelConform.vue'));
 
+// Reactive state for switch control and tenant status
 const checked = ref(false);
 const tenantStatus = ref<{ value: string, message: string }>({ value: '', message: '' });
+
+/**
+ * Fetch tenant details and update component state
+ * Sets the switch state based on tenant cancellation status
+ */
 const getTenantDetail = async () => {
-  const [error, { data }] = await tenant.getTenantDetail(appContext.getUser()?.tenantId);
+  const [error, { data }] = await tenant.getTenantDetail(appContext.getUser()?.tenantId ?? 0);
   if (error) {
     return;
   }
@@ -19,8 +29,12 @@ const getTenantDetail = async () => {
   checked.value = data?.status?.value === 'CANCELLING';
 };
 
+/**
+ * Handle switch change events for account cancellation
+ * @param value - Boolean value indicating cancellation state
+ */
 const switchChange = async (value: boolean) => {
-  // 撤销注销
+  // Revoke cancellation request
   if (!value) {
     const [error] = await tenant.revokeSignCancel();
     if (error) {
@@ -28,7 +42,7 @@ const switchChange = async (value: boolean) => {
     }
     getTenantDetail();
     checked.value = false;
-    notification.success('取消注销成功');
+    notification.success(t('security.messages.cancellationRevoked'));
     return;
   }
 
@@ -36,6 +50,10 @@ const switchChange = async (value: boolean) => {
   visible.value = true;
 };
 
+/**
+ * Handle modal update events
+ * @param value - Boolean value indicating if update was successful
+ */
 const handleUpdate = (value: boolean) => {
   if (value) {
     getTenantDetail();
@@ -44,16 +62,19 @@ const handleUpdate = (value: boolean) => {
   checked.value = false;
 };
 
+// Initialize component data on mount
 onMounted(() => {
   getTenantDetail();
 });
+
+// Modal visibility state
 const visible = ref(false);
 </script>
 <template>
   <Card bodyClass="px-8 py-5 text-3 leading-3 text-theme-content">
     <template #title>
       <div class="flex items-center">
-        <span>注销账号</span>
+        <span>{{ t('security.titles.accountCancellation') }}</span>
         <Switch
           v-model:checked="checked"
           size="small"
@@ -64,7 +85,7 @@ const visible = ref(false);
           class="text-3 leading-3 mt-1">{{ tenantStatus?.message }}</span>
       </div>
     </template>
-    确认账号不在使用，可以进行注销。系统管理员注销确认后，账户会继续保留24小时后被清除，保留期间您可以撤销注销账户。注销后账号及账号下所有的用户将无法登录，服务及数据将会被删除且无法恢复。
+    {{ t('security.messages.accountCancellationDesc') }}
     <AsyncComponent :visible="visible">
       <CancellationModal
         v-if="visible"

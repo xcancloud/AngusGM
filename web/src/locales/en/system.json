@@ -110,7 +110,69 @@
     }
   },
   "security": {
-
+    "columns": {
+      "invitationCode": "Invitation Code",
+      "minLength": "Minimum Length",
+      "alarmMethod": "Alarm Method",
+      "alarmRecipients": "Alarm Recipients",
+      "verificationCode": "Verification Code"
+    },
+    "placeholder": {
+      "inputMinLength": "Please enter minimum password length",
+      "inputVerificationCode": "Please enter 6-digit verification code"
+    },
+    "messages": {
+      "loginRestrictionsDesc": "Within {interval} minutes, if password errors exceed {errorNum} times, lock account for {lockDuration} minutes.",
+      "passwordPolicyDesc": "Minimum password length {minLength} characters, password length range allowed is 6-50 characters.",
+      "passwordPolicyRule": "Password must contain at least two combinations from \"uppercase letters, lowercase letters, numbers, special symbols\", where special symbols include \"-=[];',./~!@#$%^&*()_+{}:\\\"<>?\".",
+      "registrationDesc": "After enabling the registration code, users can register as users under the current account through invitation codes.",
+      "accountCancellationDesc": "Confirm that the account is no longer in use and can be cancelled. After system administrator confirmation, the account will be retained for 24 hours before being cleared. During the retention period, you can revoke the account cancellation. After cancellation, the account and all users under it will be unable to log in, and services and data will be deleted and cannot be recovered.",
+      "cancellationModalDesc": "The person cancelling must be a system administrator.",
+      "sendVerificationCodeDesc": "Send verification code to current user's mobile",
+      "verificationCodeCountdown": "({count})",
+      "verificationCodeError": "Please enter 6-digit verification code",
+      "cancellationRevoked": "Cancellation revoked successfully",
+      "cancellationSuccess": "Account cancelled successfully, will take effect in 24 hours",
+      "selectUsers": "Select Users"
+    },
+    "titles": {
+      "loginRestrictions": "Login Restrictions",
+      "passwordPolicy": "Password Policy",
+      "allowRegistration": "Allow Registration",
+      "securityAlerts": "Security Alerts",
+      "accountCancellation": "Account Cancellation",
+      "cancellationConfirmation": "Account Cancellation Confirmation"
+    },
+    "validation": {
+      "verificationCodeRequired": "Please enter 6-digit verification code"
+    },
+    "buttons": {
+      "reset": "Reset",
+      "selectUsers": "Select Users",
+      "sendVerificationCode": "Send Verification Code",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "labels": {
+      "sms": "SMS",
+      "email": "Email",
+      "within": "Within",
+      "minutes": "minutes",
+      "ifPasswordErrorsExceed": "if password errors exceed",
+      "times": "times",
+      "lockAccountFor": "lock account for",
+      "minimumPasswordLength": "Minimum password length",
+      "characters": "characters",
+      "passwordLengthRangeAllowed": "password length range allowed is",
+      "passwordMustContain": "Password must contain at least two combinations",
+      "from": "from",
+      "whereSpecialSymbolsInclude": "where special symbols include",
+      "afterEnablingRegistrationCode": "After enabling the registration code, users can register as users under the current account through invitation codes.",
+      "confirmAccountNoLongerInUse": "Confirm that the account is no longer in use and can be cancelled. After system administrator confirmation, the account will be retained for 24 hours before being cleared. During the retention period, you can revoke the account cancellation. After cancellation, the account and all users under it will be unable to log in, and services and data will be deleted and cannot be recovered.",
+      "personCancellingMustBeAdmin": "The person cancelling must be a system administrator.",
+      "sendVerificationCodeToCurrentUserMobile": "Send verification code to current user's mobile",
+      "verificationCode": "Verification Code"
+    }
   },
   "event": {
 

@@ -4,9 +4,13 @@ import { AsyncComponent, Card, Grid, Icon } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
 import { Button, Checkbox, CheckboxGroup, Switch, Tag } from 'ant-design-vue';
+import { useI18n } from 'vue-i18n';
 
 import { Alarm, Operation } from '../PropsType';
 
+const { t } = useI18n();
+
+// Async component for user selection modal
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 
 interface Props {
@@ -28,39 +32,61 @@ const emit = defineEmits<{
   }[], type: string, operation?: Operation): void
 }>();
 
-// 获取注册码
-// const getCode = async function () {
-//   const [error, res] = await tenant.getInvitationCode();
-// };
-
+// Early warning switch state
 const currEnabled = ref(false);
+
+/**
+ * Handle early warning switch change with debounce
+ * @param value - Boolean value indicating if early warning is enabled
+ */
 const enabledChange = debounce(duration.search, (value) => {
   emit('change', value, 'enabled', 'earlySwitch');
 });
 
+// Selected alarm method IDs
 const checkedMethodIds = ref<('SMS' | 'EMAIL') []>([]);
 
+// User selection modal visibility
 const userVisible = ref(false);
+
+/**
+ * Open user selection modal
+ */
 const handleSelectUser = () => {
   userVisible.value = true;
 };
 
+// Selected users for receiving alarms
 const receiveUser = ref<{ id: string, fullName: string }[]>([]);
+
+/**
+ * Handle alarm method checkbox changes
+ */
 const checkBoxChange = () => {
   emit('change', checkedMethodIds.value, 'alarmWay', 'safetyCheckBox');
 };
 
+/**
+ * Save selected users for alarm reception
+ * @param _userIds - Array of user IDs
+ * @param _users - Array of user objects with id and fullName
+ */
 const userSave = async (_userIds: string[], _users: { id: string, fullName: string }[]) => {
   userVisible.value = false;
   receiveUser.value = _users;
   emit('change', _users, 'receiveUser');
 };
 
+/**
+ * Remove user from alarm reception list
+ * @param userId - ID of user to remove
+ */
 const delUser = (userId: string) => {
   receiveUser.value = receiveUser.value.filter(item => item.id !== userId);
   emit('change', receiveUser.value, 'receiveUser');
 };
 
+// Watch for alarm prop changes and update local state
 watch(() => props.alarm, (newValue) => {
   if (newValue) {
     currEnabled.value = newValue?.enabled;
@@ -71,15 +97,16 @@ watch(() => props.alarm, (newValue) => {
   immediate: true
 });
 
+// Grid column configuration for layout
 const gridColumns = [
   [
     {
-      label: '告警方式',
+      label: t('security.columns.alarmMethod'),
       dataIndex: 'type',
       colon: false
     },
     {
-      label: '告警接收用户',
+      label: t('security.columns.alarmRecipients'),
       dataIndex: 'user',
       colon: false
     }
@@ -91,7 +118,7 @@ const gridColumns = [
   <Card bodyClass="px-8 py-5 flex items-center space-x-5">
     <template #title>
       <div class="flex items-center">
-        <span>安全告警</span>
+        <span>{{ t('security.titles.securityAlerts') }}</span>
         <Switch
           v-model:checked="currEnabled"
           :loading="props.earlySwitchLoading"
@@ -112,13 +139,13 @@ const gridColumns = [
               value="SMS"
               :disabled="!currEnabled"
               class="text-3 leading-3">
-              短信
+              {{ t('security.labels.sms') }}
             </Checkbox>
             <Checkbox
               value="EMAIL"
               :disabled="!currEnabled"
               class="text-3 leading-3">
-              邮箱
+              {{ t('security.labels.email') }}
             </Checkbox>
           </CheckboxGroup>
         </template>
@@ -140,7 +167,7 @@ const gridColumns = [
             size="small"
             @click="handleSelectUser">
             <Icon icon="icon-xuanze" class="mr-1 text-3" />
-            选择用户
+            {{ t('security.buttons.selectUsers') }}
           </Button>
         </template>
       </Grid>

@@ -4,8 +4,11 @@ import { Card, Input } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { Switch } from 'ant-design-vue';
 import { duration } from '@xcan-angus/infra';
+import { useI18n } from 'vue-i18n';
 
 import { Operation, SigninLimit } from '../PropsType';
+
+const { t } = useI18n();
 
 interface Props {
   signinLimit: SigninLimit;
@@ -19,6 +22,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'change', value: string | boolean, type: string, operation?: Operation): void }>();
 
+/**
+ * Handle locked password error number change with debounce
+ * Validates input value and emits change event
+ * @param event - Input change event
+ */
 const lockedPasswordErrorNumChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   if (!value || value === props.signinLimit?.lockedPasswordErrorNum || +value < 1 || +value > 50) {
@@ -27,6 +35,11 @@ const lockedPasswordErrorNumChange = debounce(duration.search, (event: any) => {
   emit('change', value, 'lockedPasswordErrorNum');
 });
 
+/**
+ * Handle locked duration change with debounce
+ * Validates input value and emits change event
+ * @param event - Input change event
+ */
 const lockedDurationInMinutesChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   if (!value || value === props.signinLimit?.lockedDurationInMinutes) {
@@ -35,6 +48,11 @@ const lockedDurationInMinutesChange = debounce(duration.search, (event: any) => 
   emit('change', value, 'lockedDurationInMinutes');
 });
 
+/**
+ * Handle password error interval change with debounce
+ * Validates input value and emits change event
+ * @param event - Input change event
+ */
 const passwordErrorIntervalInMinutesChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
   if (!value || value === props.signinLimit?.passwordErrorIntervalInMinutes) {
@@ -43,11 +61,18 @@ const passwordErrorIntervalInMinutesChange = debounce(duration.search, (event: a
   emit('change', value, 'passwordErrorIntervalInMinutes');
 });
 
+// Current login restrictions switch state
 const currEnabled = ref(false);
+
+/**
+ * Handle login restrictions switch change
+ * @param value - Boolean value indicating if login restrictions are enabled
+ */
 const enabledChange = (value) => {
   emit('change', value, 'enabled', 'signinSwitch');
 };
 
+// Watch for signinLimit prop changes and update local state
 watch(() => props.signinLimit, (newValue) => {
   if (newValue) {
     currEnabled.value = newValue.enabled;
@@ -61,7 +86,7 @@ watch(() => props.signinLimit, (newValue) => {
   <Card bodyClass="px-8 py-5">
     <template #title>
       <div class="flex items-center">
-        <span>登录限制</span>
+        <span>{{ t('security.titles.loginRestrictions') }}</span>
         <Switch
           v-model:checked="currEnabled"
           :loading="props.signinSwitchLoading"
@@ -72,7 +97,7 @@ watch(() => props.signinLimit, (newValue) => {
       </div>
     </template>
     <div class="flex items-center text-3 leading-3 text-theme-content">
-      在
+      {{ t('security.labels.within') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -81,7 +106,7 @@ watch(() => props.signinLimit, (newValue) => {
         :min="0"
         :disabled="!currEnabled || !props.signinLimit"
         @change="passwordErrorIntervalInMinutesChange" />
-      分钟内，密码错误超出
+      {{ t('security.labels.minutes') }}，{{ t('security.labels.ifPasswordErrorsExceed') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -91,7 +116,7 @@ watch(() => props.signinLimit, (newValue) => {
         :max="50"
         :disabled="!currEnabled || !props.signinLimit"
         @change="lockedPasswordErrorNumChange" />
-      次，锁定账号
+      {{ t('security.labels.times') }}，{{ t('security.labels.lockAccountFor') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -100,7 +125,7 @@ watch(() => props.signinLimit, (newValue) => {
         :min="0"
         :disabled="!currEnabled || !props.signinLimit"
         @change="lockedDurationInMinutesChange" />
-      分钟。
+      {{ t('security.labels.minutes') }}
     </div>
   </Card>
 </template>

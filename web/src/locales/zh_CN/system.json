@@ -110,7 +110,69 @@
     }
   },
   "security": {
-
+    "columns": {
+      "invitationCode": "邀请码",
+      "minLength": "最小长度",
+      "alarmMethod": "告警方式",
+      "alarmRecipients": "告警接收人",
+      "verificationCode": "验证码"
+    },
+    "placeholder": {
+      "inputMinLength": "请输入密码最小长度",
+      "inputVerificationCode": "请输入6位数字验证码"
+    },
+    "messages": {
+      "loginRestrictionsDesc": "在{interval}分钟内，如果密码错误超过{errorNum}次，锁定账户{lockDuration}分钟。",
+      "passwordPolicyDesc": "最小密码长度{minLength}个字符，密码长度范围允许6-50个字符。",
+      "passwordPolicyRule": "密码必须包含\"大写字母、小写字母、数字、特殊符号\"中的至少两种组合，其中特殊符号包括\"-=[];',./~!@#$%^&*()_+{}:\\\"<>?\"。",
+      "registrationDesc": "启用注册码后，用户可通过邀请码在当前账户下注册为用户。",
+      "accountCancellationDesc": "确认该账户不再使用，可以注销。系统管理员确认后，账户将保留24小时后被清理。在保留期间，您可以撤销账户注销。注销后，该账户及其下的所有用户将无法登录，服务及数据将被删除且无法恢复。",
+      "cancellationModalDesc": "注销人员必须是系统管理员。",
+      "sendVerificationCodeDesc": "向当前用户手机发送验证码",
+      "verificationCodeCountdown": "({count})",
+      "verificationCodeError": "请输入6位数字验证码",
+      "cancellationRevoked": "注销撤销成功",
+      "cancellationSuccess": "账户注销成功，将在24小时后生效",
+      "selectUsers": "选择用户"
+    },
+    "titles": {
+      "loginRestrictions": "登录限制",
+      "passwordPolicy": "密码策略",
+      "allowRegistration": "允许注册",
+      "securityAlerts": "安全告警",
+      "accountCancellation": "账户注销",
+      "cancellationConfirmation": "账户注销确认"
+    },
+    "validation": {
+      "verificationCodeRequired": "请输入6位数字验证码"
+    },
+    "buttons": {
+      "reset": "重置",
+      "selectUsers": "选择用户",
+      "sendVerificationCode": "发送验证码",
+      "confirm": "确认",
+      "cancel": "取消"
+    },
+    "labels": {
+      "sms": "短信",
+      "email": "邮箱",
+      "within": "在",
+      "minutes": "分钟",
+      "ifPasswordErrorsExceed": "如果密码错误超过",
+      "times": "次",
+      "lockAccountFor": "锁定账户",
+      "minimumPasswordLength": "最小密码长度",
+      "characters": "个字符",
+      "passwordLengthRangeAllowed": "密码长度范围允许是",
+      "passwordMustContain": "密码必须包含至少两种组合",
+      "from": "从",
+      "whereSpecialSymbolsInclude": "其中特殊符号包括",
+      "afterEnablingRegistrationCode": "启用注册码后，用户可通过邀请码在当前账户下注册为用户。",
+      "confirmAccountNoLongerInUse": "确认该账户不再使用，可以注销。系统管理员确认后，账户将保留24小时后被清理。在保留期间，您可以撤销账户注销。注销后，该账户及其下的所有用户将无法登录，服务及数据将被删除且无法恢复。",
+      "personCancellingMustBeAdmin": "注销人员必须是系统管理员。",
+      "sendVerificationCodeToCurrentUserMobile": "向当前用户手机发送验证码",
+      "verificationCode": "验证码"
+    }
   },
   "event": {
 

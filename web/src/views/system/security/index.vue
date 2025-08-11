@@ -5,16 +5,22 @@ import { appContext } from '@xcan-angus/infra';
 import { setting } from '@/api';
 import { Operation, SafetyConfig } from './PropsType';
 
+// Async components for security settings
 const LoginRestrictions = defineAsyncComponent(() => import('./components/loginRestrictions.vue'));
 const Invitation = defineAsyncComponent(() => import('./components/invitation.vue'));
 const PasswordPolicy = defineAsyncComponent(() => import('./components/passwordPolicy.vue'));
 const EarlyWarning = defineAsyncComponent(() => import('./components/earlyWarning.vue'));
 const AccountCancellation = defineAsyncComponent(() => import('./components/accountCancel.vue'));
 
+// Security configuration state
 const safetyConfig = ref<SafetyConfig>();
 
 const loading = ref(false);
-// 获取安全配置
+
+/**
+ * Fetch tenant security configuration
+ * Retrieves security settings from API and updates local state
+ */
 const getTenantSafetyConfig = async function () {
   loading.value = true;
   const [error, { data }] = await setting.getTenantSafetyConfig();
@@ -25,17 +31,25 @@ const getTenantSafetyConfig = async function () {
   safetyConfig.value = data;
 };
 
+// Loading states for different security setting operations
 const updateLoading = ref({
-  signinSwitchLoading: false, // 登录限制开关loading
-  registSwitchLoading: false, // 允许注册开关loading
-  earlySwitchLoading: false, // 安全告警开关oading
-  resetButtonLoading: false, // 允许注册重置按钮loading
-  safetyCheckBoxLoading: false // 安全告警复选框loading
+  signinSwitchLoading: false, // Login restrictions switch loading
+  registSwitchLoading: false, // Registration switch loading
+  earlySwitchLoading: false, // Security alert switch loading
+  resetButtonLoading: false, // Registration reset button loading
+  safetyCheckBoxLoading: false // Security alert checkbox loading
 });
 
-// 更新安全配置
+/**
+ * Update tenant security configuration
+ * Handles loading states and error recovery for different operations
+ * @param params - Configuration parameters to update
+ * @param operation - Type of operation being performed
+ */
 const updateTenantSafetyConfig = async function (params, operation ?: Operation) {
   const oldSafetyConfig = JSON.parse(JSON.stringify(safetyConfig.value));
+
+  // Set loading state based on operation type
   switch (operation) {
     case 'signinSwitch':
       updateLoading.value.signinSwitchLoading = true;
@@ -53,7 +67,10 @@ const updateTenantSafetyConfig = async function (params, operation ?: Operation)
       updateLoading.value.safetyCheckBoxLoading = true;
       break;
   }
+
   const [error] = await setting.updateTenantSafetyConfig(params);
+
+  // Clear loading state based on operation type
   switch (operation) {
     case 'signinSwitch':
       updateLoading.value.signinSwitchLoading = false;
@@ -71,12 +88,20 @@ const updateTenantSafetyConfig = async function (params, operation ?: Operation)
       updateLoading.value.safetyCheckBoxLoading = false;
       break;
   }
+
+  // Restore old configuration on error
   if (error) {
     safetyConfig.value = oldSafetyConfig;
   }
 };
 
-// 登录限制模块变化
+/**
+ * Handle login restrictions module changes
+ * Updates signinLimit configuration and triggers API update
+ * @param value - New value for the setting
+ * @param type - Type of setting to update
+ * @param operation - Operation type for loading state management
+ */
 const signinLimitChange = (value, type, operation ?: Operation) => {
   if (!safetyConfig.value) {
     return;
@@ -95,7 +120,13 @@ const signinLimitChange = (value, type, operation ?: Operation) => {
   updateTenantSafetyConfig(safetyConfig.value, operation);
 };
 
-// 允许注册模块变化
+/**
+ * Handle registration module changes
+ * Updates signupAllow configuration and triggers API update
+ * @param value - New value for the setting
+ * @param type - Type of setting to update
+ * @param operation - Operation type for loading state management
+ */
 const registrationChange = (value, type, operation?: Operation) => {
   if (!safetyConfig.value) {
     return;
@@ -115,7 +146,12 @@ const registrationChange = (value, type, operation?: Operation) => {
   updateTenantSafetyConfig(safetyConfig.value, operation);
 };
 
-// 密码策略模块变化
+/**
+ * Handle password policy module changes
+ * Updates passwordPolicy configuration and triggers API update
+ * @param value - New value for the setting
+ * @param type - Type of setting to update
+ */
 const passwordPolicyChange = (value, type) => {
   if (!safetyConfig.value) {
     return;
@@ -133,7 +169,13 @@ const passwordPolicyChange = (value, type) => {
   updateTenantSafetyConfig(safetyConfig.value);
 };
 
-// 安全告警模块块变化
+/**
+ * Handle security alert module changes
+ * Updates alarm configuration and triggers API update
+ * @param value - New value for the setting
+ * @param type - Type of setting to update
+ * @param operation - Operation type for loading state management
+ */
 const earlyWarningChange = (value, type, operation?: Operation) => {
   if (!safetyConfig.value) {
     return;
@@ -144,6 +186,7 @@ const earlyWarningChange = (value, type, operation?: Operation) => {
     return;
   }
 
+  // Initialize alarm configuration if it doesn't exist
   if (!safetyConfig.value?.alarm) {
     safetyConfig.value.alarm = {
       enabled: true,
@@ -162,10 +205,13 @@ const earlyWarningChange = (value, type, operation?: Operation) => {
   updateTenantSafetyConfig(safetyConfig.value, operation);
 };
 
+// Edition type for conditional component rendering
 const editionType = ref<string>();
+
+// Initialize component data on mount
 onMounted(async () => {
   editionType.value = appContext.getEditionType();
-  getTenantSafetyConfig();
+  await getTenantSafetyConfig();
 });
 
 </script>
