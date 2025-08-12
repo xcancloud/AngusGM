@@ -7,12 +7,13 @@ import { PageQuery, GM } from '@xcan-angus/infra';
 import { setting, userLog } from '@/api';
 import { OperationLogRecord } from './PropsType';
 
-// Component state management
-const showCount = ref(true);
 const Statistics = defineAsyncComponent(() => import('@/views/system/log/operation/statistics/index.vue'));
 const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));
 
 const { t } = useI18n();
+
+// Component state management
+const showCount = ref(true);
 
 // Pagination and query parameters with correct typing
 const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
