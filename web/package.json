@@ -34,7 +34,7 @@
         "@xcan-angus/infra": "^1.0.0",
         "@xcan-angus/quill": "^2.0.3",
         "@xcan-angus/vue-ui": "^1.0.0",
-        "ant-design-vue": "^4.0.0",
+        "ant-design-vue": "^3.2.20",
         "axios": "^1.6.2",
         "dayjs": "^1.11.10",
         "dompurify": "^3.0.9",
