@@ -5,6 +5,12 @@ import { Checkbox, Form, FormItem } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';
 
+/**
+ * Component props interface for user configuration
+ * @param {number} index - Component index in parent
+ * @param {string} keys - Unique key identifier
+ * @param {any} query - Query parameters for data population
+ */
 interface Props {
   index: number,
   keys: string,
@@ -19,31 +25,40 @@ const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
 
 const formRef = ref();
 
+// Form layout configuration
 const labelCol = { span: 9 };
 const wrapperCol = { span: 15 };
+
+// Reactive form data for LDAP user configuration
 const form: any = reactive({
-  firstNameAttribute: '',
-  emailAttribute: '',
-  mobileAttribute: '',
-  userIdAttribute: '',
-  objectClass: '',
-  objectFilter: '',
-  passwordAttribute: '',
-  usernameAttribute: '',
-  ignoreSameIdentityUser: true
+  firstNameAttribute: '',           // LDAP attribute for user's first name
+  emailAttribute: '',              // LDAP attribute for user's email
+  mobileAttribute: '',             // LDAP attribute for user's mobile number
+  userIdAttribute: '',             // LDAP attribute for user's unique ID
+  objectClass: '',                 // LDAP object class for user entries
+  objectFilter: '',                // LDAP filter for user search
+  passwordAttribute: '',           // LDAP attribute for user's password
+  usernameAttribute: '',           // LDAP attribute for user's username
+  ignoreSameIdentityUser: true     // Flag to ignore duplicate identity users
 });
+
+// Form validation rules for required fields
 const rules = {
-  objectClass: [{ required: true, message: t('systemLdap.user-1') }],
-  objectFilter: [{ required: true, message: t('systemLdap.user-2') }],
-  userIdAttribute: [{ required: true, message: t('systemLdap.user-3') }],
-  passwordAttribute: [{ required: true, message: t('systemLdap.user-8') }],
-  displayNameAttribute: [{ required: true, message: '请输入用户姓名属性' }],
-  firstNameAttribute: [{ required: true, message: '请输入用户名字属性' }],
-  lastNameAttribute: [{ required: true, message: '请输入用户姓氏属性' }],
-  usernameAttribute: [{ required: true, message: '请输入用户全名名属性' }],
-  emailAttribute: [{ required: true, message: '请输入邮箱属性' }]
+  objectClass: [{ required: true, message: t('ldap.user-1') }],
+  objectFilter: [{ required: true, message: t('ldap.user-2') }],
+  userIdAttribute: [{ required: true, message: t('ldap.user-3') }],
+  passwordAttribute: [{ required: true, message: t('ldap.user-8') }],
+  displayNameAttribute: [{ required: true, message: t('ldap.validation.displayNameAttributeRequired') }],
+  firstNameAttribute: [{ required: true, message: t('ldap.validation.userFirstNameAttributeRequired') }],
+  lastNameAttribute: [{ required: true, message: t('ldap.validation.userLastNameAttributeRequired') }],
+  usernameAttribute: [{ required: true, message: t('ldap.validation.userUidAttributeRequired') }],
+  emailAttribute: [{ required: true, message: t('ldap.validation.userEmailAttributeRequired') }]
 };
 
+/**
+ * Execute form validation and emit result to parent
+ * Validates form fields and sends success/error status with form data
+ */
 const childRules = function () {
   formRef.value.validate().then(() => {
     emit('rules', 'success', props.keys, props.index, form);
@@ -52,7 +67,10 @@ const childRules = function () {
   });
 };
 
-// 回显
+/**
+ * Watch for query changes to populate form fields
+ * Automatically fills form when editing existing configuration
+ */
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
@@ -60,6 +78,8 @@ watch(() => props.query, (val) => {
     });
   }
 });
+
+// Expose validation method to parent component
 defineExpose({ childRules });
 
 </script>
@@ -74,156 +94,156 @@ defineExpose({ childRules });
     size="small">
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-1')"
+        :label="t('ldap.user-label-1')"
         name="objectClass"
         class="w-150">
         <Input
           v-model:value="form.objectClass"
           :maxlength="400"
-          :placeholder="t('systemLdap.user-1')"
+          :placeholder="t('ldap.user-1')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-1')"
+        :text="t('ldap.user-mess-1')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-2')"
+        :label="t('ldap.user-label-2')"
         name="objectFilter"
         class="w-150">
         <Input
           v-model:value="form.objectFilter"
           :maxlength="400"
-          :placeholder="t('systemLdap.user-2')"
+          :placeholder="t('ldap.user-2')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-2')"
+        :text="t('ldap.user-mess-2')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-3')"
+        :label="t('ldap.user-label-3')"
         name="usernameAttribute"
         class="w-150">
         <Input
           v-model:value="form.usernameAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.user-3')"
+          :placeholder="t('ldap.user-3')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-3')"
+        :text="t('ldap.user-mess-3')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-4')"
+        :label="t('ldap.user-label-4')"
         name="firstNameAttribute"
         class="w-150">
         <Input
           v-model:value="form.firstNameAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.user-4')"
+          :placeholder="t('ldap.user-4')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-4')"
+        :text="t('ldap.user-mess-4')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-5')"
+        :label="t('ldap.user-label-5')"
         name="lastNameAttribute"
         class="w-150">
         <Input
           v-model:value="form.lastNameAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.user-5')"
+          :placeholder="t('ldap.user-5')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-5')"
+        :text="t('ldap.user-mess-5')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('全名')"
+        :label="t('ldap.labels.displayName')"
         name="displayNameAttribute"
         class="w-150">
         <Input
           v-model:value="form.displayNameAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.user-5')"
+          :placeholder="t('ldap.user-5')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('用户全名或昵称对应的属性字段，例如：cn。')"
+                  :text="t('ldap.messages.displayNameTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-6')"
+        :label="t('ldap.user-label-6')"
         name="mobileAttribute"
         class="w-150">
         <Input
           v-model:value="form.mobileAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.user-6')"
+          :placeholder="t('ldap.user-6')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-6')"
+        :text="t('ldap.user-mess-6')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-7')"
+        :label="t('ldap.user-label-7')"
         name="emailAttribute"
         class="w-150">
         <Input
           v-model:value="form.emailAttribute"
           :maxlength="160"
           size="small"
-          :placeholder="t('systemLdap.user-7')" />
+          :placeholder="t('ldap.user-7')" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-7')"
+        :text="t('ldap.user-mess-7')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.user-label-8')"
+        :label="t('ldap.user-label-8')"
         name="passwordAttribute"
         class="w-150">
         <Input
           v-model:value="form.passwordAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.user-8')"
+          :placeholder="t('ldap.user-8')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.user-mess-8')"
+        :text="t('ldap.user-mess-8')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <FormItem
-      label="存在相同用户时是否忽略"
+      :label="t('ldap.labels.ignoreSameIdentityUser')"
       class="w-150"
       name="ignoreSameIdentityUser">
       <div class="flex items-center">
         <Checkbox :checked="form.ignoreSameIdentityUser" disabled></Checkbox>
         <Hints
-          :text="t('当存在相同用户唯一标识(用户名,邮箱,手机号)时强制忽略')"
+          :text="t('ldap.messages.ignoreSameIdentityUserTip')"
           style="transform: translateY(1px);"
           class="ml-2" />
       </div>

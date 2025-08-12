@@ -2,9 +2,15 @@
 import { ref, watch } from 'vue';
 import { Alert, Skeleton } from 'ant-design-vue';
 import { Icon, Modal } from '@xcan-angus/vue-ui';
+import { useI18n } from 'vue-i18n';
 
 import { userDirectory } from '@/api';
 
+/**
+ * Component props interface for test modal
+ * @param {boolean} visible - Modal visibility state
+ * @param {string} id - Directory ID to test
+ */
 interface Props {
   visible: boolean;
   id: string
@@ -15,6 +21,13 @@ const props = withDefaults(defineProps<Props>(), {
   visible: false
 });
 
+const { t } = useI18n();
+
+/**
+ * Get alert type based on success flag
+ * @param {boolean|null} flag - Success flag
+ * @returns {string} Alert type: 'success', 'error', or 'info'
+ */
 const getType = (flag = null) => {
   if (flag) {
     return 'success';
@@ -27,56 +40,98 @@ const getType = (flag = null) => {
   return 'info';
 };
 
+/**
+ * Close modal and emit visibility update
+ */
 const cancel = () => {
   emit('update:visible', false);
 };
 
+// Test result data and loading state
 const showData = ref<any>({});
 const loading = ref(false);
 
-// 链接
-const connetMsg = ref('');
+// Test result messages for different operations
+const connetMsg = ref('');      // Connection test message
+const userMsg = ref('');        // User sync test message
+const groupMsg = ref('');       // Group sync test message
+const memberMsg = ref('');      // Membership sync test message
 
-const userMsg = ref('');
-
-const groupMsg = ref('');
-
-const memberMsg = ref('');
-
+/**
+ * Initialize test modal and execute LDAP directory test
+ * Fetches directory configuration and runs test to validate connection and sync
+ */
 const init = async () => {
   loading.value = true;
+
+  // Get directory configuration details
   const [error, res] = await userDirectory.getDirectoryDetail(props.id);
   if (error) {
     loading.value = false;
     return;
   }
+
+  // Execute directory test with configuration
   const [error1, res1] = await userDirectory.testDirectory(res.data);
   if (error1) {
     loading.value = false;
     return;
   }
 
+  // Process and display test results
   showData.value = res1.data;
-  connetMsg.value = showData.value.connectSuccess ? '链接成功' : '链接失败';
+
+  // Update connection test message
+  connetMsg.value = showData.value.connectSuccess ?
+    t('ldap.messages.connectSuccess') :
+    t('ldap.messages.connectFailed');
+
+  // Update user sync test message
   userMsg.value = showData.value.userSuccess === null
     ? ''
     : showData.value.userSuccess
-      ? `同步用户成功，用户总数${showData.value.totalUserNum}个，新增用户${showData.value.addUserNum} 个，更新用户${showData.value.updateUserNum}个，删除用户${showData.value.deleteUserNum}个，忽略用户${showData.value.ignoreUserNum}个。`
-      : '同步用户成功失败';
+      ? t('ldap.messages.userSyncSuccess', {
+          total: showData.value.totalUserNum,
+          new: showData.value.addUserNum,
+          update: showData.value.updateUserNum,
+          delete: showData.value.deleteUserNum,
+          ignore: showData.value.ignoreUserNum
+        })
+      : t('ldap.messages.userSyncFailed');
+
+  // Update group sync test message
   groupMsg.value = showData.value.groupSuccess === null
     ? ''
     : showData.value.groupSuccess
-      ? `同步组成功，组总数${showData.value.totalUserNum}个，新增组${showData.value.addUserNum} 个，更新组${showData.value.updateUserNum}个，删除组${showData.value.deleteUserNum}个，忽略组${showData.value.ignoreUserNum}个。`
-      : '同步组成功失败';
+      ? t('ldap.messages.groupSyncSuccess', {
+          total: showData.value.totalUserNum,
+          new: showData.value.addUserNum,
+          update: showData.value.updateUserNum,
+          delete: showData.value.deleteUserNum,
+          ignore: showData.value.ignoreUserNum
+        })
+      : t('ldap.messages.groupSyncFailed');
 
+  // Update membership sync test message
   memberMsg.value = showData.value.membershipSuccess === null
     ? ''
     : showData.value.membershipSuccess
-      ? `同步组成员成功，成员总数${showData.value.totalUserNum}个，新增成员${showData.value.addUserNum} 个，更新成员${showData.value.updateUserNum}个，删除成员${showData.value.deleteUserNum}个，忽略成员${showData.value.ignoreUserNum}个。`
-      : '同步组成员成功失败';
+      ? t('ldap.messages.memberSyncSuccess', {
+          total: showData.value.totalUserNum,
+          new: showData.value.addUserNum,
+          update: showData.value.updateUserNum,
+          delete: showData.value.deleteUserNum,
+          ignore: showData.value.ignoreUserNum
+        })
+      : t('ldap.messages.memberSyncFailed');
+
   loading.value = false;
 };
 
+/**
+ * Watch modal visibility changes to auto-execute test
+ * Automatically runs test when modal becomes visible
+ */
 watch(() => props.visible, newValue => {
   if (newValue) {
     init();
@@ -88,7 +143,7 @@ watch(() => props.visible, newValue => {
 <template>
   <Modal
     :visible="props.visible"
-    title="测试"
+    :title="t('ldap.titles.testConfiguration')"
     :footer="null"
     width="600px"
     @cancel="cancel">
@@ -107,7 +162,7 @@ watch(() => props.visible, newValue => {
       <div v-if="showData.connectSuccess === false" class="px-2 text-warn">{{ showData.errorMessage }}</div>
       <Alert
         key="user"
-        :message="'用户：' + userMsg"
+        :message="t('ldap.messages.userLabel') + userMsg"
         class="mt-3 text-3"
         showIcon
         :type="getType(showData.userSuccess)">
@@ -118,7 +173,7 @@ watch(() => props.visible, newValue => {
       <div v-if="showData.userSuccess === false" class="px-2 text-warn">{{ showData.errorMessage }}</div>
       <Alert
         key="group"
-        :message="'组：' + groupMsg"
+        :message="t('ldap.messages.groupLabel') + groupMsg"
         class="mt-3 text-3"
         showIcon
         :type="getType(showData.groupSuccess)">
@@ -129,7 +184,7 @@ watch(() => props.visible, newValue => {
       <div v-if="showData.groupSuccess === false" class="px-2 text-warn">{{ showData.errorMessage }}</div>
       <Alert
         key="member"
-        :message="'组成员：' + memberMsg"
+        :message="t('ldap.messages.memberLabel') + memberMsg"
         class="mt-3 text-3"
         showIcon
         :type="getType(showData.membershipSuccess)">

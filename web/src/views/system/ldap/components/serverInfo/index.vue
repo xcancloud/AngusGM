@@ -6,6 +6,12 @@ import { DirectoryType } from '@/enums/enums';
 
 import { useI18n } from 'vue-i18n';
 
+/**
+ * Component props interface
+ * @param {number} index - Component index in parent
+ * @param {string} keys - Unique key identifier
+ * @param {any} query - Query parameters for data population
+ */
 interface Props {
   index: number,
   keys: string,
@@ -18,37 +24,56 @@ const emit = defineEmits(['rules']);
 
 const { t } = useI18n();
 
+// Form layout configuration
 const labelCol = { span: 9 };
+
+// Reactive form data for server configuration
 const form = ref({
-  directoryType: DirectoryType.OpenLDAP,
-  host: '',
-  name: '',
-  password: '',
-  port: '',
-  ssl: false,
-  username: ''
+  directoryType: DirectoryType.OpenLDAP, // Default directory type
+  host: '',                              // Server host address
+  name: '',                              // Server name/identifier
+  password: '',                          // Connection password
+  port: '',                              // Connection port
+  ssl: false,                            // SSL connection flag
+  username: ''                           // Connection username
 });
 
 const formRef = ref();
 
+// Form validation rules
 const rules = reactive({
-  name: [{ required: true, message: t('systemLdap.info-1') }],
+  name: [{ required: true, message: t('ldap.info-1') }],
   directoryType: [{ required: true, message: t('请选择目录类型') }],
-  username: [{ required: true, message: t('systemLdap.info-3') }],
-  port: [{ required: true, message: t('systemLdap.info-4') }],
-  password: [{ required: true, message: t('systemLdap.info-5') }],
-  host: [{ required: true, message: t('systemLdap.info-6') }]
+  username: [{ required: true, message: t('ldap.info-3') }],
+  port: [{ required: true, message: t('ldap.info-4') }],
+  password: [{ required: true, message: t('ldap.info-5') }],
+  host: [{ required: true, message: t('ldap.info-6') }]
 });
 
+/**
+ * Execute form validation and emit result to parent
+ * Validates form fields and sends success/error status with form data
+ */
 const childRules = function () {
   formRef.value.validate().then(() => {
-    emit('rules', 'success', props.keys, props.index, { ...form.value, port: Number(form.value.port) });
+    // Emit success with validated form data
+    emit('rules', 'success', props.keys, props.index, {
+      ...form.value,
+      port: Number(form.value.port)
+    });
   }).catch(() => {
-    emit('rules', 'error', props.keys, props.index, { ...form.value, port: Number(form.value.port) });
+    // Emit error with form data for error handling
+    emit('rules', 'error', props.keys, props.index, {
+      ...form.value,
+      port: Number(form.value.port)
+    });
   });
 };
 
-// 回显
+/**
+ * Watch for query changes to populate form fields
+ * Automatically fills form when editing existing configuration
+ */
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
@@ -57,12 +82,17 @@ watch(() => props.query, (val) => {
   }
 });
 
+/**
+ * Watch SSL checkbox changes to update port automatically
+ * Sets port to 636 (LDAPS) when SSL is enabled, user can override
+ */
 watch(() => form.value.ssl, newValue => {
   if (newValue) {
     form.value.port = '636';
   }
 });
 
+// Expose validation method to parent component
 defineExpose({ childRules });
 
 </script>
@@ -76,49 +106,49 @@ defineExpose({ childRules });
     size="small">
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.info-label-1')"
+        :label="t('ldap.info-label-1')"
         name="name"
         class="w-150">
         <Input
           v-model:value="form.name"
           :maxlength="100"
-          :placeholder="t('systemLdap.info-1')"
+          :placeholder="t('ldap.info-1')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('LDAP服务名称，不允许重复，如：MyOpenLDAP。')"
+        :text="t('ldap.messages.serverNameTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <FormItem
-      :label="t('systemLdap.info-label-2')"
+      :label="t('ldap.info-label-2')"
       name="directoryType"
       class="w-150">
       <SelectEnum
         v-model:value="form.directoryType"
-        placeholder="请输入目录类型"
+        :placeholder="t('ldap.placeholder.selectDirectoryType')"
         :enumKey="DirectoryType"
         size="small" />
     </FormItem>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.info-label-3')"
+        :label="t('ldap.info-label-3')"
         name="host"
         class="w-150">
         <Input
           v-model:value="form.host"
           :maxlength="200"
-          :placeholder="t('systemLdap.info-6')"
+          :placeholder="t('ldap.info-6')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('运行LDAP的服务器的主机名，例如：ldap.example.com。')"
+        :text="t('ldap.messages.hostTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.info-label-4')"
+        :label="t('ldap.info-label-4')"
         name="port"
         class="w-150">
         <Input
@@ -127,39 +157,39 @@ defineExpose({ childRules });
           :max="65535"
           required
           dataType="number"
-          :placeholder="t('systemLdap.info-4')"
+          :placeholder="t('ldap.info-4')"
           size="small" />
       </FormItem>
       <Checkbox
         v-model:checked="form.ssl"
         class="ml-2"
         style="transform: translateY(3px);">
-        {{ t('systemLdap.info-mess-1') }}
+        {{ t('ldap.info-mess-1') }}
       </Checkbox>
       <Hints
-        :text="t('运行LDAP的服务的端口号，例如：389 或 SSL 636。')"
+        :text="t('ldap.messages.portTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.info-label-5')"
+        :label="t('ldap.info-label-5')"
         name="username"
         class="w-150">
         <Input
           v-model:value="form.username"
           :maxlength="200"
-          :placeholder="t('systemLdap.info-3')"
+          :placeholder="t('ldap.info-3')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('登录LDAP的服务的账号，例如：cn=admin,dc=example,dc=org。')"
+        :text="t('ldap.messages.usernameTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
-        :label="t('systemLdap.info-label-6')"
+        :label="t('ldap.info-label-6')"
         name="password"
         class="w-150">
         <Input
@@ -168,12 +198,12 @@ defineExpose({ childRules });
           class="password-input"
           autocomplete="off"
           :maxlength="400"
-          :placeholder="t('systemLdap.info-5')"
+          :placeholder="t('ldap.info-5')"
           size="small">
         </Input>
       </FormItem>
       <Hints
-        :text="t('登录LDAP的服务的账号密码。')"
+        :text="t('ldap.messages.passwordTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>

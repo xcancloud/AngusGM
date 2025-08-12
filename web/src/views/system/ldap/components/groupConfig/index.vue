@@ -5,6 +5,12 @@ import { Checkbox, Form, FormItem } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';
 
+/**
+ * Component props interface for group configuration
+ * @param {number} index - Component index in parent
+ * @param {string} keys - Unique key identifier
+ * @param {any} query - Query parameters for data population
+ */
 interface Props {
   index: number,
   keys: string,
@@ -19,22 +25,29 @@ const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
 
 const formRef = ref();
 
+// Form layout configuration
 const labelCol = { span: 9 };
+
+// Reactive form data for LDAP group configuration
 const form: any = reactive({
-  descriptionAttribute: '',
-  objectFilter: '',
-  nameAttribute: '',
-  objectClass: '',
-  ignoreSameNameGroup: true
+  descriptionAttribute: '',         // LDAP attribute for group description
+  objectFilter: '',                // LDAP filter for group search
+  nameAttribute: '',               // LDAP attribute for group name
+  objectClass: '',                 // LDAP object class for group entries
+  ignoreSameNameGroup: true        // Flag to ignore duplicate name groups
 });
 
+// Form validation rules with dynamic required field logic
 const rules = reactive({
-  objectFilter: [{ required: false, message: t('systemLdap.config-2') }],
-  nameAttribute: [{ required: false, message: t('systemLdap.config-3') }],
-  objectClass: [{ required: false, message: '请输入组对象类' }]
+  objectFilter: [{ required: false, message: t('ldap.config-2') }],
+  nameAttribute: [{ required: false, message: t('ldap.config-3') }],
+  objectClass: [{ required: false, message: t('ldap.validation.groupObjectClassRequired') }]
 });
 
-// 表单验证方法
+/**
+ * Execute form validation and emit result to parent
+ * Validates form fields and sends success/error status with form data
+ */
 const childRules = function () {
   formRef.value.validate().then(() => {
     emit('rules', 'success', props.keys, props.index, form);
@@ -43,15 +56,26 @@ const childRules = function () {
   });
 };
 
-// 监听表单 动态必填
+/**
+ * Watch form changes to dynamically update required field validation
+ * Makes fields required only when at least one group configuration field is filled
+ */
 watch(() => form, (val) => {
-  const isNull = Object.keys(val).every((key) => (key !== 'ignoreSameNameGroup' && form[key] === '') || key === 'ignoreSameNameGroup');
+  // Check if all group configuration fields are empty (except ignoreSameNameGroup)
+  const isNull = Object.keys(val).every((key) =>
+    (key !== 'ignoreSameNameGroup' && form[key] === '') || key === 'ignoreSameNameGroup'
+  );
+
+  // Update required validation based on whether any group config is provided
   rules.objectFilter[0].required = !isNull;
   rules.nameAttribute[0].required = !isNull;
   rules.objectClass[0].required = !isNull;
 }, { deep: true, immediate: true });
 
-// 回显
+/**
+ * Watch for query changes to populate form fields
+ * Automatically fills form when editing existing configuration
+ */
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
@@ -60,6 +84,7 @@ watch(() => props.query, (val) => {
   }
 });
 
+// Expose validation method to parent component
 defineExpose({ childRules });
 
 </script>
@@ -74,16 +99,16 @@ defineExpose({ childRules });
     <div class="flex">
       <FormItem
         class="w-150"
-        :label="t('systemLdap.config-5')"
+        :label="t('ldap.config-5')"
         name="objectClass">
         <Input
           v-model:value="form.objectClass"
-          :placeholder="t('systemLdap.config-1')"
+          :placeholder="t('ldap.config-1')"
           :maxlength="400"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.config-mess-1')"
+        :text="t('ldap.config-mess-1')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
@@ -91,16 +116,16 @@ defineExpose({ childRules });
       <FormItem
         id="group-objectFilter"
         class="w-150"
-        :label="t('systemLdap.config-6')"
+        :label="t('ldap.config-6')"
         name="objectFilter">
         <Input
           v-model:value="form.objectFilter"
           :maxlength="400"
-          :placeholder="t('systemLdap.config-2')"
+          :placeholder="t('ldap.config-2')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.config-mess-2')"
+        :text="t('ldap.config-mess-2')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
@@ -108,41 +133,41 @@ defineExpose({ childRules });
       <FormItem
         id="group-nameAttribute"
         class="w-150"
-        :label="t('systemLdap.config-7')"
+        :label="t('ldap.config-7')"
         name="nameAttribute">
         <Input
           v-model:value="form.nameAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.config-3')" />
+          :placeholder="t('ldap.config-3')" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.config-mess-3')"
+        :text="t('ldap.config-mess-3')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <div class="flex">
       <FormItem
         class="w-150"
-        :label="t('systemLdap.config-8')">
+        :label="t('ldap.config-8')">
         <Input
           v-model:value="form.descriptionAttribute"
           :maxlength="160"
-          :placeholder="t('systemLdap.config-4')"
+          :placeholder="t('ldap.config-4')"
           size="small" />
       </FormItem>
       <Hints
-        :text="t('systemLdap.config-mess-4')"
+        :text="t('ldap.config-mess-4')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
     <FormItem
       class="w-225"
       :labelCol="{span: 6}"
-      :label="t('存在相同组名时是否忽略')">
+      :label="t('ldap.labels.ignoreSameNameGroup')">
       <div class="flex">
         <Checkbox v-model:checked="form.ignoreSameNameGroup" />
         <Hints
-          :text="t('当存在相应组名称时忽略当前目录组(重复不忽略时将存在两个同名组)')"
+          :text="t('ldap.messages.ignoreSameNameGroupTip')"
           style="transform: translateY(3px);"
           class="ml-2" />
       </div>
