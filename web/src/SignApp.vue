@@ -6,7 +6,6 @@ import 'dayjs/locale/zh-cn';
 
 <template>
   <ConfigProvider :locale="zhCN">
-    <RouterView class="sign-container" />
   </ConfigProvider>
 </template>
 

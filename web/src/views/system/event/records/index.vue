@@ -14,6 +14,7 @@ const ReceiveConfig = defineAsyncComponent(() => import('./components/receiveCon
 const ViewEvent = defineAsyncComponent(() => import('./components/view.vue'));
 const { t } = useI18n();
 const visible = ref(false);
+// Selected event record item for viewing details
 const selectedItem = ref<EventRecord>({
   description: '',
   eventCode: '',
@@ -28,66 +29,67 @@ const selectedItem = ref<EventRecord>({
   triggerTime: '',
   type: { value: '', message: '' }
 });
+// Search panel options configuration
 const Options = [
   {
-    placeholder: t('placeholder.p1'),
+    placeholder: t('event.records.placeholder.searchEventCode'),
     valueKey: 'code',
-    type: 'input',
-    op: 'MATCH',
+    type: 'input' as const,
+    op: 'MATCH' as const,
     allowClear: true
   },
   {
     valueKey: 'userId',
-    type: 'select-user',
+    type: 'select-user' as const,
     allowClear: true,
-    placeholder: '请选择接收人',
+    placeholder: t('event.records.placeholder.selectReceiver'),
     showSearch: true
   },
   {
     valueKey: 'type',
-    type: 'select-enum',
+    type: 'select-enum' as const,
     enumKey: EventType,
     allowClear: true,
-    placeholder: t('placeholder.p2')
+    placeholder: t('event.records.placeholder.selectEventType')
   },
   {
     valueKey: 'pushStatus',
-    type: 'select-enum',
+    type: 'select-enum' as const,
     enumKey: EventPushStatus,
     allowClear: true,
-    placeholder: t('placeholder.p3')
+    placeholder: t('event.records.placeholder.selectPushStatus')
   },
   {
     valueKey: 'createdDate',
-    type: 'date-range'
+    type: 'date-range' as const
   }
 ];
 
+// Table columns configuration
 const Columns = [
   {
-    title: 'ID',
+    title: t('event.records.columns.id'),
     dataIndex: 'id',
     key: 'id',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('接收人名称'),
-    dataIndex: 'fullName',
-    groupName: 'user',
     width: '13%'
   },
   {
-    title: t('接收人ID'),
+    title: t('event.records.columns.receiverName'),
+    dataIndex: 'fullName',
+    groupName: 'user',
+    key: 'receiverName',
+    width: '13%'
+  },
+  {
+    title: t('event.records.columns.receiverId'),
     dataIndex: 'userId',
     groupName: 'user',
+    key: 'receiverId',
     hide: true,
     width: '13%'
   },
   {
-    title: t('事件编码'),
+    title: t('event.records.columns.eventCode'),
     dataIndex: 'code',
     key: 'eventCode',
     width: '8%',
@@ -97,7 +99,7 @@ const Columns = [
     }
   },
   {
-    title: t('事件名称'),
+    title: t('event.records.columns.eventName'),
     dataIndex: 'name',
     key: 'eventName',
     width: '8%',
@@ -105,9 +107,9 @@ const Columns = [
     hide: true
   },
   {
-    title: t('eKey'),
+    title: t('event.records.columns.eKey'),
     dataIndex: 'ekey',
-    key: 'ekey',
+    key: 'eKey',
     width: '10%',
     ellipsis: true,
     customCell: () => {
@@ -115,12 +117,12 @@ const Columns = [
     }
   },
   {
-    title: t('内容'),
+    title: t('event.records.columns.content'),
     dataIndex: 'description',
     key: 'description'
   },
   {
-    title: t('type'),
+    title: t('event.records.columns.type'),
     dataIndex: 'type',
     key: 'type',
     width: '6%',
@@ -129,7 +131,7 @@ const Columns = [
     }
   },
   {
-    title: t('push-status'),
+    title: t('event.records.columns.pushStatus'),
     dataIndex: 'pushStatus',
     key: 'pushStatus',
     width: '8%',
@@ -138,7 +140,7 @@ const Columns = [
     }
   },
   {
-    title: t('table-triggerTime'),
+    title: t('event.records.columns.triggerTime'),
     dataIndex: 'createdDate',
     key: 'createdDate',
     width: '11%',
@@ -150,7 +152,7 @@ const Columns = [
     }
   },
   {
-    title: t('table-operate'),
+    title: t('event.records.columns.operate'),
     dataIndex: 'action',
     key: 'action',
     width: 280,
@@ -212,17 +214,18 @@ const openCheckContentDialog = (item: string) => {
   checkContentConfig.content = item;
 };
 
-const obj: {
+const statusStyle: {
   [key: string]: string
 } = {
-  UN_PUSH: 'default',
+  PENDING: 'warning',
   PUSHING: 'processing',
   PUSH_SUCCESS: 'success',
-  PUSH_FAIL: 'error'
+  PUSH_FAIL: 'error',
+  IGNORED: 'default'
 };
 
-const getStatus = (key: string): string => {
-  return obj[key];
+const getStatusStyle = (key: string): string => {
+  return statusStyle[key];
 };
 
 const handleChange = async (data: Record<string, string>[]) => {
@@ -252,7 +255,8 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col min-h-full">
-    <Hints :text="t('eventLogTip')" class="mb-1" />
+    <!-- Event records description hint -->
+    <Hints :text="t('event.records.messages.description')" class="mb-1" />
     <PureCard class="flex-1 p-3.5">
       <Statistics
         resource="Event"
@@ -285,7 +289,6 @@ onMounted(() => {
           <template v-if="column.dataIndex === 'id'">
             <Button
               type="link"
-              size="small"
               class="px-0"
               @click="openCheckContentDialog(record.eventViewUrl)">
               {{ record.id }}
@@ -296,7 +299,7 @@ onMounted(() => {
           </template>
           <template v-if="column.dataIndex === 'pushStatus'">
             <Badge
-              :status="getStatus(record.pushStatus.value)"
+              :status="getStatusStyle(record.pushStatus.value)"
               :text="record.pushStatus.message">
             </Badge>
             <Popover
@@ -306,7 +309,7 @@ onMounted(() => {
                 icon="icon-gantanhao-yuankuang"
                 class="text-3.5 leading-3.5 text-theme-sub-content text-theme-text-hover ml-1" />
               <template #title>
-                {{ t('errMsg') }}
+                {{ t('event.records.messages.failureReason') }}
               </template>
               <template #content>
                 <div class="max-h-100 max-w-150 overflow-auto" v-html=" DOMPurify.sanitize(record.pushMsg)"></div>
@@ -317,8 +320,6 @@ onMounted(() => {
             <Button
               v-if="app.show('ReceivingChannelView')"
               type="text"
-              size="small"
-              :disabled="!app.has('ReceivingChannelView')"
               @click="openReceiveConfig(record)">
               <Icon icon="icon-jiekoudaili" class="mr-1" />
               {{ app.getName('ReceivingChannelView') }}
@@ -326,7 +327,6 @@ onMounted(() => {
             <Button
               v-if="app.show('EventContentView')"
               type="text"
-              size="small"
               :disabled="!app.has('EventContentView')"
               @click="openCheckContentDialog(record.eventViewUrl)">
               <Icon icon="icon-shijianjilu" class="mr-1" />
@@ -366,7 +366,7 @@ onMounted(() => {
         v-if="visible"
         v-model:visible="visible"
         :eventCode="selectedItem.eventCode"
-        :ekey="selectedItem.ekey" />
+        :eKey="selectedItem.eKey" />
     </AsyncComponent>
     <AsyncComponent :visible="checkContentConfig.dialogVisible">
       <ViewEvent v-model:visible="checkContentConfig.dialogVisible" :value="checkContentConfig.content" />

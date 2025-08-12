@@ -36,33 +36,50 @@ const dataSource = ref<{
   isEdit: true
 }]);
 
-const validateEmial = (_val, value) => {
+/**
+ * Validate email format for multiple email addresses
+ * @param _val - Validation context (unused)
+ * @param value - Email addresses string (comma-separated)
+ * @returns Promise that resolves if valid, rejects with error message if invalid
+ */
+const validateEmail = (_val: any, value: string) => {
   if (!value.trim()) {
-    return Promise.reject(new Error(t('address-required')));
+    return Promise.reject(new Error(t('event.channel.messages.addressRequired')));
   }
+
   if (value) {
     const values = value.split(',');
     if (values.every(email => regexpUtils.isEmail(email))) {
       return Promise.resolve();
     } else {
-      Promise.reject(new Error('请输入正确邮箱地址'));
+      return Promise.reject(new Error(t('event.channel.messages.emailFormatError')));
     }
   }
-  return Promise.reject(new Error('请输入正确邮箱地址'));
+
+  return Promise.reject(new Error(t('event.channel.messages.emailFormatError')));
 };
 
-const validateAddress = (_val, value) => {
+/**
+ * Validate webhook URL format
+ * @param _val - Validation context (unused)
+ * @param value - URL string to validate
+ * @returns Promise that resolves if valid, rejects with error message if invalid
+ */
+const validateAddress = (_val: any, value: string) => {
   if (!value.trim()) {
-    return Promise.reject(new Error(t('address-required')));
+    return Promise.reject(new Error(t('event.channel.messages.addressRequired')));
   }
+
   if (value && regexpUtils.isUrl(value)) {
     return Promise.resolve();
   }
-  return Promise.reject(new Error('请输入正确地址'));
+
+  return Promise.reject(new Error(t('event.channel.messages.webhookFormatError')));
 };
 
+// Validation rules for address field
 const addressRule = ref([
-  { required: true, validator: props.channelType === 'EMAIL' ? validateEmial : validateAddress }
+  { required: true, validator: props.channelType === 'EMAIL' ? validateEmail : validateAddress }
 ]);
 
 // 查询列表详情
@@ -102,7 +119,7 @@ const addHttpItem = (index: number, item) => {
       return;
     }
 
-    notification.success(t('renew.t5'));
+    notification.success(t('event.channel.messages.addSuccess'));
     getReceiveSettingDetail();
   }).catch();
 };
@@ -117,7 +134,7 @@ const editHttpItemConfirm = (index: number, item) => {
     if (error) {
       return;
     }
-    notification.success(t('renew.t7'));
+    notification.success(t('event.channel.messages.editSuccess'));
     getReceiveSettingDetail();
   }).catch();
 };
@@ -126,8 +143,8 @@ const editHttpItemConfirm = (index: number, item) => {
 const deleteConfirm = (id: string) => {
   modal.confirm({
     centered: true,
-    title: t('delete'),
-    content: t('renew.t3'),
+    title: t('common.actions.delete'),
+    content: t('event.channel.messages.deleteConfirm'),
     onOk () {
       delHttpConfig(id);
     }
@@ -143,7 +160,7 @@ const delHttpConfig = async (id: string): Promise<void> => {
     return;
   }
 
-  notification.success(t('renew.t4'));
+  notification.success(t('event.channel.messages.deleteSuccess'));
   getReceiveSettingDetail();
 };
 
@@ -162,7 +179,7 @@ const testConfig = async (index, item) => {
       return;
     }
 
-    notification.success(t('renew.t6'));
+    notification.success(t('event.channel.messages.testSuccess'));
   }).catch();
 };
 
@@ -195,21 +212,21 @@ onMounted(() => {
       class="flex space-x-5 mb-2">
       <div class="flex-1/3 break-all">
         <FormItem
-          :label="index === 0 && t('name')"
+          :label="index === 0 && t('event.channel.columns.name')"
           :colon="false"
           name="name"
-          :rules="[{ required: true, message: t('name-required') }]"
+          :rules="[{ required: true, message: t('event.channel.messages.nameRequired') }]"
           class="text-theme-content">
           <Input
             v-model:value="item.name"
-            :placeholder="t('name-placeholder')"
+            :placeholder="t('event.channel.placeholder.inputName')"
             :maxlength="80"
             :disabled="!item.isEdit" />
         </FormItem>
       </div>
       <div class="flex-2/3 break-all">
         <FormItem
-          :label="index === 0 && t('address')"
+          :label="index === 0 && t('event.channel.columns.address')"
           :colon="false"
           name="address"
           :rules="addressRule"
@@ -234,10 +251,10 @@ onMounted(() => {
             </Input>
             <div v-if="item.isEdit && item.id" class="pl-4">
               <a class="text-theme-special text-theme-text-hover text-3" @click="editHttpItemConfirm(index,item)">
-                {{ t('sure') }}
+                {{ t('common.actions.confirm') }}
               </a>
               <Divider type="vertical" />
-              <a class="text-theme-special text-theme-text-hover text-3" @click="cancelEdit(item, index)">{{ t('cancel')
+              <a class="text-theme-special text-theme-text-hover text-3" @click="cancelEdit(item, index)">{{ t('common.actions.cancel')
               }}</a>
             </div>
           </div>

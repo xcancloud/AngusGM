@@ -16,10 +16,10 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 <template>
   <div>
-    <Hints :text="$t('email-title')" />
+    <Hints :text="$t('event.channel.titles.emailTitle')" />
     <ChannelAddress
       :max="props.max"
       channelType="EMAIL"
-      :placeholder="t('renew.t8')" />
+      :placeholder="t('event.channel.placeholder.inputEmailAddress')" />
   </div>
 </template>

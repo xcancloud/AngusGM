@@ -63,7 +63,7 @@ watch(() => props.visible, newValue => {
 <template>
   <Modal
     :visible="visible"
-    :title="t('systemEventLog.table-2')"
+    :title="t('event.records.messages.viewPushSettings')"
     :centered="true"
     width="600px"
     @ok="handleOk"

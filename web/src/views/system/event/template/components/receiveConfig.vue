@@ -118,16 +118,16 @@ const getOptions = (key: string) => {
 };
 const getPlaceholder = (key: string) => {
   if (key === 'WEBHOOK') {
-    return t('form-2');
+    return t('event.config.placeholder.selectHttpAddress');
   }
   if (key === 'EMAIL') {
-    return t('form-3');
+    return t('event.config.placeholder.selectEmail');
   }
   if (key === 'DINGTALK') {
-    return t('form-4');
+    return t('event.config.placeholder.selectDingTalk');
   }
   if (key === 'WECHAT') {
-    return t('form-5');
+    return t('event.config.placeholder.selectWeChat');
   }
 };
 
@@ -156,14 +156,14 @@ watch(() => props.visible, newValue => {
 <template>
   <Modal
     :visible="visible"
-    :title="t('renew.r2')"
+    :title="t('event.config.messages.configReceiveChannel')"
     :centered="true"
     width="800px"
     @ok="handleOk"
     @cancel="handleCancel">
     <Form size="small" :labelCol="{span: 6}">
       <FormItem
-        :label="t('renew.r5')"
+        :label="t('event.config.messages.selectReceiveMethod')"
         name="receiveSetting">
         <CheckboxGroup
           :options="eventTypes"

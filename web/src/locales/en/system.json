@@ -204,7 +204,123 @@
     }
   },
   "event": {
-
+    "template": {
+      "columns": {
+        "eventName": "Event Name",
+        "eventCode": "Event Code",
+        "type": "Type",
+        "category": "Category",
+        "app": "Application",
+        "pushMethod": "Push Method",
+        "operate": "Operation"
+      },
+      "placeholder": {
+        "selectApp": "Select Application",
+        "searchEventName": "Search event code, description",
+        "selectEventType": "Select type"
+      },
+      "messages": {
+        "description": "Event templates are classifications of events. Through event templates, you can configure different receiving channels for different types of events. After configuration, when events occur, they will be automatically sent to the corresponding template's event channels. For business events, you can also configure events in Application Management.",
+        "public": "Public"
+      }
+    },
+    "records": {
+      "columns": {
+        "id": "ID",
+        "receiverName": "Receiver Name",
+        "receiverId": "Receiver ID",
+        "eventCode": "Event Code",
+        "eventName": "Event Name",
+        "eKey": "Error Key",
+        "content": "Content",
+        "type": "Type",
+        "pushStatus": "Push Status",
+        "triggerTime": "Trigger Time",
+        "operate": "Operation"
+      },
+      "placeholder": {
+        "selectReceiver": "Please select receiver",
+        "searchEventCode": "Search event code, description",
+        "selectEventType": "Select event type",
+        "selectPushStatus": "Select push status",
+        "selectTime": "Select time"
+      },
+      "messages": {
+        "description": "Event records are system and business critical states collected by applications during runtime, such as: task status changes, quota and resource shortages, major errors or exceptions, security alerts, etc. In addition to viewing events in the current event records, you can also associate event channels with event templates. After association, events will be automatically pushed to corresponding event channels. If the event template does not configure receiving channels, event notifications will not be triggered.",
+        "failureReason": "Failure Reason",
+        "viewPushSettings": "View Push Settings",
+        "viewEventContent": "View Event Content"
+      }
+    },
+    "channel": {
+      "columns": {
+        "name": "Name",
+        "address": "Address",
+        "operate": "Operation"
+      },
+      "placeholder": {
+        "inputName": "Please enter name",
+        "inputAddress": "Please enter address",
+        "inputEmailAddress": "Please enter email address",
+        "inputWebhookAddress": "Please enter HTTP(s) address",
+        "inputDingTalkKeyword": "Please enter DingTalk robot keyword",
+        "inputWeChatAddress": "Please enter WeChat Enterprise robot address"
+      },
+      "messages": {
+        "nameRequired": "Name cannot be empty",
+        "addressRequired": "Address cannot be empty",
+        "emailFormatError": "Please enter correct email address",
+        "webhookFormatError": "Please enter correct address",
+        "addSuccess": "Added successfully",
+        "editSuccess": "Edited successfully",
+        "deleteSuccess": "Deleted successfully",
+        "testSuccess": "Test passed",
+        "saveSuccess": "Saved successfully",
+        "deleteConfirm": "Confirm deletion?",
+        "maxWebhook": "Maximum 5 webhook addresses can be added",
+        "maxEmail": "Maximum 20 email addresses can be added",
+        "maxDingTalk": "Maximum 10 DingTalk robots can be added",
+        "maxWeChat": "Maximum 10 WeChat Enterprise robots can be added"
+      },
+      "titles": {
+        "webhookTitle": "Webhook is the HTTP callback address you use to receive event content. By associating pre-defined webhook addresses in event templates, when events occur, the system will send events to corresponding webhook addresses via HTTP protocol POST requests. Maximum 5 webhook addresses are allowed.",
+        "emailTitle": "Email groups are user email groups you use to receive events. By associating pre-defined email groups in event templates, when events occur, the system will send emails to corresponding email group mailboxes. Maximum 20 email groups are allowed.",
+        "dingTalkTitle": "DingTalk robots are DingTalk message groups you use to receive events. For DingTalk robot configuration, please refer to DingTalk product documentation. By associating pre-defined DingTalk robots in event templates, when events occur, the system will send events to corresponding DingTalk robot message groups. Maximum 10 DingTalk robots are allowed.",
+        "weChatTitle": "WeChat Enterprise robots are WeChat Enterprise message groups you use to receive events. For WeChat Enterprise robot configuration, please refer to WeChat Enterprise product documentation. By associating pre-defined WeChat Enterprise robots in event templates, when events occur, the system will send events to corresponding WeChat Enterprise robot message groups. Maximum 10 WeChat Enterprise robots are allowed."
+      },
+      "steps": {
+        "step1": "Step 1",
+        "step2": "Step 2",
+        "step3": "Step 3",
+        "step4": "Step 4",
+        "step5": "Step 5",
+        "dingTalkStep1": "Add robot to DingTalk group, select 'Custom' for robot type.",
+        "dingTalkStep2": "In security settings, check keyword, the entered name should correspond to the added name, e.g., if DingTalk robot keyword is 'Test Report', then the robot name added on the page should be 'Test Report'.",
+        "dingTalkStep3": "If security level has requirements, security settings can check signature. This is not mandatory.",
+        "dingTalkStep4": "Copy the webhook address and signature of DingTalk robot.",
+        "dingTalkStep5": "Paste the name (DingTalk keyword), address (DingTalk webhook address), signature (DingTalk signature) into 'DingTalk Robot Configuration', click [Test] [Save]."
+      }
+    },
+    "config": {
+      "columns": {
+        "receiveMethod": "Receive Method",
+        "channelType": "Channel Type"
+      },
+      "placeholder": {
+        "selectPushMethod": "Select push method",
+        "selectHttpAddress": "Select HTTP(S) address",
+        "selectEmail": "Select email",
+        "selectDingTalk": "Select DingTalk robot",
+        "selectWeChat": "Select WeChat Enterprise robot"
+      },
+      "messages": {
+        "addPushConfig": "Add Push Configuration",
+        "configReceiveChannel": "Configure Receive Channel",
+        "editPushConfig": "Edit Push Configuration",
+        "continueAdd": "Continue Adding",
+        "selectReceiveMethod": "Select receive method"
+      }
+    }
   },
   "log": {
     "operation": {

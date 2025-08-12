@@ -204,7 +204,123 @@
     }
   },
   "event": {
-
+    "template": {
+      "columns": {
+        "eventName": "事件名称",
+        "eventCode": "事件编码",
+        "type": "类型",
+        "category": "分类",
+        "app": "应用",
+        "pushMethod": "推送方式",
+        "operate": "操作"
+      },
+      "placeholder": {
+        "selectApp": "选择应用",
+        "searchEventName": "查询事件编码、描述",
+        "selectEventType": "选择类型"
+      },
+      "messages": {
+        "description": "事件模版是对事件的分类，通过事件模版您可以为不同类型事件配置不同的接收通道，配置后当事件发生时会被自动发送到对应模版的事件通道，对于业务事件，您也可以在应用管理中配置事件。",
+        "public": "公共"
+      }
+    },
+    "records": {
+      "columns": {
+        "id": "ID",
+        "receiverName": "接收人名称",
+        "receiverId": "接收人ID",
+        "eventCode": "事件编码",
+        "eventName": "事件名称",
+        "eKey": "错误编码",
+        "content": "内容",
+        "type": "类型",
+        "pushStatus": "推送状态",
+        "triggerTime": "触发时间",
+        "operate": "操作"
+      },
+      "placeholder": {
+        "selectReceiver": "请选择接收人",
+        "searchEventCode": "查询事件编码、描述",
+        "selectEventType": "选择事件类型",
+        "selectPushStatus": "选择推送状态",
+        "selectTime": "选择时间"
+      },
+      "messages": {
+        "description": "事件记录是应用在运行时收集的系统和业务关键状态，如：任务状态变更，配额和资源不足、重大错误或异常，安全告警等。除了可以在当前事件记录中查看事件外，您还可以将事件通道和事件模版关联，关联后事件会被自动推送到对应事件通道。如果事件对应模版未配置接收通道，将不会触发事件通知。",
+        "failureReason": "失败原因",
+        "viewPushSettings": "查看推送设置",
+        "viewEventContent": "查看事件内容"
+      }
+    },
+    "channel": {
+      "columns": {
+        "name": "名称",
+        "address": "地址",
+        "operate": "操作"
+      },
+      "placeholder": {
+        "inputName": "请输入名称",
+        "inputAddress": "请输入地址",
+        "inputEmailAddress": "请输入邮箱地址",
+        "inputWebhookAddress": "请输入HTTP(s)地址",
+        "inputDingTalkKeyword": "请输入钉钉机器人关键词",
+        "inputWeChatAddress": "请输入企业微信机器人地址"
+      },
+      "messages": {
+        "nameRequired": "名称不能为空",
+        "addressRequired": "地址不能为空",
+        "emailFormatError": "请输入正确邮箱地址",
+        "webhookFormatError": "请输入正确地址",
+        "addSuccess": "添加成功",
+        "editSuccess": "编辑成功",
+        "deleteSuccess": "删除成功",
+        "testSuccess": "测试通过",
+        "saveSuccess": "保存成功",
+        "deleteConfirm": "确定删除吗？",
+        "maxWebhook": "最多可添加5个webhook地址",
+        "maxEmail": "最多可添加20个邮箱地址",
+        "maxDingTalk": "最多可添加10个钉钉机器人",
+        "maxWeChat": "最多可添加10个企业微信机器人"
+      },
+      "titles": {
+        "webhookTitle": "Webhook是您用于接收事件内容的Http回推地址，通过在事件模版中关联已定义好Webhook地址，事件发生后系统会以Http协议POST请求方式发送事件对应Webhook地址。最大允许定义5个Webhook地址。",
+        "emailTitle": "邮件组是您用于接收事件的用户邮箱分组，通过在事件模版中关联已定义好邮件组，事件发生后系统会发送邮件到对应邮件组邮箱。最大允许定义20个邮件组。",
+        "dingTalkTitle": "钉钉机器人是您用于接收事件的钉钉消息群，钉钉机器人配置请查看钉钉产品说明，通过在事件模版中关联已定义好钉钉机器人，事件发生后系统会发送事件到对应钉钉机器人消息群。最大允许定义10个钉钉机器人。",
+        "weChatTitle": "企业微信机器人是您用于接收事件的企业微信消息群，企业微信机器人配置请查看企业微信产品说明，通过在事件模版中关联已定义好企业微信机器人，事件发生后系统会发送事件到对应企业微信机器人消息群。最大允许定义10个企业微信机器人。"
+      },
+      "steps": {
+        "step1": "第一步",
+        "step2": "第二步",
+        "step3": "第三步",
+        "step4": "第四步",
+        "step5": "第五步",
+        "dingTalkStep1": "钉钉群添加机器人，机器人类型选择自定义。",
+        "dingTalkStep2": "安全设置勾选关键词，输入的名称要和添加的名称对应，如 钉钉机器人的关键词是测试报告，那么页面中添加的机器人名称为测试报告。",
+        "dingTalkStep3": "若安全级别有要求，安全设置可以勾选加签。此项非必须。",
+        "dingTalkStep4": "复制钉钉的机器人的Webhook地址和签名。",
+        "dingTalkStep5": "把名称(钉钉关键词)、地址(钉钉webhook地址)、签名(钉钉签名)粘贴到钉钉机器人配置 中，点击【测试】【保存】。"
+      }
+    },
+    "config": {
+      "columns": {
+        "receiveMethod": "接收方式",
+        "channelType": "通道类型"
+      },
+      "placeholder": {
+        "selectPushMethod": "选择推送方式",
+        "selectHttpAddress": "选择HTTP(S)地址",
+        "selectEmail": "选择邮箱",
+        "selectDingTalk": "选择钉钉机器人",
+        "selectWeChat": "选择企业微信机器人"
+      },
+      "messages": {
+        "addPushConfig": "添加推送配置",
+        "configReceiveChannel": "配置接收通道",
+        "editPushConfig": "编辑推送配置",
+        "continueAdd": "继续添加",
+        "selectReceiveMethod": "选择接收方式"
+      }
+    }
   },
   "log": {
     "operation": {

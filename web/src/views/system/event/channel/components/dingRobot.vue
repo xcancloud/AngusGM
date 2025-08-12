@@ -16,11 +16,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <div>
-    <Hints :text="$t('ding-talk-title')" />
+    <Hints :text="$t('event.channel.titles.dingTalkTitle')" />
     <ChannelAddress
       :max="props.max"
       channelType="DINGTALK"
-      :placeholder="t('ding-talk-placeholder3')" />
+      :placeholder="t('event.channel.placeholder.inputDingTalkKeyword')" />
   </div>
 </template>
 <style scoped>

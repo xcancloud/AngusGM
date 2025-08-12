@@ -5,7 +5,7 @@ export interface SaveSetting {
 
 export interface EventConfigList {
   id: string;
-  ekey: string;
+  eKey: string;
   bizKey: string;
   bigBizKey: string;
   eventCode: string;

@@ -16,10 +16,10 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 <template>
   <div>
-    <Hints :text="$t('wechat-title')" />
+    <Hints :text="$t('event.channel.titles.weChatTitle')" />
     <ChannelAddress
       channelType="WECHAT"
       :max="props.max"
-      :placeholder="t('wechat-placeholder2')" />
+      :placeholder="t('event.channel.placeholder.inputWeChatAddress')" />
   </div>
 </template>

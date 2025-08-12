@@ -34,7 +34,7 @@ watch(() => props.visible, newValue => {
 <template>
   <Modal
     class="rounded"
-    :title="$t('table-operate2')"
+    :title="$t('event.records.messages.viewEventContent')"
     :footer="null"
     :visible="props.visible"
     :width="700"

@@ -26,23 +26,23 @@ const selectedItem = ref<EventConfigList>({
 });
 const Options = ref([
   {
-    placeholder: t('placeholder.p1'),
+    placeholder: t('event.template.placeholder.searchEventName'),
     valueKey: 'eventName',
-    type: 'input',
+    type: 'input' as const,
     allowClear: true
   },
   {
     valueKey: 'eventType',
-    type: 'select-enum',
-    op: 'EQUAL',
+    type: 'select-enum' as const,
+    op: 'EQUAL' as const,
     enumKey: EventType,
     allowClear: true,
-    placeholder: t('placeholder.p2')
+    placeholder: t('event.template.placeholder.selectEventType')
   },
   {
     valueKey: 'appCode',
-    type: 'select',
-    placeholder: '选择应用',
+    type: 'select' as const,
+    placeholder: t('event.template.placeholder.selectApp'),
     options: [],
     fieldNames: {
       value: 'appCode',
@@ -53,38 +53,42 @@ const Options = ref([
 
 const Columns = [
   {
-    title: t('事件名称'),
+    title: t('event.template.columns.eventName'),
     dataIndex: 'eventName',
+    key: 'eventName',
     width: '12%'
   },
   {
-    title: t('事件编码'),
+    title: t('event.template.columns.eventCode'),
     dataIndex: 'eventCode',
+    key: 'eventCode',
     width: '12%'
   },
   {
-    title: t('type'),
+    title: t('event.template.columns.type'),
     dataIndex: 'eventType',
     key: 'eventType',
     customRender: ({ text }): string => text?.message,
     width: '8%'
   },
   {
-    title: '分类',
-    dataIndex: 'targetType'
+    title: t('event.template.columns.category'),
+    dataIndex: 'targetType',
+    key: 'targetType'
   },
   {
-    title: '应用',
-    dataIndex: 'appCode'
+    title: t('event.template.columns.app'),
+    dataIndex: 'appCode',
+    key: 'appCode'
   },
   {
-    title: t('table-push-method'),
+    title: t('event.template.columns.pushMethod'),
     dataIndex: 'allowedChannelTypes',
     key: 'allowedChannelTypes',
     width: '15%'
   },
   {
-    title: t('operate'),
+    title: t('event.template.columns.operate'),
     key: 'operate',
     dataIndex: 'operate',
     width: '8%'
@@ -133,7 +137,7 @@ const loadAppOptions = async (pageSize = 10) => {
 
 const getTargetTypeName = (value: string) => {
   const target = targetTypeEnums.value.find(i => i.value === value);
-  return target?.message || '公共';
+  return target?.message || t('event.template.messages.public');
 };
 
 const getAppName = (value: string) => {
@@ -186,7 +190,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="flex flex-col min-h-full">
-    <Hints :text="t('eventTip1')" class="mb-1" />
+    <Hints :text="t('event.template.messages.description')" class="mb-1" />
     <PureCard class="flex-1 p-3.5">
       <div class="flex justify-between items-center mb-2">
         <SearchPanel

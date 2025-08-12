@@ -16,10 +16,10 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 <template>
   <div>
-    <Hints :text="$t('https-title')" />
+    <Hints :text="$t('event.channel.titles.webhookTitle')" />
     <ChannelAddress
       :max="props.max"
       channelType="WEBHOOK"
-      :placeholder="t('address-placeholder')" />
+      :placeholder="t('event.channel.placeholder.inputWebhookAddress')" />
   </div>
 </template>
