@@ -3,23 +3,40 @@ import { onMounted, ref } from 'vue';
 import { Card, Colon, Input, notification, Spin } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
+import { useI18n } from 'vue-i18n';
 
 import { setting } from '@/api';
 
+const { t } = useI18n();
+
+// Loading state for all operations
 const loading = ref(false);
+
+// Monitoring data settings
 const controlSetting = ref();
 const maxMetricsDays = ref('15');
+
+/**
+ * Fetch monitoring data retention settings from API
+ * Retrieves MAX_METRICS_DAYS configuration
+ */
 const getControlSetting = async () => {
   loading.value = true;
   const [error, { data }] = await setting.getSettingDetail('MAX_METRICS_DAYS');
   loading.value = false;
+
   if (error) {
     return;
   }
+
   controlSetting.value = data;
   maxMetricsDays.value = data.maxMetricsDays;
 };
 
+/**
+ * Update monitoring data retention setting with debounced API call
+ * @param value - Number of days to retain monitoring data (1-3650)
+ */
 const handleSetControl = debounce(duration.search, async (value) => {
   loading.value = true;
   const [error] = await setting.setSetting({
@@ -28,25 +45,39 @@ const handleSetControl = debounce(duration.search, async (value) => {
     key: 'MAX_METRICS_DAYS'
   });
   loading.value = false;
+
   if (error) {
     return;
   }
-  notification.success('修改配置成功');
+
+  notification.success(t('other.messages.modifyConfigSuccess'));
 });
 
+// Activity data settings
 const activitySetting = ref();
 const maxResourceActivities = ref('200');
+
+/**
+ * Fetch activity data retention settings from API
+ * Retrieves MAX_RESOURCE_ACTIVITIES configuration
+ */
 const getActivitySetting = async () => {
   loading.value = true;
   const [error, { data }] = await setting.getSettingDetail('MAX_RESOURCE_ACTIVITIES');
   loading.value = false;
+
   if (error) {
     return;
   }
+
   activitySetting.value = data;
   maxResourceActivities.value = data.maxResourceActivities;
 };
 
+/**
+ * Update activity data retention setting with debounced API call
+ * @param value - Number of activities to retain (1-10000)
+ */
 const handleSetActivity = debounce(duration.search, async (value) => {
   loading.value = true;
   const [error] = await setting.setSetting({
@@ -55,33 +86,42 @@ const handleSetActivity = debounce(duration.search, async (value) => {
     key: 'MAX_RESOURCE_ACTIVITIES'
   });
   loading.value = false;
+
   if (error) {
     return;
   }
-  notification.success('修改配置成功');
+
+  notification.success(t('other.messages.modifyConfigSuccess'));
 });
 
+// Initialize component data on mount
 onMounted(() => {
   getControlSetting();
   getActivitySetting();
 });
 </script>
+
 <template>
   <Spin :spinning="loading">
-    <Card title="监控数据" bodyClass="flex items-center text-3 p-3.5">
-      配置监控数据最大保留最近<Input
+    <!-- Monitoring Data Retention Configuration -->
+    <Card :title="t('other.titles.monitoringData')" bodyClass="flex items-center text-3 p-3.5">
+      {{ t('other.descriptions.monitoringDataDesc') }}
+      <Input
         v-model:value="maxMetricsDays"
         class="w-25 flex-none mx-1"
         dataType="number"
         :min="1"
         :max="3650"
-        @change="handleSetControl($event.target.value)" />天，允许范围：1-3650，默认15天。
+        @change="handleSetControl($event.target.value)" />
+      {{ t('common.time.day') }}{{ t('other.descriptions.monitoringDataRange') }}
     </Card>
+
+    <!-- Activity Data Retention Configuration -->
     <Card
-      title="活动数据"
+      :title="t('other.titles.activityData')"
       class="mt-2"
       bodyClass="flex items-center text-3 p-3.5">
-      配置最大保留资源最新活动记录数
+      {{ t('other.descriptions.activityDataDesc') }}
       <Colon />
       <Input
         v-model:value="maxResourceActivities"
@@ -89,7 +129,8 @@ onMounted(() => {
         dataType="number"
         :min="1"
         :max="10000"
-        @change="handleSetActivity($event.target.value)" />，允许设置范围：1-10000，默认200。
+        @change="handleSetActivity($event.target.value)" />
+      {{ t('other.descriptions.activityDataRange') }}
     </Card>
   </Spin>
 </template>

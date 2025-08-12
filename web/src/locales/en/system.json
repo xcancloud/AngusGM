@@ -1148,5 +1148,20 @@
       "config": "Delete Configuration",
       "content": "Are you sure you want to delete LDAP service 【{name}】?"
     }
+  },
+  "other": {
+    "titles": {
+      "monitoringData": "Monitoring Data",
+      "activityData": "Activity Data"
+    },
+    "descriptions": {
+      "monitoringDataDesc": "Configure maximum retention period for monitoring data, keep recent",
+      "monitoringDataRange": " days, allowed range: 1-3650, default 15 days.",
+      "activityDataDesc": "Configure maximum number of latest resource activity records to retain",
+      "activityDataRange": ", allowed range: 1-10000, default 200."
+    },
+    "messages": {
+      "modifyConfigSuccess": "Configuration modified successfully"
+    }
   }
 }

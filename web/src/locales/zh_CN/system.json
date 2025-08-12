@@ -1148,5 +1148,20 @@
       "groupTest": "组测试",
       "memberTest": "成员测试"
     }
+  },
+  "other": {
+    "titles": {
+      "monitoringData": "监控数据",
+      "activityData": "活动数据"
+    },
+    "descriptions": {
+      "monitoringDataDesc": "配置监控数据最大保留最近",
+      "monitoringDataRange": "天，允许范围：1-3650，默认15天。",
+      "activityDataDesc": "配置最大保留资源最新活动记录数",
+      "activityDataRange": "，允许设置范围：1-10000，默认200。"
+    },
+    "messages": {
+      "modifyConfigSuccess": "修改配置成功"
+    }
   }
 }
