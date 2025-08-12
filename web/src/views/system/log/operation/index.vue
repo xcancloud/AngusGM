@@ -2,75 +2,75 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { Hints, Image, PureCard, Table } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan-angus/infra';
+import { PageQuery, GM } from '@xcan-angus/infra';
 
 import { setting, userLog } from '@/api';
+import { OperationLogRecord } from './PropsType';
 
-type FilterOp =
-  'EQUAL'
-  | 'NOT_EQUAL'
-  | 'GREATER_THAN'
-  | 'GREATER_THAN_EQUAL'
-  | 'LESS_THAN'
-  | 'LESS_THAN_EQUAL'
-  | 'CONTAIN'
-  | 'NOT_CONTAIN'
-  | 'MATCH_END'
-  | 'MATCH'
-  | 'IN'
-  | 'NOT_IN'
-type Filters = { key: string, value: string, op: FilterOp }[]
-type SearchParams = {
-  pageNo?: number;
-  pageSize?: number;
-  orderBy?: string;
-  orderSort?: 'ASC' | 'DESC';
-  fullTextSearch?: boolean;
-  filters?: Filters;
-}
-
+// Component state management
 const showCount = ref(true);
 const Statistics = defineAsyncComponent(() => import('@/views/system/log/operation/statistics/index.vue'));
 const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));
 
 const { t } = useI18n();
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
+
+// Pagination and query parameters with correct typing
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 const loading = ref(false);
-const tableList = ref<any[]>([]);
+const tableList = ref<OperationLogRecord[]>([]);
 
-const searchChange = async (data:{filters:{ key: string; value: string; op: FilterOp; }[]}) => {
-  params.value.pageNo = 1;
-  params.value.filters = data.filters;
+/**
+ * Handle search criteria changes and reset pagination
+ * @param data - Search filters data containing key, value, and operation
+ */
+const searchChange = async (data:{filters:{ key: string; op: string; value: string|string[]; }[]}) => {
+  params.value.pageNo = 1; // Reset to first page when search changes
+  // Type assertion to convert between compatible filter types
+  params.value.filters = data.filters as any;
   await getList();
 };
 
+/**
+ * Fetch operation log list with current parameters
+ * Includes loading state management and error handling
+ */
 const getList = async () => {
+  // Prevent multiple simultaneous requests
   if (loading.value) {
     return;
   }
-  loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await userLog.getOperationLogList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
-  }
 
-  tableList.value = data.list;
-  total.value = +data.total;
+  loading.value = true;
+  try {
+    const [error, { data = { list: [], total: 0 } }] = await userLog.getOperationLogList(params.value);
+    if (error) {
+      return;
+    }
+
+    tableList.value = data.list;
+    total.value = +data.total;
+  } finally {
+    loading.value = false;
+  }
 };
 
-const pagination = computed(() => {
-  return {
-    current: params.value.pageNo,
-    pageSize: params.value.pageSize,
-    total: total.value
-  };
-});
+// Computed pagination object for table component
+const pagination = computed(() => ({
+  current: params.value.pageNo,
+  pageSize: params.value.pageSize,
+  total: total.value
+}));
 
-const tableChange = async (_pagination, _filters, sorter: {
+/**
+ * Handle table pagination, sorting, and filtering changes
+ * @param _pagination - Pagination object from table
+ * @param _filters - Filter object from table
+ * @param sorter - Sorting configuration with orderBy and orderSort
+ */
+const tableChange = async (_pagination: any, _filters: any, sorter: {
   orderBy: string;
-  orderSort: 'DESC' | 'ASC'
+  orderSort: PageQuery.OrderSort
 }) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -80,7 +80,13 @@ const tableChange = async (_pagination, _filters, sorter: {
   await getList();
 };
 
+// Configuration for log retention period
 const clearBeforeDay = ref<string>();
+
+/**
+ * Fetch system settings for operation log configuration
+ * Retrieves log retention period settings
+ */
 const getSettings = async () => {
   const [error, { data }] = await setting.getSettingDetail('OPERATION_LOG_CONFIG');
   if (error) {
@@ -90,80 +96,100 @@ const getSettings = async () => {
   clearBeforeDay.value = data.operationLog?.clearBeforeDay;
 };
 
+/**
+ * Toggle statistics display visibility
+ */
 const toggleOpenCount = () => {
   showCount.value = !showCount.value;
 };
 
+// Lifecycle hook - initialize component
 onMounted(() => {
   getSettings();
   getList();
 });
 
+// Table column definitions with sorting and custom rendering
 const columns = [
   {
-    title: t('ID'),
+    key: 'id',
+    title: t('log.operation.columns.id'),
     dataIndex: 'id',
     hide: true
   },
   {
-    title: t('操作人'),
+    key: 'fullName',
+    title: t('log.operation.columns.operator'),
     dataIndex: 'fullName',
     width: '15%',
-    sorter: true
+    sorter: true // Enable sorting for operator column
   },
   {
-    title: t('操作内容'),
+    key: 'description',
+    title: t('log.operation.columns.operationContent'),
     dataIndex: 'description',
     width: '35%'
   },
   {
-    title: t('操作资源'),
+    key: 'resource',
+    title: t('log.operation.columns.operationResource'),
     dataIndex: 'resource',
     width: '15%',
-    customRender: ({ text }) => text?.message
+    customRender: ({ text }) => text?.message // Custom render for resource display
   },
   {
-    title: t('操作资源名称'),
+    key: 'resourceName',
+    title: t('log.operation.columns.operationResourceName'),
     dataIndex: 'resourceName',
-    groupName: 'resource',
+    groupName: 'resource', // Group with resource column
     width: '20%'
   },
   {
-    title: t('操作资源ID'),
+    key: 'resourceId',
+    title: t('log.operation.columns.operationResourceId'),
     dataIndex: 'resourceId',
-    groupName: 'resource',
+    groupName: 'resource', // Group with resource column
     hide: true,
     width: '20%'
   },
   {
-    title: t('op-table-5'),
+    key: 'optDate',
+    title: t('log.operation.columns.operationDate'),
     dataIndex: 'optDate',
     width: '15%',
-    sorter: true,
+    sorter: true, // Enable sorting for date column
     customCell: () => {
-      return { style: 'white-space:nowrap;' };
+      return { style: 'white-space:nowrap;' }; // Prevent date wrapping
     }
   }
 ];
 </script>
+
 <template>
   <div class="flex flex-col min-h-full">
+    <!-- System hint about log retention period -->
     <Hints
-      :text="'实时记录用户对系统的操作行为和资源变更信息；通过操作日志您可以实现安全分析、资源变更追踪、异常问题定位等。默认保存日志'+clearBeforeDay+'天。'"
+      :text="t('log.operation.messages.description', { days: clearBeforeDay })"
       class="mb-1" />
+
     <PureCard class="flex-1 p-3.5">
+      <!-- Statistics component for operation logs -->
       <Statistics
         resource="OperationLog"
-        :barTitle="t('statistics.metrics.newOperations')"
+        :barTitle="t('log.operation.statistics.newOperations')"
         dateType="DAY"
         :router="GM"
         :visible="showCount" />
+
+      <!-- Search panel with filters and quick actions -->
       <SearchPanel
         :loading="loading"
         :showCount="showCount"
         @openCount="toggleOpenCount"
         @refresh="getList"
         @change="searchChange" />
+
+      <!-- Data table with pagination and sorting -->
       <Table
         :loading="loading"
         :dataSource="tableList"
@@ -171,8 +197,11 @@ const columns = [
         :pagination="pagination"
         rowKey="id"
         size="small"
+        :noDataSize="'small'"
+        :noDataText="t('common.messages.noData')"
         class="mt-2"
         @change="tableChange">
+        <!-- Custom cell rendering for operator column -->
         <template #bodyCell="{column, record}">
           <template v-if="column.dataIndex === 'fullName'">
             <div class="flex items-center">

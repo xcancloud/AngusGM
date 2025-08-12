@@ -206,8 +206,51 @@
   "event": {
 
   },
-  "audit": {
+  "log": {
+    "operation": {
+      "columns": {
+        "id": "ID",
+        "operator": "操作人",
+        "operationContent": "操作内容",
+        "operationResource": "操作资源",
+        "operationResourceName": "操作资源名称",
+        "operationResourceId": "操作资源ID",
+        "operationDate": "操作时间"
+      },
+      "placeholder": {
+        "searchOperationContent": "查询操作内容",
+        "operationTime": "操作时间"
+      },
+      "messages": {
+        "description": "实时记录用户对系统的操作行为和资源变更信息；通过操作日志您可以实现安全分析、资源变更追踪、异常问题定位等。默认保存日志{days}天。",
+        "quickQuery": "快速查询",
+        "all": "全部",
+        "myOperations": "我的操作",
+        "last1Day": "近1天",
+        "last3Days": "近3天",
+        "last7Days": "近7天",
+        "viewStatistics": "查看统计",
+        "hideStatistics": "收起统计",
+        "refresh": "刷新",
+        "timeUnit": "时间单位"
+      },
+      "statistics": {
+        "newOperations": "新增操作",
+        "resource": "资源",
+        "timeRanges": {
+          "today": "今天",
+          "last7Days": "近7天",
+          "last30Days": "近30天",
+          "lastYear": "近一年"
+        }
+      }
+    },
+    "request": {
 
+    },
+    "system": {
+
+    }
   },
   "onlineUser": {
     "columns": {

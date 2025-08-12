@@ -32,7 +32,7 @@ const { t } = useI18n();
 const operationLogsGroup = ref<PieSetting[]>([
   {
     key: 'resource',
-    value: t('资源'),
+    value: t('log.operation.statistics.resource'),
     type: [],
     color: []
   }

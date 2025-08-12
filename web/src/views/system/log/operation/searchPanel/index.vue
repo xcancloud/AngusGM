@@ -31,7 +31,7 @@ const selectedMenuMap = ref<{[key: string]: boolean}>({});
 const searchPanelOptions = [
   {
     valueKey: 'description',
-    placeholder: t('查询操作内容'),
+    placeholder: t('log.operation.placeholder.searchOperationContent'),
     type: 'input',
     allowClear: true
   },
@@ -43,30 +43,30 @@ const searchPanelOptions = [
   {
     valueKey: 'optDate',
     type: 'date',
-    placeholder: t('操作时间')
+    placeholder: t('log.operation.placeholder.operationTime')
   }
 ];
 
 const menuItems = computed(() => [
   {
     key: '',
-    name: '全部'
+    name: t('log.operation.messages.all')
   },
   {
     key: 'userId',
-    name: '我的操作'
+    name: t('log.operation.messages.myOperations')
   },
   {
     key: 'lastDay',
-    name: '近1天'
+    name: t('log.operation.messages.last1Day')
   },
   {
     key: 'lastThreeDays',
-    name: '近3天'
+    name: t('log.operation.messages.last3Days')
   },
   {
     key: 'lastWeek',
-    name: '近7天'
+    name: t('log.operation.messages.last7Days')
   }
 ]);
 
@@ -98,18 +98,6 @@ const formatDateString = (key: string) => {
   }
 
   return [startDate ? startDate.format('YYYY-MM-DD HH:mm:ss') : '', endDate ? endDate.format('YYYY-MM-DD HH:mm:ss') : ''];
-
-  // return [
-  //   startDate ? {
-  //     value: startDate.format('YYYY-MM-DD HH:mm:ss'),
-  //     op: 'GREATER_THAN_EQUAL',
-  //     key: 'createdDate'
-  //   } : '',
-  //   endDate ? {
-  //     value: endDate.format('YYYY-MM-DD HH:mm:ss'),
-  //     op: 'LESS_THAN_EQUAL',
-  //     key: 'createdDate'
-  //   }  : ''].filter(Boolean);
 };
 
 const getParams = () => {
@@ -157,11 +145,6 @@ const searchChange = (data: {key: string; op: string; value: string|string[]}[])
     });
   }
 
-  emits('change', getParams());
-};
-const toSort = (sortData) => {
-  orderBy.value = sortData.orderBy;
-  orderSort.value = sortData.orderSort;
   emits('change', getParams());
 };
 
@@ -252,7 +235,7 @@ onMounted(() => {
   <div class="mt-2.5 mb-3.5">
     <div class="flex">
       <div class="whitespace-nowrap text-3 text-text-sub-content transform-gpu translate-y-0.5">
-        <span>快速查询</span>
+        <span>{{ t('log.operation.messages.quickQuery') }}</span>
         <Colon />
       </div>
       <div class="flex  flex-wrap ml-2 text-3">
@@ -277,7 +260,7 @@ onMounted(() => {
         <Tooltip
           arrowPointAtCenter
           placement="topLeft"
-          :title="props.showCount?'收起统计':'查看统计'">
+          :title="props.showCount ? t('log.operation.messages.hideStatistics') : t('log.operation.messages.viewStatistics')">
           <IconCount
             :value="props.showCount"
             class="flex-none text-4.5"
@@ -286,10 +269,11 @@ onMounted(() => {
         <Tooltip
           arrowPointAtCenter
           placement="topLeft"
-          title="刷新">
+          :title="t('log.operation.messages.refresh')">
           <IconRefresh
             :loading="loading"
-            class="text-4.5 ml-2"
+            :text="4.5"
+            class="ml-2"
             @click="refresh" />
         </Tooltip>
       </div>

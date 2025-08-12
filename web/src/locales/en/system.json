@@ -206,8 +206,51 @@
   "event": {
 
   },
-  "audit": {
+  "log": {
+    "operation": {
+      "columns": {
+        "id": "ID",
+        "operator": "Operator",
+        "operationContent": "Operation Content",
+        "operationResource": "Operation Resource",
+        "operationResourceName": "Operation Resource Name",
+        "operationResourceId": "Operation Resource ID",
+        "operationDate": "Operation Date"
+      },
+      "placeholder": {
+        "searchOperationContent": "Search operation content",
+        "operationTime": "Operation time"
+      },
+      "messages": {
+        "description": "Real-time recording of user operations and resource change information on the system; through operation logs, you can achieve security analysis, resource change tracking, and abnormal problem positioning. Logs are saved by default for {days} days.",
+        "quickQuery": "Quick Query",
+        "all": "All",
+        "myOperations": "My Operations",
+        "last1Day": "Last 1 Day",
+        "last3Days": "Last 3 Days",
+        "last7Days": "Last 7 Days",
+        "viewStatistics": "View Statistics",
+        "hideStatistics": "Hide Statistics",
+        "refresh": "Refresh",
+        "timeUnit": "Time Unit"
+      },
+      "statistics": {
+        "newOperations": "New Operations",
+        "resource": "Resource",
+        "timeRanges": {
+          "today": "Today",
+          "last7Days": "Last 7 Days",
+          "last30Days": "Last 30 Days",
+          "lastYear": "Last Year"
+        }
+      }
+    },
+    "request": {
 
+    },
+    "system": {
+
+    }
   },
   "onlineUser": {
     "columns": {

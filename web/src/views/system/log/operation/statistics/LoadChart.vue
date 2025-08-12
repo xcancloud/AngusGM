@@ -45,7 +45,7 @@ const dateChange = (value) => {
         value: `"${dayjs().startOf('date').subtract(1, 'year').add(1, 'day').format('YYYY-MM-DD HH:mm:ss')}"`
       },
       { key: 'created_date', op: 'LESS_THAN_EQUAL', value: `"${dayjs().format('YYYY-MM-DD HH:mm:ss')}"` }];
-      unit = ['MONTH', t('month')];
+      unit = ['MONTH', t('common.time.month')];
       return;
     }
     // 清空时间框 日志没有年 清空时间框默认展示今天
@@ -60,7 +60,7 @@ const dateChange = (value) => {
         op: 'LESS_THAN_EQUAL',
         value: `"${dayjs().endOf('date').format('YYYY-MM-DD HH:mm:ss')}"`
       }];
-      unit = ['HOUR', t('hour')];
+      unit = ['HOUR', t('common.time.hour')];
       return;
     }
 
@@ -71,7 +71,7 @@ const dateChange = (value) => {
       value: `"${dayjs().startOf('date').subtract(1, 'week').add(1, 'day').format('YYYY-MM-DD HH:mm:ss')}"`
     },
     { key: 'created_date', op: 'LESS_THAN_EQUAL', value: `"${dayjs().format('YYYY-MM-DD HH:mm:ss')}"` }];
-    unit = ['DAY', t('day')];
+    unit = ['DAY', t('common.time.day')];
   }
 
   filters = [{ key: 'created_date', op: 'GREATER_THAN_EQUAL', value: `"${value[0]}"` },
@@ -80,15 +80,15 @@ const dateChange = (value) => {
   const endDate = dayjs(value[1]);
   const often = endDate.diff(startDate, 'day');
   if (often <= 1) {
-    unit = ['HOUR', t('hour')];
+    unit = ['HOUR', t('common.time.hour')];
   } else if (often > 1 && often <= 30) {
-    unit = ['DAY', t('day')];
+    unit = ['DAY', t('common.time.day')];
   } else if (often > 30 && often <= 120) {
-    unit = ['WEEK', t('week')];
+    unit = ['WEEK', t('common.time.week')];
   } else if (often > 120 && often <= 730) {
-    unit = ['MONTH', t('month')];
+    unit = ['MONTH', t('common.time.month')];
   } else {
-    unit = ['YEAR', t('year')];
+    unit = ['YEAR', t('common.time.year')];
   }
 
   dateFilters.value = filters;
@@ -113,7 +113,7 @@ const selectDate = (value) => {
         op: 'LESS_THAN_EQUAL',
         value: `"${dayjs().endOf('date').format('YYYY-MM-DD HH:mm:ss')}"`
       }];
-      unit = ['HOUR', t('hour')];
+      unit = ['HOUR', t('common.time.hour')];
       break;
     case 'WEEK':
       filters = [{
@@ -122,7 +122,7 @@ const selectDate = (value) => {
         value: `"${dayjs().startOf('date').subtract(1, 'week').add(1, 'day').format('YYYY-MM-DD HH:mm:ss')}"`
       },
       { key: 'created_date', op: 'LESS_THAN_EQUAL', value: `"${dayjs().format('YYYY-MM-DD HH:mm:ss')}"` }];
-      unit = ['DAY', t('day')];
+      unit = ['DAY', t('common.time.day')];
       break;
     case 'MONTH':
       filters = [{
@@ -131,7 +131,7 @@ const selectDate = (value) => {
         value: `"${dayjs().startOf('date').subtract(1, 'month').add(1, 'day').format('YYYY-MM-DD HH:mm:ss')}"`
       },
       { key: 'created_date', op: 'LESS_THAN_EQUAL', value: `"${dayjs().format('YYYY-MM-DD HH:mm:ss')}"` }];
-      unit = ['DAY', t('day')];
+      unit = ['DAY', t('common.time.day')];
       break;
     case 'YEAR':
       filters = [{
@@ -140,7 +140,7 @@ const selectDate = (value) => {
         value: `"${dayjs().startOf('date').subtract(1, 'year').add(1, 'day').format('YYYY-MM-DD HH:mm:ss')}"`
       },
       { key: 'created_date', op: 'LESS_THAN_EQUAL', value: `"${dayjs().format('YYYY-MM-DD HH:mm:ss')}"` }];
-      unit = ['MONTH', t('month')];
+      unit = ['MONTH', t('common.time.month')];
       break;
   }
 
@@ -337,13 +337,13 @@ const getHttpCodeNum = (codes: { name: string, value: string }[]): string | numb
 const barChartData = ref<BarData>({} as BarData);
 const getDefaultDateRangeType = () => {
   if (['ApiLogs', 'OperationLog'].includes(props.resource)) {
-    return ['HOUR', t('hour')];
+    return ['HOUR', t('common.time.hour')];
   }
   if (['Dept', 'User', 'Group', 'OrgTagTarget'].includes(props.resource)) {
-    return ['MONTH', t('month')];
+    return ['MONTH', t('common.time.month')];
   }
 
-  return ['DAY', t('day')];
+  return ['DAY', t('common.time.day')];
 };
 // 默认查询单位
 const dateRangeType = ref(getDefaultDateRangeType());
@@ -439,7 +439,7 @@ const loadDateCount = async () => {
 // 设置柱状图默认数据
 const setBarChartDefault = () => {
   barChartData.value.title = `${props.barTitle}`;
-  barChartData.value.unit = `${t('时间单位')}: ${dateRangeType.value[1]}`;
+  barChartData.value.unit = `${t('common.time.unit')}: ${dateRangeType.value[1]}`;
   barChartData.value.xData = [];
   barChartData.value.yData = [];
 };

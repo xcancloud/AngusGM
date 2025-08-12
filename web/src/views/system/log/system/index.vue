@@ -32,7 +32,7 @@ const loadDiscoveryServices = async () => {
     label: item,
     value: item
   }));
-  loadServiceInstances();
+  await loadServiceInstances();
 };
 
 const loadServiceInstances = async () => {

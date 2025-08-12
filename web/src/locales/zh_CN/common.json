@@ -76,7 +76,8 @@
       "lastYear": "去年",
       "nearly7Days": "近7天",
       "nearly30Days": "近30天",
-      "nearlyYear": "近一年"
+      "nearlyYear": "近一年",
+      "unit": "时间单位"
     },
     "form": {
       "selectAll": "全选",

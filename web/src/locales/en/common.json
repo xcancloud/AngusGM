@@ -76,7 +76,8 @@
       "lastYear": "Last Year",
       "nearly7Days": "Nearly 7 Days",
       "nearly30Days": "Nearly 30 Days",
-      "nearlyYear": "Nearly Year"
+      "nearlyYear": "Nearly Year",
+      "unit": "Time Unit"
     },
     "columns": {
       "name": "Name",
