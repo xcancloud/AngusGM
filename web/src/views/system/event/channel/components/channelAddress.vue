@@ -139,7 +139,6 @@ const editHttpItemConfirm = (index: number, item) => {
   }).catch();
 };
 
-// 删除确认
 const deleteConfirm = (id: string) => {
   modal.confirm({
     centered: true,
@@ -151,7 +150,6 @@ const deleteConfirm = (id: string) => {
   });
 };
 
-// 删除
 const delHttpConfig = async (id: string): Promise<void> => {
   loading.value = true;
   const [error] = await event.deleteChannel(id);
@@ -164,7 +162,6 @@ const delHttpConfig = async (id: string): Promise<void> => {
   getReceiveSettingDetail();
 };
 
-// 测试
 const testConfig = async (index, item) => {
   formRefs[index].validate().then(async () => {
     loading.value = true;
