@@ -246,7 +246,52 @@
       }
     },
     "request": {
-
+      "columns": {
+        "apiName": "接口名称",
+        "requestId": "请求ID",
+        "apiCode": "接口编码",
+        "serviceName": "服务名称",
+        "serviceCode": "服务编码",
+        "uri": "请求地址",
+        "method": "请求方法",
+        "elapsedMillis": "请求耗时",
+        "status": "状态码"
+      },
+      "placeholder": {
+        "searchLogId": "查询日志ID",
+        "selectUserId": "选择或查询用户",
+        "searchRequestId": "查询请求ID",
+        "searchOperationResource": "查询操作资源",
+        "searchSuccess": "查询是否成功",
+        "selectOrSearchService": "选择或搜索服务",
+        "searchInstanceId": "查询实例ID",
+        "searchApiCode": "查询接口编码",
+        "searchRequestMethod": "查询请求方式",
+        "searchRequestUri": "查询请求URI",
+        "searchStatusCode": "查询状态码(0~1000)",
+        "requestTime": "请求时间"
+      },
+      "messages": {
+        "description": "查看\"用户令牌\"和\"系统令牌\"的访问请求日志。默认保存{clearBeforeDay}天的记录。",
+        "summary": "summary",
+        "raw": "raw",
+        "headers": "Headers",
+        "queryString": "Query String",
+        "response": "Response",
+        "prettyFormat": "美化格式",
+        "rawFormat": "原生格式",
+        "preview": "预览",
+        "newRequests": "新增请求"
+      },
+      "tabs": {
+        "basic": "基本",
+        "request": "请求",
+        "response": "响应"
+      },
+      "search": {
+        "success": "成功",
+        "failed": "失败"
+      }
     },
     "system": {
       "columns": {

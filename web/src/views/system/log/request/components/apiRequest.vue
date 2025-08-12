@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { Colon } from '@xcan-angus/vue-ui';
 import { Col, Collapse, CollapsePanel, RadioButton, RadioGroup, Row } from 'ant-design-vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
+import { useI18n } from 'vue-i18n';
 
 import { DataInfoType } from '../PropsType';
 
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {});
+const { t } = useI18n();
 
 const rowConfig = {
   gutter: 15,
@@ -52,8 +54,8 @@ const body = computed(() => {
       buttonStyle="solid"
       size="small"
       class="custom-group-btn">
-      <RadioButton value="summary">summary</RadioButton>
-      <RadioButton value="raw">raw</RadioButton>
+      <RadioButton value="summary">{{ t('log.request.messages.summary') }}</RadioButton>
+      <RadioButton value="raw">{{ t('log.request.messages.raw') }}</RadioButton>
     </RadioGroup>
     <Collapse
       v-if="mode === 'summary'"
@@ -69,7 +71,7 @@ const body = computed(() => {
       </template>
       <CollapsePanel
         key="1"
-        header="Headers"
+        :header="t('log.request.messages.headers')"
         class="custom-collapse-item text-3 text-theme-content">
         <div
           v-for="(item, index) in headers"
@@ -99,7 +101,7 @@ const body = computed(() => {
       <CollapsePanel
         key="2"
         class="custom-collapse-item text-3 text-theme-content"
-        header="Query String">
+        :header="t('log.request.messages.queryString')">
         <template v-if="props.data?.requestBody">
           <div
             v-for="(item, index) in body"

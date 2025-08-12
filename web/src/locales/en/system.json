@@ -246,7 +246,52 @@
       }
     },
     "request": {
-
+      "columns": {
+        "apiName": "API Name",
+        "requestId": "Request ID",
+        "apiCode": "API Code",
+        "serviceName": "Service Name",
+        "serviceCode": "Service Code",
+        "uri": "Request URI",
+        "method": "Request Method",
+        "elapsedMillis": "Request Duration",
+        "status": "Status Code"
+      },
+      "placeholder": {
+        "searchLogId": "Search log ID",
+        "selectUserId": "Select or search user",
+        "searchRequestId": "Search request ID",
+        "searchOperationResource": "Search operation resource",
+        "searchSuccess": "Search success status",
+        "selectOrSearchService": "Select or search service",
+        "searchInstanceId": "Search instance ID",
+        "searchApiCode": "Search API code",
+        "searchRequestMethod": "Search request method",
+        "searchRequestUri": "Search request URI",
+        "searchStatusCode": "Search status code (0~1000)",
+        "requestTime": "Request time"
+      },
+      "messages": {
+        "description": "View access request logs for \"User Tokens\" and \"System Tokens\". Records are saved for {clearBeforeDay} days by default.",
+        "summary": "Summary",
+        "raw": "Raw",
+        "headers": "Headers",
+        "queryString": "Query String",
+        "response": "Response",
+        "prettyFormat": "Pretty Format",
+        "rawFormat": "Raw Format",
+        "preview": "Preview",
+        "newRequests": "New Requests"
+      },
+      "tabs": {
+        "basic": "Basic",
+        "request": "Request",
+        "response": "Response"
+      },
+      "search": {
+        "success": "Success",
+        "failed": "Failed"
+      }
     },
     "system": {
       "columns": {

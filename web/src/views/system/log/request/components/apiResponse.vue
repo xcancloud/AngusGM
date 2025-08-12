@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { Colon, FormatHighlight } from '@xcan-angus/vue-ui';
 import { Col, Collapse, CollapsePanel, RadioButton, RadioGroup, Row } from 'ant-design-vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
+import { useI18n } from 'vue-i18n';
 
 import { DataInfoType } from '../PropsType';
 
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {});
+const { t } = useI18n();
 
 const rowConfig = {
   gutter: 15,
@@ -38,15 +40,15 @@ const headers = computed(() => {
 const currentTabId = ref<string>('pretty');
 const tabs = [
   {
-    name: '美化格式',
+    name: t('log.request.messages.prettyFormat'),
     value: 'pretty'
   },
   {
-    name: '原生格式',
+    name: t('log.request.messages.rawFormat'),
     value: 'raw'
   },
   {
-    name: '预览',
+    name: t('log.request.messages.preview'),
     value: 'preview'
   }
 
@@ -70,8 +72,8 @@ const contentType = computed(() => {
       buttonStyle="solid"
       size="small"
       class="custom-group-btn">
-      <RadioButton value="summary">summary</RadioButton>
-      <RadioButton value="raw">raw</RadioButton>
+      <RadioButton value="summary">{{ t('log.request.messages.summary') }}</RadioButton>
+      <RadioButton value="raw">{{ t('log.request.messages.raw') }}</RadioButton>
     </RadioGroup>
     <Collapse
       v-if="mode === 'summary'"
@@ -87,7 +89,7 @@ const contentType = computed(() => {
       </template>
       <CollapsePanel
         key="1"
-        header="Headers"
+        :header="t('log.request.messages.headers')"
         class="custom-collapse-item text-3 text-theme-content">
         <div
           v-for="(item, index) in headers"
@@ -117,7 +119,7 @@ const contentType = computed(() => {
       <CollapsePanel
         key="2"
         class="custom-collapse-item text-3 text-theme-content"
-        header="Response">
+        :header="t('log.request.messages.response')">
         <div class="w-full mt-4">
           <div class="flex mb-3 flex-freeze-auto items-center rounded text-3 text-black-secondary">
             <div
