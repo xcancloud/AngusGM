@@ -45,7 +45,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <Card title="默认语言" bodyClass="py-8 px-15 text-3 leading-3">
+  <Card :title="t('appearance.titles.defaultLanguage')" bodyClass="py-8 px-15 text-3 leading-3">
     <Skeleton
       active
       :loading="firstLoad"
@@ -53,8 +53,8 @@ onMounted(() => {
       :paragraph="{ rows: 2,width:['100%','100%'] }">
       <div class="flex">
         <div>
-          <div class="text-theme-content h-7 leading-7">{{ t('语言') }}&nbsp;</div>
-          <div class="text-theme-content h-7 leading-7 mt-6">{{ t('时区') }}&nbsp;</div>
+          <div class="text-theme-content h-7 leading-7">{{ t('appearance.labels.language') }}&nbsp;</div>
+          <div class="text-theme-content h-7 leading-7 mt-6">{{ t('appearance.labels.timezone') }}&nbsp;</div>
         </div>
         <div class="flex flex-col ml-2.5">
           <SelectEnum

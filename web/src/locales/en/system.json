@@ -36,6 +36,34 @@
       "versionIntroduction": "Version Introduction"
     }
   },
+  "appearance": {
+    "columns": {
+      "icon": "Icon",
+      "name": "Name",
+      "domain": "Domain"
+    },
+    "placeholder": {
+      "inputName": "Please enter name",
+      "inputDomain": "Please enter domain"
+    },
+    "messages": {
+      "siteInfo": "Site Information",
+      "uploadLogoSuccess": "Logo uploaded successfully",
+      "modifyNameSuccess": "Name modified successfully",
+      "modifyDomainSuccess": "Domain modified successfully",
+      "upload": "Upload",
+      "sure": "Confirm",
+      "cancel": "Cancel"
+    },
+    "titles": {
+      "siteInfo": "Site Information",
+      "defaultLanguage": "Default Language"
+    },
+    "labels": {
+      "language": "Language",
+      "timezone": "Timezone"
+    }
+  },
   "realName": {
     "columns": {
       "name": "Name",

@@ -1,28 +1,39 @@
-export type AppInfo = {
-  id: string;
+/**
+ * Application information interface for appearance management
+ * Contains core app data and UI state management properties
+ */
+export interface AppInfo {
+  // Core application properties
+  id: number;
   code: string;
   name: string;
   showName: string;
   icon: string;
-  type: {
-    value: string;
-    message: string;
-  },
-  authCtrl: true,
-  enabled: true,
   url: string;
   sequence: string;
   version: string;
+
+  // Application metadata
+  type: {
+    value: string;
+    message: string;
+  };
+  authCtrl: boolean;
+  enabled: boolean;
   openStage: {
     value: string;
     message: string;
-  },
+  };
+
+  // Creation information
   createdBy: string;
   createdByName: string;
   createdDate: string;
-  showInfo?: boolean;
-  isEditName?: boolean;
-  isEditUrl?: boolean;
-  isUpload?: boolean;
-  loading?: boolean;
+
+  // UI state management properties
+  showInfo?: boolean; // Controls whether app info is expanded
+  isEditName?: boolean; // Controls name editing mode
+  isEditUrl?: boolean; // Controls URL editing mode
+  isUpload?: boolean; // Controls upload state
+  loading?: boolean; // Controls loading state during operations
 }

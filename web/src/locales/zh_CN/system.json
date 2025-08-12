@@ -36,6 +36,34 @@
       "versionIntroduction": "版本介绍"
     }
   },
+  "appearance": {
+    "columns": {
+      "icon": "图标",
+      "name": "名称",
+      "domain": "域名"
+    },
+    "placeholder": {
+      "inputName": "请输入名称",
+      "inputDomain": "请输入域名"
+    },
+    "messages": {
+      "siteInfo": "站点信息",
+      "uploadLogoSuccess": "上传Logo成功",
+      "modifyNameSuccess": "修改名称成功",
+      "modifyDomainSuccess": "修改域名成功",
+      "upload": "上传",
+      "sure": "确定",
+      "cancel": "取消"
+    },
+    "titles": {
+      "siteInfo": "站点信息",
+      "defaultLanguage": "默认语言"
+    },
+    "labels": {
+      "language": "语言",
+      "timezone": "时区"
+    }
+  },
   "realName": {
     "columns": {
       "name": "姓名",
