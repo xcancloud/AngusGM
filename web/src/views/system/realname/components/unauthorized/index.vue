@@ -27,24 +27,24 @@ onMounted(async () => {
 
 // Enterprise authentication content descriptions
 const contentsEnterprise = [
-  t('realname.messages.enterpriseAuthDesc'),
-  t('realname.messages.enterpriseAuthDesc2'),
-  t('realname.messages.enterpriseAuthDesc3')
+  t('realName.messages.enterpriseAuthDesc'),
+  t('realName.messages.enterpriseAuthDesc2'),
+  t('realName.messages.enterpriseAuthDesc3')
 ];
 
 // Government organization authentication content descriptions
 const contentsGovernment = [
-  t('realname.messages.governmentAuthDesc'),
-  t('realname.messages.governmentAuthDesc2'),
-  t('realname.messages.governmentAuthDesc3')
+  t('realName.messages.governmentAuthDesc'),
+  t('realName.messages.governmentAuthDesc2'),
+  t('realName.messages.governmentAuthDesc3')
 ];
 
 // Personal authentication content descriptions
 const contentsPerson = [
-  t('realname.messages.personalAuthDesc'),
-  t('realname.messages.personalAuthDesc2'),
-  t('realname.messages.personalAuthDesc3'),
-  t('realname.messages.personalAuthDesc4')
+  t('realName.messages.personalAuthDesc'),
+  t('realName.messages.personalAuthDesc2'),
+  t('realName.messages.personalAuthDesc3'),
+  t('realName.messages.personalAuthDesc4')
 ];
 
 /**
@@ -61,7 +61,7 @@ const handleClick = (type: TenantType) => {
   <!-- Personal authentication option -->
   <AuthList
     :id="form.id"
-    :pageTitle="t('realname.titles.personalAuth')"
+    :pageTitle="t('realName.titles.personalAuth')"
     :contents="contentsPerson"
     :disbaled="!app.has('PersonalCertification')"
     icon="icon-gerenrenzheng"
@@ -71,7 +71,7 @@ const handleClick = (type: TenantType) => {
   <!-- Enterprise authentication option -->
   <AuthList
     :id="form.id"
-    :pageTitle="t('realname.titles.enterpriseAuth')"
+    :pageTitle="t('realName.titles.enterpriseAuth')"
     :contents="contentsEnterprise"
     :disbaled="!app.has('EnterpriseCertification')"
     icon="icon-qiyerenzheng"
@@ -82,7 +82,7 @@ const handleClick = (type: TenantType) => {
   <!-- Government organization authentication option -->
   <AuthList
     :id="form.id"
-    :pageTitle="t('realname.titles.governmentAuth')"
+    :pageTitle="t('realName.titles.governmentAuth')"
     :contents="contentsGovernment"
     :disbaled="!app.has('InstitutionsCertification')"
     icon="icon-shiyedanweirenzheng"

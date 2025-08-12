@@ -36,7 +36,7 @@
       "versionIntroduction": "Version Introduction"
     }
   },
-  "realname": {
+  "realName": {
     "columns": {
       "name": "Name",
       "realName": "Real Name",
@@ -209,7 +209,7 @@
   "audit": {
 
   },
-  "online": {
+  "onlineUser": {
     "columns": {
       "id": "ID",
       "user": "User",
@@ -235,6 +235,45 @@
     }
   },
   "systemToken": {
-
+    "columns": {
+      "name": "Name",
+      "authType": "Authorization Method",
+      "expiredDate": "Expiration Date",
+      "token": "Token",
+      "expired": "Expired",
+      "createdByName": "Created By",
+      "createdDate": "Created Date",
+      "action": "Action"
+    },
+    "placeholder": {
+      "addTokenName": "Support input within 100 characters",
+      "expiredDate": "Expiration Date",
+      "selectService": "Select service",
+      "copy": "Copy"
+    },
+    "messages": {
+      "tip": "The currently generated access token (access_token) is a \"System\" access token, used for system-to-system API calls in scenarios where users do not exist (such as other CI systems or development systems, etc.); To ensure security, it is recommended to create and authorize different system tokens for different external systems; All access operations and audit information of system access tokens will be associated with corresponding request logs; Only system administrators are allowed to create, delete, and view system tokens.",
+      "addToken": "Add Access Token",
+      "tokenName": "Token Name",
+      "tokenAuth": "Authorization Scope",
+      "limitTime": "Expiration Time (default valid for 30 days if not specified)",
+      "addSuccess": "Created Successfully",
+      "deleteSuccess": "Deleted Successfully",
+      "copySuccess": "Copied Successfully",
+      "deleteConfirm": "Confirm Delete Token",
+      "deleteConfirmTip": "Confirm delete `{name}`?",
+      "expired": "Expired",
+      "notExpired": "Not Expired",
+      "addTokenNum": "Added {n} tokens",
+      "supportMaxNum": "Support adding up to {n} system access tokens",
+      "actionView": "View Authorization",
+      "totalItem": "Total {value} items",
+      "selectItem": "Selected {value} items",
+      "servicePlaceholder": "Please select service",
+      "serviceTip": "This service already exists"
+    },
+    "titles": {
+      "deleteToken": "Delete Token"
+    }
   }
 }

@@ -1,70 +1,65 @@
+/**
+ * Option interface for dropdown/select components
+ */
 export interface Option {
-  value: string,
-  label: string
+  value: string;
+  label: string;
 }
 
+/**
+ * Column configuration interface for table columns
+ */
 export interface Column {
-  dataIndex: string,
-  localesCode: string
+  dataIndex: string;
+  localesCode: string;
 }
 
+/**
+ * Grant data interface for API/ACL permissions
+ */
 export interface GrantData {
-  acls?: Array<string>,
-  apiIds?: string[],
-  resource: string
+  acls?: Array<string>;
+  apiIds?: string[];
+  resource: string;
 }
 
+/**
+ * Service interface representing a service with its resources
+ */
 export interface Service {
-  serviceCode: string,
-  serviceName: string,
-  title?: string,
-  resources: Array<any>,
-  spread?: boolean,
-  list: Array<any>,
-  open: boolean
+  serviceCode: string;
+  serviceName: string;
+  title?: string;
+  resources: Array<any>;
+  spread?: boolean;
+  list: Array<any>;
+  open: boolean;
 }
 
-export const _columns = [
-  {
-    title: '名称',
-    dataIndex: 'name',
-    localesCode: 'systemToken.col_name'
-  },
-  {
-    title: '授权方式',
-    dataIndex: 'authType',
-    localesCode: '授权方式'
-  },
-  {
-    title: '到期时间',
-    dataIndex: 'expiredDate',
-    localesCode: 'systemToken.col_expird_date'
-  },
-  {
-    title: '令牌',
-    dataIndex: 'token',
-    localesCode: 'systemToken.table_token_name',
-    width: '550px'
-  },
-  {
-    title: '是否到期',
-    dataIndex: 'expired',
-    localesCode: '是否到期'
-  },
-  {
-    title: '创建人',
-    dataIndex: 'createdByName',
-    localesCode: 'createdBy'
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createdDate',
-    localesCode: 'createdDate'
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    localesCode: 'systemToken.col_action',
-    width: 140
-  }
-];
+/**
+ * Token interface representing a system token
+ */
+export interface Token {
+  id: string;
+  name: string;
+  token?: string;
+  showToken?: boolean;
+  expiredDate: string;
+  authType: {
+    value: string;
+    message: string;
+  };
+  createdByName?: string;
+  createdDate: string;
+}
+
+/**
+ * Table column properties interface
+ */
+export interface ColumnsProps {
+  key: string;
+  title: string;
+  dataIndex: string;
+  localesCode: string;
+  width?: string | number;
+}

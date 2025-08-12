@@ -36,7 +36,7 @@
       "versionIntroduction": "版本介绍"
     }
   },
-  "realname": {
+  "realName": {
     "columns": {
       "name": "姓名",
       "realName": "真实姓名",
@@ -209,7 +209,7 @@
   "audit": {
 
   },
-  "online": {
+  "onlineUser": {
     "columns": {
       "id": "ID",
       "user": "用户",
@@ -235,6 +235,45 @@
     }
   },
   "systemToken": {
-
+    "columns": {
+      "name": "名称",
+      "authType": "授权方式",
+      "expiredDate": "到期时间",
+      "token": "令牌",
+      "expired": "是否到期",
+      "createdByName": "创建人",
+      "createdDate": "创建时间",
+      "action": "操作"
+    },
+    "placeholder": {
+      "addTokenName": "支持输入100个字符以内",
+      "expiredDate": "到期时间",
+      "selectService": "选择服务",
+      "copy": "复制"
+    },
+    "messages": {
+      "tip": "当前生成访问令牌（access_token）为\"系统\"访问令牌，用于不存在用户场景的系统间 API 调用(如其他CI系统或研发系统等)；为了保证安全性，建议为不同外部系统创建并授权不同系统令牌；系统访问令牌所有访问操作和审计信息都会关联到对应请求日志；只允许系统管理员创建、删除和查看系统令牌。",
+      "addToken": "添加访问令牌",
+      "tokenName": "令牌名称",
+      "tokenAuth": "授权范围",
+      "limitTime": "到期时间(不指定30天内有效)",
+      "addSuccess": "创建成功",
+      "deleteSuccess": "删除成功",
+      "copySuccess": "复制成功",
+      "deleteConfirm": "确认删除令牌",
+      "deleteConfirmTip": "确认删除`{name}`?",
+      "expired": "已到期",
+      "notExpired": "未到期",
+      "addTokenNum": "已添加了{n}个令牌",
+      "supportMaxNum": "支持最多添加{n}个系统访问令牌",
+      "actionView": "查看授权",
+      "totalItem": "总共{value}项",
+      "selectItem": "已选{value}项",
+      "servicePlaceholder": "请选择服务",
+      "serviceTip": "该服务已存在"
+    },
+    "titles": {
+      "deleteToken": "删除令牌"
+    }
   }
 }

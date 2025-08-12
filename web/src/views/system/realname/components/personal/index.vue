@@ -69,10 +69,10 @@ onMounted(() => {
 
 // Personal authentication content descriptions
 const contents = [
-  t('realname.messages.personalAuthDesc'),
-  t('realname.messages.personalAuthDesc2'),
-  t('realname.messages.personalAuthDesc3'),
-  t('realname.messages.personalAuthDesc4')
+  t('realName.messages.personalAuthDesc'),
+  t('realName.messages.personalAuthDesc2'),
+  t('realName.messages.personalAuthDesc3'),
+  t('realName.messages.personalAuthDesc4')
 ];
 
 </script>
@@ -82,24 +82,24 @@ const contents = [
     <!-- Personal authentication summary card -->
     <PageCard
       :contents="contents"
-      :pageTitle="t('realname.titles.personalAuth')"
+      :pageTitle="t('realName.titles.personalAuth')"
       icon="icon-gerenrenzheng"
       :success="form.status === 'AUDITED'" />
 
     <!-- Personal certification details card -->
     <Card
-      :title="t('realname.titles.personalAuth')"
+      :title="t('realName.titles.personalAuth')"
       class="flex-1"
       bodyClass="px-8 py-5">
       <!-- Name field -->
       <div class="flex py-3.75">
-        <div class="text-theme-content w-28 mr-7.5">{{ t('realname.columns.name') }}</div>
+        <div class="text-theme-content w-28 mr-7.5">{{ t('realName.columns.name') }}</div>
         <div>{{ form.name }}</div>
       </div>
 
       <!-- ID card number field -->
       <div class="flex py-3.75">
-        <div class="text-theme-content w-28 mr-7.5">{{ t('realname.columns.idCard') }}</div>
+        <div class="text-theme-content w-28 mr-7.5">{{ t('realName.columns.idCard') }}</div>
         <div>{{ form.certNo }}</div>
       </div>
 
@@ -109,13 +109,13 @@ const contents = [
           <div class="w-67.5 h-42 rounded flex items-center justify-center overflow-hidden border-theme-divider border">
             <img :src="certFrontPicUrl" class="w-full" />
           </div>
-          <p class="text-center text-theme-content mt-3">{{ t('realname.columns.certFront') }}</p>
+          <p class="text-center text-theme-content mt-3">{{ t('realName.columns.certFront') }}</p>
         </div>
         <div>
           <div class="w-67.5 h-42 rounded flex items-center justify-center overflow-hidden border-theme-divider border">
             <img :src="certBackPicUrl" class="w-full" />
           </div>
-          <p class="text-center text-theme-content mt-3">{{ t('realname.columns.certBack') }}</p>
+          <p class="text-center text-theme-content mt-3">{{ t('realName.columns.certBack') }}</p>
         </div>
       </div>
     </Card>

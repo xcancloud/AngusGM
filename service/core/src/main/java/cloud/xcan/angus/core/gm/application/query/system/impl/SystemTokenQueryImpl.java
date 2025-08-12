@@ -85,8 +85,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
               resource.setApi(apiMap.get(Long.parseLong(resource.getAuthority())));
             }
           }
-
         }
+
         // Join service name
         Set<String> serviceCodes = resources.stream().map(SystemTokenResource::getServiceCode)
             .collect(Collectors.toSet());

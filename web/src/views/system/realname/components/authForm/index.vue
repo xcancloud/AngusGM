@@ -128,19 +128,19 @@ const form = ref<FormState>({
 const validateId = () => {
   if (props.type === TenantType.PERSONAL) {
     if (!form.value.personalCert.certNo.trim()) {
-      return Promise.reject(new Error(t('realname.validation.idCardRequired')));
+      return Promise.reject(new Error(t('realName.validation.idCardRequired')));
     }
     if (!regexpUtils.isId(form.value.personalCert.certNo)) {
-      return Promise.reject(new Error(t('realname.messages.idCardFormatError')));
+      return Promise.reject(new Error(t('realName.messages.idCardFormatError')));
     }
     return Promise.resolve();
   }
   if (props.type === TenantType.ENTERPRISE) {
     if (!form.value.enterpriseLegalPersonCert.certNo.trim()) {
-      return Promise.reject(new Error(t('realname.validation.legalIdCardRequired')));
+      return Promise.reject(new Error(t('realName.validation.legalIdCardRequired')));
     }
     if (!regexpUtils.isId(form.value.enterpriseLegalPersonCert.certNo)) {
-      return Promise.reject(new Error(t('realname.messages.idCardFormatError')));
+      return Promise.reject(new Error(t('realName.messages.idCardFormatError')));
     }
     return Promise.resolve();
   }
@@ -153,31 +153,31 @@ const rules = {
   enterpriseCert: {
     businessLicensePicUrl: [{
       required: true,
-      message: t('realname.validation.businessLicenseRequired'),
+      message: t('realName.validation.businessLicenseRequired'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 3)
     }],
-    name: [{ required: true, messge: t('realname.validation.companyNameRequired'), trigger: 'change' }],
-    creditCode: [{ required: true, message: t('realname.validation.enterpriseNameRequired'), trigger: 'change' }]
+    name: [{ required: true, messge: t('realName.validation.companyNameRequired'), trigger: 'change' }],
+    creditCode: [{ required: true, message: t('realName.validation.enterpriseNameRequired'), trigger: 'change' }]
   },
   // Enterprise legal person certification rules
   enterpriseLegalPersonCert: {
     certFrontPicUrl: [{
       required: true,
-      message: t('realname.messages.uploadLegalIdCard'),
+      message: t('realName.messages.uploadLegalIdCard'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 1)
     }],
     certNo: [{ required: true, validator: validateId, trigger: 'blur' }],
-    name: [{ required: true, message: t('realname.placeholder.inputLegalName'), trigger: 'change' }]
+    name: [{ required: true, message: t('realName.placeholder.inputLegalName'), trigger: 'change' }]
   },
   // Government organization certification rules
   governmentCert: {
-    name: [{ required: true, message: t('realname.placeholder.inputOrgName'), trigger: 'change' }],
-    orgCode: [{ required: true, message: t('realname.validation.orgCodeRequired'), trigger: 'change' }],
+    name: [{ required: true, message: t('realName.placeholder.inputOrgName'), trigger: 'change' }],
+    orgCode: [{ required: true, message: t('realName.validation.orgCodeRequired'), trigger: 'change' }],
     orgCertPicUrl: [{
       required: true,
-      message: t('realname.validation.orgCertificateRequired'),
+      message: t('realName.validation.orgCertificateRequired'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 3)
     }]
@@ -186,12 +186,12 @@ const rules = {
   personalCert: {
     certFrontPicUrl: [{
       required: true,
-      message: t('realname.messages.uploadIdCard'),
+      message: t('realName.messages.uploadIdCard'),
       trigger: 'change',
       validator: (rules: any) => errorRules(rules, 1)
     }],
     certNo: [{ required: true, validator: validateId, trigger: 'blur' }],
-    name: [{ required: true, message: t('realname.placeholder.inputRealName'), trigger: 'change' }]
+    name: [{ required: true, message: t('realName.placeholder.inputRealName'), trigger: 'change' }]
   }
 };
 
@@ -288,7 +288,7 @@ const confirm = function () {
         return;
       }
 
-      notification.success(t('realname.messages.successSubmit'));
+      notification.success(t('realName.messages.successSubmit'));
       emit('confirmed');
     }).catch(() => {
       confirmLoading.value = false;
@@ -350,108 +350,108 @@ const trimValue = (type, key) => {
         :wrapperCol="{ span: 17 }">
         <template v-if="props.type === TenantType.PERSONAL">
           <FormItem
-            :label="t('realname.columns.realName')"
+            :label="t('realName.columns.realName')"
             :name="['personalCert','name']"
             :colon="false">
             <Input
               v-model:value="form.personalCert.name"
               :maxlength="80"
-              :placeholder="t('realname.placeholder.inputRealName')"
+              :placeholder="t('realName.placeholder.inputRealName')"
               @blur="trimValue('personalCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.idCard')"
+            :label="t('realName.columns.idCard')"
             :name="['personalCert','certNo']"
             :colon="false">
             <Input
               v-model:value="form.personalCert.certNo"
               :maxlenth="50"
-              :placeholder="t('realname.validation.idCardRequired')"
+              :placeholder="t('realName.validation.idCardRequired')"
               @blur="trimValue('personalCert', 'certNo')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.certFront')"
+            :label="t('realName.columns.certFront')"
             :name="['enterpriseLegalPersonCert','certFrontPicUrl']"
             :colon="false">
             <UploadImage
               type="1"
-              :mess="t('realname.placeholder.uploadIdCardFront')"
+              :mess="t('realName.placeholder.uploadIdCardFront')"
               class="mr-8 inline-block"
               :error="errorUpload.includes(1)"
               @change="(value)=> loadChange('0', value)" />
             <UploadImage
               type="1"
               class="inline-block"
-              :mess="t('realname.placeholder.uploadIdCardBack')"
+              :mess="t('realName.placeholder.uploadIdCardBack')"
               :error="errorUpload.includes(2)"
               @change="(value)=> loadChange('1', value)" />
           </FormItem>
         </template>
         <template v-else-if="props.type === TenantType.ENTERPRISE">
           <FormItem
-            :label="t('realname.columns.enterpriseName')"
+            :label="t('realName.columns.enterpriseName')"
             :name="['enterpriseCert','name']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseCert.name"
               :maxlength="30"
-              :placeholder="t('realname.placeholder.inputEnterpriseName')"
+              :placeholder="t('realName.placeholder.inputEnterpriseName')"
               @blur="trimValue('enterpriseCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.creditCode')"
+            :label="t('realName.columns.creditCode')"
             :name="['enterpriseCert','creditCode']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseCert.creditCode"
               :maxlength="50"
-              :placeholder="t('realname.placeholder.inputCreditCode')" />
+              :placeholder="t('realName.placeholder.inputCreditCode')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.legalName')"
+            :label="t('realName.columns.legalName')"
             :name="['enterpriseLegalPersonCert','name']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseLegalPersonCert.name"
-              :placeholder="t('realname.placeholder.inputLegalName')"
+              :placeholder="t('realName.placeholder.inputLegalName')"
               :maxlenth="50"
               @blur="trimValue('enterpriseLegalPersonCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.legalIdCard')"
+            :label="t('realName.columns.legalIdCard')"
             :name="['enterpriseLegalPersonCert','certNo']"
             :colon="false">
             <Input
               v-model:value="form.enterpriseLegalPersonCert.certNo"
-              :placeholder="t('realname.validation.legalIdCardRequired')"
+              :placeholder="t('realName.validation.legalIdCardRequired')"
               :maxlenth="50"
               @blur="trimValue('enterpriseLegalPersonCert', 'certNo')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.certFront')"
+            :label="t('realName.columns.certFront')"
             :name="['enterpriseLegalPersonCert','certFrontPicUrl']"
             :colon="false">
             <div class="flex">
               <UploadImage
                 type="1"
-                :mess="t('realname.placeholder.uploadLegalIdCardFront')"
+                :mess="t('realName.placeholder.uploadLegalIdCardFront')"
                 class="mr-5"
                 :error="errorUpload.includes(1)"
                 @change="(value)=> loadChange('0', value)" />
               <UploadImage
                 type="1"
-                :mess="t('realname.placeholder.uploadLegalIdCardBack')"
+                :mess="t('realName.placeholder.uploadLegalIdCardBack')"
                 :error="errorUpload.includes(2)"
                 @change="(value)=> loadChange('1', value)" />
             </div>
           </FormItem>
           <FormItem
-            :label="t('realname.columns.businessLicense')"
+            :label="t('realName.columns.businessLicense')"
             :name="['enterpriseCert','businessLicensePicUrl']"
             :colon="false">
             <UploadImage
               type="2"
-              :mess="t('realname.placeholder.uploadBusinessLicense')"
+              :mess="t('realName.placeholder.uploadBusinessLicense')"
               :error="errorUpload.includes(3)"
               class="mr-5"
               @change="(value)=> loadChange('2', value)" />
@@ -459,40 +459,40 @@ const trimValue = (type, key) => {
         </template>
         <template v-else>
           <FormItem
-            :label="t('realname.columns.orgName')"
+            :label="t('realName.columns.orgName')"
             :maxlength="30"
             :name="['governmentCert','name']"
             :colon="false">
             <Input
               v-model:value="form.governmentCert.name"
-              :placeholder="t('realname.placeholder.inputOrgName')"
+              :placeholder="t('realName.placeholder.inputOrgName')"
               :maxlenth="80"
               @blur="trimValue('governmentCert', 'name')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.orgCode')"
+            :label="t('realName.columns.orgCode')"
             :name="['governmentCert','orgCode']"
             :colon="false">
             <Input
               v-model:value="form.governmentCert.orgCode"
               :maxlength="50"
-              :placeholder="t('realname.placeholder.inputOrgCode')"
+              :placeholder="t('realName.placeholder.inputOrgCode')"
               @blur="trimValue('governmentCert', 'orgCode')" />
           </FormItem>
           <FormItem
-            :label="t('realname.columns.orgCertificate')"
+            :label="t('realName.columns.orgCertificate')"
             :name="['governmentCert','orgCertPicUrl']"
             :colon="false">
             <UploadImage
               type="2"
-              :mess="t('realname.placeholder.uploadOrgCertificate')"
+              :mess="t('realName.placeholder.uploadOrgCertificate')"
               class="mr-5"
               @change="(value)=> loadChange('2', value)" />
           </FormItem>
         </template>
       </Form>
       <div class="w-250 h-0.25 bg-gray-border -ml-60 mt-9"></div>
-      <Hints :text="t('realname.messages.registerAccountDefaultAdmin')" class="ml-40 mt-10" />
+      <Hints :text="t('realName.messages.registerAccountDefaultAdmin')" class="ml-40 mt-10" />
     </div>
     <ButtonGroup
       class="my-7.5"

@@ -63,9 +63,9 @@ function start (data: any) {
 
 // Enterprise authentication content descriptions
 const contents = [
-  t('realname.messages.enterpriseAuthDesc'),
-  t('realname.messages.enterpriseAuthDesc2'),
-  t('realname.messages.enterpriseAuthDesc3')
+  t('realName.messages.enterpriseAuthDesc'),
+  t('realName.messages.enterpriseAuthDesc2'),
+  t('realName.messages.enterpriseAuthDesc3')
 ];
 
 </script>
@@ -74,38 +74,38 @@ const contents = [
   <div class="flex space-x-2 flex-1">
     <!-- Enterprise authentication summary card -->
     <PageCard
-      :pageTitle="t('realname.titles.enterpriseAuth')"
+      :pageTitle="t('realName.titles.enterpriseAuth')"
       icon="icon-qiyerenzheng"
       :contents="contents"
       :success="form.status === 'AUDITED'" />
 
     <!-- Enterprise certification details card -->
     <Card
-      :title="t('realname.titles.enterpriseAuth')"
+      :title="t('realName.titles.enterpriseAuth')"
       class=" flex-1"
       bodyClass="px-8 py-5 text-3 leading-3">
       <!-- Company name field -->
       <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">{{ t('realname.columns.enterpriseName') }}</div>
+        <div class="text-black-content w-28 mr-7.5">{{ t('realName.columns.enterpriseName') }}</div>
         <div>{{ form.companyName }}</div>
       </div>
 
       <!-- Business license number field -->
       <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">{{ t('realname.columns.creditCode') }}</div>
+        <div class="text-black-content w-28 mr-7.5">{{ t('realName.columns.creditCode') }}</div>
         <div>{{ form.creditCode }}</div>
       </div>
 
       <!-- Legal person name field -->
       <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">{{ t('realname.columns.legalName') }}</div>
+        <div class="text-black-content w-28 mr-7.5">{{ t('realName.columns.legalName') }}</div>
         <div>{{ form.name }}</div>
       </div>
 
       <!-- Legal person ID number field -->
       <div class="flex py-3.75">
         <div class="text-black-content w-28 mr-7.5">
-          {{ t('realname.columns.legalIdCard') }}
+          {{ t('realName.columns.legalIdCard') }}
         </div>
         <div>{{ form.certNo }}</div>
       </div>
@@ -116,19 +116,19 @@ const contents = [
           <div class="w-54 h-33.5 rounded overflow-hidden flex justify-center items-center border-theme-divider border">
             <img class="w-full" :src="certFrontPicUrl" />
           </div>
-          <p class="text-center text-black-content mt-3">{{ t('realname.columns.certFront') }}</p>
+          <p class="text-center text-black-content mt-3">{{ t('realName.columns.certFront') }}</p>
         </div>
         <div class="mr-7.5">
           <div class="w-54 h-33.5 rounded overflow-hidden flex justify-center items-center border-theme-divider border">
             <img class="w-full" :src="certBackPicUrl" />
           </div>
-          <p class="text-center text-black-content mt-3">{{ t('realname.columns.certBack') }}</p>
+          <p class="text-center text-black-content mt-3">{{ t('realName.columns.certBack') }}</p>
         </div>
         <div>
           <div class="w-54 h-33.5 rounded overflow-hidden flex justify-center items-center border-theme-divider border">
             <img class="w-full" :src="businessCertPicUrl" />
           </div>
-          <p class="text-center text-black-content mt-3">{{ t('realname.columns.businessLicense') }}</p>
+          <p class="text-center text-black-content mt-3">{{ t('realName.columns.businessLicense') }}</p>
         </div>
       </div>
     </Card>

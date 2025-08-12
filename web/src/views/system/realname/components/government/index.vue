@@ -51,9 +51,9 @@ function start (data: any) {
 
 // Government organization authentication content descriptions
 const contents = [
-  t('realname.messages.governmentAuthDesc'),
-  t('realname.messages.governmentAuthDesc2'),
-  t('realname.messages.governmentAuthDesc3')
+  t('realName.messages.governmentAuthDesc'),
+  t('realName.messages.governmentAuthDesc2'),
+  t('realName.messages.governmentAuthDesc3')
 ];
 
 </script>
@@ -62,7 +62,7 @@ const contents = [
   <div class="flex space-x-2 flex-1">
     <!-- Government organization authentication summary card -->
     <PageCard
-      :pageTitle="t('realname.titles.governmentAuth')"
+      :pageTitle="t('realName.titles.governmentAuth')"
       icon="icon-shiyedanweirenzheng"
       :contents="contents"
       :count="3"
@@ -70,13 +70,13 @@ const contents = [
 
     <!-- Government organization certification details card -->
     <Card
-      :title="t('realname.titles.governmentAuth')"
+      :title="t('realName.titles.governmentAuth')"
       class=" flex-1"
       bodyClass="px-8 py-5">
       <!-- Organization name field -->
       <div class="flex py-3.75">
         <div class="text-black-content w-28 mr-7.5">
-          {{ t('realname.columns.orgName') }}
+          {{ t('realName.columns.orgName') }}
         </div>
         <div>{{ form.name }}</div>
       </div>
@@ -84,7 +84,7 @@ const contents = [
       <!-- Organization code field -->
       <div class="flex py-3.75">
         <div class="text-black-content w-28 mr-7.5">
-          {{ t('realname.columns.orgCode') }}
+          {{ t('realName.columns.orgCode') }}
         </div>
         <div>{{ form.orgCode }}</div>
       </div>
@@ -96,7 +96,7 @@ const contents = [
             <img :src="orgCertPicUrl" class="w-full" />
           </div>
           <p class="text-center text-black-content mt-3">
-            {{ t('realname.columns.orgCertificate') }}
+            {{ t('realName.columns.orgCertificate') }}
           </p>
         </div>
       </div>

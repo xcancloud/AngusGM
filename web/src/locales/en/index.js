@@ -136,5 +136,9 @@ export default {
   },
   systemToken: {
     table_token_name: 'Access Token(access_token)'
-  }
+  },
+  selectToken: 'Select Service',
+  new: 'New',
+  selectAll: 'Select All',
+  all: 'All'
 };

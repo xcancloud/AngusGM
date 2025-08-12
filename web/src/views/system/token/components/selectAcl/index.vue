@@ -8,39 +8,59 @@ import SelectAcls from './selectAcl.vue';
 
 const { t } = useI18n();
 
+// Component props interface
 interface Props {
-  disabled: boolean
+  disabled: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false
 });
-const serviceCode = ref();
-const serviceName = ref();
 
-const selectService = (value, opt) => {
+// Service selection state
+const serviceCode = ref<string>();
+const serviceName = ref<string>();
+
+/**
+ * Handle service selection change
+ */
+const selectService = (value: any, opt: any) => {
   serviceCode.value = value;
   serviceName.value = opt.name;
 };
 
-const dataSource = ref<{ serviceCode?: string, serviceName?: string, source: Record<string, any> }[]>([]);
+// Data source for selected services and their ACL resources
+const dataSource = ref<{
+  serviceCode?: string,
+  serviceName?: string,
+  source: Record<string, any>
+}[]>([]);
 
-const emit = defineEmits<{(e: 'change', value): void }>();
+// Event emitter for parent component communication
+const emit = defineEmits<{(e: 'change', value: any): void }>();
 
+// Computed property for selected service codes
 const selectedCode = computed(() => {
-  return dataSource.value.map(i => i.serviceCode).filter(Boolean);
+  return dataSource.value.map(i => i.serviceCode).filter(Boolean) as string[];
 });
 
-const delData = (idx) => {
+/**
+ * Delete service data by index
+ */
+const delData = (idx: number) => {
   dataSource.value.splice(idx, 1);
   emit('change', source.value);
 };
 
-const setData = (data, idx) => {
+/**
+ * Update service data source
+ */
+const setData = (data: any, idx: number) => {
   dataSource.value[idx].source = data;
   emit('change', source.value);
 };
 
+// Computed property for processed source data
 const source = computed(() => {
   const result: any[] = [];
   dataSource.value.forEach(data => {
@@ -56,24 +76,39 @@ const source = computed(() => {
   return result;
 });
 
+/**
+ * Add new service to data source
+ */
 const add = () => {
   if (!serviceCode.value) {
-    notification.error(t('systemToken.service_placeholder'));
+    notification.error(t('systemToken.messages.servicePlaceholder'));
     return;
   }
   if (dataSource.value.find(service => service.serviceCode === serviceCode.value)) {
-    notification.error(t('systemToken.service_tip'));
+    notification.error(t('systemToken.messages.serviceTip'));
     return;
   }
-  dataSource.value.push({ serviceCode: serviceCode.value, serviceName: serviceName.value, source: {} });
+  dataSource.value.push({
+    serviceCode: serviceCode.value,
+    serviceName: serviceName.value,
+    source: {}
+  });
 };
 
+// Resource ACL type options
 const ResourceAclTypeOpt = ref<EnumMessage<string>[]>([]);
+
+/**
+ * Fetch resource ACL type options from enum utils
+ */
 const getResourceAclType = async () => {
   ResourceAclTypeOpt.value = enumUtils.enumToMessages(ResourceAclType)
     .filter(type => type.value !== ResourceAclType.ALL);
 };
 
+/**
+ * Clear all form data and reset to initial state
+ */
 const clearData = () => {
   serviceCode.value = undefined;
   serviceName.value = undefined;
@@ -81,14 +116,18 @@ const clearData = () => {
   emit('change', source.value);
 };
 
+// Lifecycle hook
 onMounted(() => {
   getResourceAclType();
 });
 
+// Expose methods to parent component
 defineExpose({ clearData });
 </script>
+
 <template>
   <div>
+    <!-- Service selection and add button -->
     <div>
       <Select
         v-model:value="serviceCode"
@@ -96,7 +135,7 @@ defineExpose({ clearData });
         :action="`${GM}/service`"
         :fieldNames="{value: 'code', label: 'name'}"
         :disabled="props.disabled"
-        :placeholder="t('selectToken')"
+        :placeholder="t('systemToken.placeholder.selectService')"
         @change="selectService">
       </Select>
       <Button
@@ -105,9 +144,11 @@ defineExpose({ clearData });
         :disabled="props.disabled"
         @click="add">
         <Icon icon="icon-tianjia" class="-mt-0.5" />
-        {{ t('new') }}
+        {{ t('common.actions.add') }}
       </Button>
     </div>
+
+    <!-- ACL selection components for each service -->
     <SelectAcls
       v-for="(service, idx) in dataSource"
       :key="idx"

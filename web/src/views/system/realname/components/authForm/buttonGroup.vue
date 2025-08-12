@@ -27,7 +27,7 @@ const buttonClick = function (type: boolean) {
       :loading="confirmLoading"
       class="mr-5"
       @click="buttonClick(true)">
-      {{ t('realname.buttons.confirm') }}
+      {{ t('realName.buttons.confirm') }}
     </Button>
 
     <!-- Cancel button -->
@@ -35,7 +35,7 @@ const buttonClick = function (type: boolean) {
       size="small"
       class="mr-22"
       @click="buttonClick(false)">
-      {{ t('realname.buttons.cancel') }}
+      {{ t('realName.buttons.cancel') }}
     </Button>
   </div>
 </template>

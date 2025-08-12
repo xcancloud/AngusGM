@@ -97,14 +97,14 @@ onMounted(() => {
 
 const searchOptions = [
   {
-    placeholder: t('online.placeholder.searchNameIp'),
+    placeholder: t('onlineUser.placeholder.searchNameIp'),
     valueKey: 'fullName',
     type: 'input',
     op: 'EQUAL',
     allowClear: true
   },
   {
-    placeholder: t('online.placeholder.searchDeviceId'),
+    placeholder: t('onlineUser.placeholder.searchDeviceId'),
     valueKey: 'deviceId',
     type: 'input',
     op: 'EQUAL',
@@ -113,36 +113,36 @@ const searchOptions = [
   {
     valueKey: 'onlineDate',
     type: 'date-range',
-    placeholder: [t('online.placeholder.onlineTimeFrom'), t('online.placeholder.onlineTimeTo')],
+    placeholder: [t('onlineUser.placeholder.onlineTimeFrom'), t('onlineUser.placeholder.onlineTimeTo')],
     allowClear: true
   },
   {
     valueKey: 'offlineDate',
     type: 'date-range',
-    placeholder: [t('online.placeholder.offlineTimeFrom'), t('online.placeholder.offlineTimeTo')],
+    placeholder: [t('onlineUser.placeholder.offlineTimeFrom'), t('onlineUser.placeholder.offlineTimeTo')],
     allowClear: true
   }
 ];
 
 const columns = [
   {
-    title: t('online.columns.id'),
+    title: t('onlineUser.columns.id'),
     dataIndex: 'id',
     hide: true
   },
   {
-    title: t('online.columns.user'),
+    title: t('onlineUser.columns.user'),
     dataIndex: 'fullName',
     width: '10%',
     sorter: true
   },
   {
-    title: t('online.columns.onlineStatus'),
+    title: t('onlineUser.columns.onlineStatus'),
     dataIndex: 'online',
     width: '8%'
   },
   {
-    title: t('online.columns.upTime'),
+    title: t('onlineUser.columns.upTime'),
     dataIndex: 'onlineDate',
     key: 'onlineDate',
     width: '12%',
@@ -152,7 +152,7 @@ const columns = [
     }
   },
   {
-    title: t('online.columns.offlineTime'),
+    title: t('onlineUser.columns.offlineTime'),
     dataIndex: 'offlineDate',
     key: 'offlineDate',
     width: '12%',
@@ -162,14 +162,14 @@ const columns = [
     }
   },
   {
-    title: t('online.columns.terminalEquipment'),
+    title: t('onlineUser.columns.terminalEquipment'),
     dataIndex: 'userAgent',
     width: '42%',
     groupName: 'userAgent',
     customRender: ({ text }) => text || '--'
   },
   {
-    title: t('online.columns.deviceId'),
+    title: t('onlineUser.columns.deviceId'),
     dataIndex: 'deviceId',
     width: '42%',
     hide: true,
@@ -177,12 +177,12 @@ const columns = [
     customRender: ({ text }) => text || '--'
   },
   {
-    title: t('online.columns.ip'),
+    title: t('onlineUser.columns.ip'),
     dataIndex: 'remoteAddress',
     width: '8%'
   },
   {
-    title: t('online.columns.logOut'),
+    title: t('onlineUser.columns.logOut'),
     dataIndex: 'option',
     width: '8%',
     align: 'center'
@@ -227,7 +227,7 @@ const indicator = h(LoadingOutlined, {
           </div>
         </template>
         <template v-if="column.dataIndex === 'online'">
-          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('online.messages.online'): t('online.messages.offline')" />
+          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('onlineUser.messages.online'): t('onlineUser.messages.offline')" />
         </template>
         <template v-if="column.dataIndex === 'option' && app.show('SignOut')">
           <template v-if="record.loading">
