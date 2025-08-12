@@ -1,0 +1,82 @@
+{
+  "sign": {
+    "columns": {
+      "account": "账号",
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "verificationCode": "验证码",
+      "invitationCode": "邀请码",
+      "mobile": "手机号",
+      "email": "邮箱"
+    },
+    "placeholder": {
+      "enterPass": "输入密码",
+      "confirmPass": "确认密码",
+      "enterMobile": "请输入11位手机号",
+      "enterEmail": "输入邮箱地址",
+      "enterCode": "输入验证码",
+      "enterInviteCode": "输入邀请码（选填）",
+      "resetPassword": "重置密码"
+    },
+    "messages": {
+      "signinTip": "统一资源认证与授权中心 ▪ 开启安全和资源共享 ▪ 基础资源统一化管理！",
+      "initPassDesc": "检测到您的账号还未设置密码，请先设置密码",
+      "inviteCodeDesc": "非必填项。用户可以通过已有账号\"注册码\"将当前用户注册到对应账号(注册码在\"全局管理\"-\"系统\"-\"安全设置\"中设置)。",
+      "passNoSame": "密码不一致，请重新输入",
+      "emptyPass": "密码不能为空",
+      "errorVerifyCode": "验证码格式有误",
+      "networkError": "网络错误，请稍后再试",
+      "invalidPass": "密码不符合规则",
+      "passLength": "长度为6-50位",
+      "noSpace": "不支持空格",
+      "strengthDesc": "密码强度{text}",
+      "passRules": "至少包含大写字母、小写字母、数字、特殊符号中的两种组合。特殊符号包含",
+      "noEmptyAccount": "账号不能为空",
+      "enterAccount": "用户名、手机号、邮箱",
+      "choseAccount": "选择账号",
+      "selectLoginAccount": "请选择要登录的账户",
+      "emailError": "邮箱地址有误",
+      "errorMobile": "手机号格式有误",
+      "makeMistake": "出错了！",
+      "resend": "重新发送（{second}s）",
+      "getCode": "获取验证码",
+      "enterCode": "输入验证码",
+      "registerSuccess": "注册成功",
+      "setPasswordSuccess": "设置密码成功",
+      "resetPasswordSuccess": "重置密码成功",
+      "termsRequired": "请勾选阅读并同意"
+    },
+    "actions": {
+      "register": "注册",
+      "signin": "登录",
+      "ok": "确定",
+      "return": "返回",
+      "returnLogin": "返回登录",
+      "freeRegistration": "免费注册",
+      "forgotPassword": "忘记密码",
+      "accountSignin": "使用已有账号登录"
+    },
+    "tabs": {
+      "signinAccount": "账号登录",
+      "signinSms": "短信登录",
+      "signinOther": "其他登录方式",
+      "registerMobile": "手机注册",
+      "registerEmail": "邮箱注册",
+      "smsVerification": "短信验证",
+      "emailVerification": "邮箱验证"
+    },
+    "terms": {
+      "clause": "阅读并同意",
+      "xcanCloud": "晓蚕云",
+      "termsCloud": "《服务条款》",
+      "privacyCloud": "《隐私条款》"
+    },
+    "validation": {
+      "accountRequired": "账号不能为空",
+      "passwordRequired": "密码不能为空",
+      "confirmPasswordRequired": "确认密码不能为空",
+      "verificationCodeRequired": "验证码不能为空",
+      "termsAccepted": "请阅读并同意服务条款和隐私条款"
+    }
+  }
+}

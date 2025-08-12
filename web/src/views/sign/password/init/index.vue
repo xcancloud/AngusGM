@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
 import { notification } from '@xcan-angus/vue-ui';
 
@@ -9,6 +10,7 @@ import { auth } from '@/api';
 import PasswordInput from '@/components/PasswordInput/index.vue';
 import PasswordConfirmInput from '@/components/PasswordConfirmInput/index.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 
 // Form references for validation
@@ -73,7 +75,7 @@ const confirm = async () => {
     
     // Clear session storage and show success message
     sessionStorage.removeItem('hasPassword');
-    notification.success('设置密码成功');
+    notification.success(t('sign.messages.setPasswordSuccess'));
     await redirectTo();
   } finally {
     loading.value = false;
@@ -89,14 +91,14 @@ onMounted(() => {
   <!-- Password initialization description -->
   <div class="flex flex-no-wrap items-start mb-8 text-gray-content">
     <img class="relative top-0.25 w-4 h-4 flex-shrink-0 flex-grow-0 mr-2" src="./assets/warning.png">
-    <span>{{ $t('init-pass-desc') }}</span>
+    <span>{{ $t('sign.messages.initPassDesc') }}</span>
   </div>
   
   <!-- Password input field -->
   <PasswordInput
     ref="passwordRef"
     v-model:value="password"
-    :placeholder="$t('enter-pass')"
+            :placeholder="$t('sign.placeholder.enterPass')"
     class="mb-7.5 absolute-fixed" />
   
   <!-- Password confirmation field -->
@@ -104,7 +106,7 @@ onMounted(() => {
     ref="confirmPasswordRef"
     v-model:value="confirmPassword"
     :password="password"
-    :placeholder="$t('confirm-pass')"
+            :placeholder="$t('sign.placeholder.confirmPass')"
     class="mb-7.5 absolute-fixed" />
   
   <!-- Submit button with error handling -->
@@ -115,7 +117,7 @@ onMounted(() => {
       type="primary"
       size="large"
       @click="confirm">
-      {{ $t('ok') }}
+              {{ $t('sign.actions.ok') }}
     </Button>
     <div class="error-message">{{ errorMessage }}</div>
   </div>

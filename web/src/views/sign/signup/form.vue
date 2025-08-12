@@ -124,10 +124,10 @@ watch(() => props.type, () => {
  */
 const openModal = (key: string) => {
   if (key === 'termsVisible') {
-    modelTitle.value = t('xcan_cloud') + t('terms_cloud');
+    modelTitle.value = t('sign.terms.xcanCloud') + t('sign.terms.termsCloud');
     termsContent.value = termsAndConditions;
   } else {
-    modelTitle.value = t('xcan_cloud') + t('privacy_cloud');
+    modelTitle.value = t('sign.terms.xcanCloud') + t('sign.terms.privacyCloud');
     termsContent.value = privacyPolicy;
   }
   visible.value = !visible.value;
@@ -243,7 +243,7 @@ const signup = async () => {
       return;
     }
     
-    notification.success('注册成功');
+    notification.success(t('sign.messages.registerSuccess'));
     router.push('/signin');
   } finally {
     loading.value = false;
@@ -277,14 +277,14 @@ const signup = async () => {
         ref="mobilePassRef"
         v-model:value="mobileForm.password"
         :showTip="true"
-        :placeholder="$t('enter-pass')"
+        :placeholder="$t('sign.placeholder.enterPass')"
         class="input-container block-fixed" />
       <PasswordConfirmInput
         key="mobile-confirmpass"
         ref="mobileConfirmpassRef"
         v-model:value="mobileForm.confirmPassword"
         :password="mobileForm.password"
-        :placeholder="$t('confirm-pass')"
+        :placeholder="$t('sign.placeholder.confirmPass')"
         class="input-container block-fixed" />
       <InvitationCodeInput
         key="mobile-invite"
@@ -311,14 +311,14 @@ const signup = async () => {
         ref="emailPassRef"
         v-model:value="emailForm.password"
         :showTip="true"
-        :placeholder="$t('enter-pass')"
+        :placeholder="$t('sign.placeholder.enterPass')"
         class="input-container block-fixed" />
       <PasswordConfirmInput
         key="email-confirmpass"
         ref="emailConfirmpassRef"
         v-model:value="emailForm.confirmPassword"
         :password="emailForm.password"
-        :placeholder="$t('confirm-pass')"
+        :placeholder="$t('sign.placeholder.confirmPass')"
         class="input-container block-fixed" />
       <InvitationCodeInput
         key="email-invite"
@@ -334,30 +334,30 @@ const signup = async () => {
         type="primary"
         size="large"
         @click="signup">
-        {{ t('register') }}
+        {{ t('sign.actions.register') }}
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
     
     <!-- Sign in link -->
     <div class="link-container">
-      <RouterLink class="link" to="/signin">{{ t('account-signin') }}</RouterLink>
+      <RouterLink class="link" to="/signin">{{ t('sign.actions.accountSignin') }}</RouterLink>
     </div>
     
     <!-- Terms and privacy policy links -->
     <div class="text-group">
       <em class="require">*</em>
-      <span>{{ t('xcan_cloud') }}</span>
-      <span class="link" @click="openModal('termsVisible')">{{ t('terms_cloud') }}</span>
-      <span class="link" @click="openModal('prvacyVisible')">{{ t('privacy_cloud') }}</span>
+      <span>{{ t('sign.terms.xcanCloud') }}</span>
+      <span class="link" @click="openModal('termsVisible')">{{ t('sign.terms.termsCloud') }}</span>
+      <span class="link" @click="openModal('prvacyVisible')">{{ t('sign.terms.privacyCloud') }}</span>
     </div>
     
     <!-- Terms acceptance checkbox -->
     <div class="flex items-center">
       <Checkbox v-model:checked="checked" class="checkbox-container">
-        {{ t('clause') }}
+        {{ t('sign.terms.clause') }}
       </Checkbox>
-      <span class="error-message !px-1" :class="{'!block': !checked && validateData}">请勾选阅读并同意</span>
+      <span class="error-message !px-1" :class="{'!block': !checked && validateData}">{{ $t('sign.messages.termsRequired') }}</span>
     </div>
     
     <!-- Terms and privacy policy modal -->

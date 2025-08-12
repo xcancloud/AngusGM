@@ -32,12 +32,12 @@ onMounted(async () => {
 const tabList = computed(() => {
   if (editionType.value === EditionType.CLOUD_SERVICE) {
     return [
-      { label: t('signin-account'), value: 'account' },
-      { label: t('signin-sms'), value: 'mobile' }
+      { label: t('sign.tabs.signinAccount'), value: 'account' },
+      { label: t('sign.tabs.signinSms'), value: 'mobile' }
     ];
   }
 
-  return [{ label: t('signin-account'), value: 'account' }];
+      return [{ label: t('sign.tabs.signinAccount'), value: 'account' }];
 });
 </script>
 

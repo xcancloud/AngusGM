@@ -17,6 +17,7 @@ import enPermission from './locales/en/permission.json';
 import enStatistics from './locales/en/statistics.json';
 import enMessages from './locales/en/messages.json';
 import enSystem from './locales/en/system.json';
+import enSign from './locales/en/sign.json';
 
 import zhCommon from './locales/zh_CN/common.json';
 import zhAuth from './locales/zh_CN/auth.json';
@@ -25,6 +26,7 @@ import zhPermission from './locales/zh_CN/permission.json';
 import zhStatistics from './locales/zh_CN/statistics.json';
 import zhMessages from './locales/zh_CN/messages.json';
 import zhSystem from './locales/zh_CN/system.json';
+import zhSign from './locales/zh_CN/sign.json';
 
 import zhEnumLocale from '@/enums/locale/zh_CN.json';
 import enEnumLocale from '@/enums/locale/en.json';
@@ -48,7 +50,8 @@ const bootstrap = async () => {
         ...enStatistics,
         ...enEnumLocale,
         ...enMessages,
-        ...enSystem
+        ...enSystem,
+        ...enSign
       },
       zh_CN: {
         ...zhCommon,
@@ -58,7 +61,8 @@ const bootstrap = async () => {
         ...zhStatistics,
         ...zhEnumLocale,
         ...zhMessages,
-        ...zhSystem
+        ...zhSystem,
+        ...zhSign
       }
     };
     const locale = i18n_.getI18nLanguage();
@@ -92,7 +96,7 @@ const bootstrapSign = async () => {
   cookieUtils.deleteTokenInfo();
 
   const locale = i18n_.getI18nLanguage();
-  const messages = (await import(`./locales/${locale}/sign.js`)).default;
+  const messages = (await import(`./locales/${locale}/sign.json`)).default;
   const i18n = createI18n({
     locale,
     legacy: false,

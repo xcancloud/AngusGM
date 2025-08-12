@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { notification } from '@xcan-angus/vue-ui';
 import { Button } from 'ant-design-vue';
 import { login } from '@/api';
@@ -34,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'email'
 });
 
+const { t } = useI18n();
 const router = useRouter();
 
 // Loading and error states
@@ -250,7 +252,7 @@ const toUpdate = async () => {
     return;
   }
   
-  notification.success('重置密码成功');
+      notification.success(t('sign.messages.resetPasswordSuccess'));
   router.push('/signin');
 };
 
@@ -349,14 +351,14 @@ const confirm = async () => {
         v-model:value="mobileForm.newPassword"
         tipClass="custom-tip"
         :showTip="true"
-        :placeholder="$t('reset-password')"
+        :placeholder="$t('sign.placeholder.resetPassword')"
         class="mb-5 block-fixed" />
       <PasswordConfirmInput
         key="mobileConfirmRef"
         ref="mobileConfirmRef"
         v-model:value="mobileForm.confirmPassword"
         :password="mobileForm.newPassword"
-        :placeholder="$t('confirm-pass')"
+        :placeholder="$t('sign.placeholder.confirmPass')"
         class="mb-5 block-fixed" />
       
       <!-- Account selection for multiple accounts -->
@@ -394,14 +396,14 @@ const confirm = async () => {
         v-model:value="emailForm.newPassword"
         tipClass="custom-tip"
         :showTip="true"
-        :placeholder="$t('reset-password')"
+        :placeholder="$t('sign.placeholder.resetPassword')"
         class="mb-5 block-fixed" />
       <PasswordConfirmInput
         key="emailConfirmRef"
         ref="emailConfirmRef"
         v-model:value="emailForm.confirmPassword"
         :password="emailForm.newPassword"
-        :placeholder="$t('confirm-pass')"
+        :placeholder="$t('sign.placeholder.confirmPass')"
         class="mb-5 block-fixed" />
       
       <!-- Account selection for multiple accounts -->
@@ -424,7 +426,7 @@ const confirm = async () => {
         type="primary"
         size="large"
         @click="confirm">
-        {{ $t('ok') }}
+        {{ $t('sign.actions.ok') }}
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
@@ -433,7 +435,7 @@ const confirm = async () => {
     <RouterLink
       class="select-none whitespace-nowrap flex justify-center items-center mt-6 text-4 leading-4 text-blue-tab-active"
       to="/signin">
-      <img class="relative top-0.25 mr-1" src="./assets/left.png" />{{ $t('return-login') }}
+      <img class="relative top-0.25 mr-1" src="./assets/left.png" />{{ $t('sign.actions.returnLogin') }}
     </RouterLink>
   </div>
 </template>

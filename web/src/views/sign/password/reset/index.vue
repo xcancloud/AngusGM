@@ -24,7 +24,7 @@ const activeValue = ref<'mobile' | 'email'>('email');
 const tabList = computed(() => {
   const tabs = [
     {
-      label: t('email-verification'),
+      label: t('sign.tabs.emailVerification'),
       value: 'email'
     }
   ];
@@ -32,7 +32,7 @@ const tabList = computed(() => {
   // Add SMS verification tab for non-private editions
   if (!isPrivate.value) {
     tabs.push({
-      label: t('sms-verification'),
+      label: t('sign.tabs.smsVerification'),
       value: 'mobile'
     });
   }

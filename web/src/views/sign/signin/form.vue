@@ -414,7 +414,7 @@ onMounted(async () => {
       <PasswordPureInput
         ref="accountPassRef"
         v-model:value="accountForm.password"
-        :placeholder="$t('enter-pass')"
+        :placeholder="$t('sign.placeholder.enterPass')"
         class="mb-7.5 absolute-fixed"
         @pressEnter="pressEnter" />
       <!-- Multi-account Selection for Account Users -->
@@ -465,7 +465,7 @@ onMounted(async () => {
         type="primary"
         size="large"
         @click="signin">
-        {{ $t('signin') }}
+        {{ $t('sign.actions.signin') }}
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
@@ -477,14 +477,14 @@ onMounted(async () => {
       <RouterLink
         class="text-blue-tab-active"
         to="/signup">
-        {{ $t('free-registration') }}
+        {{ $t('sign.actions.freeRegistration') }}
       </RouterLink>
-      <RouterLink to="/password/reset">{{ $t('forgot-password') }}</RouterLink>
+      <RouterLink to="/password/reset">{{ $t('sign.actions.forgotPassword') }}</RouterLink>
     </div>
     
     <!-- Standard Edition Links -->
     <div v-else class="select-none whitespace-nowrap px-4 flex-end text-3.5 leading-4">
-      <RouterLink to="/password/reset">{{ $t('forgot-password') }}</RouterLink>
+      <RouterLink to="/password/reset">{{ $t('sign.actions.forgotPassword') }}</RouterLink>
     </div>
   </div>
 </template>

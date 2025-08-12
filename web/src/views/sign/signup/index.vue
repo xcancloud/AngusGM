@@ -27,8 +27,8 @@ const activeValue = ref<'mobile' | 'email'>('mobile');
  * Supports both mobile and email registration
  */
 const tabList = [
-  { label: t('register-mobile'), value: 'mobile' },
-  { label: t('register-email'), value: 'email' }
+  { label: t('sign.tabs.registerMobile'), value: 'mobile' },
+  { label: t('sign.tabs.registerEmail'), value: 'email' }
 ];
 </script>
 
