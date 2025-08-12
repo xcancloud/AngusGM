@@ -1,71 +1,32 @@
+/**
+ * SMS template configuration interface
+ */
 export interface Template {
-  id: string,
-  code: string,
-  name: string,
-  thirdCode: string,
-  channelId: string,
-  signature: string,
-  content: string,
-  subject: string,
-  language: string,
-  verificationCode: boolean,
-  verificationCodeValidSecond: string
-  showEdit: boolean,
-  editValues: {
-    name: string;
-    thirdCode: string;
-    language: string;
-    signature: string;
-    content: string;
+  id: string, // Unique template identifier
+  code: string, // Template code for identification
+  name: string, // Template display name
+  thirdCode: string, // Third-party service template code
+  channelId: string, // Associated SMS channel ID
+  signature: string, // SMS signature text
+  content: string, // SMS template content
+  subject: string, // SMS subject (if applicable)
+  language: string, // Template language code
+  verificationCode: boolean, // Whether template contains verification code
+  verificationCodeValidSecond: string, // Verification code validity period in seconds
+  showEdit: boolean, // Edit mode display state
+  editValues: { // Editable template values
+    name: string; // Editable name
+    thirdCode: string; // Editable third-party code
+    language: string; // Editable language
+    signature: string; // Editable signature
+    content: string; // Editable content
   }
 }
 
+/**
+ * Generic options interface for select components
+ */
 export interface Options {
-  label: string,
-  value: string
+  label: string, // Display label
+  value: string // Option value
 }
-
-export const _columns = [
-  {
-    title: 'templateName',
-    dataIndex: 'name',
-    key: 'name',
-    width: '10%'
-  },
-  {
-    title: 'code',
-    dataIndex: 'code',
-    key: 'code',
-    width: '15%'
-  },
-  {
-    title: 'thridCode',
-    dataIndex: 'thirdCode',
-    key: 'thirdCode',
-    width: '18%'
-  },
-  {
-    title: 'language',
-    dataIndex: 'language',
-    key: 'language',
-    width: '6%'
-  },
-  {
-    title: 'sign',
-    dataIndex: 'signature',
-    key: 'signature',
-    width: '8%'
-  },
-  {
-    title: 'templateContent',
-    dataIndex: 'content',
-    key: 'content'
-  },
-  {
-    title: 'operation',
-    key: 'operate',
-    dataIndex: 'operate',
-    width: '8%',
-    align: 'center'
-  }
-];

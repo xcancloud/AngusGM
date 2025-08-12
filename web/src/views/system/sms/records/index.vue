@@ -2,20 +2,25 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM, ProcessStatus } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, app, GM, ProcessStatus } from '@xcan-angus/infra';
 import { Badge } from 'ant-design-vue';
 
 import { sms } from '@/api';
-import { FilterOp, SearchParams, SmsRecord } from './PropsType';
+import { SmsRecord } from './PropsType';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 
 const { t } = useI18n();
+
+// SMS records data
 const smsList = ref<SmsRecord[]>([]);
 
+// UI state management
 const showCount = ref(true);
 const loading = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [] });
+
+// Query parameters for pagination and filtering
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 
 const pagination = computed(() => {
@@ -26,24 +31,40 @@ const pagination = computed(() => {
   };
 });
 
+/**
+ * Load SMS records list from API
+ */
 const loadSmsRecordList = async function () {
   loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await sms.getSmsList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
+  try {
+    const [error, { data = { list: [], total: 0 } }] = await sms.getSmsList(params.value);
+    if (error) {
+      return;
+    }
+    smsList.value = data.list;
+    total.value = +data.total;
+  } finally {
+    loading.value = false;
   }
-  smsList.value = data.list;
-  total.value = +data.total;
 };
 
-const searchChange = (data: { key: string; value: string; op: FilterOp; }[]) => {
+/**
+ * Handle search criteria changes
+ * @param data - Search criteria array
+ */
+const searchChange = (data: { key: string; value: string; op: SearchCriteria.OpEnum; }[]) => {
   params.value.pageNo = 1;
   params.value.filters = data;
   loadSmsRecordList();
 };
 
-const tableChange = (_pagination, _filters, sorter) => {
+/**
+ * Handle table pagination, filtering, and sorting changes
+ * @param _pagination - Pagination object
+ * @param _filters - Filter criteria
+ * @param sorter - Sorting information
+ */
+const tableChange = (_pagination: any, _filters: any, sorter: any) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
   params.value.pageSize = pageSize;
@@ -52,6 +73,9 @@ const tableChange = (_pagination, _filters, sorter) => {
   loadSmsRecordList();
 };
 
+/**
+ * Handle refresh button click
+ */
 const handleRefresh = () => {
   if (loading.value) {
     return;
@@ -67,13 +91,14 @@ const columns = [
   {
     title: 'ID',
     dataIndex: 'id',
+    key: 'id',
     width: '10%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
   },
   {
-    title: t('发送状态'),
+    title: t('sms.columns.sendStatus'),
     dataIndex: 'sendStatus',
     key: 'sendStatus',
     width: '8%',
@@ -82,7 +107,7 @@ const columns = [
     }
   },
   {
-    title: t('发送用户ID'),
+    title: t('sms.columns.sendUserId'),
     dataIndex: 'sendUserId',
     key: 'sendUserId',
     width: '10%',
@@ -92,32 +117,35 @@ const columns = [
     }
   },
   {
-    title: t('模板编码'),
+    title: t('sms.columns.templateCode'),
     dataIndex: 'templateCode',
     key: 'templateCode',
     width: '20%',
     customRender: ({ text }): string => text || '--'
   },
   {
-    title: t('是否加急'),
+    title: t('sms.columns.urgent'),
     dataIndex: 'urgent',
+    key: 'urgent',
     width: '7%',
-    customRender: ({ text }): string => text ? '是' : '否'
+    customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
   },
   {
-    title: t('是否验证码'),
+    title: t('sms.columns.verificationCode'),
     dataIndex: 'verificationCode',
+    key: 'verificationCode',
     width: '7%',
-    customRender: ({ text }): string => text ? '是' : '否'
+    customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
   },
   {
-    title: t('批量发送'),
+    title: t('sms.columns.batch'),
     dataIndex: 'batch',
+    key: 'batch',
     width: '7%',
-    customRender: ({ text }): string => text ? '是' : '否'
+    customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
   },
   {
-    title: t('发送时间'),
+    title: t('sms.columns.actualSendDate'),
     dataIndex: 'actualSendDate',
     key: 'actualSendDate',
     sorter: true,
@@ -125,7 +153,7 @@ const columns = [
     customRender: ({ text }): string => text || '--'
   },
   {
-    title: t('期望发送时间'),
+    title: t('sms.columns.expectedSendDate'),
     dataIndex: 'expectedSendDate',
     key: 'expectedSendDate',
     sorter: true,
@@ -137,89 +165,106 @@ const columns = [
 const searchOptions = ref([
   {
     valueKey: 'sendUserId',
-    type: 'select-user',
+    type: 'select-user' as const,
     allowClear: true,
     placeholder: '选择发送用户',
     axiosConfig: { headers: { 'XC-Opt-Tenant-Id': '' } }
   },
   {
     valueKey: 'sendStatus',
-    type: 'select-enum',
+    type: 'select-enum' as const,
     enumKey: ProcessStatus,
-    placeholder: t('选择发送状态'),
+    placeholder: t('sms.placeholder.selectSendStatus'),
     allowClear: true
   },
   {
     valueKey: 'templateCode',
-    type: 'input',
-    placeholder: t('查询模板编码'),
+    type: 'input' as const,
+    placeholder: t('sms.placeholder.queryTemplateCode'),
     allowClear: true
   },
   {
     valueKey: 'urgent',
-    type: 'select',
-    options: [{ value: true, label: '是' }, { value: false, label: '否' }],
-    placeholder: t('是否加急'),
+    type: 'select' as const,
+    options: [{ value: true, label: t('common.status.yes') }, { value: false, label: t('common.status.no') }],
+    placeholder: t('sms.placeholder.isUrgent'),
     allowClear: true
   },
   {
     valueKey: 'verificationCode',
-    type: 'select',
-    options: [{ value: true, label: '是' }, { value: false, label: '否' }],
-    placeholder: t('是否验证码'),
+    type: 'select' as const,
+    options: [{ value: true, label: t('common.status.yes') }, { value: false, label: t('common.status.no') }],
+    placeholder: t('sms.placeholder.isVerificationCode'),
     allowClear: true
   },
   {
     valueKey: 'batch',
-    type: 'select',
-    options: [{ value: true, label: '是' }, { value: false, label: '否' }],
-    placeholder: t('是否批量发送'),
+    type: 'select' as const,
+    options: [{ value: true, label: t('common.status.yes') }, { value: false, label: t('common.status.no') }],
+    placeholder: t('sms.placeholder.isBatch'),
     allowClear: true
   },
   {
     valueKey: 'actualSendDate',
-    type: 'date-range',
-    placeholder: [t('发送时间'), t('发送时间')],
+    type: 'date-range' as const,
+    placeholder: [t('sms.placeholder.sendTimeRange'), t('sms.placeholder.sendTimeRange')],
     allowClear: true
   },
   {
     valueKey: 'expectedSendDate',
-    type: 'date-range',
-    placeholder: [t('期望时间'), t('期望时间')],
+    type: 'date-range' as const,
+    placeholder: [t('sms.placeholder.expectedTimeRange'), t('sms.placeholder.expectedTimeRange')],
     allowClear: true
   }
 ]);
 
+/**
+ * Get color for SMS send status badge
+ * @param value - SMS send status
+ * @returns Color string for badge styling
+ */
 const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
   switch (value) {
-    case 'SUCCESS': // 成功
+    case 'SUCCESS': // Success
       return 'rgba(82,196,26,1)';
-    case 'PENDING': // 待处理
+    case 'PENDING': // Pending
       return 'rgba(255,165,43,1)';
-    case 'FAILURE': // 失败
+    case 'FAILURE': // Failure
       return 'rgba(245,34,45,1)';
+    default:
+      return 'rgba(128,128,128,1)'; // Default gray
   }
 };
 </script>
 <template>
   <PureCard class="flex-1 p-3.5">
+    <!-- SMS statistics component -->
     <Statistics
       resource="Sms"
       :router="GM"
-      :barTitle="t('发送记录')"
+      :barTitle="t('sms.titles.smsRecords')"
       :visible="showCount" />
-    <div class="flex items-start  mb-2">
+
+    <!-- Search and filter controls -->
+    <div class="flex items-start mb-2">
+      <!-- Search panel for filtering records -->
       <SearchPanel
         :options="searchOptions"
         class="flex-1 mr-2"
         @change="searchChange" />
+
+      <!-- Control buttons -->
       <div class="flex items-center flex-none h-7">
+        <!-- Toggle statistics visibility -->
         <IconCount v-model:value="showCount" class="mr-2" />
+        <!-- Refresh button -->
         <IconRefresh
           :loading="loading"
           @click="handleRefresh" />
       </div>
     </div>
+
+    <!-- SMS records table -->
     <Table
       :loading="loading"
       :dataSource="smsList"
@@ -228,7 +273,9 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
       rowKey="id"
       size="small"
       @change="tableChange">
+      <!-- Custom cell rendering -->
       <template #bodyCell="{column,text}">
+        <!-- ID column with optional link to detail -->
         <template v-if="column.dataIndex === 'id'">
           <RouterLink
             v-if="app.has('SMSSendRecordsDetail')"
@@ -240,6 +287,8 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
             {{ text }}
           </template>
         </template>
+
+        <!-- Send status column with colored badge -->
         <template v-if="column.dataIndex === 'sendStatus'">
           <Badge :color="getSendStatusColor(text?.value)" :text="text?.message" />
         </template>

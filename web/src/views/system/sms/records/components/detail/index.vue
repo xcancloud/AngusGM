@@ -40,62 +40,62 @@ const gridColumns = [
       dataIndex: 'id'
     },
     {
-      label: t('发送状态'),
+      label: t('sms.columns.sendStatus'),
       dataIndex: 'sendStatus'
     },
     {
-      label: t('发送租户ID'),
+      label: t('sms.columns.sendTenantId'),
       dataIndex: 'sendTenantId'
     },
     {
-      label: t('发送用户ID'),
+      label: t('sms.columns.sendUserId'),
       dataIndex: 'sendId'
     },
     {
-      label: t('模板编码'),
+      label: t('sms.columns.templateCode'),
       dataIndex: 'templateCode'
     },
     {
-      label: t('是否加急'),
+      label: t('sms.columns.urgent'),
       dataIndex: 'urgent',
-      customRender: ({ text }): string => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('是否验证码'),
+      label: t('sms.columns.verificationCode'),
       dataIndex: 'verificationCode',
-      customRender: ({ text }): string => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('失败原因'),
+      label: t('sms.columns.failureReason'),
       dataIndex: 'failureReason'
     }
   ],
   [
     {
-      label: t('发送时间'),
+      label: t('sms.columns.actualSendDate'),
       dataIndex: 'actualSendDate'
     },
     {
-      label: t('期望发送时间'),
+      label: t('sms.columns.expectedSendDate'),
       dataIndex: 'expectedSendDate'
     },
     {
-      label: t('业务ID'),
+      label: t('sms.columns.outId'),
       dataIndex: 'outId'
     },
     {
-      label: t('业务Key'),
+      label: t('sms.columns.bizKey'),
       dataIndex: 'bizKey'
     },
     {
-      label: t('语言'),
+      label: t('sms.columns.language'),
       dataIndex: 'language',
       customRender: ({ text }): string => text?.message || '--'
     },
     {
-      label: t('批量发送'),
+      label: t('sms.columns.batch'),
       dataIndex: 'batch',
-      customRender: ({ text }): string => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     }
   ]
 ];
@@ -112,7 +112,7 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
 };
 </script>
 <template>
-  <Card :title="t('基本信息')" bodyClass="px-8 py-5">
+  <Card :title="t('common.labels.basicInformation')" bodyClass="px-8 py-5">
     <Skeleton
       :loading="firstLoad"
       :title="false"
@@ -134,13 +134,13 @@ const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
     </Skeleton>
   </Card>
   <Card
-    :title="t('发送参数')"
+    :title="t('sms.titles.sendParams')"
     class="my-2"
     bodyClass="px-8 py-5">
     <pre v-if="installRecordInfo?.inputParam">{{ JSON.stringify(installRecordInfo?.inputParam, null, 2) }}</pre>
   </Card>
   <Card
-    :title="t('返回参数')"
+    :title="t('sms.titles.returnParams')"
     bodyClass="px-8 py-5">
     <pre v-if="installRecordInfo?.thirdOutputParam">{{
         JSON.stringify(JSON.parse(installRecordInfo?.thirdOutputParam?.replace(/\\/g, '')), null, 2)

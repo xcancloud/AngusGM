@@ -1,44 +1,28 @@
-export type FilterOp =
-  'EQUAL'
-  | 'NOT_EQUAL'
-  | 'GREATER_THAN'
-  | 'GREATER_THAN_EQUAL'
-  | 'LESS_THAN'
-  | 'LESS_THAN_EQUAL'
-  | 'CONTAIN'
-  | 'NOT_CONTAIN'
-  | 'MATCH_END'
-  | 'MATCH'
-  | 'IN'
-  | 'NOT_IN'
-export type Filters = { key: string, value: string, op: FilterOp }[]
-export type SearchParams = {
-  pageNo?: number;
-  pageSize?: number;
-  filters: Filters;
-  orderBy?: string;
-  orderSort?: 'ASC' | 'DESC';
-}
-
+/**
+ * Email protocol types
+ */
 export type Protocol = 'SMTP' | 'IMAP' | 'POP3'
 
+/**
+ * SMS record interface for tracking SMS sending history
+ */
 export type SmsRecord = {
-  id: string;
-  templateCode: string;
-  language: {
-    value: string;
-    message: string;
+  id: string; // Unique SMS record identifier
+  templateCode: string; // Associated SMS template code
+  language: { // Language information
+    value: string; // Language code
+    message: string; // Localized language name
   },
-  bizKey: string;
-  outId: string;
-  thirdOutputParam: any;
-  inputParam: any;
-  verificationCode: boolean;
-  batch: boolean;
-  sendTenantId: string;
-  sendUserId: string;
-  urgent: boolean;
-  sendStatus: boolean;
-  actualSendDate: boolean;
-  expectedSendDate: boolean;
+  bizKey: string; // Business key for tracking
+  outId: string; // External system ID
+  thirdOutputParam: any; // Third-party service output parameters
+  inputParam: any; // Input parameters for SMS
+  verificationCode: boolean; // Whether SMS contains verification code
+  batch: boolean; // Whether SMS is part of batch sending
+  sendTenantId: string; // Tenant ID of sender
+  sendUserId: string; // User ID of sender
+  urgent: boolean; // Whether SMS is marked as urgent
+  sendStatus: boolean; // SMS sending status
+  actualSendDate: boolean; // Actual sending date
+  expectedSendDate: boolean; // Expected sending date
 }

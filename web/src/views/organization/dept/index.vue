@@ -1067,7 +1067,7 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
 .dept-tree-node {
   display: flex;
   align-items: center;
-  padding: 6px 8px;
+  padding: 3px 3px;
   border-radius: 6px;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -1092,7 +1092,6 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
 }
 
 .dept-node-icon {
-  margin-right: 8px;
   font-size: 12px;
   color: #1890ff;
   flex-shrink: 0;
