@@ -37,7 +37,7 @@ const tabList = computed(() => {
     ];
   }
 
-      return [{ label: t('sign.tabs.signinAccount'), value: 'account' }];
+  return [{ label: t('sign.tabs.signinAccount'), value: 'account' }];
 });
 </script>
 

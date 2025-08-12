@@ -28,7 +28,7 @@ const tabList = computed(() => {
       value: 'email'
     }
   ];
-  
+
   // Add SMS verification tab for non-private editions
   if (!isPrivate.value) {
     tabs.push({
@@ -36,7 +36,7 @@ const tabList = computed(() => {
       value: 'mobile'
     });
   }
-  
+
   return tabs;
 });
 
@@ -59,7 +59,7 @@ onMounted(async () => {
         <!-- <Language class="ml-8 mr-5" /> -->
       </div>
     </div>
-    
+
     <!-- Main content area -->
     <div class="main-content-col flex items-center justify-center">
       <div class="w-115 p-10 rounded-3xl shadow-big bg-white">
@@ -69,7 +69,7 @@ onMounted(async () => {
         <Form :type="activeValue" />
       </div>
     </div>
-    
+
     <!-- Footer copyright -->
     <Records class="justify-center pb-3" />
   </div>

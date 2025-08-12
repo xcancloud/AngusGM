@@ -40,7 +40,7 @@ const init = () => {
  */
 const validate = () => {
   let validationErrors = 0;
-  
+
   if (!passwordRef.value?.validateData()) {
     validationErrors++;
   }
@@ -64,15 +64,15 @@ const confirm = async () => {
   try {
     error.value = false;
     loading.value = true;
-    
+
     const [err] = await auth.updateUserInitPassword({ newPassword: password.value });
-    
+
     if (err) {
       error.value = true;
       errorMessage.value = err.message;
       return;
     }
-    
+
     // Clear session storage and show success message
     sessionStorage.removeItem('hasPassword');
     notification.success(t('sign.messages.setPasswordSuccess'));
@@ -93,22 +93,22 @@ onMounted(() => {
     <img class="relative top-0.25 w-4 h-4 flex-shrink-0 flex-grow-0 mr-2" src="./assets/warning.png">
     <span>{{ $t('sign.messages.initPassDesc') }}</span>
   </div>
-  
+
   <!-- Password input field -->
   <PasswordInput
     ref="passwordRef"
     v-model:value="password"
-            :placeholder="$t('sign.placeholder.enterPass')"
+    :placeholder="$t('sign.placeholder.enterPass')"
     class="mb-7.5 absolute-fixed" />
-  
+
   <!-- Password confirmation field -->
   <PasswordConfirmInput
     ref="confirmPasswordRef"
     v-model:value="confirmPassword"
     :password="password"
-            :placeholder="$t('sign.placeholder.confirmPass')"
+    :placeholder="$t('sign.placeholder.confirmPass')"
     class="mb-7.5 absolute-fixed" />
-  
+
   <!-- Submit button with error handling -->
   <div :class="{ 'error': error }" class="absolute-fixed relative">
     <Button
@@ -117,7 +117,7 @@ onMounted(() => {
       type="primary"
       size="large"
       @click="confirm">
-              {{ $t('sign.actions.ok') }}
+      {{ $t('sign.actions.ok') }}
     </Button>
     <div class="error-message">{{ errorMessage }}</div>
   </div>

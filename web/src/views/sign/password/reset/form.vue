@@ -94,7 +94,7 @@ const isMobile = computed(() => {
  */
 watch(() => props.type, () => {
   error.value = false;
-  
+
   // Reset email form
   emailForm.value = {
     account: '',
@@ -128,7 +128,7 @@ watch(() => props.type, () => {
  */
 const accountChange = (id: string | undefined) => {
   if (!id) return;
-  
+
   const accountInfo = accountList.value.find(item => item.userId === id);
   if (!accountInfo) {
     return;
@@ -170,7 +170,7 @@ const validateEmail = () => {
  */
 const validateMobileForm = () => {
   let validationErrors = 0;
-  
+
   if (!mobileRef.value?.validateData()) {
     validationErrors++;
   }
@@ -196,7 +196,7 @@ const validateMobileForm = () => {
  */
 const validateEmailForm = () => {
   let validationErrors = 0;
-  
+
   if (!emailRef.value?.validateData()) {
     validationErrors++;
   }
@@ -245,14 +245,14 @@ const toUpdate = async () => {
   const { userId, newPassword, linkSecret } = isMobile.value ? mobileForm.value : emailForm.value;
   const [err] = await login.resetPassword({ id: userId, newPassword, linkSecret });
   loading.value = false;
-  
+
   if (err) {
     error.value = true;
     errorMessage.value = err.message;
     return;
   }
-  
-      notification.success(t('sign.messages.resetPasswordSuccess'));
+
+  notification.success(t('sign.messages.resetPasswordSuccess'));
   router.push('/signin');
 };
 
@@ -305,7 +305,7 @@ const confirm = async () => {
 
     const data = res.data || [];
     accountList.value = data;
-    
+
     if (data.length === 1) {
       const { userId, linkSecret } = data[0];
       if (isMobile.value) {
@@ -360,7 +360,7 @@ const confirm = async () => {
         :password="mobileForm.newPassword"
         :placeholder="$t('sign.placeholder.confirmPass')"
         class="mb-5 block-fixed" />
-      
+
       <!-- Account selection for multiple accounts -->
       <template v-if="accountList.length > 1">
         <AccountSelect
@@ -372,7 +372,7 @@ const confirm = async () => {
           @change="accountChange" />
       </template>
     </template>
-    
+
     <!-- Email verification form -->
     <template v-else>
       <EmailInput
@@ -405,7 +405,7 @@ const confirm = async () => {
         :password="emailForm.newPassword"
         :placeholder="$t('sign.placeholder.confirmPass')"
         class="mb-5 block-fixed" />
-      
+
       <!-- Account selection for multiple accounts -->
       <template v-if="accountList.length > 1">
         <AccountSelect
@@ -417,7 +417,7 @@ const confirm = async () => {
           @change="accountChange" />
       </template>
     </template>
-    
+
     <!-- Submit button with error handling -->
     <div :class="{'error': error}" class="relative mb-4 block-fixed">
       <Button
@@ -430,7 +430,7 @@ const confirm = async () => {
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
-    
+
     <!-- Return to login link -->
     <RouterLink
       class="select-none whitespace-nowrap flex justify-center items-center mt-6 text-4 leading-4 text-blue-tab-active"

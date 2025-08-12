@@ -43,7 +43,7 @@ const tabList = [
         <!-- <Language /> -->
       </div>
     </div>
-    
+
     <!-- Main content area with decorative images -->
     <div class="layout-inner-container">
       <img
@@ -52,13 +52,13 @@ const tabList = [
         @contextmenu="preventDefaultListener"
         @dragstart="preventDefaultListener"
         @touchstart="preventDefaultListener">
-      
+
       <!-- Registration form container -->
       <div class="main-content-container">
         <Tab v-model:activeKey="activeValue" :tabList="tabList" />
         <Form :type="activeValue" />
       </div>
-      
+
       <img
         class="img-end"
         src="./assets/inner.png"
@@ -66,7 +66,7 @@ const tabList = [
         @dragstart="preventDefaultListener"
         @touchstart="preventDefaultListener">
     </div>
-    
+
     <!-- Footer copyright -->
     <Records class="layout-footer" />
   </div>

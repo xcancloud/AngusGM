@@ -14,7 +14,7 @@ import AccountSelect from '@/components/AccountSelect/index.vue';
 
 /**
  * Component Props Interface
- * 
+ *
  * Defines the authentication type for the form,
  * supporting 'mobile' or 'account' authentication methods
  */
@@ -26,7 +26,7 @@ const router = useRouter();
 
 /**
  * Component References
- * 
+ *
  * References to child components for validation and data access
  */
 const mobile = ref();
@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 /**
  * Component State Management
- * 
+ *
  * Centralized reactive state for managing form behavior,
  * authentication flow, and user interactions
  */
@@ -53,7 +53,7 @@ const loading = ref(false); // Loading state during authentication process
 
 /**
  * Account Authentication Form State
- * 
+ *
  * Manages account-based authentication data including
  * credentials, scope, and user identification
  */
@@ -68,7 +68,7 @@ const accountForm = reactive({
 
 /**
  * Mobile Authentication Form State
- * 
+ *
  * Manages mobile-based authentication data including
  * verification codes and user identification
  */
@@ -91,14 +91,14 @@ const accountList = ref<Array<{
 
 /**
  * Watch Authentication Type Changes
- * 
+ *
  * Resets form state and clears data when switching between
  * mobile and account authentication methods
  */
 watch(() => props.type, newValue => {
   error.value = false;
   isMobile.value = newValue === 'mobile';
-  
+
   // Reset account form state
   accountForm.account = undefined;
   accountForm.password = undefined;
@@ -106,7 +106,7 @@ watch(() => props.type, newValue => {
   accountForm.signinType = 'ACCOUNT_PASSWORD';
   accountForm.userId = '';
   accountForm.hasPassword = false;
-  
+
   // Reset mobile form state
   mobileForm.account = undefined;
   mobileForm.password = undefined;
@@ -115,19 +115,19 @@ watch(() => props.type, newValue => {
   mobileForm.signinType = 'SMS_CODE';
   mobileForm.userId = '';
   mobileForm.hasPassword = false;
-  
+
   accountList.value = [];
 });
 
 /**
  * Handle Account Selection Change
- * 
+ *
  * Processes user selection from multi-account list and
  * automatically initiates login process
  */
 const accountChange = (id: string | undefined) => {
   if (!id) return;
-  
+
   const accountInfo = accountList.value.find(item => item.userId === id);
   if (accountInfo) {
     const { userId, linkSecret, hasPassword } = accountInfo;
@@ -146,7 +146,7 @@ const accountChange = (id: string | undefined) => {
 
 /**
  * Execute Sign In Process
- * 
+ *
  * Performs the actual authentication request with the backend,
  * handles token storage, and manages post-login flow
  */
@@ -155,7 +155,7 @@ const toSignin = async () => {
   const params = { account, password, scope, signinType, userId };
   const clientId = appContext.getContext().env.oauthClientId || '';
   const clientSecret = appContext.getContext().env.oauthClientSecret || '';
-  
+
   try {
     const [err, res] = await login.signin({ ...params, clientSecret, clientId });
 
@@ -165,13 +165,13 @@ const toSignin = async () => {
       accountList.value = [];
       return;
     }
-    
+
     // Extract authentication tokens from response
     // eslint-disable-next-line camelcase
     const { access_token, refresh_token, expires_in } = res.data;
     const isCloudServiceEdition = appContext.isCloudServiceEdition();
     let queryParams: { accessToken: string; refreshToken: string; clientId: string } | undefined;
-    
+
     if (isCloudServiceEdition) {
       // Store token info in cookies for cloud service edition
       const tokenInfo: TokenInfo = {
@@ -203,7 +203,7 @@ const toSignin = async () => {
 
 /**
  * Validate Account Input
- * 
+ *
  * Delegates validation to the appropriate input component
  * based on current authentication type
  */
@@ -216,13 +216,13 @@ const validateAccount = () => {
 
 /**
  * Validate Account Form
- * 
+ *
  * Performs comprehensive validation of account form fields
  * and returns validation status
  */
 const validateAccountForm = () => {
   let validationErrors = 0;
-  
+
   if (!account.value?.validateData()) {
     validationErrors++;
   }
@@ -236,13 +236,13 @@ const validateAccountForm = () => {
 
 /**
  * Validate Mobile Form
- * 
+ *
  * Performs comprehensive validation of mobile form fields
  * and returns validation status
  */
 const validateMobileForm = () => {
   let validationErrors = 0;
-  
+
   if (!mobile.value?.validateData()) {
     validationErrors++;
   }
@@ -256,30 +256,30 @@ const validateMobileForm = () => {
 
 /**
  * Get Account Information
- * 
+ *
  * Retrieves user account information from backend based on
  * current authentication type and form data
  */
 const getAccount = () => {
   if (isMobile.value) {
-    const params = { 
-      bizKey: 'SIGNIN', 
-      mobile: mobileForm.account, 
-      verificationCode: mobileForm.verificationCode 
+    const params = {
+      bizKey: 'SIGNIN',
+      mobile: mobileForm.account,
+      verificationCode: mobileForm.verificationCode
     };
     return login.checkUserMobileCode(params);
   }
-  
-  const params = { 
-    account: accountForm.account, 
-    password: accountForm.password 
+
+  const params = {
+    account: accountForm.account,
+    password: accountForm.password
   };
   return login.getUserAcount(params);
 };
 
 /**
  * Main Sign In Function
- * 
+ *
  * Orchestrates the complete sign-in process including
  * validation, account retrieval, and authentication
  */
@@ -300,7 +300,7 @@ const signin = async () => {
     toSignin();
     return;
   }
-  
+
   // Handle single account scenario
   let isInvalid = false;
   if (isMobile.value) {
@@ -315,7 +315,7 @@ const signin = async () => {
 
   loading.value = true;
   error.value = false;
-  
+
   try {
     // Retrieve account information from backend
     const [err, res] = await getAccount();
@@ -329,19 +329,19 @@ const signin = async () => {
     const data = res.data || [];
     accountList.value = data;
 
-         if (!data.length) {
-       // No accounts found, proceed with direct login
-       if (isMobile.value) {
-         mobileForm.userId = '';
-         mobileForm.password = mobileForm.verificationCode;
-         mobileForm.hasPassword = true;
-       } else {
-         accountForm.userId = '';
-       }
-       toSignin();
-       return;
-     }
-    
+    if (!data.length) {
+      // No accounts found, proceed with direct login
+      if (isMobile.value) {
+        mobileForm.userId = '';
+        mobileForm.password = mobileForm.verificationCode;
+        mobileForm.hasPassword = true;
+      } else {
+        accountForm.userId = '';
+      }
+      toSignin();
+      return;
+    }
+
     if (data.length === 1) {
       // Single account found, auto-login
       const { userId, linkSecret, hasPassword } = data[0];
@@ -361,7 +361,7 @@ const signin = async () => {
 
 /**
  * Handle Enter Key Press
- * 
+ *
  * Triggers sign-in process when user presses Enter key
  * in form fields, providing keyboard navigation support
  */
@@ -379,7 +379,7 @@ const pressEnter = () => {
 
 /**
  * Watch Account Input Changes
- * 
+ *
  * Clears account list and resets loading state when
  * user modifies account input fields
  */
@@ -393,7 +393,7 @@ const editionType = ref<string>();
 
 /**
  * Component Mounted Lifecycle
- * 
+ *
  * Initializes component state and retrieves edition type
  * for conditional feature rendering
  */
@@ -428,7 +428,7 @@ onMounted(async () => {
           @change="accountChange" />
       </template>
     </template>
-    
+
     <!-- Mobile-based Authentication Form -->
     <template v-else>
       <MobileInput
@@ -456,7 +456,7 @@ onMounted(async () => {
           @change="accountChange" />
       </template>
     </template>
-    
+
     <!-- Sign In Button and Error Display -->
     <div :class="{ 'error': error }" class="absolute-fixed relative mb-6">
       <Button
@@ -469,7 +469,7 @@ onMounted(async () => {
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
-    
+
     <!-- Cloud Service Edition Links -->
     <div
       v-if="editionType === 'CLOUD_SERVICE'"
@@ -481,7 +481,7 @@ onMounted(async () => {
       </RouterLink>
       <RouterLink to="/password/reset">{{ $t('sign.actions.forgotPassword') }}</RouterLink>
     </div>
-    
+
     <!-- Standard Edition Links -->
     <div v-else class="select-none whitespace-nowrap px-4 flex-end text-3.5 leading-4">
       <RouterLink to="/password/reset">{{ $t('sign.actions.forgotPassword') }}</RouterLink>

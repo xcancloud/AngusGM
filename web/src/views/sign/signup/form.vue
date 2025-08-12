@@ -166,7 +166,7 @@ const validateEmail = () => {
  */
 const validateMobileForm = () => {
   let validationErrors = 0; // Count validation failures
-  
+
   if (!mobileRef.value?.validateData()) {
     validationErrors++;
   }
@@ -192,7 +192,7 @@ const validateMobileForm = () => {
  */
 const validateEmailForm = () => {
   let validationErrors = 0; // Count validation failures
-  
+
   if (!emailRef.value?.validateData()) {
     validationErrors++;
   }
@@ -229,20 +229,20 @@ const signup = async () => {
     validateData.value = true;
     return;
   }
-  
+
   loading.value = true;
   error.value = false;
-  
+
   try {
     const params = isMobile.value ? mobileForm : emailForm;
     const [err] = await login.signup(params);
-    
+
     if (err) {
       error.value = true;
       errorMessage.value = err.message;
       return;
     }
-    
+
     notification.success(t('sign.messages.registerSuccess'));
     router.push('/signin');
   } finally {
@@ -291,7 +291,7 @@ const signup = async () => {
         v-model:value="mobileForm.invitationCode"
         class="input-container block-fixed" />
     </template>
-    
+
     <!-- Email registration form -->
     <template v-else>
       <EmailInput
@@ -325,7 +325,7 @@ const signup = async () => {
         v-model:value="emailForm.invitationCode"
         class="input-container block-fixed" />
     </template>
-    
+
     <!-- Submit button and error display -->
     <div :class="{'error': error}" class="error-container block-fixed">
       <Button
@@ -338,12 +338,12 @@ const signup = async () => {
       </Button>
       <div class="error-message">{{ errorMessage }}</div>
     </div>
-    
+
     <!-- Sign in link -->
     <div class="link-container">
       <RouterLink class="link" to="/signin">{{ t('sign.actions.accountSignin') }}</RouterLink>
     </div>
-    
+
     <!-- Terms and privacy policy links -->
     <div class="text-group">
       <em class="require">*</em>
@@ -351,7 +351,7 @@ const signup = async () => {
       <span class="link" @click="openModal('termsVisible')">{{ t('sign.terms.termsCloud') }}</span>
       <span class="link" @click="openModal('prvacyVisible')">{{ t('sign.terms.privacyCloud') }}</span>
     </div>
-    
+
     <!-- Terms acceptance checkbox -->
     <div class="flex items-center">
       <Checkbox v-model:checked="checked" class="checkbox-container">
@@ -359,7 +359,7 @@ const signup = async () => {
       </Checkbox>
       <span class="error-message !px-1" :class="{'!block': !checked && validateData}">{{ $t('sign.messages.termsRequired') }}</span>
     </div>
-    
+
     <!-- Terms and privacy policy modal -->
     <Modal
       key="termsVisible"
