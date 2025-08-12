@@ -535,5 +535,45 @@
     "titles": {
       "deleteToken": "删除令牌"
     }
+  },
+  "storage": {
+    "columns": {
+      "homeDir": "安装目录 (HOME_DIR)",
+      "workDir": "工作数据目录 (WORK_DIR)",
+      "dataDir": "数据存储目录 (DATA_DIR)",
+      "logsDir": "日志存储目录 (LOGS_DIR)",
+      "tmpDir": "临时数据存储目录 (TMP_DIR)",
+      "confDir": "配置文件目录 (CONF_DIR)",
+      "proxyAddress": "代理地址",
+      "region": "区域 (S3_REGION)",
+      "endpoint": "端点 (S3_ENDPOINT)",
+      "accessKey": "访问密钥 (S3_ACCESSKEY)",
+      "secretKey": "密钥 (S3_SECRETKEY)",
+      "origin": "源地址",
+      "url": "存储路径"
+    },
+    "placeholder": {
+      "selectService": "选择服务",
+      "selectInstance": "选择实例"
+    },
+    "messages": {
+      "appStorageTitle": "应用数据存储",
+      "appStorageDesc": "应用数据存储路径由用户在安装时指定，修改路径需要手动修改配置文件后重启生效。",
+      "businessStorageTitle": "业务文件存储",
+      "businessStorageDesc": "配置应用业务文件数据存储位置，修改路径后会导致历史数据丢失，修改前请先备份并同步迁移历史数据防止数据丢失。",
+      "storageType": "存储类型：",
+      "proxyAddressRequired": "代理地址不能为空！",
+      "storagePathRequired": "存储路径不能为空！",
+      "endpointRequired": "端点不能为空！",
+      "accessKeyRequired": "访问密钥不能为空！",
+      "secretKeyRequired": "密钥不能为空！",
+      "confirmTitle": "确认",
+      "service": "服务",
+      "instance": "实例"
+    },
+    "buttons": {
+      "confirm": "确定",
+      "cancel": "取消"
+    }
   }
 }

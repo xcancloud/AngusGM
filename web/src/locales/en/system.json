@@ -535,5 +535,45 @@
     "titles": {
       "deleteToken": "Delete Token"
     }
+  },
+  "storage": {
+    "columns": {
+      "homeDir": "Installation Directory (HOME_DIR)",
+      "workDir": "Work Data Directory (WORK_DIR)",
+      "dataDir": "Data Storage Directory (DATA_DIR)",
+      "logsDir": "Log Storage Directory (LOGS_DIR)",
+      "tmpDir": "Temporary Data Storage Directory (TMP_DIR)",
+      "confDir": "Configuration File Directory (CONF_DIR)",
+      "proxyAddress": "Proxy Address",
+      "region": "Region (S3_REGION)",
+      "endpoint": "Endpoint (S3_ENDPOINT)",
+      "accessKey": "Access Key (S3_ACCESSKEY)",
+      "secretKey": "Secret Key (S3_SECRETKEY)",
+      "origin": "Origin",
+      "url": "Storage Path"
+    },
+    "placeholder": {
+      "selectService": "Select Service",
+      "selectInstance": "Select Instance"
+    },
+    "messages": {
+      "appStorageTitle": "Application Data Storage",
+      "appStorageDesc": "Application data storage paths are specified by users during installation. Modifying paths requires manual configuration file changes and restart to take effect.",
+      "businessStorageTitle": "Business File Storage",
+      "businessStorageDesc": "Configure application business file data storage location. Modifying paths will result in loss of historical data. Please backup and migrate historical data before modification to prevent data loss.",
+      "storageType": "Storage Type:",
+      "proxyAddressRequired": "Proxy address cannot be empty!",
+      "storagePathRequired": "Storage path cannot be empty!",
+      "endpointRequired": "Endpoint cannot be empty!",
+      "accessKeyRequired": "Access key cannot be empty!",
+      "secretKeyRequired": "Secret key cannot be empty!",
+      "confirmTitle": "Confirm",
+      "service": "Service",
+      "instance": "Instance"
+    },
+    "buttons": {
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
   }
 }

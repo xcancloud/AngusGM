@@ -289,7 +289,7 @@ onMounted(() => {
           <template v-if="column.dataIndex === 'id'">
             <Button
               type="link"
-              class="px-0"
+              class="px-0 text-xs"
               @click="openCheckContentDialog(record.eventViewUrl)">
               {{ record.id }}
             </Button>
@@ -307,12 +307,12 @@ onMounted(() => {
               <Icon
                 v-if="record.pushStatus?.value === 'PUSH_FAIL' "
                 icon="icon-gantanhao-yuankuang"
-                class="text-3.5 leading-3.5 text-theme-sub-content text-theme-text-hover ml-1" />
+                class="text-xs leading-3.5 text-theme-sub-content text-theme-text-hover ml-1" />
               <template #title>
                 {{ t('event.records.messages.failureReason') }}
               </template>
               <template #content>
-                <div class="max-h-100 max-w-150 overflow-auto" v-html=" DOMPurify.sanitize(record.pushMsg)"></div>
+                <div class="text-xs max-h-100 max-w-150 overflow-auto" v-html=" DOMPurify.sanitize(record.pushMsg)"></div>
               </template>
             </Popover>
           </template>
@@ -320,6 +320,7 @@ onMounted(() => {
             <Button
               v-if="app.show('ReceivingChannelView')"
               type="text"
+              class="text-xs"
               @click="openReceiveConfig(record)">
               <Icon icon="icon-jiekoudaili" class="mr-1" />
               {{ app.getName('ReceivingChannelView') }}
@@ -327,6 +328,7 @@ onMounted(() => {
             <Button
               v-if="app.show('EventContentView')"
               type="text"
+              class="text-xs"
               :disabled="!app.has('EventContentView')"
               @click="openCheckContentDialog(record.eventViewUrl)">
               <Icon icon="icon-shijianjilu" class="mr-1" />
