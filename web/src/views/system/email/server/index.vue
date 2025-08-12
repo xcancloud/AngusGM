@@ -8,144 +8,191 @@ import { app } from '@xcan-angus/infra';
 import { email } from '@/api';
 import { MailboxService } from './PropsType';
 
+// Lazy load Test component for better performance
 const Test = defineAsyncComponent(() => import('@/views/system/email/server/components/test/index.vue'));
 
 const { t } = useI18n();
-const mailboxServiceList = ref<MailboxService[]>([]);
-const maxlength = 10;
 
+// Reactive state management
+const mailboxServiceList = ref<MailboxService[]>([]);
 const loading = ref(false);
-const params = ref({ pageNo: 1, pageSize: 10, filters: [] });
 const total = ref(0);
 
-const pagination = computed(() => {
-  return {
-    current: params.value.pageNo,
-    pageSize: params.value.pageSize,
-    total: total.value
-  };
+// Configuration constants
+const MAX_MAILBOX_SERVICES = 10;
+const DEFAULT_PAGE_SIZE = 10;
+
+// Pagination and search parameters
+const params = ref({
+  pageNo: 1,
+  pageSize: DEFAULT_PAGE_SIZE,
+  filters: []
 });
 
+// Computed pagination object for table component
+const pagination = computed(() => ({
+  current: params.value.pageNo,
+  pageSize: params.value.pageSize,
+  total: total.value
+}));
+
+// Table column definitions with optimized rendering
 const columns = [
   {
-    title: 'ID',
+    title: t('email.columns.id'),
     dataIndex: 'id',
+    key: 'id',
     width: '16%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('name'),
+    title: t('email.columns.name'),
     dataIndex: 'name',
+    key: 'name',
     width: '24%'
   },
   {
-    title: t('protocol'),
+    title: t('email.columns.protocol'),
     dataIndex: 'protocol',
     key: 'protocol',
     width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+    customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('sendAddress'),
+    title: t('email.columns.sendAddress'),
     dataIndex: 'host',
     key: 'host',
     width: '20%'
   },
   {
-    title: t('prefix'),
+    title: t('email.columns.prefix'),
     dataIndex: 'subjectPrefix',
     key: 'subjectPrefix',
     width: '20%'
   },
   {
-    title: t('operation'),
+    title: t('email.columns.operation'),
     dataIndex: 'action',
-    align: 'center',
+    key: 'action',
+    align: 'center' as const,
     width: '8%'
   }
 ];
 
-// 获取邮箱服务器列表
-const loadEmailServiceList = async function () {
-  if (loading.value) {
-    return;
-  }
-  loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await email.getServerList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
-  }
-  mailboxServiceList.value = data.list;
-  total.value = +data.total;
-};
-
-const deleteConfig = (id: string, name: string) => {
-  if (loading.value) {
-    return;
-  }
-  modal.confirm({
-    centered: true,
-    title: t('删除'),
-    content: t('userTip4', { name }),
-    onOk () {
-      confimOk(id);
-    }
-  });
-};
-
-const confimOk = async function (id) {
-  loading.value = true;
-  const [error] = await email.deleteServer({ ids: [id] });
-  loading.value = false;
-  if (error) {
-    return;
-  }
-
-  mailboxServiceList.value = mailboxServiceList.value.filter(item => item.id !== id);
-};
-
+// Modal state management
 const visible = ref(false);
 const testAddress = ref('');
 const testServerId = ref('');
-// 测试邮箱点击
+
+/**
+ * Load mailbox service list from API with error handling
+ */
+const loadEmailServiceList = async (): Promise<void> => {
+  if (loading.value) return; // Prevent duplicate requests
+
+  loading.value = true;
+  try {
+    const [error, { data = { list: [], total: 0 } }] = await email.getServerList(params.value);
+
+    if (error) {
+      console.error('Failed to load mailbox service list:', error);
+      return;
+    }
+
+    mailboxServiceList.value = data.list;
+    total.value = +data.total;
+  } catch (err) {
+    console.error('Unexpected error loading mailbox service list:', err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+/**
+ * Show delete confirmation modal
+ */
+const deleteConfig = (id: string, name: string): void => {
+  if (loading.value) return;
+
+  modal.confirm({
+    centered: true,
+    title: t('email.messages.delete'),
+    content: t('email.messages.deleteConfirm', { name }),
+    onOk: () => confirmDelete(id)
+  });
+};
+
+/**
+ * Execute delete operation after confirmation
+ */
+const confirmDelete = async (id: string): Promise<void> => {
+  loading.value = true;
+  try {
+    const [error] = await email.deleteServer({ ids: [id] });
+
+    if (error) {
+      console.error('Failed to delete mailbox service:', error);
+      return;
+    }
+
+    // Remove deleted item from local state
+    mailboxServiceList.value = mailboxServiceList.value.filter(item => item.id !== id);
+  } catch (err) {
+    console.error('Unexpected error deleting mailbox service:', err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+/**
+ * Open test email modal
+ */
 const testEmail = (id: string, address: string): void => {
   testServerId.value = id;
   testAddress.value = address;
   visible.value = true;
 };
 
-// 设为默认
-const defaultEmail = async function (id, enabled) {
-  if (loading.value) {
-    return;
-  }
-  const [error] = await email.updateServer({ id, enabled: !enabled });
-  if (error) {
-    return;
-  }
+/**
+ * Toggle default status for mailbox service
+ */
+const defaultEmail = async (id: string, enabled: boolean): Promise<void> => {
+  if (loading.value) return;
 
-  for (let i = 0; i < mailboxServiceList.value.length; i++) {
-    if (mailboxServiceList.value[i].id === id) {
-      mailboxServiceList.value[i].enabled = !enabled;
-    } else {
-      mailboxServiceList.value[i].enabled = false;
+  try {
+    const [error] = await email.updateServer({ id, enabled: !enabled });
+
+    if (error) {
+      console.error('Failed to update mailbox service:', error);
+      return;
     }
+
+    // Update local state to reflect changes
+    mailboxServiceList.value.forEach(service => {
+      if (service.id === id) {
+        service.enabled = !enabled;
+      } else {
+        service.enabled = false; // Only one service can be default
+      }
+    });
+  } catch (err) {
+    console.error('Unexpected error updating mailbox service:', err);
   }
 };
 
+// Initialize data on component mount
 onMounted(() => {
   loadEmailServiceList();
 });
 </script>
+
 <template>
   <div class="flex flex-col min-h-full">
-    <Hints :text="$t('mailboxTip')" class="mb-1" />
+    <!-- Helpful hints for users -->
+    <Hints :text="$t('email.messages.mailboxTip')" class="mb-1" />
+
     <PureCard class="flex-1 p-3.5">
+      <!-- Action buttons and refresh control -->
       <div class="flex justify-end items-center mb-2">
         <ButtonAuth
           code="MailServerAdd"
@@ -153,12 +200,14 @@ onMounted(() => {
           type="primary"
           size="small"
           icon="icon-tianjia"
-          :disabled="mailboxServiceList.length >= maxlength" />
+          :disabled="mailboxServiceList.length >= MAX_MAILBOX_SERVICES" />
         <IconRefresh
           class="text-4 mx-2"
           :loading="loading"
           @click="loadEmailServiceList" />
       </div>
+
+      <!-- Mailbox services table -->
       <Table
         :loading="loading"
         :dataSource="mailboxServiceList"
@@ -166,47 +215,61 @@ onMounted(() => {
         :columns="columns"
         rowKey="id"
         size="small">
-        <template #bodyCell="{column, record}">
+        <template #bodyCell="{ column, record }">
+          <!-- Name column with detail link and default indicator -->
           <template v-if="column.dataIndex === 'name'">
             <RouterLink
               v-if="app.has('MailServerDetail')"
               :to="`/system/email/server/${record.id}?type=detail`"
               class="text-theme-special text-theme-text-hover">
-              {{ record.name }}<span v-if="record.enabled" class="text-theme-special ml-1">({{
-                t('default')
-              }})</span>
+              {{ record.name }}
+              <span v-if="record.enabled" class="text-theme-special ml-1">
+                ({{ t('email.messages.default') }})
+              </span>
             </RouterLink>
             <template v-else>
-              {{ record.name }}<span v-if="record.enabled" class="text-theme-special ml-1">({{
-                t('default')
-              }})</span>
+              {{ record.name }}
+              <span v-if="record.enabled" class="text-theme-special ml-1">
+                ({{ t('email.messages.default') }})
+              </span>
             </template>
           </template>
+
+          <!-- Protocol column with message display -->
           <template v-if="column.dataIndex === 'protocol'">
             {{ record.protocol?.message }}
           </template>
+
+          <!-- Action column with dropdown menu -->
           <template v-if="column.dataIndex === 'action'">
             <Dropdown
               overlayClassName="ant-dropdown-sm"
               placement="bottomRight">
               <Icon
-                class=" cursor-pointer"
+                class="cursor-pointer"
                 icon="icon-gengduo"
                 @click.prevent />
               <template #overlay>
                 <Menu>
+                  <!-- Set as default option -->
                   <MenuItem
                     v-if="app.show('MailServerSetDefault')"
                     :disabled="!app.has('MailServerSetDefault')"
-                    @click="defaultEmail(record.id,record.enabled)">
+                    @click="defaultEmail(record.id, record.enabled)">
                     <template #icon>
-                      <Icon :icon="record.enabled?'icon-quxiao':'icon-sheweimoren'" />
+                      <Icon :icon="record.enabled ? 'icon-quxiao' : 'icon-sheweimoren'" />
                     </template>
                     {{
-                      record.enabled ? app.getName('MailServerSetDefault', 1) : app.getName('MailServerSetDefault', 0)
+                      record.enabled
+                        ? app.getName('MailServerSetDefault', 1)
+                        : app.getName('MailServerSetDefault', 0)
                     }}
                   </MenuItem>
-                  <MenuItem v-if="app.show('MailServerModify')" :disabled="!app.has('MailServerModify')">
+
+                  <!-- Edit option -->
+                  <MenuItem
+                    v-if="app.show('MailServerModify')"
+                    :disabled="!app.has('MailServerModify')">
                     <template #icon>
                       <Icon icon="icon-shuxie" />
                     </template>
@@ -214,19 +277,23 @@ onMounted(() => {
                       {{ app.getName('MailServerModify') }}
                     </RouterLink>
                   </MenuItem>
+
+                  <!-- Delete option -->
                   <MenuItem
                     v-if="app.show('MailServerDelete')"
                     :disabled="!app.has('MailServerDelete')"
-                    @click="deleteConfig(record.id,record.name)">
+                    @click="deleteConfig(record.id, record.name)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
                     </template>
                     {{ app.getName('MailServerDelete') }}
                   </MenuItem>
+
+                  <!-- Test option -->
                   <MenuItem
                     v-if="app.show('MailServerTest')"
                     :disabled="!app.has('MailServerTest')"
-                    @click="testEmail(record.id,record.host)">
+                    @click="testEmail(record.id, record.host)">
                     <template #icon>
                       <Icon icon="icon-zhihangceshi" />
                     </template>
@@ -239,6 +306,8 @@ onMounted(() => {
         </template>
       </Table>
     </PureCard>
+
+    <!-- Test email modal -->
     <AsyncComponent :visible="visible">
       <Test
         :id="testServerId"

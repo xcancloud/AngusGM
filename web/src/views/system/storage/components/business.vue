@@ -301,11 +301,11 @@ const handleSubmit = async () => {
           centered: true,
           title: t('storage.messages.confirmTitle'),
           content: error.message,
-          async onOk() {
+          async onOk () {
             force.value = true;
             await handleSubmit();
           },
-          onCancel() {
+          onCancel () {
             cancelEdit();
           }
         });

@@ -7,173 +7,209 @@ import { Card, Grid } from '@xcan-angus/vue-ui';
 import { cookieUtils } from '@xcan-angus/infra';
 
 import { email } from '@/api';
-import { EmailRecord } from '../../PropsType';
+import { EmailRecord, EmailSendStatus } from '../../PropsType';
 
 const { t } = useI18n();
 const route = useRoute();
+
+// Reactive state management
 const firstLoad = ref<boolean>(true);
+const emailRecordInfo = ref<EmailRecord>();
 const id = route.params.id as string;
 
-const installRecordInfo = ref<EmailRecord>();
+// Status color mapping for better maintainability
+const STATUS_COLORS: Record<EmailSendStatus, string> = {
+  SUCCESS: 'rgba(82,196,26,1)', // Green for success
+  PENDING: 'rgba(255,165,43,1)', // Orange for pending
+  FAILURE: 'rgba(245,34,45,1)' // Red for failure
+};
 
-const init = () => {
+/**
+ * Initialize component data
+ */
+const init = (): void => {
   getEmailRecordInfo();
 };
 
+/**
+ * Fetch email record details from API with error handling
+ */
 const getEmailRecordInfo = async (): Promise<void> => {
-  const [error, { data }] = await email.getEmailDetail(id);
-  firstLoad.value = false;
-  if (error) {
-    return;
+  try {
+    const [error, { data }] = await email.getEmailDetail(id);
+
+    if (error) {
+      console.error('Failed to load email record details:', error);
+      return;
+    }
+
+    emailRecordInfo.value = data;
+  } catch (err) {
+    console.error('Unexpected error loading email record details:', err);
+  } finally {
+    firstLoad.value = false;
   }
-  installRecordInfo.value = data;
 };
 
-onMounted(() => {
-  init();
-});
+/**
+ * Get status color based on send status value
+ */
+const getSendStatusColor = (value: EmailSendStatus): string => {
+  return STATUS_COLORS[value] || STATUS_COLORS.FAILURE;
+};
 
+/**
+ * Grid column configuration for email record details
+ * Organized in two columns for better layout
+ */
 const gridColumns = [
+  // Left column
   [
     {
-      label: 'ID',
+      label: t('email.columns.id'),
       dataIndex: 'id'
     },
     {
-      label: t('邮件类型'),
+      label: t('email.columns.emailType'),
       dataIndex: 'emailType'
     },
     {
-      label: t('发送状态'),
+      label: t('email.columns.sendStatus'),
       dataIndex: 'sendStatus'
     },
     {
-      label: t('发送租户ID'),
+      label: t('email.columns.sendTenantId'),
       dataIndex: 'sendTenantId'
     },
     {
-      label: t('发送用户ID'),
+      label: t('email.columns.sendUserId'),
       dataIndex: 'sendId'
     },
     {
-      label: t('模板编码'),
+      label: t('email.columns.templateCode'),
       dataIndex: 'templateCode'
     },
     {
-      label: t('是否加急'),
+      label: t('email.columns.urgent'),
       dataIndex: 'urgent',
-      customRender: ({ text }): string => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('是否验证码'),
+      label: t('email.columns.verificationCode'),
       dataIndex: 'verificationCode',
-      customRender: ({ text }): string => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('批量发送'),
+      label: t('email.columns.batch'),
       dataIndex: 'batch',
-      customRender: ({ text }): string => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('主题'),
+      label: t('email.columns.subject'),
       dataIndex: 'subject'
     },
     {
-      label: t('发送内容'),
+      label: t('email.columns.content'),
       dataIndex: 'content'
     }
   ],
+  // Right column
   [
     {
-      label: t('发送时间'),
+      label: t('email.columns.sendTime'),
       dataIndex: 'actualSendDate'
     },
     {
-      label: t('期望发送时间'),
+      label: t('email.columns.expectedTime'),
       dataIndex: 'expectedSendDate'
     },
     {
-      label: t('业务ID'),
+      label: t('email.columns.outId'),
       dataIndex: 'outId'
     },
     {
-      label: t('业务Key'),
+      label: t('email.columns.bizKey'),
       dataIndex: 'bizKey'
     },
     {
-      label: t('语言'),
+      label: t('email.columns.language'),
       dataIndex: 'language',
       customRender: ({ text }): string => text?.message || '--'
     },
     {
-      label: t('发件人地址'),
+      label: t('email.columns.fromAddr'),
       dataIndex: 'fromAddr'
     },
     {
-      label: t('收件人地址'),
+      label: t('email.columns.toAddress'),
       dataIndex: 'toAddress',
       customRender: ({ text }): string => text?.join(',') || '--'
     },
     {
-      label: t('是否HTML'),
+      label: t('email.columns.html'),
       dataIndex: 'html',
-      customRender: ({ text }) => text ? '是' : '否'
+      customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no')
     },
     {
-      label: t('失败原因'),
+      label: t('email.columns.failureReason'),
       dataIndex: 'failureReason'
     },
     {
-      label: t('附件'),
+      label: t('email.columns.attachments'),
       dataIndex: 'attachments'
     }
   ]
 ];
 
-const getSendStatusColor = (value: 'SUCCESS' | 'PENDING' | 'FAILURE') => {
-  switch (value) {
-    case 'SUCCESS': // 成功
-      return 'rgba(82,196,26,1)';
-    case 'PENDING': // 待处理
-      return 'rgba(255,165,43,1)';
-    case 'FAILURE': // 失败
-      return 'rgba(245,34,45,1)';
-  }
-};
+// Initialize component on mount
+onMounted(() => {
+  init();
+});
 </script>
+
 <template>
-  <Card :title="t('邮件信息')" bodyClass="px-8 py-5">
+  <!-- Email record information card -->
+  <Card :title="t('email.titles.emailInfo')" bodyClass="px-8 py-5">
     <Skeleton
       :loading="firstLoad"
       :title="false"
       :paragraph="{ rows: 11 }">
       <Grid
         :columns="gridColumns"
-        :dataSource="installRecordInfo">
-        <template #sendStatus="{text}">
-          <Badge :color="getSendStatusColor(text?.value)" :text="text?.message" />
+        :dataSource="emailRecordInfo">
+        <!-- Send status with colored badge -->
+        <template #sendStatus="{ text }">
+          <Badge
+            :color="getSendStatusColor(text?.value)"
+            :text="text?.message" />
         </template>
-        <template #attachments="{text}">
+
+        <!-- File attachments with download links -->
+        <template #attachments="{ text }">
           <a
-            v-for="(item,index) in text"
+            v-for="(item, index) in text"
             :key="index"
             class="mr-4 text-theme-special"
-            :href="`${item.url}&access_token=${cookieUtils.get('access_token')}`">{{ item.name }}</a>
+            :href="`${item.url}&access_token=${cookieUtils.get('access_token')}`">
+            {{ item.name }}
+          </a>
         </template>
       </Grid>
     </Skeleton>
   </Card>
+
+  <!-- Template parameters card -->
   <Card
-    :title="t('发送参数')"
+    :title="t('email.titles.sendParams')"
     bodyClass="px-8 py-5"
-    class=" flex-1">
+    class="flex-1">
     <Skeleton
       :loading="firstLoad"
       :title="false"
       :paragraph="{ rows: 5 }">
-      <pre v-if="installRecordInfo?.templateParams">{{
-          JSON.stringify(installRecordInfo?.templateParams, null, 2)
-      }}</pre>
+      <pre v-if="emailRecordInfo?.templateParams">
+        {{ JSON.stringify(emailRecordInfo?.templateParams, null, 2) }}
+      </pre>
     </Skeleton>
   </Card>
 </template>
