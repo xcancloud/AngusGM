@@ -249,7 +249,35 @@
 
     },
     "system": {
-
+      "columns": {
+        "service": "Service",
+        "instance": "Instance",
+        "logFile": "Log File",
+        "browseLogs": "Browse Logs",
+        "autoRefresh": "Auto Refresh",
+        "saveToFile": "Save to File",
+        "fullScreen": "Full Screen"
+      },
+      "placeholder": {
+        "selectService": "Select Service",
+        "selectInstance": "Select Instance",
+        "selectLogFile": "Select Log File"
+      },
+      "messages": {
+        "browseLines": "Last {lines} lines",
+        "close": "Close",
+        "fullScreen": "Full Screen",
+        "autoRefresh": "Auto Refresh"
+      },
+      "labels": {
+        "service": "Service",
+        "instance": "Instance",
+        "logFile": "Log File",
+        "browseLogs": "Browse Logs",
+        "autoRefresh": "Auto Refresh",
+        "saveToFile": "Save to File",
+        "fullScreen": "Full Screen"
+      }
     }
   },
   "onlineUser": {

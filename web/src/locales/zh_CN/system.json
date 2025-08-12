@@ -249,7 +249,35 @@
 
     },
     "system": {
-
+      "columns": {
+        "service": "服务",
+        "instance": "实例",
+        "logFile": "日志文件",
+        "browseLogs": "浏览日志",
+        "autoRefresh": "自动刷新",
+        "saveToFile": "保存到文件",
+        "fullScreen": "全屏"
+      },
+      "placeholder": {
+        "selectService": "选择服务",
+        "selectInstance": "选择实例",
+        "selectLogFile": "选择日志文件"
+      },
+      "messages": {
+        "browseLines": "末尾{lines}行",
+        "close": "关闭",
+        "fullScreen": "全屏",
+        "autoRefresh": "自动刷新"
+      },
+      "labels": {
+        "service": "服务",
+        "instance": "实例",
+        "logFile": "日志文件",
+        "browseLogs": "浏览日志",
+        "autoRefresh": "自动刷新",
+        "saveToFile": "保存到文件",
+        "fullScreen": "全屏"
+      }
     }
   },
   "onlineUser": {
