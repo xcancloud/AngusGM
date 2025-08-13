@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Card } from '@xcan-angus/vue-ui';
 import certFrontPicUrl from '../../images/idCardFront.png';
-import certBackPicUrl from '../../images/images/idCardBack.png';
+import certBackPicUrl from '../../images/idCardBack.png';
 
 import PageCard from '@/views/system/realname/components/cardPage/index.vue';
 
