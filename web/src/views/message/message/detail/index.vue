@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Badge, Skeleton, Tag } from 'ant-design-vue';
@@ -7,7 +7,8 @@ import { Card, Grid, Image } from '@xcan-angus/vue-ui';
 import RichEditor from '@/components/RichEditor/index.vue';
 
 import { message } from '@/api';
-import { ReceiveObjectData, ReceiveObjectDataType } from '../PropsType';
+import { ReceiveObjectData, ReceiveObjectDataType } from '../types';
+import { createDetailGridColumns, getStatusText } from '../utils';
 
 const { t } = useI18n();
 
@@ -68,60 +69,7 @@ const getMessageDetail = async () => {
  * Grid column configuration for basic message information
  * Organized in two rows for better layout and readability
  */
-const gridColumns = [
-  [
-    {
-      label: t('messages.columns.createdByName'),
-      dataIndex: 'fullName'
-    },
-    {
-      label: t('messages.columns.sendType'),
-      dataIndex: 'sentType'
-    },
-    {
-      label: t('messages.columns.receiveType'),
-      dataIndex: 'receiveType'
-    },
-    {
-      label: t('messages.columns.timingDate'),
-      dataIndex: 'timingDate'
-    }
-  ],
-  [
-    {
-      label: t('messages.columns.sentNum'),
-      dataIndex: 'sentNum'
-    },
-    {
-      label: t('messages.columns.readNum'),
-      dataIndex: 'readNum'
-    },
-    {
-      label: t('messages.columns.status'),
-      dataIndex: 'status'
-    }
-  ]
-];
-
-/**
- * Status color mapping for message status badges
- * Maps status values to appropriate badge colors for visual feedback
- */
-const obj: {
-  [key: string]: string
-} = {
-  PENDING: 'warning',
-  SENT: 'success',
-  FAILURE: 'error'
-};
-
-/**
- * Get status color for a given status key
- * Returns the appropriate color for status badge display
- */
-const getStatusText = (key: string): string => {
-  return obj[key];
-};
+const gridColumns = computed(() => createDetailGridColumns());
 
 /**
  * Initialize component on mount
@@ -144,7 +92,7 @@ onMounted(() => {
         <Grid :columns="gridColumns" :dataSource="content">
           <!-- Status Badge Template -->
           <template #status="{text}">
-            <Badge :status="getStatusText(text?.value)" :text="text?.message" />
+            <Badge :status="getStatusText(text?.value) as any" :text="text?.message" />
           </template>
           <!-- Sent Number Template -->
           <template #sentNum="{text}">

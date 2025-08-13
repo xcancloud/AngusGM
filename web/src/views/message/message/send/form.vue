@@ -9,6 +9,7 @@ import RichEditor from '@/components/RichEditor/index.vue';
 import { Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 
 import { email } from '@/api';
+import { getDisabledTimeOptions, isPastDate } from './utils';
 
 /**
  * Component props interface
@@ -104,10 +105,6 @@ const loadSentType = () => {
   sentTypeList.value = enumUtils.enumToMessages(SentType);
 };
 
-onMounted(() => {
-  init();
-});
-
 /**
  * Email server availability state
  * Tracks whether email server is available for sending
@@ -198,6 +195,8 @@ watch(() => content.value, (newValue) => {
  * Ensures parent component receives updated form values
  */
 onMounted(() => {
+  init();
+
   watch(() => title.value, (newValue) => {
     emit('update:propsTitle', newValue);
   }, {
@@ -253,21 +252,7 @@ watch(() => props.propsDateRule, (newValue) => {
  * Disable past dates in date picker
  * Prevents scheduling messages in the past
  */
-const disabledDate = (current: any) => {
-  return current && current < dayjs();
-};
-
-/**
- * Generate range of numbers
- * Utility function for time picker options
- */
-const range = (start: number, end: number) => {
-  const result: number[] = [];
-  for (let i = start; i < end; i++) {
-    result.push(i);
-  }
-  return result;
-};
+const disabledDate = isPastDate;
 
 /**
  * Current time plus one minute
@@ -279,12 +264,7 @@ const currTime = dayjs().add(1, 'minute');
  * Disable past time options
  * Prevents selecting past times for scheduled messages
  */
-const disabledDateTime = () => {
-  return {
-    disabledHours: () => range(0, currTime.hour()),
-    disabledMinutes: () => range(0, currTime.minute())
-  };
-};
+const disabledDateTime = () => getDisabledTimeOptions(currTime);
 
 /**
  * File upload configuration

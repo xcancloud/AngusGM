@@ -15,7 +15,7 @@ export interface Goods {
   introduction: string;
   /** Optional array of tags associated with the goods */
   tags?: string[];
-  
+
   // Classification and metadata
   /** Edition type with value and display message */
   editionType: { value: string, message: string };
@@ -35,7 +35,7 @@ export interface Goods {
   productType: { value: string, message: string };
   /** Version string of the goods */
   version: string;
-  
+
   // Licensing and purchase information
   /** Whether the goods requires payment */
   charge: boolean;
@@ -54,7 +54,7 @@ export interface Goods {
   pricingUrl: string;
   /** Date when goods went online */
   onlineDate: string;
-  
+
   // User interaction flags
   /** Whether current user has starred this goods */
   star?: boolean;
@@ -68,7 +68,7 @@ export interface Goods {
   installed?: boolean;
   /** Whether goods has been purchased */
   purchased?: boolean;
-  
+
   // Additional information
   /** Compatible edition types for this goods */
   applyEditionTypes: { value: string, message: string }[];

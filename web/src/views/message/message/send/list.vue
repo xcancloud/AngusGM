@@ -2,12 +2,23 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
-  Grid, Hints, Icon, IconRequired, Image, Input, NoData, notification, PureCard, SelectEnum, Spin
+  Grid,
+  Hints,
+  Icon,
+  IconRequired,
+  Image,
+  Input,
+  NoData,
+  notification,
+  PureCard,
+  SelectEnum,
+  Spin
 } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
 import { duration, ReceiveObjectType } from '@xcan-angus/infra';
 import { Checkbox, CheckboxGroup, Divider, Pagination, Popover, Tooltip, Tree } from 'ant-design-vue';
 import { dept, group, user } from '@/api';
+import { buildTree, shouldExcludeRecipientType } from '../utils';
 
 /**
  * Component props interface
@@ -73,9 +84,7 @@ const total = ref(0);
  * Check if recipient type should be excluded
  * Filters out certain recipient types from selection
  */
-const excludes = ({ value }: { value: any }) => {
-  return [ReceiveObjectType.TO_POLICY, ReceiveObjectType.POLICY, ReceiveObjectType.ALL].includes(value);
-};
+const excludes = shouldExcludeRecipientType;
 
 /**
  * User data list for display
@@ -240,50 +249,6 @@ const getDeptList = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-/**
- * Build hierarchical tree structure from flat list
- * Converts flat department list to nested tree structure
- */
-const buildTree = (_treeData: any[]) => {
-  if (!_treeData?.length) {
-    return [];
-  }
-
-  const result: any[] = [];
-  const itemMap: any = {};
-
-  for (const item of _treeData) {
-    const id = item.id;
-    const pid = item.pid;
-
-    if (!itemMap[id]) {
-      itemMap[id] = {
-        children: []
-      };
-    }
-
-    itemMap[id] = {
-      ...item,
-      children: itemMap[id].children
-    };
-
-    const treeItem = itemMap[id];
-
-    if (pid === '-1') {
-      result.push(treeItem);
-    } else {
-      if (!itemMap[pid]) {
-        itemMap[pid] = {
-          children: []
-        };
-      }
-      itemMap[pid].children.push(treeItem);
-    }
-  }
-
-  return result;
 };
 
 /**

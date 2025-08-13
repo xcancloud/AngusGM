@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { reactive, onMounted, computed, ref, defineAsyncComponent } from 'vue';
-import { SearchPanel, Table, PureCard, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
-import { app, GM, ReceiveObjectType } from '@xcan-angus/infra';
-import { MessageReceiveType, MessageStatus } from '@/enums/enums';
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
+import { ButtonAuth, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
+import { app, GM } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
-
 import { message } from '@/api';
-import type { TableColumnType } from './types';
+import type {
+  MessageComponentState,
+  MessageSearchParams,
+  PaginationConfig,
+  SearchParams,
+  SortConfig,
+  TableChangeParams
+} from './types';
+import { createSearchOptions, createTableColumns, getStatusText } from './utils';
 
 /**
  * Async component import for Statistics
@@ -18,8 +24,8 @@ const Statistics = defineAsyncComponent(() => import('@/components/Statistics/in
 const { t } = useI18n();
 
 // Search and filter state management
-let searchForm: any = [];
-const sortForm: Record<string, any> = {};
+let searchForm: SearchParams[] = [];
+const sortForm: SortConfig = {};
 const receiveObjectType = ref();
 const disabled = ref(false);
 const showCount = ref(true);
@@ -28,11 +34,7 @@ const showCount = ref(true);
  * Component state management
  * Centralized reactive state for managing component behavior and data
  */
-const state = reactive<{
-  loading: boolean,
-  columns: Array<TableColumnType>,
-  dataSource: never[]
-}>({
+const state = reactive<MessageComponentState>({
   loading: false,
   columns: [],
   dataSource: []
@@ -42,7 +44,7 @@ const state = reactive<{
  * Pagination configuration
  * Manages table pagination state including current page, page size, and total count
  */
-const pagination = reactive({
+const pagination = reactive<PaginationConfig>({
   current: 1,
   pageSize: 10,
   total: 0
@@ -57,7 +59,7 @@ const getMessageList = async () => {
     return;
   }
 
-  const params: Record<string, any> = {
+  const params: MessageSearchParams = {
     filters: searchForm,
     pageNo: pagination.current,
     pageSize: pagination.pageSize,
@@ -84,7 +86,7 @@ const getMessageList = async () => {
  * Handle search table operations
  * Processes search parameters and triggers data refresh
  */
-const searchTable = async (searchParams: any[]) => {
+const searchTable = async (searchParams: SearchParams[]) => {
   receiveObjectType.value = searchParams.find(i => i.key === 'receiveObjectType')?.value || undefined;
   searchForm = searchParams.filter(i => i.key !== 'sendTenantId');
   pagination.current = 1;
@@ -101,7 +103,7 @@ const searchTable = async (searchParams: any[]) => {
  * Handle table pagination and sorting changes
  * Updates pagination state and refreshes data when user changes page or sorts
  */
-const listChange = async (page: Record<string, any>, _filters: unknown, sorter: Record<string, any>) => {
+const listChange = async (page: TableChangeParams, _filters: unknown, sorter: Record<string, any>) => {
   if (sorter.orderBy) {
     sortForm.orderBy = sorter.orderBy;
     sortForm.orderSort = sorter.orderSort;
@@ -119,136 +121,16 @@ const listChange = async (page: Record<string, any>, _filters: unknown, sorter: 
 };
 
 /**
- * Status color mapping for message status badges
- * Maps status values to appropriate badge colors for visual feedback
- */
-const getStatusColor: {
-  [key: string]: string
-} = {
-  PENDING: 'warning',
-  SENT: 'success',
-  FAILURE: 'error'
-};
-
-/**
- * Get status color for a given status key
- * Returns the appropriate color for status badge display
- */
-const getStatusText = (key: string): string => {
-  return getStatusColor[key];
-};
-
-/**
  * Search panel configuration options
  * Defines available search fields and their types for the search panel
  */
-const searchOptions = computed(() => {
-  return [
-    {
-      valueKey: 'title',
-      allowClear: true,
-      type: 'input' as const,
-      placeholder: t('messages.placeholder.title')
-    },
-    {
-      valueKey: 'receiveType',
-      type: 'select-enum' as const,
-      enumKey: MessageReceiveType,
-      allowClear: true,
-      placeholder: t('messages.placeholder.receiveType')
-    },
-    {
-      valueKey: 'status',
-      type: 'select-enum' as const,
-      enumKey: MessageStatus,
-      allowClear: true,
-      placeholder: t('messages.placeholder.status')
-    },
-    {
-      valueKey: 'receiveObjectType',
-      type: 'select-enum' as const,
-      enumKey: ReceiveObjectType,
-      allowClear: true,
-      placeholder: t('messages.placeholder.receiveObjectType')
-    }
-  ];
-});
+const searchOptions = computed(() => createSearchOptions());
 
 /**
  * Table column configuration
  * Defines the structure and display properties for the message table columns
  */
-const columns = [
-  {
-    title: t('messages.columns.title'),
-    key: 'title',
-    dataIndex: 'title',
-    width: '17%'
-  },
-  {
-    title: t('messages.columns.receiveType'),
-    key: 'receiveType',
-    dataIndex: 'receiveType',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('messages.columns.status'),
-    key: 'status',
-    dataIndex: 'status',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('messages.columns.failureReason'),
-    key: 'failureReason',
-    dataIndex: 'failureReason',
-    width: '17%'
-  },
-  {
-    title: t('messages.columns.createdByName'),
-    key: 'createdByName',
-    dataIndex: 'createdByName',
-    width: '8%'
-  },
-  {
-    title: t('messages.columns.receiveObjectType'),
-    key: 'receiveObjectType',
-    dataIndex: 'receiveObjectType',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('messages.columns.sentNum'),
-    dataIndex: 'sentNum',
-    key: 'sentNum',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('messages.columns.readNum'),
-    key: 'readNum',
-    dataIndex: 'readNum',
-    width: '8%'
-  },
-  {
-    title: t('messages.columns.timingDate'),
-    key: 'timingDate',
-    dataIndex: 'timingDate',
-    width: '10%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  }
-];
+const columns = computed(() => createTableColumns());
 
 /**
  * Initialize component on mount
