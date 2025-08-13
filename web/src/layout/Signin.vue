@@ -120,7 +120,7 @@ const preventDefaultListener = (e) => {
 
 .layout-container .content {
   width: 380px;
-  margin-left: 66px;
+  margin-left: 76px;
   margin-bottom: 8px;
   font-size: 19px;
   line-height: 30px;
