@@ -213,22 +213,11 @@
         "networkError": "Network error"
       }
     },
-    "statistics": {
-      "metrics": {
-        "method": "Method",
-        "type": "Type",
-        "status": "Status",
-        "disable": "Disable",
-        "enable": "Enable",
-        "yes": "Yes",
-        "no": "No"
-      }
-    },
     "copyRight": {
       "copyright": "Copyright",
       "allRightsReserved": "All Rights Reserved",
-      "icpRecord": "ICP Record",
-      "publicSecurityRecord": "Public Security Record"
+      "icpRecord": "京ICP备2021037962号-1",
+      "publicSecurityRecord": "京公网安备 11011402012129号"
     },
     "passwordInput": {
       "messages": {
@@ -237,6 +226,17 @@
         "passRules": "Contains at least two types of combinations",
         "noSpace": "No spaces allowed",
         "strengthDesc": "Password strength: {text}"
+      },
+      "errors": {
+        "illegalCharacter": "Illegal character, input not allowed",
+        "repetitionRate": "The repetition rate cannot exceed 50%, such as 6 characters, at least 3 characters are different",
+        "lengthRange": "Password length between 6 and 50",
+        "typeCombination": "Contains at least two types of combinations"
+      },
+      "strength": {
+        "weak": "weak",
+        "medium": "medium",
+        "strong": "strong"
       }
     },
     "mobileInput": {

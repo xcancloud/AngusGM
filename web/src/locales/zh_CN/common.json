@@ -159,6 +159,7 @@
       "placeholder": {
         "choseAccount": "请选择账号"
       },
+
       "messages": {
         "selectLoginAccount": "请选择登录账号"
       }
@@ -213,17 +214,6 @@
         "networkError": "网络错误"
       }
     },
-    "statistics": {
-      "metrics": {
-        "method": "方法",
-        "type": "类型",
-        "status": "状态",
-        "disable": "禁用",
-        "enable": "启用",
-        "yes": "是",
-        "no": "否"
-      }
-    },
     "copyRight": {
       "copyright": "版权所有",
       "allRightsReserved": "版权所有",
@@ -237,6 +227,17 @@
         "passRules": "至少包含两种类型组合",
         "noSpace": "不允许包含空格",
         "strengthDesc": "密码强度：{text}"
+      },
+      "errors": {
+        "illegalCharacter": "非法字符，不允许输入",
+        "repetitionRate": "重复率不能超过50%，如6个字符至少3个字符不相同",
+        "lengthRange": "密码长度在6到50之间",
+        "typeCombination": "至少包含两种类型组合"
+      },
+      "strength": {
+        "weak": "弱",
+        "medium": "中",
+        "strong": "强"
       }
     },
     "mobileInput": {

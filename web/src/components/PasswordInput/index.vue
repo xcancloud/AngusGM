@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { cookieUtils } from '@xcan-angus/infra';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { InputPassword } from 'ant-design-vue';
 
@@ -40,51 +39,6 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
-
-/**
- * Error message mapping for different locales
- * Provides localized error messages for password validation
- */
-const errorMap = {
-  en: {
-    1: 'Illegal character, input not allowed',
-    2: 'The repetition rate cannot exceed 0.5, such as 6 characters, at least 3 characters are different',
-    3: 'Password length between 6 and 50',
-    4: 'Contains at least two types of combinations'
-  },
-  zh_CN: {
-    1: '非法字符，不允许输入',
-    2: '重复率不能超过0.5，如6个字符至少3个字符不相同',
-    3: '密码长度在6到50之间',
-    4: '至少包含两种类型组合'
-  }
-};
-
-/**
- * Password strength mapping for different locales
- * Provides localized strength indicators
- */
-const tipMap = {
-  en: {
-    weak: 'weak',
-    medium: 'medium',
-    strong: 'strong'
-  },
-  zh_CN: {
-    weak: '弱',
-    medium: '中',
-    strong: '强'
-  }
-};
-
-/**
- * Get current locale from cookie and set appropriate message maps
- * Dynamically switches between English and Chinese based on user preference
- */
-const localeCookie = cookieUtils.get('localeCookie') as string;
-const currentLocale = ['en', 'zh_CN'].includes(localeCookie) ? localeCookie : 'zh_CN';
-const errorMessageMap = computed(() => errorMap[currentLocale]);
-const strengthMap = computed(() => tipMap[currentLocale]);
 
 // Reactive state variables
 const errorMessage = ref(t('components.passwordInput.messages.invalidPass'));
@@ -144,7 +98,30 @@ const validateData = (): boolean => {
   const { code, char } = password.isInvalid(inputValue.value);
   if (code) {
     error.value = true;
-    errorMessage.value = char ? `${char} ${errorMessageMap.value[code]}` : errorMessageMap.value[code];
+    // Get error message based on error code
+    let errorKey = '';
+    switch (code) {
+      case 1:
+        errorKey = 'components.passwordInput.errors.illegalCharacter';
+        break;
+      case 2:
+        errorKey = 'components.passwordInput.errors.repetitionRate';
+        break;
+      case 3:
+        errorKey = 'components.passwordInput.errors.lengthRange';
+        break;
+      case 4:
+        errorKey = 'components.passwordInput.errors.typeCombination';
+        break;
+      default:
+        errorKey = 'components.passwordInput.messages.invalidPass';
+    }
+
+    if (char) {
+      errorMessage.value = `${char} ${t(errorKey)}`;
+    } else {
+      errorMessage.value = t(errorKey);
+    }
     return false;
   }
 
@@ -172,7 +149,9 @@ watch(() => inputValue.value, (newValue) => {
   // Calculate and update password strength
   const strength = password.calcStrength(newValue);
   strengthClass.value = strength;
-  strengthText.value = strengthMap.value[strength];
+  // Get strength text from internationalization
+  const strengthKey = `components.passwordInput.strength.${strength}`;
+  strengthText.value = t(strengthKey);
   showStrength.value = !password.isInvalid(newValue).code;
 });
 
