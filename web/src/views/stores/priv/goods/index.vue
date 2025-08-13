@@ -76,7 +76,7 @@ const getProductTypeColor = (value) => {
           type: 'input',
           valueKey: 'name',
           allowClear: true,
-          placeholder: t('查询商品名称、描述')
+          placeholder: t('priv.placeholder.searchGoodsName')
         }]"
         @change="handleParamChange" />
     </div>
@@ -85,14 +85,14 @@ const getProductTypeColor = (value) => {
         size="small"
         type="primary"
         @click="openUpload">
-        上传并安装
+        {{ t('priv.messages.uploadPackage') }}
       </Button>
       <Dropdown overlayClassName="table-oper-menu ant-dropdown-sm" placement="bottom">
         <Icon icon="icon-shunxu" class="cursor-pointer outline-none" />
         <template #overlay>
           <Menu class="p-2 text-3 leading-3 font-normal bg-theme-container">
             <MenuItem @click="handleOrder('purchaseDate')">
-              {{ t('按购买时间') }}
+              {{ t('stores.sortByPurchaseTime') }}
             </MenuItem>
           </Menu>
         </template>
@@ -128,30 +128,30 @@ const getProductTypeColor = (value) => {
                 <span class="text-3 ml-2">V{{ item.version }}</span>
                 <span
                   v-if="item.expired"
-                  class="ml-2 inline-block px-2 rounded-full text-3 bg-danger-bg text-danger">已过期</span>
+                  class="ml-2 inline-block px-2 rounded-full text-3 bg-danger-bg text-danger">{{ t('priv.messages.expired') }}</span>
                 <span
                   v-if="item.uninstallable === false"
-                  class="ml-2 inline-block px-2 rounded-full text-3 bg-orange-bg1 text-orange-text"> 不可卸载</span>
+                  class="ml-2 inline-block px-2 rounded-full text-3 bg-orange-bg1 text-orange-text"> {{ t('priv.messages.uninstallable') }}</span>
               </div>
               <div class="flex text-3 flex-wrap text-theme-sub-content">
                 <div>
-                  <span>{{ t('版本') }}<Colon class="mr-1" /></span>
+                  <span>{{ t('priv.messages.version') }}<Colon class="mr-1" /></span>
                   <span class="mr-8 font-medium text-theme-content">{{ item.editionType?.message || '--' }}</span>
                 </div>
                 <div>
-                  <span>{{ t('类型') }}<Colon class="mr-1" /></span>
+                  <span>{{ t('priv.messages.type') }}<Colon class="mr-1" /></span>
                   <span class="mr-8 font-medium text-theme-content" :style="getProductTypeColor(item.type?.value)">{{ item.type?.message || '--' }}</span>
                 </div>
                 <div>
-                  <span>{{ t('安装时间') }}<Colon class="mr-1" /></span>
+                  <span>{{ t('priv.messages.installTime') }}<Colon class="mr-1" /></span>
                   <span class="mr-8 font-medium text-theme-content">{{ item.createdDate || '--' }}</span>
                 </div>
                 <!-- <div>
-                  <span>{{ t('是否过期') }}<Colon class="mr-1" /></span>
+                  <span>{{ t('priv.messages.expired') }}<Colon class="mr-1" /></span>
                   <span class="mr-8 font-medium text-theme-content">{{ '--' }}</span>
                 </div> -->
                 <div>
-                  <span>{{ t('过期时间') }}<Colon class="mr-1" /></span>
+                  <span>{{ t('priv.messages.expiredTime') }}<Colon class="mr-1" /></span>
                   <span class="mr-8 font-medium text-theme-content">{{ item.expiredDate || '--' }}</span>
                 </div>
               </div>

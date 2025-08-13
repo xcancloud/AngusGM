@@ -19,11 +19,11 @@ interface Props {
 const columns = [[
   {
     dataIndex: 'name',
-    label: t('name')
+    label: t('open2p.columns.name')
   },
   {
     dataIndex: 'editionType',
-    label: t('editionType')
+    label: t('open2p.columns.type')
   }
 ]];
 
@@ -61,7 +61,7 @@ const handlePush = () => {
 
     <div class="border-t border-b border-theme-divider py-10 mt-10 mx-auto w-42.5 video-aske text-center">
       <template v-if="props.goods.videos?.length">
-        <div>{{ t('videoTeaching') }}</div>
+        <div>{{ t('open2p.messages.videoTeaching') }}</div>
         <Icon
           class="text-4 cursor-pointer"
           :class="{'invisible': top >= 0}"
@@ -90,9 +90,9 @@ const handlePush = () => {
           @click="handlePull" />
       </template>
       <Image :src="noPublic" class="w-full h-full" />
-      {{ t('noPublicTips') }}
+      {{ t('open2p.messages.noPublicTips') }}
       <Image :src="weChat" class="w-full h-full mt-5" />
-      {{ t('weChatTips') }}
+      {{ t('open2p.messages.weChatTips') }}
     </div>
   </PureCard>
 </template>

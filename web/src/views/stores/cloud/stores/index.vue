@@ -1,17 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import {
-  ButtonAuth,
-  Colon,
-  DropdownSort,
-  Icon,
-  IconRefresh,
-  Image,
-  NoData,
-  PureCard,
-  SearchPanel,
-  Spin
-} from '@xcan-angus/vue-ui';
+import { useI18n } from 'vue-i18n';
+import { ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, Image, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 'ant-design-vue';
 import { store } from '@/api';
 import { useRouter } from 'vue-router';
@@ -20,27 +10,28 @@ import type { Goods } from './PropsType';
 import { goodsTypeColor } from './PropsType';
 import ShowButton from './components/showButton.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 const searchOpt = [
   {
-    type: 'input',
+    type: 'input' as const,
     valueKey: 'name',
-    placeholder: '应用、插件',
+    placeholder: t('cloud.placeholder.searchGoods'),
     allowClear: true
   },
   {
-    type: 'select-enum',
+    type: 'select-enum' as const,
     valueKey: 'type',
     enumKey: GoodsType,
-    placeholder: '选择商品类型',
+    placeholder: t('cloud.placeholder.selectGoodsType'),
     allowClear: true
   },
   {
-    type: 'select-enum',
+    type: 'select-enum' as const,
     valueKey: 'applyEditionType',
     enumKey: EditionType,
-    placeholder: '选择适用版本',
-    op: 'MATCH',
+    placeholder: t('cloud.placeholder.selectEditionType'),
+    op: 'MATCH' as const,
     allowClear: true
   }
 ];
@@ -48,13 +39,13 @@ const searchOpt = [
 const sortMenus = [
   {
     key: 'starNum',
-    name: '按点赞量',
-    orderSort: 'ASC'
+    name: t('cloud.messages.sortByLikes'),
+    orderSort: 'ASC' as const
   },
   {
     key: 'createdDate',
-    name: '按时间',
-    orderSort: 'ASC'
+    name: t('cloud.messages.sortByTime'),
+    orderSort: 'ASC' as const
   }
 ];
 
@@ -72,20 +63,27 @@ const params = reactive({
 const loading = ref(false);
 const downloading = ref(false);
 
-// 商品列表
+/**
+ * <p>Goods list on current page.</p>
+ */
 const goodsList = ref<Goods[]>([]);
 
-// banner 商品列表
+/**
+ * <p>Banner area with a highlighted product (AngusTester placeholder by default).</p>
+ */
 const hotList = ref([{
-  name: 'AngusTester 云测试平台',
+  name: t('cloud.descriptions.angusTesterName'),
   tags: [],
-  introduction: 'AngusTester是一个现代化的云测试服务平台。 使用AngusTester可以帮助测试人员和开发人员更高效地完成“性能、功能、稳定性、自动化”等测试工作。AngusTester主要能力由“接口管理、测试管理、数据模拟与生成、服务模拟”四部分组成，支持测试对象包括：服务、接口、协议、中间件等。',
+  introduction: t('cloud.descriptions.angusTesterIntro'),
   id: '',
   purchaseUrl: '',
   purchase: false
 }]);
 
-// 商品列表 load
+/**
+ * <p>Load goods list by current pagination and filters.</p>
+ * <p>Guard: skip when already loading.</p>
+ */
 const loadGoods = async () => {
   if (loading.value) {
     return;
@@ -101,7 +99,9 @@ const loadGoods = async () => {
   pagination.total = +res.data.total;
 };
 
-// 获取 AngusTester
+/**
+ * <p>Fetch highlighted AngusTester in CLOUD_SERVICE edition and update banner CTA.</p>
+ */
 const loadAngus = async () => {
   const [error, { data = { list: [] } }] = await store.getCloudGoodsList({ code: 'AngusTester', editionType: 'CLOUD_SERVICE' });
   if (error) {
@@ -115,27 +115,42 @@ const loadAngus = async () => {
   }
 };
 
+/**
+ * <p>Handle pagination change.</p>
+ */
 const changPage = (page, pageSize) => {
   pagination.current = page;
   pagination.pageSize = pageSize;
   loadGoods();
 };
 
+/**
+ * <p>Handle search filter change and reset to first page.</p>
+ */
 const changeSearch = (val) => {
   params.filters = val;
   pagination.current = 1;
   loadGoods();
 };
+/**
+ * <p>Handle sorting change.</p>
+ */
 const changeOrder = ({ orderBy, orderSort }) => {
   params.orderBy = orderBy;
   params.orderSort = orderSort;
   loadGoods();
 };
 
+/**
+ * <p>Navigates to goods detail page.</p>
+ */
 const gotoDetail = (id: string) => {
   router.push(`/stores/cloud/${id}`);
 };
 
+/**
+ * <p>Toggle star for a goods card and update counts optimistically.</p>
+ */
 const starGoods = async (goods: Goods) => {
   const [error] = await store.starGoods({ goodsId: goods.goodsId, star: !goods.star });
   if (error) {
@@ -148,6 +163,9 @@ const starGoods = async (goods: Goods) => {
     goods.starNum = goods.starNum - 1;
   }
 };
+/**
+ * <p>Open pricing page in a new tab.</p>
+ */
 const topay = (purchaseUrl) => {
   // window.parent.postMessage({ e: 'purchase', value: purchaseUrl }, '*');
   // window.parent.location.href = purchaseUrl;
@@ -188,7 +206,7 @@ onMounted(async () => {
                 type="primary"
                 class="mr-3"
                 @click="topay(item.purchaseUrl)">
-                立即购买
+                {{ t('cloud.messages.buyNow') }}
               </Button>
               <ButtonAuth
                 code="GoodsDetail"
@@ -196,12 +214,6 @@ onMounted(async () => {
                 ghost
                 @click="gotoDetail(item.id)">
               </ButtonAuth>
-              <!-- <Button
-                type="primary"
-                ghost
-                @click="gotoDetail(item.id)">
-                查看详情
-              </Button> -->
             </div>
           </div>
           <img class="my-image" src="./images/img1.png" />
@@ -261,27 +273,27 @@ onMounted(async () => {
               </Tag>
               <div class="flex items-center mt-2 flex-wrap flex-1">
                 <div class="flex-none mr-8">
-                  <label class="mr-1 text-black-label">版本
+                  <label class="mr-1 text-black-label">{{ t('cloud.labels.version') }}
                     <Colon class="mr-1" />
                   </label><span>{{ goods.editionType.message }}</span>
                 </div>
                 <div v-if="goods.applyEditionTypes" class="flex-none mr-8">
-                  <label class="mr-1 text-black-label">适用版本
+                  <label class="mr-1 text-black-label">{{ t('cloud.labels.applicableVersion') }}
                     <Colon class="mr-1" />
                   </label><span>{{ (goods.applyEditionTypes || []).map(i => i.message).join('、') }}</span>
                 </div>
                 <div class="flex-none mr-8">
-                  <label class="mr-1 text-black-label">类型
+                  <label class="mr-1 text-black-label">{{ t('cloud.labels.type') }}
                     <Colon class="mr-1" />
                   </label><span :class="goodsTypeColor[goods.type?.value]">{{ goods.type.message }}</span>
                 </div>
                 <div class="flex-none mr-8">
-                  <label class="mr-1 text-black-label">发布时间
+                  <label class="mr-1 text-black-label">{{ t('cloud.labels.releaseTime') }}
                     <Colon class="mr-1" />
                   </label><span>{{ goods.onlineDate }}</span>
                 </div>
                 <div class="flex-none">
-                  <label class="mr-1 text-black-label">价格
+                  <label class="mr-1 text-black-label">{{ t('cloud.labels.price') }}
                     <Colon class="mr-1" />
                   </label>
                   <template v-if="goods.charge">
@@ -294,7 +306,7 @@ onMounted(async () => {
                     </template>
                     <template v-else>--</template>
                   </template>
-                  <template v-else>免费</template>
+                  <template v-else>{{ t('cloud.messages.free') }}</template>
                 </div>
               </div>
             </div>
@@ -302,7 +314,7 @@ onMounted(async () => {
               <ShowButton
                 v-model:downLoading="downloading"
                 :goods="goods"
-                :disabled="!['CloudNode'].includes(goods.code)"
+                :disabled="false"
                 @reload="loadGoods" />
             </div>
           </div>

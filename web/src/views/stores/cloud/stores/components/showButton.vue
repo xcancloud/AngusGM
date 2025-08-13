@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { downloadEditionTypes, isCloudGoods, isPriGoods, multipleEditionTypes } from '../PropsType';
 import { Button, Popconfirm, RadioButton, RadioGroup } from 'ant-design-vue';
 import { AppOrServiceRoute, DomainManager, download, routerUtils } from '@xcan-angus/infra';
 import { notification } from '@xcan-angus/vue-ui';
 import { store } from '@/api';
+
+const { t } = useI18n();
 
 interface Props {
   goods: any,
@@ -81,7 +84,7 @@ const open = async () => {
             placement="leftTop"
             @confirm="downloadInstallEdition()">
             <template #title>
-              <p>选择安装版本类型</p>
+              <p>{{ t('cloud.messages.selectInstallVersion') }}</p>
               <RadioGroup
                 v-model:value="downloadEdition"
                 size="small"
@@ -101,7 +104,7 @@ const open = async () => {
               size="small"
               :disabled="props.disabled"
               :loading="downLoading">
-              立即下载
+              {{ t('cloud.messages.downloadNow') }}
             </Button>
           </Popconfirm>
           <Button
@@ -112,7 +115,7 @@ const open = async () => {
             :disabled="props.disabled"
             :loading="downLoading"
             @click="toDownload">
-            立即下载
+            {{ t('cloud.messages.downloadNow') }}
           </Button>
         </template>
         <!-- 云服务商品 -->
@@ -120,7 +123,7 @@ const open = async () => {
           v-if="isCloudGoods(goods)"
           disabled
           size="small">
-          已开通
+          {{ t('cloud.messages.alreadyActivated') }}
         </Button>
       </template>
 
@@ -132,7 +135,7 @@ const open = async () => {
           :disabled="props.disabled"
           size="small"
           @click="topay">
-          去购买
+          {{ t('cloud.messages.goToBuy') }}
         </Button>
       </template>
     </template>
@@ -146,7 +149,7 @@ const open = async () => {
           placement="leftTop"
           @confirm="downloadInstallEdition()">
           <template #title>
-            <p>选择安装版本类型</p>
+            <p>{{ t('cloud.messages.selectInstallVersion') }}</p>
             <RadioGroup
               v-model:value="downloadEdition"
               :disabled="props.disabled"
@@ -166,7 +169,7 @@ const open = async () => {
             :disabled="props.disabled"
             size="small"
             :loading="downLoading">
-            立即下载
+            {{ t('cloud.messages.downloadNow') }}
           </Button>
         </Popconfirm>
         <Button
@@ -177,7 +180,7 @@ const open = async () => {
           size="small"
           :loading="downLoading"
           @click="toDownload">
-          立即下载
+          {{ t('cloud.messages.downloadNow') }}
         </Button>
       </template>
       <template v-if="isCloudGoods(goods)">
@@ -188,14 +191,14 @@ const open = async () => {
             :disabled="props.disabled"
             size="small"
             @click="open">
-            立即开通
+            {{ t('cloud.messages.activateNow') }}
           </Button>
         </template>
         <template v-else>
           <Button
             disabled
             size="small">
-            已开通
+            {{ t('cloud.messages.alreadyActivated') }}
           </Button>
         </template>
       </template>

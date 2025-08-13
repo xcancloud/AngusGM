@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { store } from '@/api';
 import { cookieUtils } from '@xcan-angus/infra';
 import { Carousel, Colon, Icon, Image, PureCard, Spin, StoreComment } from '@xcan-angus/vue-ui';
@@ -11,6 +12,8 @@ import ShowButton from '../components/showButton.vue';
 
 import type { Goods } from '../PropsType';
 import { goodsTypeColor } from '../PropsType';
+
+const { t } = useI18n();
 
 const route = useRoute();
 
@@ -44,6 +47,9 @@ const goods = ref<Goods>({
   pricingUrl: '',
   onlineDate: ''
 });
+/**
+ * <p>Load goods detail data by route id.</p>
+ */
 const loadDetail = async () => {
   loading.value = true;
   const [error, res] = await store.getCloudGoodsDetail(id as string);
@@ -54,6 +60,9 @@ const loadDetail = async () => {
   goods.value = res.data;
 };
 
+/**
+ * <p>Toggle star in detail view and update counts optimistically.</p>
+ */
 const starGoods = async (goods: Goods) => {
   const [error] = await store.starGoods({ goodsId: goods.goodsId, star: !goods.star });
   if (error) {
@@ -99,27 +108,27 @@ onMounted(() => {
             </Tag>
             <div class="flex items-center mt-5 space-x-8">
               <div>
-                <label class="mr-1 text-black-label">版本
+                <label class="mr-1 text-black-label">{{ t('cloud.labels.version') }}
                   <Colon class="mr-1" />
                 </label><span>{{ goods.editionType.message }}</span>
               </div>
               <div v-if="goods.applyEditionTypes">
-                <label class="mr-1 text-black-label">适用版本
+                <label class="mr-1 text-black-label">{{ t('cloud.labels.applicableVersion') }}
                   <Colon class="mr-1" />
                 </label><span>{{ (goods.applyEditionTypes || []).map(i => i.message).join('、') }}</span>
               </div>
               <div>
-                <label class="mr-1 text-black-label">类型
+                <label class="mr-1 text-black-label">{{ t('cloud.labels.type') }}
                   <Colon class="mr-1" />
                 </label><span :class="goodsTypeColor[goods.type?.value]">{{ goods.type.message }}</span>
               </div>
               <div>
-                <label class="mr-1 text-black-label">发布时间
+                <label class="mr-1 text-black-label">{{ t('cloud.labels.releaseTime') }}
                   <Colon class="mr-1" />
                 </label><span>{{ goods.onlineDate }}</span>
               </div>
               <div class="">
-                <label class="mr-1 text-black-label">价格
+                <label class="mr-1 text-black-label">{{ t('cloud.labels.price') }}
                   <Colon class="mr-1" />
                 </label>
                 <template v-if="goods.charge">
@@ -132,7 +141,7 @@ onMounted(() => {
                   </template>
                   <template v-else>--</template>
                 </template>
-                <template v-else>免费</template>
+                <template v-else>{{ t('cloud.messages.free') }}</template>
               </div>
             </div>
           </div>

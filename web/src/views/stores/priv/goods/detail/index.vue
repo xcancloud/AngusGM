@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { Card, Grid, NoData } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
 import { privStore } from '@/api';
 
+const { t } = useI18n();
 const route = useRoute();
 const id = route.params.id;
 
@@ -14,52 +16,52 @@ const goodsColumns = [
   [
     {
       dataIndex: 'name',
-      label: '商品名称'
+      label: t('priv.detail.goodsName')
     },
     {
       dataIndex: 'goodsId',
-      label: 'ID'
+      label: t('priv.detail.id')
     },
     {
       dataIndex: 'code',
-      label: '编码'
+      label: t('priv.detail.code')
     },
     {
       dataIndex: 'type',
-      label: '商品类型',
+      label: t('priv.detail.goodsType'),
       customRender: ({ text }) => text?.message || '--'
     },
     {
       dataIndex: 'orderNo',
-      label: '订单号'
+      label: t('priv.detail.orderNo')
     },
     {
       dataIndex: 'tags',
-      label: '标签'
+      label: t('priv.detail.tags')
     }
   ],
   [
     {
       dataIndex: 'charge',
-      label: '是否收费',
-      customRender: ({ text }) => typeof text === 'boolean' ? (text ? '是' : '否') : '--'
+      label: t('priv.detail.charge'),
+      customRender: ({ text }) => typeof text === 'boolean' ? (text ? t('priv.messages.yes') : t('priv.messages.no')) : '--'
     },
     {
       dataIndex: 'createdDate',
-      label: '获取时间'
+      label: t('priv.detail.getTime')
     },
     {
       dataIndex: 'expiredDate',
-      label: '过期时间'
+      label: t('priv.detail.expiredTime')
     },
     {
       dataIndex: 'editionType',
-      label: '版本类型',
+      label: t('priv.detail.editionType'),
       customRender: ({ text }) => text?.message || '--'
     },
     {
       dataIndex: 'version',
-      label: '版本号'
+      label: t('priv.detail.version')
     }
   ]
 ];
@@ -68,37 +70,37 @@ const installColumns = [
   [
     {
       dataIndex: 'installAppCode',
-      label: '安装应用编码'
+      label: t('priv.detail.installAppCode')
     },
     {
       dataIndex: 'licenseNo',
-      label: '许可编号'
+      label: t('priv.detail.licenseNo')
     },
     {
       dataIndex: 'onlineInstall',
-      label: '是否在线安装',
-      customRender: ({ text }) => typeof text === 'boolean' ? (text ? '是' : '否') : '--'
+      label: t('priv.detail.onlineInstall'),
+      customRender: ({ text }) => typeof text === 'boolean' ? (text ? t('priv.messages.yes') : t('priv.messages.no')) : '--'
     },
     {
       dataIndex: 'createdDate',
-      label: '安装时间'
+      label: t('priv.detail.installTime')
     }
   ],
   [
     {
       dataIndex: 'installMainApp',
-      label: '是否安装到主应用',
-      customRender: ({ text }) => typeof text === 'boolean' ? (text ? '是' : '否') : '--'
+      label: t('priv.detail.installMainApp'),
+      customRender: ({ text }) => typeof text === 'boolean' ? (text ? t('priv.messages.yes') : t('priv.messages.no')) : '--'
     },
     {
       dataIndex: 'relativeInstallPaths',
-      label: '插件安装路径',
+      label: t('priv.detail.installPath'),
       customRender: ({ text }) => text ? text.join('，') : '--'
     },
     {
       dataIndex: 'uninstallable',
-      label: '是否可卸载',
-      customRender: ({ text }) => typeof text === 'boolean' ? (text ? '是' : '否') : '--'
+      label: t('priv.detail.uninstallable'),
+      customRender: ({ text }) => typeof text === 'boolean' ? (text ? t('priv.messages.yes') : t('priv.messages.no')) : '--'
     }
   ]
 ];
@@ -118,7 +120,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <Card title="基本信息" bodyClass="flex items-center px-8 py-5 space-x-10">
+  <Card :title="t('priv.detail.basicInfo')" bodyClass="flex items-center px-8 py-5 space-x-10">
     <template v-if="detail">
       <div class="w-50 h-50 flex flex-col justify-center border border-border-divider rounded p-2 border-dashed">
         <img class="max-h-full w-h-full rounded mx-auto" :src="detail?.iconText" />
@@ -148,7 +150,7 @@ onMounted(() => {
   </Card>
   <Card
     class="mt-2"
-    title="商品介绍"
+    :title="t('priv.detail.productIntro')"
     bodyClass="flex px-8 py-5">
     <template v-if="detail?.introduction">
       {{ detail.introduction }}
@@ -159,7 +161,7 @@ onMounted(() => {
   </Card>
   <Card
     class="mt-2"
-    title="安装信息"
+    :title="t('priv.detail.installInfo')"
     bodyClass="px-8 py-5">
     <template v-if="detail">
       <Grid :columns="installColumns" :dataSource="detail" />

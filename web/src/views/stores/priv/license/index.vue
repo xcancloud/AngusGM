@@ -70,16 +70,15 @@ const handleRefresh = () => {
   loadLicensedList();
 };
 
-// TODO 移到api
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const token = cookieUtils.get('access_token');
-  const url = await routerUtils.getGMApiUrl(`/store/license/${licenseNo}/download?access_token=${token}`);
+  const url = routerUtils.getGMApiUrl(`/store/license/${licenseNo}/download?access_token=${token}`);
   download(url);
 };
 
 const columns = [
   {
-    title: t('商品ID'),
+    title: t('priv.columns.goodsId'),
     dataIndex: 'goodsId',
     groupName: 'product',
     width: '10%',
@@ -89,13 +88,13 @@ const columns = [
     }
   },
   {
-    title: t('商品名称'),
+    title: t('priv.columns.goodsName'),
     dataIndex: 'goodsName',
     groupName: 'product',
     width: '10%'
   },
   {
-    title: t('商品类型'),
+    title: t('priv.columns.goodsType'),
     dataIndex: 'goodsType',
     customRender: ({ text }) => text?.message,
     groupName: 'product',
@@ -103,14 +102,14 @@ const columns = [
     hide: true
   },
   {
-    title: t('商品版本'),
+    title: t('priv.columns.goodsVersion'),
     dataIndex: 'goodsVersion',
     groupName: 'product',
     width: '10%',
     hide: true
   },
   {
-    title: t('商品版本类型'),
+    title: t('priv.columns.goodsEditionType'),
     dataIndex: 'goodsEditionType',
     groupName: 'product',
     hide: true,
@@ -118,7 +117,7 @@ const columns = [
     width: '10%'
   },
   {
-    title: t('许可编号'),
+    title: t('priv.columns.licenseNo'),
     dataIndex: 'licenseNo',
     width: '9%',
     customCell: () => {
@@ -126,47 +125,47 @@ const columns = [
     }
   },
   {
-    title: t('适用版本类型'),
+    title: t('priv.columns.installEditionType'),
     dataIndex: 'installEditionType',
     customRender: ({ text }) => text?.message || '--',
     width: '7%'
   },
   {
-    title: t('提供者'),
+    title: t('priv.columns.provider'),
     dataIndex: 'provider',
     groupName: 'issuer',
     width: '16%'
   },
   {
-    title: t('持有者'),
+    title: t('priv.columns.holder'),
     dataIndex: 'holder',
     groupName: 'issuer',
     width: '16%',
     hide: true
   },
   {
-    title: t('发布者'),
+    title: t('priv.columns.issuer'),
     dataIndex: 'issuer',
     groupName: 'issuer',
     width: '16%',
     hide: true
   },
   {
-    title: t('主题'),
+    title: t('priv.columns.subject'),
     dataIndex: 'subject',
     width: '16%',
     groupName: 'issuer',
     hide: true,
-    customRender: ({ record, text }) => record.main ? text : text + '(主)'
+    customRender: ({ record, text }) => record.main ? text : text + t('priv.messages.main')
   },
   {
-    title: t('许可签名'),
+    title: t('priv.columns.signature'),
     dataIndex: 'signature',
     width: '17%',
     customRender: ({ text }) => text || '--'
   },
   {
-    title: t('订单号'),
+    title: t('priv.columns.orderNo'),
     dataIndex: 'orderNo',
     width: '8%',
     customRender: ({ text }) => text || '--',
@@ -175,23 +174,23 @@ const columns = [
     }
   },
   {
-    title: t('是否到期'),
+    title: t('priv.columns.expired'),
     dataIndex: 'expired',
     width: '5%',
-    customRender: ({ text }) => text ? '是' : '否',
+    customRender: ({ text }) => text ? t('priv.messages.yes') : t('priv.messages.no'),
     customCell: (record) => {
       return { style: `min-width:60px;color:${record.expired ? 'rgba(245,34,45,1);' : 'rgba(82,196,26,1);'}` };
     }
   },
   {
-    title: t('到期时间'),
+    title: t('priv.columns.endDate'),
     dataIndex: 'endDate',
     width: '9%',
     sorter: true,
     groupName: 'date'
   },
   {
-    title: t('生效时间'),
+    title: t('priv.columns.beginDate'),
     dataIndex: 'beginDate',
     width: '9%',
     sorter: true,
@@ -199,7 +198,7 @@ const columns = [
     hide: true
   },
   {
-    title: t('发行日期'),
+    title: t('priv.columns.issuedDate'),
     dataIndex: 'issuedDate',
     groupName: 'date',
     width: '9%',
@@ -207,16 +206,16 @@ const columns = [
     hide: true
   },
   {
-    title: t('是否注销'),
+    title: t('priv.columns.revoke'),
     dataIndex: 'revoke',
     width: '5%',
-    customRender: ({ text }) => text ? '是' : '否',
+    customRender: ({ text }) => text ? t('priv.messages.yes') : t('priv.messages.no'),
     customCell: (record) => {
       return { style: `min-width:60px;color:${record.revoke ? 'rgba(245,34,45,1);' : 'rgba(82,196,26,1);'}` };
     }
   },
   {
-    title: '操作',
+    title: t('common.actions.operation'),
     dataIndex: 'action',
     align: 'center',
     width: '5%',
@@ -235,7 +234,7 @@ onMounted(() => {
     <div class="mb-2 flex justify-between items-center">
       <Input
         class="w-52"
-        placeholder="查询许可编号"
+        :placeholder="t('priv.placeholder.searchLicenseNo')"
         @change="handleSearch" />
       <IconRefresh
         :loading="loading"
@@ -257,7 +256,7 @@ onMounted(() => {
             type="text"
             @click="downloadLicense(record.licenseNo)">
             <Icon icon="icon-xiazai" />
-            下载
+            {{ t('priv.messages.download') }}
           </Button>
         </template>
       </template>

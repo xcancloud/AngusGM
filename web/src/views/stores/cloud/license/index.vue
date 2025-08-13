@@ -28,6 +28,10 @@ const init = () => {
 };
 
 const licensedList = ref<Licensed[]>([]);
+/**
+ * <p>Load licensed list from cloud with current params.</p>
+ * <p>Updates table data and total count.</p>
+ */
 const loadLicensedList = async (): Promise<void> => {
   loading.value = true;
   const [error, { data = { list: [], total: 0 } }] = await license.getLicenseInCloud(params.value);
@@ -39,6 +43,9 @@ const loadLicensedList = async (): Promise<void> => {
   total.value = +data.total;
 };
 
+/**
+ * <p>Handle table pagination/sorting change.</p>
+ */
 const tableChange = async (_pagination, _filters, sorter) => {
   const { current, pageSize } = _pagination;
   params.value.pageNo = current;
@@ -50,8 +57,11 @@ const tableChange = async (_pagination, _filters, sorter) => {
   disabled.value = false;
 };
 
+/**
+ * <p>Debounced search by license number (suffix match).</p>
+ */
 const handleSearch = debounce(duration.search, async (event: any) => {
-  const value = event.target.value;
+  const value = (event.target.value || '').trim();
   if (!value) {
     params.value.filters = [];
   } else {
@@ -69,15 +79,19 @@ const handleRefresh = () => {
   loadLicensedList();
 };
 
+/**
+ * <p>Download license file by license number using current access token.</p>
+ */
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const token = cookieUtils.get('access_token');
-  download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`); // TODO 移到api
+  download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`);
 };
 
 const columns = [
   {
-    title: t('商品ID'),
+    title: t('cloud.columns.goodsId'),
     dataIndex: 'goodsId',
+    key: 'goodsId',
     groupName: 'product',
     width: '10%',
     hide: true,
@@ -86,85 +100,97 @@ const columns = [
     }
   },
   {
-    title: t('商品名称'),
+    title: t('cloud.columns.goodsName'),
     dataIndex: 'goodsName',
+    key: 'goodsName',
     groupName: 'product',
     width: '10%'
   },
   {
-    title: t('商品类型'),
+    title: t('cloud.columns.goodsType'),
     dataIndex: 'goodsType',
+    key: 'goodsType',
     customRender: ({ text }) => text?.message,
     groupName: 'product',
     width: '10%',
     hide: true
   },
   {
-    title: t('商品版本'),
+    title: t('cloud.columns.goodsVersion'),
     dataIndex: 'goodsVersion',
+    key: 'goodsVersion',
     groupName: 'product',
     width: '10%',
     hide: true
   },
   {
-    title: t('商品版本类型'),
+    title: t('cloud.columns.goodsEditionType'),
     dataIndex: 'goodsEditionType',
+    key: 'goodsEditionType',
     groupName: 'product',
     hide: true,
     customRender: ({ text }) => text?.message,
     width: '10%'
   },
   {
-    title: t('许可编号'),
+    title: t('cloud.columns.licenseNo'),
     dataIndex: 'licenseNo',
+    key: 'licenseNo',
     width: '9%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
     }
   },
   {
-    title: t('适用版本类型'),
+    title: t('cloud.columns.installEditionType'),
     dataIndex: 'installEditionType',
+    key: 'installEditionType',
     customRender: ({ text }) => text?.message || '--',
     width: '7%'
   },
   {
-    title: t('提供者'),
+    title: t('cloud.columns.provider'),
     dataIndex: 'provider',
+    key: 'provider',
     groupName: 'issuer',
     width: '16%'
   },
   {
-    title: t('持有者'),
+    title: t('cloud.columns.holder'),
     dataIndex: 'holder',
+    key: 'holder',
     groupName: 'issuer',
     width: '16%',
     hide: true
   },
   {
-    title: t('发布者'),
+    title: t('cloud.columns.issuer'),
     dataIndex: 'issuer',
+    key: 'issuer',
     groupName: 'issuer',
     width: '16%',
     hide: true
   },
   {
-    title: t('主题'),
+    title: t('cloud.columns.subject'),
     dataIndex: 'subject',
+    key: 'subject',
     width: '16%',
     groupName: 'issuer',
     hide: true,
-    customRender: ({ record, text }) => record.main ? text : text + '(主)'
+    customRender: ({ record, text }) => record.main ? text : text + t('cloud.messages.main')
   },
   {
-    title: t('许可签名'),
+    title: t('cloud.columns.signature'),
     dataIndex: 'signature',
+    key: 'signature',
     width: '17%',
     customRender: ({ text }) => text || '--'
   },
   {
-    title: t('订单号'),
+    title: t('cloud.columns.orderNo'),
     dataIndex: 'orderNo',
+    key: 'orderNo',
     width: '8%',
     customRender: ({ text }) => text || '--',
     customCell: () => {
@@ -172,17 +198,19 @@ const columns = [
     }
   },
   {
-    title: t('是否到期'),
+    title: t('cloud.columns.expired'),
     dataIndex: 'expired',
+    key: 'expired',
     width: '5%',
-    customRender: ({ text }) => text ? '是' : '否',
+    customRender: ({ text }) => text ? t('cloud.messages.yes') : t('cloud.messages.no'),
     customCell: (record) => {
       return { style: `min-width:60px;color:${record.expired ? 'rgba(245,34,45,1);' : 'rgba(82,196,26,1);'}` };
     }
   },
   {
-    title: t('到期时间'),
+    title: t('cloud.columns.expiredDate'),
     dataIndex: 'expiredDate',
+    key: 'expiredDate',
     width: '9%',
     sorter: true,
     groupName: 'date',
@@ -191,26 +219,29 @@ const columns = [
     }
   },
   {
-    title: t('发行日期'),
+    title: t('cloud.columns.issuedDate'),
     dataIndex: 'issuedDate',
+    key: 'issuedDate',
     groupName: 'date',
     width: '9%',
     sorter: true,
     hide: true
   },
   {
-    title: t('是否注销'),
+    title: t('cloud.columns.revoke'),
     dataIndex: 'revoke',
+    key: 'revoke',
     width: '5%',
-    customRender: ({ text }) => text ? '是' : '否',
+    customRender: ({ text }) => text ? t('cloud.messages.yes') : t('cloud.messages.no'),
     customCell: (record) => {
       return { style: `min-width:60px;color:${record.revoke ? 'rgba(245,34,45,1);' : 'rgba(82,196,26,1);'}` };
     }
   },
   {
-    title: '操作',
+    title: t('cloud.columns.action'),
     dataIndex: 'action',
-    align: 'center',
+    key: 'action',
+    align: 'center' as const,
     width: '5%',
     customCell: () => {
       return { style: 'white-space:nowrap;' };
@@ -227,7 +258,7 @@ onMounted(() => {
     <div class="mb-2 flex justify-between items-center">
       <Input
         class="w-52"
-        placeholder="查询许可编号"
+        :placeholder="t('cloud.placeholder.searchLicenseNo')"
         @change="handleSearch" />
       <IconRefresh
         :loading="loading"
@@ -239,6 +270,8 @@ onMounted(() => {
       :loading="loading"
       :columns="columns"
       :pagination="pagination"
+      noDataText=""
+      noDataSize="small"
       rowKey="id"
       size="small"
       @change="tableChange">

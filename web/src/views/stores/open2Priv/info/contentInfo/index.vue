@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PureCard } from '@xcan-angus/vue-ui';
 import { Divider, Skeleton } from 'ant-design-vue';
+import { useI18n } from 'vue-i18n';
 // import RichBrowser from '@xcan/browser';
 import RichEditor from '@/components/RichEditor/index.vue';
 import { Goods } from '../../PropsType';
@@ -14,6 +15,8 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false
 });
 
+const { t } = useI18n();
+
 </script>
 <template>
   <PureCard class="p-6 text-3">
@@ -23,13 +26,13 @@ const props = withDefaults(defineProps<Props>(), {
       :title="true"
       :paragraph="{ rows: 10}">
       <div>
-        <h4 class="text-theme-special text-3.5">产品介绍</h4>
+        <h4 class="text-theme-special text-3.5">{{ t('open2p.labels.productIntro') }}</h4>
         <div class="text-black-title mt-5">{{ props.goods?.introduction }}</div>
       </div>
       <Divider class="my-6 divider" />
       <template v-if="!!props.goods?.features">
         <div>
-          <h4 class="text-theme-special text-3.5">产品特性</h4>
+          <h4 class="text-theme-special text-3.5">{{ t('open2p.labels.productFeatures') }}</h4>
           <ul class="mt-5 text-black-title text-3">
             <li v-for="item in props.goods?.features" :key="item">
               {{ item }}
@@ -39,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
         <Divider class="my-6 divider" />
       </template>
       <div>
-        <h4 class="text-theme-special text-3.5">产品信息</h4>
+        <h4 class="text-theme-special text-3.5">{{ t('open2p.labels.productInfo') }}</h4>
         <RichEditor :value="props.goods?.information || ''" mode="view" />
         <!-- <RichBrowser
           :value="props.goods?.information || ''"

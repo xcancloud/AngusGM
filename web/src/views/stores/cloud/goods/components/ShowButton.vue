@@ -19,15 +19,30 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'update:downLoading', value: boolean): void }>();
 
+/**
+ * <p>Preferred download edition type bound to the popconfirm radio group.</p>
+ * <p>Default to the first available type from goods meta.</p>
+ */
 const downloadEdition = ref(downloadEditionTypes(props.goods)?.[0]?.value);
 
+/**
+ * <p>Local loading flag to avoid double clicks and reflect UI loading.</p>
+ */
 const downLoading = ref(false);
 
+/**
+ * <p>Open official deployment page in a new tab.</p>
+ * <p>Fix: await domain resolving to avoid opening url with a Promise.</p>
+ */
 const toDownloadApply = async () => {
   const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.open(host + '/deployment', '_blank');
 };
 
+/**
+ * <p>Download install edition package.</p>
+ * <p>Guard: if goods type is APPLICATION, redirect to deployment page instead.</p>
+ */
 const downloadInstallEdition = async (installType: string = downloadEdition.value) => {
   if (props.goods.goodsType.value === 'APPLICATION') {
     await toDownloadApply();
@@ -44,7 +59,9 @@ const downloadInstallEdition = async (installType: string = downloadEdition.valu
   emit('update:downLoading', false);
 };
 
-// 跳到官网
+/**
+ * <p>Go to deployment page on the official website.</p>
+ */
 const toDeployUrl = async () => {
   const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.open(`${host}/deployment`, '_blank');
@@ -58,7 +75,7 @@ const toDeployUrl = async () => {
       class="ml-3"
       type="primary"
       ghost>
-      {{ t('已开通') }}
+      {{ t('cloud.messages.alreadyActivated') }}
     </Button>
     <Button
       v-if="isPriGoods(props.goods.applyEditionTypes)"
@@ -67,7 +84,7 @@ const toDeployUrl = async () => {
       type="primary"
       ghost
       @click="toDeployUrl">
-      {{ t('去下载') }}
+      {{ t('cloud.messages.download') }}
     </Button>
   </template>
   <template v-else>
@@ -77,7 +94,7 @@ const toDeployUrl = async () => {
         placement="leftTop"
         @confirm="downloadInstallEdition()">
         <template #title>
-          <p>选择安装版本类型</p>
+          <p>{{ t('cloud.messages.selectInstallVersion') }}</p>
           <RadioGroup
             v-model:value="downloadEdition"
             size="small"
@@ -95,7 +112,7 @@ const toDeployUrl = async () => {
           size="small"
           ghost
           :loading="downLoading">
-          {{ t('下载') }}
+          {{ t('cloud.messages.download') }}
         </Button>
       </Popconfirm>
       <Button
@@ -106,7 +123,7 @@ const toDeployUrl = async () => {
         ghost
         :loading="downLoading"
         @click="downloadInstallEdition()">
-        {{ t('下载') }}
+        {{ t('cloud.messages.download') }}
       </Button>
     </template>
   </template>

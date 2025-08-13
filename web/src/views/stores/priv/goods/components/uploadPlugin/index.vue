@@ -56,7 +56,7 @@ const uploadChange = async ({ file }) => {
 
 const uploadFile = async () => {
   if (!fileList.value.length) {
-    notification.warning('请选择上传文件');
+    notification.warning(t('priv.messages.pleaseSelectFile'));
   }
   const formData = new FormData();
   formData.append('file', fileList.value[0].originFileObj);
@@ -89,11 +89,11 @@ watch(() => props.visible, newValue => {
 
 const radioOpt = [
   {
-    label: '安装包',
+    label: t('priv.messages.installPackage'),
     value: false
   },
   {
-    label: '升级包',
+    label: t('priv.messages.upgradePackage'),
     value: true
   }
 ];
@@ -106,7 +106,7 @@ const delUploadItem = (index: number) => {
 
 <template>
   <Modal
-    :title="t('上传并安装插件')"
+    :title="t('priv.messages.uploadAndInstallPlugin')"
     :visible="props.visible"
     :centered="true"
     :destroyOnClose="true"
@@ -127,10 +127,10 @@ const delUploadItem = (index: number) => {
         @change="uploadChange">
         <span class="text-theme-special text-theme-text-hover cursor-pointer">
           <Icon icon="icon-xuanze" class="mr-1 mb-0.5 text-3 leading-3" />
-          {{ t('stores.selectTheFile') }}
+          {{ t('priv.messages.selectFile') }}
         </span>
       </Upload>
-      <Hints :text="t('stores.supportedFormats')+': zip'" class="ml-2" />
+      <Hints :text="t('priv.messages.supportedFormats')+': zip'" class="ml-2" />
     </div>
     <div class="px-4 pt-2 text-3 leading-3 text-theme-content customize">
       <div

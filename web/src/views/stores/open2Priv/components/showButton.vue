@@ -2,98 +2,148 @@
 import { ref } from 'vue';
 import { AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 import { Button } from 'ant-design-vue';
+import { useI18n } from 'vue-i18n';
 import { store } from '@/api';
 
+import type { Goods } from '../PropsType';
+
+/**
+ * Props interface for ShowButton component
+ * - goods: The goods item to display action buttons for
+ */
 interface Props {
-  goods: any,
+  goods: Goods;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  goods: {}
+  goods: (): Goods => ({}) as Goods
 });
+
+/**
+ * Emits
+ * - reload: Triggered when goods state changes (install/upgrade)
+ */
 const emit = defineEmits<{(e: 'reload'): void }>();
 
+const { t } = useI18n();
 const loading = ref(false);
 
-// 去购买
+/**
+ * Handle purchase action
+ * Sends purchase message to parent window with pricing URL
+ */
 const handleToPrice = () => {
   if (props.goods.pricingUrl) {
     window.parent.postMessage({ e: 'purchase', value: props.goods.pricingUrl }, '*');
   }
 };
 
-// 跳到官网安装、下载
+/**
+ * Navigate to private cloud deployment page
+ * Sends message to parent window to redirect to deployment page
+ */
 const toPriCloud = async () => {
   const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.parent.postMessage({ e: 'purchase', value: host + '/deployment' }, '*');
 };
 
+/**
+ * Handle goods upgrade
+ * Calls upgrade API and emits reload event on success
+ */
 const toUpgrade = async () => {
   loading.value = true;
-  const [error] = await store.onlineUpgradeInPriv({ upgradeToGoodsId: props.goods.goodsId }, window.location.ancestorOrigins[0]);
-  loading.value = false;
-  if (error) {
-    return;
+
+  try {
+    const [error] = await store.onlineUpgradeInPriv(
+      { upgradeToGoodsId: props.goods.goodsId },
+      window.location.ancestorOrigins[0]
+    );
+
+    if (error) {
+      return;
+    }
+
+    emit('reload');
+  } finally {
+    loading.value = false;
   }
-  emit('reload');
 };
 
+/**
+ * Handle goods installation
+ * Calls install API and emits reload event on success
+ */
 const toInstall = async () => {
   loading.value = true;
-  const [error] = await store.onlineInstallInPriv(props.goods.goodsId, window.location.ancestorOrigins[0]);
-  loading.value = false;
-  if (error) {
-    return;
-  }
-  emit('reload');
-};
 
+  try {
+    const [error] = await store.onlineInstallInPriv(
+      props.goods.goodsId,
+      window.location.ancestorOrigins[0]
+    );
+
+    if (error) {
+      return;
+    }
+
+    emit('reload');
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
+
 <template>
   <div>
-    <!-- 收费 且未购买-->
+    <!-- Paid goods that haven't been purchased -->
     <template v-if="goods.charge && !goods.purchased">
       <Button
         type="primary"
         ghost
         size="small"
         @click="handleToPrice">
-        去购买
+        {{ t('open2p.messages.goToPurchase') }}
       </Button>
     </template>
-    <!-- 免费/或已购买 -->
+
+    <!-- Free goods or already purchased -->
     <template v-else>
-      <!-- 应用 -->
+      <!-- Application type goods -->
       <template v-if="goods.editionType.value === 'APPLICATION'">
+        <!-- Upgrade available -->
         <template v-if="goods.allowUpgrade">
           <Button
             type="primary"
             size="small"
             ghost
             @click="toPriCloud">
-            去升级
+            {{ t('open2p.messages.goToUpgrade') }}
           </Button>
         </template>
-        <!-- 未安装 -->
+
+        <!-- Installation available -->
         <template v-if="goods.allowInstall">
           <Button
             type="primary"
             size="small"
             ghost
             @click="toPriCloud">
-            去安装
+            {{ t('open2p.messages.goToInstall') }}
           </Button>
         </template>
-        <!-- 已安装 -->
+
+        <!-- Already installed -->
         <template v-if="goods.installed && !goods.allowUpgrade">
           <Button type="text" size="small">
-            已安装
+            {{ t('open2p.messages.installed') }}
           </Button>
         </template>
       </template>
-      <!-- 插件， 插件应用 -->
+
+      <!-- Plugin or plugin application type goods -->
       <template v-else>
-        <!-- 可安装 -->
+        <!-- Installation available -->
         <template v-if="goods.allowInstall">
           <Button
             type="primary"
@@ -101,10 +151,11 @@ const toInstall = async () => {
             ghost
             :loading="loading"
             @click="toInstall">
-            立即安装
+            {{ t('open2p.messages.installNow') }}
           </Button>
         </template>
-        <!-- 可升级 -->
+
+        <!-- Upgrade available -->
         <template v-if="goods.allowUpgrade">
           <Button
             type="primary"
@@ -112,13 +163,14 @@ const toInstall = async () => {
             ghost
             :loading="loading"
             @click="toUpgrade">
-            立即升级
+            {{ t('open2p.messages.upgradeNow') }}
           </Button>
         </template>
-        <!-- 已安装 -->
+
+        <!-- Already installed -->
         <template v-if="goods.installed && !goods.allowUpgrade">
           <Button type="text" size="small">
-            已安装
+            {{ t('open2p.messages.installed') }}
           </Button>
         </template>
       </template>

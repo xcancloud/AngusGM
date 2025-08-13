@@ -64,7 +64,7 @@ const handleChange = (value) => {
 
 const sortMenus = [
   {
-    name: '按购买时间',
+    name: t('cloud.messages.sortByPurchaseTime'),
     key: 'purchaseDate',
     orderSort: 'DESC'
   }
@@ -75,13 +75,13 @@ const options = [
     type: 'input',
     valueKey: 'goodsName',
     allowClear: true,
-    placeholder: t('查询商品名称、描述')
+    placeholder: t('cloud.placeholder.searchGoodsNameDesc')
   },
   {
     type: 'select-enum',
     valueKey: 'goodsType',
     enumKey: GoodsType,
-    placeholder: t('选择商品类型'),
+    placeholder: t('cloud.placeholder.selectGoodsType'),
     allowClear: true,
     excludes: ['RESOURCE_QUOTA']
   }
@@ -141,35 +141,35 @@ const options = [
             </div>
             <div class="flex text-3 flex-wrap text-theme-sub-content mt-2 leading-5">
               <div>
-                <span>{{ t('版本') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.version') }}<Colon class="mr-2" /></span>
                 <span class="mr-8 font-medium text-theme-content">{{ item.goodsEditionType.message }}</span>
               </div>
               <div v-if="item.applyEditionTypes">
-                <span>{{ t('适用版本') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.applicableVersion') }}<Colon class="mr-2" /></span>
                 <span class="mr-8 font-medium text-theme-content">{{
                   (item.applyEditionTypes || []).map(i => i.message).join('、')
                 }}</span>
               </div>
               <div>
-                <span>{{ t('类型') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.type') }}<Colon class="mr-2" /></span>
                 <span class="mr-8 font-medium" :class="goodsTypeColor[item.goodsType.value]">{{
                   item.goodsType.message
                 }}</span>
               </div>
               <div>
-                <span>{{ t('获取时间') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.getTime') }}<Colon class="mr-2" /></span>
                 <span class="mr-8 font-medium text-theme-content">{{ item?.purchaseDate || '--' }}</span>
               </div>
               <div>
-                <span>{{ t('获取人') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.getPerson') }}<Colon class="mr-2" /></span>
                 <span class="mr-8 font-medium text-theme-content">{{ item?.purchaseByName || '--' }}</span>
               </div>
               <div>
-                <span>{{ t('订单号') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.orderNumber') }}<Colon class="mr-2" /></span>
                 <a class="mr-8 font-medium text-theme-content">{{ item.orderNo || '--' }}</a>
               </div>
               <div>
-                <span>{{ t('过期时间') }}<Colon class="mr-2" /></span>
+                <span>{{ t('cloud.labels.expiredTime') }}<Colon class="mr-2" /></span>
                 <span class="mr-8 font-medium text-theme-content">{{ item.expiredDate || '--' }}</span>
               </div>
             </div>

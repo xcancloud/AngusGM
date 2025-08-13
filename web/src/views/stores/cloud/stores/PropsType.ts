@@ -29,7 +29,7 @@ export interface Goods {
 const goodsPriTypes = ['DATACENTER', 'ENTERPRISE', 'COMMUNITY'];
 const goodsCloudTypes = ['CLOUD_SERVICE'];
 
-// 是否为私有化商品 isCloudGoods
+
 export const isPriGoods = (goods: Goods): boolean => {
   return (goods.applyEditionTypes || []).some(i => goodsPriTypes.includes(i.value));
 };
