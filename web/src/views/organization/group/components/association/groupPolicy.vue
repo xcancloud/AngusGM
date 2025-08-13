@@ -1,15 +1,15 @@
 <script setup lang='ts'>
-import {computed, defineAsyncComponent, onMounted, ref} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {Popover} from 'ant-design-vue';
-import {ButtonAuth, Hints, Icon, IconRefresh, Input, Table} from '@xcan-angus/vue-ui';
-import {debounce} from 'throttle-debounce';
-import {duration, PageQuery, SearchCriteria, utils} from '@xcan-angus/infra';
-import {OrgTargetType} from '@/enums/enums';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Popover } from 'ant-design-vue';
+import { ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
+import { debounce } from 'throttle-debounce';
+import { duration, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
+import { OrgTargetType } from '@/enums/enums';
 
-import {auth} from '@/api';
-import {createAuthPolicyColumns} from '@/views/organization/user/PropsType';
-import {Props} from '../../PropsType';
+import { auth } from '@/api';
+import { createAuthPolicyColumns } from '@/views/organization/user/PropsType';
+import { Props } from '../../PropsType';
 
 const { t } = useI18n();
 

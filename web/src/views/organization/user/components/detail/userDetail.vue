@@ -57,20 +57,24 @@ const tt = (key: string, fallback: string): string => {
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.identity') }}</div>
-          <div class="info-value">{{ props.dataSource?.sysAdmin ? t('user.profile.systemAdmin') :
-            t('user.profile.generalUser') }}</div>
+          <div class="info-value">
+            {{ props.dataSource?.sysAdmin ? t('user.profile.systemAdmin') :
+              t('user.profile.generalUser') }}
+          </div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.status') }}</div>
           <div class="info-value">
-            <Badge :status="props.dataSource?.enabled ? 'success' : 'error'"
+            <Badge
+              :status="props.dataSource?.enabled ? 'success' : 'error'"
               :text="props.dataSource?.enabled ? t('common.status.enabled') : t('common.status.disabled')" />
           </div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.lockedStatus') }}</div>
           <div class="info-value">
-            <Badge :status="props.dataSource?.locked ? 'error' : 'success'"
+            <Badge
+              :status="props.dataSource?.locked ? 'error' : 'success'"
               :text="props.dataSource?.locked ? t('common.status.locked') : t('common.status.unlocked')" />
           </div>
         </div>
@@ -89,8 +93,10 @@ const tt = (key: string, fallback: string): string => {
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.address') }}</div>
-          <div class="info-value" :title="props.dataSource?.contactAddress">{{
-            textOrDash(props.dataSource?.contactAddress) }}</div>
+          <div class="info-value" :title="props.dataSource?.contactAddress">
+            {{
+              textOrDash(props.dataSource?.contactAddress) }}
+          </div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('user.columns.source') }}</div>

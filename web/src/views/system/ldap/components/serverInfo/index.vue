@@ -30,12 +30,12 @@ const labelCol = { span: 9 };
 // Reactive form data for server configuration
 const form = ref({
   directoryType: DirectoryType.OpenLDAP, // Default directory type
-  host: '',                              // Server host address
-  name: '',                              // Server name/identifier
-  password: '',                          // Connection password
-  port: '',                              // Connection port
-  ssl: false,                            // SSL connection flag
-  username: ''                           // Connection username
+  host: '', // Server host address
+  name: '', // Server name/identifier
+  password: '', // Connection password
+  port: '', // Connection port
+  ssl: false, // SSL connection flag
+  username: '' // Connection username
 });
 
 const formRef = ref();

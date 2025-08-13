@@ -314,9 +314,9 @@ const handleTestResult = (data) => {
   testVisible.value = true;
 
   // Update connection message
-  connectMsg.value = showData.value.connectSuccess ?
-    t('ldap.messages.connectSuccess') :
-    t('ldap.messages.connectFailed') + ': ' + showData.value.errorMessage;
+  connectMsg.value = showData.value.connectSuccess
+    ? t('ldap.messages.connectSuccess')
+    : t('ldap.messages.connectFailed') + ': ' + showData.value.errorMessage;
 
   // Update user sync message
   userMsg.value = showData.value.userSuccess === null
@@ -551,13 +551,13 @@ const handleTestResult = (data) => {
                     <Icon icon="icon-xiangxia" class="text-3 mr-0.5" />
                     {{ t('ldap.buttons.moveDown') }}
                   </MenuItem>
-                                      <MenuItem
-                      v-if="app.show('LdapDelete')"
-                      :disabled="!app.has('LdapDelete')"
-                      @click="deleteConfirm(record, false)">
-                      <Icon icon="icon-lajitong" />
-                      {{ t('ldap.messages.deleteDirectory') }}
-                    </MenuItem>
+                  <MenuItem
+                    v-if="app.show('LdapDelete')"
+                    :disabled="!app.has('LdapDelete')"
+                    @click="deleteConfirm(record, false)">
+                    <Icon icon="icon-lajitong" />
+                    {{ t('ldap.messages.deleteDirectory') }}
+                  </MenuItem>
                   <MenuItem
                     v-if="app.show('LdapDelete')"
                     :disabled="!app.has('LdapDelete')"

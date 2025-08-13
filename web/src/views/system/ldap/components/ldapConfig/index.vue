@@ -30,9 +30,9 @@ const wrapperCol = { span: 15 };
 
 // Reactive form data for LDAP base configuration
 const form: any = reactive({
-  baseDn: '',              // Base Distinguished Name for LDAP search
-  additionalUserDn: '',    // Additional user DN for extended user search
-  additionalGroupDn: ''    // Additional group DN for extended group search
+  baseDn: '', // Base Distinguished Name for LDAP search
+  additionalUserDn: '', // Additional user DN for extended user search
+  additionalGroupDn: '' // Additional group DN for extended group search
 });
 
 // Form validation rules

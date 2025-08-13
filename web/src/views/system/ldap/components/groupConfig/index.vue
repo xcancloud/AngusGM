@@ -30,11 +30,11 @@ const labelCol = { span: 9 };
 
 // Reactive form data for LDAP group configuration
 const form: any = reactive({
-  descriptionAttribute: '',         // LDAP attribute for group description
-  objectFilter: '',                // LDAP filter for group search
-  nameAttribute: '',               // LDAP attribute for group name
-  objectClass: '',                 // LDAP object class for group entries
-  ignoreSameNameGroup: true        // Flag to ignore duplicate name groups
+  descriptionAttribute: '', // LDAP attribute for group description
+  objectFilter: '', // LDAP filter for group search
+  nameAttribute: '', // LDAP attribute for group name
+  objectClass: '', // LDAP object class for group entries
+  ignoreSameNameGroup: true // Flag to ignore duplicate name groups
 });
 
 // Form validation rules with dynamic required field logic

@@ -52,10 +52,10 @@ const showData = ref<any>({});
 const loading = ref(false);
 
 // Test result messages for different operations
-const connetMsg = ref('');      // Connection test message
-const userMsg = ref('');        // User sync test message
-const groupMsg = ref('');       // Group sync test message
-const memberMsg = ref('');      // Membership sync test message
+const connetMsg = ref(''); // Connection test message
+const userMsg = ref(''); // User sync test message
+const groupMsg = ref(''); // Group sync test message
+const memberMsg = ref(''); // Membership sync test message
 
 /**
  * Initialize test modal and execute LDAP directory test
@@ -82,21 +82,21 @@ const init = async () => {
   showData.value = res1.data;
 
   // Update connection test message
-  connetMsg.value = showData.value.connectSuccess ?
-    t('ldap.messages.connectSuccess') :
-    t('ldap.messages.connectFailed');
+  connetMsg.value = showData.value.connectSuccess
+    ? t('ldap.messages.connectSuccess')
+    : t('ldap.messages.connectFailed');
 
   // Update user sync test message
   userMsg.value = showData.value.userSuccess === null
     ? ''
     : showData.value.userSuccess
       ? t('ldap.messages.userSyncSuccess', {
-          total: showData.value.totalUserNum,
-          new: showData.value.addUserNum,
-          update: showData.value.updateUserNum,
-          delete: showData.value.deleteUserNum,
-          ignore: showData.value.ignoreUserNum
-        })
+        total: showData.value.totalUserNum,
+        new: showData.value.addUserNum,
+        update: showData.value.updateUserNum,
+        delete: showData.value.deleteUserNum,
+        ignore: showData.value.ignoreUserNum
+      })
       : t('ldap.messages.userSyncFailed');
 
   // Update group sync test message
@@ -104,12 +104,12 @@ const init = async () => {
     ? ''
     : showData.value.groupSuccess
       ? t('ldap.messages.groupSyncSuccess', {
-          total: showData.value.totalUserNum,
-          new: showData.value.addUserNum,
-          update: showData.value.updateUserNum,
-          delete: showData.value.deleteUserNum,
-          ignore: showData.value.ignoreUserNum
-        })
+        total: showData.value.totalUserNum,
+        new: showData.value.addUserNum,
+        update: showData.value.updateUserNum,
+        delete: showData.value.deleteUserNum,
+        ignore: showData.value.ignoreUserNum
+      })
       : t('ldap.messages.groupSyncFailed');
 
   // Update membership sync test message
@@ -117,12 +117,12 @@ const init = async () => {
     ? ''
     : showData.value.membershipSuccess
       ? t('ldap.messages.memberSyncSuccess', {
-          total: showData.value.totalUserNum,
-          new: showData.value.addUserNum,
-          update: showData.value.updateUserNum,
-          delete: showData.value.deleteUserNum,
-          ignore: showData.value.ignoreUserNum
-        })
+        total: showData.value.totalUserNum,
+        new: showData.value.addUserNum,
+        update: showData.value.updateUserNum,
+        delete: showData.value.deleteUserNum,
+        ignore: showData.value.ignoreUserNum
+      })
       : t('ldap.messages.memberSyncFailed');
 
   loading.value = false;

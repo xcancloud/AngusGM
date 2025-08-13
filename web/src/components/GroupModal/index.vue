@@ -324,8 +324,6 @@ watch(() => props.tagId, () => {
           </div>
         </CheckboxGroup>
       </Scroll>
-
-
     </div>
   </Modal>
 </template>

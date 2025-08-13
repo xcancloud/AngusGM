@@ -31,15 +31,15 @@ const wrapperCol = { span: 15 };
 
 // Reactive form data for LDAP user configuration
 const form: any = reactive({
-  firstNameAttribute: '',           // LDAP attribute for user's first name
-  emailAttribute: '',              // LDAP attribute for user's email
-  mobileAttribute: '',             // LDAP attribute for user's mobile number
-  userIdAttribute: '',             // LDAP attribute for user's unique ID
-  objectClass: '',                 // LDAP object class for user entries
-  objectFilter: '',                // LDAP filter for user search
-  passwordAttribute: '',           // LDAP attribute for user's password
-  usernameAttribute: '',           // LDAP attribute for user's username
-  ignoreSameIdentityUser: true     // Flag to ignore duplicate identity users
+  firstNameAttribute: '', // LDAP attribute for user's first name
+  emailAttribute: '', // LDAP attribute for user's email
+  mobileAttribute: '', // LDAP attribute for user's mobile number
+  userIdAttribute: '', // LDAP attribute for user's unique ID
+  objectClass: '', // LDAP object class for user entries
+  objectFilter: '', // LDAP filter for user search
+  passwordAttribute: '', // LDAP attribute for user's password
+  usernameAttribute: '', // LDAP attribute for user's username
+  ignoreSameIdentityUser: true // Flag to ignore duplicate identity users
 });
 
 // Form validation rules for required fields
@@ -184,7 +184,7 @@ defineExpose({ childRules });
           size="small" />
       </FormItem>
       <Hints
-                  :text="t('ldap.messages.displayNameTip')"
+        :text="t('ldap.messages.displayNameTip')"
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>

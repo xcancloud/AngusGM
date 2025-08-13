@@ -61,13 +61,13 @@ const loadDiscoveryServices = async () => {
     if (error || !data?.length) {
       return;
     }
-    
+
     serviceId.value = data[0];
     serviceOptions.value = data.map((item: string) => ({
       label: item,
       value: item
     }));
-    
+
     await loadServiceInstances();
   } catch (error) {
     console.error('Failed to load discovery services:', error);
@@ -80,18 +80,18 @@ const loadDiscoveryServices = async () => {
  */
 const loadServiceInstances = async () => {
   if (!serviceId.value) return;
-  
+
   try {
     const [error, { data = [] }] = await service.getServiceInstances(serviceId.value);
     if (error || !data?.length) {
       return;
     }
-    
+
     instancesOptions.value = data.map((item: string) => ({
       value: item,
       label: item
     }));
-    
+
     instances.value = data[0];
     await loadLogFile();
   } catch (error) {
@@ -105,7 +105,7 @@ const loadServiceInstances = async () => {
  */
 const loadLogFile = async () => {
   if (!instances.value) return;
-  
+
   try {
     const [error, { data = [] }] = await systemLog.getInstanceLogFiles(instances.value);
     if (error) return;
@@ -120,7 +120,7 @@ const loadLogFile = async () => {
       await loadLogContent();
       return;
     }
-    
+
     logFile.value = data[0];
     await loadLogContent();
   } catch (error) {
@@ -133,17 +133,17 @@ const loadLogFile = async () => {
  */
 const loadLogContent = async () => {
   if (!instances.value || !logFile.value) return;
-  
+
   try {
     const [error, { data }] = await systemLog.getInstanceLogFile(
-      instances.value, 
-      logFile.value, 
+      instances.value,
+      logFile.value,
       {
         linesNum: browse.value,
         tail: currentBrowseOption.value?.type === 0
       }
     );
-    
+
     if (error) return;
     logContent.value = data;
   } catch (error) {
@@ -207,7 +207,7 @@ const autoRefreshChange = (value: boolean) => {
  */
 const startAutoRefresh = () => {
   stopAutoRefresh(); // Clear existing timer first
-  
+
   timer = setTimeout(async () => {
     await loadLogContent();
     startAutoRefresh(); // Recursive call for continuous refresh
@@ -237,18 +237,18 @@ const toggleFullScreen = (value: boolean) => {
  */
 const saveToFile = () => {
   if (!logContent.value) return;
-  
+
   const timestamp = dayjs().format('YYYY/MM/DD HH/mm/ss');
   const filename = `${currentServiceLabel.value}(${browse.value})-${timestamp}.log`;
-  
+
   const blob = new Blob([logContent.value], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
-  
+
   const link = document.createElement('a');
   link.download = filename;
   link.href = url;
   link.click();
-  
+
   // Clean up the created URL object
   URL.revokeObjectURL(url);
 };
@@ -286,7 +286,7 @@ onBeforeUnmount(() => {
           <Icon icon="icon-quanping" class="mr-1" />
           <span>{{ t('log.system.messages.close') }}</span>
         </div>
-        
+
         <!-- Fullscreen log content -->
         <div
           class="bg-black-log text-3 font-normal whitespace-pre-wrap p-3.5 leading-4 flex-1 overflow-x-hidden overflow-y-auto my-3.5"
@@ -310,7 +310,7 @@ onBeforeUnmount(() => {
         :placeholder="t('log.system.placeholder.selectService')"
         size="small"
         @change="serviceChange" />
-      
+
       {{ t('log.system.labels.instance') }}
       <Select
         v-model:value="instances"
@@ -320,7 +320,7 @@ onBeforeUnmount(() => {
         :placeholder="t('log.system.placeholder.selectInstance')"
         size="small"
         @change="instancesChange" />
-      
+
       {{ t('log.system.labels.logFile') }}
       <Select
         v-model:value="logFile"

@@ -20,6 +20,6 @@ onMounted(async () => {
       class="text-theme-special text-theme-text-hover"
       :href="href"
       target="_blank">{{ t('quota.messages.submitTicket') }}</a>
-      &nbsp;{{ t('quota.messages.contactEngineer') }}
+    &nbsp;{{ t('quota.messages.contactEngineer') }}
   </div>
 </template>

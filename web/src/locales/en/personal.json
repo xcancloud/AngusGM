@@ -40,8 +40,8 @@
       "principal": "Principal"
     },
     "enterprise": {
-      "enterpriseName": "Enterprise Name",
-      "entityName": "Entity Name",
+      "enterpriseName": "Tenant Name",
+      "entityName": "Tenant Name",
       "wechat": "WeChat",
       "google": "Google",
       "github": "Github"
@@ -193,10 +193,10 @@
     "globalSearch": "Search",
     "information": "Message Center",
     "personalCenter": {
-      "baseInfo": "Basic Information",
-      "securitySetting": "Security Settings",
-      "accessToken": "Access Token",
-      "messages": "My Messages",
+      "baseInfo": "Information",
+      "securitySetting": "Security",
+      "accessToken": "Token",
+      "messages": "Messages",
       "expense": "Expense",
       "workOrder": "Ticket",
       "officialWebsite": "Official Website"

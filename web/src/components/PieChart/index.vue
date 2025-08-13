@@ -53,7 +53,7 @@ const isDomReady = (): boolean => {
   if (!chartsRef.value) {
     return false;
   }
-  
+
   const dom = chartsRef.value;
   return dom.clientWidth > 0 && dom.clientHeight > 0;
 };
@@ -65,7 +65,7 @@ const isDomReady = (): boolean => {
 const initCharts = async (): Promise<void> => {
   // Wait for DOM rendering to complete
   await nextTick();
-  
+
   if (!isDomReady()) {
     // Retry initialization if DOM is not ready
     setTimeout(() => {
@@ -79,11 +79,11 @@ const initCharts = async (): Promise<void> => {
     if (myChart) {
       myChart.dispose();
     }
-    
+
     if (chartsRef.value) {
       myChart = echarts.init(chartsRef.value);
       myChart.setOption(chartsOption.value, true, false);
-      
+
       // Add window resize listener
       window.addEventListener('resize', handleResize);
     }
@@ -119,7 +119,7 @@ const destroyChart = (): void => {
  */
 const legend = computed(() => {
   const dataSource = props.dataSource;
-  
+
   if (dataSource.length > 8 && dataSource.length < 12) {
     // Multi-column layout for medium data sets
     return [0, 1, 2].map(idx => ({
@@ -230,7 +230,7 @@ const chartsOption = computed(() => ({
     formatter: function (params: any) {
       let res = `<div style='margin-bottom:5px;width:100%;min-width:100px;font-size:12px;color:#8C8C8C;color:var(--content-text-title);'>
                     ${props.title}</div>`;
-      
+
       // Special handling for API logs status
       if (props.source === 'ApiLogs' && props.type === 'status') {
         if (params.data.codes?.length) {
@@ -341,9 +341,9 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div 
-    ref="chartsRef" 
-    class="w-full h-full" 
+  <div
+    ref="chartsRef"
+    class="w-full h-full"
     style="min-height: 200px; min-width: 200px;">
   </div>
 </template>

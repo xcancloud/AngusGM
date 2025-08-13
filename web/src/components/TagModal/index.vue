@@ -220,7 +220,6 @@ const action = computed(() => {
     class="my-modal"
     @cancel="handleCancel"
     @ok="handleOk">
-    
     <div class="-mt-3">
       <!-- Search input for tag filtering -->
       <Input
@@ -232,7 +231,7 @@ const action = computed(() => {
           <Icon icon="icon-sousuo" class="text-3.5 leading-3.5" />
         </template>
       </Input>
-      
+
       <!-- Table header -->
       <div class="flex py-1 bg-theme-form-head text-theme-title text-3 font-normal">
         <div class="w-1/3 pl-8 mr-2">
@@ -242,7 +241,7 @@ const action = computed(() => {
           {{ t('tag.columns.userTag.name') }}
         </div>
       </div>
-      
+
       <!-- Scrollable tag list with checkboxes -->
       <Scroll
         v-model="loading"
@@ -253,31 +252,28 @@ const action = computed(() => {
         :params="params"
         :notify="notify"
         @change="handleChange">
-        
         <CheckboxGroup
           v-model:value="checkedList"
           style="width: 100%;"
           class="space-y-2">
-          
           <!-- Tag list items -->
           <div
             v-for="item,index in dataList"
             :key="item.id"
             class="flex flex-1 items-center text-3 text-theme-content"
             :calss="{'mt-1':index>0}">
-            
             <!-- Tag checkbox -->
             <Checkbox
               :value="item.id"
               :disabled="getDisabled(item.id)"
               class="mr-3.5 -mb-0.5">
             </Checkbox>
-            
+
             <!-- Tag ID -->
             <div class="w-1/3 truncate mr-2 pt-1" :title="item.id">
               {{ item.id }}
             </div>
-            
+
             <!-- Tag name -->
             <div class="w-2/3 truncate pt-1" :title="item.name">
               {{ item.name }}
@@ -285,7 +281,7 @@ const action = computed(() => {
           </div>
         </CheckboxGroup>
       </Scroll>
-      
+
       <!-- Select all checkbox -->
       <Divider class="my-2" />
       <Checkbox :indeterminate="indeterminate" @change="onCheckAllChange">

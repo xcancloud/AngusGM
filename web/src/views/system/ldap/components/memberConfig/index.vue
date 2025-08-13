@@ -29,8 +29,8 @@ const labelCol = { span: 9 };
 
 // Reactive form data for LDAP membership configuration
 const form: any = reactive({
-  groupMemberAttribute: '',         // LDAP attribute for group membership (user -> group)
-  memberGroupAttribute: ''          // LDAP attribute for member groups (group -> user)
+  groupMemberAttribute: '', // LDAP attribute for group membership (user -> group)
+  memberGroupAttribute: '' // LDAP attribute for member groups (group -> user)
 });
 
 // Form validation rules with dynamic required field logic

@@ -280,8 +280,10 @@ const addVisible = ref();
  */
 const getType = computed(() => {
   return state.tab === 'USER'
-    ? 'User' : state.tab === 'DEPT'
-      ? 'Dept' : 'Group';
+    ? 'User'
+    : state.tab === 'DEPT'
+      ? 'Dept'
+      : 'Group';
 });
 
 /**
