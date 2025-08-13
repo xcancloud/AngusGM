@@ -5,7 +5,7 @@ import { Button } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { store } from '@/api';
 
-import type { Goods } from '../PropsType';
+import type { Goods } from '../types';
 
 /**
  * Props interface for ShowButton component

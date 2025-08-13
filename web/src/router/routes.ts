@@ -69,7 +69,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/organization/user/add',
-        component: (): Component => import('@/views/organization/user/components/edit/index.vue'),
+        component: (): Component => import('@/views/organization/user/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.user', path: '/organization/user' },
@@ -79,7 +79,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/organization/user/edit/:id',
-        component: (): Component => import('@/views/organization/user/components/edit/index.vue'),
+        component: (): Component => import('@/views/organization/user/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.user', path: '/organization/user' },
@@ -89,7 +89,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/organization/user/:id',
-        component: (): Component => import('@/views/organization/user/components/detail/index.vue'),
+        component: (): Component => import('@/views/organization/user/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.user', path: '/organization/user' },
@@ -107,7 +107,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/organization/group/add',
-        component: (): Component => import('@/views/organization/group/components/edit/index.vue'),
+        component: (): Component => import('@/views/organization/group/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.group', path: '/organization/group' },
@@ -117,7 +117,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/organization/group/edit/:id',
-        component: (): Component => import('@/views/organization/group/components/edit/index.vue'),
+        component: (): Component => import('@/views/organization/group/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.group', path: '/organization/group' },
@@ -127,7 +127,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/organization/group/:id',
-        component: (): Component => import('@/views/organization/group/components/detail/index.vue'),
+        component: (): Component => import('@/views/organization/group/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.group', path: '/organization/group' },
@@ -146,7 +146,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/permissions/policy/auth/:id',
-        component: () => import('@/views/permission/policy/components/auth/index.vue'),
+        component: () => import('@/views/permission/policy/auth/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.strategy', path: '/permissions/policy' },
@@ -156,7 +156,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/permissions/policy/:id',
-        component: () => import('@/views/permission/policy/components/detail/index.vue'),
+        component: () => import('@/views/permission/policy/detail/index.vue'),
         meta: {
           breadcrumb: [
             // { name: 'common.permissions' },
@@ -179,7 +179,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/stores/cloud/:id',
-        component: () => import('@/views/stores/cloud/stores/info/index.vue'),
+        component: () => import('@/views/stores/cloud/stores/info.vue'),
         meta: {
           class: 'pr-0'
         }
@@ -224,7 +224,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/messages/notification/:id',
-        component: () => import('@/views/message/notice/components/detail/index.vue'),
+        component: () => import('@/views/message/notice/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.announcement', path: '/messages/notification' },
@@ -234,7 +234,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/messages/notification/send',
-        component: () => import('@/views/message/notice/components/add/index.vue')
+        component: () => import('@/views/message/notice/add/index.vue')
       },
       {
         path: '/messages/message',
@@ -242,7 +242,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/messages/message/send',
-        component: () => import('@/views/message/message/components/send/index.vue'),
+        component: () => import('@/views/message/message/send/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.sendMessage', path: '/messages/message' },
@@ -252,7 +252,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/messages/message/:id',
-        component: () => import('@/views/message/message/components/detail/index.vue'),
+        component: () => import('@/views/message/message/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.sendMessage', path: '/messages/message' },
@@ -278,7 +278,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/system/ldap/detail',
         name: 'ldapDetail',
-        component: () => import('@/views/system/ldap/components/detail/index.vue'),
+        component: () => import('@/views/system/ldap/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.ldap', path: '/system/ldap' },
@@ -289,7 +289,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/system/ldap/add',
         name: 'add',
-        component: () => import('@/views/system/ldap/components/detail/index.vue'),
+        component: () => import('@/views/system/ldap/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.ldap', path: '/system/ldap' },
@@ -311,7 +311,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/system/email/server/:id',
-        component: (): Component => import('@/views/system/email/server/components/edit/index.vue'),
+        component: (): Component => import('@/views/system/email/server/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.mailboxServer', path: '/system/email' },
@@ -322,7 +322,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/system/email/server/add',
-        component: (): Component => import('@/views/system/email/server/components/edit/index.vue'),
+        component: (): Component => import('@/views/system/email/server/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.mailboxServer', path: '/system/email' },
@@ -333,7 +333,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/system/email/server/edit/:id',
-        component: (): Component => import('@/views/system/email/server/components/edit/index.vue'),
+        component: (): Component => import('@/views/system/email/server/edit/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.mailboxServer', path: '/system/email' },
@@ -351,7 +351,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/system/email/records/:id',
-        component: (): Component => import('@/views/system/email/records/components/detail/index.vue'),
+        component: (): Component => import('@/views/system/email/records/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.sendRecords', path: '/system/email/records' },
@@ -377,7 +377,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/system/sms/records/:id',
-        component: (): Component => import('@/views/system/sms/records/components/detail/index.vue'),
+        component: (): Component => import('@/views/system/sms/records/detail/index.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.sendRecords', path: '/system/sms/records' },
@@ -462,7 +462,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/personal/information/other',
-        component: () => import('@/views/personal/information/components/other.vue'),
+        component: () => import('@/views/personal/information/other.vue'),
         meta: {
           breadcrumb: [
             { name: 'router.breadcrumb.basicInfo', path: '/information' },

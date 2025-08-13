@@ -6,7 +6,7 @@ import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, modal, PureCard, 
 import { app } from '@xcan-angus/infra';
 
 import { email } from '@/api';
-import { MailboxService } from './PropsType';
+import { MailboxService } from './types';
 
 // Lazy load Test component for better performance
 const Test = defineAsyncComponent(() => import('@/views/system/email/server/components/test/index.vue'));

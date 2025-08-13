@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { PageQuery, GM } from '@xcan-angus/infra';
 
 import { setting, userLog } from '@/api';
-import { OperationLogRecord } from './PropsType';
+import { OperationLogRecord } from './types';
 
 const Statistics = defineAsyncComponent(() => import('@/views/system/log/operation/statistics/index.vue'));
 const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));

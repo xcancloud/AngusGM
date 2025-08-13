@@ -8,7 +8,7 @@ import {
 } from '@xcan-angus/vue-ui';
 import { app, appContext, GM, utils, Enabled, UserSource, SearchCriteria, PageQuery } from '@xcan-angus/infra';
 
-import { User, UserState, SearchOption } from './PropsType';
+import { User, UserState, SearchOption } from './types';
 import { user } from '@/api';
 
 /**
@@ -16,8 +16,9 @@ import { user } from '@/api';
  * These components are loaded only when needed to improve initial page load performance
  */
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
-const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/components/password/index.vue'));
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
+
+const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/password/index.vue'));
 
 // Internationalization setup
 const { t } = useI18n();

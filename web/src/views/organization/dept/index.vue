@@ -10,18 +10,19 @@ import { app, duration, GM, PageQuery, SearchCriteria, utils } from '@xcan-angus
 import { debounce } from 'throttle-debounce';
 import { OrgTargetType } from '@/enums/enums';
 
-import { DeptInfo, DeptState } from './PropsType';
+import { DeptInfo, DeptState } from './types';
 import { auth, dept } from '@/api';
-import { createAuthPolicyColumns } from '@/views/organization/user/PropsType';
+import { createAuthPolicyColumns } from '@/views/organization/user/types';
 
 // Async component definitions
-const Info = defineAsyncComponent(() => import('./components/info/index.vue'));
 const SelectTagModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
-const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/components/add/index.vue'));
-const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/components/edit/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
-const MoveDeptModal = defineAsyncComponent(() => import('./components/move/index.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
+
+const Info = defineAsyncComponent(() => import('@/views/organization/dept/info/index.vue'));
+const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/add/index.vue'));
+const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/edit/index.vue'));
+const MoveDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/move/index.vue'));
 
 const { t } = useI18n();
 

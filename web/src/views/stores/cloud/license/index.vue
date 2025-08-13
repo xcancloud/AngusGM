@@ -2,17 +2,17 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, IconRefresh, Input, PureCard, Table } from '@xcan-angus/vue-ui';
-import { cookieUtils, download, duration, ESS } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, cookieUtils, download, duration, ESS } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
 import { license } from '@/api';
-import { Licensed, SearchParams } from './PropsType';
+import { Licensed } from './types';
 
 const { t } = useI18n();
 
 const loading = ref(false);
 const disabled = ref(false);
-const params = ref<SearchParams>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
 const total = ref(0);
 
 const pagination = computed(() => {
@@ -65,7 +65,7 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   if (!value) {
     params.value.filters = [];
   } else {
-    params.value.filters = [{ key: 'licenseNo', op: 'MATCH_END', value: value }];
+    params.value.filters = [{ key: 'licenseNo', op: SearchCriteria.OpEnum.MatchEnd, value: value }];
   }
   disabled.value = true;
   await loadLicensedList();
@@ -80,11 +80,11 @@ const handleRefresh = () => {
 };
 
 /**
- * <p>Download license file by license number using current access token.</p>
+ * <p>Download license file by license number using current access token.</p> TODO 移动到 api
  */
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const token = cookieUtils.get('access_token');
-  download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`);
+  await download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`);
 };
 
 const columns = [

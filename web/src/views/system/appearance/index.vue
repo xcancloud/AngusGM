@@ -6,7 +6,7 @@ import { appContext } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
 import { app } from '@/api';
-import { AppInfo } from './PropsType';
+import { AppInfo } from './types';
 
 // Lazy load the ExpandHead component for better performance
 const ExpandHead = defineAsyncComponent(() => import('./components/expandHead.vue'));

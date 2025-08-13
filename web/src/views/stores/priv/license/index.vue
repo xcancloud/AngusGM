@@ -7,7 +7,7 @@ import { cookieUtils, download, duration, routerUtils } from '@xcan-angus/infra'
 import { debounce } from 'throttle-debounce';
 
 import { privLicense } from '@/api';
-import { Licensed, SearchParams } from './PropsType';
+import { Licensed, SearchParams } from './types';
 
 const { t } = useI18n();
 

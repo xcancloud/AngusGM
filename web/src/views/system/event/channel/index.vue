@@ -3,10 +3,10 @@ import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { ReceiveChannelType, enumUtils } from '@xcan-angus/infra';
 import { AsyncComponent, Card } from '@xcan-angus/vue-ui';
 
-const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./components/http.vue'));
-const ReceivingConfigurationEmail = defineAsyncComponent(() => import('./components/email.vue'));
-const ReceivingConfigurationNailingRobot = defineAsyncComponent(() => import('./components/dingRobot.vue'));
-const ReceivingConfigurationEnterpriseRobot = defineAsyncComponent(() => import('./components/wechatRobot.vue'));
+const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./http.vue'));
+const ReceivingConfigurationEmail = defineAsyncComponent(() => import('./email.vue'));
+const ReceivingConfigurationNailingRobot = defineAsyncComponent(() => import('./dingRobot.vue'));
+const ReceivingConfigurationEnterpriseRobot = defineAsyncComponent(() => import('./wechatRobot.vue'));
 
 const activeKey = ref('WEBHOOK');
 const enumsList: {

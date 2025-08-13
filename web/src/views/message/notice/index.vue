@@ -8,7 +8,7 @@ import { NoticeScope, SentType } from '@/enums/enums';
 import { Tooltip } from 'ant-design-vue';
 
 import { notice } from '@/api';
-import type { NoticeDataType } from './PropsType';
+import type { NoticeDataType } from './types';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 

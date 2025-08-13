@@ -5,7 +5,7 @@ import { Col, Collapse, CollapsePanel, RadioButton, RadioGroup, Row } from 'ant-
 import { CaretRightOutlined } from '@ant-design/icons-vue';
 import { useI18n } from 'vue-i18n';
 
-import { DataInfoType } from '../PropsType';
+import { DataInfoType } from '../types';
 
 interface Props {
   data: DataInfoType

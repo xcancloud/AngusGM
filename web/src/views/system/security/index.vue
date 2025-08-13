@@ -3,7 +3,7 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { appContext } from '@xcan-angus/infra';
 
 import { setting } from '@/api';
-import { Operation, SafetyConfig } from './PropsType';
+import { Operation, SafetyConfig } from './types';
 
 // Async components for security settings
 const LoginRestrictions = defineAsyncComponent(() => import('./components/loginRestrictions.vue'));

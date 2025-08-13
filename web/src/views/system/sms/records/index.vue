@@ -6,7 +6,7 @@ import { PageQuery, SearchCriteria, app, GM, ProcessStatus } from '@xcan-angus/i
 import { Badge } from 'ant-design-vue';
 
 import { sms } from '@/api';
-import { SmsRecord } from './PropsType';
+import { SmsRecord } from './types';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 

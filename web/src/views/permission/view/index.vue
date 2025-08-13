@@ -11,7 +11,7 @@ import { auth } from '@/api';
  * Async component imports for better performance
  * Lazy loading components to improve initial page load time
  */
-const TargetPanel = defineAsyncComponent(() => import('./components/authObjects.vue'));
+const TargetPanel = defineAsyncComponent(() => import('./authObjects.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
 
 /**

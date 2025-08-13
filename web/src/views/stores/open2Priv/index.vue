@@ -6,8 +6,8 @@ import { useRouter } from 'vue-router';
 import { API, AppOrServiceRoute, DomainManager, http, VERSION, GoodsType, EditionType } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
-import type { Goods } from './PropsType';
-import { getEnumMessages, goodsTypeColor } from './PropsType';
+import type { Goods } from './types';
+import { getEnumMessages, goodsTypeColor } from './types';
 import { store } from '@/api';
 import ShowButton from './components/showButton.vue';
 

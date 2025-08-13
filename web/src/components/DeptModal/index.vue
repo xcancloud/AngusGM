@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { GM } from '@xcan-angus/infra';
 import { Icon, Modal, Select, Tree } from '@xcan-angus/vue-ui';
 
-import { DataType } from '@/views/organization/dept/PropsType';
+import { DataType } from '@/views/organization/dept/types';
 import { dept, orgTag, user } from '@/api';
 
 /**

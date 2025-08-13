@@ -18,12 +18,12 @@ import {
 } from '@xcan-angus/vue-ui';
 
 import { sms } from '@/api';
-import { Aisle } from './PropsType';
+import { Aisle } from './types';
 
 import placeholderLogo from '@/views/system/sms/channel/images/robot.png';
 
 // Lazy load SMS sending component for better performance
-const SendMessages = defineAsyncComponent(() => import('@/views/system/sms/channel/components/send/index.vue'));
+const SendMessages = defineAsyncComponent(() => import('@/views/system/sms/channel/send/index.vue'));
 
 const { t } = useI18n();
 const useForm = Form.useForm;

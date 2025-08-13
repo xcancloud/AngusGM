@@ -6,11 +6,11 @@ import { useI18n } from 'vue-i18n';
 import { appContext } from '@xcan-angus/infra';
 
 // Import security-related components
-import ModifyPassword, { Strength } from '@/views/personal/security/components/modifyPassword/index.vue';
-import PasswordStrength from '@/views/personal/security/components/passwordStrength/index.vue';
-import PasswordConfirm from '@/views/personal/security/components/passwordConfirm/index.vue';
-import BindMobileEmail from '@/views/personal/security/components/bindMobileEmail/index.vue';
-import ModifyMobileEmail, { UserInfoParams } from '@/views/personal/security/components/modifyMobileEmail/index.vue';
+import ModifyPassword, { Strength } from '@/views/personal/security/modifyPassword/index.vue';
+import PasswordStrength from '@/views/personal/security/passwordStrength/index.vue';
+import PasswordConfirm from '@/views/personal/security/passwordConfirm/index.vue';
+import BindMobileEmail from '@/views/personal/security/bindMobileEmail/index.vue';
+import ModifyMobileEmail, { UserInfoParams } from '@/views/personal/security/modifyMobileEmail/index.vue';
 
 // Type definitions for security operations
 type KeyType = 'email' | 'mobile';

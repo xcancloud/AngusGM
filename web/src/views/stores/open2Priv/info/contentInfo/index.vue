@@ -4,7 +4,7 @@ import { Divider, Skeleton } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 // import RichBrowser from '@xcan/browser';
 import RichEditor from '@/components/RichEditor/index.vue';
-import { Goods } from '../../PropsType';
+import { Goods } from '../../types';
 
 interface Props {
   loading: boolean;

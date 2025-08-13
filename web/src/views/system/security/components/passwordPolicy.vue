@@ -4,7 +4,7 @@ import { debounce } from 'throttle-debounce';
 import { duration } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
-import { PasswordPolicy } from '../PropsType';
+import { PasswordPolicy } from '../types';
 
 const { t } = useI18n();
 

@@ -11,8 +11,8 @@ import VideoLink from '@/views/stores/open2Priv/info/videoLink/index.vue';
 import ContentInfo from '@/views/stores/open2Priv/info/contentInfo/index.vue';
 import ShowButton from '../components/showButton.vue';
 
-import type { Goods } from '../PropsType';
-import { getEnumMessages, goodsTypeColor } from '../PropsType';
+import type { Goods } from '../types';
+import { getEnumMessages, goodsTypeColor } from '../types';
 
 const { t } = useI18n();
 const route = useRoute();

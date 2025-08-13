@@ -7,7 +7,7 @@ import { GM } from '@xcan-angus/infra';
 
 import { privStore } from '@/api';
 import UploadPlugin from '@/views/stores/priv/goods/components/uploadPlugin/index.vue';
-import { PrivateGoods } from './PropsType';
+import { PrivateGoods } from './types';
 
 const { t } = useI18n();
 const loading = ref<boolean>(false);

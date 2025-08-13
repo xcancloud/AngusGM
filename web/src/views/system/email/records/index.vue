@@ -6,7 +6,7 @@ import { PageQuery, SearchCriteria, app, GM, ProcessStatus } from '@xcan-angus/i
 import { Badge } from 'ant-design-vue';
 
 import { email } from '@/api';
-import { EmailRecord, EmailSendStatus } from './PropsType';
+import { EmailRecord, EmailSendStatus } from './types';
 
 // Lazy load Statistics component for better performance
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));

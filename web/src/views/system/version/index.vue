@@ -8,9 +8,10 @@ import { EditionType, appContext } from '@xcan-angus/infra';
 import dayjs from 'dayjs';
 
 import { edition } from '@/api';
-import { InstallEdition } from './PropsType';
-import UpdatedVersion from './components/updatableVersion.vue';
+import { InstallEdition } from './types';
 import grayImg from './images/gray1.png';
+
+import UpdatableVersion from './updatable.vue';
 
 const { t } = useI18n();
 
@@ -270,7 +271,7 @@ onMounted(() => {
   </Card>
 
   <!-- Updatable Version Component -->
-  <UpdatedVersion
+  <UpdatableVersion
     class="mt-2"
     :currentVersion="installEdition?.goodsVersion"
     :installGoodsCode="installEdition?.goodsCode" />

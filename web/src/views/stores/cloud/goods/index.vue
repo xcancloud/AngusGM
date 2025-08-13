@@ -2,22 +2,15 @@
 import { reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
-  ButtonAuth,
-  Colon,
-  DropdownSort,
-  Icon,
-  IconRefresh,
-  PureCard,
-  Scroll,
-  SearchPanel,
-  Spin
+  ButtonAuth, Colon, DropdownSort, Icon, IconRefresh, PureCard, Scroll, SearchPanel, Spin
 } from '@xcan-angus/vue-ui';
 import { app, ESS, GoodsType } from '@xcan-angus/infra';
 
-import UploadPlugin from './components/UploadPlugin/index.vue';
-import ShowButton from './components/ShowButton.vue';
-import { Goods } from './PropsType';
-import { goodsTypeColor } from '@/views/stores/cloud/stores/PropsType';
+import { Goods } from './types';
+import { goodsTypeColor } from '@/views/stores/cloud/stores/types';
+
+import UploadPlugin from './UploadPlugin/index.vue';
+import ShowButton from './ShowButton.vue';
 
 const { t } = useI18n();
 const visible = ref<boolean>(false);

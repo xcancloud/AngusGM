@@ -2,8 +2,8 @@
 /**
  * Personal Information Page
  */
-import BaseInfo from './components/baseInfo.vue';
-import DetailInfo from './components/detailInfo.vue';
+import BaseInfo from './baseInfo.vue';
+import DetailInfo from './detailInfo.vue';
 </script>
 
 <template>

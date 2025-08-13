@@ -4,12 +4,11 @@ import { Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
 import { EnumMessage, app, enumUtils, CombinedTargetType, EventType } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
-import { appopen } from '@/api/index';
+import { appopen, event } from '@/api';
 
-import { EventConfigList } from './PropsType';
-import { event } from '@/api';
+import { EventConfigList } from './types';
 
-const ReceiveConfig = defineAsyncComponent(() => import('./components/receiveConfig.vue'));
+const ReceiveConfig = defineAsyncComponent(() => import('./receiveConfig.vue'));
 
 const { t } = useI18n();
 const visible = ref(false);

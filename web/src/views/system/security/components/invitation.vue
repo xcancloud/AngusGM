@@ -6,7 +6,7 @@ import { duration } from '@xcan-angus/infra';
 import { Button, Switch } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 
-import { Operation, SignupAllow } from '../PropsType';
+import { Operation, SignupAllow } from '../types';
 import { setting } from '@/api';
 
 const { t } = useI18n();

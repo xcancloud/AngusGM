@@ -7,7 +7,7 @@ import { Image, Skeleton } from 'ant-design-vue';
 import noPublic from './images/officialAccount.jpg';
 import weChat from './images/commercialAffairs.jpg';
 import Video from '../../components/vedio.vue';
-import { Goods } from '../../PropsType';
+import { Goods } from '../../types';
 
 const { t } = useI18n();
 

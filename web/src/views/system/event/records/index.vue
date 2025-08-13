@@ -7,11 +7,12 @@ import { app, GM, EventPushStatus, EventType } from '@xcan-angus/infra';
 import DOMPurify from 'dompurify';
 
 import { event } from '@/api';
-import { EventRecord } from './PropsType';
+import { EventRecord } from './types';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
-const ReceiveConfig = defineAsyncComponent(() => import('./components/receiveConfig.vue'));
-const ViewEvent = defineAsyncComponent(() => import('./components/view.vue'));
+const ReceiveConfig = defineAsyncComponent(() => import('./receiveConfig.vue'));
+const ViewEvent = defineAsyncComponent(() => import('./view.vue'));
+
 const { t } = useI18n();
 const visible = ref(false);
 // Selected event record item for viewing details

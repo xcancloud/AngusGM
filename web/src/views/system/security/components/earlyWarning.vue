@@ -6,7 +6,7 @@ import { duration } from '@xcan-angus/infra';
 import { Button, Checkbox, CheckboxGroup, Switch, Tag } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 
-import { Alarm, Operation } from '../PropsType';
+import { Alarm, Operation } from '../types';
 
 const { t } = useI18n();
 

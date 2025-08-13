@@ -6,7 +6,7 @@ import { Switch } from 'ant-design-vue';
 import { duration } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 
-import { Operation, SigninLimit } from '../PropsType';
+import { Operation, SigninLimit } from '../types';
 
 const { t } = useI18n();
 

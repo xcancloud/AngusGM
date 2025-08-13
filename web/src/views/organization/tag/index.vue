@@ -4,13 +4,14 @@ import { Hints, PureCard } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { app, GM } from '@xcan-angus/infra';
 
-import { OrgTag } from './PropsType';
+import { OrgTag } from './types';
 
 // Async components
-const List = defineAsyncComponent(() => import('@/views/organization/tag/components/list/index.vue'));
-const Table = defineAsyncComponent(() => import('@/views/organization/tag/components/table/index.vue'));
-const Info = defineAsyncComponent(() => import('@/views/organization/tag/components/info/index.vue'));
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
+
+const List = defineAsyncComponent(() => import('@/views/organization/tag/list/index.vue'));
+const Table = defineAsyncComponent(() => import('@/views/organization/tag/table/index.vue'));
+const Info = defineAsyncComponent(() => import('@/views/organization/tag/info/index.vue'));
 
 const { t } = useI18n();
 

@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { enumUtils } from '@xcan-angus/infra';
 import { OperationResourceType } from '@/enums/enums';
 import { useI18n } from 'vue-i18n';
-import { DateType, PieSetting } from './PropsType';
+import { DateType, PieSetting } from './types';
 
 // TODO 合并到组件统计：web/src/components/Statistics； 并解决国际化配置
 

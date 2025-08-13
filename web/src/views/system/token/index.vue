@@ -8,10 +8,11 @@ import {
 } from '@xcan-angus/vue-ui';
 import { app, appContext, EnumMessage, ResourceAuthType, ResourceAclType, enumUtils } from '@xcan-angus/infra';
 
-import SelectApis from '@/views/system/token/components/selectApi/index.vue';
-import SelectAcls from '@/views/system/token/components/selectAcl/index.vue';
 import { setting, systemToken } from '@/api';
-import { GrantData, Service, Token, ColumnsProps } from './PropsType';
+import { GrantData, Service, Token, ColumnsProps } from './types';
+
+import SelectApis from '@/views/system/token/selectApi/index.vue';
+import SelectAcls from '@/views/system/token/selectAcl/index.vue';
 
 const { t } = useI18n();
 const { toClipboard } = useClipboard();

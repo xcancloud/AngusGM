@@ -4,9 +4,9 @@ import { useI18n } from 'vue-i18n';
 import { Hints } from '@xcan-angus/vue-ui';
 
 // Import policy management components
-import AddPolicyForm from '@/views/permission/policy/components/addForm/index.vue';
-import AddedPolicyList from '@/views/permission/policy/components/addList/index.vue';
-import DefaultPolicyList from '@/views/permission/policy/components/defaultList/index.vue';
+import AddPolicyForm from '@/views/permission/policy/addForm/index.vue';
+import AddedPolicyList from '@/views/permission/policy/addList/index.vue';
+import DefaultPolicyList from '@/views/permission/policy/defaultList/index.vue';
 
 const { t } = useI18n();
 

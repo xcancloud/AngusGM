@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
 
 import { message } from '@/api';
-import type { TableColumnType } from './PropsType';
+import type { TableColumnType } from './types';
 
 /**
  * Async component import for Statistics

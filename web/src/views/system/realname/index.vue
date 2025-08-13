@@ -5,7 +5,7 @@ import { TenantType, TenantRealNameStatus } from '@xcan-angus/infra';
 import { tenant } from '@/api';
 
 // Async components for different authentication states
-const Unauthorized = defineAsyncComponent(() => import('@/views/system/realname/components/unauthorized/index.vue'));
+const Unauthorized = defineAsyncComponent(() => import('@/views/system/realname/unauthorized/index.vue'));
 const unauthorizedVisible = ref(false);
 
 // Audit status component for submitted and failed authentication
@@ -13,19 +13,19 @@ const AuditStatus = defineAsyncComponent(() => import('@/components/AuditStatus/
 const auditStatusVisible = ref(false);
 
 // Personal authentication component
-const PersonalAuth = defineAsyncComponent(() => import('@/views/system/realname/components/personal/index.vue'));
+const PersonalAuth = defineAsyncComponent(() => import('@/views/system/realname/personal/index.vue'));
 const personalAuthVisible = ref(false);
 
 // Enterprise authentication component
-const EnterpriseAuth = defineAsyncComponent(() => import('@/views/system/realname/components/enterprise/index.vue'));
+const EnterpriseAuth = defineAsyncComponent(() => import('@/views/system/realname/enterprise/index.vue'));
 const enterpriseAuthVisible = ref(false);
 
 // Government organization authentication component
-const GovernmentAuth = defineAsyncComponent(() => import('@/views/system/realname/components/government/index.vue'));
+const GovernmentAuth = defineAsyncComponent(() => import('@/views/system/realname/government/index.vue'));
 const governmentAuthVisible = ref(false);
 
 // Authentication form component
-const AuthForm = defineAsyncComponent(() => import('@/views/system/realname/components/authForm/index.vue'));
+const AuthForm = defineAsyncComponent(() => import('@/views/system/realname/authForm/index.vue'));
 const authFormVisible = ref(false);
 
 // Form type for authentication

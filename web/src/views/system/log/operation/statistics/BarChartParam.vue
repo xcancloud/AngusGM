@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { DateType } from './PropsType';
+import { DateType } from './types';
 import { RadioButton, RadioGroup } from 'ant-design-vue';
 import { DatePicker } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';

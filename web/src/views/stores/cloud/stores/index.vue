@@ -6,9 +6,9 @@ import { Button, Carousel, Divider, Pagination, Tag, TypographyParagraph } from 
 import { store } from '@/api';
 import { useRouter } from 'vue-router';
 import { app, AppOrServiceRoute, DomainManager, GoodsType, EditionType } from '@xcan-angus/infra';
-import type { Goods } from './PropsType';
-import { goodsTypeColor } from './PropsType';
-import ShowButton from './components/showButton.vue';
+import type { Goods } from './types';
+import { goodsTypeColor } from './types';
+import ShowButton from './showButton.vue';
 
 const { t } = useI18n();
 const router = useRouter();

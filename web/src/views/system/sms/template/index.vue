@@ -6,7 +6,7 @@ import { ButtonAuth, IconRefresh, Input, notification, PureCard, Select, SelectE
 import { GM, SupportedLanguage } from '@xcan-angus/infra';
 
 import { sms } from '@/api';
-import { Options, Template } from './PropsType';
+import { Options, Template } from './types';
 
 const { t } = useI18n();
 

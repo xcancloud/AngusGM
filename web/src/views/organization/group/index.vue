@@ -8,7 +8,7 @@ import {
 } from '@xcan-angus/vue-ui';
 import { PageQuery, SearchCriteria, app, GM, utils, Enabled } from '@xcan-angus/infra';
 
-import { ListGroup } from './PropsType';
+import { ListGroup } from './types';
 import { group } from '@/api';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
