@@ -1,24 +1,49 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, nextTick, reactive, ref } from 'vue';
+import { computed, defineAsyncComponent, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Dropdown, Menu, MenuItem, TabPane, Tabs } from 'ant-design-vue';
 import {
   AsyncComponent, ButtonAuth, IconRefresh, Image, Input,
-  modal, notification, PureCard, Select, Table, Tree
+  notification, PureCard, Select, Table, Tree
 } from '@xcan-angus/vue-ui';
-import { app, duration, GM, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
-import { debounce } from 'throttle-debounce';
+import { app, GM, PageQuery, SearchCriteria } from '@xcan-angus/infra';
 import { OrgTargetType } from '@/enums/enums';
 
-import { DeptInfo, DeptState } from './PropsType';
-import { auth, dept } from '@/api';
+// Import types and utilities
+import type {
+  DeptInfo, 
+  DeptState, 
+  CurrentActionNode, 
+  PolicyPagination, 
+  TreeFieldNames,
+  DeptSearchParams,
+  TreeParams
+} from './types';
+import {
+  loadUser,
+  loadDeptInfo,
+  addDeptUser,
+  delDeptUser,
+  handleSearchDept,
+  handleSearchTag,
+  deleteDepartment,
+  saveDeptTags,
+  moveDepartment,
+  getDeptPolicy,
+  saveDeptPolicies,
+  cancelDeptPolicy,
+  createUserSearchHandler,
+  createPolicySearchHandler,
+  handleTableChange,
+  handlePolicyTableChange
+} from './utils';
 import { createAuthPolicyColumns } from '@/views/organization/user/PropsType';
 
 // Async component definitions
 const Info = defineAsyncComponent(() => import('./components/info/index.vue'));
 const SelectTagModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
-const AddDeptModal = defineAsyncComponent(() => import('@/views/organization/dept/components/add/index.vue'));
-const EditModal = defineAsyncComponent(() => import('@/views/organization/dept/components/edit/index.vue'));
+const AddDeptModal = defineAsyncComponent(() => import('./components/add/index.vue'));
+const EditModal = defineAsyncComponent(() => import('./components/edit/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 const MoveDeptModal = defineAsyncComponent(() => import('./components/move/index.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
@@ -74,7 +99,7 @@ const userUpdateLoading = ref(false);
 const notify = ref(0);
 
 // Current action node for operations
-const currentActionNode = ref<{ id: string; name: string; pid: string }>({ id: '', name: '', pid: '' });
+const currentActionNode = ref<CurrentActionNode>({ id: '', name: '', pid: '' });
 
 // Department info reactive object
 const deptInfo = reactive<DeptInfo>({
@@ -91,7 +116,7 @@ const deptInfo = reactive<DeptInfo>({
 
 // Policy related state
 const policyData = ref([]);
-const policyPagination = reactive({
+const policyPagination = reactive<PolicyPagination>({
   current: 1,
   pageSize: 10,
   total: 0
@@ -106,12 +131,12 @@ const pagination = computed(() => ({
   total: total.value
 }));
 
-const getSearchDeptParams = computed(() => ({
+const getSearchDeptParams = computed<DeptSearchParams>(() => ({
   tagId: searchTagId.value,
   fullTextSearch: true
 }));
 
-const treeParams = computed(() => ({
+const treeParams = computed<TreeParams>(() => ({
   pid: -1,
   pageSize: 30,
   tagId: searchTagId.value,
@@ -119,7 +144,7 @@ const treeParams = computed(() => ({
   orderSort: 'ASC'
 }));
 
-const treeFieldNames = { title: 'name', key: 'id', children: 'hasSubDept' };
+const treeFieldNames: TreeFieldNames = { title: 'name', key: 'id', children: 'hasSubDept' };
 
 // Tree selection change handler
 const changeSelect = async (
@@ -136,13 +161,13 @@ const changeSelect = async (
 
     try {
       userLoadDisabled.value = true;
-      await loadUser();
+      await loadUser(state, params, total, userLoading, userSearchName);
       userLoadDisabled.value = false;
 
-      await loadDeptInfo();
+      await loadDeptInfo(state, deptInfo);
 
       policyLoadDisabled.value = true;
-      await getDeptPolicy();
+      await getDeptPolicy(state, policyPagination, policyFilters, policyLoading, policyData);
       policyLoadDisabled.value = false;
     } catch (error) {
       console.error('Error in changeSelect:', error);
@@ -154,89 +179,9 @@ const changeSelect = async (
 };
 
 /**
- * Load user list for selected department
- * Handles loading state and error notifications
- */
-const loadUser = async (): Promise<void> => {
-  if (!state.currentSelectedNode.id) {
-    notification.warning(t('common.messages.queryListFailed'));
-    return;
-  }
-
-  if (userLoading.value) {
-    return;
-  }
-
-  try {
-    userLoading.value = true;
-
-    // Prepare filters for search
-    if (userSearchName.value && params.value.filters) {
-      params.value.filters.push({ key: 'fullName', op: SearchCriteria.OpEnum.MatchEnd, value: userSearchName.value });
-    } else {
-      params.value.filters = [];
-    }
-
-    const [error, res] = await dept.getDeptUsers(state.currentSelectedNode.id, params.value);
-
-    if (error) {
-      notification.error(t('common.messages.queryListFailed'));
-      return;
-    }
-
-    state.userDataSource = res.data.list;
-    total.value = +res.data.total;
-  } catch (error) {
-    console.error('Error loading users:', error);
-    notification.error(t('common.messages.networkError'));
-  } finally {
-    userLoading.value = false;
-  }
-};
-
-/**
- * Load department information
- * Updates deptInfo with current department details
- */
-const loadDeptInfo = async (): Promise<void> => {
-  if (!state.currentSelectedNode.id) return;
-
-  try {
-    const [error, { data = {} }] = await dept.getDeptDetail(state.currentSelectedNode.id);
-    if (error) {
-      notification.error(t('common.messages.queryListFailed'));
-      return;
-    }
-
-    // Update department info with proper type safety
-    Object.assign(deptInfo, {
-      name: data.name || '',
-      code: data.code || '',
-      id: data.id || '',
-      createdByName: data.createdByName || '',
-      createdDate: data.createdDate || '',
-      tags: data.tags || [],
-      level: data.level || '',
-      lastModifiedDate: data.lastModifiedDate || '',
-      lastModifiedByName: data.lastModifiedByName || '--'
-    });
-  } catch (error) {
-    console.error('Error loading department info:', error);
-    notification.error(t('common.messages.networkError'));
-  }
-};
-
-/**
- * Enhanced error handling for API operations
- * Provides consistent error messaging and logging
- */
-const handleApiError = (error: any, operation: string): void => {
-  console.error(`Error in ${operation}:`, error);
-  notification.error(t('common.messages.operationFailed'));
-};
-
-/**
+ * <p>
  * Add department modal handlers
+ * </p>
  */
 const addDept = (pid = '-1' as string): void => {
   addModalVisible.value = true;
@@ -257,7 +202,9 @@ const saveAdd = (value: any): void => {
 };
 
 /**
+ * <p>
  * Edit department name modal handlers
+ * </p>
  */
 const editDeptName = (): void => {
   editModalVisible.value = true;
@@ -276,67 +223,24 @@ const saveEditName = (name: string): void => {
 };
 
 /**
- * Delete department with confirmation
- * Checks for child departments and users before deletion
+ * <p>
+ * Delete department wrapper
+ * </p>
  */
 const del = async (): Promise<void> => {
-  try {
-    const [error, res] = await dept.getDeptCount(currentActionNode.value.id as string);
-    if (error) {
-      handleApiError(error, 'get department count');
-      return;
-    }
-
-    const { subDeptNum, sunUserNum } = res.data;
-    const existChildDept = subDeptNum > 0;
-    const existUser = sunUserNum > 0;
-
-    let content = '';
-    if (existChildDept && existUser) {
-      content = t('department.messages.deptHasChildAndUserTip', { childNum: subDeptNum, userNum: sunUserNum });
-    } else if (existChildDept && !existUser) {
-      content = t('department.messages.deptHasChildTip', { childNum: subDeptNum });
-    } else if (!existChildDept && existUser) {
-      content = t('department.messages.deptHasUserTip', { userNum: sunUserNum });
-    }
-
-    modal.confirm({
-      centered: true,
-      title: t('department.actions.deleteDept'),
-      content: t('department.messages.confirmDelete', { content }),
-      onOk: async () => {
-        try {
-          const [error] = await dept.deleteDept({ ids: [currentActionNode.value.id as string] });
-          if (error) {
-            handleApiError(error, 'delete department');
-            return;
-          }
-
-          notification.success(t('common.messages.deleteSuccess'));
-          treeSelect.value.del(currentActionNode.value.id);
-
-          if (currentActionNode.value.pid && +currentActionNode.value.pid < 0 && !searchDeptId.value) {
-            notify.value += 1;
-          }
-
-          if (currentActionNode.value.id === state.currentSelectedNode.id) {
-            state.currentSelectedNode.id = undefined;
-            state.currentSelectedNode.pid = undefined;
-            state.currentSelectedNode.name = undefined;
-            state.userDataSource = [];
-          }
-        } catch (error) {
-          handleApiError(error, 'delete department');
-        }
-      }
-    });
-  } catch (error) {
-    handleApiError(error, 'get department count');
-  }
+  await deleteDepartment(
+    currentActionNode,
+    state,
+    treeSelect,
+    searchDeptId,
+    notify
+  );
 };
 
 /**
+ * <p>
  * Tag management handlers
+ * </p>
  */
 const editTag = async (): Promise<void> => {
   editTagVisible.value = true;
@@ -347,34 +251,34 @@ const tagSave = async (
   _tags: { id: string; name: string }[],
   deleteTagIds: string[]
 ): Promise<void> => {
-  try {
-    // Add new tags
-    if (_tagIds.length) {
-      await dept.addDeptTags({ id: currentActionNode.value.id as string, ids: _tagIds });
-    }
-
-    // Delete tags
-    if (deleteTagIds.length) {
-      await dept.deleteDeptTag({ id: currentActionNode.value.id as string, ids: deleteTagIds });
-    }
-
-    editTagVisible.value = false;
-    await loadDeptInfo();
-  } catch (error) {
-    handleApiError(error, 'save tags');
-  }
+  await saveDeptTags(
+    _tagIds,
+    _tags,
+    deleteTagIds,
+    currentActionNode,
+    editTagVisible,
+    deptInfo,
+    state
+  );
 };
 
 /**
+ * <p>
  * User search with debounced input
+ * </p>
  */
-const searchLoadUser = debounce(duration.search, () => {
-  params.value.pageNo = 1;
-  loadUser();
-});
+const searchLoadUser = createUserSearchHandler(
+  state,
+  params,
+  total,
+  userLoading,
+  userSearchName
+);
 
 /**
+ * <p>
  * User association handlers
+ * </p>
  */
 const assocUser = async (): Promise<void> => {
   userVisible.value = true;
@@ -388,12 +292,21 @@ const userSave = async (
   try {
     // Delete users if any
     if (deleteUserIds.length) {
-      await delDeptUser(deleteUserIds, 'Modal');
+      await delDeptUser(
+        deleteUserIds,
+        'Modal',
+        state,
+        params,
+        total,
+        userUpdateLoading,
+        userLoadDisabled,
+        isRefresh
+      );
     }
 
     // Add new users if any
     if (_userIds.length) {
-      await addDeptUser(_userIds);
+      await addDeptUser(_userIds, state, userUpdateLoading, isRefresh);
     }
 
     userVisible.value = false;
@@ -401,110 +314,33 @@ const userSave = async (
 
     if (isRefresh.value) {
       userLoadDisabled.value = true;
-      await loadUser();
+      await loadUser(state, params, total, userLoading, userSearchName);
       userLoadDisabled.value = false;
       isRefresh.value = false;
     }
   } catch (error) {
-    handleApiError(error, 'save users');
+    console.error('Error in userSave:', error);
+    notification.error(t('common.messages.networkError'));
   }
 };
 
 /**
- * Add users to department
+ * <p>
+ * Department search handlers
+ * </p>
  */
-const addDeptUser = async (userIds: string[]): Promise<void> => {
-  try {
-    userUpdateLoading.value = true;
-    const [error] = await dept.createDeptUser(state.currentSelectedNode.id as string, userIds);
-    if (error) {
-      handleApiError(error, 'add users to department');
-      return;
-    }
+const handleDeptSearch = async (value: any): Promise<void> => {
+  await handleSearchDept(value, state, selectedDept, changeSelect);
+};
 
-    isRefresh.value = true;
-  } catch (error) {
-    handleApiError(error, 'add users to department');
-  } finally {
-    userUpdateLoading.value = false;
-  }
+const handleTagSearch = (value: any): void => {
+  handleSearchTag(value, searchTagId, searchDeptId, state, changeSelect);
 };
 
 /**
- * Remove users from department
- */
-const delDeptUser = async (userIds: string[], type?: 'Table' | 'Modal'): Promise<void> => {
-  try {
-    userUpdateLoading.value = true;
-    const [error] = await dept.deleteDeptUser(state.currentSelectedNode.id as string, userIds);
-    if (error) {
-      handleApiError(error, 'remove users from department');
-      return;
-    }
-
-    if (type === 'Modal') {
-      isRefresh.value = true;
-    }
-
-    params.value.pageNo = utils.getCurrentPage(
-      params.value.pageNo as number,
-      params.value.pageSize as number,
-      total.value
-    );
-
-    // Refresh table data for table operations
-    if (type === 'Table') {
-      userLoadDisabled.value = true;
-      await loadUser();
-      userLoadDisabled.value = false;
-    }
-  } catch (error) {
-    handleApiError(error, 'remove users from department');
-  } finally {
-    userUpdateLoading.value = false;
-  }
-};
-
-/**
- * Optimized department search with better error handling
- */
-const handleSearchDept = async (value: any): Promise<void> => {
-  if (!value) return;
-
-  try {
-    const [error, res] = await dept.getNavigationByDeptId({ id: value });
-    if (error) {
-      handleApiError(error, 'department search');
-      return;
-    }
-
-    const parentChain = (res.data.parentChain || []).map(item => ({ ...item, hasSubDept: true }));
-    const { id, pid, name } = res.data.current;
-
-    await nextTick();
-    selectedDept.value = id;
-    // Ensure all tree data has required properties and filter out undefined values
-    const validParentChain = parentChain.filter(item => item.id && item.name);
-    const validCurrent = res.data.current.id && res.data.current.name ? res.data.current : null;
-    // Filter out items with undefined id or name to ensure ITreeOption compatibility
-    const filteredDataSource = validCurrent ? [...validParentChain, validCurrent] : validParentChain;
-    state.dataSource = filteredDataSource.filter(item => item.id && item.name);
-    await changeSelect([id], true, { id, pid, name });
-  } catch (error) {
-    handleApiError(error, 'department search');
-  }
-};
-
-const handleSearchTag = (value: any): void => {
-  searchTagId.value = value;
-  if (searchDeptId.value) {
-    searchDeptId.value = undefined;
-  }
-  changeSelect([], false, state.currentSelectedNode);
-};
-
-/**
+ * <p>
  * Tree loading and refresh handlers
+ * </p>
  */
 const hasDept = ref(false);
 
@@ -513,7 +349,7 @@ const loaded = (options: any[]): void => {
 };
 
 const handleRefreshUser = (): void => {
-  loadUser();
+  loadUser(state, params, total, userLoading, userSearchName);
 };
 
 const handleRefreshDeptList = (): void => {
@@ -521,146 +357,95 @@ const handleRefreshDeptList = (): void => {
 };
 
 /**
+ * <p>
  * Department move handlers
+ * </p>
  */
 const openMove = (): void => {
   moveVisible.value = true;
 };
 
 const confirmMove = async (targetId: string): Promise<void> => {
-  try {
-    const [error] = await dept.updateDept([{ pid: targetId, id: currentActionNode.value.id }]);
-
-    if (error) {
-      notification.error(t('common.messages.operationFailed'));
-      return;
-    }
-
-    moveVisible.value = false;
-    notify.value += 1;
-  } catch (error) {
-    console.error('Error moving department:', error);
-    notification.error(t('common.messages.networkError'));
-  }
+  await moveDepartment(targetId, currentActionNode, moveVisible, notify);
 };
 
 /**
+ * <p>
  * Table pagination change handler
+ * </p>
  */
 const tableChange = async (_pagination: any): Promise<void> => {
-  const { current, pageSize } = _pagination;
-  params.value.pageNo = current;
-  params.value.pageSize = pageSize;
-
-  userLoadDisabled.value = true;
-  await loadUser();
-  userLoadDisabled.value = false;
+  await handleTableChange(
+    _pagination,
+    state,
+    params,
+    total,
+    userLoading,
+    userSearchName,
+    userLoadDisabled
+  );
 };
 
 /**
+ * <p>
  * Policy management handlers
+ * </p>
  */
 const openPolicyModal = (): void => {
   policyVisible.value = true;
 };
 
-const getDeptPolicy = async (): Promise<void> => {
-  if (policyLoading.value) return;
-
-  try {
-    const { pageSize, current } = policyPagination;
-    policyLoading.value = true;
-
-    const [error, res] = await auth.getDeptPolicy(state.currentSelectedNode.id as string, {
-      pageSize,
-      pageNo: current,
-      filters: policyFilters.value
-    });
-
-    if (error) {
-      notification.error(t('common.messages.operationFailed'));
-      return;
-    }
-
-    policyData.value = res.data?.list || [];
-    policyPagination.total = res.data.total;
-  } catch (error) {
-    console.error('Error loading department policies:', error);
-    notification.error(t('common.messages.networkError'));
-  } finally {
-    policyLoading.value = false;
-  }
-};
-
 const policySave = async (addIds: string[]): Promise<void> => {
-  if (!addIds.length) {
-    policyVisible.value = false;
-    return;
-  }
-
-  try {
-    policyUpdateLoading.value = true;
-    const [error] = await auth.addPolicyByDept(state.currentSelectedNode.id as string, addIds);
-    if (error) {
-      notification.error(t('common.messages.operationFailed'));
-      return;
-    }
-
-    policyVisible.value = false;
-    policyLoadDisabled.value = true;
-    await getDeptPolicy();
-    policyLoadDisabled.value = false;
-  } catch (error) {
-    console.error('Error saving policies:', error);
-    notification.error(t('common.messages.networkError'));
-  } finally {
-    policyUpdateLoading.value = false;
-  }
+  await saveDeptPolicies(
+    addIds,
+    state,
+    policyVisible,
+    policyUpdateLoading,
+    policyLoadDisabled,
+    policyPagination,
+    policyFilters,
+    policyLoading,
+    policyData
+  );
 };
 
 const handleCancel = async (delId: string): Promise<void> => {
-  try {
-    const [error] = await auth.deletePolicyByDept(state.currentSelectedNode.id as string, [delId]);
-    if (error) {
-      notification.error(t('common.messages.operationFailed'));
-      return;
-    }
-
-    policyLoadDisabled.value = true;
-    await getDeptPolicy();
-    policyLoadDisabled.value = false;
-  } catch (error) {
-    console.error('Error canceling policy:', error);
-    notification.error(t('common.messages.networkError'));
-  }
+  await cancelDeptPolicy(
+    delId,
+    state,
+    policyLoadDisabled,
+    policyPagination,
+    policyFilters,
+    policyLoading,
+    policyData
+  );
 };
 
 const changePolicyPage = async (page: any): Promise<void> => {
-  policyPagination.current = page.current;
-  policyPagination.pageSize = page.pageSize;
-
-  policyLoadDisabled.value = true;
-  await getDeptPolicy();
-  policyLoadDisabled.value = false;
+  await handlePolicyTableChange(
+    page,
+    state,
+    policyPagination,
+    policyFilters,
+    policyLoading,
+    policyData,
+    policyLoadDisabled
+  );
 };
 
-const policyNameChange = debounce(duration.search, async (event: any): Promise<void> => {
-  const value = event.target.value;
-  policyPagination.current = 1;
-
-  if (value) {
-    policyFilters.value = [{ key: 'name', op: SearchCriteria.OpEnum.MatchEnd, value: value }];
-  } else {
-    policyFilters.value = [];
-  }
-
-  policyLoadDisabled.value = true;
-  await getDeptPolicy();
-  policyLoadDisabled.value = false;
-});
+const policyNameChange = createPolicySearchHandler(
+  state,
+  policyPagination,
+  policyFilters,
+  policyLoading,
+  policyData,
+  policyLoadDisabled
+);
 
 /**
+ * <p>
  * Right-click menu handlers
+ * </p>
  */
 const rightEditDeptName = (selected: any): void => {
   currentActionNode.value = selected;
@@ -726,7 +511,9 @@ const userColumns = [
 ];
 
 /**
+ * <p>
  * Table columns configuration
+ * </p>
  * Defines the structure and behavior of each table column
  */
 const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
@@ -750,7 +537,7 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
             :allowClear="true"
             :fieldNames="{label: 'name', value: 'id'}"
             :placeholder="t('department.placeholder.name')"
-            @change="handleSearchDept" />
+            @change="handleDeptSearch" />
           <Select
             v-model:value="searchTagId"
             :allowClear="true"
@@ -760,7 +547,7 @@ const policyColumns = createAuthPolicyColumns(t, OrgTargetType.DEPT);
             showSearch
             :placeholder="t('department.placeholder.tag')"
             :action="`${GM}/org/tag`"
-            @change="handleSearchTag" />
+            @change="handleTagSearch" />
           <ButtonAuth
             code="DeptAdd"
             type="primary"

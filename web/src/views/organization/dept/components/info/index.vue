@@ -3,28 +3,15 @@ import { withDefaults, defineProps, defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, Card, Icon } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
-
-interface DeptTag { id: string; name: string }
-interface DeptInfo {
-  id?: string;
-  name?: string;
-  code?: string;
-  createdByName?: string;
-  createdDate?: string;
-  lastModifiedByName?: string;
-  lastModifiedDate?: string;
-  level?: string | number;
-  tags?: DeptTag[];
-}
-interface NodeLike { id?: string }
+import type { DeptInfo, TreeRecordType } from '../../types';
 
 interface Props {
-  node: NodeLike;
+  node: TreeRecordType;
   deptInfo: DeptInfo;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  node: () => ({} as NodeLike),
+  node: () => ({} as TreeRecordType),
   deptInfo: () => ({}) as DeptInfo
 });
 
