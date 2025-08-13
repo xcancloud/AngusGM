@@ -61,7 +61,7 @@ defineExpose({ validateData });
       v-model:value="inputValue"
       :maxlength="11"
       :disabled="disabled"
-      :placeholder="$t('enter-mobile')"
+      :placeholder="$t('components.mobileInput.placeholder.enterMobile')"
       class="pl22"
       size="large"
       dataType="number"
@@ -75,7 +75,7 @@ defineExpose({ validateData });
         </div>
       </template>
     </Input>
-    <div class="error-message">{{ $t('error-mobile') }}</div>
+    <div class="error-message">{{ $t('components.mobileInput.messages.errorMobile') }}</div>
   </div>
 </template>
 <style scoped>

@@ -89,7 +89,7 @@ defineExpose({ validateData });
         <img src="./assets/lock.png" />
       </template>
     </InputPassword>
-    <div class="error-message">{{ t('empty-pass') }}</div>
+    <div class="error-message">{{ t('components.passwordBaseInput.messages.emptyPass') }}</div>
   </div>
 </template>
 <style scoped>

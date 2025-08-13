@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { cookieUtils } from '@xcan-angus/infra';
 
+const { t } = useI18n();
+
 const options = [
-  { label: '简体中文', value: 'zh_CN' },
-  { label: 'English', value: 'en' }
+  { label: t('components.language.labels.simplifiedChinese'), value: 'zh_CN' },
+  { label: t('components.language.labels.english'), value: 'en' }
 ];
 
 const language = (cookieUtils.get('localeCookie') || navigator.language);

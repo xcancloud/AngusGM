@@ -55,11 +55,11 @@ defineExpose({ validateData });
       :getPopupContainer="getPopupContainer"
       :options="props.dataSource"
       :fieldNames="{label:'tenantName',value:'userId'}"
-      :placeholder="$t('chose-account')"
+      :placeholder="$t('components.accountSelect.placeholder.choseAccount')"
       dropdownClassName="rounded-select"
       class="w-full rounded-select"
       size="large" />
-    <div class="error-message">{{ $t('select-login-account') }}</div>
+    <div class="error-message">{{ $t('components.accountSelect.messages.selectLoginAccount') }}</div>
   </div>
 </template>
 <style scoped>

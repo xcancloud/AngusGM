@@ -24,7 +24,7 @@ const preventDefaultListener = (e) => {
     <div class="layout-inner-container">
       <div class="img-front">
         <div class="title">AngusGM</div>
-        <div class="content">
+        <div class="content text-with-line-break">
           {{ t('sign.messages.signinTip') }}
         </div>
         <img
@@ -112,13 +112,15 @@ const preventDefaultListener = (e) => {
 
 .layout-container .title {
   width: 364px;
+  margin-left: 66px;
   margin-bottom: 12px;
   font-size: 30px;
   line-height: 30px;
 }
 
 .layout-container .content {
-  width: 364px;
+  width: 380px;
+  margin-left: 66px;
   margin-bottom: 8px;
   font-size: 19px;
   line-height: 30px;
@@ -143,6 +145,10 @@ const preventDefaultListener = (e) => {
   border-radius: 24px;
   background-color: rgb(255, 255, 255, 100%);
   box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 5%);
+}
+
+.text-with-line-break {
+  white-space: pre-line;
 }
 
 .layout-footer {

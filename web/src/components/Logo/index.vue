@@ -4,7 +4,7 @@ import { AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 
 const officialUrl = ref<string>();
 onMounted(async () => {
-  officialUrl.value = await DomainManager.getInstance().getApiDomain(AppOrServiceRoute.www);
+  officialUrl.value = DomainManager.getInstance().getApiDomain(AppOrServiceRoute.www);
 });
 </script>
 

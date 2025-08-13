@@ -40,7 +40,7 @@ const switchChange = async (value: boolean) => {
     if (error) {
       return;
     }
-    getTenantDetail();
+    await getTenantDetail();
     checked.value = false;
     notification.success(t('security.messages.cancellationRevoked'));
     return;

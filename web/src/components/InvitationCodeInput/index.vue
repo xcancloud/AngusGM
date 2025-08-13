@@ -40,7 +40,7 @@ const blur = () => {
       dataType="mixin-en"
       size="large"
       class="w-full"
-      :placeholder="$t('invite-code-desc')"
+      :placeholder="$t('components.invitationCodeInput.placeholder.inviteCodeDesc')"
       @blur="blur"
       @focus="focus">
       <template #prefix>
@@ -48,7 +48,7 @@ const blur = () => {
       </template>
     </Input>
     <div class="tip-container leading-5">
-      {{ $t('invite-code-description') }}
+      {{ $t('components.invitationCodeInput.messages.inviteCodeDescription') }}
     </div>
   </div>
 </template>

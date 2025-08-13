@@ -4,18 +4,23 @@ import { Quill } from '@xcan-angus/vue-ui';
 import '@xcan-angus/quill/dist/quill.snow.css';
 import '@xcan-angus/quill/dist/quill.core.css';
 
+// Async component for browser functionality to improve initial page load performance
 const Browser = defineAsyncComponent(() => import('./browser/index.vue'));
 
+/**
+ * Component props interface
+ * Defines the structure for rich text editor configuration
+ */
 interface Props {
-  value: string;
+  value: string; // Rich text content value
   uploadOptions?: {
-    bizKey: string;
-  } & Record<string, string>;
-  disabled: boolean;
-  mode: 'edit'|'view';
-  height: number;
-  options?: {[key: string]: any};
-  toolbarOptions?: string[]
+    bizKey: string; // Business key for file uploads
+  } & Record<string, string>; // Additional upload configuration options
+  disabled: boolean; // Whether the editor is disabled
+  mode: 'edit' | 'view'; // Editor mode: edit or view only
+  height: number; // Editor height in pixels
+  options?: { [key: string]: any }; // Additional Quill editor options
+  toolbarOptions?: string[]; // Custom toolbar configuration
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -28,26 +33,40 @@ const props = withDefaults(defineProps<Props>(), {
   toolbarOptions: undefined
 });
 
-// eslint-disable-next-line func-call-spacing
+/**
+ * Component emits definition
+ * Defines the events that this component can emit
+ */
 const emit = defineEmits<{
-  (e: 'update:value', value: string);
-  (e: 'change', value: string);
+  (e: 'update:value', value: string): void;
+  (e: 'change', value: string): void;
 }>();
 
-const quillRef = ref();
-const contents = ref([]);
-const isQuillValue = ref(true);
-const loaded = ref(false);
+// Reactive state variables
+const quillRef = ref<InstanceType<typeof Quill>>();
+const contents = ref<any[]>([]); // Rich text content array
+const isQuillValue = ref(true); // Flag indicating if value is valid Quill format
+const loaded = ref(false); // Flag indicating if component is fully loaded
 
+/**
+ * Lifecycle hook - initialize component on mount
+ * Sets up watchers for value changes and content updates
+ */
 onMounted(() => {
+  /**
+   * Watch for changes in props.value and parse content
+   * Handles both Quill format and plain text content
+   */
   watch(() => props.value, () => {
     loaded.value = false;
     try {
       if (props.value) {
         const values = JSON.parse(props.value);
         if (typeof values !== 'object') {
+          // Handle plain text content
           contents.value = [{ insert: props.value }];
         } else {
+          // Handle Quill format content
           contents.value = values || [];
         }
       } else {
@@ -55,6 +74,7 @@ onMounted(() => {
       }
       isQuillValue.value = true;
     } catch {
+      // Handle invalid JSON content
       isQuillValue.value = false;
     } finally {
       loaded.value = true;
@@ -63,6 +83,10 @@ onMounted(() => {
     immediate: true
   });
 
+  /**
+   * Watch for changes in contents and emit updates
+   * Converts content back to JSON string for parent component
+   */
   watch(() => contents.value, () => {
     if (contents.value?.length) {
       emit('update:value', JSON.stringify(contents.value));
@@ -74,8 +98,14 @@ onMounted(() => {
   });
 });
 
+// State for zoom functionality
 const isMax = ref(false);
-const zoomHandler = (type) => {
+
+/**
+ * Handle zoom state changes
+ * @param type - Zoom type: 'max' for maximized, other for normal
+ */
+const zoomHandler = (type: string): void => {
   if (type === 'max') {
     isMax.value = true;
   } else {
@@ -83,14 +113,32 @@ const zoomHandler = (type) => {
   }
 };
 
+/**
+ * Expose editor methods for parent components
+ * Provides access to Quill editor functionality
+ */
 defineExpose({
-  getLength: () => {
+  /**
+   * Get the total length of editor content
+   * @returns Total character count or undefined if editor not ready
+   */
+  getLength: (): number | undefined => {
     return quillRef.value && quillRef.value.getLength();
   },
-  getText: () => {
+
+  /**
+   * Get plain text content from editor
+   * @returns Plain text content or undefined if editor not ready
+   */
+  getText: (): string | undefined => {
     return quillRef.value && quillRef.value.getText();
   },
-  getData: () => {
+
+  /**
+   * Get processed data from editor content
+   * @returns Processed content data or undefined if empty
+   */
+  getData: (): any => {
     if (contents.value?.length) {
       if (contents.value?.length === 1) {
         const content = (contents.value[0]?.insert || '').replace('\n', '');
@@ -98,13 +146,11 @@ defineExpose({
           return undefined;
         }
       }
-      return JSON.stringify(contents.value);
-    } else {
-      return undefined;
+      return contents.value;
     }
+    return undefined;
   }
 });
-
 </script>
 <template>
   <template v-if="!isQuillValue && props.mode === 'view' && loaded">

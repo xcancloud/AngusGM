@@ -216,7 +216,7 @@ const treeOptions = computed(() => {
 <template>
   <!-- Department association modal -->
   <Modal
-    :title="t('department.assocTitle')"
+    :title="t('components.deptModal.assocTitle')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -230,7 +230,7 @@ const treeOptions = computed(() => {
       <div class="flex mb-2">
         <!-- Department selection dropdown -->
         <Select
-          :placeholder="t('department.placeholder.name')"
+          :placeholder="t('components.deptModal.placeholder.name')"
           :action="`${GM}/dept`"
           size="small"
           class="w-1/2 mr-2"
@@ -243,7 +243,7 @@ const treeOptions = computed(() => {
         <!-- Tag filter dropdown -->
         <Select
           v-model:value="selectTagId"
-          :placeholder="t('department.placeholder.tag')"
+          :placeholder="t('components.deptModal.placeholder.tag')"
           :action="`${GM}/org/tag`"
           :fieldNames="{ label: 'name', value: 'id' }"
           :params="{fullTextSearch: true}"
@@ -256,10 +256,10 @@ const treeOptions = computed(() => {
       <!-- Table header -->
       <div class="flex py-1 bg-theme-form-head text-theme-title text-3 font-normal">
         <div class="w-1/2 pl-10 mr-2">
-          {{ t('common.columns.name') }}
+          {{ t('components.deptModal.columns.name') }}
         </div>
         <div class="w-1/2 pl-10 mr-2">
-          {{ t('common.columns.code') }}
+          {{ t('components.deptModal.columns.code') }}
         </div>
       </div>
 

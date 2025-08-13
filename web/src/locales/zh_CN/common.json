@@ -56,15 +56,15 @@
       "pending": "待处理",
       "approved": "已批准",
       "rejected": "已拒绝",
-      "sms": "SMS"
+      "sms": "短信"
     },
     "time": {
       "year": "年",
       "month": "月",
       "week": "周",
       "day": "天",
-      "hour": "时",
-      "minute": "分",
+      "hour": "小时",
+      "minute": "分钟",
       "second": "秒",
       "today": "今天",
       "yesterday": "昨天",
@@ -80,22 +80,22 @@
       "nearlyYear": "近一年",
       "unit": "时间单位"
     },
-    "form": {
-      "selectAll": "全选",
-      "collapse": "收起",
-      "expand": "展开"
-    },
     "columns": {
       "name": "名称",
       "code": "编码",
       "type": "类型",
       "description": "描述",
-      "createdDate": "添加时间",
-      "createdByName": "添加人",
+      "createdDate": "创建日期",
+      "createdByName": "创建人",
       "lastModifiedByName": "最后修改人",
-      "lastModifiedDate": "最后修改时间",
+      "lastModifiedDate": "最后修改日期",
       "tags": "标签",
       "tenantName": "租户名称"
+    },
+    "form": {
+      "selectAll": "全选",
+      "collapse": "收起",
+      "expand": "展开"
     },
     "table": {
       "total": "总计",
@@ -103,28 +103,28 @@
       "items": "条",
       "noData": "暂无数据",
       "loading": "加载中...",
-      "pageShowTotal": "共{total}条记录，第{pageNo} / {totalPage}页"
+      "pageShowTotal": "共 {total} 条记录，第 {pageNo} / {totalPage} 页"
     },
     "messages": {
       "confirmTitle": "确认",
-      "confirmDelete": "确认删除`{name}`?",
+      "confirmDelete": "确定要删除 `{name}` 吗？",
       "deleteSuccess": "删除成功",
       "deleteFailed": "删除失败",
       "addSuccess": "添加成功",
       "submitSuccess": "提交成功",
-      "editSuccess": "修改成功",
-      "editFailed": "修改失败",
-      "confirmEnable": "确定启用`{name}`吗？",
+      "editSuccess": "编辑成功",
+      "editFailed": "编辑失败",
+      "confirmEnable": "确定要启用 `{name}` 吗？",
       "enableSuccess": "启用成功",
-      "confirmDisable": "确定禁用`{name}`吗？",
+      "confirmDisable": "确定要禁用 `{name}` 吗？",
       "disableSuccess": "禁用成功",
-      "lockTip": "您正在进行锁定用户操作，锁定成功后该用户将无法进行登录。",
-      "unlockTip": "确定解锁`{name}`吗？",
+      "lockTip": "您正在执行用户锁定操作。锁定成功后，用户将无法登录。",
+      "unlockTip": "确定要解锁 `{name}` 吗？",
       "lockSuccess": "锁定成功",
       "unlockSuccess": "解锁成功",
       "unlockFailed": "解锁失败",
-      "cancelAdminTip": "确定设置`{name}`为一般用户吗？",
-      "setAdminTip": "确定设置`{name}`为系统管理员吗？",
+      "cancelAdminTip": "确定要将 `{name}` 设置为普通用户吗？",
+      "setAdminTip": "确定要将 `{name}` 设置为系统管理员吗？",
       "copySuccess": "复制成功",
       "uploadSuccess": "上传成功",
       "downloadSuccess": "下载成功",
@@ -144,6 +144,137 @@
       "source": "来源",
       "association": "关联",
       "language": "语言"
+    }
+  },
+  "components": {
+    "accountInput": {
+      "placeholder": {
+        "enterAccount": "输入用户名、手机号、邮箱"
+      },
+      "messages": {
+        "noEmptyAccount": "账号不能为空"
+      }
+    },
+    "accountSelect": {
+      "placeholder": {
+        "choseAccount": "请选择账号"
+      },
+      "messages": {
+        "selectLoginAccount": "请选择登录账号"
+      }
+    },
+    "auditStatus": {
+      "messages": {
+        "auditingMessage": "您提交的认证资料正在审核中...",
+        "auditingDescription": "请耐心等待，我们会在1-3个工作日内完成",
+        "failedMessage": "非常遗憾，审核未通过！",
+        "failedReason": "不通过原因："
+      }
+    },
+    "deptModal": {
+      "assocTitle": "部门关联",
+      "placeholder": {
+        "name": "搜索部门名称",
+        "tag": "选择标签"
+      },
+      "columns": {
+        "name": "名称",
+        "code": "编码"
+      }
+    },
+    "groupModal": {
+      "assocTitle": "组关联",
+      "placeholder": {
+        "name": "搜索组名称",
+        "tag": "选择标签"
+      },
+      "columns": {
+        "name": "名称",
+        "code": "编码",
+        "validStatus": "有效状态"
+      }
+    },
+    "emailInput": {
+      "placeholder": {
+        "enterEmail": "请输入邮箱地址"
+      },
+      "messages": {
+        "emailError": "请输入正确的邮箱地址"
+      }
+    },
+    "verificationCodeInput": {
+      "placeholder": {
+        "enterCode": "请输入验证码"
+      },
+      "messages": {
+        "getCode": "获取验证码",
+        "resend": "重新发送({second}s)",
+        "errorVerifyCode": "无效的验证码",
+        "networkError": "网络错误"
+      }
+    },
+    "statistics": {
+      "metrics": {
+        "method": "方法",
+        "type": "类型",
+        "status": "状态",
+        "disable": "禁用",
+        "enable": "启用",
+        "yes": "是",
+        "no": "否"
+      }
+    },
+    "copyRight": {
+      "copyright": "版权所有",
+      "allRightsReserved": "版权所有",
+      "icpRecord": "京ICP备2021037962号-1",
+      "publicSecurityRecord": "京公网安备 11011402012129号"
+    },
+    "passwordInput": {
+      "messages": {
+        "invalidPass": "无效密码",
+        "passLength": "密码长度在6到50之间",
+        "passRules": "至少包含两种类型组合",
+        "noSpace": "不允许包含空格",
+        "strengthDesc": "密码强度：{text}"
+      }
+    },
+    "mobileInput": {
+      "placeholder": {
+        "enterMobile": "请输入手机号"
+      },
+      "messages": {
+        "errorMobile": "请输入正确的手机号"
+      }
+    },
+    "invitationCodeInput": {
+      "placeholder": {
+        "inviteCodeDesc": "请输入邀请码"
+      },
+      "messages": {
+        "inviteCodeDescription": "请输入邀请码完成注册"
+      }
+    },
+    "passwordConfirmInput": {
+      "messages": {
+        "passNoSame": "密码不一致"
+      }
+    },
+    "language": {
+      "labels": {
+        "simplifiedChinese": "简体中文",
+        "english": "English"
+      }
+    },
+    "officialLink": {
+      "labels": {
+        "officialWebsite": "官方网站"
+      }
+    },
+    "passwordBaseInput": {
+      "messages": {
+        "emptyPass": "密码不能为空"
+      }
     }
   }
 }

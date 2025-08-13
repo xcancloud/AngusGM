@@ -230,7 +230,7 @@ watch(() => props.tagId, () => {
 <template>
   <!-- Group association modal -->
   <Modal
-    :title="t('group.assocTitle')"
+    :title="t('components.groupModal.assocTitle')"
     :visible="props.visible"
     :centered="true"
     :keyboard="true"
@@ -244,7 +244,7 @@ watch(() => props.tagId, () => {
       <div class="mb-2 flex space-x-2">
         <!-- Group name search input -->
         <Input
-          :placeholder="t('group.placeholder.name')"
+          :placeholder="t('components.groupModal.placeholder.name')"
           class="w-1/2"
           size="small"
           allowClear
@@ -256,7 +256,7 @@ watch(() => props.tagId, () => {
 
         <!-- Tag filter dropdown -->
         <Select
-          :placeholder="t('group.placeholder.tag')"
+          :placeholder="t('components.groupModal.placeholder.tag')"
           :action="`${GM}/org/tag`"
           :fieldNames="{ label: 'name', value: 'id' }"
           :params="{fullTextSearch: true}"
@@ -272,9 +272,9 @@ watch(() => props.tagId, () => {
           class="w-4"
           :indeterminate="indeterminate"
           @change="onCheckAllChange" />
-        <div class="flex-1 min-w-60">{{ t('common.columns.name') }}</div>
-        <div class="w-60">{{ t('common.columns.code') }}</div>
-        <div class="w-25">{{ t('common.status.validStatus') }}</div>
+        <div class="flex-1 min-w-60">{{ t('components.groupModal.columns.name') }}</div>
+        <div class="w-60">{{ t('components.groupModal.columns.code') }}</div>
+        <div class="w-25">{{ t('components.groupModal.columns.validStatus') }}</div>
       </div>
 
       <!-- Scrollable group list with checkboxes -->

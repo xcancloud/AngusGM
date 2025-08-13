@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { cookieUtils } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { InputPassword } from 'ant-design-vue';
 
 import password from './password';
 
+/**
+ * Component props interface
+ * Defines the structure for password input configuration
+ */
 interface Props {
   value: string;
   tipClass?: string;
@@ -26,9 +30,21 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: undefined
 });
 
-const emit = defineEmits<{(e: 'update:value', value: string): void, (e: 'pressEnter', value: string): void }>();
+/**
+ * Component emits definition
+ * Defines the events that this component can emit
+ */
+const emit = defineEmits<{
+  (e: 'update:value', value: string): void;
+  (e: 'pressEnter', value: string): void;
+}>();
 
 const { t } = useI18n();
+
+/**
+ * Error message mapping for different locales
+ * Provides localized error messages for password validation
+ */
 const errorMap = {
   en: {
     1: 'Illegal character, input not allowed',
@@ -43,6 +59,11 @@ const errorMap = {
     4: '至少包含两种类型组合'
   }
 };
+
+/**
+ * Password strength mapping for different locales
+ * Provides localized strength indicators
+ */
 const tipMap = {
   en: {
     weak: 'weak',
@@ -55,54 +76,75 @@ const tipMap = {
     strong: '强'
   }
 };
-let errorMessageMap = errorMap.zh_CN;
-let strengthMap = tipMap.zh_CN;
+
+/**
+ * Get current locale from cookie and set appropriate message maps
+ * Dynamically switches between English and Chinese based on user preference
+ */
 const localeCookie = cookieUtils.get('localeCookie') as string;
-if (['en', 'zh_CN'].includes(localeCookie)) {
-  errorMessageMap = errorMap[localeCookie];
-  strengthMap = tipMap[localeCookie];
-}
-const errorMessage = ref(t('invalid-pass'));
+const currentLocale = ['en', 'zh_CN'].includes(localeCookie) ? localeCookie : 'zh_CN';
+const errorMessageMap = computed(() => errorMap[currentLocale]);
+const strengthMap = computed(() => tipMap[currentLocale]);
+
+// Reactive state variables
+const errorMessage = ref(t('components.passwordInput.messages.invalidPass'));
 const focused = ref(false);
-
 const validLength = ref(false);
-const blank = ref(false); // 密码是否包含空格
-const group = ref(false); // 至少包含数字和字母两种组合
-const strengthClass = ref(); // 密码强度提示class
-const strengthText = ref(); // 密码强度提示文字
-const showStrength = ref(false); // 是否展示密码强度
-
+const blank = ref(false); // Password contains non-space characters
+const group = ref(false); // Contains at least two types of characters
+const strengthClass = ref<string>(); // Password strength CSS class
+const strengthText = ref<string>(); // Password strength text
+const showStrength = ref(false); // Whether to show password strength indicator
 const error = ref(false);
 const input = ref(false);
-const inputValue = ref();
+const inputValue = ref<string>('');
 
-watch(() => props.value, newValue => {
+/**
+ * Watch for changes in props.value and update local state
+ * Ensures component stays in sync with parent component
+ */
+watch(() => props.value, (newValue) => {
   inputValue.value = newValue;
 }, {
   immediate: true
 });
 
-const change = (event: any) => {
-  let value = event.target.value;
+/**
+ * Handle input change events
+ * Filters out invalid characters and spaces, limits length to 50
+ */
+const change = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+
   if (input.value) {
     return;
   }
 
+  // Remove all spaces and invalid characters
   value = value?.replace(/\s+/g, '');
   // eslint-disable-next-line no-useless-escape
   inputValue.value = value?.replace(/[^\da-zA-Z@#~`\$%\^&\*-_+=\(\)\}\{\]\[;:'",\.<>?/|!]/g, '').slice(0, 50);
   emit('update:value', inputValue.value);
 };
 
+/**
+ * Handle Enter key press
+ * Emits pressEnter event with current input value
+ */
 const pressEnter = () => {
   emit('pressEnter', inputValue.value);
 };
 
-const validateData = () => {
+/**
+ * Validate password data against security rules
+ * Returns true if password is valid, false otherwise
+ */
+const validateData = (): boolean => {
   const { code, char } = password.isInvalid(inputValue.value);
   if (code) {
     error.value = true;
-    errorMessage.value = char ? (char + ' ' + errorMessageMap[code]) : errorMessageMap[code];
+    errorMessage.value = char ? `${char} ${errorMessageMap.value[code]}` : errorMessageMap.value[code];
     return false;
   }
 
@@ -110,38 +152,65 @@ const validateData = () => {
   return true;
 };
 
-watch(() => inputValue.value, newValue => {
+/**
+ * Watch for changes in input value and update validation state
+ * Updates password strength indicators and validation flags
+ */
+watch(() => inputValue.value, (newValue) => {
   if (!newValue) {
     newValue = '';
   }
 
-  validateData();// 校验输入字符是否符合密码规则
+  // Validate input characters against password rules
+  validateData();
 
+  // Update validation flags
   validLength.value = newValue.length >= 6 && newValue.length <= 50;
-  blank.value = newValue.length;
-  group.value = password.getTypesNum(newValue) >= 2;
+  blank.value = newValue.length > 0;
+  group.value = password.getTypesNum(newValue.split('')) >= 2;
 
+  // Calculate and update password strength
   const strength = password.calcStrength(newValue);
   strengthClass.value = strength;
-  strengthText.value = strengthMap[strength];
+  strengthText.value = strengthMap.value[strength];
   showStrength.value = !password.isInvalid(newValue).code;
 });
 
+/**
+ * Handle blur event
+ * Removes focus state and validates data
+ */
 const blur = () => {
   focused.value = false;
   validateData();
 };
 
+/**
+ * Handle focus event
+ * Sets focus state to true
+ */
 const focus = () => {
   focused.value = true;
 };
-const compositionend = (e) => {
+
+/**
+ * Handle composition end event for IME input
+ * Processes input after IME composition is complete
+ */
+const compositionend = (e: Event) => {
   input.value = false;
   change(e);
 };
+
+/**
+ * Handle composition start event for IME input
+ * Prevents processing during IME composition
+ */
 const compositionstart = () => {
   input.value = true;
 };
+
+// Expose validation method for parent components
 defineExpose({ validateData });
 </script>
 
@@ -176,7 +245,7 @@ defineExpose({ validateData });
           v-else
           class="absolute top-0.5"
           src="./assets/gou1.png">
-        <div class="ml-7.25 whitespace-pre-wrap">{{ t('pass-length') }}</div>
+        <div class="ml-7.25 whitespace-pre-wrap">{{ t('components.passwordInput.messages.passLength') }}</div>
       </div>
       <div class="relative mt-2">
         <img
@@ -187,7 +256,7 @@ defineExpose({ validateData });
           v-else
           class="absolute top-0.5"
           src="./assets/gou1.png">
-        <div class="ml-7.25 whitespace-pre-wrap">{{ t('pass-rules') }}@#~`$%^&*)(-_+=}{][;:,.'>?"/|!</div>
+        <div class="ml-7.25 whitespace-pre-wrap">{{ t('components.passwordInput.messages.passRules') }}@#~`$%^&*)(-_+=}{][;:,.'>?"/|!</div>
       </div>
       <div class="relative mt-2">
         <img
@@ -198,7 +267,7 @@ defineExpose({ validateData });
           v-else
           class="absolute top-0.5"
           src="./assets/gou1.png">
-        <div class="ml-7.25 whitespace-pre-wrap">{{ t('no-space') }}</div>
+        <div class="ml-7.25 whitespace-pre-wrap">{{ t('components.passwordInput.messages.noSpace') }}</div>
       </div>
     </div>
     <div class="error-message">{{ errorMessage }}</div>
@@ -206,7 +275,7 @@ defineExpose({ validateData });
       v-show="showStrength"
       :class="strengthClass"
       class="strength w-full flex items-center flex-no-wrap whitespace-nowrap text-3.5 leading-3 mt-2 px-5">
-      <div class="text-tip mr-4 whitespace-nowrap">{{ t('strength-desc',{text:strengthText}) }}</div>
+      <div class="text-tip mr-4 whitespace-nowrap">{{ t('components.passwordInput.messages.strengthDesc',{text:strengthText}) }}</div>
       <div class="w-full h-1 rounded bg-gray-bg overflow-hidden">
         <div class="icon-tip h-full rounded"></div>
       </div>

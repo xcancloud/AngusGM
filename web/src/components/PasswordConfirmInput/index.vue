@@ -92,6 +92,6 @@ defineExpose({ validateData });
         <img src="./assets/lock.png" />
       </template>
     </InputPassword>
-    <div class="error-message">{{ $t('pass-no-same') }}</div>
+    <div class="error-message">{{ $t('components.passwordConfirmInput.messages.passNoSame') }}</div>
   </div>
 </template>

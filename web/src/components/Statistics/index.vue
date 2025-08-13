@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { enumUtils, UserSource, Gender, HttpMethod, ApiType, EventType, ProcessStatus } from '@xcan-angus/infra';
+import { enumUtils, Gender, HttpMethod, ApiType, EventType, ProcessStatus } from '@xcan-angus/infra';
 import {
   GroupSource, OrgTargetType, NoticeScope, SentType, MessageReceiveType,
   MessageStatus, EventPushStatus, ServiceSource
@@ -8,7 +8,7 @@ import {
 import { useI18n } from 'vue-i18n';
 import { DateType, PieSetting } from './PropsType';
 
-// Async component for chart loading
+// Async component for chart loading to improve initial page load performance
 const LoadChart = defineAsyncComponent(() => import('./LoadChart.vue'));
 
 /**
@@ -16,12 +16,12 @@ const LoadChart = defineAsyncComponent(() => import('./LoadChart.vue'));
  * Defines the structure for statistics component configuration
  */
 interface Props {
-  router: string; // API gateway URL
-  resource: string; // Resource type for statistics
-  barTitle: string; // Title for bar chart
-  dateType: DateType; // Date range type
+  router: string; // API gateway URL for data fetching
+  resource: string; // Resource type for statistics (User, Group, etc.)
+  barTitle: string; // Title for bar chart display
+  dateType: DateType; // Date range type for data filtering
   visible?: boolean; // Visibility control for statistics panel
-  userId?: string; // Optional user ID for filtering
+  userId?: string; // Optional user ID for filtering user-specific data
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,21 +34,27 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { t } = useI18n();
 
-// Color palette configuration for charts
+/**
+ * Color palette configuration for charts
+ * Provides consistent color scheme across all chart types
+ */
 const COLOR = [
-  '45,142,255', // Blue
-  '82,196,26', // Green
-  '255,165,43', // Yellow
-  '245,34,45', // Red
-  '103,215,255', // Light Blue
-  '201,119,255', // Purple
-  '255,102,0', // Orange
-  '217, 217, 217', // Gray
-  '251, 129, 255', // Pink
-  '171, 211, 255' // Light Blue 1
+  '45,142,255', // Blue - Primary color
+  '82,196,26', // Green - Success color
+  '255,165,43', // Yellow - Warning color
+  '245,34,45', // Red - Error color
+  '103,215,255', // Light Blue - Secondary color
+  '201,119,255', // Purple - Accent color
+  '255,102,0', // Orange - Highlight color
+  '217, 217, 217', // Gray - Neutral color
+  '251, 129, 255', // Pink - Tertiary color
+  '171, 211, 255' // Light Blue 1 - Quaternary color
 ] as const;
 
-// User statistics configuration - defines pie chart settings for user data
+/**
+ * User statistics configuration
+ * Defines pie chart settings for user-related data visualization
+ */
 const userGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
@@ -76,7 +82,10 @@ const userGroup = ref<PieSetting[]>([
   }
 ]);
 
-// Group statistics configuration
+/**
+ * Group statistics configuration
+ * Defines pie chart settings for group-related data visualization
+ */
 const groupByGroup = ref<PieSetting[]>([
   {
     key: 'enabled',
@@ -92,7 +101,10 @@ const groupByGroup = ref<PieSetting[]>([
   }
 ]);
 
-// Organization tag statistics configuration
+/**
+ * Organization tag statistics configuration
+ * Defines pie chart settings for organization tag data visualization
+ */
 const orgTagGroup = ref<PieSetting[]>([
   {
     key: 'target_type',
@@ -102,7 +114,10 @@ const orgTagGroup = ref<PieSetting[]>([
   }
 ]);
 
-// Notice statistics configuration
+/**
+ * Notice statistics configuration
+ * Defines pie chart settings for notice-related data visualization
+ */
 const noticeGroup = ref<PieSetting[]>([
   {
     key: 'scope',
@@ -118,7 +133,10 @@ const noticeGroup = ref<PieSetting[]>([
   }
 ]);
 
-// Message statistics configuration
+/**
+ * Message statistics configuration
+ * Defines pie chart settings for message-related data visualization
+ */
 const messageGroup = ref<PieSetting[]>([
   {
     key: 'receive_type',
@@ -134,7 +152,10 @@ const messageGroup = ref<PieSetting[]>([
   }
 ]);
 
-// Service statistics configuration
+/**
+ * Service statistics configuration
+ * Defines pie chart settings for service-related data visualization
+ */
 const serviceGroup = ref<PieSetting[]>([
   {
     key: 'source',
@@ -144,8 +165,8 @@ const serviceGroup = ref<PieSetting[]>([
   },
   {
     key: 'enabled',
-    value: t('status'),
-    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
+    value: t('components.statistics.metrics.status'),
+    type: [{ value: 0, message: t('components.statistics.metrics.disable') }, { value: 1, message: t('components.statistics.metrics.enable') }],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   }
 ]);
@@ -154,31 +175,34 @@ const serviceGroup = ref<PieSetting[]>([
 const apiGroup = ref<PieSetting[]>([ // TODO 删除图表
   {
     key: 'method',
-    value: t('方法'),
+    value: t('components.statistics.metrics.method'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
   {
     key: 'type',
-    value: t('type'),
+    value: t('components.statistics.metrics.type'),
     type: [],
     color: [COLOR[0], COLOR[2], COLOR[4], COLOR[5], COLOR[6], COLOR[3], COLOR[1]]
   },
   {
     key: 'enabled',
-    value: t('status'),
-    type: [{ value: 0, message: t('disable') }, { value: 1, message: t('enable') }],
+    value: t('components.statistics.metrics.status'),
+    type: [{ value: 0, message: t('components.statistics.metrics.disable') }, { value: 1, message: t('components.statistics.metrics.enable') }],
     color: [COLOR[3], COLOR[1], COLOR[5], COLOR[6]]
   }
 ]);
 
-// HTTP status code ranges for API logs
+/**
+ * HTTP status code ranges for API logs
+ * Provides meaningful grouping of HTTP status codes for visualization
+ */
 const statusCode = [
   { value: 100, message: '1xx' }, // Informational status codes
-  { value: 200, message: '2xx' }, // Success
-  { value: 300, message: '3xx' }, // Redirection
-  { value: 400, message: '4xx' }, // Client errors
-  { value: 500, message: '5xx' } // Server errors
+  { value: 200, message: '2xx' }, // Success status codes
+  { value: 300, message: '3xx' }, // Redirection status codes
+  { value: 400, message: '4xx' }, // Client error status codes
+  { value: 500, message: '5xx' } // Server error status codes
 ];
 
 // Request logs statistics configuration // TODO 未展示默认数量0
@@ -209,26 +233,35 @@ const requestLogsGroup = ref<PieSetting[]>([
   }
 ]);
 
-// Operation logs statistics configuration
+/**
+ * Operation logs statistics configuration
+ * Currently empty, can be extended for operation log visualization
+ */
 const operationLogsGroup = ref<PieSetting[]>([]);
 
-// System events statistics configuration
+/**
+ * System events statistics configuration
+ * Defines pie chart settings for system event data visualization
+ */
 const eventGroup = ref<PieSetting[]>([
   {
     key: 'type',
     value: t('statistics.metrics.eventType'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[1], COLOR[3]]
   },
   {
     key: 'push_status',
     value: t('statistics.metrics.eventPushStatus'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[1], COLOR[3]]
   }
 ]);
 
-// SMS records statistics configuration
+/**
+ * SMS records statistics configuration
+ * Defines pie chart settings for SMS record data visualization
+ */
 const smsRecordGroup = ref<PieSetting[]>([
   {
     key: 'send_status',
@@ -239,24 +272,27 @@ const smsRecordGroup = ref<PieSetting[]>([
   {
     key: 'urgent',
     value: t('statistics.metrics.isUrgent'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'verification_code',
     value: t('statistics.metrics.isVCode'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'batch',
     value: t('statistics.metrics.isBatchSend'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[3], COLOR[1]]
   }
 ]);
 
-// Email records statistics configuration
+/**
+ * Email records statistics configuration
+ * Defines pie chart settings for email record data visualization
+ */
 const emailRecordGroup = ref<PieSetting[]>([
   {
     key: 'send_status',
@@ -267,24 +303,24 @@ const emailRecordGroup = ref<PieSetting[]>([
   {
     key: 'urgent',
     value: t('statistics.metrics.isUrgent'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'verification_code',
     value: t('statistics.metrics.isVCode'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[3], COLOR[1]]
   },
   {
     key: 'batch',
     value: t('statistics.metrics.isBatchSend'),
-    type: [{ value: 1, message: t('yes') }, { value: 0, message: t('no') }],
+    type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
     color: [COLOR[3], COLOR[1]]
   }
 ]);
 
-// Flag to control pie chart visibility
+// Flag to control pie chart visibility based on resource type
 const hasPieChart = ref(false);
 
 /**

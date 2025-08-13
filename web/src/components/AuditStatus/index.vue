@@ -42,8 +42,8 @@ const reAudit = function () {
           class="text-success mb-10"
           style="font-size: 120px;" />
       </div>
-      <p class="text-theme-content mb-5 font-medium">{{ t('您提交的认证资料正在审核中...') }}</p>
-      <p class="text-theme-content">{{ t('请耐心等待，我们会在1-3个工作日内完成') }}</p>
+      <p class="text-theme-content mb-5 font-medium">{{ t('components.auditStatus.messages.auditingMessage') }}</p>
+      <p class="text-theme-content">{{ t('components.auditStatus.messages.auditingDescription') }}</p>
     </template>
     <template v-else>
       <div>
@@ -52,8 +52,8 @@ const reAudit = function () {
           class="text-danger mb-10"
           style="font-size: 120px;" />
       </div>
-      <p class="text-theme-content mb-5 font-medium">{{ t('非常遗憾，审核未通过！') }}</p>
-      <p class="text-theme-content">{{ t('不通过原因：') }}{{ message }}</p>
+      <p class="text-theme-content mb-5 font-medium">{{ t('components.auditStatus.messages.failedMessage') }}</p>
+      <p class="text-theme-content">{{ t('components.auditStatus.messages.failedReason') }}{{ message }}</p>
     </template>
     <div class="mt-15">
       <Button

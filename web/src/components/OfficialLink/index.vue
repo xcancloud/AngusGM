@@ -11,5 +11,5 @@ onMounted(() => {
   <a
     class="text-gray-content hover:text-blue-hover"
     :href="officialUrl"
-    target="_self">{{ $t('official-website') }}</a>
+    target="_self">{{ $t('components.officialLink.labels.officialWebsite') }}</a>
 </template>
