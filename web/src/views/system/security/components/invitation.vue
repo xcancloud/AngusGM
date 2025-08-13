@@ -71,7 +71,7 @@ watch(() => props.signupAllow, (newValue) => {
   <Card bodyClass="px-8 py-5 text-3 leading-3 text-theme-content">
     <template #title>
       <div class="flex items-center">
-        <span>{{ t('securities.titles.allowRegistration') }}</span>
+        <span>{{ t('security.titles.allowRegistration') }}</span>
         <Switch
           v-model:checked="currEnabled"
           :loading="props.signupSwitchLoading"
@@ -79,10 +79,10 @@ watch(() => props.signupAllow, (newValue) => {
           class="ml-6 mt-0.5"
           @change="enabledChange" />
         <span
-          class="text-3 leading-3 text-theme-sub-content mt-1.25 ml-2">{{ t('securities.messages.registrationDesc') }}</span>
+          class="text-3 leading-3 text-theme-sub-content mt-1.25 ml-2">{{ t('security.messages.registrationDesc') }}</span>
       </div>
     </template>
-    <span>{{ t('securities.columns.invitationCode') }}<Colon /></span>
+    <span>{{ t('security.columns.invitationCode') }}<Colon /></span>
     <template v-if="currEnabled"><span>{{ code }}</span></template>
     <Button
       size="small"
@@ -91,7 +91,7 @@ watch(() => props.signupAllow, (newValue) => {
       :disabled="!currEnabled"
       :loading="props.resetButtonLoading"
       @click="getSignupInvitationCode">
-      {{ t('securities.buttons.reset') }}
+      {{ t('security.buttons.reset') }}
     </Button>
   </Card>
 </template>

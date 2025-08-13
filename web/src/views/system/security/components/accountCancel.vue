@@ -42,7 +42,7 @@ const switchChange = async (value: boolean) => {
     }
     getTenantDetail();
     checked.value = false;
-    notification.success(t('securities.messages.cancellationRevoked'));
+    notification.success(t('security.messages.cancellationRevoked'));
     return;
   }
 
@@ -74,7 +74,7 @@ const visible = ref(false);
   <Card bodyClass="px-8 py-5 text-3 leading-3 text-theme-content">
     <template #title>
       <div class="flex items-center">
-        <span>{{ t('securities.titles.accountCancellation') }}</span>
+        <span>{{ t('security.titles.accountCancellation') }}</span>
         <Switch
           v-model:checked="checked"
           size="small"
@@ -85,7 +85,7 @@ const visible = ref(false);
           class="text-3 leading-3 mt-1">{{ tenantStatus?.message }}</span>
       </div>
     </template>
-    {{ t('securities.messages.accountCancellationDesc') }}
+    {{ t('security.messages.accountCancellationDesc') }}
     <AsyncComponent :visible="visible">
       <CancellationModal
         v-if="visible"
