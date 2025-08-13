@@ -14,28 +14,39 @@ import { notice } from '@/api';
 const { t } = useI18n();
 const router = useRouter();
 
+// Form layout configuration
 const labelCol = { span: 8 };
 const wrapperCol = { span: 16 };
 
+// Form reference for validation
 const formRef = ref();
 
+// Form data model with default values
 const form: NoticeFormType = reactive({
-  content: '',
-  scope: NoticeScope.GLOBAL,
-  appCode: undefined,
-  appName: undefined,
-  editionType: undefined,
-  appId: undefined,
-  sendType: SentType.SEND_NOW,
-  sendTimingDate: undefined,
-  expirationDate: undefined
+  content: '', // Notice content text
+  scope: NoticeScope.GLOBAL, // Notice scope (global or app-specific)
+  appCode: undefined, // Application code for app-scoped notices
+  appName: undefined, // Application name for app-scoped notices
+  editionType: undefined, // Application edition type
+  appId: undefined, // Application ID for app-scoped notices
+  sendType: SentType.SEND_NOW, // Send type (immediate or scheduled)
+  sendTimingDate: undefined, // Scheduled send date/time
+  expirationDate: undefined // Notice expiration date
 });
 
+/**
+ * Cancel form and return to notice list
+ * Resets form data and navigates back
+ */
 const cancel = () => {
   resetForm(form, formRef);
   router.push('/messages/notification');
 };
 
+/**
+ * Submit form and create notice
+ * Validates form data, submits to API, and handles response
+ */
 const submitForm = () => {
   formRef.value
     .validate()
@@ -53,14 +64,16 @@ const submitForm = () => {
     });
 };
 
+// Enum lists for form options
 const enumsList: {
-  noticeScopeList: Array<any>
-  SentTypeList: Array<any>
+  noticeScopeList: Array<any> // Available notice scopes
+  SentTypeList: Array<any> // Available send types
 } = reactive({
   noticeScopeList: [],
   SentTypeList: []
 });
 
+// Initialize enum data on component mount
 onMounted(() => {
   enumsList.SentTypeList = enumUtils.enumToMessages(SentType);
 });
@@ -75,6 +88,7 @@ onMounted(() => {
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
       size="small">
+      <!-- Notice content input -->
       <FormItem
         colon
         :label="t('notification.columns.content')"
@@ -86,6 +100,8 @@ onMounted(() => {
           :maxlength="200"
           size="small" />
       </FormItem>
+
+      <!-- Notice scope selection -->
       <FormItem
         colon
         :label="t('notification.columns.scope')"
@@ -99,9 +115,13 @@ onMounted(() => {
           :lazy="false"
           @change="(item) => handleScopeChange(item, form)" />
       </FormItem>
+
+      <!-- Global scope hint -->
       <div class="text-3 pl-1/3 -mt-4">
         <Hints :text="t('notification.globalTip')" class="w-150 mb-1" />
       </div>
+
+      <!-- App selection (only shown for app-scoped notices) -->
       <template v-if="form.scope === NoticeScope.APP">
         <FormItem
           colon
@@ -122,6 +142,8 @@ onMounted(() => {
           </Select>
         </FormItem>
       </template>
+
+      <!-- Expiration date picker -->
       <FormItem
         :label="t('notification.columns.expiredDate') + ':'"
         name="expirationDate">
@@ -132,6 +154,8 @@ onMounted(() => {
           showTime
           @change="(value) => handleExpirationDate(value, form)" />
       </FormItem>
+
+      <!-- Send type selection -->
       <FormItem
         colon
         :label="t('notification.columns.sendType')"
@@ -146,6 +170,8 @@ onMounted(() => {
           </Radio>
         </RadioGroup>
       </FormItem>
+
+      <!-- Scheduled send date (only shown for scheduled sends) -->
       <FormItem
         v-if="form.sendType === SentType.TIMING_SEND"
         :label="t('sendDate')"
@@ -159,6 +185,8 @@ onMounted(() => {
           showTime
           @change="(value) => handleDateChange(value, form)" />
       </FormItem>
+
+      <!-- Form action buttons -->
       <FormItem label=" " class="text-center">
         <Button
           size="small"
@@ -177,6 +205,7 @@ onMounted(() => {
   </PureCard>
 </template>
 <style scoped>
+/* Custom form control styling for better layout */
 .ant-form-horizontal :deep(.ant-form-item-control) {
   flex: 1 1 50%;
   max-width: 600px;
