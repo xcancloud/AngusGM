@@ -277,5 +277,27 @@
         "emptyPass": "密码不能为空"
       }
     }
+  },
+  "router": {
+    "breadcrumb": {
+      "user": "用户",
+      "addUser": "添加用户",
+      "editUser": "编辑用户",
+      "detail": "详情",
+      "group": "用户组",
+      "add": "添加",
+      "edit": "编辑",
+      "strategy": "策略",
+      "authorisation": "授权",
+      "strategyDetail": "策略详情",
+      "sendMessage": "消息管理",
+      "send": "发送",
+      "mailboxServer": "邮箱服务器",
+      "ldap": "LDAP配置",
+      "announcement": "公告",
+      "basicInfo": "基本信息",
+      "otherAccount": "其他账号",
+      "sendRecords": "发送记录"
+    }
   }
 }

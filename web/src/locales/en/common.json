@@ -276,5 +276,27 @@
         "emptyPass": "Password cannot be empty"
       }
     }
+  },
+  "router": {
+    "breadcrumb": {
+      "user": "User",
+      "addUser": "Add User",
+      "editUser": "Edit User",
+      "detail": "Detail",
+      "group": "User Group",
+      "add": "Add",
+      "edit": "Edit",
+      "strategy": "Policy",
+      "authorisation": "Authorization",
+      "strategyDetail": "Policy Detail",
+      "sendMessage": "Message",
+      "send": "Send",
+      "mailboxServer": "Mailbox Server",
+      "ldap": "LDAP Configuration",
+      "announcement": "Notification",
+      "basicInfo": "Basic Information",
+      "otherAccount": "Other Account",
+      "sendRecords": "Send Records"
+    }
   }
 }
