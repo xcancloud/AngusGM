@@ -6,12 +6,7 @@ import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
 import { message } from '@/api';
 import type {
-  MessageComponentState,
-  MessageSearchParams,
-  PaginationConfig,
-  SearchParams,
-  SortConfig,
-  TableChangeParams
+  MessageComponentState, MessageSearchParams, PaginationConfig, SearchParams, SortConfig, TableChangeParams
 } from './types';
 import { createSearchOptions, createTableColumns, getStatusText } from './utils';
 

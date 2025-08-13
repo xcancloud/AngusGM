@@ -4,44 +4,35 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { modal, Table, PureCard, SearchPanel, notification, Hints, IconCount, IconRefresh, ButtonAuth } from '@xcan-angus/vue-ui';
 import { app, GM } from '@xcan-angus/infra';
-import { NoticeScope, SentType } from '@/enums/enums';
+import { SentType } from '@/enums/enums';
 import { Tooltip } from 'ant-design-vue';
 
 import { notice } from '@/api';
-import type { NoticeDataType } from './types';
+import type { NoticeDataType, PaginationType, SearchParamsType } from './types';
+import { getQueryParams, getSearchOptions, getTableColumns } from './utils';
 
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 
 const router = useRouter();
 const { t } = useI18n();
 
-const pagination = reactive({
+const pagination = reactive<PaginationType>({
   pageSize: 10,
   current: 1,
   total: 0
 });
 
 const showCount = ref(true);
-const searchParams = ref([]);
+const searchParams = ref<SearchParamsType[]>([]);
 const loading = ref(false);
 const disabled = ref(false);
 const noticeData = ref<NoticeDataType[]>([]);
-
-const getQueryParams = () => {
-  const { pageSize, current } = pagination;
-  return {
-    pageSize,
-    pageNo: current,
-    filters: searchParams.value,
-    fullTextSearch: true
-  };
-};
 
 const getNoticeList = async () => {
   if (loading.value) {
     return;
   }
-  const params = getQueryParams();
+  const params = getQueryParams(pagination, searchParams.value);
   loading.value = true;
   const [error, res] = await notice.getNoticeList(params);
   loading.value = false;
@@ -95,86 +86,9 @@ const deleteNotice = (item: NoticeDataType) => {
   });
 };
 
-const searchOptions = [
-  {
-    type: 'input',
-    allowClear: true,
-    valueKey: 'content',
-    placeholder: t('notification.placeholder.content')
-  },
-  {
-    type: 'select-enum',
-    allowClear: true,
-    valueKey: 'scope',
-    enumKey: NoticeScope,
-    placeholder: t('notification.placeholder.scope')
-  },
-  {
-    type: 'select-enum',
-    allowClear: true,
-    valueKey: 'sendType',
-    enumKey: SentType,
-    placeholder: t('notification.placeholder.sendType')
-  }
-];
+const searchOptions = getSearchOptions(t);
 
-const columns = [
-  {
-    title: t('notification.columns.content'),
-    key: 'content',
-    dataIndex: 'content',
-    ellipsis: true
-  },
-  {
-    title: t('notification.columns.scope'),
-    key: 'scope',
-    dataIndex: 'scope',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('notification.columns.sendType'),
-    key: 'sendType',
-    dataIndex: 'sendType',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('notification.columns.timingDate'),
-    key: 'timingDate',
-    dataIndex: 'timingDate',
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('common.columns.createdByName'),
-    key: 'createdByName',
-    dataIndex: 'createdByName',
-    width: '14%'
-  },
-  {
-    title: t('common.columns.createdDate'),
-    key: 'createdDate',
-    dataIndex: 'createdDate',
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('common.actions.operation'),
-    key: 'action',
-    dataIndex: 'action',
-    width: '5%',
-    align: 'center'
-  }
-];
+const columns = getTableColumns(t);
 
 onMounted(() => {
   getNoticeList();

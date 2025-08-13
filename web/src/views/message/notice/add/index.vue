@@ -7,7 +7,8 @@ import { appContext, enumUtils, GM } from '@xcan-angus/infra';
 import { NoticeScope, SentType } from '@/enums/enums';
 import { useRouter } from 'vue-router';
 
-import type { NoticeDataType } from '../types';
+import type { NoticeFormType } from '../types';
+import { resetForm, handleScopeChange, handleSendTypeChange, handleAppChange, handleDateChange, handleExpirationDate } from '../utils';
 import { notice } from '@/api';
 
 const { t } = useI18n();
@@ -18,7 +19,7 @@ const wrapperCol = { span: 16 };
 
 const formRef = ref();
 
-const form: NoticeDataType = reactive({
+const form: NoticeFormType = reactive({
   content: '',
   scope: NoticeScope.GLOBAL,
   appCode: undefined,
@@ -30,90 +31,8 @@ const form: NoticeDataType = reactive({
   expirationDate: undefined
 });
 
-const resetForm = () => {
-  formRef.value.resetFields();
-  form.content = '';
-  form.scope = NoticeScope.GLOBAL;
-  form.sendType = SentType.SEND_NOW;
-  form.sendTimingDate = undefined;
-  form.expirationDate = undefined;
-  form.appCode = undefined;
-  form.appName = undefined;
-};
-
-const validateSendTime = () => {
-  if (!form.sendTimingDate) {
-    return Promise.reject(new Error(t('notification.messages.selectApplication')));
-  }
-  if (new Date(form.sendTimingDate as string) < new Date()) {
-    return Promise.reject(new Error(t('notification.messages.sendTimeMoreThanNow')));
-  }
-  if (new Date(form.sendTimingDate as string) > new Date(form.expirationDate || '')) {
-    return Promise.reject(new Error(t('notification.messages.sendTimeMoreExpiredDate')));
-  }
-  return Promise.resolve();
-};
-
-const validateExpirationDate = () => {
-  if (!form.expirationDate) {
-    return Promise.reject(new Error(t('notification.messages.expiredDateRequired')));
-  }
-  if (new Date(form.expirationDate as string) < new Date()) {
-    return Promise.reject(new Error(t('notification.messages.expiredDateMoreThanNow')));
-  }
-  return Promise.resolve();
-};
-
-const formRules: any = reactive({
-  content: [
-    { required: true, message: t('notification.messages.noticeContentRequired'), trigger: 'change' }
-  ],
-  sendTimingDate: [
-    { required: true, validator: validateSendTime, type: 'string' }
-  ],
-  expirationDate: [
-    { required: true, validator: validateExpirationDate, type: 'string' }
-  ],
-  appId: [
-    { required: true, message: t('notification.messages.selectApplication'), type: 'string' }
-  ],
-  scope: [
-    { required: true }
-  ]
-});
-
-const handleDateChange = (value: string): void => {
-  form.sendTimingDate = value;
-};
-
-const handleExpirationDate = (value: string): void => {
-  form.expirationDate = value;
-};
-
-const handleScopeChange = (item: string) => {
-  if (item === NoticeScope.GLOBAL) {
-    form.appCode = undefined;
-    form.appName = undefined;
-    form.appId = undefined;
-    form.editionType = undefined;
-  }
-};
-
-const handleSendTypeChange = (item: string) => {
-  if (item === SentType.SEND_NOW) {
-    form.sendTimingDate = undefined;
-  }
-};
-
-const handleChange = (_value, options) => {
-  form.appCode = options.appCode;
-  form.appName = options.appName;
-  form.appId = options.appId;
-  form.editionType = options.editionType.value;
-};
-
 const cancel = () => {
-  resetForm();
+  resetForm(form, formRef);
   router.push('/messages/notification');
 };
 
@@ -121,7 +40,7 @@ const submitForm = () => {
   formRef.value
     .validate()
     .then(async () => {
-      const params: NoticeDataType = {
+      const params: NoticeFormType = {
         ...form
       };
       const [error] = await notice.addNotice(params);
@@ -129,7 +48,7 @@ const submitForm = () => {
         return;
       }
       notification.success(t('common.messages.submitSuccess'));
-      resetForm();
+      resetForm(form, formRef);
       await router.push('/messages/notification');
     });
 };
@@ -178,7 +97,7 @@ onMounted(() => {
           size="small"
           :enumKey="NoticeScope"
           :lazy="false"
-          @change="handleScopeChange" />
+          @change="(item) => handleScopeChange(item, form)" />
       </FormItem>
       <div class="text-3 pl-1/3 -mt-4">
         <Hints :text="t('notification.globalTip')" class="w-150 mb-1" />
@@ -196,7 +115,7 @@ onMounted(() => {
             :lazy="false"
             defaultActiveFirstOption
             size="small"
-            @change="handleChange">
+            @change="(value, options) => handleAppChange(value, options, form)">
             <template #option="option">
               <span>{{ option.appName }} {{ option.editionType.message }}</span>
             </template>
@@ -211,7 +130,7 @@ onMounted(() => {
           class="w-full"
           size="small"
           showTime
-          @change="handleExpirationDate" />
+          @change="(value) => handleExpirationDate(value, form)" />
       </FormItem>
       <FormItem
         colon
@@ -222,7 +141,7 @@ onMounted(() => {
             v-for="item in enumsList.SentTypeList"
             :key="item.value + item.message"
             :value="item.value"
-            @change="handleSendTypeChange(item.value)">
+            @change="(item) => handleSendTypeChange(item.value, form)">
             {{ item.message }}
           </Radio>
         </RadioGroup>
@@ -238,7 +157,7 @@ onMounted(() => {
           class="w-full"
           size="small"
           showTime
-          @change="handleDateChange" />
+          @change="(value) => handleDateChange(value, form)" />
       </FormItem>
       <FormItem label=" " class="text-center">
         <Button

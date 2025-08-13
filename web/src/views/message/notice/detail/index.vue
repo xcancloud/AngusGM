@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router';
 import { Skeleton } from 'ant-design-vue';
 
 import { notice } from '@/api';
+import { getDetailColumns } from '../utils';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -23,40 +24,7 @@ const getDetailData = async () => {
   dataSource.value = data || {};
 };
 
-const columns = [
-  [
-    {
-      dataIndex: 'id',
-      label: 'ID'
-    },
-    {
-      dataIndex: 'sendType',
-      label: t('notification.columns.sendType')
-    },
-    {
-      dataIndex: 'createdByName',
-      label: t('common.columns.createdByName')
-    },
-    {
-      dataIndex: 'createdDate',
-      label: t('common.columns.createdDate')
-    }
-  ],
-  [
-    {
-      dataIndex: 'timingDate',
-      label: t('notification.columns.timingDate')
-    },
-    {
-      dataIndex: 'expirationDate',
-      label: t('notification.columns.expiredDate')
-    },
-    {
-      dataIndex: 'scope',
-      label: t('notification.columns.scope')
-    }
-  ]
-];
+const columns = getDetailColumns(t);
 
 onMounted(() => {
   id.value = route.params.id as string || '';
