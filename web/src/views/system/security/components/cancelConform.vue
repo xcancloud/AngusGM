@@ -70,7 +70,7 @@ const verificationCodeConfirm = async () => {
   if (error) {
     return;
   }
-  notification.success(t('security.messages.cancellationSuccess'));
+  notification.success(t('securities.messages.cancellationSuccess'));
   emit('update', true);
   emit('update:visible', false);
 };
@@ -89,18 +89,18 @@ const handleCancel = () => {
     :visible="visible"
     centered
     closable
-    :title="t('security.titles.cancellationConfirmation')"
+    :title="t('securities.titles.cancellationConfirmation')"
     @cancel="handleCancel">
     <template #default>
-      <Hints :text="t('security.messages.cancellationModalDesc')" class="mb-4" />
+      <Hints :text="t('securities.messages.cancellationModalDesc')" class="mb-4" />
       <div class="flex">
         <div class="mr-1 pt-1.25">
           <div>
-            {{ t('security.buttons.sendVerificationCode') }}
+            {{ t('securities.buttons.sendVerificationCode') }}
             <Colon />
           </div>
           <div class="mt-8">
-            {{ t('security.columns.verificationCode') }}
+            {{ t('securities.columns.verificationCode') }}
             <Colon />
           </div>
         </div>
@@ -110,7 +110,7 @@ const handleCancel = () => {
             :disabled="!appContext.isSysAdmin() || count !== 0"
             :loading="loading"
             @click="sendVerificationCode">
-            {{ t('security.messages.sendVerificationCodeDesc') }} {{ count !== 0 ? t('security.messages.verificationCodeCountdown', { count }) : '' }}
+            {{ t('securities.messages.sendVerificationCodeDesc') }} {{ count !== 0 ? t('securities.messages.verificationCodeCountdown', { count }) : '' }}
           </Button>
           <Input
             v-model:value="code"
@@ -119,20 +119,20 @@ const handleCancel = () => {
             :error="inputError"
             :maxlength="6" />
           <div style="margin-top: -5px;" class="h-4">
-            <template v-if="inputError">{{ t('security.validation.verificationCodeRequired') }}</template>
+            <template v-if="inputError">{{ t('securities.validation.verificationCodeRequired') }}</template>
           </div>
         </div>
       </div>
     </template>
     <template #footer>
       <div>
-        <Button size="small" @click="handleCancel">{{ t('security.buttons.cancel') }}</Button>
+        <Button size="small" @click="handleCancel">{{ t('securities.buttons.cancel') }}</Button>
         <Button
           size="small"
           type="primary"
           :disabled="!appContext.isSysAdmin()"
           @click="handleOk">
-          {{ t('security.buttons.confirm') }}
+          {{ t('securities.buttons.confirm') }}
         </Button>
       </div>
     </template>

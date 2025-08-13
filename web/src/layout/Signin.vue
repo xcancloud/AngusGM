@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 import Logo from '@/components/Logo/index.vue';
 import OfficialLink from '@/components/OfficialLink/index.vue';
 import Records from '@/components/CopyRight/index.vue';
+
+const { t } = useI18n();
 
 const preventDefaultListener = (e) => {
   e.preventDefault();
@@ -19,7 +23,7 @@ const preventDefaultListener = (e) => {
       <div class="img-front">
         <div class="title">AngusGM</div>
         <div class="content">
-          统一资源认证与授权中心 ▪ 开启安全和资源共享 ▪ 基础资源统一化管理！
+          {{ t('sign.messages.signinTip') }}
         </div>
         <img
           src="./assets/sign-in.svg"

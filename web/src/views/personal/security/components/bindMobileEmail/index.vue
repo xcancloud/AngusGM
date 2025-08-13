@@ -176,11 +176,11 @@ const updateUser = (info: Record<string, string>) => {
 };
 
 const typeIfy = computed(() => {
-  return props.valueKey === 'mobile' ? t('personalCenter.mobile') : t('personalCenter.email');
+  return props.valueKey === 'mobile' ? t('securities.columns.mobile') : t('securities.columns.email');
 });
 
 const title = computed(() => {
-  return `${t('personalCenter.bind')}${typeIfy.value}`;
+  return `${t('securities.messages.bind')}${typeIfy.value}`;
 });
 
 const mediumIfy = computed(() => {
@@ -198,17 +198,17 @@ const mediumIfy = computed(() => {
     <div class="flex flex-nowrap text-3 leading-5 text-theme-content">
       <template v-if="valueKey === 'mobile'">
         <Icon class="flex-shrink-0 text-4 transform-gpu translate-y-0.5 mr-2 text-green-wechat" icon="icon-right" />
-        {{ t('personalCenter.security.mobileBindDescription') }}
+        {{ t('securities.messages.mobileBindDescription') }}
       </template>
       <template v-else>
         <Icon class="flex-shrink-0 text-4 transform-gpu translate-y-0.5 mr-2 text-green-wechat" icon="icon-right" />
-        {{ t('personalCenter.security.emailBindDescription') }}
+        {{ t('securities.messages.emailBindDescription') }}
       </template>
     </div>
     <div class="flex flex-nowrap mt-8">
       <div class="flex flex-col items-end flex-grow-0 whitespace-nowrap text-theme-title mr-3">
         <span class="block h-8 leading-8">{{ typeIfy }}</span>
-        <span class="block h-8 leading-8 mt-6">{{ t('personalCenter.verificationCode') }}</span>
+        <span class="block h-8 leading-8 mt-6">{{ t('securities.columns.verificationCode') }}</span>
       </div>
       <div class="flex flex-wrap">
         <template v-if="valueKey === 'mobile'">
@@ -225,7 +225,7 @@ const mediumIfy = computed(() => {
               :maxlength="11"
               :bordered="false"
               class="flex-free-full"
-              :placeholder="t('personalCenter.security.typeMobile')"
+              :placeholder="t('securities.placeholder.typeMobile')"
               @blur="validatePhone"
               @change="changeHandle($event.target.value, 'mobile')" />
           </div>
@@ -235,7 +235,7 @@ const mediumIfy = computed(() => {
             :error="emailError"
             :allowClear="false"
             :maxlength="150"
-            :placeholder="t('personalCenter.security.typeEmail')"
+            :placeholder="t('securities.placeholder.typeEmail')"
             class="relative h-8"
             @blur="validateEmail"
             @change="changeHandle($event.target.value, 'email')" />

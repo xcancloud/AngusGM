@@ -86,7 +86,7 @@ watch(() => props.signinLimit, (newValue) => {
   <Card bodyClass="px-8 py-5">
     <template #title>
       <div class="flex items-center">
-        <span>{{ t('security.titles.loginRestrictions') }}</span>
+        <span>{{ t('securities.titles.loginRestrictions') }}</span>
         <Switch
           v-model:checked="currEnabled"
           :loading="props.signinSwitchLoading"
@@ -97,7 +97,7 @@ watch(() => props.signinLimit, (newValue) => {
       </div>
     </template>
     <div class="flex items-center text-3 leading-3 text-theme-content">
-      {{ t('security.labels.within') }}
+      {{ t('securities.labels.within') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -106,7 +106,7 @@ watch(() => props.signinLimit, (newValue) => {
         :min="0"
         :disabled="!currEnabled || !props.signinLimit"
         @change="passwordErrorIntervalInMinutesChange" />
-      {{ t('security.labels.minutes') }}，{{ t('security.labels.ifPasswordErrorsExceed') }}
+      {{ t('securities.labels.minutes') }}，{{ t('securities.labels.ifPasswordErrorsExceed') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -116,7 +116,7 @@ watch(() => props.signinLimit, (newValue) => {
         :max="50"
         :disabled="!currEnabled || !props.signinLimit"
         @change="lockedPasswordErrorNumChange" />
-      {{ t('security.labels.times') }}，{{ t('security.labels.lockAccountFor') }}
+      {{ t('securities.labels.times') }}，{{ t('securities.labels.lockAccountFor') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -125,7 +125,7 @@ watch(() => props.signinLimit, (newValue) => {
         :min="0"
         :disabled="!currEnabled || !props.signinLimit"
         @change="lockedDurationInMinutesChange" />
-      {{ t('security.labels.minutes') }}
+      {{ t('securities.labels.minutes') }}
     </div>
   </Card>
 </template>

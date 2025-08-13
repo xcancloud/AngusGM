@@ -55,7 +55,8 @@
       "inactive": "Inactive",
       "pending": "Pending",
       "approved": "Approved",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "sms": "SMS"
     },
     "time": {
       "year": "Year",
@@ -140,7 +141,8 @@
       "all": "All",
       "tenant": "Tenant",
       "source": "Source",
-      "association": "Association"
+      "association": "Association",
+      "language": "Language"
     }
   }
 }

@@ -6,10 +6,12 @@ import { Tag } from 'ant-design-vue';
 import { appContext, regexpUtils } from '@xcan-angus/infra';
 import { user } from '@/api';
 
-const userInfo = ref(appContext.getUser());
+// User information state - initialize with current user data
+const userInfo = ref(appContext.getUser() || {});
 
 const { t } = useI18n();
 
+// Name editing state variables
 const nameInput = ref(false);
 const firstName = ref<string>('');
 const prevFirstName = ref<string>('');
@@ -17,50 +19,66 @@ const lastName = ref<string>('');
 const prevLastName = ref<string>('');
 const fullName = ref<string>('');
 
+// Validation error states for name fields
 const firstNameError = ref(false);
 const lastNameError = ref(false);
 const fullNameError = ref(false);
 
+// Other editable fields state
 const titleInput = ref(false);
-const title = ref<string>();
+const title = ref<string>('');
 
 const landlineInput = ref(false);
-const landline = ref<string>();
+const landline = ref<string>('');
 
 const addressInput = ref(false);
-const address = ref<string>();
+const address = ref<string>('');
 
+/**
+ * Table columns configuration for detailed information display
+ * Organized in two rows for better layout and readability
+ */
 const columns = [
   [
-    { dataIndex: 'name', label: t('personalCenter.information.name') },
-    { dataIndex: 'mobile', label: t('personalCenter.mobile') },
-    { dataIndex: 'email', label: t('personalCenter.email') },
-    { dataIndex: 'title', label: t('personalCenter.information.title') },
-    { dataIndex: 'landline', label: t('personalCenter.information.landline') },
-    { dataIndex: 'address', label: t('personalCenter.information.address'), divide: true }
+    { dataIndex: 'name', label: t('information.columns.name') },
+    { dataIndex: 'mobile', label: t('information.columns.mobile') },
+    { dataIndex: 'email', label: t('information.columns.email') },
+    { dataIndex: 'title', label: t('information.columns.title') },
+    { dataIndex: 'landline', label: t('information.columns.landline') },
+    { dataIndex: 'address', label: t('information.columns.address'), divide: true }
   ],
   [
-    { dataIndex: 'createdDate', label: t('personalCenter.information.registerTime') },
-    { dataIndex: 'sysAdmin', label: t('personalCenter.information.systemId') },
-    { dataIndex: 'group', label: t('personalCenter.information.group') },
-    { dataIndex: 'depts', label: t('personalCenter.information.ownDept') },
-    { dataIndex: 'tags', label: t('用户标签') },
-    { dataIndex: 'otherAccount', label: t('personalCenter.information.otherAccount'), offset: true }
+    { dataIndex: 'createdDate', label: t('information.columns.registerTime') },
+    { dataIndex: 'sysAdmin', label: t('information.columns.identity') },
+    { dataIndex: 'group', label: t('information.columns.group') },
+    { dataIndex: 'depts', label: t('information.columns.ownDept') },
+    { dataIndex: 'tags', label: t('information.columns.userTags') },
+    { dataIndex: 'otherAccount', label: t('information.columns.otherAccount'), offset: true }
   ]
 ];
 
+/**
+ * Initiates name editing mode
+ * Sets up initial values and clears validation errors
+ */
 const editName = () => {
-  firstName.value = userInfo.value.firstName;
+  if (!userInfo.value) return;
+
+  firstName.value = userInfo.value.firstName || '';
   prevFirstName.value = firstName.value;
-  lastName.value = userInfo.value.lastName;
+  lastName.value = userInfo.value.lastName || '';
   prevLastName.value = lastName.value;
-  fullName.value = userInfo.value.fullName;
+  fullName.value = userInfo.value.fullName || '';
   nameInput.value = true;
   firstNameError.value = false;
   lastNameError.value = false;
   fullNameError.value = false;
 };
 
+/**
+ * Handles first name input blur event
+ * Validates input and triggers name change if modified
+ */
 const firstNameBlur = () => {
   firstNameError.value = !firstName.value;
   if (fullName.value && prevFirstName.value === firstName.value) {
@@ -71,6 +89,10 @@ const firstNameBlur = () => {
   nameChange();
 };
 
+/**
+ * Handles last name input blur event
+ * Validates input and triggers name change if modified
+ */
 const lastNameBlur = () => {
   lastNameError.value = !lastName.value;
   if (fullName.value && prevLastName.value === lastName.value) {
@@ -81,6 +103,10 @@ const lastNameBlur = () => {
   nameChange();
 };
 
+/**
+ * Handles full name input blur event
+ * Validates full name input
+ */
 const fullNameBlur = () => {
   fullNameError.value = !fullName.value;
 };
@@ -137,7 +163,7 @@ const cancelNameEdit = () => {
 };
 
 const editTitle = () => {
-  title.value = userInfo.value.title;
+  title.value = userInfo.value.title || '';
   titleInput.value = true;
 };
 
@@ -161,15 +187,26 @@ const saveTitle = async () => {
 
 const cancelTitleEdit = () => {
   titleInput.value = false;
-  title.value = undefined;
+  title.value = '';
 };
 
+/**
+ * Initiates landline editing mode
+ * Sets up initial value for landline input
+ */
 const editLandline = () => {
-  landline.value = userInfo.value.landline;
+  if (!userInfo.value) return;
+  landline.value = userInfo.value.landline || '';
   landlineInput.value = true;
 };
 
+// Loading state for landline save operation
 const landlineSaving = ref(false);
+
+/**
+ * Saves landline changes to backend
+ * Updates local state on successful save
+ */
 const saveLandline = async () => {
   if (landlineSaving.value) {
     return;
@@ -183,17 +220,27 @@ const saveLandline = async () => {
     return;
   }
 
-  userInfo.value.landline = params.landline;
+  if (userInfo.value) {
+    userInfo.value.landline = params.landline;
+  }
   landlineInput.value = false;
 };
 
+/**
+ * Cancels landline editing and resets input state
+ */
 const cancelLandlineEdit = () => {
   landlineInput.value = false;
-  landline.value = undefined;
+  landline.value = '';
 };
 
+/**
+ * Initiates address editing mode
+ * Sets up initial value for address input
+ */
 const editAddress = () => {
-  address.value = userInfo.value.address;
+  if (!userInfo.value) return;
+  address.value = userInfo.value.address || '';
   addressInput.value = true;
 };
 
@@ -217,32 +264,51 @@ const saveAddress = async () => {
 
 const cancelAddressEdit = () => {
   addressInput.value = false;
-  address.value = undefined;
+  address.value = '';
 };
 
+/**
+ * Computed property for user departments
+ * Returns empty array if no departments assigned
+ */
 const depts = computed(() => {
   return userInfo.value?.depts || [];
 });
 
+/**
+ * Computed property for user groups
+ * Returns empty array if no groups assigned
+ */
 const groups = computed(() => {
   return userInfo.value?.groups || [];
 });
 
+/**
+ * Computed property for formatted phone number
+ * Combines country code and mobile number
+ */
 const phone = computed(() => {
-  const temp = (+userInfo.value?.itc + ' ' + userInfo.value?.mobile).replace(/\+/, '');
+  if (!userInfo.value?.itc || !userInfo.value?.mobile) return '';
+
+  const temp = (+userInfo.value.itc + ' ' + userInfo.value.mobile).replace(/\+/, '');
   return temp ? ('+' + temp) : '';
 });
 
+/**
+ * Watches for changes in user information
+ * Synchronizes local state with updated user data
+ * Resets validation errors when user data changes
+ */
 watch(() => userInfo.value, (newValue: any) => {
   if (!newValue?.id) {
     return;
   }
 
-  title.value = newValue.title;
-  landline.value = newValue.landline;
-  firstName.value = newValue.firstName;
-  lastName.value = newValue.lastName;
-  fullName.value = newValue.fullName;
+  title.value = newValue.title || '';
+  landline.value = newValue.landline || '';
+  firstName.value = newValue.firstName || '';
+  lastName.value = newValue.lastName || '';
+  fullName.value = newValue.fullName || '';
 
   firstNameError.value = false;
   lastNameError.value = false;
@@ -252,6 +318,7 @@ watch(() => userInfo.value, (newValue: any) => {
 });
 </script>
 <template>
+  <!-- Detailed information card with user data grid -->
   <PureCard class="py-7.5 px-25 w-11/12 2xl:px-6 mx-auto">
     <Grid :columns="columns" :dataSource="userInfo">
       <template #name>
@@ -267,29 +334,29 @@ watch(() => userInfo.value, (newValue: any) => {
               <Input
                 v-model:value="lastName"
                 :error="lastNameError"
-                placeholder="名称"
-                title="名称"
+                placeholder="t('information.placeholder.lastName')"
+                title="t('information.placeholder.lastName')"
                 class="mr-2"
                 @blur="lastNameBlur" />
               <Input
                 v-model:value="firstName"
                 :error="firstNameError"
-                placeholder="姓氏"
-                title="姓氏"
+                placeholder="t('information.placeholder.firstName')"
+                title="t('information.placeholder.firstName')"
                 class="mr-2"
                 @blur="firstNameBlur" />
               <Input
                 v-model:value="fullName"
                 :error="fullNameError"
-                placeholder="全名"
-                title="全名"
+                placeholder="t('information.placeholder.fullName')"
+                title="t('information.placeholder.fullName')"
                 @blur="fullNameBlur" />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
-                @click.prevent="saveName">{{ t('personalCenter.save') }}</a>
+                @click.prevent="saveName">{{ t('information.messages.save') }}</a>
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 text-theme-content hover:text-theme-content"
-                @click.prevent="cancelNameEdit">{{ t('personalCenter.cancel') }}</a>
+                @click.prevent="cancelNameEdit">{{ t('information.messages.cancel') }}</a>
             </div>
           </template>
         </div>
@@ -309,15 +376,15 @@ watch(() => userInfo.value, (newValue: any) => {
               class="absolute -top-1.5 flex flex-nowrap items-center whitespace-nowrap">
               <Input
                 v-model:value="title"
-                title="职务"
-                placeholder="职务"
+                title="t('information.placeholder.title')"
+                placeholder="t('information.placeholder.title')"
                 allowClear />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
-                @click.prevent="saveTitle">{{ t('personalCenter.save') }}</a>
+                @click.prevent="saveTitle">{{ t('information.messages.save') }}</a>
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 text-theme-content hover:text-theme-content"
-                @click.prevent="cancelTitleEdit">{{ t('personalCenter.cancel') }}</a>
+                @click.prevent="cancelTitleEdit">{{ t('information.messages.cancel') }}</a>
             </div>
           </template>
         </div>
@@ -336,17 +403,17 @@ watch(() => userInfo.value, (newValue: any) => {
               class="absolute -top-1.5 flex flex-nowrap items-center whitespace-nowrap">
               <Input
                 v-model:value="landline"
-                title="座机号"
-                placeholder="座机号"
+                title="t('information.placeholder.landline')"
+                placeholder="t('information.placeholder.landline')"
                 allowClear
                 dataType="number"
                 includes="-" />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
-                @click.prevent="saveLandline">{{ t('personalCenter.save') }}</a>
+                @click.prevent="saveLandline">{{ t('information.messages.save') }}</a>
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 text-theme-content hover:text-theme-content"
-                @click.prevent="cancelLandlineEdit">{{ t('personalCenter.cancel') }}</a>
+                @click.prevent="cancelLandlineEdit">{{ t('information.messages.cancel') }}</a>
             </div>
           </template>
         </div>
@@ -365,15 +432,15 @@ watch(() => userInfo.value, (newValue: any) => {
               class="absolute -top-1.5 flex flex-nowrap items-center whitespace-nowrap">
               <Input
                 v-model:value="address"
-                title="地址"
-                placeholder="地址"
+                title="t('information.placeholder.address')"
+                placeholder="t('information.placeholder.address')"
                 allowClear />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
-                @click.prevent="saveAddress">{{ t('personalCenter.save') }}</a>
+                @click.prevent="saveAddress">{{ t('information.messages.save') }}</a>
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 text-theme-content hover:text-theme-content"
-                @click.prevent="cancelAddressEdit">{{ t('personalCenter.cancel') }}</a>
+                @click.prevent="cancelAddressEdit">{{ t('information.messages.cancel') }}</a>
             </div>
           </template>
         </div>
@@ -392,12 +459,12 @@ watch(() => userInfo.value, (newValue: any) => {
         </template>
       </template>
       <template #sysAdmin>
-        {{ userInfo.sysAdmin ? t('personalCenter.information.systemAdmin') :
-          t('personalCenter.information.generalUser') }}
+        {{ userInfo.sysAdmin ? t('information.status.systemAdmin') :
+          t('information.status.generalUser') }}
       </template>
       <template #deptHead>
-        {{ userInfo.deptHead ? t('personalCenter.information.principal') :
-          t('personalCenter.information.generalUser') }}
+        {{ userInfo.deptHead ? t('information.status.principal') :
+          t('information.status.generalUser') }}
       </template>
       <template #depts>
         <template v-if="depts?.length">
@@ -442,6 +509,7 @@ watch(() => userInfo.value, (newValue: any) => {
   </PureCard>
 </template>
 <style scoped>
+/* Social media account status indicators */
 .active-wechat {
   @apply text-green-wechat;
 }

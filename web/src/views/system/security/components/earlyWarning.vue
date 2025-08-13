@@ -101,12 +101,12 @@ watch(() => props.alarm, (newValue) => {
 const gridColumns = [
   [
     {
-      label: t('security.columns.alarmMethod'),
+      label: t('securities.columns.alarmMethod'),
       dataIndex: 'type',
       colon: false
     },
     {
-      label: t('security.columns.alarmRecipients'),
+      label: t('securities.columns.alarmRecipients'),
       dataIndex: 'user',
       colon: false
     }
@@ -118,7 +118,7 @@ const gridColumns = [
   <Card bodyClass="px-8 py-5 flex items-center space-x-5">
     <template #title>
       <div class="flex items-center">
-        <span>{{ t('security.titles.securityAlerts') }}</span>
+        <span>{{ t('securities.titles.securityAlerts') }}</span>
         <Switch
           v-model:checked="currEnabled"
           :loading="props.earlySwitchLoading"
@@ -139,13 +139,13 @@ const gridColumns = [
               value="SMS"
               :disabled="!currEnabled"
               class="text-3 leading-3">
-              {{ t('security.labels.sms') }}
+              {{ t('securities.labels.sms') }}
             </Checkbox>
             <Checkbox
               value="EMAIL"
               :disabled="!currEnabled"
               class="text-3 leading-3">
-              {{ t('security.labels.email') }}
+              {{ t('securities.labels.email') }}
             </Checkbox>
           </CheckboxGroup>
         </template>
@@ -167,7 +167,7 @@ const gridColumns = [
             size="small"
             @click="handleSelectUser">
             <Icon icon="icon-xuanze" class="mr-1 text-3" />
-            {{ t('security.buttons.selectUsers') }}
+            {{ t('securities.buttons.selectUsers') }}
           </Button>
         </template>
       </Grid>

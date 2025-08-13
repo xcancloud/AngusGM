@@ -55,7 +55,8 @@
       "inactive": "非活跃",
       "pending": "待处理",
       "approved": "已批准",
-      "rejected": "已拒绝"
+      "rejected": "已拒绝",
+      "sms": "SMS"
     },
     "time": {
       "year": "年",
@@ -141,7 +142,8 @@
       "all": "全部",
       "tenant": "租户",
       "source": "来源",
-      "association": "关联"
+      "association": "关联",
+      "language": "语言"
     }
   }
 }

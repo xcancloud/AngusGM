@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { appContext, cookieUtils, type TokenInfo } from '@xcan-angus/infra';
 import { Hints, Input, Modal } from '@xcan-angus/vue-ui';
 import { login } from '@/api';
@@ -21,6 +22,7 @@ const emit = defineEmits<{
   (e: 'ok'): void,
 }>();
 
+const { t } = useI18n();
 const inputValue = ref<string>();
 const passIsError = ref(false);
 
@@ -74,7 +76,7 @@ const cancel = () => {
   emit('update:visible', false);
 };
 
-const inputChange = (event: { target: { value: string; }; }) => {
+const inputChange = (event: any) => {
   const value = event.target.value;
   emit('update:value', value);
 };
@@ -88,19 +90,19 @@ onMounted(() => {
 <template>
   <Modal
     :closable="false"
-    :title="$t('personalCenter.verifyPass')"
+    :title="$t('securities.messages.verifyPass')"
     :visible="visible"
-    :okText="$t('personalCenter.nextStep')"
+    :okText="$t('securities.messages.nextStep')"
     @ok="ok"
     @cancel="cancel">
-    <Hints text="你正在进行敏感操作，继续操作前请验证您的身份。" />
+    <Hints :text="t('securities.messages.modalDescription', { typeIfy: t('securities.columns.loginPassword') })" />
     <div class="flex items-center flex-nowrap whitespace-nowrap mt-6">
-      <span class="mr-2 text-theme-title">登录密码</span>
+      <span class="mr-2 text-theme-title">{{ t('securities.columns.loginPassword') }}</span>
       <Input
         :value="inputValue"
         :allowClear="false"
         :error="passIsError"
-        placeholder="输入登录密码进行验证"
+        :placeholder="t('securities.placeholder.passwordPlaceholder')"
         type="password"
         @change="inputChange" />
     </div>

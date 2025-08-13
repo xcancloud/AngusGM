@@ -36,10 +36,10 @@ const minLengthChange = debounce(duration.search, (event: any) => {
 <template>
   <Card bodyClass="px-8 py-5">
     <template #title>
-      <span>{{ t('security.titles.passwordPolicy') }}</span>
+      <span>{{ t('securities.titles.passwordPolicy') }}</span>
     </template>
     <div class="flex items-center text-3 leading-3 text-theme-content">
-      {{ t('security.labels.minimumPasswordLength') }}
+      {{ t('securities.labels.minimumPasswordLength') }}
       <Input
         class="w-20 mx-2"
         size="small"
@@ -49,10 +49,10 @@ const minLengthChange = debounce(duration.search, (event: any) => {
         :max="50"
         :disabled="props.loading"
         @change="minLengthChange" />
-      {{ t('security.labels.characters') }}，{{ t('security.labels.passwordLengthRangeAllowed') }}6-50{{ t('security.labels.characters') }}
+      {{ t('securities.labels.characters') }}，{{ t('securities.labels.passwordLengthRangeAllowed') }}6-50{{ t('securities.labels.characters') }}
     </div>
     <div class="flex items-center text-3 leading-3 text-theme-content mt-5">
-      {{ t('security.messages.passwordPolicyRule') }}
+      {{ t('securities.messages.passwordPolicyRule') }}
     </div>
   </Card>
 </template>

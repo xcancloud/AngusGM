@@ -2,16 +2,15 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ConfigProvider, Denied, Header, NetworkError, NotFound, VuexHelper } from '@xcan-angus/vue-ui';
-import { app, sessionStore } from '@xcan-angus/infra';
-
-import { getTopRightMenu, personalCenterMenus } from '@/layout/fixed-top-menu';
+import { sessionStore } from '@xcan-angus/infra';
+import { getTopRightMenu } from '@/utils/menus';
 
 const { t } = useI18n();
 
 const { useState, useMutations } = VuexHelper;
 const { statusCode, layoutCode } = useState(['statusCode', 'layoutCode']);
 
-const codeList = ref<{
+const topRightMenus = ref<{
   code: string;
   hasAuth: boolean;
   showName: string;
@@ -26,21 +25,11 @@ onMounted(async () => {
     }
     setLayoutCodeCode(tempLayoutCode);
   }
-
-  codeList.value = await getTopRightMenu();
-});
-
-const menuList = computed(() => {
-  return personalCenterMenus.map(item => {
-    return {
-      ...item,
-      showName: t(item.showName)
-    };
-  });
+  topRightMenus.value = await getTopRightMenu();
 });
 
 const codeMap = computed(() => {
-  return codeList.value.reduce((prev, curv) => {
+  return topRightMenus.value.reduce((prev, curv) => {
     prev.set(curv.code, {
       ...curv,
       showName: t(curv.showName)
@@ -58,11 +47,8 @@ const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
       <RouterView />
     </template>
     <template v-else>
-      <template v-if="layoutCode === 'gm'">
-        <Header :codeMap="app.codeMap" :menus="app.menuList" />
-      </template>
-      <template v-else-if="layoutCode === 'pl'">
-        <Header :menus="menuList" :codeMap="codeMap" />
+      <template id="layoutCode === 'pl'">
+        <Header :codeMap="codeMap" />
       </template>
       <div class="exception-container bg-theme-main">
         <template v-if="statusCode === 403">
@@ -71,7 +57,7 @@ const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
         <template v-else-if="statusCode === 404">
           <NotFound />
         </template>
-        <template v-if="statusCode === 405">
+        <template v-else-if="statusCode === 405">
           <Denied />
         </template>
         <template v-else-if="statusCode === 500">

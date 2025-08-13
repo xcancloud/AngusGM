@@ -6,14 +6,21 @@ import { Colon, Icon, modal, PureCard } from '@xcan-angus/vue-ui';
 
 import { user } from '@/api';
 
+// WeChat CSS import (commented out for future use)
 // const wechatStyle = new URL('../assets/reset-wechat.css', import.meta.url).href;
 
 const { t } = useI18n();
-const loading = ref(true);
-const userInfo = ref<Record<string, string>>({});
-const showWechatContainer = ref(false);
-const spinning = ref(true);
 
+// Component state variables
+const loading = ref(true); // Controls initial loading state
+const userInfo = ref<Record<string, string>>({}); // User account information
+const showWechatContainer = ref(false); // Controls WeChat binding modal visibility
+const spinning = ref(true); // Controls spinner state for operations
+
+/**
+ * Computed property for WeChat account information
+ * Extracts WeChat binding details from user data
+ */
 const wechatInfo = computed(() => {
   return {
     id: userInfo.value.wechatUserId,
@@ -22,6 +29,10 @@ const wechatInfo = computed(() => {
   };
 });
 
+/**
+ * Computed property for Google account information
+ * Extracts Google binding details from user data
+ */
 const googleInfo = computed(() => {
   return {
     id: userInfo.value.googleUserId,
@@ -30,6 +41,10 @@ const googleInfo = computed(() => {
   };
 });
 
+/**
+ * Computed property for GitHub account information
+ * Extracts GitHub binding details from user data
+ */
 const githubInfo = computed(() => {
   return {
     id: userInfo.value.githubUserId,
@@ -38,6 +53,10 @@ const githubInfo = computed(() => {
   };
 });
 
+/**
+ * Loads current user information from API
+ * Updates component state with user data
+ */
 const loadUser = async () => {
   const [error, res] = await user.getCurrentUser();
   loading.value = false;
@@ -48,63 +67,77 @@ const loadUser = async () => {
   userInfo.value = res.data;
 };
 
+/**
+ * Initiates account binding process for specified platform
+ * Currently supports Google, WeChat, and GitHub
+ * @param type - Platform type to bind account to
+ */
 const bindAccount = async (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): Promise<void> => {
   if (type === 'GOOGLE') {
-    // TODO
+    // TODO: Implement Google account binding
   }
 };
 
+/**
+ * Initiates account unbinding process with confirmation dialog
+ * Shows confirmation modal before proceeding with unbinding
+ * @param type - Platform type to unbind account from
+ */
 const unbind = (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): void => {
   let typeText = '';
   switch (type) {
     case 'WECHAT':
-      typeText = t('personalCenter.wechat');
+      typeText = t('information.enterprise.wechat');
       break;
     case 'GOOGLE':
-      typeText = t('personalCenter.google');
+      typeText = t('information.enterprise.google');
       break;
     case 'GITHUB':
-      typeText = t('personalCenter.github');
+      typeText = t('information.enterprise.github');
       break;
   }
 
+  // Show confirmation dialog before unbinding
   modal.confirm({
     centered: true,
-    title: t('personalCenter.hint'),
-    content: t('personalCenter.unbind-desc', { typeText }),
+    title: t('information.account.hint'),
+    content: t('information.account.unbindDesc', { typeText }),
     async onOk () {
       const [error] = await user.unbind({ type });
       if (error) {
         return;
       }
+      // Reload user data after successful unbinding
       loadUser();
     }
   });
 };
 
+// Lifecycle hook - load user data when component mounts
 onMounted(() => {
   loadUser();
 });
 </script>
 
 <template>
+  <!-- WeChat binding modal overlay -->
   <div
     v-show="showWechatContainer"
     class="wechat-container-mask top-0 left-0 right-0 bottom-0"
     @click="showWechatContainer=false">
     <div class="wechat-inner-container">
       <div class="flex justify-between items-center">
-        <div class="text-3.5 text-theme-title">{{ t('personalCenter.bind-wechat') }}</div>
+        <div class="text-3.5 text-theme-title">{{ t('information.account.bindWechat') }}</div>
         <Icon
           class="text-3.5 cursor-pointer text-theme-sub-content"
           icon="icon-shanchuguanbi"
           @click="showWechatContainer=false" />
       </div>
-      <Spin :spinning="spinning" tip="loading...">
+      <Spin :spinning="spinning" :tip="t('information.messages.loading')">
         <div id="wechat-container" class="wechat-container"></div>
       </Spin>
       <div class="wechat-desc text-theme-content">
-        {{ t('personalCenter.bind-wechat-desc') }}
+        {{ t('information.account.bindWechatDesc') }}
       </div>
     </div>
   </div>
@@ -118,22 +151,22 @@ onMounted(() => {
           :class="{ 'active-wechat': wechatInfo.id }"
           class="text-6xl text-gray-placeholder"
           icon="icon-weixin" />
-        <span class="mt-4 text-3.5 text-theme-title">{{ $t('personalCenter.wechat') }}</span>
+        <span class="mt-4 text-3.5 text-theme-title">{{ $t('information.enterprise.wechat') }}</span>
         <template v-if="wechatInfo.id">
           <span class="flex mt-6 text-3.5 text-green-wechat">
-            <Icon class="mr-2 text-3.5" icon="icon-right" />{{ $t('personalCenter.bound') }}
+            <Icon class="mr-2 text-3.5" icon="icon-right" />{{ $t('information.account.bound') }}
           </span>
         </template>
         <template v-else>
-          <span class="flex mt-6 text-3.5 text-theme-content">{{ $t('personalCenter.unbound') }}</span>
+          <span class="flex mt-6 text-3.5 text-theme-content">{{ $t('information.account.unbound') }}</span>
         </template>
       </div>
       <div class="w-full flex flex-col text-3 items-center py-10">
         <template v-if="wechatInfo.id">
           <div class="flex flex-nowrap">
             <div class="flex flex-col flex-wrap items-end text-theme-content mr-2.5">
-              <span class="flex-freeze-auto">{{ $t('personalCenter.bindAccount') }}<Colon /></span>
-              <span class="flex-freeze-auto mt-6">{{ $t('personalCenter.bindTime') }}<Colon /></span>
+              <span class="flex-freeze-auto">{{ $t('information.account.bindAccount') }}<Colon /></span>
+              <span class="flex-freeze-auto mt-6">{{ $t('information.account.bindTime') }}<Colon /></span>
             </div>
             <div class="flex flex-col flex-wrap items-start text-theme-title">
               <span class="flex-freeze-auto">{{ wechatInfo.account }}</span>
@@ -145,7 +178,7 @@ onMounted(() => {
             class="mt-10 border-gray-line"
             type="default"
             @click="unbind('WECHAT')">
-            {{ $t('personalCenter.removeBind') }}
+            {{ $t('information.account.removeBind') }}
           </Button>
         </template>
         <template v-else>
@@ -154,7 +187,7 @@ onMounted(() => {
             class="mt-10"
             type="primary"
             @click="bindAccount('WECHAT')">
-            {{ $t('personalCenter.immediatelyBinding') }}
+            {{ $t('information.account.immediatelyBinding') }}
           </Button>
         </template>
       </div>
@@ -168,22 +201,22 @@ onMounted(() => {
           :class="{ 'active-google': googleInfo.id }"
           class="text-6xl text-gray-placeholder"
           icon="icon-google" />
-        <span class="mt-4 text-3.5 text-theme-title">Google</span>
+        <span class="mt-4 text-3.5 text-theme-title">{{ $t('information.enterprise.google') }}</span>
         <template v-if="googleInfo.id">
           <span class="flex mt-6 text-3.5 text-green-wechat">
-            <Icon class="mr-2 text-3.5" icon="icon-right" />{{ $t('personalCenter.bound') }}
+            <Icon class="mr-2 text-3.5" icon="icon-right" />{{ $t('information.account.bound') }}
           </span>
         </template>
         <template v-else>
-          <span class="flex mt-6 text-3.5 text-theme-content">{{ $t('personalCenter.unbound') }}</span>
+          <span class="flex mt-6 text-3.5 text-theme-content">{{ $t('information.account.unbound') }}</span>
         </template>
       </div>
       <div class="w-full flex flex-col text-3 items-center py-10">
         <template v-if="googleInfo.id">
           <div class="flex flex-nowrap">
             <div class="flex flex-col flex-wrap items-end text-theme-content mr-2.5">
-              <span class="flex-freeze-auto">{{ $t('personalCenter.bindAccount') }}<Colon /></span>
-              <span class="flex-freeze-auto mt-6">{{ $t('personalCenter.bindTime') }}<Colon /></span>
+              <span class="flex-freeze-auto">{{ $t('information.account.bindAccount') }}<Colon /></span>
+              <span class="flex-freeze-auto mt-6">{{ $t('information.account.bindTime') }}<Colon /></span>
             </div>
             <div class="flex flex-col flex-wrap items-start text-theme-title">
               <span class="flex-freeze-auto">{{ googleInfo.account }}</span>
@@ -195,7 +228,7 @@ onMounted(() => {
             class="mt-10 border-gray-line"
             type="default"
             @click="unbind('GOOGLE')">
-            {{ $t('personalCenter.removeBind') }}
+            {{ $t('information.account.removeBind') }}
           </Button>
         </template>
         <template v-else>
@@ -204,7 +237,7 @@ onMounted(() => {
             class="mt-10"
             type="primary"
             @click="bindAccount('GOOGLE')">
-            {{ $t('personalCenter.immediatelyBinding') }}
+            {{ $t('information.account.immediatelyBinding') }}
           </Button>
         </template>
       </div>
@@ -218,22 +251,22 @@ onMounted(() => {
           :class="{ 'active-github': githubInfo.id }"
           class="text-6xl text-gray-placeholder"
           icon="icon-Github" />
-        <span class="mt-4 text-3.5 text-theme-title">Github</span>
+        <span class="mt-4 text-3.5 text-theme-title">{{ $t('information.enterprise.github') }}</span>
         <template v-if="githubInfo.id">
           <span class="flex mt-6 text-3.5 text-green-wechat">
-            <Icon class="mr-2 text-3.5" icon="icon-right" />{{ $t('personalCenter.bound') }}
+            <Icon class="mr-2 text-3.5" icon="icon-right" />{{ $t('information.account.bound') }}
           </span>
         </template>
         <template v-else>
-          <span class="flex mt-6 text-3.5 text-theme-content">{{ $t('personalCenter.unbound') }}</span>
+          <span class="flex mt-6 text-3.5 text-theme-content">{{ $t('information.account.unbound') }}</span>
         </template>
       </div>
       <div class="w-full flex flex-col text-3 items-center py-10">
         <template v-if="githubInfo.id">
           <div class="flex flex-nowrap">
             <div class="flex flex-col flex-wrap items-end text-theme-content mr-2.5">
-              <span class="flex-freeze-auto">{{ $t('personalCenter.bindAccount') }}<Colon /></span>
-              <span class="flex-freeze-auto mt-6">{{ $t('personalCenter.bindTime') }}<Colon /></span>
+              <span class="flex-freeze-auto">{{ $t('information.account.bindAccount') }}<Colon /></span>
+              <span class="flex-freeze-auto mt-6">{{ $t('information.account.bindTime') }}<Colon /></span>
             </div>
             <div class="flex flex-col flex-wrap items-start text-theme-title">
               <span class="flex-freeze-auto">{{ githubInfo.account }}</span>
@@ -245,7 +278,7 @@ onMounted(() => {
             class="mt-10 border-gray-line"
             type="default"
             @click="unbind('GITHUB')">
-            {{ $t('personalCenter.removeBind') }}
+            {{ $t('information.account.removeBind') }}
           </Button>
         </template>
         <template v-else>
@@ -254,7 +287,7 @@ onMounted(() => {
             class="mt-10"
             type="primary"
             @click="bindAccount('GITHUB')">
-            {{ $t('personalCenter.immediatelyBinding') }}
+            {{ $t('information.account.immediatelyBinding') }}
           </Button>
         </template>
       </div>

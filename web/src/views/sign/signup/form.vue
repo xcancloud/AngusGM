@@ -78,8 +78,8 @@ const mobileRef = ref();
 const emailRef = ref();
 const mobileVerificationRef = ref();
 const mobilePassRef = ref();
-const mobileConfirmpassRef = ref();
-const emailConfirmpassRef = ref();
+const mobileConfirmPassRef = ref();
+const emailConfirmPassRef = ref();
 const emailPassRef = ref();
 const emailVeriRef = ref();
 
@@ -179,7 +179,7 @@ const validateMobileForm = () => {
     validationErrors++;
   }
 
-  if (!mobileConfirmpassRef.value?.validateData()) {
+  if (!mobileConfirmPassRef.value?.validateData()) {
     validationErrors++;
   }
 
@@ -205,7 +205,7 @@ const validateEmailForm = () => {
     validationErrors++;
   }
 
-  if (!emailConfirmpassRef.value?.validateData()) {
+  if (!emailConfirmPassRef.value?.validateData()) {
     validationErrors++;
   }
 
@@ -281,7 +281,7 @@ const signup = async () => {
         class="input-container block-fixed" />
       <PasswordConfirmInput
         key="mobile-confirmpass"
-        ref="mobileConfirmpassRef"
+        ref="mobileConfirmPassRef"
         v-model:value="mobileForm.confirmPassword"
         :password="mobileForm.password"
         :placeholder="$t('sign.placeholder.confirmPass')"
@@ -315,7 +315,7 @@ const signup = async () => {
         class="input-container block-fixed" />
       <PasswordConfirmInput
         key="email-confirmpass"
-        ref="emailConfirmpassRef"
+        ref="emailConfirmPassRef"
         v-model:value="emailForm.confirmPassword"
         :password="emailForm.password"
         :placeholder="$t('sign.placeholder.confirmPass')"

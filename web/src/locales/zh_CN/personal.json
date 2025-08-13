@@ -1,0 +1,205 @@
+{
+  "information": {
+    "columns": {
+      "accountId": "账号ID",
+      "accountName": "账户名称",
+      "userName": "用户名",
+      "name": "姓名",
+      "mobile": "手机号",
+      "email": "邮箱",
+      "title": "职务",
+      "landline": "座机号",
+      "address": "地址",
+      "registerTime": "注册时间",
+      "identity": "用户身份",
+      "group": "用户组",
+      "ownDept": "所在部门",
+      "userTags": "用户标签",
+      "otherAccount": "三方账号绑定"
+    },
+    "placeholder": {
+      "firstName": "名称",
+      "lastName": "姓氏",
+      "fullName": "全名",
+      "title": "职务",
+      "landline": "座机号",
+      "address": "地址"
+    },
+    "messages": {
+      "copySuccess": "复制到剪贴板",
+      "upload": "上传头像",
+      "toAuth": "去认证",
+      "cancel": "取消",
+      "save": "保存",
+      "edit": "编辑",
+      "loading": "loading..."
+    },
+    "status": {
+      "systemAdmin": "系统管理员",
+      "generalUser": "一般用户",
+      "principal": "负责人"
+    },
+    "enterprise": {
+      "enterpriseName": "企业名称",
+      "entityName": "单位名称",
+      "wechat": "微信",
+      "google": "Google",
+      "github": "Github"
+    },
+    "account": {
+      "hint": "提示",
+      "bound": "已绑定",
+      "unbound": "未绑定",
+      "bindAccount": "绑定账号",
+      "bindTime": "绑定时间",
+      "removeBind": "解除绑定",
+      "immediatelyBinding": "立即绑定",
+      "bindWechat": "绑定微信账号",
+      "bindWechatDesc": "打开微信扫描二维码进行微信绑定",
+      "unbindDesc": "解除绑定后将无法使用{typeText}账户登录，确认解除绑定吗？"
+    }
+  },
+  "message": {
+    "columns": {
+      "title": "标题",
+      "sender": "发送人",
+      "sendDate": "发送时间",
+      "content": "消息内容"
+    },
+    "placeholder": {
+      "searchMessage": "搜索消息"
+    },
+    "messages": {
+      "noMessageData": "暂无消息数据",
+      "markReadSuccess": "标记为已读成功",
+      "deleteSuccess": "删除成功",
+      "deleteConfirm": "确认删除选中的消息吗？",
+      "loadFailed": "加载消息失败"
+    },
+    "status": {
+      "read": "已读",
+      "unread": "未读"
+    },
+    "actions": {
+      "markRead": "标记为已读",
+      "delete": "删除",
+      "selectAll": "全选",
+      "selected": "已选"
+    },
+    "tabs": {
+      "all": "全部",
+      "unread": "未读",
+      "read": "已读"
+    }
+  },
+  "securities": {
+    "columns": {
+      "loginPassword": "登录密码",
+      "mobile": "手机号",
+      "email": "邮箱",
+      "passwordStrength": "密码强度",
+      "currentPassword": "当前密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "verificationCode": "验证码"
+    },
+    "placeholder": {
+      "passwordPlaceholder": "请输入密码",
+      "typeMobile": "请输入手机号",
+      "typeEmail": "请输入邮箱",
+      "codePlaceholder": "请输入验证码"
+    },
+    "messages": {
+      "securityDescription": "我们建议定期更新密码。高安全性的密码能更好地保护您的账户。密码要求：\n- 至少包含以下2种字符组合：大写字母、小写字母、数字或特殊符号。\n- 密码最小长度为6个字符及以上。",
+      "mobileDescription": "您已绑定了手机号{mobile}，可用于登录、找回密码、接收服务短信通知消息等功能。",
+      "emailDescription": "您已绑定了邮箱{email}，可用于登录、接收服务通知消息等功能。",
+      "unbindMobileDesc": "你还没有绑定手机号，绑定后可用于登录、找回密码、接收服务短信通知消息等功能",
+      "unbindEmailDesc": "你还没有绑定邮箱，绑定后可用于登录、接收服务通知消息等功能",
+      "mobileBindDescription": "验证通过，请验证要绑定的手机号码",
+      "emailBoundDescription": "绑定邮箱后可用于登录及接收消息，不可绑定重复的邮箱",
+      "emailBindDescription": "验证通过，请验证要绑定的邮箱",
+      "modalDescription": "你正在进行敏感操作，继续操作前请验证您的身份，更换{typeIfy}成功后，您将无法使用旧{typeIfy}登录",
+      "changePassword": "修改密码",
+      "updateSuccessDescription": "修改密码成功后将退出到登录页面，且需要重新登录",
+      "emptyPasswordDescription": "当前密码不能为空",
+      "newNotEmpty": "新密码不能为空",
+      "notTheSame": "新密码和当前密码不能相同",
+      "confirmNotEmpty": "确认密码不能为空",
+      "twoNotSame": "两次密码不一致",
+      "systemPasswordStrength": "系统支持密码长度为6-50位",
+      "passwordRules": "至少包含数字和字母两种组合，支持数字、字母、特殊符号",
+      "passwordSpecial": "其中特殊符号为英文符号：/'\"\\:;~.!@ #$%^&*()",
+      "notSpaces": "不支持空格",
+      "theSame": "确认密码和新密码保持一致",
+      "weak": "低",
+      "medium": "中",
+      "strong": "高",
+      "sendCode": "发送验证码",
+      "resend": "{countDown}s 后重新发送",
+      "nextStep": "下一步",
+      "validation": "验证",
+      "receive": "接收",
+      "bind": "绑定",
+      "modify": "修改",
+      "verifyPass": "密码验证"
+    },
+    "status": {
+      "set": "已设置",
+      "notSet": "未设置"
+    }
+  },
+  "token": {
+    "accessToken": "访问令牌",
+    "tokenDescription": "当前生成访问令牌（access_token）为\"用户\"访问令牌，用户访问令牌和用户具有同等资源和数据权限，通过API携带用户访问令牌可访问受保护的用户资源和数据，而不会泄露用户的密码。为了用户安全性，请尽可能的设置较短的到期时间；用户访问令牌所有访问操作和审计信息都会关联到对应用户。",
+    "addToken": "添加访问令牌",
+    "tokenName": "令牌名称",
+    "expireTimeDescription": "到期时间（不指定默认30天内有效）",
+    "expireTime": "到期时间",
+    "typeSignPassword": "输入登录密码",
+    "copied": "已复制",
+    "copy": "复制",
+    "createToken": "创建令牌",
+    "addTokenDescription": "每个用户限制添加3个令牌",
+    "copiedTokenDescription": "令牌\"测试\"已创建。您将无法再次看到已生成的Token，请您确保现在进行\"复制Token。",
+    "addTokenTotal": "每个用户最多可添加{maxNum}个访问令牌, 已添加了{total}个令牌",
+    "loginPassword": "登录密码",
+    "columns": {
+      "name": "名称",
+      "token": "令牌",
+      "expired": "是否到期",
+      "expiredDate": "到期时间",
+      "createdDate": "创建时间",
+      "action": "操作"
+    },
+    "placeholder": {
+      "tokenName": "请输入令牌名称",
+      "tokenNameLength": "请输入令牌名称，100个字符以内",
+      "expireTime": "请选择到期时间",
+      "loginPassword": "请输入登录密码"
+    },
+    "messages": {
+      "addTokenTotal": "已添加了{total}个令牌，支持最多添加{maxNum}个访问令牌",
+      "confirmDelete": "确认删除该访问令牌吗？",
+      "deleteSuccess": "删除成功",
+      "createSuccess": "创建成功",
+      "copySuccess": "复制成功"
+    },
+    "status": {
+      "expired": "已到期",
+      "notExpired": "未到期"
+    }
+  },
+  "fixedTopMenu": {
+    "globalSearch": "搜索框",
+    "information": "消息中心",
+    "personalCenter": {
+      "baseInfo": "基本信息",
+      "securitySetting": "安全设置",
+      "accessToken": "访问令牌",
+      "messages": "我的消息",
+      "expense": "费用",
+      "workOrder": "工单",
+      "officialWebsite": "官网"
+    }
+  }
+}

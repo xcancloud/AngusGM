@@ -95,20 +95,35 @@ const bootstrapSign = async () => {
 
   cookieUtils.deleteTokenInfo();
 
+  const messages = {
+    en: {
+      ...enCommon,
+      ...enSign
+    },
+    zh_CN: {
+      ...zhCommon,
+      ...zhSign
+    }
+  };
   const locale = i18n_.getI18nLanguage();
-  const messages = (await import(`./locales/${locale}/sign.json`)).default;
   const i18n = createI18n({
     locale,
     legacy: false,
-    messages: {
-      [locale]: messages
-    }
+    fallbackLocale: 'en',
+    messages
   });
+
+  const enumPluginOptions = {
+    i18n: i18n,
+    enumUtils: enumUtils,
+    appEnums: enumNamespaceMap
+  };
 
   const App = (await import('@/SignApp.vue')).default;
   createApp(App)
     .use(router)
     .use(store)
+    .use(EnumPlugin, enumPluginOptions)
     .use(i18n)
     .mount('#app');
 };

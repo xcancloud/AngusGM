@@ -5,9 +5,9 @@ import { useI18n } from 'vue-i18n';
 import { Button, Checkbox, Pagination, RadioChangeEvent } from 'ant-design-vue';
 import { Card, NoData, PureCard } from '@xcan-angus/vue-ui';
 import RichEditor from '@/components/RichEditor/index.vue';
-// import RichBrowser from '@xcan/browser';
 import { message } from '@/api';
 
+// Message interface definition
 interface Message {
   content: string,
   id: string,
@@ -19,14 +19,20 @@ interface Message {
 
 const { t } = useI18n();
 
+// Tab types for message filtering
 type TabKey = 'ALL' | 'UNREAD' | 'READ'
-const tabList: { key: TabKey, tab: string }[] = [{ key: 'ALL', tab: t('personalCenter.total') }, {
-  key: 'UNREAD',
-  tab: t('personalCenter.unread')
-}, { key: 'READ', tab: t('personalCenter.read') }];
+const tabList: { key: TabKey, tab: string }[] = [
+  { key: 'ALL', tab: t('message.tabs.all') },
+  { key: 'UNREAD', tab: t('message.tabs.unread') },
+  { key: 'READ', tab: t('message.tabs.read') }
+];
+
+// Message count state variables
 const totalNum = ref(0);
 const unreadNum = ref(0);
 const readNum = ref(0);
+
+// Load message count statistics from API
 const loadCount = async () => {
   const [error, { data = [] }] = await message.getMessageStatusCount();
   if (error) {
@@ -48,11 +54,14 @@ const loadCount = async () => {
   });
 };
 
+// Route and tab management
 const route = useRoute();
 const defaultId = route.params.id;
 const initTab = defaultId ? 'UNREAD' : 'ALL';
 const selectTab = ref<TabKey>(initTab);
 const selectMessage = ref<Message>();
+
+// Handle tab changes and reset pagination/selection state
 const tabChange = (key: TabKey) => {
   selectTab.value = key;
   if (key === 'READ') {
@@ -79,30 +88,34 @@ const tabChange = (key: TabKey) => {
   }
 };
 
-const checkAll = ref(false);// 全部消息当前页是否全选
-const checkedList = ref<string[]>([]);// 全部消息当前页选中的消息
-const indeterminate = ref(false);// 全部消息当前页indeterminate
-const messageList = ref<Message[]>([]);// 全部消息当前页的消息列表
-const idList = computed(() => { // 全部消息当前页的消息列表的id集合
+// ALL messages tab state management
+const checkAll = ref(false); // Whether all messages on current page are selected
+const checkedList = ref<string[]>([]); // Selected message IDs on current page
+const indeterminate = ref(false); // Indeterminate state for checkbox
+const messageList = ref<Message[]>([]); // Message list for current page
+const idList = computed(() => { // ID collection of messages on current page
   return messageList.value?.map(item => item.id);
 });
 
-const readCheckAll = ref(false);// 已读消息当前页是否全选
-const readCheckedList = ref<string[]>([]);// 已读消息当前页选中的消息
-const readIndeterminate = ref(false);// 已读消息当前页indeterminate
-const readMessageList = ref<Message[]>([]);// 已读消息当前页的消息列表
-const readIdList = computed(() => { // 已读消息当前页的消息列表的id集合
+// READ messages tab state management
+const readCheckAll = ref(false); // Whether all read messages on current page are selected
+const readCheckedList = ref<string[]>([]); // Selected read message IDs on current page
+const readIndeterminate = ref(false); // Indeterminate state for read messages checkbox
+const readMessageList = ref<Message[]>([]); // Read message list for current page
+const readIdList = computed(() => { // ID collection of read messages on current page
   return readMessageList.value?.map(item => item.id);
 });
 
-const unreadCheckAll = ref(false);// 未读消息当前页是否全选
-const unreadCheckedList = ref<string[]>([]);// 未读消息当前页选中的消息
-const unreadIndeterminate = ref(false);// 未读消息当前页indeterminate
-const unreadMessageList = ref<Message[]>([]);// 未读消息当前页的消息列表
-const unreadIdList = computed(() => { // 未读消息当前页的消息列表的id集合
+// UNREAD messages tab state management
+const unreadCheckAll = ref(false); // Whether all unread messages on current page are selected
+const unreadCheckedList = ref<string[]>([]); // Selected unread message IDs on current page
+const unreadIndeterminate = ref(false); // Indeterminate state for unread messages checkbox
+const unreadMessageList = ref<Message[]>([]); // Unread message list for current page
+const unreadIdList = computed(() => { // ID collection of unread messages on current page
   return unreadMessageList.value?.map(item => item.id);
 });
 
+// Handle select all checkbox changes
 const onCheckAllChange = (e: RadioChangeEvent) => {
   if (e.target.checked) {
     switch (selectTab.value) {
@@ -125,6 +138,7 @@ const onCheckAllChange = (e: RadioChangeEvent) => {
     return;
   }
 
+  // Clear all selections
   switch (selectTab.value) {
     case 'READ':
       readCheckedList.value = [];
@@ -144,17 +158,20 @@ const onCheckAllChange = (e: RadioChangeEvent) => {
   }
 };
 
-const allTotal = ref(0);// 所有消息tab的总数
-const allPageNo = ref(1);// 所有消息当前页码
-const allPageSize = ref(10);// 所有消息每页显示条数
+// Pagination state for different tabs
+const allTotal = ref(0); // Total count for ALL messages tab
+const allPageNo = ref(1); // Current page number for ALL messages
+const allPageSize = ref(10); // Page size for ALL messages
 
-const readTotal = ref(0);// 已读消息tab的总数
-const readPageNo = ref(1);// 已读消息当前页码
-const readPageSize = ref(10);// 已读消息每页显示条数
+const readTotal = ref(0); // Total count for READ messages tab
+const readPageNo = ref(1); // Current page number for READ messages
+const readPageSize = ref(10); // Page size for READ messages
 
-const unreadTotal = ref(0);// 未读消息tab的总数
-const unreadPageNo = ref(1);// 未读消息当前页码
-const unreadPageSize = ref(10);// 未读消息每页显示条数
+const unreadTotal = ref(0); // Total count for UNREAD messages tab
+const unreadPageNo = ref(1); // Current page number for UNREAD messages
+const unreadPageSize = ref(10); // Page size for UNREAD messages
+
+// Get API parameters based on current tab
 const getParams = () => {
   const params: {
     pageNo: number,
@@ -183,10 +200,12 @@ const getParams = () => {
   return params;
 };
 
+// Load messages based on current tab and pagination
 const loadMessages = async () => {
   const params = getParams();
   const [error, { data = { list: [], total: 0 } }] = await message.getCurrentMessages(params);
   if (error) {
+    // Handle error by clearing data
     const read = params.read;
     if (typeof read === 'boolean') {
       if (read) {
@@ -200,16 +219,18 @@ const loadMessages = async () => {
       allTotal.value = 0;
       messageList.value = [];
     }
-
     return;
   }
 
+  // Auto-select first message if no message is selected
   if (!selectMessage.value?.id) {
     let currentMessage: Message;
     if (defaultId) {
+      // Find message by default ID from route
       currentMessage = data.list.find(item => item.id === defaultId);
       if (currentMessage) {
-        loadMessageById(currentMessage?.id);
+        await loadMessageById(currentMessage?.id);
+        // Mark as read if unread
         if (!currentMessage?.read) {
           const flag = await toMark([currentMessage.id]);
           if (flag) {
@@ -218,14 +239,16 @@ const loadMessages = async () => {
         }
       }
     } else {
+      // Select first message from list
       currentMessage = data.list[0];
       if (currentMessage) {
         selectMessage.value = currentMessage;
-        selectHandle(currentMessage);
+        await selectHandle(currentMessage);
       }
     }
   }
 
+  // Update state based on current tab
   const read = params.read;
   if (typeof read === 'boolean') {
     if (read) {
@@ -241,9 +264,11 @@ const loadMessages = async () => {
   }
 };
 
+// Handle individual checkbox changes
 const checkboxChange = (e: RadioChangeEvent, _message: Message) => {
   const id = _message.id;
   if (e.target.checked) {
+    // Add message to selected list
     switch (selectTab.value) {
       case 'READ':
         readCheckedList.value.push(id);
@@ -262,6 +287,7 @@ const checkboxChange = (e: RadioChangeEvent, _message: Message) => {
         break;
     }
   } else {
+    // Remove message from selected list
     switch (selectTab.value) {
       case 'READ':
         readCheckedList.value = readCheckedList.value.filter(item => item !== id);
@@ -282,6 +308,7 @@ const checkboxChange = (e: RadioChangeEvent, _message: Message) => {
   }
 };
 
+// Load message detail by ID
 const loadMessageById = async (id: string) => {
   const [error, { data }] = await message.getCurrentMessageDetail(id);
   if (error) {
@@ -290,19 +317,22 @@ const loadMessageById = async (id: string) => {
   selectMessage.value = data;
 };
 
+// Handle message selection and mark as read if necessary
 const selectHandle = async (_message: Message) => {
   selectMessage.value = _message;
-  loadMessageById(_message.id);
+  await loadMessageById(_message.id);
   if (!_message || _message.read) {
     return;
   }
 
+  // Mark unread message as read
   const flag = await toMark([_message.id]);
   if (flag) {
     refresh();
   }
 };
 
+// Mark messages as read
 const toMark = async (_ids: string[]) => {
   if (!_ids?.length) {
     return;
@@ -312,13 +342,13 @@ const toMark = async (_ids: string[]) => {
   return !error;
 };
 
+// Refresh message list and count
 const refresh = () => {
   loadMessages();
   loadCount();
 };
 
-// 标记为已读按钮点击事件
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+// Mark selected messages as read
 const markHandle = () => {
   const _ids = showCheckedList.value.filter(item => {
     return showUnreadIdList.value.includes(item);
@@ -326,13 +356,14 @@ const markHandle = () => {
   toMark(_ids);
 };
 
+// Delete selected messages
 const toDel = async () => {
   const [error] = await message.deleteCurrentMessages(showCheckedList.value);
   if (error) {
     return;
   }
 
-  // 清空右侧内容
+  // Clear right panel content if selected message is deleted
   const has = showCheckedList.value.findIndex(item => item === selectMessage.value?.id) > -1;
   if (has) {
     selectMessage.value = undefined;
@@ -340,6 +371,7 @@ const toDel = async () => {
 
   refresh();
 
+  // Reset selection state after deletion
   switch (selectTab.value) {
     case 'READ':
       readCheckAll.value = false;
@@ -359,6 +391,7 @@ const toDel = async () => {
   }
 };
 
+// Computed pagination object based on current tab
 const pagination = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -382,6 +415,7 @@ const pagination = computed(() => {
   }
 });
 
+// Computed disabled state for action buttons
 const disabled = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -393,6 +427,7 @@ const disabled = computed(() => {
   }
 });
 
+// Computed selected count for current tab
 const showCheckedNum = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -404,6 +439,7 @@ const showCheckedNum = computed(() => {
   }
 });
 
+// Computed select all state for current tab
 const showCheckAll = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -415,6 +451,7 @@ const showCheckAll = computed(() => {
   }
 });
 
+// Computed indeterminate state for current tab
 const showIndeterminate = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -426,15 +463,17 @@ const showIndeterminate = computed(() => {
   }
 });
 
+// Computed disabled state for mark as read button
 const markDisabled = computed(() => {
   return !showCheckedList.value.find(item => showUnreadIdList.value.includes(item));
 });
 
-// 当前消息列表中所有的未读消息集合
+// Computed unread message IDs from current message list
 const showUnreadIdList = computed(() => {
   return showMessageList.value.filter(item => !item.read).map(item => item.id);
 });
 
+// Computed message list for current tab
 const showMessageList = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -446,6 +485,7 @@ const showMessageList = computed(() => {
   }
 });
 
+// Computed checked list for current tab
 const showCheckedList = computed(() => {
   switch (selectTab.value) {
     case 'READ':
@@ -457,6 +497,7 @@ const showCheckedList = computed(() => {
   }
 });
 
+// Handle pagination changes
 const paginationChange = (current: number, size: number) => {
   switch (selectTab.value) {
     case 'READ':
@@ -484,8 +525,10 @@ const paginationChange = (current: number, size: number) => {
   loadMessages();
 };
 
+// Initialize component on mount
 onMounted(() => {
   refresh();
+  // Update browser history to remove route parameters
   history.pushState(null, '', location.origin + '/personal/messages');
 });
 </script>
@@ -520,11 +563,11 @@ onMounted(() => {
                 style="top: -2px;"
                 class="relative"
                 @change="onCheckAllChange">
-                {{ $t('personalCenter.totalSelect') }}
+                {{ $t('message.actions.selectAll') }}
               </Checkbox>
-              <span class="ml-2">{{ $t('personalCenter.selected') }}<em class="mx-1 not-italic">{{
+              <span class="ml-2">{{ $t('message.actions.selected') }}<em class="mx-1 not-italic">{{
                 showCheckedNum
-              }}</em>{{ $t('personalCenter.item') }}</span>
+              }}</em>{{ $t('common.table.items') }}</span>
             </div>
             <div class="flex items-center">
               <Button
@@ -534,14 +577,14 @@ onMounted(() => {
                 type="link"
                 class="mr-4"
                 @click="markHandle">
-                {{ $t('personalCenter.markRead') }}
+                {{ $t('message.actions.markRead') }}
               </Button>
               <Button
                 size="small"
                 :disabled="disabled"
                 type="link"
                 @click="toDel">
-                {{ $t('personalCenter.delete') }}
+                {{ $t('common.actions.delete') }}
               </Button>
             </div>
           </div>
@@ -572,7 +615,7 @@ onMounted(() => {
                 </div>
                 <div class="flex items-center mt-2.5">
                   <div class="flex-1 truncate mr-3">
-                    <span class="mr-1">{{ $t('personalCenter.sender') }}:</span> {{
+                    <span class="mr-1">{{ $t('message.columns.sender') }}:</span> {{
                       item.fullName
                     }}
                   </div>
@@ -583,9 +626,9 @@ onMounted(() => {
           </div>
           <div class="flex items-center h-12 pl-8 pr-6.5 border-t border-solid border-theme-divider">
             <div class="flex-1 truncate">
-              {{ $t('personalCenter.total') }}<em class="mx-1 not-italic">{{
+              {{ $t('common.table.total') }}<em class="mx-1 not-italic">{{
                 pagination.total
-              }}</em>{{ $t('personalCenter.item') }}
+              }}</em>{{ $t('common.table.items') }}
             </div>
             <Pagination
               size="small"
