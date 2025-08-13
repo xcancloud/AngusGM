@@ -3,8 +3,8 @@ import { onMounted, ref } from 'vue';
 import { AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 
 const officialUrl = ref<string>();
-onMounted(async () => {
-  officialUrl.value = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+onMounted(() => {
+  officialUrl.value = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
 });
 </script>
 <template>

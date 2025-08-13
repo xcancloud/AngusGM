@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n';
 
 import Logo from '@/components/Logo/index.vue';
 import OfficialLink from '@/components/OfficialLink/index.vue';
+import Language from '@/components/Language/index.vue';
 import Records from '@/components/CopyRight/index.vue';
 
 const { t } = useI18n();
@@ -17,6 +18,7 @@ const preventDefaultListener = (e) => {
       <Logo />
       <div class="layout-header-right">
         <OfficialLink />
+        <Language />
       </div>
     </div>
     <div class="layout-inner-container">
