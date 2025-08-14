@@ -149,4 +149,23 @@ export default class Auth {
   updateUserInitPassword (params: { newPassword: string|undefined }) : Promise<[Error | null, any]> {
     return http.patch(`${baseUrl}/user/password/init/current`, params);
   }
+
+  /**
+   * Get unauthorized policies URL based on type and ID
+   * @param type - Type of entity ('User', 'Group', 'Dept')
+   * @param id - Entity ID
+   * @returns URL string for unauthorized policies
+   */
+  getUnauthPolicyUrl (type: 'User' | 'Group' | 'Dept', id: string): string {
+    switch (type) {
+      case 'User':
+        return `${baseUrl}/user/${id}/unauth/policy`;
+      case 'Group':
+        return `${baseUrl}/group/${id}/unauth/policy`;
+      case 'Dept':
+        return `${baseUrl}/dept/${id}/unauth/policy`;
+      default:
+        return '';
+    }
+  }
 }
