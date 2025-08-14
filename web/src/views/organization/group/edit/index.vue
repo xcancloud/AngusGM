@@ -3,11 +3,14 @@ import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { Button, Form, FormItem, Textarea } from 'ant-design-vue';
-import { Colon, Hints, IconRequired, Input, notification, PureCard, Select } from '@xcan-angus/vue-ui';
+import { Colon, Hints, IconRequired, Input, PureCard, Select } from '@xcan-angus/vue-ui';
 import { GM, utils } from '@xcan-angus/infra';
 
 import { Detail, FormState } from '../types';
-import { group } from '@/api';
+import {
+  loadGroupDetail as loadGroupDetailUtil, loadGroupTagList as loadGroupTagListUtil,
+  addGroup as addGroupUtil, editGroup as editGroupUtil
+} from '../utils';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -28,17 +31,19 @@ const source = route.query.source as string;
  * Group detail data while editing. Used to hydrate form fields.
  */
 const groupDetail = ref<Detail>();
+
 /**
  * Load group detail by id and sync it into the form state.
  * Ensures `tagIds` is mapped from tag objects to id array.
  */
 const loadGroupDetail = async () => {
-  const [error, { data }] = await group.getGroupDetail(groupId);
-  if (error) {
+  const data = await loadGroupDetailUtil(groupId);
+  if (!data) {
     return;
   }
 
   groupDetail.value = data;
+  // Map all form fields from loaded data, handling special case for tags
   Object.keys(formState.value).every(item => {
     if (item === 'tagIds') {
       formState.value[item] = data?.tags?.map(item => item.id);
@@ -47,6 +52,7 @@ const loadGroupDetail = async () => {
     }
     return true;
   });
+  // Create deep copy for change detection
   oldFormState.value = JSON.parse(JSON.stringify(formState.value));
 };
 
@@ -60,45 +66,47 @@ const oldFormState = ref<FormState>({ code: '', name: '', remark: '', tagIds: []
 
 /** Global submit/loading guard */
 const loading = ref(false);
+
 /**
  * Create a new group by submitting current form state.
+ * Redirects to group list page on success.
  */
 const addGroup = async () => {
   if (loading.value) {
     return;
   }
   loading.value = true;
-  const [error] = await group.addGroup([formState.value]);
+  const result = await addGroupUtil(formState.value, t);
   loading.value = false;
-  if (error) {
-    return;
+  if (result) {
+    await router.push('/organization/group');
   }
-  notification.success(t('common.messages.addSuccess'));
-  router.push('/organization/group');
 };
 
 /**
  * Update an existing group when form content actually changed compared to original.
+ * Uses deep comparison to detect real changes and avoid unnecessary API calls.
  */
 const editGroup = async () => {
   if (loading.value) {
     return;
   }
 
+  // Check if form has actually changed before submitting
   const isEqual = utils.deepCompare(oldFormState.value, formState.value);
   if (isEqual) {
-    source === 'home' ? router.push('/organization/group') : router.push(`/organization/group/${groupId}`);
+    // No changes, navigate back without API call
+    source === 'home' ? await router.push('/organization/group') : await router.push(`/organization/group/${groupId}`);
     return;
   }
 
   loading.value = true;
-  const [error] = await group.replaceGroup([{ id: groupId, ...formState.value }]);
+  const result = await editGroupUtil(groupId, formState.value, oldFormState.value, t);
   loading.value = false;
-  if (error) {
-    return;
+  if (result) {
+    // Navigate based on source page after successful edit
+    source === 'home' ? await router.push('/organization/group') : await router.push(`/organization/group/${groupId}`);
   }
-  notification.success(t('common.messages.editSuccess'));
-  source === 'home' ? router.push('/organization/group') : router.push(`/organization/group/${groupId}`);
 };
 
 /**
@@ -121,17 +129,14 @@ const handleCancel = () => {
  * The number of tags already associated with the group (used in quota hints).
  */
 const total = ref(0);
+
 /**
  * Fetch tag summary for current group to show quota hints.
+ * Used to display current tag usage in edit mode.
  */
 const loadGroupTagList = async (): Promise<void> => {
   const params = { pageNo: 1, pageSize: 1 };
-  const [error, { data }] = await group.getGroupTag(groupId, params);
-  if (error) {
-    return;
-  }
-
-  total.value = +data?.total;
+  total.value = await loadGroupTagListUtil(groupId, params);
 };
 
 /** Initialize page data on mount for edit mode. */
@@ -144,12 +149,14 @@ onMounted(() => {
 
 </script>
 <template>
+  <!-- Main form container with centered layout -->
   <PureCard class="min-h-full p-3.5">
     <Form
       :model="formState"
       size="small"
       class="flex w-180 mx-auto mt-10"
       @finish="onFinish">
+      <!-- Form labels column with required indicators -->
       <div class="text-3 leading-3 text-theme-content text-right font-semibold w-28">
         <div class="h-7 leading-7 mb-5 pr-1.5 text-right">
           <IconRequired class="mr-0.5" />
@@ -170,7 +177,10 @@ onMounted(() => {
           <Colon />
         </div>
       </div>
+
+      <!-- Form inputs column -->
       <div class="flex-1 ml-3.5">
+        <!-- Group name input with validation -->
         <FormItem name="name" :rules="[{ required: true, message:t('group.placeholder.addNameTip') }]">
           <Input
             v-model:value="formState.name"
@@ -178,6 +188,8 @@ onMounted(() => {
             :maxlength="100"
             :placeholder="t('group.placeholder.addNameTip')" />
         </FormItem>
+
+        <!-- Group code input (disabled in edit mode) -->
         <FormItem name="code" :rules="[{ required: true, message:t('group.placeholder.addCodeTip') }]">
           <Input
             v-model:value="formState.code"
@@ -188,6 +200,8 @@ onMounted(() => {
             :placeholder="t('group.placeholder.addCodeTip')"
             :disabled="!!groupId" />
         </FormItem>
+
+        <!-- Group remark textarea -->
         <FormItem name="remark">
           <Textarea
             v-model:value="formState.remark"
@@ -196,9 +210,13 @@ onMounted(() => {
             :maxlength="200"
             :placeholder="t('group.placeholder.remark')" />
         </FormItem>
+
+        <!-- Tag quota hint information -->
         <FormItem>
           <Hints :text="t('group.groupTagQuotaTip', { num: groupId ? total : 0 })" />
         </FormItem>
+
+        <!-- Tag selection with multiple mode -->
         <FormItem name="tagIds" class="-mt-5">
           <Select
             v-model:value="formState.tagIds"
@@ -211,6 +229,8 @@ onMounted(() => {
             :placeholder="t('tag.placeholder.name')"
             mode="multiple" />
         </FormItem>
+
+        <!-- Form action buttons -->
         <FormItem>
           <Button
             :loading="loading"

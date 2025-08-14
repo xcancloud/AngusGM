@@ -123,45 +123,6 @@ export interface DeptFormData {
 }
 
 /**
- * Department creation parameters
- */
-export interface CreateDeptParams {
-  code: string;
-  name: string;
-  pid: string;
-  tagIds: string[];
-}
-
-/**
- * Department update parameters
- */
-export interface UpdateDeptParams {
-  id: string;
-  name?: string;
-  pid?: string;
-}
-
-/**
- * Department count information
- */
-export interface DeptCountInfo {
-  subDeptNum: number;
-  sunUserNum: number;
-}
-
-/**
- * Department navigation response
- */
-export interface DeptNavigationResponse {
-  parentChain: any[];
-  current: {
-    id: string;
-    pid: string;
-    name: string;
-  };
-}
-
-/**
  * Policy pagination interface
  */
 export interface PolicyPagination {
@@ -177,15 +138,6 @@ export interface ActionNode {
   id: string;
   name: string;
   pid: string;
-}
-
-/**
- * Tree field names configuration
- */
-export interface TreeFieldNames {
-  title: string;
-  key: string;
-  children: string;
 }
 
 /**
@@ -233,46 +185,6 @@ export interface FormRules {
     type?: string;
     validator?: (rule: any, value: any) => boolean | string | Promise<void>;
   }>;
-}
-
-/**
- * Component props for department operations
- */
-export interface DeptModalProps {
-  visible: boolean;
-  id?: string;
-  name?: string;
-  pid?: string;
-  pname?: string;
-  moveId?: string;
-  defaultPid?: string;
-  deptId?: string;
-  updateLoading?: boolean;
-  type?: string;
-}
-
-/**
- * Emit events interface
- */
-export interface DeptEmits {
-  close: () => void;
-  save: (value: any) => void;
-  ok?: (value: string) => void;
-  'update:visible'?: (value: boolean) => void;
-  change?: (addIds: string[], users: any[], deleteIds: string[]) => void;
-  add?: (node: any) => void;
-  editName?: (node: any) => void;
-  delete?: (node: any) => void;
-  editTag?: (node: any) => void;
-  move?: (node: any) => void;
-}
-
-/**
- * Department tag interface
- */
-export interface DeptTag {
-  id: string;
-  name: string;
 }
 
 /**
@@ -338,14 +250,6 @@ export interface MoveProps {
 export interface MoveEmits {
   (e: 'ok', value: string): void;
   (e: 'update:visible', value: boolean): void;
-}
-
-/**
- * Component props interface for info component
- */
-export interface InfoProps {
-  node: NodeLike;
-  deptInfo: DeptInfo;
 }
 
 /**

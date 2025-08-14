@@ -20,6 +20,7 @@ export type ListGroup = {
   lastModifiedBy: string;
   lastModifiedByName: string;
   lastModifiedDate: string;
+  source?: any;
 }
 
 export type Detail = ListGroup & { tags: null | { id: string, name: string }[] }
@@ -45,4 +46,18 @@ export type User = {
   mobile: string;
   tenantId: string;
   userId: string;
+}
+
+export interface GroupPolicyProps {
+  groupId: string;
+  enabled: boolean;
+}
+
+export interface GroupUserProps {
+  groupId: string;
+  enabled: boolean;
+}
+
+export interface DetailCardProps {
+  dataSource: Detail;
 }

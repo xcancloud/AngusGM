@@ -5,21 +5,18 @@ import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Image, Input, Tab
 import { debounce } from 'throttle-debounce';
 import { PageQuery, duration, utils, SearchCriteria } from '@xcan-angus/infra';
 
-import { User } from '../types';
+import { User, GroupUserProps } from '../types';
 
-import { group } from '@/api';
+import {
+  loadGroupUserList as loadGroupUserListUtil,
+  addGroupUser as addGroupUserUtil,
+  delGroupUser as delGroupUserUtil,
+  createGroupUserColumns
+} from '../utils';
 
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 
-/**
- * Props from parent: current group id and enabled state for operations.
- */
-interface Props {
-  groupId: string;
-  enabled: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<GroupUserProps>(), {
   groupId: undefined,
   enabled: false
 });
@@ -38,20 +35,7 @@ const userList = ref<User[]>([]);
  * Fetch group associated users list using current pagination/filters.
  */
 const loadGroupUserList = async (): Promise<void> => {
-  if (loading.value) {
-    return;
-  }
-  loading.value = true;
-  const [error, { data }] = await group.getGroupUser(props.groupId, params.value);
-  loading.value = false;
-  if (error) {
-    return;
-  }
-  userList.value = data?.list || [];
-  total.value = +data?.total;
-  if (isCountUpdate.value) {
-    count.value = +data.total;
-  }
+  await loadGroupUserListUtil(props.groupId, params.value, loading, userList, total, count, isCountUpdate);
 };
 
 const userVisible = ref(false);
@@ -89,11 +73,7 @@ const userSave = async (_userIds: string[], _users: { id: string, fullName: stri
 
 /** Add selected users to current group. */
 const addGroupUser = async (_userIds: string[]) => {
-  updateLoading.value = true;
-  const [error] = await group.addGroupUser(props.groupId, _userIds);
-  if (error) {
-    return;
-  }
+  await addGroupUserUtil(props.groupId, _userIds, updateLoading);
   isRefresh.value = true;
 };
 
@@ -102,13 +82,7 @@ const delGroupUser = async (_userIds: string[], type?: 'Table' | 'Modal') => {
   if (loading.value) {
     return;
   }
-  const [error] = await group.deleteGroupUser(props.groupId, _userIds);
-  if (type === 'Table') {
-    updateLoading.value = false;
-  }
-  if (error) {
-    return;
-  }
+  await delGroupUserUtil(props.groupId, _userIds, updateLoading);
 
   if (type === 'Modal') {
     isRefresh.value = true;
@@ -164,45 +138,7 @@ const tableChange = async (_pagination) => {
 onMounted(() => {
   loadGroupUserList();
 });
-const columns = [
-  {
-    key: 'userId',
-    title: t('user.columns.assocUser.id'),
-    dataIndex: 'userId',
-    width: '20%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'fullName',
-    title: t('user.columns.assocUser.name'),
-    dataIndex: 'fullName',
-    ellipsis: true
-  },
-  {
-    key: 'createdByName',
-    title: t('user.columns.assocUser.createdByName'),
-    dataIndex: 'createdByName',
-    width: '20%'
-  },
-  {
-    key: 'createdDate',
-    title: t('user.columns.assocUser.createdDate'),
-    dataIndex: 'createdDate',
-    width: '20%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'action',
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: '15%',
-    align: 'center' as const
-  }
-];
+const columns = createGroupUserColumns(t);
 </script>
 <template>
   <Hints class="mb-1" :text="t('group.disabledTip') + t('group.groupUserQuotaTip', { num: count })" />

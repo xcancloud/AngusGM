@@ -3,25 +3,35 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
-  AsyncComponent, ButtonAuth, Icon, IconCount, IconRefresh, modal, notification,
-  PureCard, SearchPanel, Table
+  AsyncComponent, ButtonAuth, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { PageQuery, SearchCriteria, app, GM, utils, Enabled } from '@xcan-angus/infra';
+import { app, Enabled, GM, PageQuery, SearchCriteria } from '@xcan-angus/infra';
 
+// Import local types and utility functions
 import { ListGroup } from './types';
-import { group } from '@/api';
+import {
+  addGroupUser as addGroupUserUtil, createGroupColumns, createSearchOptions,
+  delGroupConfirm as delGroupConfirmUtil, delGroupUser as delGroupUserUtil,
+  loadGroupList as loadGroupListUtil, searchChange as searchChangeUtil,
+  tableChange as tableChangeUtil, updateStatusConfirm as updateStatusConfirmUtil
+} from './utils';
 
+// Define async components for lazy loading
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 
+// Initialize internationalization
 const { t } = useI18n();
-const loading = ref(false);
-const showCount = ref(true);
-const disabled = ref(false);
-const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true });
-const total = ref(0);
-const groupList = ref<ListGroup[]>([]);
 
+// Reactive state variables
+const loading = ref(false); // Loading state for API calls
+const showCount = ref(true); // Toggle for statistics display
+const disabled = ref(false); // Disable state for operations
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [], fullTextSearch: true }); // Pagination and search parameters
+const total = ref(0); // Total number of groups
+const groupList = ref<ListGroup[]>([]); // List of groups to display
+
+// Computed pagination object for table
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -30,111 +40,63 @@ const pagination = computed(() => {
   };
 });
 
+// Initialize component data
 const init = () => {
   loadGroupList();
 };
 
+// Load group list from API
 const loadGroupList = async (): Promise<void> => {
-  if (loading.value) {
-    return;
-  }
-  loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await group.getGroupList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
-  }
-  groupList.value = data.list;
-  total.value = +data.total;
+  await loadGroupListUtil(params.value, loading, groupList, total);
 };
 
+// Confirm and update group status (enable/disable)
 const updateStatusConfirm = (id: string, name: string, enabled: boolean) => {
-  modal.confirm({
-    centered: true,
-    title: enabled ? t('common.actions.disable') : t('common.actions.enable'),
-    content: enabled ? t('common.messages.confirmDisable', { name: name }) : t('common.messages.confirmEnable', { name: name }),
-    async onOk () {
-      await updateStatus(id, enabled);
-    }
-  });
+  updateStatusConfirmUtil(id, name, enabled, t, params, total, loadGroupList, disabled);
 };
 
-const updateStatus = async (id: string, enabled: boolean) => {
-  const params = [{ id: id, enabled: !enabled }];
-  const [error] = await group.toggleGroupEnabled(params);
-  if (error) {
-    return;
-  }
-  notification.success(enabled ? t('common.messages.disableSuccess') : t('common.messages.enableSuccess'));
-  disabled.value = true;
-  await loadGroupList();
-  disabled.value = false;
-};
-
+// Handle search criteria changes
 const searchChange = async (data: SearchCriteria[]) => {
-  params.value.pageNo = 1;
-  params.value.filters = data;
-  disabled.value = true;
-  await loadGroupList();
-  disabled.value = false;
+  await searchChangeUtil(data, params, loadGroupList, disabled);
 };
 
+// Handle table pagination, filtering, and sorting changes
 const tableChange = async (_pagination, _filters, sorter) => {
-  const { current, pageSize } = _pagination;
-  params.value.pageNo = current;
-  params.value.pageSize = pageSize;
-  params.value.orderBy = sorter.orderBy;
-  params.value.orderSort = sorter.orderSort;
-  disabled.value = true;
-  await loadGroupList();
-  disabled.value = false;
+  await tableChangeUtil(_pagination, _filters, sorter, params, loadGroupList, disabled);
 };
 
+// Confirm and delete group
 const delGroupConfirm = (id: string, name: string) => {
-  modal.confirm({
-    centered: true,
-    title: t('common.actions.delete'),
-    content: t('common.messages.confirmDelete', { name: name }),
-    async onOk () {
-      await delGroup(id);
-    }
-  });
+  delGroupConfirmUtil(id, name, t, params, total, loadGroupList, disabled);
 };
 
-const delGroup = async (id: string) => {
-  const [error] = await group.deleteGroup([id]);
-  if (error) {
-    return;
-  }
-  notification.success(t('common.messages.deleteSuccess'));
-  params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
-  disabled.value = true;
-  await loadGroupList();
-  disabled.value = false;
-};
+// User management modal state
+const userVisible = ref(false); // Control user modal visibility
+const selectedGroup = ref<ListGroup>(); // Currently selected group for user operations
+const updateLoading = ref(false); // Loading state for user operations
 
-const userVisible = ref(false);
-const selectedGroup = ref<ListGroup>();
-const updateLoading = ref(false);
+// Open user association modal for a specific group
 const openConcatUser = async (record: ListGroup): Promise<void> => {
   selectedGroup.value = record;
   userVisible.value = true;
 };
 
-const userSave = async (_userIds: string[], _users: { id: string, fullName: string }[], deleteUserIds: string[]) => {
+// Save user associations (add/remove users from group)
+const saveUser = async (_userIds: string[], _users: { id: string, fullName: string }[], deleteUserIds: string[]) => {
   let reload = false;
-  // 如果有删除的用户
+  // Remove users from group
   if (deleteUserIds.length) {
     await delGroupUser(deleteUserIds);
     reload = true;
   }
-  // 如果有新增的用户
+  // Add users to group
   if (_userIds.length) {
     await addGroupUser(_userIds);
     reload = true;
   }
 
   userVisible.value = false;
+  // Reload group list if changes were made
   if (reload) {
     disabled.value = true;
     await loadGroupList();
@@ -142,61 +104,31 @@ const userSave = async (_userIds: string[], _users: { id: string, fullName: stri
   }
 };
 
+// Add users to the selected group
 const addGroupUser = async (_userIds: string[]) => {
   if (!selectedGroup.value) {
     return;
   }
-  updateLoading.value = true;
-  await group.addGroupUser(selectedGroup.value.id, _userIds);
-  updateLoading.value = false;
+  await addGroupUserUtil(selectedGroup.value.id, _userIds, updateLoading);
 };
 
+// Remove users from the selected group
 const delGroupUser = async (_userIds: string[]) => {
   if (!selectedGroup.value) {
     return;
   }
-  updateLoading.value = true;
-  await group.deleteGroupUser(selectedGroup.value.id, _userIds);
-  updateLoading.value = false;
+  await delGroupUserUtil(selectedGroup.value.id, _userIds, updateLoading);
 };
 
-const searchOptions = ref([
-  {
-    placeholder: t('group.placeholder.id'),
-    valueKey: 'id',
-    type: 'input' as const,
-    op: 'EQUAL' as const,
-    allowClear: true
-  },
-  {
-    placeholder: t('group.placeholder.name'),
-    valueKey: 'name',
-    type: 'input' as const,
-    allowClear: true
-  },
-  {
-    placeholder: t('common.status.validStatus'),
-    valueKey: 'enabled',
-    type: 'select-enum' as const,
-    enumKey: Enabled,
-    allowClear: true
-  },
-  {
-    placeholder: t('tag.placeholder.name'),
-    valueKey: 'tagId',
-    type: 'select' as const,
-    action: `${GM}/org/tag`,
-    fieldNames: { label: 'name', value: 'id' },
-    showSearch: true,
-    allowClear: true,
-    lazy: false
-  }
-]);
+// Search options for the search panel
+const searchOptions = ref(createSearchOptions(t, Enabled, GM));
 
+// Computed columns with internationalized titles
 const columns = computed(() => {
   return _columns.map((item) => ({ ...item, title: t(item.title) }));
 });
 
+// Handle refresh button click
 const handleRefresh = () => {
   if (loading.value) {
     return;
@@ -204,85 +136,18 @@ const handleRefresh = () => {
   loadGroupList();
 };
 
-const _columns = [
-  {
-    key: 'id',
-    title: 'ID',
-    dataIndex: 'id',
-    width: '12%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'name',
-    title: t('common.columns.name'),
-    dataIndex: 'name',
-    width: '18%'
-  },
-  {
-    key: 'code',
-    title: t('common.columns.code'),
-    dataIndex: 'code'
-  },
-  {
-    key: 'enabled',
-    title: t('common.status.validStatus'),
-    dataIndex: 'enabled',
-    width: '7%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'source',
-    title: t('common.labels.source'),
-    dataIndex: 'source',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'userNum',
-    title: t('group.columns.userNum'),
-    dataIndex: 'userNum',
-    width: '7%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'createdByName',
-    title: t('common.columns.createdByName'),
-    dataIndex: 'createdByName',
-    width: '10%'
-  },
-  {
-    key: 'createdDate',
-    title: t('common.columns.createdDate'),
-    sorter: true,
-    dataIndex: 'createdDate',
-    width: '11%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'action',
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: 130,
-    align: 'center' as const
-  }
-];
+// Create group table columns
+const _columns = createGroupColumns(t);
 
+// Component lifecycle - initialize on mount
 onMounted(() => {
   init();
 });
 </script>
 <template>
+  <!-- Main container with statistics and group management -->
   <PureCard class="p-3.5 min-h-full">
+    <!-- Statistics component showing new groups metrics -->
     <Statistics
       :visible="showCount"
       :barTitle="t('statistics.metrics.newGroups')"
@@ -290,8 +155,13 @@ onMounted(() => {
       resource="Group"
       :router="GM"
       class="mb-3" />
+
+    <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-3">
+      <!-- Search panel for filtering groups -->
       <SearchPanel :options="searchOptions" @change="searchChange" />
+
+      <!-- Action buttons: Add group, toggle statistics, refresh -->
       <div class="flex items-center space-x-2">
         <ButtonAuth
           code="GroupAdd"
@@ -305,6 +175,8 @@ onMounted(() => {
           @click="handleRefresh" />
       </div>
     </div>
+
+    <!-- Main data table for groups -->
     <Table
       :dataSource="groupList"
       :loading="loading"
@@ -315,7 +187,9 @@ onMounted(() => {
       :noDataSize="'small'"
       :noDataText="t('common.messages.noData')"
       @change="tableChange">
+      <!-- Custom cell rendering for different columns -->
       <template #bodyCell="{ column,text, record }">
+        <!-- Group name column with link to detail page -->
         <template v-if="column.dataIndex === 'name'">
           <RouterLink
             v-if="app.has('GroupDetail')"
@@ -325,6 +199,8 @@ onMounted(() => {
             {{ text }}
           </RouterLink>
         </template>
+
+        <!-- Enabled status column with badge indicator -->
         <template v-if="column.dataIndex === 'enabled'">
           <Badge
             v-if="record.enabled"
@@ -335,29 +211,41 @@ onMounted(() => {
             status="error"
             :text="t('common.actions.disable')" />
         </template>
+
+        <!-- Created by name column with fallback -->
         <template v-if="column.dataIndex === 'createdByName'">
           {{ text || '--' }}
         </template>
+
+        <!-- Source column showing message -->
         <template v-if="column.dataIndex === 'source'">
           {{ text?.message }}
         </template>
+
+        <!-- Action column with operation buttons -->
         <template v-if="column.dataIndex === 'action'">
           <div class="flex items-center space-x-2.5">
+            <!-- Edit group button -->
             <ButtonAuth
               code="GroupModify"
               type="text"
               :href="`/organization/group/edit/${record.id}?source=home`"
               icon="icon-shuxie" />
+
+            <!-- Enable/disable group button -->
             <ButtonAuth
               code="GroupEnable"
               type="text"
               :icon="record.enabled?'icon-jinyong1':'icon-qiyong'"
               :showTextIndex="record.enabled?1:0"
               @click="updateStatusConfirm(record.id,record.name,record.enabled)" />
+
+            <!-- More actions dropdown menu -->
             <Dropdown overlayClassName="ant-dropdown-sm" placement="bottomRight">
               <Icon icon="icon-gengduo" class="cursor-pointer outline-none" />
               <template #overlay>
                 <Menu class="text-3.5 leading-3.5 font-normal">
+                  <!-- Delete group menu item -->
                   <MenuItem
                     v-if="app.show('GroupDelete')"
                     :disabled="!app.has('GroupDelete')"
@@ -367,6 +255,8 @@ onMounted(() => {
                     </template>
                     {{ app.getName('GroupDelete') }}
                   </MenuItem>
+
+                  <!-- Associate users menu item -->
                   <MenuItem
                     v-if="app.show('GroupUserAssociate')"
                     :disabled="!record.enabled || !app.has('GroupUserAssociate')"
@@ -384,6 +274,8 @@ onMounted(() => {
       </template>
     </Table>
   </PureCard>
+
+  <!-- Async user management modal -->
   <AsyncComponent :visible="userVisible">
     <UserModal
       v-if="userVisible"
@@ -392,6 +284,6 @@ onMounted(() => {
       :groupId="selectedGroup?.id"
       :updateLoading="updateLoading"
       type="Group"
-      @change="userSave" />
+      @change="saveUser" />
   </AsyncComponent>
 </template>

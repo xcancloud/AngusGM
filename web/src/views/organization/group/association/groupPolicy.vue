@@ -7,19 +7,19 @@ import { debounce } from 'throttle-debounce';
 import { duration, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
 import { OrgTargetType } from '@/enums/enums';
 
-import { auth } from '@/api';
 import { createAuthPolicyColumns } from '@/views/organization/user/types';
-import { Props } from '../types';
+import { GroupPolicyProps } from '../types';
+import {
+  getGroupPolicy as getGroupPolicyUtil, addGroupPolicy as addGroupPolicyUtil, deleteGroupPolicy as deleteGroupPolicyUtil
+} from '../utils';
 
 const { t } = useI18n();
 
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<GroupPolicyProps>(), {
   groupId: '',
-  notify: 0,
-  enabled: false,
-  policyName: ''
+  enabled: false
 });
 
 /** Loading flags and data states */
@@ -57,20 +57,7 @@ const dataList = ref([]);
  * Fetch policies authorized to the group.
  */
 const getGroupPolicy = async () => {
-  if (loading.value) {
-    return;
-  }
-  loading.value = true;
-  disabled.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await auth.getGroupPolicy(props.groupId, params.value);
-  loading.value = false;
-  disabled.value = false;
-  if (error) {
-    return;
-  }
-
-  dataList.value = data.list;
-  total.value = data.total;
+  await getGroupPolicyUtil(props.groupId, params.value, loading, disabled, dataList, total);
 };
 
 const policyVisible = ref(false);
@@ -91,29 +78,20 @@ const policySave = async (addIds: string[]) => {
 
 /** Add policies to current group. */
 const addGroupPolicy = async (_addIds: string[]) => {
-  updateLoading.value = true;
-  const [error] = await auth.addGroupPolicy(props.groupId, _addIds);
-  updateLoading.value = false;
-  if (error) {
-    return;
+  const result = await addGroupPolicyUtil(props.groupId, _addIds, updateLoading);
+  if (result) {
+    await getGroupPolicy();
   }
-  await getGroupPolicy();
 };
 
 /** Remove a policy authorization from the group and keep table page valid. */
 const cancelLoading = ref(false);
 const handleCancel = async (id) => {
-  if (cancelLoading.value) {
-    return;
+  const result = await deleteGroupPolicyUtil(props.groupId, id, cancelLoading);
+  if (result) {
+    params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
+    await getGroupPolicy();
   }
-  cancelLoading.value = true;
-  const [error] = await auth.deleteGroupPolicy(props.groupId, [id]);
-  cancelLoading.value = false;
-  if (error) {
-    return;
-  }
-  params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
-  await getGroupPolicy();
 };
 
 /**
