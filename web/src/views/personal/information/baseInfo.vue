@@ -12,6 +12,12 @@ const authUrl = ref<string>(); // URL for real-name authentication
 const { t } = useI18n(); // Internationalization helper
 const visible = ref(false); // Controls cropper visibility
 
+// Computed properties
+/**
+ * Gets user avatar or falls back to default avatar
+ */
+const avatarRef = ref(appContext.getUser()?.avatar || defaultAvatar);
+
 // Upload configuration for avatar
 const params = {
   bizKey: 'avatar'
@@ -29,7 +35,7 @@ const upload = (): void => {
  * Updates user avatar in backend and local context
  * @param jsonData - Upload response data containing avatar URL
  */
-const success = async (jsonData): Promise<void> => {
+const uploadSuccess = async (jsonData: any): Promise<void> => {
   const avatar = jsonData.data[0].url;
   const [error] = await user.updateCurrentUser({ avatar });
   if (error) {
@@ -41,7 +47,10 @@ const success = async (jsonData): Promise<void> => {
     ...appContext.getUser(),
     avatar
   };
+
   appContext.setUser(temp);
+
+  avatarRef.value = avatar;
 };
 
 // Lifecycle hook - initialize authentication URL on component mount
@@ -49,12 +58,6 @@ onMounted(() => {
   const host = DomainManager.getInstance().getApiDomain(AppOrServiceRoute.gm);
   authUrl.value = host + '/system/auth';
 });
-
-// Computed properties
-/**
- * Gets user avatar or falls back to default avatar
- */
-const avatar = computed(() => appContext.getUser()?.avatar || defaultAvatar);
 
 /**
  * Computes real-name authentication status display properties
@@ -212,7 +215,7 @@ const copyID = () => {
   <PureCard class="flex items-center w-11/12 2xl:px-6 mx-auto px-15 py-6 mb-2">
     <!-- Avatar section with upload functionality -->
     <div class="relative flex items-center justify-center w-25 h-25 overflow-hidden rounded-full hover-show">
-      <Image :src="avatar" type="avatar" />
+      <Image :src="avatarRef" type="avatar" />
       <div
         class="hover-show cursor-pointer flex-col text-white absolute left-0 top-0 items-center justify-center w-full h-full hidden hover:bg-black-mask rounded-full z-2"
         @click="upload">
@@ -221,7 +224,7 @@ const copyID = () => {
     </div>
 
     <!-- Account information grid -->
-    <Grid class="ml-12" :columns="columns">
+    <Grid class="ml-12" labelStyle="font-weight: 700;" :columns="columns">
       <!-- Tenant ID with copy functionality -->
       <template #tenantId>
         <div class="flex space-x-2 items-center">
@@ -282,7 +285,7 @@ const copyID = () => {
   <Cropper
     v-model:visible="visible"
     :params="params"
-    @success="success" />
+    @success="uploadSuccess" />
 </template>
 
 <style scoped>

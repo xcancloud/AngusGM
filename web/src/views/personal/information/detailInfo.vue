@@ -320,7 +320,10 @@ watch(() => userInfo.value, (newValue: any) => {
 <template>
   <!-- Detailed information card with user data grid -->
   <PureCard class="py-7.5 px-25 w-11/12 2xl:px-6 mx-auto">
-    <Grid :columns="columns" :dataSource="userInfo">
+    <Grid
+      labelStyle="font-weight: 700;"
+      :columns="columns"
+      :dataSource="userInfo">
       <template #name>
         <div class="relative flex justify-between">
           <template v-if="!nameInput">
@@ -447,41 +450,59 @@ watch(() => userInfo.value, (newValue: any) => {
       </template>
       <template #group>
         <template v-if="groups?.length">
-          <div
-            v-for="item in groups"
-            :key="item.id"
-            class="inline-flex space-x-1 mr-2">
-            <div class="w-5 h-5 rounded-full bg-blue-tips flex items-center justify-center">
-              <Icon class="inline h-full text-theme-content text-4" icon="icon-zu" />
+          <div class="groups-container">
+            <div
+              v-for="item in groups"
+              :key="item.id"
+              class="group-item inline-flex items-center space-x-2 mr-3 mb-2 px-1.5 py-0.5 bg-blue-50 border border-blue-100 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+              <div class="group-icon w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center border border-blue-200">
+                <Icon class="text-blue-600 text-3" icon="icon-zu" />
+              </div>
+              <span class="group-name text-gray-700">{{ item.name }}</span>
             </div>
-            <span>{{ item.name }}</span>
           </div>
         </template>
       </template>
       <template #sysAdmin>
-        {{ userInfo.sysAdmin ? t('information.status.systemAdmin') :
-          t('information.status.generalUser') }}
+        <div class="status-badge">
+          <span
+            class="group-item inline-flex items-center space-x-2 mr-3 mb-2 px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+            {{ userInfo.sysAdmin ? t('information.status.systemAdmin') :
+              t('information.status.generalUser') }}
+          </span>
+        </div>
       </template>
       <template #deptHead>
-        {{ userInfo.deptHead ? t('information.status.principal') :
-          t('information.status.generalUser') }}
+        <div class="status-badge">
+          <span :class="userInfo.deptHead ? 'admin-badge' : 'user-badge'">
+            {{ userInfo.deptHead ? t('information.status.principal') :
+              t('information.status.generalUser') }}
+          </span>
+        </div>
       </template>
       <template #depts>
         <template v-if="depts?.length">
-          <div
-            v-for="item in depts"
-            :key="item.id"
-            class="inline-flex  space-x-1 mr-2">
-            <div class="w-5 h-5 rounded-full bg-blue-tips flex items-center justify-center">
-              <Icon class="inline h-full text-theme-content text-4" icon="icon-bumen" />
+          <div class="depts-container">
+            <div
+              v-for="item in depts"
+              :key="item.id"
+              class="dept-item inline-flex items-center space-x-2 mr-3 mb-2 px-1.5 py-0.5 bg-green-50 border border-green-100 rounded-lg hover:bg-green-100 transition-colors duration-200">
+              <div class="dept-icon w-6 h-6 rounded-full bg-green-100 flex items-center justify-center border border-green-200">
+                <Icon class="text-green-600 text-3" icon="icon-bumen" />
+              </div>
+              <span class="dept-name text-gray-700">{{ item.name }}</span>
             </div>
-            <span>{{ item.name }}</span>
           </div>
         </template>
       </template>
       <template #tags>
-        <div v-if="userInfo.tags">
-          <Tag v-for="item in userInfo.tags" :key="item.id">{{ item.name }}</Tag>
+        <div v-if="userInfo.tags" class="tags-container">
+          <Tag
+            v-for="item in userInfo.tags"
+            :key="item.id"
+            class="tag-item mr-2 mb-2 px-1.5 py-0.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+            {{ item.name }}
+          </Tag>
         </div>
       </template>
       <template #otherAccount>

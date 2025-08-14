@@ -10,12 +10,12 @@
       "title": "Title",
       "landline": "Landline",
       "address": "Address",
-      "registerTime": "Register Time",
-      "identity": "User Identity",
-      "group": "Joined Groups",
-      "ownDept": "Affiliated Department",
-      "userTags": "User Tags",
-      "otherAccount": "Third-party Accounts"
+      "registerTime": "Register",
+      "identity": "Identity",
+      "group": "Groups",
+      "ownDept": "Departments",
+      "userTags": "Tags",
+      "otherAccount": "Third-party"
     },
     "placeholder": {
       "firstName": "First Name",

@@ -76,7 +76,7 @@ const config = computed(() => {
     <span
       :class="config?.textColor"
       class="text-3 leading-3 mr-3">
-      {{ config?.name + " " + t('securities.columns.passwordStrength') }}
+      {{ t('securities.columns.passwordStrength') + " " + config?.name }}
     </span>
 
     <!-- Strength Progress Bar -->

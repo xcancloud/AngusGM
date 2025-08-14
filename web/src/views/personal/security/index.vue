@@ -174,7 +174,7 @@ watch(() => userInfo.value, (newValue) => {
         <Button
           size="small"
           class="absolute bottom-10 border-gray-line"
-          type="default"
+          type="primary"
           @click="toModify('password')">
           {{ t('securities.messages.modify') }}
         </Button>
@@ -206,7 +206,7 @@ watch(() => userInfo.value, (newValue) => {
           <Button
             size="small"
             class="absolute bottom-10 border-gray-line"
-            type="default"
+            type="primary"
             @click="toModify('mobile')">
             {{ t('securities.messages.modify') }}
           </Button>
@@ -251,7 +251,7 @@ watch(() => userInfo.value, (newValue) => {
           <Button
             size="small"
             class="absolute bottom-10 border-gray-line"
-            type="default"
+            type="primary"
             @click="toModify('email')">
             {{ t('securities.messages.modify') }}
           </Button>
