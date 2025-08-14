@@ -9,7 +9,7 @@ import RichEditor from '@/components/RichEditor/index.vue';
 import { Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 
 import { email } from '@/api';
-import { getDisabledTimeOptions, isPastDate } from './utils';
+import { getDisabledTimeOptions, isPastDate } from '../utils';
 
 /**
  * Component props interface

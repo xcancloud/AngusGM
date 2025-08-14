@@ -118,7 +118,7 @@ onMounted(() => {
 
       <!-- Global scope hint -->
       <div class="text-3 pl-1/3 -mt-4">
-        <Hints :text="t('notification.globalTip')" class="w-150 mb-1" />
+        <Hints :text="t('notification.globalTip')" class="w-170 mb-1" />
       </div>
 
       <!-- App selection (only shown for app-scoped notices) -->
@@ -208,6 +208,6 @@ onMounted(() => {
 /* Custom form control styling for better layout */
 .ant-form-horizontal :deep(.ant-form-item-control) {
   flex: 1 1 50%;
-  max-width: 600px;
+  max-width: 700px;
 }
 </style>

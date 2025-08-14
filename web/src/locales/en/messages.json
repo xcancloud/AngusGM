@@ -38,7 +38,7 @@
   },
   "notification": {
     "basicInfo": "Basic Information",
-    "globalTip": "\"Global\" notifications take effect for all applications, while \"Application-Scoped\" notifications are only valid for designated applications. If an application has both a \"Global\" notification and an \"Application-Scoped\" notification, the latest one will be displayed first.",
+    "globalTip": "\"Global\" notifications apply to all applications, while \"Application-Scoped\" ones only work for designated applications. If an application has both, the latest notification will be displayed first.",
     "columns": {
       "content": "Content",
       "scope": "Scope",

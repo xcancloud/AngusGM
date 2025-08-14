@@ -4,36 +4,12 @@ import { useI18n } from 'vue-i18n';
 import { Form, FormItem } from 'ant-design-vue';
 import { Input, Modal, notification } from '@xcan-angus/vue-ui';
 
-import { dept } from '@/api';
+import { EditProps, EditEmits, FormType } from '../types';
+import { updateDepartment } from '../utils';
 
-/**
- * Form data interface for department editing
- * Defines the structure of the form data
- */
-interface FormType {
-  name: string | undefined
-}
+const props = withDefaults(defineProps<EditProps>(), {});
 
-/**
- * Component props interface
- * Defines the properties passed to the department edit component
- */
-interface Props {
-  visible: boolean, // Modal visibility state
-  id: string | undefined, // Department ID to edit
-  name: string | undefined, // Current department name
-}
-
-const props = withDefaults(defineProps<Props>(), {});
-
-/**
- * Component emits interface
- * Defines the events that this component can emit
- */
-const emit = defineEmits<{
-  (e: 'close'): void, // Emitted when modal is closed
-  (e: 'save', value: string): void // Emitted when form is saved with new name
-}>();
+const emit = defineEmits<EditEmits>();
 
 // Internationalization setup
 const { t } = useI18n();
@@ -45,8 +21,8 @@ const formRef = ref();
  * Reactive state management for component
  */
 const state = reactive<{
-  confirmLoading: boolean, // Loading state for save operation
-  rules: Record<string, Array<Record<string, string | boolean>>> // Form validation rules
+  confirmLoading: boolean;
+  rules: Record<string, Array<Record<string, string | boolean>>>;
 }>({
   confirmLoading: false,
   rules: {
@@ -65,15 +41,6 @@ const form = reactive<FormType>({
 });
 
 /**
- * Enhanced error handling for API operations
- * Provides consistent error messaging and logging
- */
-const handleApiError = (error: any, operation: string): void => {
-  console.error(`Error in ${operation}:`, error);
-  notification.error(t('common.messages.operationFailed'));
-};
-
-/**
  * Save department changes
  * Validates form, calls API, and handles response
  */
@@ -82,29 +49,33 @@ const save = async (): Promise<void> => {
     // Validate form before submission
     await formRef.value.validate();
 
+    // Ensure id is present
+    if (!props.id) {
+      notification.error(t('common.messages.operationFailed'));
+      return;
+    }
+
     const params = {
-      id: props.id,
+      id: props.id as string,
       name: form.name
     };
 
     // Validate required fields
-    if (!params.id || !params.name) {
+    if (!params.name) {
       notification.error(t('common.messages.operationFailed'));
       return;
     }
 
     state.confirmLoading = true;
-    const [error] = await dept.updateDept([params]);
+    const success = await updateDepartment([params], t);
 
-    if (error) {
-      handleApiError(error, 'update department');
-      return;
+    if (success) {
+      notification.success(t('common.messages.editSuccess'));
+      emit('save', params.name);
     }
-
-    notification.success(t('common.messages.editSuccess'));
-    emit('save', params.name);
   } catch (error) {
-    handleApiError(error, 'save department');
+    console.error('Error saving department:', error);
+    notification.error(t('common.messages.operationFailed'));
   } finally {
     state.confirmLoading = false;
   }

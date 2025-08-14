@@ -3,41 +3,27 @@ import { withDefaults, defineProps, defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ButtonAuth, Card, Icon } from '@xcan-angus/vue-ui';
 import { Tag } from 'ant-design-vue';
+import { NodeLike, DeptInfo, InfoEmits } from '../types';
 
-interface DeptTag { id: string; name: string }
-interface DeptInfo {
-  id?: string;
-  name?: string;
-  code?: string;
-  createdByName?: string;
-  createdDate?: string;
-  lastModifiedByName?: string;
-  lastModifiedDate?: string;
-  level?: string | number;
-  tags?: DeptTag[];
-}
-interface NodeLike { id?: string }
-
+// Component props interface for department information display
 interface Props {
   node: NodeLike;
   deptInfo: DeptInfo;
 }
 
+// Component props with default values
 const props = withDefaults(defineProps<Props>(), {
   node: () => ({} as NodeLike),
-  deptInfo: () => ({}) as DeptInfo
+  deptInfo: () => ({} as DeptInfo)
 });
 
-const emit = defineEmits<{
-  (e: 'add', node: NodeLike): void;
-  (e: 'editName', node: NodeLike): void;
-  (e: 'delete', node: NodeLike): void;
-  (e: 'editTag', node: NodeLike): void;
-  (e: 'move', node: NodeLike): void;
-}>();
+// Component emit events for various department operations
+const emit = defineEmits<InfoEmits>();
 
+// Internationalization instance
 const { t } = useI18n();
 
+// Action handlers for department operations
 const onAdd = () => emit('add', props.node);
 const onEditName = () => emit('editName', props.node);
 const onDelete = () => emit('delete', props.node);
@@ -50,28 +36,35 @@ const onMove = () => emit('move', props.node);
     <template #title>
       <span class="text-3">{{ t('department.basicInfo') }}</span>
     </template>
+
+    <!-- Action buttons toolbar for department operations -->
     <template #rightExtra>
       <div class="flex items-center space-x-2.5">
+        <!-- Add department button -->
         <ButtonAuth
           code="DeptAdd"
           type="text"
           icon="icon-tianjia"
           @click="onAdd" />
+        <!-- Edit department name button -->
         <ButtonAuth
           code="DeptModify"
           type="text"
           icon="icon-shuxie"
           @click="onEditName" />
+        <!-- Delete department button -->
         <ButtonAuth
           code="DeptDelete"
           type="text"
           icon="icon-lajitong"
           @click="onDelete" />
+        <!-- Edit department tags button -->
         <ButtonAuth
           code="DeptTagsAdd"
           type="text"
           icon="icon-biaoqian2"
           @click="onEditTag" />
+        <!-- Move department button (currently disabled) -->
         <ButtonAuth
           v-if="false"
           code="Move"
@@ -81,9 +74,9 @@ const onMove = () => emit('move', props.node);
       </div>
     </template>
 
-    <!-- Department information display -->
+    <!-- Department information display section -->
     <div v-show="props.node?.id" class="dept-info-display">
-      <!-- Basic Information Row -->
+      <!-- Basic Information Row: Name, Code, ID -->
       <div class="info-row">
         <div class="info-item">
           <div class="info-label">
@@ -108,7 +101,7 @@ const onMove = () => emit('move', props.node);
         </div>
       </div>
 
-      <!-- Creation Information Row -->
+      <!-- Creation Information Row: Creator, Date, Level -->
       <div class="info-row">
         <div class="info-item">
           <div class="info-label">
@@ -133,7 +126,7 @@ const onMove = () => emit('move', props.node);
         </div>
       </div>
 
-      <!-- Modification Information Row -->
+      <!-- Modification Information Row: Last Modifier, Date, Tags -->
       <div class="info-row">
         <div class="info-item">
           <div class="info-label">
@@ -155,6 +148,7 @@ const onMove = () => emit('move', props.node);
             {{ t('common.columns.tags') }}
           </div>
           <div class="info-value">
+            <!-- Display tags if available, otherwise show placeholder -->
             <div v-if="props.deptInfo.tags && props.deptInfo.tags.length > 0" class="tags-container">
               <Tag
                 v-for="tag in props.deptInfo.tags"
@@ -178,6 +172,7 @@ const onMove = () => emit('move', props.node);
   padding: 4px 0;
 }
 
+/* Information row layout with flexbox */
 .info-row {
   display: flex;
   gap: 4px;
@@ -190,11 +185,13 @@ const onMove = () => emit('move', props.node);
   margin-bottom: 0;
 }
 
+/* Individual information item styling */
 .info-item {
   flex: 1;
   min-width: 0;
 }
 
+/* Label styling with icon and text */
 .info-label {
   display: flex;
   align-items: center;
@@ -205,12 +202,14 @@ const onMove = () => emit('move', props.node);
   padding-left: 20px;
 }
 
+/* Icon styling for information labels */
 .info-icon {
   margin-right: 6px;
   font-size: 12px;
   color: #1890ff;
 }
 
+/* Value text styling */
 .info-value {
   font-size: 12px;
   color: #262626;
@@ -220,12 +219,14 @@ const onMove = () => emit('move', props.node);
   padding-left: 40px;
 }
 
+/* Tags container for multiple tag display */
 .tags-container {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
 
+/* Individual tag styling */
 .tag {
   background: #f6ffed;
   border: 1px solid #b7eb8f;
@@ -236,12 +237,13 @@ const onMove = () => emit('move', props.node);
   margin: 0;
 }
 
+/* Placeholder text for no tags */
 .no-tags {
   color: #bfbfbf;
   font-style: italic;
 }
 
-/* Responsive design for department info */
+/* Responsive design for mobile devices */
 @media (max-width: 768px) {
   .info-row {
     flex-direction: column;

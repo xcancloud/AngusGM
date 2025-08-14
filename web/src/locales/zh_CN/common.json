@@ -290,7 +290,7 @@
       "strategy": "策略",
       "authorisation": "授权",
       "strategyDetail": "策略详情",
-      "sendMessage": "消息管理",
+      "sendMessage": "消息",
       "send": "发送",
       "mailboxServer": "邮箱服务器",
       "ldap": "LDAP配置",
