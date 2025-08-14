@@ -71,64 +71,81 @@ const contents = [
 </script>
 
 <template>
-  <div class="flex space-x-2 flex-1">
+  <div class="flex space-x-6 flex-1">
     <!-- Enterprise authentication summary card -->
     <PageCard
       :pageTitle="t('realName.titles.enterpriseAuth')"
       icon="icon-qiyerenzheng"
       :contents="contents"
-      :success="form.status === 'AUDITED'" />
+      :success="form.status === 'AUDITED'"
+      theme="enterprise" />
 
     <!-- Enterprise certification details card -->
     <Card
       :title="t('realName.titles.enterpriseAuth')"
-      class=" flex-1"
-      bodyClass="px-8 py-5 text-3 leading-3">
+      class="flex-1 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50"
+      bodyClass="px-10 py-8 text-3 leading-3">
       <!-- Company name field -->
-      <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">{{ t('realName.columns.enterpriseName') }}</div>
-        <div>{{ form.companyName }}</div>
+      <div class="flex py-4 border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+          {{ t('realName.columns.enterpriseName') }}
+        </div>
+        <div class="text-gray-800 font-semibold">{{ form.companyName }}</div>
       </div>
 
       <!-- Business license number field -->
-      <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">{{ t('realName.columns.creditCode') }}</div>
-        <div>{{ form.creditCode }}</div>
+      <div class="flex py-4 border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+          {{ t('realName.columns.creditCode') }}
+        </div>
+        <div class="text-gray-800 font-semibold font-mono">{{ form.creditCode }}</div>
       </div>
 
       <!-- Legal person name field -->
-      <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">{{ t('realName.columns.legalName') }}</div>
-        <div>{{ form.name }}</div>
+      <div class="flex py-4 border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+          {{ t('realName.columns.legalName') }}
+        </div>
+        <div class="text-gray-800 font-semibold">{{ form.name }}</div>
       </div>
 
       <!-- Legal person ID number field -->
-      <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">
+      <div class="flex py-4 border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
           {{ t('realName.columns.legalIdCard') }}
         </div>
-        <div>{{ form.certNo }}</div>
+        <div class="text-gray-800 font-semibold font-mono">{{ form.certNo }}</div>
       </div>
 
       <!-- ID card images -->
-      <div class="flex mt-8.75">
-        <div class="mr-7.5">
-          <div class="w-54 h-33.5 rounded overflow-hidden flex justify-center items-center border-theme-divider border">
-            <img class="w-full" :src="certFrontPicUrl" />
+      <div class="flex mt-10 space-x-8">
+        <div class="group">
+          <div class="w-56 h-36 rounded-xl overflow-hidden flex justify-center items-center border-2 border-gray-200 group-hover:border-blue-400 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+            <img class="w-full h-full object-cover" :src="certFrontPicUrl" />
           </div>
-          <p class="text-center text-black-content mt-3">{{ t('realName.columns.certFront') }}</p>
+          <p class="text-center text-gray-600 mt-4 font-medium group-hover:text-blue-600 transition-colors duration-200">
+            {{ t('realName.columns.certFront') }}
+          </p>
         </div>
-        <div class="mr-7.5">
-          <div class="w-54 h-33.5 rounded overflow-hidden flex justify-center items-center border-theme-divider border">
-            <img class="w-full" :src="certBackPicUrl" />
+        <div class="group">
+          <div class="w-56 h-36 rounded-xl overflow-hidden flex justify-center items-center border-2 border-gray-200 group-hover:border-blue-400 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+            <img class="w-full h-full object-cover" :src="certBackPicUrl" />
           </div>
-          <p class="text-center text-black-content mt-3">{{ t('realName.columns.certBack') }}</p>
+          <p class="text-center text-gray-600 mt-4 font-medium group-hover:text-blue-600 transition-colors duration-200">
+            {{ t('realName.columns.certBack') }}
+          </p>
         </div>
-        <div>
-          <div class="w-54 h-33.5 rounded overflow-hidden flex justify-center items-center border-theme-divider border">
-            <img class="w-full" :src="businessCertPicUrl" />
+        <div class="group">
+          <div class="w-56 h-36 rounded-xl overflow-hidden flex justify-center items-center border-2 border-gray-200 group-hover:border-blue-400 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+            <img class="w-full h-full object-cover" :src="businessCertPicUrl" />
           </div>
-          <p class="text-center text-black-content mt-3">{{ t('realName.columns.businessLicense') }}</p>
+          <p class="text-center text-gray-600 mt-4 font-medium group-hover:text-blue-600 transition-colors duration-200">
+            {{ t('realName.columns.businessLicense') }}
+          </p>
         </div>
       </div>
     </Card>

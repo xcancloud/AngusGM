@@ -36,6 +36,7 @@
     "no-debugger": 1,
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-empty-function": 2,
+    "node/no-callback-literal": "off",
     "max-len": [
       0,
       {

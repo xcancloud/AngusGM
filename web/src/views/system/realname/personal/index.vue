@@ -78,44 +78,55 @@ const contents = [
 </script>
 
 <template>
-  <div class="flex space-x-2">
+  <div class="flex space-x-6">
     <!-- Personal authentication summary card -->
     <PageCard
       :contents="contents"
       :pageTitle="t('realName.titles.personalAuth')"
       icon="icon-gerenrenzheng"
-      :success="form.status === 'AUDITED'" />
+      :success="form.status === 'AUDITED'"
+      theme="personal" />
 
     <!-- Personal certification details card -->
     <Card
       :title="t('realName.titles.personalAuth')"
-      class="flex-1"
-      bodyClass="px-8 py-5">
+      class="flex-1 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-purple-50"
+      bodyClass="px-10 py-8">
       <!-- Name field -->
-      <div class="flex py-3.75">
-        <div class="text-theme-content w-28 mr-7.5">{{ t('realName.columns.name') }}</div>
-        <div>{{ form.name }}</div>
+      <div class="flex py-4 border-b border-gray-100 hover:bg-purple-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+          {{ t('realName.columns.name') }}
+        </div>
+        <div class="text-gray-800 font-semibold">{{ form.name }}</div>
       </div>
 
       <!-- ID card number field -->
-      <div class="flex py-3.75">
-        <div class="text-theme-content w-28 mr-7.5">{{ t('realName.columns.idCard') }}</div>
-        <div>{{ form.certNo }}</div>
+      <div class="flex py-4 border-b border-gray-100 hover:bg-purple-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+          {{ t('realName.columns.idCard') }}
+        </div>
+        <div class="text-gray-800 font-semibold font-mono">{{ form.certNo }}</div>
       </div>
 
       <!-- ID card images -->
-      <div class="flex mt-8.75">
-        <div class="mr-15">
-          <div class="w-67.5 h-42 rounded flex items-center justify-center overflow-hidden border-theme-divider border">
-            <img :src="certFrontPicUrl" class="w-full" />
+      <div class="flex mt-10 space-x-8">
+        <div class="group">
+          <div class="w-72 h-44 rounded-xl flex items-center justify-center overflow-hidden border-2 border-gray-200 group-hover:border-purple-400 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+            <img :src="certFrontPicUrl" class="w-full h-full object-cover" />
           </div>
-          <p class="text-center text-theme-content mt-3">{{ t('realName.columns.certFront') }}</p>
+          <p class="text-center text-gray-600 mt-4 font-medium group-hover:text-purple-600 transition-colors duration-200">
+            {{ t('realName.columns.certFront') }}
+          </p>
         </div>
-        <div>
-          <div class="w-67.5 h-42 rounded flex items-center justify-center overflow-hidden border-theme-divider border">
-            <img :src="certBackPicUrl" class="w-full" />
+        <div class="group">
+          <div class="w-72 h-44 rounded-xl flex items-center justify-center overflow-hidden border-2 border-gray-200 group-hover:border-purple-400 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+            <img :src="certBackPicUrl" class="w-full h-full object-cover" />
           </div>
-          <p class="text-center text-theme-content mt-3">{{ t('realName.columns.certBack') }}</p>
+          <p class="text-center text-gray-600 mt-4 font-medium group-hover:text-purple-600 transition-colors duration-200">
+            {{ t('realName.columns.certBack') }}
+          </p>
         </div>
       </div>
     </Card>

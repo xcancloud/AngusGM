@@ -4,6 +4,10 @@ import 'viewerjs/dist/viewer.css';
 import { cookieUtils, upload } from '@xcan-angus/infra';
 import { Icon } from '@xcan-angus/vue-ui';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 import { defineEmits, defineProps, ref, watch, withDefaults } from 'vue';
 
 interface Props {
@@ -107,42 +111,48 @@ const deleteImage = function () {
 </script>
 
 <template>
-  <div class="w-45">
+  <div class="upload-container">
     <!-- Upload container with different dimensions based on type -->
     <!-- Type 1: ID card, Type 2: Other certificates -->
     <div
-      :class="[ type === '1' ? 'h-27.5 w-45' : 'h-40 w-30', {'border-danger': error}, 'overflow-hidden border flex items-center relative border-theme-text-box']">
+      :class="[
+        'upload-area',
+        type === '1' ? 'h-28 w-48' : 'h-40 w-32',
+        { 'upload-error': error }
+      ]">
+      
       <!-- Upload icon when no image is present -->
-      <Icon
-        v-if="!imageUrl"
-        icon="icon-shangchuanzhengjian"
-        class="mx-auto text-3xl cursor-pointer text-theme-sub-content text-theme-text-hover"
-        @click="selectFile" />
+      <div v-if="!imageUrl" class="upload-placeholder" @click="selectFile">
+        <Icon
+          icon="icon-shangchuanzhengjian"
+          class="upload-icon" />
+        <span class="upload-text">{{ t('common.actions.upload')}}</span>
+      </div>
 
       <!-- Display uploaded image -->
       <img
         v-else
         ref="viewerImageRef"
-        class="w-full"
+        class="uploaded-image"
         :src="imageUrl" />
 
       <!-- Image action overlay (view/delete) -->
       <div
         v-if="imageUrl"
-        class="absolute top-0 left-0 w-full h-full bg-black-mask flex items-center justify-center opacity-0 hover:opacity-100">
+        class="image-actions">
         <Icon
           icon="icon-zhengyan"
-          class="text-2xl text-white cursor-pointer"
+          class="action-icon view-icon"
           @click="viewImage" />
         <Icon
           icon="icon-lajitong"
-          class="text-2xl text-white ml-5 cursor-pointer"
+          class="action-icon delete-icon"
           @click="deleteImage" />
       </div>
     </div>
 
     <!-- Description message for ID card type -->
-    <p v-show="type === '1'" class="mt-3 text-center text-3 leading-3 text-gray-forget">{{ _message }}</p>
+    <p v-show="type === '1'" class="upload-description">{{ _message }}</p>
 
     <!-- Hidden file input for upload -->
     <input
@@ -154,3 +164,116 @@ const deleteImage = function () {
       @change="fileChange">
   </div>
 </template>
+
+<style scoped>
+.upload-container {
+  display: inline-block;
+}
+
+.upload-area {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 2px solid #E5E7EB;
+  background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-area:hover {
+  border-color: #3B82F6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.15);
+}
+
+.upload-area.upload-error {
+  border-color: #EF4444;
+  background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
+  animation: shake 0.5s ease-in-out;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1rem;
+  text-align: center;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: #9CA3AF;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.upload-area:hover .upload-icon {
+  color: #3B82F6;
+}
+
+.upload-text {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-actions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.upload-area:hover .image-actions {
+  opacity: 1;
+}
+
+.action-icon {
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.view-icon:hover {
+  background: rgba(59, 130, 246, 0.8);
+  transform: scale(1.1);
+}
+
+.delete-icon:hover {
+  background: rgba(239, 68, 68, 0.8);
+  transform: scale(1.1);
+}
+
+.upload-description {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+</style>

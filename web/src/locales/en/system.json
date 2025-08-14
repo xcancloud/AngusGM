@@ -81,20 +81,20 @@
       "orgCertificate": "Organization Certificate"
     },
     "placeholder": {
-      "inputRealName": "Enter real name",
-      "inputLegalName": "Enter legal representative name",
-      "inputOrgName": "Enter organization name",
+      "inputRealName": "Please enter real name",
+      "inputLegalName": "Please enter legal representative name",
+      "inputOrgName": "Please enter organization name",
       "inputIdCard": "Please enter valid ID card number",
       "inputLegalIdCard": "Please enter legal representative ID card number",
       "inputEnterpriseName": "Please enter enterprise name",
       "inputCreditCode": "Please enter business registration number",
       "inputOrgCode": "Please enter organization code",
-      "uploadIdCardFront": "Please upload personal ID card front side",
-      "uploadIdCardBack": "Please upload personal ID card back side",
-      "uploadLegalIdCardFront": "Please upload legal representative ID card front side",
-      "uploadLegalIdCardBack": "Please upload legal representative ID card back side",
-      "uploadBusinessLicense": "Please upload business license",
-      "uploadOrgCertificate": "Please upload organization certificate"
+      "uploadIdCardFront": "Personal ID card front side",
+      "uploadIdCardBack": "Personal ID card back side",
+      "uploadLegalIdCardFront": "Legal representative ID card front side",
+      "uploadLegalIdCardBack": "Legal representative ID card back side",
+      "uploadBusinessLicense": "Upload business license",
+      "uploadOrgCertificate": "Upload organization certificate"
     },
     "messages": {
       "personalAuthDesc": "Applicable to individual users, account belongs to individual;",

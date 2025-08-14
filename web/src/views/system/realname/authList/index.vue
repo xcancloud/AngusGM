@@ -56,13 +56,13 @@ const path = function () {
       v-if="!props.disabled"
       class="flex items-center text-3 leading-3 text-theme-special text-theme-text-hover cursor-pointer"
       @click="path">
-      <span>{{ t('common.actions.audit') }}</span>
+      <span>{{ t('common.actions.goAuth') }}</span>
       <Icon class="text-3 leading-3 ml-2" icon="icon-lijirenzheng" />
     </div>
 
     <!-- Authentication button - disabled state -->
     <div v-else class="flex items-center text-3 leading-3 text-theme-sub-content cursor-not-allowed">
-      <span>{{ t('common.actions.audit') }}</span>
+      <span>{{ t('common.actions.goAuth') }}</span>
       <Icon class="text-3 leading-3 ml-2" icon="icon-lijirenzheng" />
     </div>
   </PureCard>

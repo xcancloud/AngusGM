@@ -82,7 +82,7 @@ const confirmLoading = ref(false);
 const formRef = ref();
 
 // Audit in progress indicator
-const unding = ref(false);
+const auditing = ref(false);
 
 // Upload component error states
 const errorUpload = ref<number[]>([]);
@@ -337,7 +337,7 @@ const trimValue = (type, key) => {
 
 </script>
 <template>
-  <Card v-if="unding" class="mx-auto overflow-hidden">
+  <Card v-if="auditing" class="mx-auto overflow-hidden">
     <AuditStatus backUrl="/" />
   </Card>
   <Card v-else class="flex-1">
@@ -346,8 +346,8 @@ const trimValue = (type, key) => {
         ref="formRef"
         :model="form"
         :rules="rules"
-        :labelCol="{ span: 7 }"
-        :wrapperCol="{ span: 17 }">
+        :labelCol="{ span: 10 }"
+        :wrapperCol="{ span: 18 }">
         <template v-if="props.type === TenantType.PERSONAL">
           <FormItem
             :label="t('realName.columns.realName')"
@@ -501,3 +501,71 @@ const trimValue = (type, key) => {
       @confirm="confirm" />
   </Card>
 </template>
+
+<style scoped>
+/* Enhanced label styling */
+:deep(.ant-form-item-label) {
+  font-weight: 400;
+  font-size: 14px;
+  color: #1F2937 !important;
+}
+
+:deep(.ant-form-item-label > label) {
+  font-size: 0.95rem;
+  color: #1F2937 !important;
+  font-size: 14px;
+
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Ensure labels have enough space for English text */
+:deep(.ant-col-10) {
+  min-width: 120px;
+}
+
+/* Ensure input fields have enough width */
+:deep(.ant-col-18) {
+  min-width: 200px;
+}
+
+/* Form spacing improvements */
+:deep(.ant-form-item) {
+  margin-bottom: 1.5rem;
+}
+
+:deep(.ant-form-item-label) {
+  padding-bottom: 0.5rem;
+}
+
+/* Input field enhancements */
+:deep(.ant-input) {
+  border-radius: 0.5rem;
+  border: 2px solid #E5E7EB;
+  transition: all 0.3s ease;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  min-width: 200px;
+}
+
+:deep(.ant-input:hover) {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+:deep(.ant-input:focus) {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Card enhancements */
+:deep(.ant-card) {
+  border-radius: 1rem;
+  border: 1px solid #E5E7EB;
+}
+
+:deep(.ant-card-body) {
+  padding: 2rem;
+}
+</style>

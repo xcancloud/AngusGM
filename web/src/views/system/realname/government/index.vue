@@ -59,43 +59,46 @@ const contents = [
 </script>
 
 <template>
-  <div class="flex space-x-2 flex-1">
+  <div class="flex space-x-6 flex-1">
     <!-- Government organization authentication summary card -->
     <PageCard
       :pageTitle="t('realName.titles.governmentAuth')"
       icon="icon-shiyedanweirenzheng"
       :contents="contents"
       :count="3"
-      :success="form.status === 'AUDITED'" />
+      :success="form.status === 'AUDITED'"
+      theme="government" />
 
     <!-- Government organization certification details card -->
     <Card
       :title="t('realName.titles.governmentAuth')"
-      class=" flex-1"
-      bodyClass="px-8 py-5">
+      class="flex-1 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-green-50"
+      bodyClass="px-10 py-8">
       <!-- Organization name field -->
-      <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">
+      <div class="flex py-4 border-b border-gray-100 hover:bg-green-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
           {{ t('realName.columns.orgName') }}
         </div>
-        <div>{{ form.name }}</div>
+        <div class="text-gray-800 font-semibold">{{ form.name }}</div>
       </div>
 
       <!-- Organization code field -->
-      <div class="flex py-3.75">
-        <div class="text-black-content w-28 mr-7.5">
+      <div class="flex py-4 border-b border-gray-100 hover:bg-green-50 transition-colors duration-200 rounded-lg px-3">
+        <div class="text-gray-600 font-medium w-52 mr-8 flex items-center">
+          <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
           {{ t('realName.columns.orgCode') }}
         </div>
-        <div>{{ form.orgCode }}</div>
+        <div class="text-gray-800 font-semibold font-mono">{{ form.orgCode }}</div>
       </div>
 
       <!-- Organization certificate image -->
-      <div class="flex mt-8.75">
-        <div class="mr-7.5">
-          <div class="w-90 h-56  rounded overflow-hidden flex items-center justify-center border-theme-divider border">
-            <img :src="orgCertPicUrl" class="w-full" />
+      <div class="flex mt-10">
+        <div class="group">
+          <div class="w-96 h-60 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 group-hover:border-green-400 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+            <img :src="orgCertPicUrl" class="w-full h-full object-cover" />
           </div>
-          <p class="text-center text-black-content mt-3">
+          <p class="text-center text-gray-600 mt-4 font-medium group-hover:text-green-600 transition-colors duration-200">
             {{ t('realName.columns.orgCertificate') }}
           </p>
         </div>
