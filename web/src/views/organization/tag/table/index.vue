@@ -4,17 +4,23 @@ import { useI18n } from 'vue-i18n';
 import {
   AsyncComponent, ButtonAuth, Card, Icon, IconCount, IconRefresh, Input, SelectEnum, Table
 } from '@xcan-angus/vue-ui';
-import { app, duration, utils } from '@xcan-angus/infra';
-import { debounce } from 'throttle-debounce';
+import { app } from '@xcan-angus/infra';
 import { OrgTargetType } from '@/enums/enums';
 
-import { Target } from '../types';
+import { Target, TargetSearchParams, UserData, GroupData } from '../types';
+import {
+  createTargetSearchHandler, getTargetTypeText, getColumnTitles, getPlaceholderText,
+  getCancelBtnDisabled, getCancelText, calculateCurrentPage, createTableChangeHandler,
+  columns as columns_
+} from '../utils';
 import { orgTag } from '@/api';
 
+// Lazy load modal components
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
 const DeptModal = defineAsyncComponent(() => import('@/components/DeptModal/index.vue'));
 const GroupModal = defineAsyncComponent(() => import('@/components/GroupModal/index.vue'));
 
+// Component props interface
 interface Props {
   tagId: string;
   visible: boolean;
@@ -25,15 +31,26 @@ const props = withDefaults(defineProps<Props>(), {
   visible: true
 });
 
+// Component event emissions
 const emit = defineEmits<{(e: 'update:visible', value: boolean): void }>();
 
 const { t } = useI18n();
+
+// Reactive state management
 const loading = ref(false);
 const disabled = ref(false);
-const params = ref<{ pageNo: number, pageSize: number, filters: any[] }>({ pageNo: 1, pageSize: 10, filters: [] });
+const params = ref<TargetSearchParams>({
+  pageNo: 1,
+  pageSize: 10,
+  filters: [],
+  tagId: '',
+  targetType: OrgTargetType.USER
+});
 const total = ref(0);
 const targetList = ref<Target[]>([]);
 const targetType = ref<OrgTargetType>(OrgTargetType.USER);
+
+// Computed pagination object for table
 const pagination = computed(() => {
   return {
     current: params.value.pageNo,
@@ -42,75 +59,69 @@ const pagination = computed(() => {
   };
 });
 
+// Load tag targets from API
 const loadTagTargetList = async (): Promise<void> => {
   if (loading.value) {
     return;
   }
+
   const listParams = {
     ...params.value,
     tagId: props.tagId,
     targetType: targetType.value
   };
+
   loading.value = true;
   const [error, { data }] = await orgTag.getTagTargets(listParams);
   loading.value = false;
+
   if (error) {
     return;
   }
+
   targetList.value = data?.list || [];
   total.value = +data?.total;
 };
 
-const tableChange = async (_pagination) => {
-  const { current, pageSize } = _pagination;
-  params.value.pageNo = current;
-  params.value.pageSize = pageSize;
+// Handle table pagination and sorting changes
+const tableChange = createTableChangeHandler(async (pagination: { current: number, pageSize: number }) => {
+  params.value.pageNo = pagination.current;
+  params.value.pageSize = pagination.pageSize;
   disabled.value = true;
   await loadTagTargetList();
   disabled.value = false;
-};
+});
 
+// State for update operations
 const updateLoading = ref(false);
 const isRefresh = ref(false);
+
+// User association modal state and handlers
 const userVisible = ref(false);
 const relevancyUser = () => {
   userVisible.value = true;
 };
-const userSave = async (_userIds: string[], users: { id: string, fullName: string }[], deleteUserIds: string[]) => {
+
+// Save user tag associations
+const saveUserTags = async (_userIds: string[], users: UserData[], deleteUserIds: string[]) => {
+  // Delete existing associations
   if (deleteUserIds.length) {
     await delTagTarget(deleteUserIds);
   }
 
+  // Add new associations
   if (users.length) {
-    const targetList = users.map(item => ({ targetId: item.id, targetType: targetType.value }));
+    const targetList = users.map(item => ({
+      targetId: item.id,
+      targetType: targetType.value
+    }));
     await addTagTarget(targetList);
   }
 
   updateLoading.value = false;
   userVisible.value = false;
-  if (isRefresh.value) {
-    disabled.value = true;
-    loadTagTargetList();
-    disabled.value = false;
-    isRefresh.value = false;
-  }
-};
 
-const deptVisible = ref(false);
-const relevancyDept = () => {
-  deptVisible.value = true;
-};
-const deptSave = async (addIds: string[], delIds: string[]) => {
-  if (delIds.length) {
-    await delTagTarget(delIds, 'Modal');
-  }
-
-  if (addIds.length) {
-    await addTagDept(addIds);
-  }
-
-  deptVisible.value = false;
-  updateLoading.value = false;
+  // Refresh data if needed
   if (isRefresh.value) {
     disabled.value = true;
     await loadTagTargetList();
@@ -119,31 +130,78 @@ const deptSave = async (addIds: string[], delIds: string[]) => {
   }
 };
 
-const addTagDept = async (_addIds: string[]) => {
+// Department association modal state and handlers
+const deptVisible = ref(false);
+const relevancyDept = () => {
+  deptVisible.value = true;
+};
+
+// Save department tag associations
+const saveDeptTags = async (addIds: string[], delIds: string[]) => {
+  // Delete existing associations
+  if (delIds.length) {
+    await delTagTarget(delIds, 'Modal');
+  }
+
+  // Add new associations
+  if (addIds.length) {
+    await addTagDepts(addIds);
+  }
+
+  deptVisible.value = false;
+  updateLoading.value = false;
+
+  // Refresh data if needed
+  if (isRefresh.value) {
+    disabled.value = true;
+    await loadTagTargetList();
+    disabled.value = false;
+    isRefresh.value = false;
+  }
+};
+
+// Add department associations
+const addTagDepts = async (_addIds: string[]) => {
   if (loading.value) {
     return;
   }
+
   loading.value = true;
-  await orgTag.addTagTarget(props.tagId, _addIds.map(item => ({ targetId: item, targetType: 'DEPT' })));
+  await orgTag.addTagTarget(
+    props.tagId,
+    _addIds.map(item => ({ targetId: item, targetType: 'DEPT' }))
+  );
   loading.value = false;
   isRefresh.value = true;
 };
 
+// Group association modal state and handlers
 const groupVisible = ref(false);
 const relevancyGroup = () => {
   groupVisible.value = true;
 };
-const groupSave = async (_groupIds: string[], groups: { id: string, name: string }[], deleteGroupIds: string[]) => {
+
+// Save group tag associations
+const addTagGroups = async (_groupIds: string[], groups: GroupData[], deleteGroupIds: string[]) => {
+  // Delete existing associations
   if (deleteGroupIds.length) {
     await delTagTarget(deleteGroupIds, 'Modal');
   }
+
+  // Add new associations
   if (groups.length) {
-    const targetList = groups.map(item => ({ targetId: item.id, targetName: item.name, targetType: targetType.value }));
+    const targetList = groups.map(item => ({
+      targetId: item.id,
+      targetName: item.name,
+      targetType: targetType.value
+    }));
     await addTagTarget(targetList);
   }
 
   groupVisible.value = false;
   updateLoading.value = false;
+
+  // Refresh data if needed
   if (isRefresh.value) {
     disabled.value = true;
     await loadTagTargetList();
@@ -152,6 +210,7 @@ const groupSave = async (_groupIds: string[], groups: { id: string, name: string
   }
 };
 
+// Add tag targets (generic function)
 const addTagTarget = async (targetList: { targetId: string, targetType: OrgTargetType }[]) => {
   updateLoading.value = true;
   const [error] = await orgTag.addTagTarget(props.tagId, targetList);
@@ -161,12 +220,15 @@ const addTagTarget = async (targetList: { targetId: string, targetType: OrgTarge
   isRefresh.value = true;
 };
 
+// Delete tag targets
 const delTagTarget = async (targetIds: string[], type?: 'Table' | 'Modal') => {
   updateLoading.value = true;
   const [error] = await orgTag.deleteTagTarget(props.tagId, targetIds);
+
   if (type === 'Table') {
     updateLoading.value = false;
   }
+
   if (error) {
     return;
   }
@@ -175,7 +237,9 @@ const delTagTarget = async (targetIds: string[], type?: 'Table' | 'Modal') => {
     isRefresh.value = true;
   }
 
-  params.value.pageNo = utils.getCurrentPage(params.value.pageNo as number, params.value.pageSize as number, total.value);
+  // Recalculate current page after deletion
+  params.value.pageNo = calculateCurrentPage(params.value.pageNo, params.value.pageSize, total.value);
+
   if (type === 'Table') {
     disabled.value = true;
     await loadTagTargetList();
@@ -183,12 +247,14 @@ const delTagTarget = async (targetIds: string[], type?: 'Table' | 'Modal') => {
   }
 };
 
+// Watch for target type changes
 watch(() => targetType.value, async () => {
   disabled.value = true;
   await loadTagTargetList();
   disabled.value = false;
 });
 
+// Watch for tag ID changes
 watch(() => props.tagId, async (newValue) => {
   if (!newValue) {
     return;
@@ -198,117 +264,51 @@ watch(() => props.tagId, async (newValue) => {
   disabled.value = false;
 });
 
-const searchUserName = debounce(duration.search, async (event: any) => {
-  const value = event.target.value;
-  params.value.pageNo = 1;
-  if (value) {
-    params.value.filters = [{ key: 'targetName', op: 'MATCH_END', value }];
-  } else {
-    params.value.filters = [];
-  }
+// Handle search with filters
+const searchUserName = createTargetSearchHandler(async (filters: any[], pageNo: number) => {
+  params.value.pageNo = pageNo;
+  params.value.filters = filters;
   disabled.value = true;
   await loadTagTargetList();
   disabled.value = false;
 });
 
+// Toggle visibility
 const toggle = () => {
   emit('update:visible', !props.visible);
 };
 
-const getTargetType = (value: OrgTargetType) => {
-  switch (value) {
-    case OrgTargetType.USER:
-      return t('user.title');
-    case OrgTargetType.DEPT:
-      return t('department.title');
-    case OrgTargetType.GROUP:
-      return t('group.title');
-  }
-};
+// Get target type display text
+const getTargetType = (value: OrgTargetType) => getTargetTypeText(value, t);
 
-const columns = ref([
-  {
-    key: 'id',
-    title: t('user.columns.assocUser.id'),
-    dataIndex: 'id',
-    width: '20%'
-  },
-  {
-    key: 'targetName',
-    title: t('user.columns.assocUser.name'),
-    dataIndex: 'targetName',
-    ellipsis: true
-  },
-  {
-    key: 'createdDate',
-    title: t('user.columns.assocUser.createdDate'),
-    dataIndex: 'createdDate',
-    width: '20%'
-  },
-  {
-    key: 'createdByName',
-    title: t('user.columns.assocUser.createdByName'),
-    dataIndex: 'createdByName',
-    width: '20%'
-  },
-  {
-    key: 'action',
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: '15%',
-    align: 'center' as const
-  }
-]);
+// Initialize table columns
+const columns = ref(columns_(t));
 
+// Update column titles based on target type
 const targetTypeChange = () => {
-  switch (targetType.value) {
-    case 'USER':
-      columns.value[0].title = t('user.columns.assocUser.id');
-      columns.value[1].title = t('user.columns.assocUser.name');
-      break;
-    case 'DEPT':
-      columns.value[0].title = t('department.columns.userDept.code');
-      columns.value[1].title = t('department.columns.userDept.name');
-      break;
-    case 'GROUP':
-      columns.value[0].title = t('group.columns.assocGroup.code');
-      columns.value[1].title = t('group.columns.assocGroup.name');
-      break;
-  }
+  const titles = getColumnTitles(targetType.value, t);
+  columns.value[0].title = titles.id;
+  columns.value[1].title = titles.name;
 };
 
-const placeholder = computed(() => {
-  switch (targetType.value) {
-    case 'USER':
-      return t('user.placeholder.search');
-    case 'DEPT':
-      return t('department.placeholder.name');
-    case 'GROUP':
-      return t('group.placeholder.name');
-    default:
-      return t('user.placeholder.search');
-  }
-});
+// Computed placeholder text for search input
+const placeholder = computed(() => getPlaceholderText(targetType.value, t));
 
-const cancelBtnDisabled = {
-  USER: !app.has('TagUserUnassociate'),
-  DEPT: !app.has('TagDeptUnassociate'),
-  GROUP: !app.has('TagGroupUnassociate')
-};
-
-const cancelText = {
-  USER: app.getName('TagUserUnassociate'),
-  DEPT: app.getName('TagDeptUnassociate'),
-  GROUP: app.getName('TagGroupUnassociate')
-};
+// Get cancel button configuration
+const cancelBtnDisabled = getCancelBtnDisabled(app);
+const cancelText = getCancelText(app);
 </script>
+
 <template>
   <Card class="flex-1">
     <template #title>
       <span class="text-3">{{ t('tag.assocOrg') }}</span>
     </template>
+
+    <!-- Search and action toolbar -->
     <div class="flex justify-between mb-2">
       <div class="flex items-center space-x-2">
+        <!-- Target type selector -->
         <SelectEnum
           v-model:value="targetType"
           internal
@@ -316,6 +316,7 @@ const cancelText = {
           size="small"
           :enumKey="OrgTargetType"
           @change="targetTypeChange" />
+        <!-- Search input -->
         <Input
           :placeholder="placeholder"
           class="w-60"
@@ -327,7 +328,10 @@ const cancelText = {
           </template>
         </Input>
       </div>
+
+      <!-- Action buttons -->
       <div class="space-x-2 flex items-center">
+        <!-- User association button -->
         <template v-if="targetType === 'USER'">
           <ButtonAuth
             code="TagUserAssociate"
@@ -335,6 +339,7 @@ const cancelText = {
             icon="icon-tianjia"
             @click="relevancyUser" />
         </template>
+        <!-- Department association button -->
         <template v-if="targetType === 'DEPT'">
           <ButtonAuth
             code="TagDeptAssociate"
@@ -342,6 +347,7 @@ const cancelText = {
             icon="icon-tianjia"
             @click="relevancyDept" />
         </template>
+        <!-- Group association button -->
         <template v-if="targetType === 'GROUP'">
           <ButtonAuth
             code="TagGroupAssociate"
@@ -349,6 +355,8 @@ const cancelText = {
             icon="icon-tianjia"
             @click="relevancyGroup" />
         </template>
+
+        <!-- Visibility toggle and refresh -->
         <IconCount :value="props.visible" @click="toggle" />
         <IconRefresh
           :loading="loading"
@@ -356,6 +364,8 @@ const cancelText = {
           @click="loadTagTargetList" />
       </div>
     </div>
+
+    <!-- Data table -->
     <Table
       :dataSource="targetList"
       rowKey="id"
@@ -366,21 +376,25 @@ const cancelText = {
       :noDataSize="'small'"
       :noDataText="t('common.messages.noData')"
       @change="tableChange">
-      <template #bodyCell="{ column, text,record }">
+      <template #bodyCell="{ column, text, record }">
+        <!-- Target type display -->
         <template v-if="column.dataIndex === 'targetType'">
           {{ getTargetType(text) }}
         </template>
+        <!-- Action buttons -->
         <template v-if="column.dataIndex === 'action'">
           <ButtonAuth
             code="TagGroupAssociate"
             type="text"
-            :dsiabled="cancelBtnDisabled[targetType]"
+            :disabled="cancelBtnDisabled[targetType]"
             :text="cancelText[targetType]"
             icon="icon-quxiao"
-            @click="delTagTarget([record.targetId],'Table')" />
+            @click="delTagTarget([record.targetId], 'Table')" />
         </template>
       </template>
     </Table>
+
+    <!-- User association modal -->
     <AsyncComponent :visible="userVisible">
       <UserModal
         v-if="userVisible"
@@ -388,8 +402,10 @@ const cancelText = {
         :tagId="props.tagId"
         :updateLoading="updateLoading"
         type="Tag"
-        @change="userSave" />
+        @change="saveUserTags" />
     </AsyncComponent>
+
+    <!-- Department association modal -->
     <AsyncComponent :visible="deptVisible">
       <DeptModal
         v-if="deptVisible"
@@ -397,8 +413,10 @@ const cancelText = {
         type="Tag"
         :updateLoading="updateLoading"
         :tagId="props.tagId"
-        @change="deptSave" />
+        @change="saveDeptTags" />
     </AsyncComponent>
+
+    <!-- Group association modal -->
     <AsyncComponent :visible="groupVisible">
       <GroupModal
         v-if="groupVisible"
@@ -406,11 +424,13 @@ const cancelText = {
         :tagId="props.tagId"
         :updateLoading="updateLoading"
         type="Tag"
-        @change="groupSave" />
+        @change="addTagGroups" />
     </AsyncComponent>
   </Card>
 </template>
+
 <style scoped>
+/* Loading animation keyframes */
 @keyframes circle {
   from {
     transform: rotate(0deg);
@@ -421,6 +441,7 @@ const cancelText = {
   }
 }
 
+/* Loading animation class */
 .circle-move {
   animation-name: circle;
   animation-duration: 1000ms;

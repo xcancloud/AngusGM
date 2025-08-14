@@ -2,19 +2,18 @@
 import { defineProps, withDefaults, defineEmits } from 'vue';
 import { Card, Icon } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import type { OrgTag } from '@/views/organization/tag/types';
+import type { TagInfoProps } from '@/views/organization/tag/types';
 
-interface Props {
-  tag?: OrgTag;
-  canModify?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+// Component props with default values
+const props = withDefaults(defineProps<TagInfoProps>(), {
   tag: undefined,
   canModify: false
 });
 
+// Emit events for parent component communication
 const emit = defineEmits<{(e: 'editName'): void }>();
+
+// Handle edit name action
 const onEdit = () => emit('editName');
 
 const { t } = useI18n();
@@ -26,8 +25,8 @@ const { t } = useI18n();
       <span class="text-3">{{ t('tag.basicInfo') }}</span>
     </template>
 
-    <!-- Tag information display (aligned with Department info layout) -->
-    <div class="dept-info-display">
+    <!-- Tag information display with consistent layout -->
+    <div class="tag-info-display">
       <!-- Row 1: Name, ID, Created By -->
       <div class="info-row">
         <div class="info-item">
@@ -37,6 +36,7 @@ const { t } = useI18n();
           </div>
           <div class="info-value">
             {{ props.tag?.name || '' }}
+            <!-- Edit icon for name modification -->
             <Icon
               v-if="props.canModify"
               icon="icon-shuxie"
@@ -89,8 +89,8 @@ const { t } = useI18n();
 </template>
 
 <style scoped>
-/* Reuse department info layout styles for consistency */
-.dept-info-display {
+/* Tag information display layout styles */
+.tag-info-display {
   padding: 4px 0;
 }
 
@@ -98,7 +98,7 @@ const { t } = useI18n();
   display: flex;
   gap: 4px;
   margin-bottom: 4px;
-  padding: 4px 0
+  padding: 4px 0;
 }
 
 .info-row:last-child {
@@ -136,7 +136,7 @@ const { t } = useI18n();
   padding-left: 40px;
 }
 
-/* Responsive design */
+/* Responsive design for mobile devices */
 @media (max-width: 768px) {
   .info-row {
     flex-direction: column;
