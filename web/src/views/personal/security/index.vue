@@ -150,13 +150,39 @@ watch(() => userInfo.value, (newValue) => {
   immediate: true
 });
 
+/**
+ * Formats mobile description text to highlight the mobile number
+ * @returns HTML string with highlighted mobile number
+ */
+const formatMobileDescription = (): string => {
+  if (!mobile.value) return '';
+  const baseText = t('securities.messages.mobileDescription', { mobile: mobile.value });
+  return baseText.replace(
+    mobile.value,
+    `<span class="highlight-mobile">${mobile.value}</span>`
+  );
+};
+
+/**
+ * Formats email description text to highlight the email address
+ * @returns HTML string with highlighted email address
+ */
+const formatEmailDescription = (): string => {
+  if (!email.value) return '';
+  const baseText = t('securities.messages.emailDescription', { email: email.value });
+  return baseText.replace(
+    email.value,
+    `<span class="highlight-email">${email.value}</span>`
+  );
+};
+
 </script>
 
 <template>
   <!-- Security Settings Container -->
   <div class="flex justify-center flex-nowrap leading-5">
     <!-- Login Password Card -->
-    <PureCard class="p-10 flex flex-col w-96 flex-wrap items-start mr-6">
+    <PureCard class="p-10 flex flex-col w-106 flex-wrap items-start mr-6">
       <div class="relative w-full flex flex-col items-center pt-8 pb-10 border-b border-theme-divider">
         <Icon class="text-6xl text-theme-text-hover" icon="icon-denglumima" />
         <div class="mt-4 text-3.5 text-theme-title">{{ t('securities.columns.loginPassword') }}</div>
@@ -168,7 +194,7 @@ watch(() => userInfo.value, (newValue) => {
         <PasswordStrength :strength="strength" class="absolute bottom-3" />
       </div>
       <div class="relative w-full flex flex-col text-3 items-center flex-grow pt-10 pb-28">
-        <div class="whitespace-pre-line break-all text-theme-content">
+        <div class="security-description text-theme-content">
           {{ t('securities.messages.securityDescription') }}
         </div>
         <Button
@@ -182,7 +208,7 @@ watch(() => userInfo.value, (newValue) => {
     </PureCard>
 
     <!-- Mobile Number Card -->
-    <PureCard class="p-10 flex flex-col w-96 flex-wrap items-start mr-6">
+    <PureCard class="p-10 flex flex-col w-106 flex-wrap items-start mr-6">
       <div class="w-full flex flex-col items-center pt-8 pb-10 border-b border-theme-divider">
         <Icon class="text-6xl text-theme-text-hover" icon="icon-shoujihaoma" />
         <div class="mt-4 text-3.5 text-theme-title">{{ t('securities.columns.mobile') }}</div>
@@ -200,8 +226,8 @@ watch(() => userInfo.value, (newValue) => {
       <div class="relative w-full flex flex-col text-3 items-center flex-grow pt-10 pb-28">
         <!-- Conditional rendering based on mobile binding status -->
         <template v-if="mobile">
-          <div class="whitespace-pre-line break-all text-theme-content">
-            {{ t('securities.messages.mobileDescription',{mobile}) }}
+          <div class="security-description text-theme-content">
+            <span v-html="formatMobileDescription()"></span>
           </div>
           <Button
             size="small"
@@ -212,7 +238,7 @@ watch(() => userInfo.value, (newValue) => {
           </Button>
         </template>
         <template v-else>
-          <div class="whitespace-pre-line break-all text-theme-content">
+          <div class="security-description text-theme-content">
             {{ t('securities.messages.unbindMobileDesc') }}
           </div>
           <Button
@@ -227,7 +253,7 @@ watch(() => userInfo.value, (newValue) => {
     </PureCard>
 
     <!-- Email Address Card -->
-    <PureCard class="p-10 flex flex-col w-96 flex-wrap items-start">
+    <PureCard class="p-10 flex flex-col w-106 flex-wrap items-start">
       <div class="w-full flex flex-col items-center pt-8 pb-10 border-b border-theme-divider">
         <Icon class="text-6xl text-theme-text-hover" icon="icon-dianziyouxiang1" />
         <div class="mt-4 text-3.5 text-theme-title">{{ t('securities.columns.email') }}</div>
@@ -245,8 +271,8 @@ watch(() => userInfo.value, (newValue) => {
       <div class="relative w-full flex flex-col text-3 items-center flex-grow pt-10 pb-28">
         <!-- Conditional rendering based on email binding status -->
         <template v-if="email">
-          <div class="whitespace-pre-line break-all text-theme-content">
-            {{ t('securities.messages.emailDescription',{email}) }}
+          <div class="security-description text-theme-content">
+            <span v-html="formatEmailDescription()"></span>
           </div>
           <Button
             size="small"
@@ -257,7 +283,7 @@ watch(() => userInfo.value, (newValue) => {
           </Button>
         </template>
         <template v-else>
-          <div class="whitespace-pre-line break-all text-theme-content">
+          <div class="security-description text-theme-content">
             {{ t('securities.messages.unbindEmailDesc') }}
           </div>
           <Button
@@ -300,3 +326,66 @@ watch(() => userInfo.value, (newValue) => {
     :userInfo="_userInfo"
     @ok="ok" />
 </template>
+
+<style scoped>
+/* Security description text styling */
+.security-description {
+  white-space: pre-line;
+  word-break: break-word;
+  line-height: 1.8;
+  text-align: left;
+  max-width: 100%;
+  color: #6b7280;
+  font-size: 0.675rem;
+  letter-spacing: 0.025em;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* Enhanced text readability */
+.security-description:first-line {
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Better handling for English text */
+.security-description {
+  text-align: left;
+  text-justify: inter-word;
+}
+
+/* Responsive font size for different languages */
+@media (min-width: 768px) {
+  .security-description {
+    font-size: 0.9rem;
+    line-height: 1.9;
+  }
+}
+
+/* Hover effect for better interaction */
+.security-description:hover {
+  color: #4b5563;
+  transition: color 0.2s ease;
+}
+
+/* Highlight styles for mobile and email */
+.highlight-mobile {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.highlight-email {
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+</style>

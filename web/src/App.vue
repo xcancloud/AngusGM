@@ -69,6 +69,15 @@ const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 </template>
 
 <style>
+:root {
+  --font-family-zh: "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+  --font-family-en: -apple-system, "Inter", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  --letter-spacing-zh: 0;
+  --letter-spacing-en: 0.1px;
+  --line-height-zh: 1.5;
+  --line-height-en: 1.6;
+}
+
 body,
 html {
   min-width: 1280px;
@@ -82,29 +91,29 @@ html {
   z-index: 1;
   min-width: 1200px;
   height: 100%;
-  font-family: Inter,
-  "Apple System",
-  "SF Pro SC",
-  "SF Pro Display",
-  "Helvetica Neue",
-  Arial,
-  "PingFang SC",
-  "Hiragino Sans GB",
-  STHeiti,
-  "Microsoft YaHei",
-  "Microsoft JhengHei",
-  "Source Han Sans SC",
-  "Noto Sans CJK SC",
-  "Source Han Sans CN",
-  sans-serif;
+  font-family: var(--font-family-zh);
   font-size: 14px;
+  letter-spacing: var(--letter-spacing-zh);
+  line-height: var(--line-height-zh);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html[lang="en"] #app {
+  font-family: var(--font-family-en);
+  letter-spacing: var(--letter-spacing-en);
+  line-height: var(--line-height-en);
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+html[lang="en"] .btn {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .exception-container {
   @apply flex justify-center items-center;
-
   height: calc(100% - 54px);
 }
 </style>
