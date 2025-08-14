@@ -43,3 +43,53 @@ export type UpgradeableVersion = {
   releaseDate: string, // Version release date
   upgradeable: boolean | null, // Whether upgrade is available
 }
+
+/**
+ * Grid column configuration interface
+ * Defines the structure for grid column definitions
+ */
+export interface GridColumn {
+  label: string,
+  dataIndex: string,
+  hide?: boolean
+}
+
+/**
+ * Grid columns configuration type
+ * Array of grid column arrays for different layouts
+ */
+export type GridColumns = GridColumn[][]
+
+/**
+ * Component props interface for updatable version
+ */
+export interface UpdatableVersionProps {
+  currentVersion: string,
+  installGoodsCode: string
+}
+
+/**
+ * Edition type constants
+ * Maps edition types to their corresponding icon classes
+ */
+export interface EditionTypeIcons {
+  DATACENTER: string,
+  CLOUD_SERVICE: string,
+  ENTERPRISE: string,
+  COMMUNITY: string
+}
+
+/**
+ * Copy operation result types
+ * Defines possible states for copy operations
+ */
+export type CopyResult = 'copy' | 'copySuccess' | 'copyFailure'
+
+/**
+ * Version card configuration
+ * Configuration for different version card layouts
+ */
+export interface VersionCardConfig {
+  cloudService: GridColumns,
+  private: GridColumns
+}

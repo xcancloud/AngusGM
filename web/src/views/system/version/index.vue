@@ -8,7 +8,12 @@ import { EditionType, appContext } from '@xcan-angus/infra';
 import dayjs from 'dayjs';
 
 import { edition } from '@/api';
-import { InstallEdition } from './types';
+import { InstallEdition, GridColumns } from './types';
+import {
+  getEditionTypeIcon,
+  createCloudEditionColumns,
+  createPrivateEditionColumns
+} from './utils';
 import grayImg from './images/gray1.png';
 
 import UpdatableVersion from './updatable.vue';
@@ -35,114 +40,6 @@ const installEdition = ref<InstallEdition>();
  * Determines which column configuration to use
  */
 const editionType = ref<string>();
-
-/**
- * Grid columns configuration for cloud service edition
- * Defines the layout and fields for cloud service version display
- */
-const cloudEditionColumns = [
-  [
-    {
-      label: t('version.columns.editionType'),
-      dataIndex: 'editionType'
-    },
-    {
-      label: t('version.columns.goodsCode'),
-      dataIndex: 'goodsCode'
-    },
-    {
-      label: t('version.columns.goodsVersion'),
-      dataIndex: 'goodsVersion'
-    },
-    {
-      label: t('version.columns.provider'),
-      dataIndex: 'provider'
-    },
-    {
-      label: t('version.columns.publisher'),
-      dataIndex: 'issuer'
-    },
-    {
-      label: t('version.columns.holder'),
-      dataIndex: 'holder'
-    },
-    {
-      label: t('version.columns.beginDate'),
-      dataIndex: 'beginDate'
-    },
-    {
-      label: t('version.columns.endDate'),
-      dataIndex: 'endDate'
-    }
-  ]
-];
-
-/**
- * Grid columns configuration for private edition
- * Defines the layout and fields for private version display
- * Includes additional fields like license number and MD5 signature
- */
-const privateEditionColumns = [
-  [
-    {
-      label: t('version.columns.editionType'),
-      dataIndex: 'editionType'
-    },
-    {
-      label: t('version.columns.goodsCode'),
-      dataIndex: 'goodsCode'
-    },
-    {
-      label: t('version.columns.goodsVersion'),
-      dataIndex: 'goodsVersion'
-    },
-    {
-      label: t('version.columns.provider'),
-      dataIndex: 'provider'
-    },
-    {
-      label: t('version.columns.publisher'),
-      dataIndex: 'issuer'
-    },
-    {
-      label: t('version.columns.holder'),
-      dataIndex: 'holder'
-    },
-    {
-      label: t('version.columns.licenseNo'),
-      dataIndex: 'licenseNo'
-    },
-    {
-      label: t('version.columns.beginDate'),
-      dataIndex: 'beginDate'
-    },
-    {
-      label: t('version.columns.endDate'),
-      dataIndex: 'endDate'
-    },
-    {
-      label: t('version.columns.signature'),
-      dataIndex: 'signature'
-    }
-  ]
-];
-
-/**
- * Get edition type icon based on edition type key
- * Returns appropriate icon class for different edition types
- */
-const getEditionTypeIcon = (key: string) => {
-  switch (key) {
-    case EditionType.DATACENTER:
-      return 'icon-shujuzhongxin';
-    case EditionType.CLOUD_SERVICE:
-      return 'icon-yunfuwu';
-    case EditionType.ENTERPRISE:
-      return 'icon-qiye';
-    case EditionType.COMMUNITY:
-      return 'icon-shequ';
-  }
-};
 
 /**
  * Copy license number to clipboard
@@ -183,11 +80,11 @@ const tooltipTitle = computed(() => {
  * Computed columns configuration
  * Returns appropriate column configuration based on edition type
  */
-const columns = computed(() => {
+const columns = computed((): GridColumns => {
   if (editionType.value === EditionType.CLOUD_SERVICE) {
-    return cloudEditionColumns;
+    return createCloudEditionColumns(t);
   }
-  return privateEditionColumns;
+  return createPrivateEditionColumns(t);
 });
 
 /**

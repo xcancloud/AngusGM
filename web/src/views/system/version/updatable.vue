@@ -5,7 +5,12 @@ import { Card, Colon, Grid, NoData } from '@xcan-angus/vue-ui';
 import { appContext } from '@xcan-angus/infra';
 import { Skeleton } from 'ant-design-vue';
 
-import { UpgradeableVersion } from './types';
+import { UpgradeableVersion, UpdatableVersionProps, GridColumns } from './types';
+import {
+  createCurrentVersionColumns,
+  createUpgradeableColumns,
+  updateColumnsVisibility
+} from './utils';
 import { edition } from '@/api';
 
 import grayImg from './images/gray2.png';
@@ -14,10 +19,7 @@ import grayImg from './images/gray2.png';
  * Component props interface
  * Defines the properties passed from parent component
  */
-interface Props {
-  currentVersion: string, // Currently installed version
-  installGoodsCode: string, // Installed product code
-}
+type Props = UpdatableVersionProps
 
 const props = withDefaults(defineProps<Props>(), {
   currentVersion: '',
@@ -79,24 +81,17 @@ const loadUpgradeableVersion = async (): Promise<void> => {
       return;
     }
 
-    versionData.value.upgradeable
-      ? updateColumns(upgradeableColumns.value[0])
-      : updateColumns(currentVersionColumns.value[0]);
+    if (versionData.value.upgradeable) {
+      const columns = createUpgradeableColumns(t);
+      updateColumnsVisibility(columns[0]);
+      currentVersionColumns.value = columns;
+    } else {
+      const columns = createCurrentVersionColumns(t);
+      updateColumnsVisibility(columns[0]);
+      currentVersionColumns.value = columns;
+    }
   } finally {
     loading.value = false;
-  }
-};
-
-/**
- * Update column visibility based on upgrade status
- * Hides features column when no features are available
- */
-const updateColumns = (_columns: any[]) => {
-  for (let i = 0; i < _columns.length; i++) {
-    if (_columns[i].dataIndex === 'features') {
-      _columns[i].hide = true;
-      break;
-    }
   }
 };
 
@@ -104,45 +99,7 @@ const updateColumns = (_columns: any[]) => {
  * Grid columns configuration for current version display
  * Shows version introduction and current version information
  */
-const currentVersionColumns = ref([
-  [
-    {
-      label: t('version.columns.introduction'),
-      dataIndex: 'introduction'
-    },
-    {
-      label: t('version.columns.features'),
-      dataIndex: 'features',
-      hide: true
-    },
-    {
-      label: t('version.columns.currentVersion'),
-      dataIndex: 'currentVersion'
-    }
-  ]
-]);
-
-/**
- * Grid columns configuration for upgradeable version display
- * Shows version introduction and upgrade information
- */
-const upgradeableColumns = ref([
-  [
-    {
-      label: t('version.columns.introduction'),
-      dataIndex: 'introduction'
-    },
-    {
-      label: t('version.columns.features'),
-      dataIndex: 'features',
-      hide: true
-    },
-    {
-      label: t('version.columns.currentVersion'),
-      dataIndex: 'currentVersion'
-    }
-  ]
-]);
+const currentVersionColumns = ref<GridColumns>(createCurrentVersionColumns(t));
 
 /**
  * Watch for changes in installed goods code
@@ -198,7 +155,7 @@ onMounted(() => {
               <!-- Version Information Grid -->
               <Grid
                 class="introduction w-150"
-                :columns="versionData.upgradeable?upgradeableColumns:currentVersionColumns"
+                :columns="currentVersionColumns"
                 :dataSource="versionData">
                 <!-- Features Display -->
                 <template #features="{text}">
