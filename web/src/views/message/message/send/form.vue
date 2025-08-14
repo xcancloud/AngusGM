@@ -435,4 +435,12 @@ defineExpose({
 :deep(.rich-editor-rule + .tox.tox-tinymce) {
   border: 1px solid rgba(255, 77, 79, 100%) !important;
 }
+
+/**
+ * Make form labels bold
+ * Enhances label visibility while maintaining font size
+ */
+:deep(.ant-form-item-label > label) {
+  font-weight: 700;
+}
 </style>

@@ -88,6 +88,7 @@ onMounted(() => {
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
       size="small">
+
       <!-- Notice content input -->
       <FormItem
         colon
@@ -174,12 +175,12 @@ onMounted(() => {
       <!-- Scheduled send date (only shown for scheduled sends) -->
       <FormItem
         v-if="form.sendType === SentType.TIMING_SEND"
-        :label="t('sendDate')"
+        :label="t('common.labels.sendDate')"
         class="sendTimingDate"
         :name="(form.sendType === SentType.TIMING_SEND ? 'sendTimingDate' : '')">
         <DatePicker
           v-model:value="form.sendTimingDate"
-          :placeholder="t('selectTime')"
+          :placeholder="t('common.messages.selectDate')"
           class="w-full"
           size="small"
           showTime
@@ -191,12 +192,13 @@ onMounted(() => {
         <Button
           size="small"
           type="primary"
+          class="w-18"
           @click="submitForm">
-          {{ t('common.actions.ok') }}
+          {{ t('common.actions.submit') }}
         </Button>
         <Button
           size="small"
-          class="ml-5"
+          class="ml-5 w-18"
           @click="cancel">
           {{ t('common.actions.cancel') }}
         </Button>
@@ -209,5 +211,10 @@ onMounted(() => {
 .ant-form-horizontal :deep(.ant-form-item-control) {
   flex: 1 1 50%;
   max-width: 700px;
+}
+
+/* Make form labels bold */
+.ant-form-horizontal :deep(.ant-form-item-label > label) {
+  font-weight: 700;
 }
 </style>

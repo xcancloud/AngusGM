@@ -199,18 +199,19 @@ const handleCancel = () => {
     <!-- Form Action Buttons -->
     <div class="text-center">
       <Button
-        size="small"
-        class="px-3 mr-3"
-        @click="handleCancel">
-        {{ t('common.actions.cancel') }}
-      </Button>
-      <Button
         :loading="loading"
         type="primary"
         size="small"
-        class="px-3"
+        class="px-3  mr-3"
         @click="submit">
         {{ t('common.actions.submit') }}
+      </Button>
+
+      <Button
+        size="small"
+        class="px-3"
+        @click="handleCancel">
+        {{ t('common.actions.cancel') }}
       </Button>
     </div>
   </PureCard>

@@ -145,7 +145,8 @@
       "tenant": "租户",
       "source": "来源",
       "association": "关联",
-      "language": "语言"
+      "language": "语言",
+      "sendDate": "发送时间"
     }
   },
   "components": {

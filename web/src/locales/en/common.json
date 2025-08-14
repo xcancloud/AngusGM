@@ -138,14 +138,16 @@
       "requiredField": "This field is required",
       "passwordNotMatch": "Passwords do not match",
       "verificationCodeError": "Verification code format is incorrect",
-      "noData": "No data"
+      "noData": "No data",
+      "selectDate": "Select Date"
     },
     "labels": {
       "all": "All",
       "tenant": "Tenant",
       "source": "Source",
       "association": "Association",
-      "language": "Language"
+      "language": "Language",
+      "sendDate": "Send Date"
     }
   },
   "components": {

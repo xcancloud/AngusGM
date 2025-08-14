@@ -28,7 +28,7 @@
     "messages": {
       "copySuccess": "Copied to clipboard",
       "upload": "Upload Avatar",
-      "toAuth": "Go to Auth",
+      "toAuth": "Verify Identity",
       "cancel": "Cancel",
       "save": "Save",
       "edit": "Edit",

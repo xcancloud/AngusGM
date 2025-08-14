@@ -13,7 +13,7 @@
       "receiveObjectType": "Recipient Type",
       "sentNum": "Number of Recipients",
       "readNum": "Number of Readers",
-      "timingDate": "Scheduled Time",
+      "timingDate": "Send Date",
       "recipient": "Recipient"
     },
     "placeholder": {
@@ -41,7 +41,7 @@
     "globalTip": "\"Global\" notifications apply to all applications, while \"Application-Scoped\" ones only work for designated applications. If an application has both, the latest notification will be displayed first.",
     "columns": {
       "content": "Content",
-      "scope": "Scope",
+      "scope": "Send Scope",
       "sendType": "Send Type",
       "timingDate": "Timing Date",
       "expiredDate": "Expired Date"
