@@ -3,11 +3,15 @@ import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Badge, Skeleton, Tabs } from 'ant-design-vue';
-import { AsyncComponent, ButtonAuth, Grid, Image, modal, notification, PureCard } from '@xcan-angus/vue-ui';
-import { Detail } from './types';
+import { AsyncComponent, ButtonAuth, Grid, Image, PureCard } from '@xcan-angus/vue-ui';
+import { Detail } from '../types';
 import router from '@/router';
 import { appContext, GM } from '@xcan-angus/infra';
-import { user } from '@/api';
+import {
+  showStatusConfirm, unlockUser, showAdminConfirm, updateSysAdmin, loadUserDetail,
+  updateUserStatus, showDeleteUserConfirm, deleteUser, canModifyUser, createUserGridColumns,
+  handleUserLock, closeLockModal, openPasswordResetModal, closePasswordResetModal
+} from '../utils';
 
 /**
  * Async component definitions for lazy loading
@@ -33,24 +37,23 @@ const activeKey = ref<string>('1'); // Currently active tab
 const userDetail = ref<Detail>();
 const loading = ref(false); // Loading state for API calls
 const firstLoad = ref(true); // First load state for skeleton display
+const visible = ref(false); // Lock modal visibility
 
 /**
  * Load user detail information from API
  * Handles loading state and error handling
  */
-const loadUserDetail = async () => {
+const loadUserDetailData = async () => {
   if (loading.value) {
     return;
   }
   loading.value = true;
-  const [error, { data }] = await user.getUserDetail(userId);
+  const data = await loadUserDetail(userId);
   loading.value = false;
   firstLoad.value = false;
-  if (error) {
-    return;
+  if (data) {
+    userDetail.value = data;
   }
-
-  userDetail.value = data;
 };
 
 /**
@@ -58,17 +61,9 @@ const loadUserDetail = async () => {
  * Provides user confirmation before changing user status
  */
 const updateStatusConfirm = () => {
-  modal.confirm({
-    centered: true,
-    title: userDetail.value?.enabled
-      ? t('common.actions.disable')
-      : t('common.actions.enable'),
-    content: userDetail.value?.enabled
-      ? t('common.messages.confirmDisable', { name: userDetail.value?.fullName })
-      : t('common.messages.confirmEnable', { name: userDetail.value?.fullName }),
-    async onOk () {
-      await updateStatus();
-    }
+  if (!userDetail.value) return;
+  showStatusConfirm(userDetail.value.fullName, userDetail.value.enabled, t, async () => {
+    await updateStatus();
   });
 };
 
@@ -80,47 +75,32 @@ const updateStatus = async () => {
   if (!userDetail.value) {
     return;
   }
-  const params = [{ id: userDetail.value.id, enabled: !userDetail.value.enabled }];
-  const [error] = await user.toggleUserEnabled(params);
-  if (error) {
-    return;
+  const success = await updateUserStatus(userDetail.value, t);
+  if (success) {
+    await loadUserDetailData();
   }
-  notification.success(userDetail.value.enabled
-    ? t('common.messages.disableSuccess')
-    : t('common.messages.enableSuccess'));
-  loadUserDetail();
 };
-
-/**
- * Modal state management for user lock operations
- */
-const visible = ref(false); // Lock modal visibility
 
 /**
  * Handle user lock/unlock operations
  * @param locked - Whether to lock or unlock the user
  */
 const lockingUser = (locked: boolean) => {
-  if (locked) {
-    visible.value = true; // Show lock modal
-  } else {
-    unlock(); // Direct unlock
-  }
+  handleUserLock(locked, visible, unlock);
 };
 
 /**
  * Close lock modal
  */
-const closeLockModal = () => {
-  visible.value = false;
+const closeLockModalLocal = () => {
+  closeLockModal(visible, loadUserDetailData);
 };
 
 /**
  * Save lock changes and refresh user data
  */
 const saveLock = () => {
-  visible.value = false;
-  loadUserDetail();
+  closeLockModal(visible, loadUserDetailData);
 };
 
 /**
@@ -128,17 +108,10 @@ const saveLock = () => {
  * Shows confirmation dialog before unlocking
  */
 const unlock = () => {
-  modal.confirm({
-    centered: true,
-    title: t('user.actions.unlockUser'),
-    content: t('common.messages.unlockTip', { name: userDetail.value?.fullName }),
-    async onOk () {
-      const [error] = await user.toggleUserLocked({ id: userDetail.value?.id, locked: false });
-      if (error) {
-        return;
-      }
-      await loadUserDetail();
-      notification.success(t('common.messages.unlockSuccess'));
+  if (!userDetail.value) return;
+  unlockUser(userDetail.value.id, t).then(async (success) => {
+    if (success) {
+      await loadUserDetailData();
     }
   });
 };
@@ -158,14 +131,14 @@ const state = reactive<{
  * Open password reset modal
  */
 const openUpdatePasswdModal = () => {
-  state.updatePasswdVisible = true;
+  openPasswordResetModal(state);
 };
 
 /**
  * Close password reset modal
  */
 const closeUpdatePasswdModal = () => {
-  state.updatePasswdVisible = false;
+  closePasswordResetModal(state);
 };
 
 /**
@@ -176,17 +149,8 @@ const setAdminConfirm = () => {
   if (!userDetail.value) {
     return;
   }
-  modal.confirm({
-    centered: true,
-    title: userDetail.value.sysAdmin
-      ? t('user.actions.cancelAdmin')
-      : t('user.actions.setAdmin'),
-    content: userDetail.value.sysAdmin
-      ? t('common.messages.cancelAdminTip', { name: userDetail.value.fullName })
-      : t('common.messages.setAdminTip', { name: userDetail.value.fullName }),
-    async onOk () {
-      await updateSysAdmin();
-    }
+  showAdminConfirm(userDetail.value.fullName, userDetail.value.sysAdmin, t, async () => {
+    await updateSysAdminData();
   });
 };
 
@@ -194,17 +158,14 @@ const setAdminConfirm = () => {
  * Update user's system administrator status
  * Calls API to toggle system admin flag and refreshes data
  */
-const updateSysAdmin = async () => {
+const updateSysAdminData = async () => {
   if (!userDetail.value) {
     return;
   }
-  const params = { id: userDetail.value.id, sysAdmin: !userDetail.value.sysAdmin };
-  const [error] = await user.updateUserSysAdmin(params);
-  if (error) {
-    return;
+  const success = await updateSysAdmin(userDetail.value.id, userDetail.value.sysAdmin, t);
+  if (success) {
+    await loadUserDetailData();
   }
-  notification.success(t('common.messages.editSuccess'));
-  await loadUserDetail();
 };
 
 /**
@@ -215,13 +176,8 @@ const delUserConfirm = () => {
   if (!userDetail.value) {
     return;
   }
-  modal.confirm({
-    centered: true,
-    title: t('user.actions.deleteUser'),
-    content: t('common.messages.confirmDelete', { name: userDetail.value.fullName }),
-    async onOk () {
-      await delUser();
-    }
+  showDeleteUserConfirm(userDetail.value.fullName, t, async () => {
+    await delUser();
   });
 };
 
@@ -233,12 +189,10 @@ const delUser = async () => {
   if (!userDetail.value) {
     return;
   }
-  const [error] = await user.deleteUser([userDetail.value.id]);
-  if (error) {
-    return;
+  const success = await deleteUser(userDetail.value.id, t);
+  if (success) {
+    await router.push('/organization/user');
   }
-  notification.success('common.messages.deleteSuccess');
-  router.push('/organization/user');
 };
 
 /**
@@ -246,7 +200,7 @@ const delUser = async () => {
  * Checks if current user can modify system administrator accounts
  */
 const getOperationPermissions = computed(() => {
-  return !appContext.isSysAdmin() && userDetail.value?.sysAdmin;
+  return canModifyUser(userDetail.value, appContext.isSysAdmin());
 });
 
 /**
@@ -254,29 +208,14 @@ const getOperationPermissions = computed(() => {
  * Loads initial user detail data
  */
 onMounted(() => {
-  loadUserDetail();
+  loadUserDetailData();
 });
 
 /**
  * Grid columns configuration for user basic information display
  * Defines the layout and fields for user info grid
  */
-const userGridColumns = [
-  [
-    {
-      label: t('user.columns.username'),
-      dataIndex: 'username'
-    },
-    {
-      label: t('user.columns.createdDate'),
-      dataIndex: 'createdDate'
-    },
-    {
-      label: t('user.columns.onlineDate'),
-      dataIndex: 'onlineDate'
-    }
-  ]
-];
+const userGridColumns = computed(() => createUserGridColumns(t));
 </script>
 <template>
   <div class="flex flex-col min-h-full">
@@ -346,7 +285,6 @@ const userGridColumns = [
           @click="openUpdatePasswdModal" />
 
         <!-- Set/Cancel system admin button -->
-        <!-- TODO: English button text not working -->
         <ButtonAuth
           code="SetIdentity"
           :disabled="getOperationPermissions && appContext.isSysAdmin()"
@@ -407,7 +345,7 @@ const userGridColumns = [
         :tip="t('common.messages.lockTip')"
         width="550px"
         :action="`${GM}/user/locked`"
-        @cancel="closeLockModal"
+        @cancel="closeLockModalLocal"
         @save="saveLock()" />
     </AsyncComponent>
 

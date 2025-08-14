@@ -1,5 +1,4 @@
-import { Gender, UserSource, EnumMessage, SearchCriteria } from '@xcan-angus/infra';
-import { OrgTargetType } from '@/enums/enums';
+import { EnumMessage, Gender, UserSource, PasswordStrength } from '@xcan-angus/infra';
 
 /**
  * User entity interface representing a user in the system
@@ -100,98 +99,121 @@ export interface UserState {
   currentUserId: string | undefined; // Currently selected user ID for modal operations
 }
 
-/**
- * Search option type definitions
- * Defines all available search field types for the SearchPanel component
- */
-export type SearchOptionType =
-  | 'input' // Text input field
-  | 'select-enum' // Dropdown with enum values
-  | 'date-range' // Date range picker
-  | 'select' // Dropdown with custom options
-  | 'date' // Single date picker
-  | 'select-app' // Application selector
-  | 'select-dept' // Department selector
-  | 'select-group' // Group selector
-  | 'select-intl' // International selector
-  | 'select-itc' // ITC selector
-  | 'select-user' // User selector
-  | 'select-service' // Service selector
-  | 'select-tag' // Tag selector
-  | 'select-tenant' // Tenant selector
-  | 'tree-select'; // Tree structure selector
+// ==================== Detail Directory Types ====================
 
 /**
- * Search option configuration interface
- * Defines the structure and properties of search field configurations
+ * User group association interface
+ * Represents the relationship between a user and a group
  */
-export interface SearchOption {
-  placeholder?: string; // Placeholder text for the search field
-  valueKey: string; // Key used to identify the search field value
-  type: SearchOptionType; // Type of search field
-  op?: SearchCriteria.OpEnum; // Search operation type (equal, contains, etc.)
-  allowClear?: boolean; // Whether the field can be cleared
-  enumKey?: any; // Enum values for select-enum type
-  action?: string; // API endpoint for dynamic options
-  fieldNames?: { label: string; value: string }; // Field mapping for dynamic options
-  showSearch?: boolean; // Whether to show search functionality in dropdown
-  lazy?: boolean; // Whether to load options lazily
+export type UserGroup = {
+  id: string; // Unique identifier
+  groupId: string; // Group identifier
+  groupName: string; // Group display name
+  groupCode: string; // Group code
+  groupEnabled: true, // Whether the group is enabled
+  userId: string; // User identifier
+  fullName: string; // User's full name
+  mobile: string; // User's mobile number
+  avatar: string; // User's avatar URL
+  createdDate: string; // When the association was created
+  createdBy: string; // Who created the association
+  tenantId: string; // Tenant identifier
+  groupRemark: string; // Group remarks
+  createdByName: string; // Name of who created the association
 }
 
 /**
- * Factory to create i18n-aware columns inside component setup.
- * Must be called within Vue component `setup` where `t` is available.
+ * User department association interface
+ * Represents the relationship between a user and a department
  */
-export const createAuthPolicyColumns = (t: (key: string) => string, orgTargetType?: OrgTargetType) => {
-  const columns = [
+export type UserDept = {
+  id: string; // Unique identifier
+  deptId: string; // Department identifier
+  deptCode: string; // Department code
+  deptName: string; // Department name
+  deptHead: boolean; // Whether user is department head
+  mainDept: boolean; // Whether this is the main department
+  userId: string; // User identifier
+  fullName: string; // User's full name
+  mobile: string; // User's mobile number
+  avatar: string; // User's avatar URL
+  hasSubDept: boolean; // Whether department has sub-departments
+  createdDate: string; // When the association was created
+  createdBy: string; // Who created the association
+  tenantId: string; // Tenant identifier
+  createdByName: string; // Name of who created the association
+}
+
+/**
+ * User tag association interface
+ * Represents the relationship between a user and a tag
+ */
+export type UserTag = {
+  tagId: string; // Tag identifier
+  tagName: string; // Tag name
+  targetId: string; // Target object identifier
+  targetType: string; // Type of target object
+  targetName: string; // Name of target object
+  createdBy: string; // Who created the association
+  createdByName: string; // Name of who created the association
+  createdDate: string; // When the association was created
+  targetCreatedBy: string; // Who created the target
+  targetCreatedByName: string; // Name of who created the target
+  targetCreatedDate: string; // When the target was created
+}
+
+/**
+ * User detail interface
+ * Comprehensive user information including personal details, status, and associations
+ */
+export interface Detail {
+  id: string; // Unique user identifier
+  username: string; // User login name
+  fullName: string; // User's full display name
+  firstName: string; // User's first name
+  lastName: string; // User's last name
+  itc: string; // ITC (Information Technology Code) identifier
+  country: string; // User's country
+  mobile: string; // User's mobile phone number
+  email: string; // User's email address
+  landline: string; // User's landline phone number
+  avatar: string; // User's profile picture URL
+  title: string; // User's job title or position
+  gender: EnumMessage<Gender>; // User's gender with localized message
+  contactAddress: string; // User's contact address
+  sysAdmin: boolean; // Whether user is a system administrator
+  deptHead: boolean; // Whether user is a department head
+  enabled: boolean; // Whether user account is enabled
+  source: EnumMessage<UserSource>; // User source with localized message
+  locked: boolean; // Whether user account is locked
+  lockStartDate: string; // Date when user was locked
+  lockEndDate: string; // Date when user lock expires
+  tenantId: string; // Tenant identifier
+  tenantName: string; // Tenant name
+  createdBy: string; // ID of user who created this user
+  createdByName: string; // Name of user who created this user
+  createdDate: string; // Date when user was created
+  lastModifiedBy: string; // ID of user who last modified this user
+  lastModifiedByName: string; // Name of user who last modified this user
+  lastModifiedDate: string; // Date when user was last modified
+  passwordStrength: EnumMessage<PasswordStrength>; // Password strength with localized message
+  passwordExpired: boolean; // Whether password has expired
+  passwordExpiredDate: string; // Date when password expires
+  tenantRealNameStatus: string; // Real name verification status
+  online: boolean; // Whether user is currently online
+  onlineDate: string; // Date when user last went online
+  offlineDate: string; // Date when user last went offline
+  tags: [ // User's associated tags
     {
-      title: t('permission.columns.assocPolicies.id'),
-      dataIndex: 'id',
-      width: '15%',
-      customCell: () => ({ style: 'white-space:nowrap;' })
-    },
-    {
-      title: t('permission.columns.assocPolicies.name'),
-      dataIndex: 'name',
-      width: '15%'
-    },
-    {
-      title: t('permission.columns.assocPolicies.code'),
-      dataIndex: 'code'
+      id: string; // Tag identifier
+      name: string; // Tag name
     }
-  ] as const;
-
-  // Conditionally include orgType column: exclude when target type is DEPT or GROUP
-  const result: any[] = [...(columns as unknown as any[])];
-  const shouldHideOrgType = orgTargetType === OrgTargetType.DEPT || orgTargetType === OrgTargetType.GROUP;
-  if (!shouldHideOrgType) {
-    result.push({
-      title: t('permission.columns.assocPolicies.source'),
-      dataIndex: 'orgType',
-      width: '15%',
-      customCell: () => ({ style: 'white-space:nowrap;' })
-    });
-  }
-
-  result.push(
+  ],
+  depts: string; // User's associated departments
+  groups: [ // User's associated groups
     {
-      title: t('permission.columns.assocPolicies.authByName'),
-      dataIndex: 'authByName',
-      width: '15%'
-    },
-    {
-      title: t('permission.columns.assocPolicies.authDate'),
-      dataIndex: 'authDate',
-      width: '13%',
-      customCell: () => ({ style: 'white-space:nowrap;' })
-    },
-    {
-      title: t('common.actions.operation'),
-      dataIndex: 'action',
-      width: '10%',
-      align: 'center' as const
+      id: string; // Group identifier
+      name: string; // Group name
     }
-  );
-
-  return result;
-};
+  ]
+}

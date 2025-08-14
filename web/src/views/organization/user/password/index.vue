@@ -120,7 +120,7 @@ const rules = {
  * Component event handlers and business logic
  * Centralizes all user interactions and API calls
  */
-const handleFuncs = {
+const handle = {
   /**
    * Toggle password strength tips visibility
    * @param flag - Whether to show tips
@@ -163,7 +163,7 @@ const handleFuncs = {
         return;
       }
       notification.success(t('common.messages.editSuccess'));
-      handleFuncs.close();
+      handle.close();
     });
   }
 };
@@ -179,8 +179,8 @@ const handleFuncs = {
     destroyOnClose
     width="540px"
     class="reative"
-    @ok="handleFuncs.save()"
-    @cancel="handleFuncs.close()">
+    @ok="handle.save()"
+    @cancel="handle.close()">
     <!-- Password reset form -->
     <Form
       ref="formRef"
@@ -194,9 +194,9 @@ const handleFuncs = {
           :maxlength="50"
           :placeholder="t('user.security.placeholder.newPassword')"
           size="small"
-          @focus="handleFuncs.changeShowTips(true)"
-          @blur="handleFuncs.changeShowTips(false)"
-          @change="handleFuncs.changeStrength" />
+          @focus="handle.changeShowTips(true)"
+          @blur="handle.changeShowTips(false)"
+          @change="handle.changeStrength" />
 
         <!-- Password strength tips overlay -->
         <div

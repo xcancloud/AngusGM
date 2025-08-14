@@ -3,16 +3,31 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { PageQuery, duration, utils } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, duration, utils } from '@xcan-angus/infra';
 
-import { UserGroup } from './types';
+import { UserGroup } from '../types';
 import { user } from '@/api';
+import { createUserGroupColumns } from '../utils';
 
 /**
  * Async component for group modal
  * Loaded only when needed to improve performance
  */
 const GroupModal = defineAsyncComponent(() => import('@/components/GroupModal/index.vue'));
+
+/**
+ * Reactive state management for component
+ */
+const loading = ref(false); // Loading state for API calls
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const total = ref(0); // Total number of groups for pagination
+const count = ref(0); // Current group count for quota display
+const isContUpdate = ref(true); // Whether to update count continuously
+const dataList = ref<UserGroup[]>([]); // Group list data
+const groupVisible = ref(false); // Group modal visibility
+const updateLoading = ref(false); // Loading state for group update operations
+const isRefresh = ref(false); // Refresh state flag for modal operations
+const disabled = ref(false); // Disabled state for refresh button during operations
 
 /**
  * Component props interface
@@ -30,16 +45,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Internationalization setup
 const { t } = useI18n();
-
-/**
- * Reactive state management for component
- */
-const loading = ref(false); // Loading state for API calls
-const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
-const total = ref(0); // Total number of groups for pagination
-const count = ref(0); // Current group count for quota display
-const isContUpdate = ref(true); // Whether to update count continuously
-const dataList = ref<UserGroup[]>([]); // Group list data
 
 /**
  * Load user groups from API
@@ -64,31 +69,11 @@ const loadUserGroup = async () => {
 };
 
 /**
- * Modal state management for group operations
- */
-const groupVisible = ref(false); // Group modal visibility
-
-/**
  * Open group modal for adding new groups
  */
 const addGroup = () => {
   groupVisible.value = true;
 };
-
-/**
- * Loading state for group update operations
- */
-const updateLoading = ref(false);
-
-/**
- * Refresh state flag for modal operations
- */
-const isRefresh = ref(false);
-
-/**
- * Disabled state for refresh button during operations
- */
-const disabled = ref(false);
 
 /**
  * Handle group save from modal
@@ -97,7 +82,7 @@ const disabled = ref(false);
  * @param _groups - Array of group objects
  * @param deleteGroupIds - Array of group IDs to delete
  */
-const groupSave = async (_groupIds: string[], _groups: { id: string, name: string }[], deleteGroupIds: string[]) => {
+const saveGroup = async (_groupIds: string[], _groups: { id: string, name: string }[], deleteGroupIds: string[]) => {
   if (deleteGroupIds.length) {
     await delUserGroup(deleteGroupIds, 'Modal');
   }
@@ -179,7 +164,7 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
   if (value) {
-    params.value.filters = [{ key: 'groupName', op: 'MATCH_END', value }];
+    params.value.filters = [{ key: 'groupName', op: SearchCriteria.OpEnum.MatchEnd, value }];
   } else {
     params.value.filters = [];
   }
@@ -217,61 +202,18 @@ const handleChange = async (_pagination) => {
 };
 
 /**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
+const columns = createUserGroupColumns(t);
+
+/**
  * Lifecycle hook - initialize component on mount
  * Loads initial group data
  */
 onMounted(() => {
   loadUserGroup();
 });
-
-/**
- * Table columns configuration
- * Defines the structure and behavior of each table column
- */
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'groupId',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('group.columns.assocGroup.name'),
-    dataIndex: 'groupName',
-    width: '15%'
-  },
-  {
-    title: t('group.columns.assocGroup.code'),
-    dataIndex: 'groupCode',
-    width: '15%'
-  },
-  {
-    title: t('group.columns.assocGroup.remark'),
-    dataIndex: 'groupRemark'
-  },
-  {
-    title: t('group.columns.assocGroup.createdDate'),
-    dataIndex: 'createdDate',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('group.columns.assocGroup.createdByName'),
-    dataIndex: 'createdByName',
-    width: '13%'
-  },
-  {
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: '6%',
-    align: 'center'
-  }
-];
-
 </script>
 <template>
   <div>
@@ -350,6 +292,6 @@ const columns = [
       :userId="userId"
       :updateLoading="updateLoading"
       type="User"
-      @change="groupSave" />
+      @change="saveGroup" />
   </AsyncComponent>
 </template>

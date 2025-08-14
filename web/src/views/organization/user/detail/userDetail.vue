@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { Icon } from '@xcan-angus/vue-ui';
 import { Badge } from 'ant-design-vue';
 
-import { Detail } from './types';
+import { Detail } from '../types';
 
 /**
  * Component props interface

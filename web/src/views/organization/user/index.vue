@@ -3,13 +3,17 @@ import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
-  AsyncComponent, ButtonAuth, Hints, Icon, IconCount, IconRefresh,
-  Image, modal, notification, PureCard, SearchPanel, Table
+  AsyncComponent, ButtonAuth, Hints, Icon, IconCount, IconRefresh, Image, PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { app, appContext, GM, utils, Enabled, UserSource, SearchCriteria, PageQuery } from '@xcan-angus/infra';
+import { app, appContext, GM, SearchCriteria, PageQuery } from '@xcan-angus/infra';
 
-import { User, UserState, SearchOption } from './types';
-import { user } from '@/api';
+import { User, UserState } from './types';
+import {
+  loadUserList, updateSysAdmin,
+  deleteUser, toggleUserStatus, unlockUser, showAdminConfirm, showDeleteConfirm, showStatusConfirm,
+  showUnlockConfirm, calculateCurrentPage, checkOperationPermissions, handleSearchChange,
+  handleTableChange, createSearchOptions, createTableColumns
+} from './utils';
 
 /**
  * Async component definitions for lazy loading
@@ -17,7 +21,6 @@ import { user } from '@/api';
  */
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
-
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/password/index.vue'));
 
 // Internationalization setup
@@ -64,32 +67,17 @@ const pagination = computed(() => ({
 }));
 
 /**
- * Check operation permissions based on user's system admin status
- * Non-system admins cannot modify system administrator accounts
- * @param sysAdmin - Whether the user is a system administrator
- * @returns Whether the operation should be disabled
- */
-const getOperationPermissions = (sysAdmin: boolean): boolean => {
-  return !appContext.isSysAdmin() && sysAdmin;
-};
-
-/**
  * Load user list from API with error handling
  * Handles loading state and displays error notifications on failure
  */
-const loadUserList = async (): Promise<void> => {
+const loadUserListData = async (): Promise<void> => {
   try {
     loading.value = true;
-    const [error, { data = { list: [], total: 0 } }] = await user.getUserList(params.value);
-    if (error) {
-      notification.error(t('common.messages.queryListFailed'));
-      return;
-    }
-
-    userList.value = data.list;
-    total.value = +data.total;
+    const { list, total: totalCount } = await loadUserList(params.value);
+    userList.value = list;
+    total.value = totalCount;
   } catch (error) {
-    notification.error(t('common.messages.networkError'));
+    console.error('Failed to load user list:', error);
   } finally {
     loading.value = false;
   }
@@ -102,7 +90,7 @@ const loadUserList = async (): Promise<void> => {
 const init = async (): Promise<void> => {
   disabled.value = true;
   try {
-    await loadUserList();
+    await loadUserListData();
   } finally {
     disabled.value = false;
   }
@@ -114,11 +102,10 @@ const init = async (): Promise<void> => {
  * @param data - Search criteria array from SearchPanel
  */
 const searchChange = async (data: SearchCriteria[]): Promise<void> => {
-  params.value.pageNo = 1; // Reset to first page when search criteria changes
-  params.value.filters = data;
+  params.value = handleSearchChange(params.value, data);
   disabled.value = true;
   try {
-    await loadUserList();
+    await loadUserListData();
   } finally {
     disabled.value = false;
   }
@@ -132,15 +119,10 @@ const searchChange = async (data: SearchCriteria[]): Promise<void> => {
  * @param sorter - Sorting object from table
  */
 const tableChange = async (_pagination: any, _filters: any, sorter: any): Promise<void> => {
-  const { current, pageSize } = _pagination;
-  params.value.pageNo = current;
-  params.value.pageSize = pageSize;
-  params.value.orderBy = sorter.orderBy;
-  params.value.orderSort = sorter.orderSort;
-
+  params.value = handleTableChange(params.value, _pagination, sorter);
   disabled.value = true;
   try {
-    await loadUserList();
+    await loadUserListData();
   } finally {
     disabled.value = false;
   }
@@ -154,34 +136,12 @@ const tableChange = async (_pagination: any, _filters: any, sorter: any): Promis
  * @param sysAdmin - Current system admin status
  */
 const setAdminConfirm = (id: string, name: string, sysAdmin: boolean): void => {
-  modal.confirm({
-    centered: true,
-    title: sysAdmin ? t('user.actions.cancelAdmin') : t('user.actions.setAdmin'),
-    content: sysAdmin ? t('common.messages.cancelAdminTip', { name }) : t('common.messages.setAdminTip', { name }),
-    async onOk () {
-      await updateSysAdmin(id, sysAdmin);
+  showAdminConfirm(name, sysAdmin, t, async () => {
+    const success = await updateSysAdmin(id, sysAdmin, t);
+    if (success) {
+      await refreshUserList();
     }
   });
-};
-
-/**
- * Update user's system administrator status
- * Toggles the system admin flag and refreshes the user list
- * @param id - User ID
- * @param sysAdmin - Current system admin status
- */
-const updateSysAdmin = async (id: string, sysAdmin: boolean): Promise<void> => {
-  try {
-    const [error] = await user.updateUserSysAdmin({ id, sysAdmin: !sysAdmin });
-    if (error) {
-      notification.error(t('common.messages.editFailed'));
-      return;
-    }
-    notification.success(t('common.messages.editSuccess'));
-    await refreshUserList();
-  } catch (error) {
-    notification.error(t('common.messages.editFailed'));
-  }
 };
 
 /**
@@ -191,39 +151,18 @@ const updateSysAdmin = async (id: string, sysAdmin: boolean): Promise<void> => {
  * @param name - User name for display in confirmation message
  */
 const delUserConfirm = (id: string, name: string): void => {
-  modal.confirm({
-    centered: true,
-    title: t('user.actions.deleteUser'),
-    content: t('common.messages.confirmDelete', { name }),
-    async onOk () {
-      await delUser(id);
+  showDeleteConfirm(name, t, async () => {
+    const success = await deleteUser(id, t);
+    if (success) {
+      // Recalculate current page after deletion to handle edge cases
+      params.value.pageNo = calculateCurrentPage(
+        params.value.pageNo as number,
+        params.value.pageSize as number,
+        total.value
+      );
+      await refreshUserList();
     }
   });
-};
-
-/**
- * Delete user from system
- * Handles pagination recalculation after deletion to maintain proper page state
- * @param id - User ID to delete
- */
-const delUser = async (id: string): Promise<void> => {
-  try {
-    const [error] = await user.deleteUser([id]);
-    if (error) {
-      notification.error(t('user.messages.deleteFailed'));
-      return;
-    }
-    notification.error(t('user.messages.deleteSuccess'));
-    // Recalculate current page after deletion to handle edge cases
-    params.value.pageNo = utils.getCurrentPage(
-      params.value.pageNo as number,
-      params.value.pageSize as number,
-      total.value
-    );
-    await refreshUserList();
-  } catch (error) {
-    notification.error(t('user.messages.deleteFailed'));
-  }
 };
 
 /**
@@ -234,34 +173,12 @@ const delUser = async (id: string): Promise<void> => {
  * @param enabled - Current enabled status
  */
 const updateStatusConfirm = (id: string, name: string, enabled: boolean): void => {
-  modal.confirm({
-    centered: true,
-    title: enabled ? t('common.status.disabled') : t('common.status.enabled'),
-    content: enabled ? t('common.messages.confirmDisable', { name }) : t('common.messages.confirmEnable', { name }),
-    async onOk () {
-      await updateStatus(id, enabled);
+  showStatusConfirm(name, enabled, t, async () => {
+    const success = await toggleUserStatus(id, enabled, t);
+    if (success) {
+      await refreshUserList();
     }
   });
-};
-
-/**
- * Toggle user enabled/disabled status
- * Updates user status and refreshes the user list
- * @param id - User ID
- * @param enabled - Current enabled status
- */
-const updateStatus = async (id: string, enabled: boolean): Promise<void> => {
-  try {
-    const [error] = await user.toggleUserEnabled([{ id, enabled: !enabled }]);
-    if (error) {
-      notification.error(t('common.messages.editFailed'));
-      return;
-    }
-    notification.error(t('common.messages.editSuccess'));
-    await refreshUserList();
-  } catch (error) {
-    notification.error(t('common.messages.editFailed'));
-  }
 };
 
 /**
@@ -298,22 +215,10 @@ const saveLock = async (): Promise<void> => {
  * @param name - User name for display in confirmation message
  */
 const unlock = (id: string, name: string): void => {
-  modal.confirm({
-    centered: true,
-    title: t('user.actions.unlockUser'),
-    content: t('common.messages.unlockTip', { name }),
-    async onOk () {
-      try {
-        const [error] = await user.toggleUserLocked({ id, locked: false });
-        if (error) {
-          notification.success(t('common.messages.unlockSuccess'));
-          return;
-        }
-        notification.success(t('common.messages.unlockSuccess'));
-        await refreshUserList();
-      } catch (error) {
-        notification.error(t('common.messages.unlockFailed'));
-      }
+  showUnlockConfirm(name, t, async () => {
+    const success = await unlockUser(id, t);
+    if (success) {
+      await refreshUserList();
     }
   });
 };
@@ -343,7 +248,7 @@ const closeUpdatePasswdModal = (): void => {
 const refreshUserList = async (): Promise<void> => {
   disabled.value = true;
   try {
-    await loadUserList();
+    await loadUserListData();
   } finally {
     disabled.value = false;
   }
@@ -357,213 +262,20 @@ const handleRefresh = (): void => {
   if (loading.value) {
     return;
   }
-  loadUserList();
+  loadUserListData();
 };
 
 /**
  * Search options configuration for SearchPanel component
  * Defines available search fields and their properties
  */
-const searchOptions = ref<SearchOption[]>([
-  {
-    placeholder: t('user.placeholder.userId'),
-    valueKey: 'id',
-    type: 'input',
-    op: SearchCriteria.OpEnum.Equal,
-    allowClear: true
-  },
-  {
-    placeholder: t('user.placeholder.search'),
-    valueKey: 'fullName',
-    type: 'input',
-    allowClear: true
-  },
-  {
-    placeholder: t('user.placeholder.enabled'),
-    valueKey: 'enabled',
-    type: 'select-enum',
-    enumKey: Enabled,
-    allowClear: true
-  },
-  {
-    placeholder: t('user.placeholder.source'),
-    valueKey: 'source',
-    type: 'select-enum',
-    enumKey: UserSource,
-    allowClear: true
-  },
-  {
-    valueKey: 'createdDate', // TODO 时间提示
-    type: 'date-range',
-    allowClear: true
-  },
-  {
-    placeholder: t('user.placeholder.tag'),
-    valueKey: 'tagId',
-    type: 'select',
-    action: `${GM}/org/tag`,
-    fieldNames: { label: 'name', value: 'id' },
-    showSearch: true,
-    allowClear: true,
-    lazy: false
-  }
-]);
+const searchOptions = computed(() => createSearchOptions(t, GM));
 
 /**
  * Table columns configuration with custom cell renderers
  * Defines the structure and behavior of each table column
  */
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    width: '11%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.name'),
-    dataIndex: 'fullName',
-    ellipsis: true,
-    width: '16%'
-  },
-  {
-    title: t('user.columns.username'),
-    dataIndex: 'username',
-    width: '12%'
-  },
-  {
-    title: t('user.columns.status'),
-    dataIndex: 'enabled',
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.lockedStatus'),
-    dataIndex: 'locked',
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.onlineStatus'),
-    dataIndex: 'online',
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.mobile'),
-    dataIndex: 'mobile',
-    groupName: 'contact',
-    width: '10%',
-    customRender: ({ text }): string => text || '--',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.landline'),
-    dataIndex: 'landline',
-    groupName: 'contact',
-    customRender: ({ text }): string => text || '--',
-    hide: true,
-    width: '10%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.email'),
-    dataIndex: 'email',
-    groupName: 'contact',
-    customRender: ({ text }): string => text || '--',
-    hide: true,
-    width: '10%'
-  },
-  {
-    title: t('user.columns.title'),
-    dataIndex: 'title',
-    groupName: 'other',
-    customRender: ({ text }): string => text || '--',
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.source'),
-    dataIndex: 'source',
-    groupName: 'other',
-    hide: true,
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.gender'),
-    dataIndex: 'gender',
-    groupName: 'other',
-    hide: true,
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.identity'),
-    dataIndex: 'sysAdmin',
-    groupName: 'other',
-    hide: true,
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.deptHead'),
-    dataIndex: 'deptHead',
-    groupName: 'other',
-    hide: true,
-    width: '8%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.createdDate'),
-    sorter: true,
-    dataIndex: 'createdDate',
-    groupName: 'date',
-    width: '11%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.onlineDate'),
-    dataIndex: 'onlineDate',
-    groupName: 'date',
-    hide: true,
-    width: '11%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('user.columns.createdByName'),
-    dataIndex: 'createdByName',
-    groupName: 'date',
-    hide: true,
-    width: '11%',
-    ellipsis: true,
-    customRender: ({ text }): string => text || '--'
-  },
-  {
-    title: t('user.columns.lastModifiedByName'),
-    dataIndex: 'lastModifiedByName',
-    groupName: 'date',
-    hide: true,
-    width: '11%',
-    ellipsis: true,
-    customRender: ({ text }): string => text || '--'
-  },
-  {
-    title: t('user.columns.lastModifiedDate'),
-    dataIndex: 'lastModifiedDate',
-    groupName: 'date',
-    customRender: ({ text }): string => text || '--',
-    hide: true,
-    width: '11%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: 160,
-    align: 'center'
-  }
-];
+const columns = computed(() => createTableColumns(t));
 
 /**
  * Lifecycle hook - initialize component on mount
@@ -706,14 +418,14 @@ onMounted(() => {
               code="UserModify"
               type="text"
               :href="`/organization/user/edit/${record.id}?source=home`"
-              :disabled="getOperationPermissions(record.sysAdmin)"
+              :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin())"
               icon="icon-shuxie" />
 
             <!-- Reset password button -->
             <ButtonAuth
               code="ResetPassword"
               type="text"
-              :disabled="getOperationPermissions(record.sysAdmin)"
+              :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin())"
               icon="icon-zhongzhimima"
               @click="openUpdatePasswdModal(record.id)" />
 
@@ -727,54 +439,54 @@ onMounted(() => {
                   <!-- Enable/Disable user menu item -->
                   <MenuItem
                     v-if="app.show('UserEnable')"
-                    :disabled="getOperationPermissions(record.sysAdmin)||!app.has('UserEnable')"
+                    :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin()) || !app.has('UserEnable')"
                     @click="updateStatusConfirm(record.id,record.fullName,record.enabled)">
                     <template #icon>
-                      <Icon :icon="record.enabled?'icon-jinyong1':'icon-qiyong'" />
+                      <Icon :icon="record.enabled?'icon-jinyong':'icon-qiyong'" />
                     </template>
-                    {{ record.enabled ? app.getName('UserEnable', 1) : app.getName('UserEnable',0) }}
+                    {{ record.enabled ? t('common.status.disabled') : t('common.status.enabled') }}
                   </MenuItem>
 
                   <!-- Delete user menu item -->
                   <MenuItem
                     v-if="app.show('UserDelete')"
-                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('UserDelete')"
+                    :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin()) || !app.has('UserDelete')"
                     @click="delUserConfirm(record.id,record.fullName)">
                     <template #icon>
                       <Icon icon="icon-lajitong" />
                     </template>
-                    {{ app.getName('UserDelete') }}
+                    {{ t('common.actions.delete') }}
                   </MenuItem>
 
                   <!-- Lock user menu item -->
                   <MenuItem
                     v-if="!record.locked && app.show('LockingUser')"
-                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('LockingUser')"
+                    :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin()) || !app.has('LockingUser')"
                     @click="openLockedModal(record.id)">
                     <template #icon>
                       <Icon icon="icon-lock" />
                     </template>
-                    {{ app.getName('LockingUser', 0) }}
+                    {{ t('user.actions.lockUser') }}
                   </MenuItem>
 
                   <!-- Unlock user menu item -->
                   <MenuItem
                     v-if="record.locked && app.show('LockingUser')"
-                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('LockingUser')"
+                    :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin()) || !app.has('LockingUser')"
                     @click="unlock(record.id, record.fullName)">
                     <template #icon>
-                      <Icon icon="icon-kaibiaojiemi" />
+                      <Icon icon="icon-jiesuo" />
                     </template>
-                    {{ app.getName('LockingUser', 1) }}
+                    {{ t('user.actions.unlockUser') }}
                   </MenuItem>
 
                   <!-- Set/Cancel system admin menu item -->
                   <MenuItem
                     v-if="appContext.isSysAdmin() && app.show('SetIdentity')"
-                    :disabled="getOperationPermissions(record.sysAdmin) || !app.has('SetIdentity')"
+                    :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin()) || !app.has('SetIdentity')"
                     @click="setAdminConfirm(record.id, record.fullName, record.sysAdmin)">
                     <template #icon>
-                      <Icon :icon="record.sysAdmin ? 'icon-yonghu' : 'icon-guanliyuan'" />
+                      <Icon icon="icon-shezhi" />
                     </template>
                     {{ record.sysAdmin ? t('user.actions.cancelAdmin') : t('user.actions.setAdmin') }}
                   </MenuItem>

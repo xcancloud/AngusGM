@@ -26,8 +26,6 @@ const PasswordTip = defineAsyncComponent(() => import('@/views/organization/user
  */
 type Fuc = (args: Record<string, any>) => void;
 
-// TODO: User edit page and list table font sizes are inconsistent, should we unify UI component font sizes to 12px?
-
 // Routing and internationalization setup
 const route = useRoute();
 const router = useRouter();
@@ -127,9 +125,8 @@ const addUser = async (isContinueAdd?: boolean) => {
 
 /**
  * Injected function for updating user information
- * TODO: Entry point not found
  */
-const updateUserInfo: Fuc | undefined = inject('updateUserInfo'); // TODO 没有找到入口
+const updateUserInfo: Fuc | undefined = inject('updateUserInfo');
 
 /**
  * Update existing user information
@@ -143,7 +140,7 @@ const patchGroup = async () => {
   // Check if form data has changed
   const isEqual = utils.deepCompare(oldDetail.value as FormState, formState.value);
   if (isEqual) {
-    router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
+    await router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
     return;
   }
 
@@ -189,7 +186,7 @@ const patchGroup = async () => {
       updateUserInfo(temp);
     }
   }
-  router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
+  await router.push(source.value === 'home' ? '/organization/user' : `/organization/user/${userId.value}`);
 };
 
 /**
@@ -210,7 +207,7 @@ const onFinish = () => {
  */
 const continueAdd = () => {
   formRef.value.validate().then(async () => {
-    addUser(true);
+    await addUser(true);
   });
 };
 

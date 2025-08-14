@@ -2,17 +2,33 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
-import { PageQuery, duration, utils } from '@xcan-angus/infra';
+import { PageQuery, duration, utils, SearchCriteria } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
-import { UserDept } from './types';
+import { UserDept } from '../types';
 import { user } from '@/api';
+import { createUserDeptColumns } from '../utils';
 
 /**
  * Async component for department modal
  * Loaded only when needed to improve performance
  */
 const DeptModal = defineAsyncComponent(() => import('@/components/DeptModal/index.vue'));
+
+/**
+ * Reactive state management for component
+ */
+const loading = ref(false); // Loading state for API calls
+const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
+const total = ref(0); // Total number of departments for pagination
+const count = ref(0); // Current department count for quota display
+const isContUpdate = ref(true); // Whether to update count continuously
+const dataList = ref<UserDept[]>([]); // Department list data
+
+const deptVisible = ref(false); // Department modal visibility
+const updateLoading = ref(false); // Loading state for department update operations
+const isRefresh = ref(false); // Refresh state flag for modal operations
+const disabled = ref(false); // Disabled state for refresh button during operations
 
 /**
  * Component props interface
@@ -30,16 +46,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Internationalization setup
 const { t } = useI18n();
-
-/**
- * Reactive state management for component
- */
-const loading = ref(false); // Loading state for API calls
-const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] }); // Search and pagination parameters
-const total = ref(0); // Total number of departments for pagination
-const count = ref(0); // Current department count for quota display
-const isContUpdate = ref(true); // Whether to update count continuously
-const dataList = ref<UserDept[]>([]); // Department list data
 
 /**
  * Load user departments from API
@@ -61,31 +67,11 @@ const loadUserDept = async () => {
 };
 
 /**
- * Modal state management for department operations
- */
-const deptVisible = ref(false); // Department modal visibility
-
-/**
  * Open department modal for adding new departments
  */
 const addDept = () => {
   deptVisible.value = true;
 };
-
-/**
- * Loading state for department update operations
- */
-const updateLoading = ref(false);
-
-/**
- * Refresh state flag for modal operations
- */
-const isRefresh = ref(false);
-
-/**
- * Disabled state for refresh button during operations
- */
-const disabled = ref(false);
 
 /**
  * Handle department save from modal
@@ -177,7 +163,7 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
   if (value) {
-    params.value.filters = [{ key: 'deptName', op: 'MATCH_END', value }];
+    params.value.filters = [{ key: 'deptName', op: SearchCriteria.OpEnum.MatchEnd, value }];
   } else {
     params.value.filters = [];
   }
@@ -216,62 +202,18 @@ const handleChange = async (_pagination) => {
 };
 
 /**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
+const columns = createUserDeptColumns(t);
+
+/**
  * Lifecycle hook - initialize component on mount
  * Loads initial department data
  */
 onMounted(() => {
   loadUserDept();
 });
-
-/**
- * Table columns configuration
- * Defines the structure and behavior of each table column
- */
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'deptId',
-    width: '15%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('department.columns.userDept.name'),
-    dataIndex: 'deptName'
-  },
-  {
-    title: t('department.columns.userDept.code'),
-    dataIndex: 'deptCode',
-    width: '20%'
-  },
-  {
-    title: t('department.columns.userDept.head'),
-    dataIndex: 'deptHead',
-    customRender: ({ text }): string => text ? t('common.status.yes') : t('common.status.no'),
-    width: '8%'
-  },
-  {
-    title: t('department.columns.userDept.createdDate'),
-    dataIndex: 'createdDate',
-    width: '13%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('department.columns.userDept.createdByName'),
-    dataIndex: 'createdByName',
-    width: '13%'
-  },
-  {
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: '6%',
-    align: 'center'
-  }
-];
-
 </script>
 <template>
   <div>

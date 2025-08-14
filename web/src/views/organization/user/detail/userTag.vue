@@ -3,16 +3,26 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, Input, Table } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { PageQuery, duration, utils } from '@xcan-angus/infra';
+import { PageQuery, SearchCriteria, duration, utils } from '@xcan-angus/infra';
 
-import { UserTag } from './types';
 import { user } from '@/api';
+
+import { UserTag } from '../types';
+import { createUserTagColumns } from '../utils';
 
 /**
  * Async component for tag modal
  * Loaded only when needed to improve performance
  */
 const TagModal = defineAsyncComponent(() => import('@/components/TagModal/index.vue'));
+
+/**
+ * Modal state management for tag operations
+ */
+const tagVisible = ref(false); // Tag modal visibility
+const updateLoading = ref(false); // Loading state for tag update operations
+const isRefresh = ref(false); // Refresh state flag for modal operations
+const disabled = ref(false); // Disabled state for refresh button during operations
 
 /**
  * Component props interface
@@ -65,31 +75,11 @@ const loadUserTag = async () => {
 };
 
 /**
- * Modal state management for tag operations
- */
-const tagVisible = ref(false); // Tag modal visibility
-
-/**
  * Open tag modal for adding new tags
  */
 const addTag = () => {
   tagVisible.value = true;
 };
-
-/**
- * Loading state for tag update operations
- */
-const updateLoading = ref(false);
-
-/**
- * Refresh state flag for modal operations
- */
-const isRefresh = ref(false);
-
-/**
- * Disabled state for refresh button during operations
- */
-const disabled = ref(false);
 
 /**
  * Handle tag save from modal
@@ -98,7 +88,7 @@ const disabled = ref(false);
  * @param _tags - Array of tag objects
  * @param deleteTagIds - Array of tag IDs to delete
  */
-const tagSave = async (_tagIds: string[], _tags: { id: string, name: string }[], deleteTagIds: string[]) => {
+const saveUserTags = async (_tagIds: string[], _tags: { id: string, name: string }[], deleteTagIds: string[]) => {
   if (deleteTagIds.length) {
     await delUserTag(deleteTagIds, 'Modal');
   }
@@ -178,7 +168,7 @@ const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
   params.value.pageNo = 1;
   if (value) {
-    params.value.filters = [{ key: 'tagName', op: 'MATCH_END', value }];
+    params.value.filters = [{ key: 'tagName', op: SearchCriteria.OpEnum.MatchEnd, value }];
   } else {
     params.value.filters = [];
   }
@@ -217,52 +207,18 @@ const handleChange = async (_pagination) => {
 };
 
 /**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
+const userTagColumns = createUserTagColumns(t);
+
+/**
  * Lifecycle hook - initialize component on mount
  * Loads initial tag data
  */
 onMounted(() => {
   loadUserTag();
 });
-
-/**
- * Table columns configuration
- * Defines the structure and behavior of each table column
- */
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'tagId',
-    width: '20%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('tag.columns.userTag.name'),
-    dataIndex: 'tagName',
-    width: '30%'
-  },
-  {
-    title: t('tag.columns.userTag.createdDate'),
-    dataIndex: 'createdDate',
-    width: '20%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('tag.columns.userTag.createdByName'),
-    dataIndex: 'createdByName',
-    width: '20%'
-  },
-  {
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: '10%',
-    align: 'center'
-  }
-];
-
 </script>
 <template>
   <div>
@@ -307,7 +263,7 @@ const columns = [
       rowKey="id"
       :loading="loading"
       :dataSource="dataList"
-      :columns="columns"
+      :columns="userTagColumns"
       :pagination="pagination"
       @change="handleChange">
       <!-- Custom cell renderers for table columns -->
@@ -333,6 +289,6 @@ const columns = [
       :userId="userId"
       :updateLoading="updateLoading"
       type="User"
-      @change="tagSave" />
+      @change="saveUserTags" />
   </AsyncComponent>
 </template>

@@ -8,13 +8,19 @@ import { debounce } from 'throttle-debounce';
 import { OrgTargetType } from '@/enums/enums';
 
 import { auth } from '@/api';
-import { createAuthPolicyColumns } from '@/views/organization/user/types';
+import { createAuthPolicyColumns } from '@/views/organization/user/utils';
 
 /**
  * Async component for policy modal
  * Loaded only when needed to improve performance
  */
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
+
+/**
+ * Modal state management for olicy operations
+ */
+const policyVisible = ref(false); // Policy modal visibility
+const updateLoading = ref(false); // Loading state for policy update operations
 
 /**
  * Component props interface
@@ -62,21 +68,11 @@ const getUserPolicy = async () => {
 };
 
 /**
- * Modal state management for policy operations
- */
-const policyVisible = ref(false); // Policy modal visibility
-
-/**
  * Open policy modal for adding new policies
  */
 const addPolicy = () => {
   policyVisible.value = true;
 };
-
-/**
- * Loading state for policy update operations
- */
-const updateLoading = ref(false);
 
 /**
  * Handle policy save from modal
@@ -199,19 +195,18 @@ const pagination = computed(() => {
 });
 
 /**
+ * Table columns configuration
+ * Defines the structure and behavior of each table column
+ */
+const columns = createAuthPolicyColumns(t, OrgTargetType.USER);
+
+/**
  * Lifecycle hook - initialize component on mount
  * Loads initial policy data
  */
 onMounted(() => {
   getUserPolicy();
 });
-
-/**
- * Table columns configuration
- * Defines the structure and behavior of each table column
- */
-const columns = createAuthPolicyColumns(t, OrgTargetType.USER);
-
 </script>
 <template>
   <div>

@@ -24,7 +24,7 @@ import {
 
 // API services for department and authentication operations
 import { dept } from '@/api';
-import { createAuthPolicyColumns } from '@/views/organization/user/types';
+import { createAuthPolicyColumns } from '@/views/organization/user/utils';
 
 // Utility functions for department operations
 import {

@@ -7,7 +7,7 @@ import { debounce } from 'throttle-debounce';
 import { duration, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
 import { OrgTargetType } from '@/enums/enums';
 
-import { createAuthPolicyColumns } from '@/views/organization/user/types';
+import { createAuthPolicyColumns } from '@/views/organization/user/utils';
 import { GroupPolicyProps } from '../types';
 import {
   getGroupPolicy as getGroupPolicyUtil, addGroupPolicy as addGroupPolicyUtil, deleteGroupPolicy as deleteGroupPolicyUtil
