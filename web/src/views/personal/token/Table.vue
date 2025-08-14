@@ -4,33 +4,15 @@ import { useI18n } from 'vue-i18n';
 import { Badge, Popconfirm } from 'ant-design-vue';
 import { Card, Icon, IconCopy, Table } from '@xcan-angus/vue-ui';
 
-import { userToken } from '@/api';
+import { loadTokenData, deleteTokenById, fetchTokenValue, isTokenExpired } from './utils';
+import type { TokenRecord, TokenTableProps, TokenTableEmits, TableColumn, PaginationConfig } from './types';
 
-// Define interfaces for better type safety
-interface TokenRecord {
-  id: string;
-  name: string;
-  expireDate: string;
-  createdDate: string;
-  open?: boolean;
-  token?: string;
-  expiredDate?: string;
-}
-
-interface Props {
-  notify: string,
-  tokenQuota: number
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<TokenTableProps>(), {
   notify: undefined,
   tokenQuota: 3
 });
 
-// eslint-disable-next-line func-call-spacing
-const emit = defineEmits<{
-  (e: 'change', text: number): void,
-}>();
+const emit = defineEmits<TokenTableEmits>();
 
 const { t } = useI18n();
 const total = ref(0);
@@ -47,16 +29,9 @@ const state = reactive<{
 const loadToken = async () => {
   try {
     loading.value = true;
-    const [error, res] = await userToken.getToken();
-
-    if (error || !res?.data) {
-      // Handle error case - could add toast notification here
-      console.error('Failed to load tokens:', error);
-      return;
-    }
-
-    state.dataSource = res.data;
-    total.value = res.data.length;
+    const { data, total: totalCount } = await loadTokenData();
+    state.dataSource = data;
+    total.value = totalCount;
   } catch (err) {
     console.error('Unexpected error loading tokens:', err);
   } finally {
@@ -71,20 +46,13 @@ onMounted(() => {
 // Delete token by ID
 const deleteToken = async (record: TokenRecord) => {
   try {
-    const [error] = await userToken.deleteToken({ ids: [record.id] });
-
-    if (error) {
-      // Handle error case - could add toast notification here
-      console.error('Failed to delete token:', error);
-      return;
+    const success = await deleteTokenById(record);
+    if (success) {
+      // Update local state after successful deletion
+      total.value--;
+      state.dataSource = state.dataSource.filter(item => item.id !== record.id);
+      console.log('Token deleted successfully');
     }
-
-    // Update local state after successful deletion
-    total.value--;
-    state.dataSource = state.dataSource.filter(item => item.id !== record.id);
-
-    // Success case - could add success notification here
-    console.log('Token deleted successfully');
   } catch (err) {
     console.error('Unexpected error deleting token:', err);
   }
@@ -103,19 +71,14 @@ const showToken = async (record: TokenRecord) => {
     }
 
     // Fetch token value from API
-    const [error, { data = {} }] = await userToken.getTokenValue(record.id);
-
-    if (error) {
-      // Handle error case - could add toast notification here
-      console.error('Failed to fetch token value:', error);
-      return;
-    }
-
-    // Update the record with token value and show it
-    const item = state.dataSource.find(item => item.id === record.id);
-    if (item) {
-      item.open = true;
-      item.token = data.value;
+    const tokenValue = await fetchTokenValue(record.id);
+    if (tokenValue) {
+      // Update the record with token value and show it
+      const item = state.dataSource.find(item => item.id === record.id);
+      if (item) {
+        item.open = true;
+        item.token = tokenValue;
+      }
     }
   } catch (err) {
     console.error('Unexpected error showing token:', err);
@@ -127,29 +90,6 @@ const closeToken = (id: string) => {
   const item = state.dataSource.find(item => item.id === id);
   if (item) {
     item.open = false;
-  }
-};
-
-// Check if token is expired
-const getIsExpired = (item: TokenRecord) => {
-  try {
-    if (!item.expiredDate) {
-      return false; // Consider not expired if no date is provided
-    }
-
-    const expiredDate = new Date(item.expiredDate);
-    const currentDate = new Date();
-
-    // Check if the date is valid
-    if (isNaN(expiredDate.getTime())) {
-      console.warn('Invalid expired date:', item.expiredDate);
-      return false;
-    }
-
-    return expiredDate < currentDate;
-  } catch (err) {
-    console.error('Error checking token expiration:', err);
-    return false; // Default to not expired on error
   }
 };
 
@@ -165,14 +105,14 @@ watch(() => props.notify, () => {
   loadToken();
 });
 
-const pagination = computed(() => {
+const pagination = computed<PaginationConfig>(() => {
   return {
     total: state.dataSource.length
   };
 });
 
 // Define table columns configuration with proper typing
-const columns = [
+const columns: TableColumn[] = [
   {
     title: t('token.columns.name'),
     dataIndex: 'name',
@@ -236,13 +176,13 @@ const columns = [
         <!-- Action column: Delete button with confirmation -->
         <template v-if="column.dataIndex === 'action'">
           <Popconfirm
-            :title="t('confirmDelete')"
-            :okText="t('ok')"
-            :cancelText="t('cancel')"
+            :title="t('common.messages.confirmTitle')"
+            :okText="t('common.actions.confirm')"
+            :cancelText="t('common.actions.cancel')"
             @confirm="deleteToken(record)">
             <a
               class="text-3 content-primary-text text-theme-text-hover"
-              href="javascript:;">{{ t('delete') }}</a>
+              href="javascript:;">{{ t('common.actions.delete') }}</a>
           </Popconfirm>
         </template>
 
@@ -269,8 +209,8 @@ const columns = [
         <!-- Expired status column: Show expiration status with color indicator -->
         <template v-if="column.dataIndex === 'expired'">
           <span>
-            <Badge :color="getIsExpired(record) ? 'orange' : 'green'" />
-            <span>{{ getIsExpired(record) ? t('token.status.expired') : t('token.status.notExpired') }}</span>
+            <Badge :color="isTokenExpired(record) ? 'orange' : 'green'" />
+            <span>{{ isTokenExpired(record) ? t('token.status.expired') : t('token.status.notExpired') }}</span>
           </span>
         </template>
       </template>

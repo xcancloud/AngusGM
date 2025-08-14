@@ -4,8 +4,9 @@ import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
 import { Card, DatePicker, Hints, Icon, Input } from '@xcan-angus/vue-ui';
 
-import { setting, userToken } from '@/api';
 import TokenTable from './Table.vue';
+import { createToken, getTokenQuota, validateTokenForm, resetForm } from './utils';
+import type { CreateTokenParams } from './types';
 
 const { t } = useI18n();
 
@@ -25,36 +26,28 @@ const tableChange = (_total: number) => {
 
 // Reset form fields to initial state
 const reset = (): void => {
-  name.value = '';
-  password.value = '';
-  expireDate.value = '';
+  resetForm({ name, password, expireDate });
 };
 
 // Handle form submission to create new token
 const ok = async () => {
   try {
-    const params = {
+    const params: CreateTokenParams = {
       name: name.value.trim(),
       expireDate: expireDate.value,
       password: password.value
     };
 
     confirmLoading.value = true;
-    const [error, res] = await userToken.addToken(params);
+    const tokenValue = await createToken(params);
 
-    if (error || !res?.data) {
-      // Handle error case - could add toast notification here
-      console.error('Failed to create token:', error);
-      return;
+    if (tokenValue) {
+      // Store generated token and update UI
+      token.value = tokenValue;
+      prevName.value = name.value;
+      reset();
+      console.log('Token created successfully');
     }
-
-    // Store generated token and update UI
-    token.value = res.data.value;
-    prevName.value = name.value;
-    reset();
-
-    // Success case - could add success notification here
-    console.log('Token created successfully');
   } catch (err) {
     console.error('Unexpected error creating token:', err);
   } finally {
@@ -64,36 +57,19 @@ const ok = async () => {
 
 // Compute if form submission should be disabled
 const disabled = computed(() => {
-  const hasValidName = name.value && name.value.trim();
-  const isNameChanged = prevName.value !== name.value;
-  const hasValidPassword = password.value && password.value.trim();
-  const hasAvailableQuota = total.value < tokenQuota.value;
-
-  return !hasValidName || !isNameChanged || !hasAvailableQuota || !hasValidPassword;
+  return !validateTokenForm(name.value, password.value, prevName.value, total.value, tokenQuota.value);
 });
 
 // Token quota limit from system settings
 const tokenQuota = ref(0);
 
 // Fetch token quota from API
-const getTokenQuota = async () => {
-  try {
-    const [error, { data }] = await setting.getTokenQuota();
-
-    if (error) {
-      // Handle error case - could add toast notification here
-      console.error('Failed to fetch token quota:', error);
-      return;
-    }
-
-    tokenQuota.value = +data.quota;
-  } catch (err) {
-    console.error('Unexpected error fetching token quota:', err);
-  }
+const fetchTokenQuota = async () => {
+  tokenQuota.value = await getTokenQuota();
 };
 
 onMounted(() => {
-  getTokenQuota();
+  fetchTokenQuota();
 });
 </script>
 
@@ -105,7 +81,7 @@ onMounted(() => {
     </div>
 
     <!-- Information hint about token quota -->
-    <Hints :text="t('token.tokenDescription', { n: tokenQuota })" class="pt-2" />
+    <Hints :text="t('token.tokenDescription', { n: tokenQuota })" class="pt-2 font-medium" />
 
     <!-- Token creation form -->
     <Card class="mt-2" bodyClass="px-8">
