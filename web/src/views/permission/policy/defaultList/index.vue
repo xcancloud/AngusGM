@@ -6,18 +6,21 @@ import { Radio, RadioGroup } from 'ant-design-vue';
 import { app } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
-import { PolicyDefaultRecordType, PolicyDataRecordType } from '../types';
+import { PolicyDataRecordType, PolicyDefaultRecordType, TableColumn } from '../types';
+import { getUserDefinedPolicies, getUserDefinePolicyId } from '../utils';
 
 const { t } = useI18n();
 
 // Table column definitions
-const columns = [
+const columns: TableColumn[] = [
   {
+    key: 'appName',
     title: t('permission.policy.default.columns.appName'),
     dataIndex: 'appName',
     width: 274
   },
   {
+    key: 'polices',
     title: t('permission.policy.default.columns.polices'),
     dataIndex: 'polices'
   }
@@ -95,8 +98,8 @@ const updateSave = async (appId: string, policyId: string, policyName: string) =
  * @param appId - Application ID
  * @param options - Available policy options
  */
-const radioChange = (e: { target: { value: string } }, appId: string, options: PolicyDefaultRecordType[]) => {
-  const { value } = e.target;
+const radioChange = (e: any, appId: string, options: PolicyDefaultRecordType[]) => {
+  const value = e.target?.value;
   const policyName = value ? options.find(policy => policy.id === value)?.name : options.find(policy => policy.currentDefault)?.name;
   if (policyName) {
     updateSave(appId, value, policyName);
@@ -114,24 +117,6 @@ const selectChange = (value: string, appId: string, options: PolicyDefaultRecord
   if (policyName) {
     updateSave(appId, value, policyName);
   }
-};
-
-/**
- * Get user-defined policies from the record
- * @param record - Data record
- * @returns Filtered user-defined policies
- */
-const getPolices = (record: PolicyDataRecordType): PolicyDefaultRecordType[] => {
-  return record.defaultPolicies.filter((v: PolicyDefaultRecordType) => v.type.value === 'USER_DEFINED');
-};
-
-/**
- * Get the currently selected user-defined policy ID
- * @param record - Data record
- * @returns Selected policy ID or undefined
- */
-const getUserDefinePolicyId = (record: PolicyDataRecordType): string | undefined => {
-  return getPolices(record).find(policy => policy.id === record.policyId) ? record.policyId : undefined;
 };
 
 onMounted(() => {
@@ -152,7 +137,7 @@ defineExpose({
     </template>
     <Table
       :dataSource="state.dataSource"
-      :rowKey="(record:any) => record.appId"
+      rowKey="appId"
       :columns="columns"
       :pagination="false"
       size="small">
@@ -184,14 +169,14 @@ defineExpose({
             {{ t('permission.policy.default.other') }}
           </Radio>
           <Select
-            :options="getPolices(record)"
+            :options="getUserDefinedPolicies(record)"
             :value="getUserDefinePolicyId(record)"
             :fieldNames="{label:'name',value:'id'}"
             :disabled="!app.has('DefaultAppPolicySetting')"
             :placeholder="t('permission.policy.default.placeholder')"
             class="w-70"
             size="small"
-            @change="selectChange($event, record.appId, record.defaultPolicies)" />
+            @change="(value) => selectChange(value, record.appId, record.defaultPolicies)" />
         </template>
       </template>
     </Table>

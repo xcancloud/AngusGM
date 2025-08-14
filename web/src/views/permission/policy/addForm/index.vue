@@ -5,17 +5,17 @@ import { Button, Checkbox, Form, FormItem, Textarea, Tree } from 'ant-design-vue
 import { ButtonAuth, Card, Icon, Input, NoData, notification, Select } from '@xcan-angus/vue-ui';
 import { appContext, GM } from '@xcan-angus/infra';
 import { auth } from '@/api';
-import { FormType, DataRecordType, ApisType } from '../types';
+import { DataRecordType, PolicyFormState } from '../types';
+import { findParentPath, handleAppFunctions, processFunctionDisplay } from '../utils';
 
 const { t } = useI18n();
-
-// Regular expression to filter out certain resource names
-const endReg = /.*(Door|pub)$/g;
 
 const emit = defineEmits<{(e: 'reload'): void }>();
 
 // Collapsible state for the permission policy panel
 const isCollapse = ref(true);
+// Form reference for validation
+const formRef = ref();
 
 /**
  * Toggle the collapse state of the permission policy panel
@@ -25,15 +25,7 @@ const changeCollapse = () => {
 };
 
 // Reactive state for the component
-const state = reactive<{
-  saving: boolean,
-  globalAppId: string,
-  globalAppName: string,
-  form: FormType,
-  checkedNodes: DataRecordType[],
-  dataSource: DataRecordType[],
-  showFuncsObj: { [key: string]: Array<ApisType> }
-}>({
+const state = reactive<PolicyFormState>({
   saving: false, // Save button loading state
   globalAppId: '', // Global management application ID
   globalAppName: '', // Global management application name
@@ -51,9 +43,6 @@ const state = reactive<{
   dataSource: [], // Function tree data source
   showFuncsObj: {} // Processed function display object
 });
-
-// Form reference for validation
-const formRef = ref();
 
 /**
  * Validate that at least one function is selected
@@ -82,45 +71,6 @@ const rules = {
 };
 
 /**
- * Find parent paths for selected nodes
- * @param oldList - Previously selected nodes
- * @param pid - Parent ID to search for
- * @returns Array of parent nodes
- */
-const findParentPath = (oldList: DataRecordType[], pid: string) => {
-  const parentPaths: DataRecordType[] = [];
-
-  // Convert tree to flat array
-  const flattenTree = (list: DataRecordType[]) => {
-    const res: DataRecordType[] = [];
-    list.forEach(item => {
-      res.push(item);
-      item.children && res.push(...flattenTree(item.children));
-    });
-    return res;
-  };
-
-  const tempList = flattenTree(state.dataSource);
-
-  // Find parent by ID recursively
-  const findParent = (parentId: string) => {
-    const item = tempList.find(v => v.id === parentId);
-    if (item) {
-      // Don't add if already exists or is self
-      if (!oldList.find(v => v.id === item.id) && item.pid !== pid) {
-        parentPaths.unshift(item);
-      }
-      if (`${item.pid}` !== '-1') {
-        findParent(item.pid);
-      }
-    }
-  };
-
-  findParent(pid);
-  return parentPaths;
-};
-
-/**
  * Handle checkbox selection changes
  * @param _keys - Selected keys
  * @param info - Selection information with checked nodes
@@ -132,13 +82,13 @@ const onCheck = (_keys, info: { checkedNodes: DataRecordType[] }) => {
   if (info.checkedNodes.length > 0) {
     const lastCheckedItem = info.checkedNodes[info.checkedNodes.length - 1];
     if (`${lastCheckedItem.pid}` !== '-1') {
-      const list: DataRecordType[] = findParentPath(info.checkedNodes, lastCheckedItem.pid);
+      const list: DataRecordType[] = findParentPath(info.checkedNodes, lastCheckedItem.pid as string, state.dataSource);
       state.checkedNodes = [...list, ...info.checkedNodes];
     }
   }
 
   // Sync selected values to form
-  state.form.funcIds = state.checkedNodes.map(item => item.id);
+  state.form.funcIds = state.checkedNodes.map(item => item.id as string);
   formRef.value.validateFields(['funcIds']);
 };
 
@@ -160,29 +110,6 @@ const loadResourceByAppId = async () => {
     return;
   }
   state.dataSource = handleAppFunctions(res.data.appFuncs || []);
-};
-
-/**
- * Process application functions and set disabled state
- * @param funcs - Raw function data
- * @returns Processed function tree
- */
-const handleAppFunctions = (funcs = []) => {
-  if (!funcs.length) {
-    return [];
-  }
-
-  function processTree (data) {
-    return data.map(item => {
-      return {
-        ...item,
-        disabled: !item.authCtrl,
-        children: processTree(item.children || [])
-      };
-    });
-  }
-
-  return processTree(funcs);
 };
 
 /**
@@ -240,7 +167,7 @@ const editPolicy = (item: { appId: string | number, policyId: string | number })
     };
 
     findFunctions(treeData);
-    state.form.funcIds = state.checkedNodes.map(i => i.id);
+    state.form.funcIds = state.checkedNodes.map(i => i.id as string);
 
     // Scroll to top
     const dom = document.querySelector('#scrollMain');
@@ -316,22 +243,7 @@ const resetForm = () => {
 
 // Watch checked nodes to process function display data
 watch(() => state.checkedNodes, (val) => {
-  const resultMap: { [key: string]: Array<ApisType> } = {};
-
-  val.forEach((item: DataRecordType) => {
-    (item.apis || []).forEach(childItem => {
-      // Deduplicate by API ID
-      if (resultMap[childItem.resourceName]) {
-        if (!resultMap[childItem.resourceName].find(v => v.id === childItem.id)) {
-          resultMap[childItem.resourceName].push(childItem);
-        }
-      } else if (!childItem.resourceName.match(endReg)) {
-        resultMap[childItem.resourceName] = [childItem];
-      }
-    });
-  });
-
-  state.showFuncsObj = resultMap;
+  state.showFuncsObj = processFunctionDisplay(val);
 }, { deep: true });
 
 onMounted(() => {

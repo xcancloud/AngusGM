@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { appContext, GM } from '@xcan-angus/infra';
+import { appContext } from '@xcan-angus/infra';
 import { Grid, Modal, Select, SelectUser } from '@xcan-angus/vue-ui';
 
-import { app } from '@/api';
+import { app, auth } from '@/api';
+import { AddAuthParams, AddMembersProps, AddMembersState } from './types';
 
 /**
  * Component Props Interface
@@ -12,11 +13,7 @@ import { app } from '@/api';
  * Defines the required properties for the modal functionality,
  * including visibility state, application context, and entity type
  */
-interface Props {
-  visible: boolean;
-  appId: string;
-  type: 'USER' | 'DEPT' | 'GROUP';
-}
+type Props = AddMembersProps
 
 const props = withDefaults(defineProps<Props>(), {
   visible: false,
@@ -29,13 +26,14 @@ const emit = defineEmits<{(e: 'update', refresh: boolean): void }>();
 const { t } = useI18n();
 
 /**
- * User Selection State Management
- *
- * Manages the state of selected user IDs and validation errors
- * for the user selection component
+ * Reactive State Management
  */
-const selectedUserIds = ref<any>();
-const userError = ref(false);
+const state = reactive<AddMembersState>({
+  selectedUserIds: undefined,
+  userError: false,
+  selectedPolicyIds: [],
+  policyError: false
+});
 
 /**
  * Handle User Selection Changes
@@ -44,17 +42,8 @@ const userError = ref(false);
  * to provide real-time validation feedback
  */
 const userChange = (value: any) => {
-  userError.value = !value || value.length === 0;
+  state.userError = !value || value.length === 0;
 };
-
-/**
- * Policy Selection State Management
- *
- * Manages the state of selected policy IDs and validation errors
- * for the policy selection component
- */
-const selectedPolicyIds = ref<string[]>([]);
-const policyError = ref(false);
 
 /**
  * Handle Policy Selection Changes
@@ -63,7 +52,7 @@ const policyError = ref(false);
  * to provide real-time validation feedback
  */
 const policyChange = (value: any) => {
-  policyError.value = !value || value.length === 0;
+  state.policyError = !value || value.length === 0;
 };
 
 /**
@@ -73,16 +62,19 @@ const policyChange = (value: any) => {
  * based on the selected entity type
  */
 const handleOk = () => {
-  if (!selectedUserIds.value || selectedUserIds.value.length === 0) {
-    userError.value = true;
+  if (!state.selectedUserIds || state.selectedUserIds.length === 0) {
+    state.userError = true;
     return;
   }
-  if (!selectedPolicyIds.value.length) {
-    policyError.value = true;
+  if (!state.selectedPolicyIds.length) {
+    state.policyError = true;
     return;
   }
 
-  const params = { orgIds: selectedUserIds.value, policyIds: selectedPolicyIds.value };
+  const params: AddAuthParams = {
+    orgIds: state.selectedUserIds,
+    policyIds: state.selectedPolicyIds
+  };
 
   // Route to appropriate API based on entity type
   if (props.type === 'USER') {
@@ -100,7 +92,7 @@ const handleOk = () => {
  * Calls the API to add department authorization for the selected
  * departments and policies
  */
-const addDeptAuth = async (params: { orgIds: string[], policyIds: string[] }): Promise<void> => {
+const addDeptAuth = async (params: AddAuthParams): Promise<void> => {
   try {
     const [err] = await app.addDeptAuth(props.appId, params);
     if (err) {
@@ -121,7 +113,7 @@ const addDeptAuth = async (params: { orgIds: string[], policyIds: string[] }): P
  * Calls the API to add user authorization for the selected
  * users and policies
  */
-const addUserAuth = async (params: { orgIds: string[], policyIds: string[] }): Promise<void> => {
+const addUserAuth = async (params: AddAuthParams): Promise<void> => {
   try {
     const [err] = await app.addUserAuth(props.appId, params);
     if (err) {
@@ -142,7 +134,7 @@ const addUserAuth = async (params: { orgIds: string[], policyIds: string[] }): P
  * Calls the API to add group authorization for the selected
  * groups and policies
  */
-const addGroupAuth = async (params: { orgIds: string[], policyIds: string[] }): Promise<void> => {
+const addGroupAuth = async (params: AddAuthParams): Promise<void> => {
   try {
     const [err] = await app.addGroupAuth(props.appId, params);
     if (err) {
@@ -204,29 +196,18 @@ const placeholder = computed(() => {
  *
  * Generates the appropriate API endpoint for fetching unauthorized
  * organizations based on entity type
- * TODO: Migrate path information to API routing
  */
 const selectAppUnAuthOrgAction = computed(() => {
-  switch (props.type) {
-    case 'USER' :
-      return `${GM}/app/${props.appId}/unauth/user`;
-    case 'DEPT' :
-      return `${GM}/app/${props.appId}/unauth/dept`;
-    case 'GROUP':
-      return `${GM}/app/${props.appId}/unauth/group`;
-    default:
-      return `${GM}/app/${props.appId}/unauth/user`;
-  }
+  return app.getUnauthPolicyUrl(props.type, props.appId);
 });
 
 /**
  * Compute User Authorization Policy API Action
  *
  * Generates the API endpoint for fetching user authorization policies
- * TODO: Migrate path information to API routing
  */
 const selectUserAuthPolicyAction = computed(() => {
-  return `${GM}/auth/user/${appContext.getUser()?.id}/policy/associated?appId=${props.appId}&adminFullAssociated=true`;
+  return auth.getUserAuthPolicyUrl(appContext.getUser()?.id || 0, props.appId);
 });
 
 /**
@@ -306,11 +287,11 @@ const policyParams = { enabled: true, adminFullAssociated: true };
       <!-- Member Selection Section -->
       <template #users>
         <SelectUser
-          v-model:value="selectedUserIds"
+          v-model:value="state.selectedUserIds"
           :placeholder="placeholder"
           :action="selectAppUnAuthOrgAction"
           :fieldNames="fieldNames"
-          :error="userError"
+          :error="state.userError"
           allowClear
           showSearch
           mode="multiple"
@@ -322,12 +303,12 @@ const policyParams = { enabled: true, adminFullAssociated: true };
       <!-- Policy Selection Section -->
       <template #polices>
         <Select
-          v-model:value="selectedPolicyIds"
+          v-model:value="state.selectedPolicyIds"
           placeholder="permission.view.selectPolicy"
           :params="policyParams"
           class="w-full"
           mode="multiple"
-          :error="policyError"
+          :error="state.policyError"
           :action="selectUserAuthPolicyAction"
           :fieldNames="{ label: 'name', value: 'id' }"
           allowClear

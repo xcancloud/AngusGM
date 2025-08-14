@@ -168,4 +168,8 @@ export default class Auth {
         return '';
     }
   }
+
+  getUserAuthPolicyUrl (userId: number, appId: number) : string {
+    return `${baseUrl}/user/${userId}/policy/associated?appId=${appId}&adminFullAssociated=true`;
+  };
 }

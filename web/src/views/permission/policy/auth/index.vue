@@ -6,7 +6,7 @@ import { Button, Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 import { Input, notification, PureCard, SelectDept, SelectGroup, SelectUser } from '@xcan-angus/vue-ui';
 
 import { auth } from '@/api';
-import { AuthFormType } from '../types';
+import { AuthFormState } from '../types';
 
 const route = useRoute();
 const router = useRouter();
@@ -22,12 +22,7 @@ const formRef = ref();
  * Component reactive state
  * Manages loading states, form data, and validation rules
  */
-const state = reactive<{
-  loading: boolean,
-  saving: boolean,
-  form: AuthFormType,
-  rules: Record<string, Array<any>>
-}>({
+const state = reactive<AuthFormState>({
   loading: false,
   saving: false,
   form: {

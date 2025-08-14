@@ -29,4 +29,22 @@ export default class App {
   getAppByCode (appCode: string): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/${appCode}`);
   }
+
+  getAppAuthUrl (appId: number, type: string): string {
+    return `${GM}/app/${appId}/auth/${type.toLocaleLowerCase()}`;
+  }
+
+  getUnauthPolicyUrl (type: 'USER' | 'DEPT' | 'GROUP', appId: number): string {
+    switch (type) {
+      case 'USER' :
+        return `${GM}/app/${appId}/unauth/user`;
+      case 'DEPT' :
+        return `${GM}/app/${appId}/unauth/dept`;
+      case 'GROUP':
+        return `${GM}/app/${appId}/unauth/group`;
+      default:
+        return `${GM}/app/${appId}/unauth/user`;
+    }
+  }
+
 }

@@ -4,6 +4,7 @@ import { Icon } from '@xcan-angus/vue-ui';
 import { Badge } from 'ant-design-vue';
 
 import type { PolicyDetailType } from '../types';
+import { textOrDash } from '../utils';
 
 /**
  * Props interface for BaseInfo component
@@ -37,21 +38,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const { t } = useI18n();
-
-/**
- * Provide safe text for possibly empty values
- * Returns a dash when the value is undefined, null, or empty
- */
-const textOrDash = (value?: any): string => (value === undefined || value === null || value === '' ? '--' : String(value));
-
-/**
- * Resolve an i18n key with a fallback plain text when the key is missing
- * Ensures display text is always available even if translation keys are missing
- */
-const tt = (key: string, fallback: string): string => {
-  const msg = t(key);
-  return msg === key ? fallback : msg;
-};
 </script>
 
 <template>

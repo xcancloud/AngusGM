@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { NoData } from '@xcan-angus/vue-ui';
 import { Tree } from 'ant-design-vue';
 
-import type { PolicyDetailType, ApisType, DataRecordType } from '../types';
+import type { ApisType, DataRecordType, PolicyDetailType } from '../types';
 import { auth } from '@/api';
 
 const { t } = useI18n();
@@ -34,7 +34,10 @@ const props = withDefaults(defineProps<Props>(), {
     createdDate: undefined,
     type: { value: undefined, message: undefined },
     enabled: false,
-    description: undefined
+    description: undefined,
+    global: false,
+    default0: false,
+    grantStage: undefined
   })
 });
 

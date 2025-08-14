@@ -6,7 +6,8 @@ import { ButtonAuth, Card, Icon, IconRefresh, Input, modal, notification, Table 
 import { app, duration } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 import { auth } from '@/api';
-import { PolicyRecordType } from '../types';
+import { PolicyRecordType, TableColumn } from '../types';
+import { showTip } from '../utils';
 
 import AuthModal from '@/views/permission/policy/auth/auth.vue';
 
@@ -178,7 +179,7 @@ const edit = (record: PolicyRecordType) => {
 };
 
 // Table column definitions
-const columns = [
+const columns: TableColumn[] = [
   {
     key: 'id',
     title: 'ID',
@@ -256,15 +257,6 @@ onMounted(() => {
 defineExpose({
   load: loadList
 });
-
-/**
- * Check if policy is a default policy for tip display
- * @param id - Policy ID to check
- * @returns 1 if default, 0 if not
- */
-const showTip = (id: string) => {
-  return props.defaultPolicies.includes(id) ? 1 : 0;
-};
 </script>
 
 <template>
@@ -313,7 +305,7 @@ const showTip = (id: string) => {
         <template v-if="column.dataIndex === 'name'">
           <RouterLink
             v-if="app.has('PolicyDetail')"
-            :to="`/permissions/policy/${record.id}?showTip=${showTip(record.id)}`"
+            :to="`/permissions/policy/${record.id}?showTip=${showTip(record.id, props.defaultPolicies)}`"
             class="text-theme-special text-theme-text-hover">
             <Tooltip :title="record.name">{{ record.name }}</Tooltip>
           </RouterLink>
@@ -356,7 +348,7 @@ const showTip = (id: string) => {
               type="text"
               icon="icon-lajitong"
               :disabled="record.type.value !== 'USER_DEFINED'"
-              @click="delByIds(record.id, record.name)" />
+              @click="delByIds(record.id, record.name || '')" />
 
             <!-- More actions dropdown -->
             <Dropdown placement="bottomRight">

@@ -3,13 +3,22 @@ import { onMounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Pagination } from 'ant-design-vue';
 import {
-  ButtonAuth, Icon, Image, modal, NoData, notification,
-  PureCard, SelectDept, SelectGroup, SelectUser
+  ButtonAuth,
+  Icon,
+  Image,
+  modal,
+  NoData,
+  notification,
+  PureCard,
+  SelectDept,
+  SelectGroup,
+  SelectUser
 } from '@xcan-angus/vue-ui';
 import { cookieUtils } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
-import { AuthObjectDataType } from '../types';
+import { AuthObjectDataType, PaginationConfig, TargetManagementState } from '../types';
+import { getAddButtonConfig, getCancelButtonConfig, getTypeName } from '../utils';
 
 /**
  * Props interface for TargetPanel component
@@ -27,47 +36,10 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 /**
- * Configuration for add button text based on target type
- * Maps target types to their corresponding authorization codes
- */
-const addTextConfig = {
-  USER: 'AuthUserAdd',
-  DEPT: 'AuthDeptAdd',
-  GROUP: 'AuthGroupAdd'
-};
-
-/**
- * Configuration for cancel button text based on target type
- * Maps target types to their corresponding cancellation codes
- */
-const cancelText = {
-  USER: 'AuthUserCancel',
-  DEPT: 'AuthDeptCancel',
-  GROUP: 'AuthGroupCancel'
-};
-
-/**
- * Human-readable type name for display purposes
- * Converts the type enum to localized display text
- */
-const getTypeName = ():string => {
-  return props.type === 'USER'
-    ? t('permission.policy.detail.target.user')
-    : props.type === 'GROUP'
-      ? t('permission.policy.detail.target.group')
-      : t('permission.policy.detail.target.dept');
-};
-
-/**
  * Component reactive state
  * Manages loading states, selected values, and data source
  */
-const state = reactive<{
-  loading: boolean,
-  saving: boolean,
-  selectedValue: string | undefined,
-  dataSource: AuthObjectDataType[]
-}>({
+const state = reactive<TargetManagementState>({
   loading: false, // Loading state for list queries
   saving: false, // Loading state for save operations
   selectedValue: undefined, // Currently selected value in selection box
@@ -78,7 +50,7 @@ const state = reactive<{
  * Pagination configuration
  * Handles page navigation and display settings
  */
-const pagination = reactive({
+const pagination: PaginationConfig = {
   total: 0,
   current: 1,
   pageSize: 20,
@@ -89,9 +61,9 @@ const pagination = reactive({
     return t('common.table.pageShowTotal', { total, pageNo, totalPage });
   },
   showSizeChanger: false,
-  size: 'small',
+  size: 'small' as const,
   pageSizeOptions: ['10', '20', '30', '40', '50']
-});
+};
 
 /**
  * Handle target selection change
@@ -156,9 +128,9 @@ const resetPageNoLoad = () => {
  * Save the selected target to the policy
  * Adds the selected user, department, or group to the current policy
  */
-const addSave = async () => {
+const saveTargets = async () => {
   if (!state.selectedValue) {
-    notification.warning(t('permission.policy.detail.target.addWarn', { name: getTypeName() }));
+    notification.warning(t('permission.policy.detail.target.addWarn', { name: getTypeName(props.type, t) }));
     return;
   }
 
@@ -197,7 +169,7 @@ const delTarget = (item: AuthObjectDataType) => {
   modal.confirm({
     centered: true,
     title: t('common.messages.confirmTitle'),
-    content: t('permission.policy.detail.target.deleteConfirm', { name: getTypeName() }),
+    content: t('permission.policy.detail.target.deleteConfirm', { name: getTypeName(props.type, t) }),
     async onOk () {
       if (!props.policyId) {
         return;
@@ -237,7 +209,7 @@ onMounted(() => {
   <PureCard class="flex-1 flex flex-col p-3.5">
     <!-- Panel header with target type name -->
     <div class="mb-3 text-3 leading-3 text-theme-title font-medium">
-      {{ t('permission.policy.detail.target.title', { name: getTypeName() }) }}
+      {{ t('permission.policy.detail.target.title', { name: getTypeName(type, t) }) }}
     </div>
 
     <!-- Target selection and add button section -->
@@ -247,7 +219,7 @@ onMounted(() => {
         v-if="type === 'USER'"
         class="flex-1 w-70"
         :value="state.selectedValue"
-        :placeholder="t('permission.policy.detail.target.placeholder', { name: getTypeName() })"
+        :placeholder="t('permission.policy.detail.target.placeholder', { name: getTypeName(type, t) })"
         :internal="true"
         size="small"
         @change="targetChange" />
@@ -257,7 +229,7 @@ onMounted(() => {
         v-if="type === 'DEPT'"
         class="flex-1 w-70"
         :value="state.selectedValue"
-        :placeholder="t('permission.policy.detail.target.placeholder', { name: getTypeName() })"
+        :placeholder="t('permission.policy.detail.target.placeholder', { name: getTypeName(type, t) })"
         :internal="true"
         size="small"
         @change="targetChange" />
@@ -267,20 +239,20 @@ onMounted(() => {
         v-if="type === 'GROUP'"
         class="flex-1 w-70"
         :value="state.selectedValue"
-        :placeholder="t('permission.policy.detail.target.placeholder', { name: getTypeName() })"
+        :placeholder="t('permission.policy.detail.target.placeholder', { name: getTypeName(type, t) })"
         :internal="true"
         size="small"
         @change="targetChange" />
 
       <!-- Add button with authorization check -->
       <ButtonAuth
-        :code="addTextConfig[props.type]"
+        :code="getAddButtonConfig(props.type)"
         size="small"
         type="primary"
         class="ml-3"
         icon="icon-tianjia"
         :loading="state.saving"
-        @click="addSave" />
+        @click="saveTargets" />
     </div>
 
     <!-- Target list display section -->
@@ -315,7 +287,7 @@ onMounted(() => {
         <!-- Remove button for each target -->
         <div class="text-3 leading-3">
           <ButtonAuth
-            :code="cancelText[props.type]"
+            :code="getCancelButtonConfig(props.type)"
             size="small"
             type="text"
             icon="icon-quxiao"
@@ -327,7 +299,7 @@ onMounted(() => {
       <NoData
         v-if="state.dataSource.length === 0"
         class="h-full"
-        :text="t('permission.policy.detail.target.noData', { name: getTypeName() })" />
+        :text="t('permission.policy.detail.target.noData', { name: getTypeName(type, t) })" />
     </div>
 
     <!-- Pagination component -->

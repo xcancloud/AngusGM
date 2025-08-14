@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Form, FormItem, Radio, RadioGroup } from 'ant-design-vue';
 import { Input, Modal, notification, SelectDept, SelectGroup, SelectUser } from '@xcan-angus/vue-ui';
 import { auth } from '@/api';
-import { AuthFormType } from '../types';
+import { AuthFormState } from '../types';
 
 /**
  * Component props interface
@@ -41,12 +41,7 @@ const formRef = ref();
  * Component reactive state
  * Manages loading states, form data, and validation rules
  */
-const state = reactive<{
-  loading: boolean,
-  saving: boolean,
-  form: AuthFormType,
-  rules: Record<string, Array<any>>
-}>({
+const state = reactive<AuthFormState>({
   loading: false,
   saving: false,
   form: {

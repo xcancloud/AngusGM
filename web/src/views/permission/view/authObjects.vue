@@ -3,7 +3,11 @@ import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Icon, IconRefresh, Image, Input, Scroll } from '@xcan-angus/vue-ui';
 import { debounce } from 'throttle-debounce';
-import { duration, GM } from '@xcan-angus/infra';
+import { duration } from '@xcan-angus/infra';
+import { AuthorizationConfig, TargetDataType, TargetManagementState, TargetPanelProps } from './types';
+import { getEntityTypeName } from './utils';
+
+import { app } from '@/api';
 
 /**
  * Async component import for better performance
@@ -17,31 +21,21 @@ const AddMembers = defineAsyncComponent(() => import('./addMembers.vue'));
  * Defines the required and optional properties passed to this component,
  * including the entity type, application ID, and pre-selected target
  */
-interface Props {
-  type: 'USER' | 'DEPT' | 'GROUP',
-  appId: string,
-  selectedTargetId?: string
-}
+ type Props = TargetPanelProps
+
+const { t } = useI18n();
+const props = withDefaults(defineProps<Props>(), {});
 
 /**
- * Data Type Interface
- *
- * Defines the structure for target data items, supporting different
- * entity types with their specific properties
+ * Modal visibility state for adding new members
+ * Controls when the add members modal is displayed
  */
-interface DataType {
-  id: string;
-  userId?: string;
-  avatar?: string;
-  createdByName?: string;
-  userName?: string;
-  deptName?: string;
-  groupName?: string;
-  deptId?: string;
-  groupId?: string;
-  fullName?: string;
-  name?: string;
-}
+const addVisible = ref(false);
+/**
+ * Refresh counter for triggering data reloads
+ * Incremented to force component refresh when needed
+ */
+const refresh = ref(0);
 
 /**
  * Authorization Configuration Mapping
@@ -49,17 +43,11 @@ interface DataType {
  * Maps entity types to their corresponding authorization action codes,
  * enabling proper permission checking for different operations
  */
-const addAuthConfig = {
+const addAuthConfig: AuthorizationConfig = {
   USER: 'AuthorizeUserAdd',
   DEPT: 'AuthorizeDeptAdd',
   GROUP: 'AuthorizeGroupAdd'
 };
-
-/**
- * Modal visibility state for adding new members
- * Controls when the add members modal is displayed
- */
-const addVisible = ref(false);
 
 /**
  * Open Add Members Modal
@@ -70,28 +58,15 @@ const add = () => {
   addVisible.value = true;
 };
 
-const { t } = useI18n();
-const props = withDefaults(defineProps<Props>(), {});
-
 /**
  * Compute Entity Type Name
  *
  * Generates the localized name for the current entity type
  * to be used in search placeholders and other UI elements
  */
-const typeName = props.type === 'DEPT'
-  ? t('permission.check.dept')
-  : props.type === 'GROUP'
-    ? t('permission.check.group')
-    : t('permission.check.user');
+const typeName = getEntityTypeName(props.type, t);
 
 const emit = defineEmits<{(e: 'change', targetId: string): void }>();
-
-/**
- * Refresh counter for triggering data reloads
- * Incremented to force component refresh when needed
- */
-const refresh = ref(0);
 
 /**
  * Component State Management
@@ -99,16 +74,11 @@ const refresh = ref(0);
  * Centralized reactive state for managing component behavior,
  * data loading, and user interactions
  */
-const state = reactive<{
-  loading: boolean,
-  dataSource: DataType[],
-  selectedTargetId: string | undefined,
-  searchValue: string | undefined
-}>({
-  loading: false, // Data loading state
-  dataSource: [], // List data source
-  selectedTargetId: undefined, // Currently selected target ID
-  searchValue: undefined // Search input value
+const state = reactive<TargetManagementState>({
+  loading: false, // Loading state for data operations
+  dataSource: [], // Data source for the target list
+  searchValue: undefined, // Search input value for filtering
+  selectedTargetId: props.selectedTargetId // Currently selected target ID
 });
 
 /**
@@ -117,7 +87,7 @@ const state = reactive<{
  * Processes user selection of different targets and emits
  * the change event to parent components
  */
-const targetChange = (item: DataType) => {
+const targetChange = (item: TargetDataType) => {
   const id = props.type === 'USER'
     ? item.id
     : props.type === 'GROUP'
@@ -137,7 +107,7 @@ const getAction = computed(() => {
   if (!props.appId) {
     return undefined;
   }
-  return `${GM}/app/${props.appId}/auth/${props.type.toLocaleLowerCase()}`;
+  return app.getAppAuthUrl(props.appId, props.type);
 });
 
 /**
@@ -146,7 +116,7 @@ const getAction = computed(() => {
  * Processes the API response data and activates the first item
  * for better user experience
  */
-const loadData = (data: DataType[]) => {
+const loadData = (data: TargetDataType[]) => {
   state.dataSource = data;
   activeFirstItem();
 };

@@ -24,7 +24,16 @@ const route = useRoute();
  * Controls which detail section is displayed
  */
 const activeKey = ref('1');
-
+/**
+ * Flag to track if this is the first data load
+ * Used to show skeleton loading state only on initial load
+ */
+const firstLoad = ref(true);
+/**
+ * List of default policy IDs
+ * Tracks which policies are set as tenant default policies
+ */
+const defaultPolicies = ref<string[]>([]);
 /**
  * Component reactive state
  * Manages tab state, loading status, and policy detail data
@@ -46,15 +55,12 @@ const state = reactive<{
     createdDate: undefined,
     type: { value: undefined, message: undefined },
     enabled: false,
-    description: undefined
+    description: undefined,
+    global: false,
+    default0: false,
+    grantStage: undefined
   }
 });
-
-/**
- * Flag to track if this is the first data load
- * Used to show skeleton loading state only on initial load
- */
-const firstLoad = ref(true);
 
 /**
  * Load policy detail information
@@ -71,12 +77,6 @@ const load = async () => {
 
   state.detail = res.data || {};
 };
-
-/**
- * List of default policy IDs
- * Tracks which policies are set as tenant default policies
- */
-const defaultPolicies = ref<string[]>([]);
 
 /**
  * Load tenant default policies

@@ -6,6 +6,15 @@ import { ButtonAuth, IconRefresh, modal, notification, PureCard, Select, Table }
 import { appContext, GM } from '@xcan-angus/infra';
 
 import { auth } from '@/api';
+import { PaginationConfig, PolicyAdditionConfig, PolicyApiParams, PolicyRecordType, ViewState } from './types';
+import {
+  createDeptOrGroupPolicyColumns,
+  createUserPolicyColumns,
+  getEntityType,
+  getEntityTypeNameForDelete,
+  getTenantAuthTypeName,
+  handlePaginationChange
+} from './utils';
 
 /**
  * Async component imports for better performance
@@ -14,39 +23,7 @@ import { auth } from '@/api';
 const TargetPanel = defineAsyncComponent(() => import('./authObjects.vue'));
 const PolicyModal = defineAsyncComponent(() => import('@/components/PolicyModal/index.vue'));
 
-/**
- * Policy Record Type Definition
- *
- * Defines the structure for policy records displayed in the data table,
- * including identification, naming, and metadata information
- */
-interface PolicyRecordType {
-  id: string,
-  policyId: string,
-  name: string,
-  fullName: string,
-  createdDate: string,
-  description: string,
-}
-
 const { t } = useI18n();
-
-/**
- * Get Tenant Type Name for Display
- *
- * Constructs a human-readable string representing the tenant authorization type
- * by checking currentDefault and openAuth flags on the record
- */
-const getTenantAuthTypeName = (record: any) => {
-  const result: string[] = [];
-  if (record?.currentDefault) {
-    result.push(t('permission.view.tenant.defaultAuth'));
-  }
-  if (record?.openAuth) {
-    result.push(t('permission.view.tenant.openAuth'));
-  }
-  return result.join(',');
-};
 
 /**
  * Component State Management
@@ -54,12 +31,7 @@ const getTenantAuthTypeName = (record: any) => {
  * Centralized reactive state for managing component behavior, data loading,
  * and user interactions across different entity types
  */
-const state = reactive<{
-  tab: 'USER' | 'DEPT' | 'GROUP',
-  targetId: string | undefined,
-  loading: boolean,
-  dataSource: PolicyRecordType[]
-}>({
+const state = reactive<ViewState>({
   tab: 'USER', // Current active tab for entity type
   targetId: undefined, // Currently selected authorization target ID
   loading: false, // Loading state for policy table data
@@ -73,6 +45,11 @@ const state = reactive<{
 const userRef = ref();
 const deptRef = ref();
 const groupRef = ref();
+/**
+ * Modal visibility state for adding policies
+ * Controls when the policy addition modal is displayed
+ */
+const addVisible = ref();
 
 /**
  * Policy Addition Configuration Mapping
@@ -80,7 +57,7 @@ const groupRef = ref();
  * Maps entity types to their corresponding API functions for adding policies,
  * enabling dynamic policy assignment based on selected entity type
  */
-const addPolicyConfig = {
+const addPolicyConfig: PolicyAdditionConfig = {
   USER: auth.addUserPolicy,
   DEPT: auth.addPolicyByDept,
   GROUP: auth.addGroupPolicy
@@ -98,11 +75,11 @@ const appId = ref();
  * Manages table pagination state including total count, current page,
  * and page size for efficient data loading and display
  */
-const pagination = reactive({
+const pagination: PaginationConfig = {
   total: 0,
   current: 1,
   pageSize: 10
-});
+};
 
 /**
  * Load Policy Data
@@ -116,11 +93,7 @@ const load = async () => {
     return;
   }
 
-  const params: {
-    pageNo: number;
-    pageSize: number;
-    appId: string;
-  } = {
+  const params: PolicyApiParams = {
     pageNo: pagination.current,
     pageSize: pagination.pageSize,
     appId: appId.value
@@ -158,38 +131,8 @@ const load = async () => {
  * page number or page size
  */
 const listChange = (page: { current: number, pageSize: number }) => {
-  pagination.current = page.current;
-  pagination.pageSize = page.pageSize;
-  load();
+  handlePaginationChange(page, pagination, load);
 };
-
-/**
- * Watch Tab Changes
- *
- * Monitors tab switching to reset target selection and data,
- * then activates the first item in the new target panel
- */
-watch(() => state.tab, () => {
-  state.targetId = undefined;
-  state.dataSource = [];
-
-  // Activate first item in new target panel after tab change
-  if (state.tab === 'USER') {
-    setTimeout(() => {
-      userRef.value && userRef.value.activeFirstItem();
-    });
-  }
-  if (state.tab === 'DEPT') {
-    setTimeout(() => {
-      deptRef.value && deptRef.value.activeFirstItem();
-    });
-  }
-  if (state.tab === 'GROUP') {
-    setTimeout(() => {
-      groupRef.value && groupRef.value.activeFirstItem();
-    });
-  }
-});
 
 /**
  * Handle Target Selection Change
@@ -211,11 +154,7 @@ const targetChange = (targetId: string, type: string) => {
  * Handles different entity types and updates the UI accordingly.
  */
 const deleteTargetPolicy = (item: PolicyRecordType) => {
-  const typeName = state.tab === 'USER'
-    ? t('permission.check.user')
-    : state.tab === 'GROUP'
-      ? t('permission.check.dept')
-      : t('permission.check.group');
+  const typeName = getEntityTypeNameForDelete(state.tab, t);
 
   modal.confirm({
     centered: true,
@@ -267,23 +206,13 @@ const changeAppId = (value: any) => {
 };
 
 /**
- * Modal visibility state for adding policies
- * Controls when the policy addition modal is displayed
- */
-const addVisible = ref();
-
-/**
  * Compute Entity Type for Policy Modal
  *
  * Generates the appropriate entity type string for the policy modal
  * based on the currently selected tab
  */
 const getType = computed(() => {
-  return state.tab === 'USER'
-    ? 'User'
-    : state.tab === 'DEPT'
-      ? 'Dept'
-      : 'Group';
+  return getEntityType(state.tab);
 });
 
 /**
@@ -315,110 +244,37 @@ const addPolicy = async (policyIds: string[]) => {
   }
 };
 
-/**
- * Column Configuration for User Policy Table
- *
- * Defines the structure and display properties for the main policy table,
- * including column widths, alignment, and internationalized titles
- */
-const userPolicyColumns = [
-  {
-    key: 'id',
-    title: t('permission.columns.assocPolicies.id'),
-    dataIndex: 'id',
-    width: '13%'
-  },
-  {
-    key: 'name',
-    title: t('permission.columns.assocPolicies.name'),
-    dataIndex: 'name',
-    width: '20%'
-  },
-  {
-    key: 'code',
-    title: t('permission.columns.assocPolicies.code'),
-    dataIndex: 'code'
-  },
-  {
-    key: 'orgType',
-    title: t('permission.columns.assocPolicies.source'),
-    dataIndex: 'orgType',
-    width: '20%'
-  },
-  {
-    key: 'authByName',
-    title: t('permission.columns.assocPolicies.authByName'),
-    dataIndex: 'authByName',
-    width: '12%'
-  },
-  {
-    key: 'authDate',
-    title: t('permission.columns.assocPolicies.authDate'),
-    dataIndex: 'authDate',
-    width: '12%'
-  },
-  {
-    key: 'action',
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: 82,
-    align: 'center' as const
-  }
-];
+// Create table columns using utility functions
+const userPolicyColumns = createUserPolicyColumns(t);
+const deptOrGroupPolicyColumns = createDeptOrGroupPolicyColumns(t);
 
 /**
- * Column Configuration for Department/Group Policy Table
+ * Watch Tab Changes
  *
- * Defines the structure and display properties for department and group tables,
- * with optimized column widths and custom cell styling
+ * Monitors tab switching to reset target selection and data,
+ * then activates the first item in the new target panel
  */
-const deptOrGroupPolicyColumns = [
-  {
-    key: 'id',
-    title: t('permission.columns.assocPolicies.id'),
-    dataIndex: 'id',
-    width: '16%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'name',
-    title: t('permission.columns.assocPolicies.name'),
-    dataIndex: 'name',
-    width: '20%'
-  },
-  {
-    key: 'code',
-    title: t('permission.columns.assocPolicies.code'),
-    dataIndex: 'code'
-  },
-  {
-    key: 'authByName',
-    title: t('permission.columns.assocPolicies.authByName'),
-    dataIndex: 'authByName',
-    width: '15%'
-  },
-  {
-    key: 'authDate',
-    title: t('permission.columns.assocPolicies.authDate'),
-    dataIndex: 'authDate',
-    width: '16%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    key: 'action',
-    title: t('common.actions.operation'),
-    dataIndex: 'action',
-    width: 82,
-    align: 'center' as const,
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
+watch(() => state.tab, () => {
+  state.targetId = undefined;
+  state.dataSource = [];
+
+  // Activate first item in new target panel after tab change
+  if (state.tab === 'USER') {
+    setTimeout(() => {
+      userRef.value && userRef.value.activeFirstItem();
+    });
   }
-];
+  if (state.tab === 'DEPT') {
+    setTimeout(() => {
+      deptRef.value && deptRef.value.activeFirstItem();
+    });
+  }
+  if (state.tab === 'GROUP') {
+    setTimeout(() => {
+      groupRef.value && groupRef.value.activeFirstItem();
+    });
+  }
+});
 </script>
 
 <template>
@@ -523,8 +379,8 @@ const deptOrGroupPolicyColumns = [
               :title="`${text?.message}(${record.orgName})`">
               {{ text?.message }}({{ record.orgName }})
             </span>
-            <span v-else :title="getTenantAuthTypeName(record)">
-              {{ getTenantAuthTypeName(record) }}
+            <span v-else :title="getTenantAuthTypeName(record, t)">
+              {{ getTenantAuthTypeName(record, t) }}
             </span>
           </template>
 

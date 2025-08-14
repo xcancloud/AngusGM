@@ -14,7 +14,7 @@ export interface FormType {
 
 /**
  * Form data structure for authorization modal
- * @interface FormType
+ * @interface AuthFormType
  * @property {string} id - Policy identifier
  * @property {string} name - Policy name
  * @property {string} appId - Application identifier
@@ -44,14 +44,16 @@ export interface ApisType {
  */
 export interface DataRecordType {
   id: string | number | undefined,
-  showName: string,
+  showName?: string,
+  name: string,
   pid: string | number | undefined,
   type: { value: 'BUTTON' | 'MENU' | 'PANEL' | undefined, message: string | undefined },
   apis: ApisType[],
   auth?: boolean,
   children: DataRecordType[],
   disabled?: boolean,
-  disableCheckbox?: boolean
+  disableCheckbox?: boolean,
+  authCtrl?: boolean
 }
 
 /**
@@ -123,4 +125,66 @@ export interface AuthObjectDataType {
   groupId?: string,
   fullName?: string,
   name: string
+}
+
+/**
+ * Component state interface for policy forms
+ */
+export interface PolicyFormState {
+  saving: boolean,
+  globalAppId: string,
+  globalAppName: string,
+  form: FormType,
+  checkedNodes: DataRecordType[],
+  dataSource: DataRecordType[],
+  showFuncsObj: { [key: string]: Array<ApisType> }
+}
+
+/**
+ * Component state interface for authorization forms
+ */
+export interface AuthFormState {
+  loading: boolean,
+  saving: boolean,
+  form: AuthFormType,
+  rules: Record<string, Array<any>>
+}
+
+/**
+ * Component state interface for target management
+ */
+export interface TargetManagementState {
+  loading: boolean,
+  saving: boolean,
+  selectedValue: string | undefined,
+  dataSource: AuthObjectDataType[]
+}
+
+/**
+ * Pagination configuration interface
+ */
+export interface PaginationConfig {
+  total: number,
+  current: number,
+  pageSize: number,
+  showLessItems?: boolean,
+  showSizeChanger?: boolean,
+  size?: 'default' | 'small',
+  pageSizeOptions?: string[],
+  showTotal?: (total: number) => string
+}
+
+/**
+ * Table column configuration interface
+ */
+export interface TableColumn {
+  key: string,
+  title: string,
+  dataIndex: string,
+  width?: string | number,
+  customCell?: () => any,
+  customRender?: (params: any) => any,
+  groupName?: string,
+  hide?: boolean,
+  align?: 'left' | 'center' | 'right'
 }
