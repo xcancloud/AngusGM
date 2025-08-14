@@ -166,17 +166,17 @@ const starGoods = async (goods: Goods) => {
 /**
  * <p>Open pricing page in a new tab.</p>
  */
-const topay = (purchaseUrl) => {
+const toPay = (purchaseUrl) => {
   // window.parent.postMessage({ e: 'purchase', value: purchaseUrl }, '*');
   // window.parent.location.href = purchaseUrl;
   window.open(purchaseUrl, '_blank');
 };
 
 onMounted(async () => {
-  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+  const host = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   hotList.value[0].purchaseUrl = host + '/purchase';
-  loadGoods();
-  loadAngus();
+  await loadGoods();
+  await loadAngus();
 });
 </script>
 <template>
@@ -205,7 +205,7 @@ onMounted(async () => {
                 v-if="!item.purchase"
                 type="primary"
                 class="mr-3"
-                @click="topay(item.purchaseUrl)">
+                @click="toPay(item.purchaseUrl)">
                 {{ t('cloud.messages.buyNow') }}
               </Button>
               <ButtonAuth

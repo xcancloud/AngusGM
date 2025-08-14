@@ -45,7 +45,7 @@ const success = async (jsonData): Promise<void> => {
 };
 
 // Lifecycle hook - initialize authentication URL on component mount
-onMounted(async () => {
+onMounted(() => {
   const host = DomainManager.getInstance().getApiDomain(AppOrServiceRoute.gm);
   authUrl.value = host + '/system/auth';
 });

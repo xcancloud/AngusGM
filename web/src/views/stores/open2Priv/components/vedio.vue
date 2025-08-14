@@ -75,7 +75,7 @@ watch(() => visible.value, newValue => {
       class="h-full">
       <source :src="videoSrc">
     </video>
-    
+
     <!-- Play button overlay -->
     <div class="absolute w-full h-full top-0 left-0 z-9 bg-black-mask">
       <Icon
@@ -83,7 +83,7 @@ watch(() => visible.value, newValue => {
         class="text-white my-0 mx-auto text-10 mt-8 cursor-pointer"
         @click="playVideo" />
     </div>
-    
+
     <!-- Video modal for full-screen playback -->
     <Modal
       v-model:visible="visible"

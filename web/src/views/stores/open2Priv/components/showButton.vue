@@ -42,8 +42,8 @@ const handleToPrice = () => {
  * Navigate to private cloud deployment page
  * Sends message to parent window to redirect to deployment page
  */
-const toPriCloud = async () => {
-  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+const toPriCloud = () => {
+  const host = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.parent.postMessage({ e: 'purchase', value: host + '/deployment' }, '*');
 };
 

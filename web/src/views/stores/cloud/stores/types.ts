@@ -29,7 +29,6 @@ export interface Goods {
 const goodsPriTypes = ['DATACENTER', 'ENTERPRISE', 'COMMUNITY'];
 const goodsCloudTypes = ['CLOUD_SERVICE'];
 
-
 export const isPriGoods = (goods: Goods): boolean => {
   return (goods.applyEditionTypes || []).some(i => goodsPriTypes.includes(i.value));
 };

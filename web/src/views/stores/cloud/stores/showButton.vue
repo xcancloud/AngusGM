@@ -32,15 +32,15 @@ const topay = () => {
   // window.parent.location.href = props.goods.pricingUrl;
 };
 
-const toDownloadApply = async () => {
-  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+const toDownloadApply = () => {
+  const host = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.open(host + '/deployment', '_blank');
 };
 
 const toDownload = async () => {
   if (props.goods.type.value === 'PLUGIN' || props.goods.type.value === 'PLUGIN_APPLICATION') {
     const installType = props.goods.applyEditionTypes[0].value;
-    downloadInstallEdition(installType);
+    await downloadInstallEdition(installType);
     return;
   }
   if (props.goods.type.value === 'APPLICATION') {

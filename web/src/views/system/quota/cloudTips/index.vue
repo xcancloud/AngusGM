@@ -7,9 +7,9 @@ import { AppOrServiceRoute, DomainManager } from '@xcan-angus/infra';
 const { t } = useI18n();
 
 const href = ref();
-onMounted(async () => {
+onMounted(() => {
   const host = DomainManager.getInstance().getApiDomain(AppOrServiceRoute.www);
-  href.value = host + '/workorders?s=quota';
+  href.value = host + '/ticket?s=quota';
 });
 </script>
 <template>

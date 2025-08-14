@@ -36,7 +36,7 @@ export interface PrivateGoods {
   id: string;
   /** Reference to the original goods in the store */
   goodsId: string;
-  
+
   // Goods classification and metadata
   /** Edition type (e.g., Standard, Professional, Enterprise) */
   editionType: EnumType;
@@ -54,7 +54,7 @@ export interface PrivateGoods {
   tags: string[];
   /** Description or introduction text */
   introduction: string;
-  
+
   // Licensing and purchase information
   /** Whether the goods requires payment */
   charge: boolean;
@@ -66,7 +66,7 @@ export interface PrivateGoods {
   purchaseDate: string;
   /** Entity that issued the license */
   issuer: string;
-  
+
   // Upgrade path information
   /** ID of the goods this is upgrading from */
   upgradeFromGoodsId: string;
@@ -74,7 +74,7 @@ export interface PrivateGoods {
   upgradeFromCode: string;
   /** Version being upgraded from */
   upgradeFromVersion: string;
-  
+
   // Installation details
   /** Server hardware information for license validation */
   servers: Servers;
@@ -86,13 +86,13 @@ export interface PrivateGoods {
   installMessage: string;
   /** Whether the goods is currently online/active */
   online: boolean;
-  
+
   // Tenant and ownership
   /** Tenant identifier */
   tenantId: string;
   /** Tenant name */
   tenantName: string;
-  
+
   // Audit fields
   /** User ID who created the record */
   createdBy: string;
@@ -100,7 +100,7 @@ export interface PrivateGoods {
   createdByName: string;
   /** Creation timestamp */
   createdDate: string;
-  
+
   // Operational flags
   /** Whether the goods can be uninstalled */
   uninstallable: boolean;

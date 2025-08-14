@@ -204,10 +204,10 @@ const topay = (purchaseUrl: string) => {
 
 // Component lifecycle - initialize data on mount
 onMounted(async () => {
-  const purchaseUrl = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+  const purchaseUrl = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   hotList.value[0].purchaseUrl = purchaseUrl + '/purchase';
-  loadGoods();
-  loadAngus();
+  await loadGoods();
+  await loadAngus();
 });
 </script>
 

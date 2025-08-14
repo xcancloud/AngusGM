@@ -73,7 +73,7 @@ const handleRefresh = () => {
 const downloadLicense = async (licenseNo: string): Promise<void> => {
   const token = cookieUtils.get('access_token');
   const url = routerUtils.getGMApiUrl(`/store/license/${licenseNo}/download?access_token=${token}`);
-  download(url);
+  await download(url);
 };
 
 const columns = [

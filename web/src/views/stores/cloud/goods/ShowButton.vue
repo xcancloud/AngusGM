@@ -34,8 +34,8 @@ const downLoading = ref(false);
  * <p>Open official deployment page in a new tab.</p>
  * <p>Fix: await domain resolving to avoid opening url with a Promise.</p>
  */
-const toDownloadApply = async () => {
-  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+const toDownloadApply = () => {
+  const host = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.open(host + '/deployment', '_blank');
 };
 
@@ -62,8 +62,8 @@ const downloadInstallEdition = async (installType: string = downloadEdition.valu
 /**
  * <p>Go to deployment page on the official website.</p>
  */
-const toDeployUrl = async () => {
-  const host = await DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
+const toDeployUrl = () => {
+  const host = DomainManager.getInstance().getAppDomain(AppOrServiceRoute.www);
   window.open(`${host}/deployment`, '_blank');
 };
 </script>
