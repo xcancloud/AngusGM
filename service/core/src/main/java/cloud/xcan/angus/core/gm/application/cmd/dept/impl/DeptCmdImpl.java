@@ -44,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of department command operations for managing organizational departments.
- * 
+ *
  * <p>This class provides comprehensive functionality for department management including:</p>
  * <ul>
  *   <li>Creating, updating, and deleting departments</li>
@@ -53,7 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Managing department quotas and level constraints</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper organizational structure management
  * with hierarchical relationships and data consistency.</p>
  */
@@ -78,7 +78,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Creates multiple departments with comprehensive validation and setup.
-   * 
+   *
    * <p>This method performs department creation including:</p>
    * <ul>
    *   <li>Validating department code uniqueness</li>
@@ -88,7 +88,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
    *   <li>Creating department tags</li>
    *   <li>Recording creation audit logs</li>
    * </ul>
-   * 
+   *
    * @param dept List of department entities to create
    * @return List of created department identifiers with associated data
    */
@@ -140,7 +140,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Updates multiple departments with comprehensive validation and hierarchy management.
-   * 
+   *
    * <p>This method performs department updates including:</p>
    * <ul>
    *   <li>Validating department code uniqueness</li>
@@ -150,7 +150,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
    *   <li>Managing department tags</li>
    *   <li>Recording update audit logs</li>
    * </ul>
-   * 
+   *
    * @param dept List of department entities to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -205,7 +205,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
         }
 
         // Record update audit log
-        operationLogCmd.addAll(DEPT, dept, UPDATED);
+        operationLogCmd.addAll(DEPT, deptDb, UPDATED);
         return null;
       }
     }.execute();
@@ -213,7 +213,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Replaces departments by creating new ones and updating existing ones.
-   * 
+   *
    * <p>This method handles both creation and update scenarios including:</p>
    * <ul>
    *   <li>Creating new departments if no ID is provided</li>
@@ -221,7 +221,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
    *   <li>Managing department hierarchies and relationships</li>
    *   <li>Handling department tags and audit logs</li>
    * </ul>
-   * 
+   *
    * @param dept List of department entities to replace
    * @return List of department identifiers with associated data
    */
@@ -306,7 +306,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Deletes departments and cleans up related data.
-   * 
+   *
    * <p>This method performs comprehensive department deletion including:</p>
    * <ul>
    *   <li>Deleting current and sub-departments</li>
@@ -315,7 +315,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
    *   <li>Removing department authorization policies</li>
    *   <li>Recording deletion audit logs</li>
    * </ul>
-   * 
+   *
    * @param ids Set of department identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -360,10 +360,10 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Updates department levels and parent relationships for moved departments.
-   * 
+   *
    * <p>This method handles department hierarchy updates when departments are moved,
    * ensuring proper level calculations and parent relationship maintenance.</p>
-   * 
+   *
    * @param dept List of departments to update
    * @param deptDbMap Map of existing departments
    * @param parentDeptDbMap Map of parent departments
@@ -415,7 +415,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Calculates department level based on parent department.
-   * 
+   *
    * @param dept Department entity
    * @param parentDeptDbMap Map of parent departments
    * @return Calculated department level
@@ -427,7 +427,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Assembles parent-like ID for department hierarchy tracking.
-   * 
+   *
    * @param pid Parent department identifier
    * @param parentDeptDbMap Map of parent departments
    * @return Assembled parent-like ID string
@@ -443,7 +443,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Assembles parent-like ID for single parent department.
-   * 
+   *
    * @param pid Parent department identifier
    * @param parentDeptDb Parent department entity
    * @return Assembled parent-like ID string
@@ -458,7 +458,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
   /**
    * Builds organization tag targets for departments.
-   * 
+   *
    * @param departments List of departments
    * @return List of organization tag targets
    */
