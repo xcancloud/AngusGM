@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h, onMounted, ref } from 'vue';
+import { computed, h, onMounted, reactive } from 'vue';
 import { Badge, Spin } from 'ant-design-vue';
 import { Icon, IconRefresh, Image, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
 import { PageQuery, SearchCriteria, app } from '@xcan-angus/infra';
@@ -7,188 +7,122 @@ import { LoadingOutlined } from '@ant-design/icons-vue';
 
 import { useI18n } from 'vue-i18n';
 import { online } from '@/api';
-
-type Online = {
-  id: bigint;
-  userId: string;
-  fullName: string;
-  deviceId: string;
-  userAgent: string;
-  remoteAddress: string;
-  online: boolean;
-  onlineDate: string;
-  offlineDate: string;
-  loading: boolean;
-}
+import {
+  OnlineUser,
+  OnlineState,
+  PaginationConfig,
+  TableChangeParams
+} from './types';
+import {
+  createOnlineUserColumns,
+  createOnlineUserSearchOptions,
+  createPaginationConfig,
+  processOnlineUserList,
+  createLogoutParams,
+  getOnlineStatusColor,
+  getOnlineStatusText,
+  updatePaginationParams,
+  updateSortingParams,
+  resetPagination
+} from './utils';
 
 const { t } = useI18n();
 
-const params = ref<PageQuery>({
-  pageNo: 1,
-  pageSize: 10,
-  filters: [],
-  orderBy: 'id',
-  orderSort: PageQuery.OrderSort.Desc,
-  fullTextSearch: true
+// Reactive state management
+const state = reactive<OnlineState>({
+  params: {
+    pageNo: 1,
+    pageSize: 10,
+    filters: [],
+    orderBy: 'id',
+    orderSort: PageQuery.OrderSort.Desc,
+    fullTextSearch: true
+  },
+  total: 0,
+  onlineList: [],
+  loading: false,
+  disabled: false
 });
-const total = ref(0);
-const onlineList = ref<Online[]>([]);
-const loading = ref(false);
-const disabled = ref(false);
-const getList = async function () {
-  if (loading.value) {
+
+/**
+ * Load online user list from API
+ */
+const getList = async (): Promise<void> => {
+  if (state.loading) {
     return;
   }
 
-  loading.value = true;
-  const [error, { data = { list: [], total: 0 } }] = await online.getOnlineUserList(params.value);
-  loading.value = false;
-  if (error) {
-    return;
-  }
+  state.loading = true;
+  try {
+    const [error, { data = { list: [], total: 0 } }] = await online.getOnlineUserList(state.params);
+    if (error) {
+      return;
+    }
 
-  onlineList.value = data?.list.map(item => ({ ...item, loading: false }));
-  total.value = +data.total;
+    state.onlineList = processOnlineUserList(data?.list);
+    state.total = +data.total;
+  } finally {
+    state.loading = false;
+  }
 };
 
-const handleLogOut = async function (item: Online) {
+/**
+ * Handle user logout
+ * @param item - Online user to logout
+ */
+const handleLogOut = async (item: OnlineUser): Promise<void> => {
   item.loading = true;
-  await online.offlineUser({ receiveObjectIds: [item.userId], receiveObjectType: 'USER', broadcast: false });
-  item.loading = false;
-  disabled.value = true;
+  try {
+    const logoutParams = createLogoutParams(item.userId);
+    await online.offlineUser(logoutParams);
+  } finally {
+    item.loading = false;
+  }
+
+  state.disabled = true;
   await getList();
-  disabled.value = false;
+  state.disabled = false;
 };
 
-const tableChange = async (_pagination, _filters, sorter: {
-  orderBy: string;
-  orderSort: PageQuery.OrderSort
-}) => {
-  const { current, pageSize } = _pagination;
-  params.value.pageNo = current;
-  params.value.pageSize = pageSize;
-  params.value.orderBy = sorter.orderBy;
-  params.value.orderSort = sorter.orderSort;
+/**
+ * Handle table pagination, filtering, and sorting changes
+ * @param _pagination - Pagination object
+ * @param _filters - Filter criteria
+ * @param sorter - Sorting information
+ */
+const tableChange = async (_pagination: any, _filters: any, sorter: TableChangeParams['sorter']): Promise<void> => {
+  updatePaginationParams(state.params, _pagination);
+  updateSortingParams(state.params, sorter);
 
-  disabled.value = true;
+  state.disabled = true;
   await getList();
-  disabled.value = false;
+  state.disabled = false;
 };
 
-const pagination = computed(() => {
-  return {
-    current: params.value.pageNo,
-    pageSize: params.value.pageSize,
-    total: total.value
-  };
+/**
+ * Handle search criteria changes
+ * @param data - Search criteria array
+ */
+const searchChange = async (data: SearchCriteria[]): Promise<void> => {
+  resetPagination(state.params);
+  state.params.filters = data;
+  state.disabled = true;
+  await getList();
+  state.disabled = false;
+};
+
+// Computed pagination configuration
+const pagination = computed<PaginationConfig>(() => {
+  return createPaginationConfig(state.params.pageNo, state.params.pageSize, state.total);
 });
 
-const searchChange = async (data: { key: string; value: string; op: SearchCriteria.OpEnum; }[]) => {
-  params.value.pageNo = 1;
-  params.value.filters = data;
-  disabled.value = true;
-  await getList();
-  disabled.value = false;
-};
+// Create table columns using utility function
+const columns = computed(() => createOnlineUserColumns(t));
 
-onMounted(() => {
-  getList();
-});
+// Create search options using utility function
+const searchOptions = computed(() => createOnlineUserSearchOptions(t));
 
-const searchOptions = [
-  {
-    placeholder: t('onlineUser.placeholder.searchNameIp'),
-    valueKey: 'fullName',
-    type: 'input',
-    op: 'EQUAL',
-    allowClear: true
-  },
-  {
-    placeholder: t('onlineUser.placeholder.searchDeviceId'),
-    valueKey: 'deviceId',
-    type: 'input',
-    op: 'EQUAL',
-    allowClear: true
-  },
-  {
-    valueKey: 'onlineDate',
-    type: 'date-range',
-    placeholder: [t('onlineUser.placeholder.onlineTimeFrom'), t('onlineUser.placeholder.onlineTimeTo')],
-    allowClear: true
-  },
-  {
-    valueKey: 'offlineDate',
-    type: 'date-range',
-    placeholder: [t('onlineUser.placeholder.offlineTimeFrom'), t('onlineUser.placeholder.offlineTimeTo')],
-    allowClear: true
-  }
-];
-
-const columns = [
-  {
-    title: t('onlineUser.columns.id'),
-    dataIndex: 'id',
-    hide: true
-  },
-  {
-    title: t('onlineUser.columns.user'),
-    dataIndex: 'fullName',
-    width: '10%',
-    sorter: true
-  },
-  {
-    title: t('onlineUser.columns.onlineStatus'),
-    dataIndex: 'online',
-    width: '8%'
-  },
-  {
-    title: t('onlineUser.columns.upTime'),
-    dataIndex: 'onlineDate',
-    key: 'onlineDate',
-    width: '12%',
-    customRender: ({ text }) => text || '--',
-    sorter: {
-      compare: (a, b) => a.onlineDate > b.onlineDate
-    }
-  },
-  {
-    title: t('onlineUser.columns.offlineTime'),
-    dataIndex: 'offlineDate',
-    key: 'offlineDate',
-    width: '12%',
-    customRender: ({ text }) => text || '--',
-    sorter: {
-      compare: (a, b) => a.offlineDate > b.offlineDate
-    }
-  },
-  {
-    title: t('onlineUser.columns.terminalEquipment'),
-    dataIndex: 'userAgent',
-    width: '42%',
-    groupName: 'userAgent',
-    customRender: ({ text }) => text || '--'
-  },
-  {
-    title: t('onlineUser.columns.deviceId'),
-    dataIndex: 'deviceId',
-    width: '42%',
-    hide: true,
-    groupName: 'userAgent',
-    customRender: ({ text }) => text || '--'
-  },
-  {
-    title: t('onlineUser.columns.ip'),
-    dataIndex: 'remoteAddress',
-    width: '8%'
-  },
-  {
-    title: t('onlineUser.columns.logOut'),
-    dataIndex: 'option',
-    width: '8%',
-    align: 'center'
-  }
-];
-
+// Loading indicator for logout operation
 const indicator = h(LoadingOutlined, {
   style: {
     fontSize: '24px'
@@ -196,39 +130,60 @@ const indicator = h(LoadingOutlined, {
   spin: true
 });
 
+// Lifecycle hook - initialize component on mount
+onMounted(() => {
+  getList();
+});
 </script>
+
 <template>
   <PureCard class="min-h-full p-3.5">
+    <!-- Search and filter controls -->
     <div class="flex items-center justify-between mb-2">
+      <!-- Search panel for filtering users -->
       <SearchPanel
         class="flex-1"
         :options="searchOptions"
         @change="searchChange" />
+
+      <!-- Refresh button -->
       <IconRefresh
-        :loading="loading"
-        :disabled="disabled"
+        :loading="state.loading"
+        :disabled="state.disabled"
         @click="getList" />
     </div>
+
+    <!-- Online users table -->
     <Table
       :columns="columns"
-      :dataSource="onlineList"
+      :dataSource="state.onlineList"
       :pagination="pagination"
-      :loading="loading"
+      :loading="state.loading"
       rowKey="id"
+      :noDataSize="'small'"
+      :noDataText="t('common.messages.noData')"
       @change="tableChange">
-      <template #bodyCell="{column,text,record}">
+      <!-- Custom cell rendering -->
+      <template #bodyCell="{ column, text, record }">
+        <!-- User name column with avatar -->
         <template v-if="column.dataIndex === 'fullName'">
           <div class="inline-flex items-center truncate">
             <Image
               type="avatar"
               class="w-6 rounded-full mr-1"
               :src="record.avatar" />
-            <span class="flex-1 truncate" :tite="record.fullName">{{ record.fullName }}</span>
+            <span class="flex-1 truncate" :title="record.fullName">{{ record.fullName }}</span>
           </div>
         </template>
+
+        <!-- Online status column with colored badge -->
         <template v-if="column.dataIndex === 'online'">
-          <Badge :color="text?'rgba(82,196,26,1)':'rgba(217, 217, 217,1)'" :text="text?t('onlineUser.messages.online'): t('onlineUser.messages.offline')" />
+          <Badge
+            :color="getOnlineStatusColor(text)"
+            :text="getOnlineStatusText(text, t)" />
         </template>
+
+        <!-- Logout action column -->
         <template v-if="column.dataIndex === 'option' && app.show('SignOut')">
           <template v-if="record.loading">
             <Spin :indicator="indicator" />
