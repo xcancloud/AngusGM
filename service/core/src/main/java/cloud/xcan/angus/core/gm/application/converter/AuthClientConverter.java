@@ -76,7 +76,7 @@ public class AuthClientConverter {
       if (tokenName == null) {
         throw new IllegalArgumentException("Token name cannot be null");
       }
-      return format(SYS_TOKEN_CLIENT_ID_FMT, principal.getTenantId(), tokenName.trim());
+      return format(SYS_TOKEN_CLIENT_ID_FMT, principal.getTenantId(), tokenName.trim().hashCode());
     }
     throw new IllegalStateException(format("Generate the clientId based on %s is not supported",
         source.getValue()));
