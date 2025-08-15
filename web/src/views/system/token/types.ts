@@ -63,3 +63,62 @@ export interface ColumnsProps {
   localesCode: string;
   width?: string | number;
 }
+
+/**
+ * Component state interface for token management
+ */
+export interface TokenState {
+  loading: boolean;
+  list: Token[];
+}
+
+/**
+ * Form data interface for token creation
+ */
+export interface TokenFormData {
+  resources: Array<GrantData>;
+  name?: string;
+  expiredDate?: string;
+  authType: string;
+}
+
+/**
+ * Modal data interface for token detail view
+ */
+export interface TokenModalData {
+  source: Array<Service>;
+  visible: boolean;
+  authType: string;
+}
+
+/**
+ * Service selection data interface
+ */
+export interface ServiceSelectionData {
+  serviceCode?: string;
+  serviceName?: string;
+  source: Record<string, any>;
+}
+
+/**
+ * Component props interface for select API component
+ */
+export interface SelectApiProps {
+  disabled: boolean;
+}
+
+/**
+ * Component props interface for select ACL component
+ */
+export interface SelectAclProps {
+  disabled: boolean;
+}
+
+/**
+ * Pagination configuration interface
+ */
+export interface PaginationConfig {
+  current: number;
+  pageSize: number;
+  total: number;
+}

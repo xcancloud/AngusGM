@@ -9,7 +9,8 @@ import {
 import { app, appContext, EnumMessage, ResourceAuthType, ResourceAclType, enumUtils } from '@xcan-angus/infra';
 
 import { setting, systemToken } from '@/api';
-import { GrantData, Service, Token, ColumnsProps } from './types';
+import { GrantData, Token, TokenState, TokenFormData, TokenModalData } from './types';
+import { createTokenTableColumns, getTokenExpirationColor, getTokenExpirationText } from './utils';
 
 import SelectApis from '@/views/system/token/selectApi/index.vue';
 import SelectAcls from '@/views/system/token/selectAcl/index.vue';
@@ -23,8 +24,9 @@ const selectApisRef = ref();
 const selectAclsRef = ref();
 
 // Table data state
-const tableData = reactive({
-  list: [] as Token[]
+const tableData = reactive<TokenState>({
+  list: [],
+  loading: false
 });
 
 // Computed properties
@@ -52,14 +54,14 @@ const changeAuthType = (e: any) => {
 };
 
 // Modal state management
-const modalData: { source: Array<Service>, visible: boolean, authType: string } = reactive({
+const modalData: TokenModalData = reactive({
   source: [],
   visible: false,
   authType: 'API'
 });
 
 // Form data state
-const formValue: { resources: Array<GrantData>, name?: string, expiredDate?: string, authType: string } = reactive({
+const formValue: TokenFormData = reactive({
   expiredDate: undefined,
   resources: [],
   name: undefined,
@@ -200,13 +202,6 @@ const getResourceAclType = async () => {
   ResourceAclTypeOpt.value = enumUtils.enumToMessages(ResourceAclType);
 };
 
-/**
- * Check if token is expired
- */
-const getIsExpired = (item: Token): boolean => {
-  return new Date(item.expiredDate) < new Date();
-};
-
 // Token quota management
 const tokenQuota = ref(0);
 
@@ -248,59 +243,8 @@ const deleteToken = async (id: string) => {
   notification.success(t('systemToken.messages.deleteSuccess'));
 };
 
-// Table column definitions
-const _columns: ColumnsProps[] = [
-  {
-    key: 'name',
-    title: t('systemToken.columns.name'),
-    dataIndex: 'name',
-    localesCode: 'systemToken.columns.name'
-  },
-  {
-    key: 'authType',
-    title: t('systemToken.columns.authType'),
-    dataIndex: 'authType',
-    localesCode: 'systemToken.columns.authType'
-  },
-  {
-    key: 'expiredDate',
-    title: t('systemToken.columns.expiredDate'),
-    dataIndex: 'expiredDate',
-    localesCode: 'systemToken.columns.expiredDate'
-  },
-  {
-    key: 'token',
-    title: t('systemToken.columns.token'),
-    dataIndex: 'token',
-    localesCode: 'systemToken.columns.token',
-    width: '550px'
-  },
-  {
-    key: 'expired',
-    title: t('systemToken.columns.expired'),
-    dataIndex: 'expired',
-    localesCode: 'systemToken.columns.expired'
-  },
-  {
-    key: 'createdByName',
-    title: t('systemToken.columns.createdByName'),
-    dataIndex: 'createdByName',
-    localesCode: 'common.columns.createdByName'
-  },
-  {
-    key: 'createdDate',
-    title: t('systemToken.columns.createdDate'),
-    dataIndex: 'createdDate',
-    localesCode: 'common.columns.createdDate'
-  },
-  {
-    key: 'action',
-    title: t('systemToken.columns.action'),
-    dataIndex: 'action',
-    localesCode: 'systemToken.columns.action',
-    width: 200
-  }
-];
+// Create table columns using utility function
+const _columns = createTokenTableColumns(t);
 
 // Computed columns with localized titles
 const columns = computed(() => {
@@ -490,8 +434,8 @@ onMounted(async () => {
           </template>
           <!-- Expiration status column with color-coded badge -->
           <template v-if="column.dataIndex === 'expired'">
-            <Badge :color="getIsExpired(record) ? 'orange' : 'green'"></Badge>
-            {{ getIsExpired(record) ? t('systemToken.messages.expired') : t('systemToken.messages.notExpired') }}
+            <Badge :color="getTokenExpirationColor(record)"></Badge>
+            {{ getTokenExpirationText(record, t) }}
           </template>
         </template>
       </Table>

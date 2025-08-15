@@ -6,23 +6,20 @@ import { Icon, notification, Select } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
 import { GM } from '@xcan-angus/infra';
 
+import { ServiceSelectionData, SelectApiProps } from '../types';
+import { processServiceSelectionData, getSelectedServiceCodes, validateServiceSelection } from '../utils';
+
 const { t } = useI18n();
 
 // Component props interface
-interface Props {
-  disabled: boolean;
-}
+type Props = SelectApiProps
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false
 });
 
 // Data source for selected services and their API resources
-const dataSource = ref<{
-  serviceCode?: string,
-  serviceName?: string,
-  source: Record<string, any>
-}[]>([]);
+const dataSource = ref<ServiceSelectionData[]>([]);
 
 // Service selection state
 const serviceCode = ref<string>();
@@ -41,7 +38,7 @@ const emit = defineEmits<{(e: 'change', value: any): void }>();
 
 // Computed property for selected service codes
 const selectedCode = computed(() => {
-  return dataSource.value.map(i => i.serviceCode).filter(Boolean) as string[];
+  return getSelectedServiceCodes(dataSource.value);
 });
 
 /**
@@ -62,16 +59,7 @@ const setData = (data: any, idx: number) => {
 
 // Computed property for processed source data
 const source = computed(() => {
-  const result: any[] = [];
-  dataSource.value.forEach(data => {
-    Object.keys(data.source).forEach(sourceName => {
-      result.push({
-        resource: sourceName,
-        apiIds: data.source[sourceName]
-      });
-    });
-  });
-  return result;
+  return processServiceSelectionData(dataSource.value);
 });
 
 /**
@@ -88,23 +76,28 @@ const clearData = () => {
  * Add new service to data source
  */
 const add = () => {
-  if (!serviceCode.value) {
-    notification.error(t('systemToken.messages.servicePlaceholder'));
+  const validation = validateServiceSelection(serviceCode.value, dataSource.value, t);
+
+  if (!validation.isValid) {
+    notification.error(validation.errorMessage || 'Invalid service selection');
     return;
   }
-  if (dataSource.value.find(service => service.serviceCode === serviceCode.value)) {
-    notification.error(t('systemToken.messages.serviceTip'));
-    return;
-  }
+
   dataSource.value.push({
     serviceCode: serviceCode.value,
     serviceName: serviceName.value,
     source: {}
   });
+
+  // Reset selection
+  serviceCode.value = undefined;
+  serviceName.value = undefined;
 };
 
-// Expose methods to parent component
-defineExpose({ clearData });
+// Expose methods for parent component
+defineExpose({
+  clearData
+});
 </script>
 
 <template>
