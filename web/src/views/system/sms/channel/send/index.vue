@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
 import { Colon, Icon, Input } from '@xcan-angus/vue-ui';
 
 import { sms } from '@/api';
-import { Aisle, SendState } from '../types';
+import { Aisle, SendState, SmsSendProps, SmsSendState } from '../types';
+import { getSendStateIcon, getSendStateIconColor, createSmsTestParams } from '../utils';
 
 // Component props interface
-interface Props {
-  aisle: Aisle
-}
+type Props = SmsSendProps
 
 const props = defineProps<Props>();
 
 // Component emits
+// eslint-disable-next-line func-call-spacing
 const emit = defineEmits<{
   (e: 'closeSmsMessage', value: boolean, aisle: Aisle): void
 }>();
@@ -22,13 +22,13 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 // Reactive state for SMS sending
-const sendState = ref<string>('');
-const sendLoading = ref<boolean>(false);
-
-// Phone number input data
-const phoneNumber = reactive({
-  areaCode: 'CN',
-  number: ''
+const state = reactive<SmsSendState>({
+  sendState: '',
+  sendLoading: false,
+  phoneNumber: {
+    areaCode: 'CN',
+    number: ''
+  }
 });
 
 /**
@@ -42,7 +42,7 @@ const handleOk = () => {
  * Handle cancel button click
  */
 const handleCancel = () => {
-  sendState.value = '';
+  state.sendState = '';
   emit('closeSmsMessage', false, props.aisle);
 };
 
@@ -50,23 +50,20 @@ const handleCancel = () => {
  * Send test SMS via API
  */
 const sendTest = async (): Promise<void> => {
-  const params = {
-    channelId: props.aisle.id,
-    mobiles: [phoneNumber.number]
-  };
+  const params = createSmsTestParams(props.aisle.id, state.phoneNumber.number);
 
-  sendLoading.value = true;
-  sendState.value = SendState.SENDING;
+  state.sendLoading = true;
+  state.sendState = SendState.SENDING;
 
   try {
     const [error] = await sms.loadSendTest(params);
     if (error) {
-      sendState.value = SendState.SENDFAILED;
+      state.sendState = SendState.SENDFAILED;
       return;
     }
-    sendState.value = SendState.SENDSUCCESS;
+    state.sendState = SendState.SENDSUCCESS;
   } finally {
-    sendLoading.value = false;
+    state.sendLoading = false;
   }
 };
 
@@ -74,28 +71,14 @@ const sendTest = async (): Promise<void> => {
  * Get icon name based on send state
  */
 const iconName = computed(() => {
-  switch (sendState.value) {
-    case SendState.SENDSUCCESS:
-      return 'icon-right';
-    case SendState.SENDFAILED:
-      return 'icon-cuowu';
-    default:
-      return '';
-  }
+  return getSendStateIcon(state.sendState);
 });
 
 /**
  * Get icon color class based on send state
  */
 const iconColor = computed(() => {
-  switch (sendState.value) {
-    case SendState.SENDSUCCESS:
-      return 'text-success';
-    case SendState.SENDFAILED:
-      return 'text-danger';
-    default:
-      return '';
-  }
+  return getSendStateIconColor(state.sendState);
 });
 </script>
 
@@ -110,7 +93,7 @@ const iconColor = computed(() => {
       <div class="items-center space-x-2 mb-8 flex-1">
         <!-- Phone number input field -->
         <Input
-          v-model:value="phoneNumber.number"
+          v-model:value="state.phoneNumber.number"
           class="flex flex-1"
           :trimAll="true"
           :placeholder="t('sms.placeholder.mobilePhonePlaceholder')"
@@ -119,7 +102,7 @@ const iconColor = computed(() => {
         <!-- Status indicator with icon -->
         <div :class="iconColor" class="-ml-2 flex items-center">
           <Icon :icon="iconName" class="mr-2" />
-          {{ t(sendState) }}
+          {{ t(state.sendState) }}
         </div>
       </div>
     </div>
@@ -130,8 +113,8 @@ const iconColor = computed(() => {
       <Button
         type="primary"
         size="small"
-        :loading="sendLoading"
-        :disabled="!phoneNumber.number"
+        :loading="state.sendLoading"
+        :disabled="!state.phoneNumber.number"
         @click="handleOk">
         {{ t('sms.buttons.send') }}
       </Button>

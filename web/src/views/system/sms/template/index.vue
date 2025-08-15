@@ -6,22 +6,26 @@ import { ButtonAuth, IconRefresh, Input, notification, PureCard, Select, SelectE
 import { GM, SupportedLanguage } from '@xcan-angus/infra';
 
 import { sms } from '@/api';
-import { Options, Template } from './types';
+import { Template, TemplateState, TemplateQueryParams, PaginationConfig } from './types';
+import {
+  createSmsTemplateColumns, processSmsTemplates, enableTemplateEdit, cancelTemplateEdit,
+  validateTemplateEdit, hasTemplateChanges, updateTemplateValues, createPaginationConfig
+} from './utils';
 
 const { t } = useI18n();
 
 // Reactive state management
 const loading = ref<boolean>(false);
 const disabled = ref<boolean>(true);
-const state: { dataSource: Template[], options: Options[] } = reactive({
+const state = reactive<TemplateState>({
   dataSource: [],
   options: []
 });
 
 // Query parameters for SMS templates
-const params = reactive({
-  channelId: undefined as string | undefined,
-  language: undefined as string | undefined,
+const params = reactive<TemplateQueryParams>({
+  channelId: undefined,
+  language: undefined,
   pageNo: 1,
   pageSize: 10
 });
@@ -32,57 +36,11 @@ const pageTotal = ref<number>(10);
  * Handle pagination changes
  * @param _pagination - Pagination object from table
  */
-const changePagination = (_pagination: any) => {
+const changePagination = (_pagination: any): void => {
   const { current, pageSize } = _pagination;
   params.pageNo = current;
   params.pageSize = pageSize;
 };
-
-// Table column definitions with proper internationalization
-const columns = computed(() => [
-  {
-    title: t('sms.columns.templateName'),
-    dataIndex: 'name',
-    key: 'name',
-    width: '10%'
-  },
-  {
-    title: t('sms.columns.code'),
-    dataIndex: 'code',
-    key: 'code',
-    width: '15%'
-  },
-  {
-    title: t('sms.columns.thirdCode'),
-    dataIndex: 'thirdCode',
-    key: 'thirdCode',
-    width: '18%'
-  },
-  {
-    title: t('sms.columns.language'),
-    dataIndex: 'language',
-    key: 'language',
-    width: '6%'
-  },
-  {
-    title: t('sms.columns.signature'),
-    dataIndex: 'signature',
-    key: 'signature',
-    width: '8%'
-  },
-  {
-    title: t('sms.columns.content'),
-    dataIndex: 'content',
-    key: 'content'
-  },
-  {
-    title: t('sms.columns.operate'),
-    key: 'operate',
-    dataIndex: 'operate',
-    width: '8%',
-    align: 'center' as const
-  }
-]);
 
 /**
  * Load SMS templates from API
@@ -95,81 +53,33 @@ const loadSmsTemplates = async (): Promise<void> => {
       return;
     }
     pageTotal.value = parseInt(res.data.total);
-    state.dataSource = getNewSmsTemplates(res.data.list);
+    state.dataSource = processSmsTemplates(res.data.list);
   } finally {
     loading.value = false;
   }
 };
 
 /**
- * Process SMS templates and add edit state
- * @param values - Raw template data from API
- * @returns Processed templates with edit state
- */
-const getNewSmsTemplates = (values: Template[]): Template[] => {
-  if (!values.length) {
-    return [];
-  }
-
-  return values.map((item) => ({
-    ...item,
-    showEdit: false
-  }));
-};
-
-/**
- * Enable edit mode for a template
- * @param record - Template record to edit
- */
-const handleEdit = (record: Template): void => {
-  record.showEdit = true;
-  const { name, thirdCode, language, signature, content } = record;
-  record.editValues = {
-    name,
-    thirdCode,
-    language,
-    signature,
-    content
-  };
-};
-
-/**
- * Cancel edit mode for a template
- * @param record - Template record to cancel editing
- */
-const handleCancel = (record: Template): void => {
-  record.showEdit = false;
-};
-
-/**
  * Save template edits after validation
  * @param record - Template record to save
- * @param checkPassed - Whether validation has passed
  */
-const saveEdit = (record: Template, checkPassed = true): void => {
-  const editValueKeys = ['name', 'thirdCode', 'language', 'signature', 'content'];
+const saveEdit = (record: Template): void => {
+  const validation = validateTemplateEdit(record, t);
 
-  // Validate required fields
-  editValueKeys.forEach(key => {
-    if (!record.editValues[key]) {
-      checkPassed = false;
-      // Find corresponding column for error message
-      const column = columns.value.find(col => col.key === key);
-      if (column) {
-        notification.error(column.title + t('sms.messages.isNull'));
-      }
-    }
-  });
+  if (!validation.isValid) {
+    validation.errors.forEach(error => {
+      notification.error(error);
+    });
+    return;
+  }
 
   // Check if any values have changed
-  if (editValueKeys.every(key => record[key] === record.editValues[key])) {
+  if (!hasTemplateChanges(record)) {
     record.showEdit = false;
     return;
   }
 
-  if (checkPassed) {
-    handleEditTemplate(record);
-  }
+  handleEditTemplate(record);
 };
 
 /**
@@ -185,14 +95,7 @@ const handleEditTemplate = async (record: Template): Promise<void> => {
     }
 
     // Update local state with new values
-    const { name, thirdCode, language, signature, content } = record.editValues;
-    record.name = name;
-    record.thirdCode = thirdCode;
-    record.language = language;
-    record.signature = signature;
-    record.content = content;
-    record.showEdit = false;
-
+    updateTemplateValues(record);
     notification.success(t('sms.messages.saveSuccess'));
   } finally {
     loading.value = false;
@@ -200,11 +103,12 @@ const handleEditTemplate = async (record: Template): Promise<void> => {
 };
 
 // Computed pagination object
-const pagination = computed(() => ({
-  current: params.pageNo,
-  pageSize: params.pageSize,
-  total: pageTotal.value
-}));
+const pagination = computed<PaginationConfig>(() => {
+  return createPaginationConfig(params.pageNo, params.pageSize, pageTotal.value);
+});
+
+// Create table columns using utility function
+const columns = computed(() => createSmsTemplateColumns(t));
 
 // Watch for parameter changes and reload data
 watch(() => params, async () => {
@@ -320,7 +224,7 @@ onMounted(() => {
               type="text"
               icon="icon-shuxie"
               iconStyle="font-size:12px;"
-              @click="handleEdit(record)" />
+              @click="enableTemplateEdit(record)" />
           </div>
           <div v-else>
             <!-- Save and cancel buttons -->
@@ -328,7 +232,7 @@ onMounted(() => {
               {{ t('sms.buttons.save') }}
             </a>
             <Divider type="vertical" />
-            <a class="text-theme-text-hover" @click="handleCancel(record)">
+            <a class="text-theme-text-hover" @click="cancelTemplateEdit(record)">
               {{ t('sms.buttons.cancel') }}
             </a>
           </div>

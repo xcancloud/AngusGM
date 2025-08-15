@@ -1,24 +1,17 @@
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, reactive, ref, toRaw, computed } from 'vue';
+import { defineAsyncComponent, onMounted, reactive, ref, computed } from 'vue';
 import { Button, Form, FormItem, Spin, Tooltip } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import {
-  AsyncComponent,
-  ButtonAuth,
-  Colon,
-  Hints,
-  Icon,
-  IconRequired,
-  Image,
-  Input,
-  modal,
-  NoData,
-  notification,
-  PureCard
+  AsyncComponent, ButtonAuth, Colon, Hints, Icon, IconRequired, Image, Input, modal, NoData, notification, PureCard
 } from '@xcan-angus/vue-ui';
 
 import { sms } from '@/api';
-import { Aisle } from './types';
+import { Aisle, ChannelState, ChannelFormData, ValidationRules } from './types';
+import {
+  getLogoBorder, getLogo, getChannelStatus, createValidationRules, processChannelData,
+  createChannelUpdateParams, createChannelToggleParams, getPopupContainer, closeAllChannelConfigs, populateChannelForm
+} from './utils';
 
 import placeholderLogo from '@/views/system/sms/channel/images/robot.png';
 
@@ -30,10 +23,10 @@ const useForm = Form.useForm;
 
 // Reactive state management
 const loading = ref<boolean>(false);
-const state: { aisles: Aisle[] } = reactive({ aisles: [] });
+const state = reactive<ChannelState>({ aisles: [] });
 
 // SMS channel configuration form data
-const aisle: Aisle = reactive({
+const aisle = reactive<ChannelFormData>({
   accessKeyId: '',
   accessKeySecret: '',
   thirdChannelNo: '',
@@ -48,29 +41,7 @@ const aisle: Aisle = reactive({
 });
 
 // Form validation rules
-const rules = reactive({
-  accessKeyId: [
-    {
-      required: true,
-      message: t('sms.validation.accessKeyIdRequired'),
-      trigger: 'change'
-    }
-  ],
-  accessKeySecret: [
-    {
-      required: true,
-      message: t('sms.validation.accessKeySecretRequired'),
-      trigger: 'change'
-    }
-  ],
-  endpoint: [
-    {
-      required: true,
-      message: t('sms.validation.endpointRequired'),
-      trigger: 'change'
-    }
-  ]
-});
+const rules = reactive<ValidationRules>(createValidationRules(t));
 
 const { resetFields, validate, validateInfos } = useForm(aisle, rules);
 
@@ -105,42 +76,7 @@ const loadSmsConfig = async (): Promise<void> => {
  * @param data - Raw channel data from API
  */
 const setState = (data: Aisle[]) => {
-  state.aisles = data.map(item => ({
-    ...item,
-    accessKeyId: item.accessKeyId || '',
-    accessKeySecret: item.accessKeySecret || '',
-    endpoint: item.endpoint || '',
-    loading: false,
-    display: false,
-    visible: false
-  }));
-};
-
-/**
- * Get logo border styling based on logo availability
- * @param value - Logo URL or empty string
- * @returns CSS class for border styling
- */
-const getLogoBorder = (value: string): string => {
-  return value ? '' : 'border border-gray-border border-dashed';
-};
-
-/**
- * Get logo source, fallback to placeholder if not available
- * @param value - Logo URL
- * @returns Logo URL or placeholder image
- */
-const getLogo = (value: string): string => {
-  return value || placeholderLogo;
-};
-
-/**
- * Get channel status text
- * @param value - Enabled state
- * @returns Localized status text
- */
-const getState = (value: boolean): string => {
-  return value ? t('sms.status.enabled') : t('sms.status.disabled');
+  state.aisles = processChannelData(data);
 };
 
 /**
@@ -165,10 +101,8 @@ const updateStateConfirm = (item: Aisle) => {
  */
 const patchUpdateState = async (item: Aisle): Promise<void> => {
   try {
-    const [error] = await sms.toggleChannelEnabled({
-      id: item.id,
-      enabled: !item.enabled
-    });
+    const params = createChannelToggleParams(item.id, item.enabled);
+    const [error] = await sms.toggleChannelEnabled(params);
     if (error) {
       return;
     }
@@ -190,13 +124,7 @@ const patchUpdateState = async (item: Aisle): Promise<void> => {
 const patchSave = async (item: Aisle): Promise<void> => {
   item.loading = true;
   try {
-    const params = {
-      accessKeyId: toRaw(aisle.accessKeyId)?.trim(),
-      accessKeySecret: toRaw(aisle.accessKeySecret)?.trim(),
-      endpoint: toRaw(aisle.endpoint)?.trim(),
-      thirdChannelNo: toRaw(aisle.thirdChannelNo)?.trim(),
-      id: item.id
-    };
+    const params = createChannelUpdateParams(aisle, item.id);
 
     const [error] = await sms.updateChannelConfig(params);
     if (error) {
@@ -219,7 +147,6 @@ const patchSave = async (item: Aisle): Promise<void> => {
 const saveConfirm = (item: Aisle) => {
   validate().then(() => {
     modal.confirm({
-      centered: true,
       title: t('sms.messages.saveConfiguration'),
       content: t('sms.messages.confirmSave'),
       onOk () {
@@ -237,15 +164,10 @@ const saveConfirm = (item: Aisle) => {
  */
 const openConfig = (val: Aisle) => {
   // Close all other configuration forms
-  state.aisles.forEach(item => {
-    item.display = false;
-  });
+  closeAllChannelConfigs(state.aisles);
 
   // Populate form with current values
-  aisle.accessKeyId = val.accessKeyId;
-  aisle.accessKeySecret = val.accessKeySecret;
-  aisle.endpoint = val.endpoint;
-  aisle.thirdChannelNo = val?.thirdChannelNo;
+  populateChannelForm(aisle, val);
 
   // Update UI state
   val.visible = false;
@@ -277,15 +199,6 @@ const closeSmsMessage = (value: boolean, aisle: Aisle) => {
 const closeConfig = (item: Aisle) => {
   resetFields();
   item.display = false;
-};
-
-/**
- * Get popup container for tooltips
- * @param triggerNode - DOM element that triggered the tooltip
- * @returns Parent node or document body as fallback
- */
-const getPopupContainer = (triggerNode: HTMLElement) => {
-  return (triggerNode?.parentNode as HTMLElement) || document.body;
 };
 
 // Lifecycle hooks
@@ -320,7 +233,7 @@ onMounted(() => {
             <Image
               v-else
               class="w-25"
-              :src="getLogo(item.logo)" />
+              :src="getLogo(item.logo, placeholderLogo)" />
 
             <!-- Channel info and status -->
             <div class="flex space-x-6 flex-1 justify-between">
@@ -337,7 +250,7 @@ onMounted(() => {
                 <Icon
                   :icon="item.enabled ? 'icon-right' : 'icon-jinyong'"
                   :class="item.enabled ? 'text-success' : ''" />
-                {{ getState(item.enabled) }}
+                {{ getChannelStatus(item.enabled, t) }}
               </span>
             </div>
           </div>
