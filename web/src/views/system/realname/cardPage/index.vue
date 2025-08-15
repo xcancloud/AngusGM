@@ -67,7 +67,7 @@ const currentTheme = themeConfig[props.theme];
         <span :class="`flex-shrink-0 w-6 h-6 ${currentTheme.number} text-white text-xs rounded-full flex items-center justify-center font-medium mr-3 mt-0.5`">
           {{ idx + 1 }}
         </span>
-        <span :class="`text-gray-700 leading-relaxed ${currentTheme.text} transition-colors duration-200`">{{ item }}</span>
+        <span :class="`text-gray-700 leading-relaxed ${currentTheme.text} transition-colors duration-200 mt-0.5`">{{ item }}</span>
       </li>
     </ul>
 
