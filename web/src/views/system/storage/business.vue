@@ -1,51 +1,48 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, computed, reactive } from 'vue';
 import { Button, Radio, RadioGroup } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { Card, Grid, Hints, Icon, Input, modal } from '@xcan-angus/vue-ui';
-import { app, EnumMessage, PlatformStoreType, enumUtils } from '@xcan-angus/infra';
+import { app, PlatformStoreType, enumUtils } from '@xcan-angus/infra';
 import { storage as storageApi } from '@/api/index';
-import { StorageSetting, StorageParams, StorageColumn } from './types';
-
-// Storage type constants
-const STORAGE_TYPES = {
-  LOCAL: 'LOCAL',
-  AWS_S3: 'AWS_S3'
-} as const;
-
-// Error code constants
-const ERROR_CODES = {
-  BST001: 'BST001'
-} as const;
+import { StorageParams, BusinessStorageState, FormFieldValues, ValidationState } from './types';
+import {
+  createAwsStorageColumns, createLocalStorageColumns, isLocalStorage, isAwsS3Storage,
+  validateStorageForm, hasStorageChanges, resetValidationRules, resetFormValues, requiresForceConfirmation
+} from './utils';
 
 const { t } = useI18n();
 
-// Reactive data for storage configuration
-const enumData = ref<EnumMessage<PlatformStoreType>[]>([]);
-const storage = ref<StorageSetting>();
-const storeType = ref<string>();
-const isEdit = ref(false);
-const force = ref<boolean>(false);
-const editLoading = ref(false);
+// Reactive state management
+const state = reactive<BusinessStorageState>({
+  enumData: [],
+  storage: undefined,
+  storeType: undefined,
+  isEdit: false,
+  force: false,
+  editLoading: false
+});
 
 // Form field values
-const localDir = ref<string>();
-const proxyAddress = ref<string>();
-const region = ref<string>();
-const endpoint = ref<string>();
-const accessKey = ref<string>();
-const secretKey = ref<string>();
+const formValues = reactive<FormFieldValues>({
+  localDir: undefined,
+  proxyAddress: undefined,
+  region: undefined,
+  endpoint: undefined,
+  accessKey: undefined,
+  secretKey: undefined
+});
 
 // Validation rules for form fields
-const pathRule = ref<boolean>(false);
-const proxyAddressRule = ref<boolean>(false);
-const endpointRule = ref<boolean>(false);
-const accessKeyRule = ref<boolean>(false);
-const secretKeyRule = ref<boolean>(false);
+const validationState = reactive<ValidationState>({
+  pathRule: false,
+  proxyAddressRule: false,
+  endpointRule: false,
+  accessKeyRule: false,
+  secretKeyRule: false
+});
 
 // Computed properties for better performance
-const isLocalStorage = computed(() => storeType.value === STORAGE_TYPES.LOCAL);
-const isAwsS3Storage = computed(() => storeType.value === STORAGE_TYPES.AWS_S3);
 const canEdit = computed(() => app.has('ApplicationStorageModify'));
 
 /**
@@ -53,7 +50,7 @@ const canEdit = computed(() => app.has('ApplicationStorageModify'));
  */
 const loadEnums = async () => {
   try {
-    enumData.value = enumUtils.enumToMessages(PlatformStoreType);
+    state.enumData = enumUtils.enumToMessages(PlatformStoreType);
   } catch (error) {
     console.error('Failed to load storage type enums:', error);
   }
@@ -65,24 +62,19 @@ const loadEnums = async () => {
  * @param e - Radio change event
  */
 const handleChange = (e: any) => {
-  storeType.value = e.target.value;
-  resetFormValues();
-  isEdit.value = true;
+  state.storeType = e.target.value;
+  resetFormValuesToCurrent();
+  state.isEdit = true;
 };
 
 /**
  * Reset form values to current storage settings
  */
-const resetFormValues = () => {
-  if (!storage.value) return;
+const resetFormValuesToCurrent = () => {
+  if (!state.storage) return;
 
-  const currentData = JSON.parse(JSON.stringify(storage.value));
-  proxyAddress.value = currentData?.proxyAddress;
-  localDir.value = currentData?.localDir;
-  accessKey.value = currentData?.accessKey;
-  secretKey.value = currentData?.secretKey;
-  region.value = currentData?.region;
-  endpoint.value = currentData?.endpoint;
+  const newValues = resetFormValues(state.storage);
+  Object.assign(formValues, newValues);
 };
 
 /**
@@ -95,10 +87,10 @@ const loadStorage = async () => {
       return;
     }
 
-    storage.value = data;
+    state.storage = data;
     if (data) {
-      resetFormValues();
-      storeType.value = data?.storeType?.value;
+      resetFormValuesToCurrent();
+      state.storeType = data?.storeType?.value;
     }
   } catch (error) {
     console.error('Failed to load storage settings:', error);
@@ -109,30 +101,19 @@ const loadStorage = async () => {
  * Enable edit mode for storage configuration
  */
 const openEdit = () => {
-  isEdit.value = true;
+  state.isEdit = true;
 };
 
 /**
  * Cancel edit mode and reset form values
  */
 const cancelEdit = () => {
-  if (storage.value) {
-    storeType.value = storage.value.storeType?.value;
+  if (state.storage) {
+    state.storeType = state.storage.storeType?.value;
   }
-  force.value = false;
-  isEdit.value = false;
-  resetValidationRules();
-};
-
-/**
- * Reset all validation rules
- */
-const resetValidationRules = () => {
-  pathRule.value = false;
-  proxyAddressRule.value = false;
-  endpointRule.value = false;
-  accessKeyRule.value = false;
-  secretKeyRule.value = false;
+  state.force = false;
+  state.isEdit = false;
+  Object.assign(validationState, resetValidationRules());
 };
 
 /**
@@ -141,8 +122,8 @@ const resetValidationRules = () => {
  */
 const proxyAddressChange = (event: any) => {
   const value = event.target.value;
-  proxyAddressRule.value = !value;
-  proxyAddress.value = value;
+  validationState.proxyAddressRule = !value;
+  formValues.proxyAddress = value;
 };
 
 /**
@@ -151,8 +132,8 @@ const proxyAddressChange = (event: any) => {
  */
 const localDirChange = (event: any) => {
   const value = event.target.value;
-  pathRule.value = !value;
-  localDir.value = value;
+  validationState.pathRule = !value;
+  formValues.localDir = value;
 };
 
 /**
@@ -160,7 +141,7 @@ const localDirChange = (event: any) => {
  * @param event - Input change event
  */
 const regionChange = (event: any) => {
-  region.value = event.target.value;
+  formValues.region = event.target.value;
 };
 
 /**
@@ -169,8 +150,8 @@ const regionChange = (event: any) => {
  */
 const endpointChange = (event: any) => {
   const value = event.target.value;
-  endpointRule.value = !value;
-  endpoint.value = value;
+  validationState.endpointRule = !value;
+  formValues.endpoint = value;
 };
 
 /**
@@ -179,8 +160,8 @@ const endpointChange = (event: any) => {
  */
 const accessKeyChange = (event: any) => {
   const value = event.target.value;
-  accessKeyRule.value = !value;
-  accessKey.value = value;
+  validationState.accessKeyRule = !value;
+  formValues.accessKey = value;
 };
 
 /**
@@ -189,79 +170,8 @@ const accessKeyChange = (event: any) => {
  */
 const secretKeyChange = (event: any) => {
   const value = event.target.value;
-  secretKeyRule.value = !value;
-  secretKey.value = value;
-};
-
-/**
- * Validate form fields based on storage type
- * @returns true if validation passes, false otherwise
- */
-const validateForm = (): boolean => {
-  // Validate proxy address (required for all storage types)
-  if (!proxyAddress.value) {
-    proxyAddressRule.value = true;
-    return false;
-  }
-
-  // Validate local storage specific fields
-  if (isLocalStorage.value && !localDir.value) {
-    pathRule.value = true;
-    return false;
-  }
-
-  // Validate AWS S3 specific fields
-  if (isAwsS3Storage.value) {
-    if (!endpoint.value) {
-      endpointRule.value = true;
-      return false;
-    }
-    if (!accessKey.value) {
-      accessKeyRule.value = true;
-      return false;
-    }
-    if (!secretKey.value) {
-      secretKeyRule.value = true;
-      return false;
-    }
-  }
-
-  return true;
-};
-
-/**
- * Check if storage settings have changed
- * @returns true if changes detected, false otherwise
- */
-const hasChanges = (): boolean => {
-  if (!isEdit.value || !storage.value) {
-    return false;
-  }
-
-  // Check if storage type changed
-  if (storeType.value !== storage.value.storeType?.value) {
-    return true;
-  }
-
-  // Check local storage changes
-  if (isLocalStorage.value) {
-    if (localDir.value !== storage.value.localDir ||
-        proxyAddress.value !== storage.value.proxyAddress) {
-      return true;
-    }
-  }
-
-  // Check AWS S3 changes
-  if (isAwsS3Storage.value) {
-    if (region.value !== storage.value.region ||
-        endpoint.value !== storage.value.endpoint ||
-        accessKey.value !== storage.value.accessKey ||
-        secretKey.value !== storage.value.secretKey) {
-      return true;
-    }
-  }
-
-  return false;
+  validationState.secretKeyRule = !value;
+  formValues.secretKey = value;
 };
 
 /**
@@ -269,40 +179,43 @@ const hasChanges = (): boolean => {
  * Validates form and saves storage settings
  */
 const handleSubmit = async () => {
-  if (!validateForm()) {
+  const { isValid, validationState: newValidationState } = validateStorageForm(formValues, state.storeType);
+
+  if (!isValid) {
+    Object.assign(validationState, newValidationState);
     return;
   }
 
-  if (!hasChanges() || editLoading.value) {
-    isEdit.value = false;
+  if (!hasStorageChanges(formValues, state.storage, state.storeType) || state.editLoading) {
+    state.isEdit = false;
     return;
   }
 
   const params: StorageParams = {
-    accessKey: accessKey.value || '',
-    endpoint: endpoint.value || '',
-    force: force.value,
-    proxyAddress: proxyAddress.value || '',
-    localDir: localDir.value || '',
-    region: region.value || '',
-    secretKey: secretKey.value || '',
-    storeType: storeType.value || ''
+    accessKey: formValues.accessKey || '',
+    endpoint: formValues.endpoint || '',
+    force: state.force,
+    proxyAddress: formValues.proxyAddress || '',
+    localDir: formValues.localDir || '',
+    region: formValues.region || '',
+    secretKey: formValues.secretKey || '',
+    storeType: state.storeType || ''
   };
 
-  editLoading.value = true;
+  state.editLoading = true;
 
   try {
     const [error] = await storageApi.putSetting(params, { silence: true });
 
     if (error) {
       // Handle specific error code for force confirmation
-      if (error.code === ERROR_CODES.BST001) {
+      if (requiresForceConfirmation((error as any).code)) {
         modal.confirm({
           centered: true,
           title: t('storage.messages.confirmTitle'),
-          content: error.message,
+          content: (error as any).message,
           async onOk () {
-            force.value = true;
+            state.force = true;
             await handleSubmit();
           },
           onCancel () {
@@ -315,59 +228,18 @@ const handleSubmit = async () => {
 
     // Success - reload storage settings and reset form
     await loadStorage();
-    isEdit.value = false;
-    force.value = false;
+    state.isEdit = false;
+    state.force = false;
   } catch (error) {
     console.error('Failed to save storage settings:', error);
   } finally {
-    editLoading.value = false;
+    state.editLoading = false;
   }
 };
 
-// Table columns configuration for different storage types
-const awsColumns = computed<StorageColumn[][]>(() => [
-  [
-    {
-      dataIndex: 'proxyAddress',
-      label: t('storage.columns.proxyAddress'),
-      required: true
-    },
-    {
-      dataIndex: 'region',
-      label: t('storage.columns.region')
-    },
-    {
-      dataIndex: 'endpoint',
-      label: t('storage.columns.endpoint'),
-      required: true
-    },
-    {
-      dataIndex: 'accessKey',
-      label: t('storage.columns.accessKey'),
-      required: true
-    },
-    {
-      dataIndex: 'secretKey',
-      label: t('storage.columns.secretKey'),
-      required: true
-    }
-  ]
-]);
-
-const localColumns = computed<StorageColumn[][]>(() => [
-  [
-    {
-      dataIndex: 'origin',
-      label: t('storage.columns.proxyAddress'),
-      required: true
-    },
-    {
-      dataIndex: 'url',
-      label: t('storage.columns.url'),
-      required: true
-    }
-  ]
-]);
+// Create table columns using utility functions
+const awsColumns = computed(() => createAwsStorageColumns(t));
+const localColumns = computed(() => createLocalStorageColumns(t));
 
 // Lifecycle hook - initialize component on mount
 onMounted(() => {
@@ -394,12 +266,12 @@ onMounted(() => {
       <div class="flex items-center text-3 leading-3">
         <span class="mr-3">{{ t('storage.messages.storageType') }}</span>
         <RadioGroup
-          :value="storeType"
+          :value="state.storeType"
           :disabled="!canEdit"
           size="small"
           @change="handleChange">
           <Radio
-            v-for="item in enumData"
+            v-for="item in state.enumData"
             :key="item.value"
             :value="item.value">
             {{ item.message }}
@@ -410,7 +282,7 @@ onMounted(() => {
       <!-- Storage configuration forms -->
       <div>
         <!-- Local storage configuration -->
-        <template v-if="isLocalStorage">
+        <template v-if="isLocalStorage(state.storeType)">
           <Grid
             :columns="localColumns"
             class="mt-5"
@@ -418,15 +290,15 @@ onMounted(() => {
             <template #origin>
               <div class="relative">
                 <Input
-                  :value="proxyAddress"
-                  :disabled="!isEdit"
+                  :value="formValues.proxyAddress"
+                  :disabled="!state.isEdit"
                   :maxlength="200"
                   size="small"
                   @change="proxyAddressChange" />
-                <div v-show="proxyAddressRule" class="absolute top-7.5 text-3 leading-3 text-rule">
+                <div v-show="validationState.proxyAddressRule" class="absolute top-7.5 text-3 leading-3 text-rule">
                   {{ t('storage.messages.proxyAddressRequired') }}
                 </div>
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -437,15 +309,15 @@ onMounted(() => {
             <template #url>
               <div class="relative">
                 <Input
-                  :value="localDir"
-                  :disabled="!isEdit"
+                  :value="formValues.localDir"
+                  :disabled="!state.isEdit"
                   :maxlength="400"
                   size="small"
                   @change="localDirChange" />
-                <div v-show="pathRule" class="absolute top-9 text-3 leading-3 text-rule">
+                <div v-show="validationState.pathRule" class="absolute top-9 text-3 leading-3 text-rule">
                   {{ t('storage.messages.storagePathRequired') }}
                 </div>
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -457,7 +329,7 @@ onMounted(() => {
         </template>
 
         <!-- AWS S3 storage configuration -->
-        <template v-if="isAwsS3Storage">
+        <template v-if="isAwsS3Storage(state.storeType)">
           <Grid
             :columns="awsColumns"
             class="mt-5"
@@ -465,15 +337,15 @@ onMounted(() => {
             <template #proxyAddress>
               <div class="relative">
                 <Input
-                  :value="proxyAddress"
-                  :disabled="!isEdit"
+                  :value="formValues.proxyAddress"
+                  :disabled="!state.isEdit"
                   :maxlength="200"
                   size="small"
                   @change="proxyAddressChange" />
-                <div v-show="proxyAddressRule" class="absolute top-7.5 text-3 leading-3 text-rule">
+                <div v-show="validationState.proxyAddressRule" class="absolute top-7.5 text-3 leading-3 text-rule">
                   {{ t('storage.messages.proxyAddressRequired') }}
                 </div>
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -484,12 +356,12 @@ onMounted(() => {
             <template #region>
               <div class="relative">
                 <Input
-                  :value="region"
-                  :disabled="!isEdit"
+                  :value="formValues.region"
+                  :disabled="!state.isEdit"
                   :maxlength="160"
                   size="small"
                   @change="regionChange" />
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -500,15 +372,15 @@ onMounted(() => {
             <template #endpoint>
               <div class="relative -mt-1">
                 <Input
-                  :value="endpoint"
-                  :disabled="!isEdit"
+                  :value="formValues.endpoint"
+                  :disabled="!state.isEdit"
                   :maxlength="200"
                   size="small"
                   @change="endpointChange" />
-                <div v-show="endpointRule" class="absolute top-8 text-3 leading-3 text-rule">
+                <div v-show="validationState.endpointRule" class="absolute top-8 text-3 leading-3 text-rule">
                   {{ t('storage.messages.endpointRequired') }}
                 </div>
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -519,15 +391,15 @@ onMounted(() => {
             <template #accessKey>
               <div class="relative -mt-1">
                 <Input
-                  :value="accessKey"
-                  :disabled="!isEdit"
+                  :value="formValues.accessKey"
+                  :disabled="!state.isEdit"
                   :maxlength="4096"
                   size="small"
                   @change="accessKeyChange" />
-                <div v-show="accessKeyRule" class="absolute top-8 text-3 leading-3 text-rule">
+                <div v-show="validationState.accessKeyRule" class="absolute top-8 text-3 leading-3 text-rule">
                   {{ t('storage.messages.accessKeyRequired') }}
                 </div>
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -538,15 +410,15 @@ onMounted(() => {
             <template #secretKey>
               <div class="relative -mt-1">
                 <Input
-                  :value="secretKey"
-                  :disabled="!isEdit"
+                  :value="formValues.secretKey"
+                  :disabled="!state.isEdit"
                   :maxlength="4096"
                   size="small"
                   @change="secretKeyChange" />
-                <div v-show="secretKeyRule" class="absolute top-8 text-3 leading-3 text-rule">
+                <div v-show="validationState.secretKeyRule" class="absolute top-8 text-3 leading-3 text-rule">
                   {{ t('storage.messages.secretKeyRequired') }}
                 </div>
-                <template v-if="!isEdit && canEdit">
+                <template v-if="!state.isEdit && canEdit">
                   <Icon
                     icon="icon-shuxie"
                     class="text-theme-special text-theme-text-hover cursor-pointer absolute -right-5 top-2"
@@ -558,10 +430,10 @@ onMounted(() => {
         </template>
 
         <!-- Action buttons for edit mode -->
-        <template v-if="isEdit">
+        <template v-if="state.isEdit">
           <div class="text-center space-x-8 mt-5">
             <Button
-              :disabled="!isEdit"
+              :disabled="!state.isEdit"
               size="small"
               type="primary"
               class="px-3"
@@ -569,7 +441,7 @@ onMounted(() => {
               {{ t('storage.buttons.confirm') }}
             </Button>
             <Button
-              :disabled="!isEdit"
+              :disabled="!state.isEdit"
               size="small"
               class="px-3"
               @click="cancelEdit">

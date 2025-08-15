@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, computed, reactive } from 'vue';
 import { Card, Grid, Hints, Select } from '@xcan-angus/vue-ui';
 import { pubProxy, service as serviceApi } from '@/api';
 import { useI18n } from 'vue-i18n';
-import { ServiceOption, AppStorageData, StorageColumn } from './types';
+import { AppStorageState } from './types';
+import { createAppStorageColumns } from './utils';
 
 const { t } = useI18n();
 
-// Reactive data for service and instance selection
-const serviceOptions = ref<ServiceOption[]>([]);
-const instancesOptions = ref<ServiceOption[]>([]);
-const service = ref<string>();
-const instances = ref<string>();
-const dataSource = ref<AppStorageData>();
+// Reactive state management
+const state = reactive<AppStorageState>({
+  serviceOptions: [],
+  instancesOptions: [],
+  service: undefined,
+  instances: undefined,
+  dataSource: undefined
+});
 
 // Computed properties for better performance
-const hasService = computed(() => !!service.value);
+const hasService = computed(() => !!state.service);
 
 /**
  * Initialize component data
@@ -37,8 +40,8 @@ const loadServiceList = async () => {
     }
 
     // Set first service as default
-    service.value = data[0];
-    serviceOptions.value = data.map((item: string) => ({
+    state.service = data[0];
+    state.serviceOptions = data.map((item: string) => ({
       label: item,
       value: item
     }));
@@ -59,8 +62,8 @@ const serviceChange = async (value: any) => {
     await loadInstancesList();
   } else {
     // Reset instances when service is cleared
-    instances.value = undefined;
-    dataSource.value = undefined;
+    state.instances = undefined;
+    state.dataSource = undefined;
   }
 };
 
@@ -69,19 +72,19 @@ const serviceChange = async (value: any) => {
  * Sets the first instance as default and loads app storage data
  */
 const loadInstancesList = async () => {
-  if (!service.value) {
+  if (!state.service) {
     return;
   }
 
   try {
-    const [error, { data = [] }] = await serviceApi.getServiceInstances(service.value);
+    const [error, { data = [] }] = await serviceApi.getServiceInstances(state.service);
     if (error || !data?.length) {
       return;
     }
 
     // Set first instance as default
-    instances.value = data[0];
-    instancesOptions.value = data.map((item: string) => ({
+    state.instances = data[0];
+    state.instancesOptions = data.map((item: string) => ({
       label: item,
       value: item
     }));
@@ -111,23 +114,14 @@ const loadApp = async (address: string) => {
     if (error) {
       return;
     }
-    dataSource.value = res.data;
+    state.dataSource = res.data;
   } catch (error) {
     console.error('Failed to load app storage data:', error);
   }
 };
 
-// Table columns configuration for storage paths display
-const columns = computed<StorageColumn[][]>(() => [
-  [
-    { dataIndex: 'homeDir', label: t('storage.columns.homeDir') },
-    { dataIndex: 'workDir', label: t('storage.columns.workDir') },
-    { dataIndex: 'dataDir', label: t('storage.columns.dataDir') },
-    { dataIndex: 'logsDir', label: t('storage.columns.logsDir') },
-    { dataIndex: 'tmpDir', label: t('storage.columns.tmpDir') },
-    { dataIndex: 'confDir', label: t('storage.columns.confDir') }
-  ]
-]);
+// Create table columns using utility function
+const columns = computed(() => createAppStorageColumns(t));
 
 // Lifecycle hook - initialize component on mount
 onMounted(() => {
@@ -154,8 +148,8 @@ onMounted(() => {
         <span>{{ t('storage.messages.service') }}</span>
         <em class="not-italic mr-1">:</em>
         <Select
-          v-model:value="service"
-          :options="serviceOptions"
+          v-model:value="state.service"
+          :options="state.serviceOptions"
           defaultActiveFirstOption
           class="w-60 mr-5"
           size="small"
@@ -164,9 +158,9 @@ onMounted(() => {
         <span>{{ t('storage.messages.instance') }}</span>
         <em class="not-italic mr-1">:</em>
         <Select
-          v-model:value="instances"
+          v-model:value="state.instances"
           :disabled="!hasService"
-          :options="instancesOptions"
+          :options="state.instancesOptions"
           class="w-60 mr-5"
           size="small"
           @change="instancesChange" />
@@ -175,7 +169,7 @@ onMounted(() => {
       <!-- Storage paths data grid -->
       <Grid
         :columns="columns"
-        :dataSource="dataSource"
+        :dataSource="state.dataSource"
         style="width: 80%;"
         class="grid-row" />
     </template>
