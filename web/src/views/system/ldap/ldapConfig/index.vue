@@ -4,47 +4,36 @@ import { Hints, Input } from '@xcan-angus/vue-ui';
 import { Form, FormItem } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 
-/**
- * Component props interface for LDAP configuration
- * @param {number} index - Component index in parent
- * @param {string} keys - Unique key identifier
- * @param {any} query - Query parameters for data population
- */
-interface Props {
-  index: number,
-  keys: string,
-  query?: any
-}
+import { LdapComponentProps, LdapBaseConfig } from '../types';
+import { createFormLayoutConfig, createLdapBaseValidationRules, createInitialLdapBaseConfig } from '../utils';
+
+const props = withDefaults(defineProps<LdapComponentProps>(), {
+  index: -1,
+  keys: ''
+});
 
 const emit = defineEmits(['rules']);
 
 const { t } = useI18n();
 
-const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
-
+// Form reference
 const formRef = ref();
 
 // Form layout configuration
-const labelCol = { span: 9 };
-const wrapperCol = { span: 15 };
+const labelCol = createFormLayoutConfig(9);
+const wrapperCol = createFormLayoutConfig(15);
 
 // Reactive form data for LDAP base configuration
-const form: any = reactive({
-  baseDn: '', // Base Distinguished Name for LDAP search
-  additionalUserDn: '', // Additional user DN for extended user search
-  additionalGroupDn: '' // Additional group DN for extended group search
-});
+const form = reactive<LdapBaseConfig>(createInitialLdapBaseConfig());
 
 // Form validation rules
-const rules = {
-  baseDn: [{ required: true, message: t('ldap.model-1') }]
-};
+const rules = createLdapBaseValidationRules(t);
 
 /**
  * Execute form validation and emit result to parent
  * Validates form fields and sends success/error status with form data
  */
-const childRules = function () {
+const childRules = (): void => {
   formRef.value.validate().then(() => {
     emit('rules', 'success', props.keys, props.index, form);
   }).catch(() => {
@@ -59,15 +48,15 @@ const childRules = function () {
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
-      form[key] = val[key];
+      form[key as keyof LdapBaseConfig] = val[key];
     });
   }
 });
 
 // Expose validation method to parent component
 defineExpose({ childRules });
-
 </script>
+
 <template>
   <Form
     ref="formRef"
@@ -77,6 +66,7 @@ defineExpose({ childRules });
     :model="form"
     :colon="false"
     size="small">
+    <!-- Base DN Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.model-label-1')"
@@ -93,6 +83,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Additional User DN Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.model-label-2')"
@@ -108,6 +100,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Additional Group DN Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.model-label-3')"

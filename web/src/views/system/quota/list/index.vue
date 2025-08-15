@@ -155,7 +155,7 @@ onMounted(() => {
       size="small"
       rowKey="id"
       :noDataSize="'small'"
-      :noDataText="t('common.noData')"
+      :noDataText="t('common.messages.noData')"
       @change="changePagination">
       <!-- Custom cell rendering -->
       <template #bodyCell="{ column, text, record }">

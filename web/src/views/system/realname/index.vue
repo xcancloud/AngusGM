@@ -4,13 +4,13 @@ import { TenantType, TenantRealNameStatus } from '@xcan-angus/infra';
 
 import { tenant } from '@/api';
 
-// Async components for different authentication states
-const Unauthorized = defineAsyncComponent(() => import('@/views/system/realname/unauthorized/index.vue'));
-const unauthorizedVisible = ref(false);
-
 // Audit status component for submitted and failed authentication
 const AuditStatus = defineAsyncComponent(() => import('@/components/AuditStatus/index.vue'));
 const auditStatusVisible = ref(false);
+
+// Async components for different authentication states
+const Unauthorized = defineAsyncComponent(() => import('@/views/system/realname/unauthorized/index.vue'));
+const unauthorizedVisible = ref(false);
 
 // Personal authentication component
 const PersonalAuth = defineAsyncComponent(() => import('@/views/system/realname/personal/index.vue'));

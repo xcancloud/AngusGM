@@ -4,51 +4,38 @@ import { Hints, Input } from '@xcan-angus/vue-ui';
 import { Checkbox, Form, FormItem } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';
+import { LdapComponentProps, GroupSchemaConfig, FormValidationRules } from '../types';
+import {
+  createFormLayoutConfig, createGroupSchemaValidationRules,
+  createInitialGroupSchemaConfig, updateGroupSchemaValidationRules
+} from '../utils';
 
-/**
- * Component props interface for group configuration
- * @param {number} index - Component index in parent
- * @param {string} keys - Unique key identifier
- * @param {any} query - Query parameters for data population
- */
-interface Props {
-  index: number,
-  keys: string,
-  query?: any
-}
+const props = withDefaults(defineProps<LdapComponentProps>(), {
+  index: -1,
+  keys: ''
+});
 
 const emit = defineEmits(['rules']);
 
 const { t } = useI18n();
 
-const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
-
+// Form reference
 const formRef = ref();
 
 // Form layout configuration
-const labelCol = { span: 9 };
+const labelCol = createFormLayoutConfig(9);
 
 // Reactive form data for LDAP group configuration
-const form: any = reactive({
-  descriptionAttribute: '', // LDAP attribute for group description
-  objectFilter: '', // LDAP filter for group search
-  nameAttribute: '', // LDAP attribute for group name
-  objectClass: '', // LDAP object class for group entries
-  ignoreSameNameGroup: true // Flag to ignore duplicate name groups
-});
+const form = reactive<GroupSchemaConfig>(createInitialGroupSchemaConfig());
 
 // Form validation rules with dynamic required field logic
-const rules = reactive({
-  objectFilter: [{ required: false, message: t('ldap.config-2') }],
-  nameAttribute: [{ required: false, message: t('ldap.config-3') }],
-  objectClass: [{ required: false, message: t('ldap.validation.groupObjectClassRequired') }]
-});
+const rules = reactive<FormValidationRules>(createGroupSchemaValidationRules(t));
 
 /**
  * Execute form validation and emit result to parent
  * Validates form fields and sends success/error status with form data
  */
-const childRules = function () {
+const childRules = (): void => {
   formRef.value.validate().then(() => {
     emit('rules', 'success', props.keys, props.index, form);
   }).catch(() => {
@@ -61,15 +48,7 @@ const childRules = function () {
  * Makes fields required only when at least one group configuration field is filled
  */
 watch(() => form, (val) => {
-  // Check if all group configuration fields are empty (except ignoreSameNameGroup)
-  const isNull = Object.keys(val).every((key) =>
-    (key !== 'ignoreSameNameGroup' && form[key] === '') || key === 'ignoreSameNameGroup'
-  );
-
-  // Update required validation based on whether any group config is provided
-  rules.objectFilter[0].required = !isNull;
-  rules.nameAttribute[0].required = !isNull;
-  rules.objectClass[0].required = !isNull;
+  updateGroupSchemaValidationRules(rules, val);
 }, { deep: true, immediate: true });
 
 /**
@@ -79,15 +58,15 @@ watch(() => form, (val) => {
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
-      form[key] = val[key];
+      form[key as keyof GroupSchemaConfig] = val[key];
     });
   }
 });
 
 // Expose validation method to parent component
 defineExpose({ childRules });
-
 </script>
+
 <template>
   <Form
     ref="formRef"
@@ -96,6 +75,7 @@ defineExpose({ childRules });
     :rules="rules"
     :colon="false"
     size="small">
+    <!-- Object Class Field -->
     <div class="flex">
       <FormItem
         class="w-150"
@@ -112,6 +92,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Object Filter Field -->
     <div class="flex">
       <FormItem
         id="group-objectFilter"
@@ -129,6 +111,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Name Attribute Field -->
     <div class="flex">
       <FormItem
         id="group-nameAttribute"
@@ -145,6 +129,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Description Attribute Field -->
     <div class="flex">
       <FormItem
         class="w-150"
@@ -160,6 +146,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Ignore Same Name Group Field -->
     <FormItem
       class="w-225"
       :labelCol="{span: 6}"

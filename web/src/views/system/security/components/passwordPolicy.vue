@@ -53,6 +53,7 @@ const minLengthChange = debounce(duration.search, (event: any) => {
     </div>
     <div class="flex items-center text-3 leading-3 text-theme-content mt-5">
       {{ t('security.messages.passwordPolicyRule') }}
+      <span class="font-bold"><pre class="inline"> -=[];\',./~!@#$%^&*()_+{}:"?`</pre></span>
     </div>
   </Card>
 </template>

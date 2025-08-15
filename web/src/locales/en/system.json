@@ -152,7 +152,7 @@
     "messages": {
       "loginRestrictionsDesc": "Within {interval} minutes, if password errors exceed {errorNum} times, lock account for {lockDuration} minutes.",
       "passwordPolicyDesc": "Minimum password length {minLength} characters, password length range allowed is 6-50 characters.",
-      "passwordPolicyRule": "Password must contain at least two combinations from 'uppercase letters, lowercase letters, numbers, special symbols', where special symbols include '-=[];\\',./~!@#$%^&*()_+{}:\"<>?'.",
+      "passwordPolicyRule": "Password must contain at least two combinations from 'uppercase letters, lowercase letters, numbers, special symbols', where special symbols include: ",
       "registrationDesc": "After enabling the registration code, users can register as users under the current account through invitation codes.",
       "accountCancellationDesc": "Confirm that the account is no longer in use and can be cancelled. After system administrator confirmation, the account will be retained for 24 hours before being cleared. During the retention period, you can revoke the account cancellation. After cancellation, the account and all users under it will be unable to log in, and services and data will be deleted and cannot be recovered.",
       "cancellationModalDesc": "The person cancelling must be a system administrator.",

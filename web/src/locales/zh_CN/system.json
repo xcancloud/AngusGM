@@ -152,7 +152,7 @@
     "messages": {
       "loginRestrictionsDesc": "在{interval}分钟内，如果密码错误超过{errorNum}次，锁定账户{lockDuration}分钟。",
       "passwordPolicyDesc": "最小密码长度{minLength}个字符，密码长度范围允许6-50个字符。",
-      "passwordPolicyRule": "密码必须包含'大写字母、小写字母、数字、特殊符号'中的至少两种组合，其中特殊符号包括'-=[];\\',./~!@#$%^&*()_+{}:\"<>?'。",
+      "passwordPolicyRule": "密码必须包含'大写字母、小写字母、数字、特殊符号'中的至少两种组合，其中特殊符号包括：",
       "registrationDesc": "启用注册码后，用户可通过邀请码在当前账户下注册为用户。",
       "accountCancellationDesc": "确认该账户不再使用，可以注销。系统管理员确认后，账户将保留24小时后被清理。在保留期间，您可以撤销账户注销。注销后，该账户及其下的所有用户将无法登录，服务及数据将被删除且无法恢复。",
       "cancellationModalDesc": "注销人员必须是系统管理员。",

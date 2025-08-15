@@ -170,7 +170,7 @@ const columns: TableColumn[] = [
       :pagination="pagination"
       class="mt-3.5"
       size="small"
-      :noDataText="t('common.noData')"
+      :noDataText="t('common.messages.noData')"
       :noDataSize="'small'">
       <template #bodyCell="{ column, record }">
         <!-- Action column: Delete button with confirmation -->

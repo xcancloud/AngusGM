@@ -4,46 +4,38 @@ import { Hints, Input } from '@xcan-angus/vue-ui';
 import { Form, FormItem } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';
+import { LdapComponentProps, MembershipConfig, FormValidationRules } from '../types';
+import {
+  createFormLayoutConfig, createMembershipValidationRules,
+  createInitialMembershipConfig, updateMembershipValidationRules
+} from '../utils';
 
-/**
- * Component props interface for member configuration
- * @param {number} index - Component index in parent
- * @param {string} keys - Unique key identifier
- * @param {any} query - Query parameters for data population
- */
-interface Props {
-  index: number,
-  keys: string,
-  query?: any
-}
+const props = withDefaults(defineProps<LdapComponentProps>(), {
+  index: -1,
+  keys: ''
+});
 
 const emit = defineEmits(['rules']);
 
-const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
-
 const { t } = useI18n();
+
+// Form reference
 const formRef = ref();
 
 // Form layout configuration
-const labelCol = { span: 9 };
+const labelCol = createFormLayoutConfig(9);
 
 // Reactive form data for LDAP membership configuration
-const form: any = reactive({
-  groupMemberAttribute: '', // LDAP attribute for group membership (user -> group)
-  memberGroupAttribute: '' // LDAP attribute for member groups (group -> user)
-});
+const form = reactive<MembershipConfig>(createInitialMembershipConfig());
 
 // Form validation rules with dynamic required field logic
-const rules = reactive({
-  groupMemberAttribute: [{ required: false, message: t('ldap.member-label-1') }],
-  memberGroupAttribute: [{ required: false, message: t('ldap.member-label-2') }]
-});
+const rules = reactive<FormValidationRules>(createMembershipValidationRules(t));
 
 /**
  * Execute form validation and emit result to parent
  * Validates form fields and sends success/error status with form data
  */
-const childRules = function () {
+const childRules = (): void => {
   formRef.value.validate().then(() => {
     emit('rules', 'success', props.keys, props.index, form);
   }).catch(() => {
@@ -56,12 +48,7 @@ const childRules = function () {
  * Makes fields required only when at least one membership configuration field is filled
  */
 watch(() => form, (val) => {
-  // Check if all membership configuration fields are empty
-  const isNull = Object.keys(val).every((key) => form[key] === '');
-
-  // Update required validation based on whether any membership config is provided
-  rules.groupMemberAttribute[0].required = !isNull;
-  rules.memberGroupAttribute[0].required = !isNull;
+  updateMembershipValidationRules(rules, val);
 }, { deep: true, immediate: true });
 
 /**
@@ -71,15 +58,15 @@ watch(() => form, (val) => {
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
-      form[key] = val[key];
+      form[key as keyof MembershipConfig] = val[key];
     });
   }
 });
 
 // Expose validation method to parent component
 defineExpose({ childRules });
-
 </script>
+
 <template>
   <Form
     ref="formRef"
@@ -88,6 +75,7 @@ defineExpose({ childRules });
     :rules="rules"
     :colon="false"
     size="small">
+    <!-- Group Member Attribute Field -->
     <div class="flex">
       <FormItem
         class="w-150"
@@ -104,6 +92,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Member Group Attribute Field -->
     <div class="flex">
       <FormItem
         class="w-150"

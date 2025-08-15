@@ -4,17 +4,9 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { Button } from 'ant-design-vue';
 
-/**
- * Component props interface for submit button states
- * @param {boolean} testLoading - Loading state for test operation
- * @param {boolean} saveLoading - Loading state for save operation
- */
-interface Props {
-  testLoading: boolean,
-  saveLoading: boolean
-}
+import { SubmitButtonProps } from '../types';
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SubmitButtonProps>(), {
   testLoading: false,
   saveLoading: false
 });
@@ -29,7 +21,7 @@ const router = useRouter();
  * Emit save configuration event to parent component
  * Triggers form validation and data submission
  */
-const saveConfig = function () {
+const saveConfig = (): void => {
   emit('saveConfig');
 };
 
@@ -37,7 +29,7 @@ const saveConfig = function () {
  * Navigate back to LDAP directory list page
  * Cancels current operation and returns to main view
  */
-const goBackList = () => {
+const goBackList = (): void => {
   router.push('/system/ldap');
 };
 
@@ -45,29 +37,32 @@ const goBackList = () => {
  * Programmatically trigger test button click
  * Exposed method for parent components to trigger testing
  */
-const testClick = function () {
+const testClick = (): void => {
   testButton.value.onClick();
 };
 
 // Expose testClick method for external access
 defineExpose({ testClick });
-
 </script>
+
 <template>
   <div class="my-10 -ml-50">
+    <!-- Save Configuration Button -->
     <Button
       size="small"
-      :loading="saveLoading"
-      :disabled="testLoading"
+      :loading="props.saveLoading"
+      :disabled="props.testLoading"
       type="primary"
       @click="saveConfig">
       {{ t('ldap.buttons.saveConfig') }}
     </Button>
+
+    <!-- Cancel Button -->
     <Button
       size="small"
       class="ml-2"
-      :loading="saveLoading"
-      :disabled="testLoading"
+      :loading="props.saveLoading"
+      :disabled="props.testLoading"
       @click="goBackList">
       {{ t('common.actions.cancel') }}
     </Button>

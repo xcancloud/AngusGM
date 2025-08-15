@@ -130,7 +130,7 @@ onMounted(() => {
       rowKey="id"
       size="small"
       :noDataSize="'small'"
-      :noDataText="t('common.noData')"
+      :noDataText="t('common.messages.noData')"
       @change="tableChange">
       <!-- Custom cell rendering -->
       <template #bodyCell="{column,text}">

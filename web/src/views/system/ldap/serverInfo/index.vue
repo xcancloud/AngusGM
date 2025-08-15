@@ -5,67 +5,46 @@ import { Checkbox, Form, FormItem } from 'ant-design-vue';
 import { DirectoryType } from '@/enums/enums';
 
 import { useI18n } from 'vue-i18n';
+import { LdapComponentProps, ServerConfig, FormValidationRules } from '../types';
+import { createFormLayoutConfig, createServerValidationRules, createInitialServerConfig } from '../utils';
 
-/**
- * Component props interface
- * @param {number} index - Component index in parent
- * @param {string} keys - Unique key identifier
- * @param {any} query - Query parameters for data population
- */
-interface Props {
-  index: number,
-  keys: string,
-  query?: any
-}
-
-const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
+const props = withDefaults(defineProps<LdapComponentProps>(), {
+  index: -1,
+  keys: ''
+});
 
 const emit = defineEmits(['rules']);
 
 const { t } = useI18n();
 
 // Form layout configuration
-const labelCol = { span: 9 };
+const labelCol = createFormLayoutConfig(9);
 
-// Reactive form data for server configuration
-const form = ref({
-  directoryType: DirectoryType.OpenLDAP, // Default directory type
-  host: '', // Server host address
-  name: '', // Server name/identifier
-  password: '', // Connection password
-  port: '', // Connection port
-  ssl: false, // SSL connection flag
-  username: '' // Connection username
-});
-
+// Form reference
 const formRef = ref();
 
+// Reactive form data for server configuration
+const form = reactive<ServerConfig>(createInitialServerConfig());
+
 // Form validation rules
-const rules = reactive({
-  name: [{ required: true, message: t('ldap.info-1') }],
-  directoryType: [{ required: true, message: t('请选择目录类型') }],
-  username: [{ required: true, message: t('ldap.info-3') }],
-  port: [{ required: true, message: t('ldap.info-4') }],
-  password: [{ required: true, message: t('ldap.info-5') }],
-  host: [{ required: true, message: t('ldap.info-6') }]
-});
+const rules = reactive<FormValidationRules>(createServerValidationRules(t));
 
 /**
  * Execute form validation and emit result to parent
  * Validates form fields and sends success/error status with form data
  */
-const childRules = function () {
+const childRules = (): void => {
   formRef.value.validate().then(() => {
     // Emit success with validated form data
     emit('rules', 'success', props.keys, props.index, {
-      ...form.value,
-      port: Number(form.value.port)
+      ...form,
+      port: Number(form.port)
     });
   }).catch(() => {
     // Emit error with form data for error handling
     emit('rules', 'error', props.keys, props.index, {
-      ...form.value,
-      port: Number(form.value.port)
+      ...form,
+      port: Number(form.port)
     });
   });
 };
@@ -77,7 +56,7 @@ const childRules = function () {
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
-      form.value[key] = val[key];
+      form[key as keyof ServerConfig] = val[key];
     });
   }
 });
@@ -86,16 +65,16 @@ watch(() => props.query, (val) => {
  * Watch SSL checkbox changes to update port automatically
  * Sets port to 636 (LDAPS) when SSL is enabled, user can override
  */
-watch(() => form.value.ssl, newValue => {
+watch(() => form.ssl, (newValue) => {
   if (newValue) {
-    form.value.port = '636';
+    form.port = '636';
   }
 });
 
 // Expose validation method to parent component
 defineExpose({ childRules });
-
 </script>
+
 <template>
   <Form
     ref="formRef"
@@ -104,6 +83,7 @@ defineExpose({ childRules });
     :model="form"
     :colon="false"
     size="small">
+    <!-- Server Name Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.info-label-1')"
@@ -120,6 +100,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Directory Type Field -->
     <FormItem
       :label="t('ldap.info-label-2')"
       name="directoryType"
@@ -130,6 +112,8 @@ defineExpose({ childRules });
         :enumKey="DirectoryType"
         size="small" />
     </FormItem>
+
+    <!-- Host Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.info-label-3')"
@@ -146,6 +130,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Port and SSL Fields -->
     <div class="flex">
       <FormItem
         :label="t('ldap.info-label-4')"
@@ -171,6 +157,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Username Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.info-label-5')"
@@ -187,6 +175,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Password Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.info-label-6')"
@@ -209,6 +199,7 @@ defineExpose({ childRules });
     </div>
   </Form>
 </template>
+
 <style scoped>
 :deep(.password-input .ant-input-suffix) {
   @apply hidden;

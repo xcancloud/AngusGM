@@ -4,62 +4,36 @@ import { Hints, Input } from '@xcan-angus/vue-ui';
 import { Checkbox, Form, FormItem } from 'ant-design-vue';
 
 import { useI18n } from 'vue-i18n';
+import { LdapComponentProps, UserSchemaConfig } from '../types';
+import { createFormLayoutConfig, createUserSchemaValidationRules, createInitialUserSchemaConfig } from '../utils';
 
-/**
- * Component props interface for user configuration
- * @param {number} index - Component index in parent
- * @param {string} keys - Unique key identifier
- * @param {any} query - Query parameters for data population
- */
-interface Props {
-  index: number,
-  keys: string,
-  query?: any
-}
+const props = withDefaults(defineProps<LdapComponentProps>(), {
+  index: -1,
+  keys: ''
+});
 
 const emit = defineEmits(['rules']);
 
 const { t } = useI18n();
 
-const props = withDefaults(defineProps<Props>(), { index: -1, keys: '' });
-
+// Form reference
 const formRef = ref();
 
 // Form layout configuration
-const labelCol = { span: 9 };
-const wrapperCol = { span: 15 };
+const labelCol = createFormLayoutConfig(9);
+const wrapperCol = createFormLayoutConfig(15);
 
 // Reactive form data for LDAP user configuration
-const form: any = reactive({
-  firstNameAttribute: '', // LDAP attribute for user's first name
-  emailAttribute: '', // LDAP attribute for user's email
-  mobileAttribute: '', // LDAP attribute for user's mobile number
-  userIdAttribute: '', // LDAP attribute for user's unique ID
-  objectClass: '', // LDAP object class for user entries
-  objectFilter: '', // LDAP filter for user search
-  passwordAttribute: '', // LDAP attribute for user's password
-  usernameAttribute: '', // LDAP attribute for user's username
-  ignoreSameIdentityUser: true // Flag to ignore duplicate identity users
-});
+const form = reactive<UserSchemaConfig>(createInitialUserSchemaConfig());
 
 // Form validation rules for required fields
-const rules = {
-  objectClass: [{ required: true, message: t('ldap.user-1') }],
-  objectFilter: [{ required: true, message: t('ldap.user-2') }],
-  userIdAttribute: [{ required: true, message: t('ldap.user-3') }],
-  passwordAttribute: [{ required: true, message: t('ldap.user-8') }],
-  displayNameAttribute: [{ required: true, message: t('ldap.validation.displayNameAttributeRequired') }],
-  firstNameAttribute: [{ required: true, message: t('ldap.validation.userFirstNameAttributeRequired') }],
-  lastNameAttribute: [{ required: true, message: t('ldap.validation.userLastNameAttributeRequired') }],
-  usernameAttribute: [{ required: true, message: t('ldap.validation.userUidAttributeRequired') }],
-  emailAttribute: [{ required: true, message: t('ldap.validation.userEmailAttributeRequired') }]
-};
+const rules = createUserSchemaValidationRules(t);
 
 /**
  * Execute form validation and emit result to parent
  * Validates form fields and sends success/error status with form data
  */
-const childRules = function () {
+const childRules = (): void => {
   formRef.value.validate().then(() => {
     emit('rules', 'success', props.keys, props.index, form);
   }).catch(() => {
@@ -74,15 +48,17 @@ const childRules = function () {
 watch(() => props.query, (val) => {
   if (val) {
     Object.keys(val).forEach((key: string) => {
-      form[key] = val[key];
+      if (key in form) {
+        (form as any)[key] = val[key];
+      }
     });
   }
 });
 
 // Expose validation method to parent component
 defineExpose({ childRules });
-
 </script>
+
 <template>
   <Form
     ref="formRef"
@@ -92,6 +68,7 @@ defineExpose({ childRules });
     :model="form"
     :colon="false"
     size="small">
+    <!-- Object Class Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-1')"
@@ -108,6 +85,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Object Filter Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-2')"
@@ -124,6 +103,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Username Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-3')"
@@ -140,6 +121,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- First Name Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-4')"
@@ -156,6 +139,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Last Name Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-5')"
@@ -172,6 +157,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Display Name Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.labels.displayName')"
@@ -188,6 +175,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Mobile Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-6')"
@@ -204,6 +193,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Email Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-7')"
@@ -220,6 +211,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Password Attribute Field -->
     <div class="flex">
       <FormItem
         :label="t('ldap.user-label-8')"
@@ -236,6 +229,8 @@ defineExpose({ childRules });
         style="transform: translateY(7px);"
         class="ml-2" />
     </div>
+
+    <!-- Ignore Same Identity User Field -->
     <FormItem
       :label="t('ldap.labels.ignoreSameIdentityUser')"
       class="w-150"
