@@ -97,18 +97,6 @@ export interface DataInfoType {
 }
 
 /**
- * HTTP method type for type safety
- * Defines all supported HTTP methods
- */
-export type HttpMethodType = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD' | 'TRACE';
-
-/**
- * HTTP status code type for validation
- * Defines valid HTTP status code ranges
- */
-export type HttpStatusCode = number;
-
-/**
  * Search filter interface for log queries
  * Defines the structure of search criteria
  */
@@ -122,40 +110,137 @@ export interface LogSearchFilter {
 }
 
 /**
- * Pagination parameters interface
- * Defines pagination state for log queries
+ * Component props interface for API request component
  */
-export interface LogPaginationParams {
-  /** Current page number (1-based) */
-  pageNo: number;
-  /** Number of items per page */
-  pageSize: number;
-  /** Total number of items */
-  total: number;
-  /** Search filters to apply */
-  filters: LogSearchFilter[];
-}
-
-/**
- * API log response interface
- * Defines the structure of API responses for log queries
- */
-export interface ApiLogResponse {
-  /** List of log entries */
-  list: DataRecordType[];
-  /** Total count of matching entries */
-  total: number;
-  /** Current page number */
-  pageNo: number;
-  /** Number of items per page */
-  pageSize: number;
-}
-
-/**
- * Log detail response interface
- * Defines the structure of detailed log information
- */
-export interface LogDetailResponse {
-  /** Detailed log information */
+export interface ApiRequestProps {
+  /** Request log data to display */
   data: DataInfoType;
+}
+
+/**
+ * Component props interface for API response component
+ */
+export interface ApiResponseProps {
+  /** Response log data to display */
+  data: DataInfoType;
+}
+
+/**
+ * Row configuration interface for grid layouts
+ */
+export interface RowConfig {
+  /** Spacing between columns */
+  gutter: number;
+  /** Label column span */
+  labelCol: number;
+  /** Value column span */
+  valueCol: number;
+}
+
+/**
+ * Header item interface for request/response headers
+ */
+export interface HeaderItem {
+  /** Header key */
+  key: string;
+  /** Header value */
+  value: any;
+}
+
+/**
+ * Tab configuration interface
+ */
+export interface TabConfig {
+  /** Tab display name */
+  name: string;
+  /** Tab value identifier */
+  value: string;
+}
+
+/**
+ * Component state interface for main request log component
+ */
+export interface RequestLogState {
+  /** Whether to show statistics */
+  showCount: boolean;
+  /** Query parameters */
+  params: {
+    pageNo: number;
+    pageSize: number;
+    filters: any[];
+  };
+  /** Total count of records */
+  total: number;
+  /** List of log records */
+  tableList: DataRecordType[];
+  /** Loading state */
+  loading: boolean;
+  /** Disabled state */
+  disabled: boolean;
+  /** Detailed log information */
+  detail?: DataInfoType;
+  /** Selected API log */
+  selectedApi?: DataRecordType;
+  /** Active tab key */
+  activeKey: number;
+  /** Search bar height for layout */
+  searchBarHeight: number;
+  /** Log retention period */
+  clearBeforeDay?: string;
+}
+
+/**
+ * Search option configuration interface
+ */
+export interface SearchOption {
+  /** Field key to search on */
+  valueKey: string;
+  /** Placeholder text */
+  placeholder: string;
+  /** Input type */
+  type: 'input' | 'select' | 'select-app' | 'select-enum' | 'select-dept' | 'select-group' | 'select-intl' | 'select-itc' | 'select-user' | 'select-service' | 'select-tag' | 'select-tenant' | 'date' | 'date-range' | 'tree-select';
+  /** Search operation */
+  op?: string;
+  /** Whether to allow clearing */
+  allowClear: boolean;
+  /** Additional options for select types */
+  options?: Array<{ label: string; value: any }>;
+  /** Action URL for select types */
+  action?: string;
+  /** Field name mapping for select types */
+  fieldNames?: { label: string; value: string };
+  /** Whether to show search */
+  showSearch?: boolean;
+  /** Data type for number inputs */
+  dataType?: string;
+  /** Minimum value for number inputs */
+  min?: number;
+  /** Maximum value for number inputs */
+  max?: number;
+  /** Enum key for enum selects */
+  enumKey?: any;
+}
+
+/**
+ * Grid column configuration interface
+ */
+export interface GridColumn {
+  /** Column label */
+  label: string;
+  /** Data field name */
+  dataIndex: string;
+}
+
+/**
+ * HTTP method color mapping interface
+ */
+export interface HttpMethodColors {
+  GET: string;
+  POST: string;
+  DELETE: string;
+  PATCH: string;
+  PUT: string;
+  OPTIONS: string;
+  HEAD: string;
+  TRACE: string;
 }

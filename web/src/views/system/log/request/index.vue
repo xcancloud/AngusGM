@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, ref, computed, nextTick } from 'vue';
+import { defineAsyncComponent, onMounted, reactive, computed, nextTick, ref } from 'vue';
 import { Pagination, TabPane, Tabs, Tooltip } from 'ant-design-vue';
 import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { PageQuery, SearchCriteria, GM, HttpMethod } from '@xcan-angus/infra';
+import { SearchCriteria, GM, HttpMethod } from '@xcan-angus/infra';
 import elementResizeDetector from 'element-resize-detector';
 
 import { setting, userLog } from '@/api';
+import { DataRecordType, RequestLogState } from './types';
+import {
+  createSearchOptions, createGridColumns, createHttpMethodColors, createPageSizeOptions, resetPagination,
+  updatePaginationParams, getHttpMethodColor, getStatusIcon, getStatusTextColor, isItemSelected
+} from './utils';
 
 // Lazy load components for better performance
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
@@ -16,215 +21,72 @@ const ApiResponse = defineAsyncComponent(() => import('./components/apiResponse.
 const { t } = useI18n();
 
 // Reactive state management
-const showCount = ref(true);
-const params = ref<PageQuery>({ pageNo: 1, pageSize: 10, filters: [] });
-const total = ref(0);
-const tableList = ref<any[]>([]);
-const loading = ref(false);
-const disabled = ref(false);
-const detail = ref();
-const selectedApi = ref();
-const activeKey = ref(0);
+const state = reactive<RequestLogState>({
+  showCount: true,
+  params: { pageNo: 1, pageSize: 10, filters: [] },
+  total: 0,
+  tableList: [],
+  loading: false,
+  disabled: false,
+  detail: undefined,
+  selectedApi: undefined,
+  activeKey: 0,
+  searchBarHeight: 0,
+  clearBeforeDay: undefined
+});
 
 // UI state management
-const tabItemRefs = ref<HTMLElement[]>([]);
+const tabItemRefs = reactive<HTMLElement[]>([]);
 const searchBar = ref<HTMLElement | null>(null);
-const searchBarHeight = ref(0);
-const clearBeforeDay = ref<string>();
 
 // Element resize detector for dynamic height calculation
 const erd = elementResizeDetector();
 
 // Computed properties for better performance
-const hasData = computed(() => tableList.value.length > 0);
-const isSelected = computed(() => (item: any) => selectedApi.value?.id === item?.id);
+const hasData = computed(() => state.tableList.length > 0);
 
 // HTTP method color mapping for visual distinction
-const textColor = {
-  GET: 'text-blue-bg',
-  POST: 'text-success',
-  DELETE: 'text-danger',
-  PATCH: 'text-blue-bg1',
-  PUT: 'text-orange-bg2',
-  OPTIONS: 'text-blue-bg2',
-  HEAD: 'text-orange-method',
-  TRACE: 'text-purple-method'
-} as const;
+const textColor = computed(() => createHttpMethodColors());
 
 // Pagination configuration
-const pageSizeOptions = ['10', '20', '30', '40', '50'] as const;
+const pageSizeOptions = computed(() => createPageSizeOptions());
 
 // Search options configuration for the search panel
-const options: any[] = [
-  {
-    valueKey: 'id',
-    placeholder: t('log.request.placeholder.searchLogId'),
-    type: 'input' as const,
-    op: SearchCriteria.OpEnum.Equal,
-    allowClear: true
-  },
-  {
-    valueKey: 'userId',
-    placeholder: t('log.request.placeholder.selectUserId'),
-    type: 'select-user' as const,
-    allowClear: true
-  },
-  {
-    valueKey: 'requestId',
-    placeholder: t('log.request.placeholder.searchRequestId'),
-    op: SearchCriteria.OpEnum.Equal,
-    type: 'input' as const,
-    allowClear: true
-  },
-  {
-    valueKey: 'resourceName',
-    placeholder: t('log.request.placeholder.searchOperationResource'),
-    type: 'input' as const,
-    op: SearchCriteria.OpEnum.Equal,
-    allowClear: true
-  },
-  {
-    valueKey: 'success',
-    type: 'select' as const,
-    allowClear: true,
-    options: [
-      {
-        label: t('log.request.search.failed'),
-        value: false
-      },
-      {
-        label: t('log.request.search.success'),
-        value: true
-      }
-    ],
-    placeholder: t('log.request.placeholder.searchSuccess')
-  },
-  {
-    valueKey: 'serviceCode',
-    placeholder: t('log.request.placeholder.selectOrSearchService'),
-    type: 'select' as const,
-    action: `${GM}/service`,
-    fieldNames: { label: 'name', value: 'code' },
-    showSearch: true,
-    allowClear: true
-  },
-  {
-    valueKey: 'instanceId',
-    placeholder: t('log.request.placeholder.searchInstanceId'),
-    type: 'input' as const,
-    op: SearchCriteria.OpEnum.Equal,
-    allowClear: true
-  },
-  {
-    valueKey: 'apiCode',
-    placeholder: t('log.request.placeholder.searchApiCode'),
-    type: 'input' as const,
-    op: SearchCriteria.OpEnum.Equal,
-    allowClear: true
-  },
-  {
-    valueKey: 'method',
-    placeholder: t('log.request.placeholder.searchRequestMethod'),
-    type: 'select-enum' as const,
-    enumKey: HttpMethod,
-    allowClear: true
-  },
-  {
-    valueKey: 'uri',
-    placeholder: t('log.request.placeholder.searchRequestUri'),
-    type: 'input' as const,
-    op: SearchCriteria.OpEnum.Equal,
-    allowClear: true
-  },
-  {
-    valueKey: 'status',
-    placeholder: t('log.request.placeholder.searchStatusCode'),
-    type: 'input' as const,
-    op: SearchCriteria.OpEnum.Equal,
-    dataType: 'number',
-    min: 0,
-    max: 1000,
-    allowClear: true
-  },
-  {
-    valueKey: 'requestDate',
-    type: 'date' as const,
-    placeholder: t('log.request.placeholder.requestTime')
-  }
-];
+const options = computed(() => createSearchOptions(t, GM, HttpMethod));
 
 // Grid columns configuration for displaying log details
-const gridColumns = [
-  [
-    {
-      label: t('log.request.columns.apiName'),
-      dataIndex: 'apiName'
-    },
-    {
-      label: t('log.request.columns.requestId'),
-      dataIndex: 'requestId'
-    },
-    {
-      label: t('log.request.columns.apiCode'),
-      dataIndex: 'apiCode'
-    },
-    {
-      label: t('log.request.columns.serviceName'),
-      dataIndex: 'serviceName'
-    },
-    {
-      label: t('log.request.columns.serviceCode'),
-      dataIndex: 'serviceCode'
-    },
-    {
-      label: t('log.request.columns.uri'),
-      dataIndex: 'uri'
-    },
-    {
-      label: t('log.request.columns.method'),
-      dataIndex: 'method'
-    },
-    {
-      label: t('log.request.columns.elapsedMillis'),
-      dataIndex: 'elapsedMillis'
-    },
-    {
-      label: t('log.request.columns.status'),
-      dataIndex: 'status'
-    }
-  ]
-];
+const gridColumns = computed(() => createGridColumns(t));
 
 /**
  * Fetch API log list with pagination and filters
  * Includes debouncing to prevent multiple simultaneous requests
  */
-const getList = async function () {
-  if (loading.value) {
+const getList = async (): Promise<void> => {
+  if (state.loading) {
     return;
   }
 
-  loading.value = true;
+  state.loading = true;
   try {
-    const [error, { data = { list: [], total: 0 } }] = await userLog.getApiLog(params.value);
+    const [error, { data = { list: [], total: 0 } }] = await userLog.getApiLog(state.params);
 
     if (error) {
       return;
     }
 
     if (data.list?.length) {
-      tableList.value = data.list;
-      total.value = +data.total;
-      selectedApi.value = data.list[0];
+      state.tableList = data.list;
+      state.total = +data.total;
+      state.selectedApi = data.list[0];
       await getDetail(data.list[0].id);
       return;
     }
 
-    tableList.value = [];
-    selectedApi.value = undefined;
-    detail.value = undefined;
+    state.tableList = [];
+    state.selectedApi = undefined;
+    state.detail = undefined;
   } finally {
-    loading.value = false;
+    state.loading = false;
   }
 };
 
@@ -232,7 +94,7 @@ const getList = async function () {
  * Fetch detailed information for a specific API log entry
  * @param id - The unique identifier of the log entry
  */
-const getDetail = async (id: string) => {
+const getDetail = async (id: string): Promise<void> => {
   if (!id) return;
 
   const [error, res] = await userLog.getApiLogDetail(id);
@@ -240,22 +102,22 @@ const getDetail = async (id: string) => {
     return;
   }
 
-  detail.value = res.data;
+  state.detail = res.data;
 };
 
 /**
  * Handle search criteria changes and trigger new search
  * @param data - Array of search criteria with key, value, and operation
  */
-const searchChange = async (data: { key: string; value: string; op: SearchCriteria.OpEnum; }[]) => {
-  params.value.pageNo = 1;
-  params.value.filters = data;
-  disabled.value = true;
+const searchChange = async (data: SearchCriteria[]): Promise<void> => {
+  resetPagination(state.params);
+  state.params.filters = data;
+  state.disabled = true;
 
   try {
     await getList();
   } finally {
-    disabled.value = false;
+    state.disabled = false;
   }
 };
 
@@ -263,21 +125,21 @@ const searchChange = async (data: { key: string; value: string; op: SearchCriter
  * Fetch system settings for API log configuration
  * Retrieves the number of days to keep logs before automatic cleanup
  */
-const getSettings = async () => {
+const getSettings = async (): Promise<void> => {
   const [error, { data }] = await setting.getSettingDetail('API_LOG_CONFIG');
   if (error) {
     return;
   }
 
-  clearBeforeDay.value = data.apiLog?.clearBeforeDay;
+  state.clearBeforeDay = data.apiLog?.clearBeforeDay;
 };
 
 /**
  * Handle element resize for dynamic height calculation
  * Ensures proper layout when search bar height changes
  */
-const resize = (element: HTMLElement) => {
-  searchBarHeight.value = element.offsetHeight;
+const resize = (element: HTMLElement): void => {
+  state.searchBarHeight = element.offsetHeight;
 };
 
 /**
@@ -285,15 +147,14 @@ const resize = (element: HTMLElement) => {
  * @param page - Current page number
  * @param size - Number of items per page
  */
-const paginationChange = async (page: number, size: number) => {
-  params.value.pageNo = page;
-  params.value.pageSize = size;
-  disabled.value = true;
+const paginationChange = async (page: number, size: number): Promise<void> => {
+  updatePaginationParams(state.params, page, size);
+  state.disabled = true;
 
   try {
     await getList();
   } finally {
-    disabled.value = false;
+    state.disabled = false;
   }
 };
 
@@ -302,8 +163,8 @@ const paginationChange = async (page: number, size: number) => {
  * Updates selected item and fetches detailed information
  * @param item - The selected log item
  */
-const handleClick = async (item: any) => {
-  selectedApi.value = item;
+const handleClick = async (item: DataRecordType): Promise<void> => {
+  state.selectedApi = item;
   await getDetail(item.id);
 };
 
@@ -318,7 +179,7 @@ onMounted(async () => {
   // Set up resize detection for search bar
   await nextTick();
   if (searchBar.value) {
-    erd.listenTo(searchBar.value, resize);
+    erd.listenTo(searchBar, resize);
   }
 });
 </script>
@@ -327,7 +188,7 @@ onMounted(async () => {
   <div class="h-full">
     <!-- System hints showing log retention policy -->
     <Hints
-      :text="t('log.request.messages.description', { clearBeforeDay: clearBeforeDay })"
+      :text="t('log.request.messages.description', { clearBeforeDay: state.clearBeforeDay })"
       class="mb-1" />
 
     <PureCard class="p-3.5" style="height: calc(100% - 24px);">
@@ -338,7 +199,7 @@ onMounted(async () => {
           :barTitle="t('log.request.messages.newRequests')"
           dateType="DAY"
           :router="GM"
-          :visible="showCount" />
+          :visible="state.showCount" />
 
         <div class="flex items-start justify-between text-3 leading-3 mb-2">
           <SearchPanel
@@ -348,12 +209,12 @@ onMounted(async () => {
 
           <div>
             <IconCount
-              v-model:value="showCount"
+              v-model:value="state.showCount"
               class="mt-1.5 text-3.5" />
             <IconRefresh
               class="ml-2 mt-1.5 text-3.5"
-              :loading="loading"
-              :disabled="disabled"
+              :loading="state.loading"
+              :disabled="state.disabled"
               @click="getList" />
           </div>
         </div>
@@ -361,24 +222,24 @@ onMounted(async () => {
 
       <!-- Main content area with log list and details -->
       <div
-        :style="{height: `calc(100% - ${searchBarHeight}px)`}"
+        :style="{ height: `calc(100% - ${state.searchBarHeight}px)` }"
         class="flex">
         <!-- Left panel: API log list -->
         <Spin
-          :spinning="loading"
+          :spinning="state.loading"
           class="w-100 border-r flex flex-col flex-none border-theme-divider h-full">
           <template v-if="hasData">
             <div
               class="relative text-3 leading-3 flex-1 overflow-hidden hover:overflow-y-auto pr-1.75"
               style="scrollbar-gutter: stable;">
               <div
-                v-for="(item, index) in tableList"
+                v-for="(item, index) in state.tableList"
                 :key="item.id"
                 ref="tabItemRefs"
                 class="p-2 space-y-3.5 cursor-pointer border-theme-divider transition-colors duration-200"
                 :class="{
-                  'border-b': index < tableList.length - 1,
-                  'bg-theme-tabs-selected border-l-2 border-selected': isSelected(item)
+                  'border-b': index < state.tableList.length - 1,
+                  'bg-theme-tabs-selected border-l-2 border-selected': isItemSelected(item, state.selectedApi?.id || '')
                 }"
                 @click="handleClick(item)">
                 <!-- API name and status row -->
@@ -392,9 +253,9 @@ onMounted(async () => {
                   </div>
                   <div
                     class="whitespace-nowrap flex items-center"
-                    :class="[item.status.substring(0, 2) === '20' ? 'text-success' : 'text-danger']">
+                    :class="getStatusTextColor(item.status || '')">
                     <Icon
-                      :icon="item.status === '200' ? 'icon-right' : 'icon-cuowu'"
+                      :icon="getStatusIcon(item.status || '')"
                       class="mr-1" />
                     {{ item.status }}
                   </div>
@@ -402,7 +263,7 @@ onMounted(async () => {
 
                 <!-- HTTP method and URI row -->
                 <div class="flex items-center space-x-3.5">
-                  <div :class="textColor[item?.method]">{{ item?.method }}</div>
+                  <div :class="getHttpMethodColor(item?.method || '', textColor)">{{ item?.method }}</div>
                   <div class="truncate">
                     <Tooltip
                       :title="item.uri"
@@ -416,12 +277,12 @@ onMounted(async () => {
 
             <!-- Pagination controls -->
             <Pagination
-              :current="params.pageNo"
-              :pageSize="params.pageSize"
-              :pageSizeOptions="pageSizeOptions"
-              :total="total"
+              :current="state.params.pageNo"
+              :pageSize="state.params.pageSize"
+              :pageSizeOptions="pageSizeOptions as (string | number)[]"
+              :total="state.total"
               :hideOnSinglePage="false"
-              :showTotal="false"
+              :showTotal="(total: number, range: [number, number]) => `${range[0]}-${range[1]} of ${total} items`"
               showLessItems
               showSizeChanger
               size="small"
@@ -436,18 +297,18 @@ onMounted(async () => {
 
         <!-- Right panel: Tabbed detail view -->
         <Tabs
-          v-model:activeKey="activeKey"
+          v-model:activeKey="state.activeKey"
           size="small"
           class="flex-1 ml-3.5 h-full"
-          :class="{'-mr-3.5': activeKey !== 0}">
+          :class="{ '-mr-3.5': state.activeKey !== 0 }">
           <!-- Basic information tab -->
           <TabPane
             :key="0"
             :tab="t('log.request.tabs.basic')">
-            <template v-if="detail">
+            <template v-if="state.detail">
               <Grid
                 :columns="gridColumns"
-                :dataSource="detail"
+                :dataSource="state.detail"
                 :colon="false"
                 :labelSpacing="40"
                 class="-ml-2 grid-row" />
@@ -462,8 +323,8 @@ onMounted(async () => {
             :key="1"
             :tab="t('log.request.tabs.request')"
             forceRender>
-            <template v-if="detail">
-              <ApiRequest :data="detail" />
+            <template v-if="state.detail">
+              <ApiRequest :data="state.detail" />
             </template>
             <template v-else>
               <NoData class="flex-1 -mt-6" />
@@ -475,8 +336,8 @@ onMounted(async () => {
             :key="2"
             :tab="t('log.request.tabs.response')"
             forceRender>
-            <template v-if="detail">
-              <ApiResponse :data="detail" />
+            <template v-if="state.detail">
+              <ApiResponse :data="state.detail" />
             </template>
             <template v-else>
               <NoData class="flex-1 -mt-6" />
