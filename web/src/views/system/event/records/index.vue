@@ -1,333 +1,233 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM, EventPushStatus, EventType } from '@xcan-angus/infra';
+import { app, GM } from '@xcan-angus/infra';
 import DOMPurify from 'dompurify';
 
 import { event } from '@/api';
-import { EventRecord } from './types';
+import { EventRecord, EventRecordsState, CheckContentConfig } from './types';
+import {
+  createSearchOptions, createTableColumns, createStatusStyleMapping,
+  createInitialPaginationParams, createInitialEventRecord, createInitialCheckContentConfig,
+  createPaginationObject, updatePaginationParams, resetPagination, updateSearchFilters,
+  getStatusStyle, hasEventError, canViewEvent, canShowReceiveConfig
+} from './utils';
 
+// Async component imports
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const ReceiveConfig = defineAsyncComponent(() => import('./receiveConfig.vue'));
 const ViewEvent = defineAsyncComponent(() => import('./view.vue'));
 
 const { t } = useI18n();
-const visible = ref(false);
-// Selected event record item for viewing details
-const selectedItem = ref<EventRecord>({
-  description: '',
-  eventCode: '',
-  eKey: '',
-  errMsg: '',
-  eventContent: '',
-  execNo: '',
-  id: '',
-  pushStatus: { value: '', message: '' },
-  tenantId: '',
-  tenantName: '',
-  triggerTime: '',
-  type: { value: '', message: '' }
+
+// Component state management
+const state = reactive<EventRecordsState>({
+  showCount: true,
+  eventRecordList: [],
+  params: createInitialPaginationParams(),
+  total: 0,
+  loading: false,
+  disabled: false,
+  selectedItem: createInitialEventRecord(),
+  visible: false
 });
+
+// Check content configuration
+const checkContentConfig = reactive<CheckContentConfig>(
+  createInitialCheckContentConfig()
+);
+
+// Status style mapping for push status badges
+const statusStyleMapping = createStatusStyleMapping();
+
 // Search panel options configuration
-const Options = [
-  {
-    placeholder: t('event.records.placeholder.searchEventCode'),
-    valueKey: 'code',
-    type: 'input' as const,
-    op: 'MATCH' as const,
-    allowClear: true
-  },
-  {
-    valueKey: 'userId',
-    type: 'select-user' as const,
-    allowClear: true,
-    placeholder: t('event.records.placeholder.selectReceiver'),
-    showSearch: true
-  },
-  {
-    valueKey: 'type',
-    type: 'select-enum' as const,
-    enumKey: EventType,
-    allowClear: true,
-    placeholder: t('event.records.placeholder.selectEventType')
-  },
-  {
-    valueKey: 'pushStatus',
-    type: 'select-enum' as const,
-    enumKey: EventPushStatus,
-    allowClear: true,
-    placeholder: t('event.records.placeholder.selectPushStatus')
-  },
-  {
-    valueKey: 'createdDate',
-    type: 'date-range' as const
-  }
-];
+const searchOptions = computed(() => createSearchOptions(t));
 
 // Table columns configuration
-const Columns = [
-  {
-    title: t('event.records.columns.id'),
-    dataIndex: 'id',
-    key: 'id',
-    width: '13%'
-  },
-  {
-    title: t('event.records.columns.receiverName'),
-    dataIndex: 'fullName',
-    groupName: 'user',
-    key: 'receiverName',
-    width: '13%'
-  },
-  {
-    title: t('event.records.columns.receiverId'),
-    dataIndex: 'userId',
-    groupName: 'user',
-    key: 'receiverId',
-    hide: true,
-    width: '13%'
-  },
-  {
-    title: t('event.records.columns.eventCode'),
-    dataIndex: 'code',
-    key: 'eventCode',
-    width: '8%',
-    groupName: 'event',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('event.records.columns.eventName'),
-    dataIndex: 'name',
-    key: 'eventName',
-    width: '8%',
-    groupName: 'event',
-    hide: true
-  },
-  {
-    title: t('event.records.columns.eKey'),
-    dataIndex: 'ekey',
-    key: 'eKey',
-    width: '10%',
-    ellipsis: true,
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('event.records.columns.content'),
-    dataIndex: 'description',
-    key: 'description'
-  },
-  {
-    title: t('event.records.columns.type'),
-    dataIndex: 'type',
-    key: 'type',
-    width: '6%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('event.records.columns.pushStatus'),
-    dataIndex: 'pushStatus',
-    key: 'pushStatus',
-    width: '8%',
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('event.records.columns.triggerTime'),
-    dataIndex: 'createdDate',
-    key: 'createdDate',
-    width: '11%',
-    sorter: {
-      compare: (a, b) => a.createdDate > b.createdDate
-    },
-    customCell: () => {
-      return { style: 'white-space:nowrap;' };
-    }
-  },
-  {
-    title: t('event.records.columns.operate'),
-    dataIndex: 'action',
-    key: 'action',
-    width: 280,
-    align: 'center'
-  }
-];
+const tableColumns = computed(() => createTableColumns(t));
 
-const showCount = ref(true);
-
-const eventRecordList = ref<EventRecord[]>([]);
-const params = reactive({
-  pageNo: 1,
-  pageSize: 10,
-  orderSort: 'DESC',
-  sortBy: 'createdDate',
-  fullTextSearch: true,
-  filters: [] as Record<string, string>[]
-});
-
-const total = ref(0);
-const loading = ref(false);
-const disabled = ref(false);
-const getEventList = async () => {
-  if (loading.value) {
-    return;
-  }
-  loading.value = true;
-  const [error, res] = await event.getEventList({ ...params });
-  loading.value = false;
-  if (error) {
+/**
+ * Get event list from API
+ * Fetches event records based on current parameters
+ */
+const getEventList = async (): Promise<void> => {
+  if (state.loading) {
     return;
   }
 
-  eventRecordList.value = res.data.list;
-  total.value = +res.data.total || 0;
+  try {
+    state.loading = true;
+    const [error, res] = await event.getEventList({ ...state.params });
+
+    if (error) {
+      return;
+    }
+
+    state.eventRecordList = res.data.list;
+    state.total = +res.data.total || 0;
+  } catch (error) {
+    console.error('Failed to get event list:', error);
+  } finally {
+    state.loading = false;
+  }
 };
 
-const tableChange = async (_pagination, _filter, sorter) => {
-  params.orderSort = sorter.orderSort;
-  params.sortBy = sorter.sortBy;
-  const { current, pageSize } = _pagination;
-  params.pageNo = current;
-  params.pageSize = pageSize;
-  disabled.value = true;
+/**
+ * Handle table change events
+ * Updates pagination and sorting parameters
+ */
+const tableChange = async (_pagination: any, _filter: any, sorter: any): Promise<void> => {
+  updatePaginationParams(state.params, {
+    orderSort: sorter.orderSort,
+    sortBy: sorter.sortBy,
+    current: _pagination.current,
+    pageSize: _pagination.pageSize
+  });
+
+  state.disabled = true;
   await getEventList();
-  disabled.value = false;
+  state.disabled = false;
 };
 
-const checkContentConfig: {
-  dialogVisible: boolean
-  content: string
-} = reactive({
-  dialogVisible: false,
-  content: ''
-});
-
-const openCheckContentDialog = (item: string) => {
+/**
+ * Open check content dialog
+ * Shows event content in a modal
+ */
+const openCheckContentDialog = (content: string): void => {
   checkContentConfig.dialogVisible = true;
-  checkContentConfig.content = item;
+  checkContentConfig.content = content;
 };
 
-const statusStyle: {
-  [key: string]: string
-} = {
-  PENDING: 'warning',
-  PUSHING: 'processing',
-  PUSH_SUCCESS: 'success',
-  PUSH_FAIL: 'error',
-  IGNORED: 'default'
-};
+/**
+ * Handle search panel changes
+ * Updates search filters and resets pagination
+ */
+const handleChange = async (filters: Record<string, string>[]): Promise<void> => {
+  resetPagination(state.params);
+  updateSearchFilters(state.params, filters);
 
-const getStatusStyle = (key: string): string => {
-  return statusStyle[key];
-};
-
-const handleChange = async (data: Record<string, string>[]) => {
-  params.pageNo = 1;
-  params.filters = data;
-  disabled.value = true;
+  state.disabled = true;
   await getEventList();
-  disabled.value = false;
+  state.disabled = false;
 };
 
-const openReceiveConfig = (value) => {
-  selectedItem.value = value;
-  visible.value = true;
+/**
+ * Open receive configuration modal
+ * Shows channel configuration for selected event
+ */
+const openReceiveConfig = (record: EventRecord): void => {
+  state.selectedItem = record;
+  state.visible = true;
 };
 
-const pagination = computed(() => {
-  return {
-    current: params.pageNo,
-    pageSize: params.pageSize,
-    total: total.value
-  };
-});
+// Computed pagination object for table component
+const pagination = computed(() =>
+  createPaginationObject(state.params, state.total)
+);
 
+// Lifecycle hooks
 onMounted(() => {
   getEventList();
 });
 </script>
+
 <template>
   <div class="flex flex-col min-h-full">
     <!-- Event records description hint -->
     <Hints :text="t('event.records.messages.description')" class="mb-1" />
+
     <PureCard class="flex-1 p-3.5">
+      <!-- Statistics component -->
       <Statistics
         resource="Event"
         :barTitle="t('statistics.metrics.newEvents')"
         :router="GM"
-        :visible="showCount" />
+        :visible="state.showCount" />
+
+      <!-- Search panel and controls -->
       <div class="flex items-center justify-between mb-2">
         <SearchPanel
           class="flex-1"
-          :options="Options"
+          :options="searchOptions"
           @change="handleChange" />
         <div class="flex">
-          <IconCount v-model:value="showCount" />
+          <IconCount v-model:value="state.showCount" />
           <IconRefresh
-            :loading="loading"
-            :disabled="disabled"
+            :loading="state.loading"
+            :disabled="state.disabled"
             class="ml-2"
             @click="getEventList" />
         </div>
       </div>
+
+      <!-- Event records table -->
       <Table
         size="small"
-        :dataSource="eventRecordList"
-        :columns="Columns"
+        :dataSource="state.eventRecordList"
+        :columns="tableColumns"
         :pagination="pagination"
-        :loading="loading"
+        :loading="state.loading"
         bodyCell="--"
         @change="tableChange">
         <template #bodyCell="{ column, record }">
+          <!-- ID column with view link -->
           <template v-if="column.dataIndex === 'id'">
             <Button
+              v-if="canViewEvent(record)"
               type="link"
               class="px-0 text-xs"
               @click="openCheckContentDialog(record.eventViewUrl)">
               {{ record.id }}
             </Button>
+            <span v-else>{{ record.id }}</span>
           </template>
+
+          <!-- Event type column -->
           <template v-if="column.dataIndex === 'type'">
             {{ record.type.message }}
           </template>
+
+          <!-- Push status column with error details -->
           <template v-if="column.dataIndex === 'pushStatus'">
             <Badge
-              :status="getStatusStyle(record.pushStatus.value)"
+              :status="getStatusStyle(record.pushStatus.value, statusStyleMapping)"
               :text="record.pushStatus.message">
             </Badge>
             <Popover
-              :overlayStyle="{maxWidth:'500px'}">
+              v-if="hasEventError(record)"
+              :overlayStyle="{ maxWidth: '500px' }">
               <Icon
-                v-if="record.pushStatus?.value === 'PUSH_FAIL' "
                 icon="icon-gantanhao-yuankuang"
                 class="text-xs leading-3.5 text-theme-sub-content text-theme-text-hover ml-1" />
               <template #title>
                 {{ t('event.records.messages.failureReason') }}
               </template>
               <template #content>
-                <div class="text-xs max-h-100 max-w-150 overflow-auto" v-html=" DOMPurify.sanitize(record.pushMsg)"></div>
+                <div
+                  class="text-xs max-h-100 max-w-150 overflow-auto"
+                  v-html="DOMPurify.sanitize(record.pushMsg)">
+                </div>
               </template>
             </Popover>
           </template>
-          <template v-if="column.dataIndex ==='action'">
+
+          <!-- Action column -->
+          <template v-if="column.dataIndex === 'action'">
+            <!-- Receive channel view button -->
             <Button
-              v-if="app.show('ReceivingChannelView')"
+              v-if="app.show('ReceivingChannelView') && canShowReceiveConfig(record)"
               type="text"
               class="text-xs"
               @click="openReceiveConfig(record)">
               <Icon icon="icon-jiekoudaili" class="mr-1" />
               {{ app.getName('ReceivingChannelView') }}
             </Button>
+
+            <!-- Event content view button -->
             <Button
-              v-if="app.show('EventContentView')"
+              v-if="app.show('EventContentView') && canViewEvent(record)"
               type="text"
               class="text-xs"
               :disabled="!app.has('EventContentView')"
@@ -335,44 +235,25 @@ onMounted(() => {
               <Icon icon="icon-shijianjilu" class="mr-1" />
               {{ app.getName('EventContentView') }}
             </Button>
-            <!-- <Dropdown overlayClassName="table-oper-menu ant-dropdown-sm">
-              <Icon icon="icon-gengduo" class="cursor-pointer outline-none" />
-              <template #overlay>
-                <Menu>
-                  <MenuItem
-                    v-if="app.show('ReceivingChannelView')"
-                    :disabled="!app.has('ReceivingChannelView')"
-                    @click="openReceiveConfig(record)">
-                    <template #icon>
-                      <Icon icon="icon-jiekoudaili" />
-                    </template>
-                    <a href="javascript:;" class="text-theme-text-hover">{{ app.getName('ReceivingChannelView') }}</a>
-                  </MenuItem>
-                  <MenuItem
-                    v-if="app.show('EventContentView')"
-                    :disabled="!app.has('EventContentView')"
-                    @click="openCheckContentDialog(record.eventViewUrl)">
-                    <template #icon>
-                      <Icon icon="icon-shijianjilu" />
-                    </template>
-                    <a href="javascript:;" class="text-theme-text-hover">{{ app.getName('EventContentView') }}</a>
-                  </MenuItem>
-                </Menu>
-              </template>
-            </Dropdown> -->
           </template>
         </template>
       </Table>
     </PureCard>
-    <AsyncComponent :visible="visible">
+
+    <!-- Receive configuration modal -->
+    <AsyncComponent :visible="state.visible">
       <ReceiveConfig
-        v-if="visible"
-        v-model:visible="visible"
-        :eventCode="selectedItem.eventCode"
-        :eKey="selectedItem.eKey" />
+        v-if="state.visible"
+        v-model:visible="state.visible"
+        :eventCode="state.selectedItem.eventCode"
+        :eKey="state.selectedItem.ekey" />
     </AsyncComponent>
+
+    <!-- Event content view modal -->
     <AsyncComponent :visible="checkContentConfig.dialogVisible">
-      <ViewEvent v-model:visible="checkContentConfig.dialogVisible" :value="checkContentConfig.content" />
+      <ViewEvent
+        v-model:visible="checkContentConfig.dialogVisible"
+        :value="checkContentConfig.content" />
     </AsyncComponent>
   </div>
 </template>

@@ -1,145 +1,130 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { Divider, Form, FormItem } from 'ant-design-vue';
 import { ButtonAuth, Input, modal, notification, Select } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { regexpUtils } from '@xcan-angus/infra';
 
 import { event } from '@/api';
+import {
+  ChannelAddressProps, ChannelData, ChannelFormData, ChannelUpdateData, ChannelTestConfig, ValidationRule, FormRef
+} from './types';
+import {
+  createInitialChannelData, processChannelData, addNewChannelData, createAddressValidationRules,
+  createChannelFormData, createChannelUpdateData, createChannelTestConfig, isChannelInEditMode,
+  isNewChannel, canEditChannel, canDeleteChannel, canTestChannel
+} from './utils';
 
-interface Props {
-  max: number,
-  channelType: string;
-  placeholder: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+// Component props with proper typing
+const props = withDefaults(defineProps<ChannelAddressProps>(), {
   max: 5,
   channelType: 'WEBHOOK',
   placeholder: ''
 });
 
 const { t } = useI18n();
-const formRefs: any[] = [];
+
+// Form references for validation
+const formRefs = reactive<FormRef[]>([]);
+
+// Component state management
 const loading = ref(true);
-const dataSource = ref<{
-  address: string | string[],
-  id: string,
-  name: string,
-  channelType: string,
-  isEdit?: boolean
-}[]>([{
-  id: '',
-  address: props.channelType === 'EMAIL' ? [] : '',
-  name: '',
-  channelType: props.channelType,
-  isEdit: true
-}]);
-
-/**
- * Validate email format for multiple email addresses
- * @param _val - Validation context (unused)
- * @param value - Email addresses string (comma-separated)
- * @returns Promise that resolves if valid, rejects with error message if invalid
- */
-const validateEmail = (_val: any, value: string) => {
-  if (!value.trim()) {
-    return Promise.reject(new Error(t('event.channel.messages.addressRequired')));
-  }
-
-  if (value) {
-    const values = value.split(',');
-    if (values.every(email => regexpUtils.isEmail(email))) {
-      return Promise.resolve();
-    } else {
-      return Promise.reject(new Error(t('event.channel.messages.emailFormatError')));
-    }
-  }
-
-  return Promise.reject(new Error(t('event.channel.messages.emailFormatError')));
-};
-
-/**
- * Validate webhook URL format
- * @param _val - Validation context (unused)
- * @param value - URL string to validate
- * @returns Promise that resolves if valid, rejects with error message if invalid
- */
-const validateAddress = (_val: any, value: string) => {
-  if (!value.trim()) {
-    return Promise.reject(new Error(t('event.channel.messages.addressRequired')));
-  }
-
-  if (value && regexpUtils.isUrl(value)) {
-    return Promise.resolve();
-  }
-
-  return Promise.reject(new Error(t('event.channel.messages.webhookFormatError')));
-};
-
-// Validation rules for address field
-const addressRule = ref([
-  { required: true, validator: props.channelType === 'EMAIL' ? validateEmail : validateAddress }
+const dataSource = ref<ChannelData[]>([
+  createInitialChannelData(props.channelType)
 ]);
 
-// 查询列表详情
-const getReceiveSettingDetail = async () => {
-  const [error, res] = await event.getTypeChannel(props.channelType);
-  if (error && !res.data) {
-    return;
-  }
+// Validation rules for address field
+const addressRule = ref<ValidationRule[]>(
+  createAddressValidationRules(props.channelType, t)
+);
 
-  dataSource.value = res.data.map(m => {
-    return {
-      ...m,
-      isEdit: false,
-      address: props.channelType === 'EMAIL' ? m.address.split(',') : m.address
-    };
-  });
+/**
+ * Get receive setting details from API
+ * Loads existing channel configurations and adds new channel if needed
+ */
+const getReceiveSettingDetail = async (): Promise<void> => {
+  try {
+    const [error, res] = await event.getTypeChannel(props.channelType);
+    if (error && !res.data) {
+      return;
+    }
 
-  if (dataSource.value.length < props.max) {
-    dataSource.value[dataSource.value.length] = {
-      id: '',
-      address: props.channelType === 'EMAIL' ? [] : '',
-      name: '',
-      channelType: props.channelType,
-      isEdit: true
-    };
+    dataSource.value = processChannelData(res.data, props.channelType);
+    addNewChannelData(dataSource.value, props.channelType, props.max);
+  } catch (error) {
+    console.error('Failed to load channel details:', error);
+  } finally {
+    loading.value = false;
   }
 };
 
-// 新增保存
-const addHttpItem = (index: number, item) => {
-  formRefs[index].validate().then(async () => {
+/**
+ * Add new HTTP item
+ * Validates form and saves new channel configuration
+ * @param index - Index of the form to validate
+ * @param item - Channel data item to save
+ */
+const addHttpItem = async (index: number, item: ChannelData): Promise<void> => {
+  try {
+    await formRefs[index].validate();
+
     loading.value = true;
-    const addresses = typeof item.address === 'string' ? item.address : item.address.join(',');
-    const [error] = await event.addChannel({ name: item.name, channelType: item.channelType, address: addresses });
-    loading.value = false;
+    const formData: ChannelFormData = createChannelFormData(
+      item.name,
+      item.channelType,
+      item.address
+    );
+
+    const [error] = await event.addChannel(formData);
     if (error) {
       return;
     }
 
     notification.success(t('event.channel.messages.addSuccess'));
-    getReceiveSettingDetail();
-  }).catch();
+    await getReceiveSettingDetail();
+  } catch (error) {
+    console.error('Failed to add channel:', error);
+  } finally {
+    loading.value = false;
+  }
 };
 
-// 编辑保存
-const editHttpItemConfirm = (index: number, item) => {
-  formRefs[index].validate().then(async () => {
+/**
+ * Edit HTTP item confirmation
+ * Validates form and updates existing channel configuration
+ * @param index - Index of the form to validate
+ * @param item - Channel data item to update
+ */
+const editHttpItemConfirm = async (index: number, item: ChannelData): Promise<void> => {
+  try {
+    await formRefs[index].validate();
+
     loading.value = true;
-    const addresses = typeof item.address === 'string' ? item.address : item.address.join(',');
-    const [error] = await event.replaceChannel({ id: item.id, address: addresses, name: item.name });
-    loading.value = false;
+    const updateData: ChannelUpdateData = createChannelUpdateData(
+      item.id,
+      item.name,
+      item.address
+    );
+
+    const [error] = await event.replaceChannel(updateData);
     if (error) {
       return;
     }
+
     notification.success(t('event.channel.messages.editSuccess'));
-    getReceiveSettingDetail();
-  }).catch();
+    await getReceiveSettingDetail();
+  } catch (error) {
+    console.error('Failed to update channel:', error);
+  } finally {
+    loading.value = false;
+  }
 };
 
-const deleteConfirm = (id: string) => {
+/**
+ * Delete confirmation modal
+ * Shows confirmation dialog before deleting channel
+ * @param id - Channel ID to delete
+ */
+const deleteConfirm = (id: string): void => {
   modal.confirm({
     centered: true,
     title: t('common.actions.delete'),
@@ -150,63 +135,103 @@ const deleteConfirm = (id: string) => {
   });
 };
 
+/**
+ * Delete HTTP configuration
+ * Removes channel configuration from the system
+ * @param id - Channel ID to delete
+ */
 const delHttpConfig = async (id: string): Promise<void> => {
-  loading.value = true;
-  const [error] = await event.deleteChannel(id);
-  loading.value = false;
-  if (error) {
-    return;
-  }
+  try {
+    loading.value = true;
+    const [error] = await event.deleteChannel(id);
+    if (error) {
+      return;
+    }
 
-  notification.success(t('event.channel.messages.deleteSuccess'));
-  getReceiveSettingDetail();
+    notification.success(t('event.channel.messages.deleteSuccess'));
+    await getReceiveSettingDetail();
+  } catch (error) {
+    console.error('Failed to delete channel:', error);
+  } finally {
+    loading.value = false;
+  }
 };
 
-const testConfig = async (index, item) => {
-  formRefs[index].validate().then(async () => {
+/**
+ * Test channel configuration
+ * Validates and tests channel configuration
+ * @param index - Index of the form to validate
+ * @param item - Channel data item to test
+ */
+const testConfig = async (index: number, item: ChannelData): Promise<void> => {
+  try {
+    await formRefs[index].validate();
+
     loading.value = true;
-    const addresses = typeof item.address === 'string' ? item.address : item.address.join(',');
-    const [error] = await event.testChannelConfig({
-      name: item.name,
-      address: addresses,
-      channelType: item.channelType.value || item.channelType
-    });
-    loading.value = false;
+    const testConfig: ChannelTestConfig = createChannelTestConfig(
+      item.name,
+      item.address,
+      item.channelType
+    );
+
+    const [error] = await event.testChannelConfig(testConfig);
     if (error) {
       return;
     }
 
     notification.success(t('event.channel.messages.testSuccess'));
-  }).catch();
+  } catch (error) {
+    console.error('Failed to test channel:', error);
+  } finally {
+    loading.value = false;
+  }
 };
 
-const editAddress = (item) => {
+/**
+ * Edit channel address
+ * Enables edit mode for existing channel
+ * @param item - Channel data item to edit
+ */
+const editAddress = (item: ChannelData): void => {
   item.oldName = item.name;
   item.oldAddress = item.address;
   item.isEdit = true;
 };
 
-const cancelEdit = (item, index) => {
-  item.name = item.oldName;
-  item.address = item.oldAddress;
+/**
+ * Cancel edit operation
+ * Restores original values and disables edit mode
+ * @param item - Channel data item to cancel edit for
+ * @param index - Index of the form to clear validation for
+ */
+const cancelEdit = (item: ChannelData, index: number): void => {
+  if (item.oldName !== undefined) {
+    item.name = item.oldName;
+  }
+  if (item.oldAddress !== undefined) {
+    item.address = item.oldAddress;
+  }
   item.isEdit = false;
   formRefs[index].clearValidate();
 };
 
+// Lifecycle hooks
 onMounted(() => {
   getReceiveSettingDetail();
 });
 </script>
+
 <template>
   <div class="p-3.5 max-w-300">
     <Form
       v-for="(item, index) in dataSource"
       :key="index"
-      :ref="dom => formRefs[index] = dom"
+      :ref="(dom: any) => formRefs[index] = dom"
       :model="item"
       size="small"
       layout="vertical"
       class="flex space-x-5 mb-2">
+      <!-- Channel name field -->
       <div class="flex-1/3 break-all">
         <FormItem
           :label="index === 0 && t('event.channel.columns.name')"
@@ -218,9 +243,11 @@ onMounted(() => {
             v-model:value="item.name"
             :placeholder="t('event.channel.placeholder.inputName')"
             :maxlength="80"
-            :disabled="!item.isEdit" />
+            :disabled="!isChannelInEditMode(item)" />
         </FormItem>
       </div>
+
+      <!-- Channel address field -->
       <div class="flex-2/3 break-all">
         <FormItem
           :label="index === 0 && t('event.channel.columns.address')"
@@ -229,54 +256,74 @@ onMounted(() => {
           :rules="addressRule"
           class="text-theme-content flex-1">
           <div class="flex items-center">
+            <!-- Email address input (tags mode) -->
             <Select
               v-if="props.channelType === 'EMAIL'"
               v-model:value="item.address"
               mode="tags"
               class="flex-1"
               :maxlength="100"
-              :disabled="!item.isEdit"
+              :disabled="!isChannelInEditMode(item)"
               :placeholder="props.placeholder">
             </Select>
+
+            <!-- Webhook/other address input -->
             <Input
               v-else
               v-model:value="item.address"
               :maxlength="1000"
               class="flex-1"
-              :disabled="!item.isEdit"
+              :disabled="!isChannelInEditMode(item)"
               :placeholder="props.placeholder">
             </Input>
-            <div v-if="item.isEdit && item.id" class="pl-4">
-              <a class="text-theme-special text-theme-text-hover text-3" @click="editHttpItemConfirm(index,item)">
+
+            <!-- Edit mode action buttons -->
+            <div v-if="isChannelInEditMode(item) && item.id" class="pl-4">
+              <a
+                class="text-theme-special text-theme-text-hover text-3"
+                @click="editHttpItemConfirm(index, item)">
                 {{ t('common.actions.confirm') }}
               </a>
               <Divider type="vertical" />
-              <a class="text-theme-special text-theme-text-hover text-3" @click="cancelEdit(item, index)">{{ t('common.actions.cancel')
-              }}</a>
+              <a
+                class="text-theme-special text-theme-text-hover text-3"
+                @click="cancelEdit(item, index)">
+                {{ t('common.actions.cancel') }}
+              </a>
             </div>
           </div>
         </FormItem>
       </div>
-      <div class="w-80 pt-1 space-x-2.5" :class="{'mt-6': index === 0}">
+
+      <!-- Action buttons -->
+      <div class="w-80 pt-1 space-x-2.5" :class="{ 'mt-6': index === 0 }">
+        <!-- Test channel button -->
         <ButtonAuth
+          v-if="canTestChannel(item)"
           code="ChannelTest"
           type="link"
           icon="icon-zhihangceshi"
-          @click="testConfig(index,item)" />
+          @click="testConfig(index, item)" />
+
+        <!-- Delete channel button -->
         <ButtonAuth
-          v-if="item.id"
+          v-if="canDeleteChannel(item)"
           code="ChannelDelete"
           type="link"
           icon="icon-lajitong"
           @click="deleteConfirm(item.id)" />
-        <template v-if="!item.id">
+
+        <!-- Add new channel button -->
+        <template v-if="isNewChannel(item)">
           <ButtonAuth
             code="ChannelAdd"
             type="link"
             icon="icon-tianjia"
-            @click="addHttpItem(index,item)" />
+            @click="addHttpItem(index, item)" />
         </template>
-        <template v-if="item.id">
+
+        <!-- Edit channel button -->
+        <template v-if="canEditChannel(item)">
           <ButtonAuth
             code="ChannelEdit"
             type="link"

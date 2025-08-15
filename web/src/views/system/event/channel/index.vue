@@ -1,50 +1,75 @@
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
+import { defineAsyncComponent, onMounted, reactive } from 'vue';
 import { ReceiveChannelType, enumUtils } from '@xcan-angus/infra';
 import { AsyncComponent, Card } from '@xcan-angus/vue-ui';
 
+import { ChannelState } from './types';
+import { convertEnumToTabs } from './utils';
+
+// Async component imports for different channel types
 const ReceivingConfigurationHttps = defineAsyncComponent(() => import('./http.vue'));
 const ReceivingConfigurationEmail = defineAsyncComponent(() => import('./email.vue'));
 const ReceivingConfigurationNailingRobot = defineAsyncComponent(() => import('./dingRobot.vue'));
 const ReceivingConfigurationEnterpriseRobot = defineAsyncComponent(() => import('./wechatRobot.vue'));
 
-const activeKey = ref('WEBHOOK');
-const enumsList: {
-  pKeyEnumList: Record<string, any>[]
-} = reactive({
+// Reactive state management
+const state = reactive<ChannelState>({
+  activeKey: 'WEBHOOK',
   pKeyEnumList: []
 });
 
-const getDirectory = async () => {
-  const data = enumUtils.enumToMessages(ReceiveChannelType);
-  enumsList.pKeyEnumList = data?.map(item => {
-    return {
-      key: item.value,
-      tab: item.message
-    };
-  });
+/**
+ * Get directory of available channel types
+ * Converts enum values to tab configurations
+ */
+const getDirectory = async (): Promise<void> => {
+  try {
+    const data = enumUtils.enumToMessages(ReceiveChannelType);
+    if (data && Array.isArray(data)) {
+      state.pKeyEnumList = convertEnumToTabs(data);
+    }
+  } catch (error) {
+    console.error('Failed to load channel types:', error);
+  }
 };
 
+// Lifecycle hooks
 onMounted(() => {
   getDirectory();
 });
 </script>
+
 <template>
   <Card
-    v-model:value="activeKey"
+    v-model:value="state.activeKey"
     class="flex-1"
-    :tabList="enumsList.pKeyEnumList">
-    <AsyncComponent :visible="activeKey==='WEBHOOK'">
-      <ReceivingConfigurationHttps v-show="activeKey==='WEBHOOK'" :max="5" />
+    :tabList="state.pKeyEnumList">
+    <!-- Webhook channel configuration -->
+    <AsyncComponent :visible="state.activeKey === 'WEBHOOK'">
+      <ReceivingConfigurationHttps
+        v-show="state.activeKey === 'WEBHOOK'"
+        :max="5" />
     </AsyncComponent>
-    <AsyncComponent :visible="activeKey==='EMAIL'">
-      <ReceivingConfigurationEmail v-show="activeKey==='EMAIL'" :max="20" />
+
+    <!-- Email channel configuration -->
+    <AsyncComponent :visible="state.activeKey === 'EMAIL'">
+      <ReceivingConfigurationEmail
+        v-show="state.activeKey === 'EMAIL'"
+        :max="20" />
     </AsyncComponent>
-    <AsyncComponent :visible="activeKey==='DINGTALK'">
-      <ReceivingConfigurationNailingRobot v-show="activeKey==='DINGTALK'" :max="10" />
+
+    <!-- DingTalk channel configuration -->
+    <AsyncComponent :visible="state.activeKey === 'DINGTALK'">
+      <ReceivingConfigurationNailingRobot
+        v-show="state.activeKey === 'DINGTALK'"
+        :max="10" />
     </AsyncComponent>
-    <AsyncComponent :visible="activeKey==='WECHAT'">
-      <ReceivingConfigurationEnterpriseRobot v-show="activeKey==='WECHAT'" :max="10" />
+
+    <!-- WeChat channel configuration -->
+    <AsyncComponent :visible="state.activeKey === 'WECHAT'">
+      <ReceivingConfigurationEnterpriseRobot
+        v-show="state.activeKey === 'WECHAT'"
+        :max="10" />
     </AsyncComponent>
   </Card>
 </template>

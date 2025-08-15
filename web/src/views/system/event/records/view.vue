@@ -5,32 +5,42 @@ import { Modal } from '@xcan-angus/vue-ui';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 
+import { ViewProps } from './types';
+
+// Markdown editor component
 const viewMarkVue = mavonEditor.mavonEditor;
 
-interface Props {
-  value: string,
-  visible: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
+// Component props with proper typing
+const props = withDefaults(defineProps<ViewProps>(), {
   visible: false
 });
-const emit = defineEmits<{(e: 'update:visible', value: boolean): void }>();
 
-const cancel = () => {
+// Component emits
+// eslint-disable-next-line func-call-spacing
+const emit = defineEmits<{
+  (e: 'update:visible', value: boolean): void;
+}>();
+
+// Component state
+const values = ref<string>('');
+
+/**
+ * Cancel modal and close it
+ */
+const cancel = (): void => {
   emit('update:visible', false);
 };
 
-const values = ref('');
-watch(() => props.visible, newValue => {
+// Watch for visible changes to update content
+watch(() => props.visible, (newValue) => {
   if (newValue) {
     values.value = props.value;
   }
 }, {
   immediate: true
 });
-
 </script>
+
 <template>
   <Modal
     class="rounded"
@@ -39,7 +49,8 @@ watch(() => props.visible, newValue => {
     :visible="props.visible"
     :width="700"
     @cancel="cancel">
-    <div style="min-height: 550px;max-height: 70vh;overflow-y: auto;">
+    <!-- Markdown content viewer -->
+    <div style="min-height: 550px; max-height: 70vh; overflow-y: auto;">
       <viewMarkVue
         v-model="values"
         class="!text-3 -mt-2"
