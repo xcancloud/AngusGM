@@ -1,110 +1,67 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { AsyncComponent, ButtonAuth, Hints, Icon, IconRefresh, modal, PureCard, Table } from '@xcan-angus/vue-ui';
 import { app } from '@xcan-angus/infra';
 
 import { email } from '@/api';
-import { MailboxService } from './types';
+import { EmailServerState } from './types';
+import {
+  createTableColumns, createInitialPaginationParams, createPaginationObject, createDeleteServerRequest,
+  createUpdateServerRequest, processServerListResponse, removeServerFromState, setSingleDefaultServer,
+  canSetAsDefault, canEditServer, canDeleteServer, canTestServer, getDefaultStatusText, formatProtocolDisplay
+} from './utils';
 
 // Lazy load Test component for better performance
 const Test = defineAsyncComponent(() => import('@/views/system/email/server/test/index.vue'));
 
 const { t } = useI18n();
 
-// Reactive state management
-const mailboxServiceList = ref<MailboxService[]>([]);
-const loading = ref(false);
-const total = ref(0);
-
 // Configuration constants
 const MAX_MAILBOX_SERVICES = 10;
-const DEFAULT_PAGE_SIZE = 10;
 
-// Pagination and search parameters
-const params = ref({
-  pageNo: 1,
-  pageSize: DEFAULT_PAGE_SIZE,
-  filters: []
+// Component state management
+const state = reactive<EmailServerState>({
+  mailboxServiceList: [],
+  loading: false,
+  total: 0,
+  params: createInitialPaginationParams(),
+  visible: false,
+  testAddress: '',
+  testServerId: ''
 });
 
+// Table columns configuration
+const columns = ref(createTableColumns(t));
+
 // Computed pagination object for table component
-const pagination = computed(() => ({
-  current: params.value.pageNo,
-  pageSize: params.value.pageSize,
-  total: total.value
-}));
-
-// Table column definitions with optimized rendering
-const columns = [
-  {
-    title: t('email.columns.id'),
-    dataIndex: 'id',
-    key: 'id',
-    width: '16%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('email.columns.name'),
-    dataIndex: 'name',
-    key: 'name',
-    width: '24%'
-  },
-  {
-    title: t('email.columns.protocol'),
-    dataIndex: 'protocol',
-    key: 'protocol',
-    width: '12%',
-    customCell: () => ({ style: 'white-space:nowrap;' })
-  },
-  {
-    title: t('email.columns.sendAddress'),
-    dataIndex: 'host',
-    key: 'host',
-    width: '20%'
-  },
-  {
-    title: t('email.columns.prefix'),
-    dataIndex: 'subjectPrefix',
-    key: 'subjectPrefix',
-    width: '20%'
-  },
-  {
-    title: t('email.columns.operation'),
-    dataIndex: 'action',
-    key: 'action',
-    align: 'center' as const,
-    width: '8%'
-  }
-];
-
-// Modal state management
-const visible = ref(false);
-const testAddress = ref('');
-const testServerId = ref('');
+const pagination = computed(() =>
+  createPaginationObject(state.params, state.total)
+);
 
 /**
  * Load mailbox service list from API with error handling
  */
 const loadEmailServiceList = async (): Promise<void> => {
-  if (loading.value) return; // Prevent duplicate requests
+  if (state.loading) return; // Prevent duplicate requests
 
-  loading.value = true;
   try {
-    const [error, { data = { list: [], total: 0 } }] = await email.getServerList(params.value);
+    state.loading = true;
+    const [error, response] = await email.getServerList(state.params);
 
     if (error) {
       console.error('Failed to load mailbox service list:', error);
       return;
     }
 
-    mailboxServiceList.value = data.list;
-    total.value = +data.total;
+    const { list, total } = processServerListResponse(response);
+    state.mailboxServiceList = list;
+    state.total = total;
   } catch (err) {
     console.error('Unexpected error loading mailbox service list:', err);
   } finally {
-    loading.value = false;
+    state.loading = false;
   }
 };
 
@@ -112,7 +69,7 @@ const loadEmailServiceList = async (): Promise<void> => {
  * Show delete confirmation modal
  */
 const deleteConfig = (id: string, name: string): void => {
-  if (loading.value) return;
+  if (state.loading) return;
 
   modal.confirm({
     centered: true,
@@ -126,9 +83,9 @@ const deleteConfig = (id: string, name: string): void => {
  * Execute delete operation after confirmation
  */
 const confirmDelete = async (id: string): Promise<void> => {
-  loading.value = true;
   try {
-    const [error] = await email.deleteServer({ ids: [id] });
+    state.loading = true;
+    const [error] = await email.deleteServer(createDeleteServerRequest(id));
 
     if (error) {
       console.error('Failed to delete mailbox service:', error);
@@ -136,11 +93,11 @@ const confirmDelete = async (id: string): Promise<void> => {
     }
 
     // Remove deleted item from local state
-    mailboxServiceList.value = mailboxServiceList.value.filter(item => item.id !== id);
+    state.mailboxServiceList = removeServerFromState(state.mailboxServiceList, id);
   } catch (err) {
     console.error('Unexpected error deleting mailbox service:', err);
   } finally {
-    loading.value = false;
+    state.loading = false;
   }
 };
 
@@ -148,19 +105,19 @@ const confirmDelete = async (id: string): Promise<void> => {
  * Open test email modal
  */
 const testEmail = (id: string, address: string): void => {
-  testServerId.value = id;
-  testAddress.value = address;
-  visible.value = true;
+  state.testServerId = id;
+  state.testAddress = address;
+  state.visible = true;
 };
 
 /**
  * Toggle default status for mailbox service
  */
 const defaultEmail = async (id: string, enabled: boolean): Promise<void> => {
-  if (loading.value) return;
+  if (state.loading) return;
 
   try {
-    const [error] = await email.updateServer({ id, enabled: !enabled });
+    const [error] = await email.updateServer(createUpdateServerRequest(id, enabled));
 
     if (error) {
       console.error('Failed to update mailbox service:', error);
@@ -168,13 +125,7 @@ const defaultEmail = async (id: string, enabled: boolean): Promise<void> => {
     }
 
     // Update local state to reflect changes
-    mailboxServiceList.value.forEach(service => {
-      if (service.id === id) {
-        service.enabled = !enabled;
-      } else {
-        service.enabled = false; // Only one service can be default
-      }
-    });
+    state.mailboxServiceList = setSingleDefaultServer(state.mailboxServiceList, id);
   } catch (err) {
     console.error('Unexpected error updating mailbox service:', err);
   }
@@ -200,17 +151,17 @@ onMounted(() => {
           type="primary"
           size="small"
           icon="icon-tianjia"
-          :disabled="mailboxServiceList.length >= MAX_MAILBOX_SERVICES" />
+          :disabled="state.mailboxServiceList.length >= MAX_MAILBOX_SERVICES" />
         <IconRefresh
           class="text-4 mx-2"
-          :loading="loading"
+          :loading="state.loading"
           @click="loadEmailServiceList" />
       </div>
 
       <!-- Mailbox services table -->
       <Table
-        :loading="loading"
-        :dataSource="mailboxServiceList"
+        :loading="state.loading"
+        :dataSource="state.mailboxServiceList"
         :pagination="pagination"
         :columns="columns"
         rowKey="id"
@@ -224,20 +175,20 @@ onMounted(() => {
               class="text-theme-special text-theme-text-hover">
               {{ record.name }}
               <span v-if="record.enabled" class="text-theme-special ml-1">
-                ({{ t('email.messages.default') }})
+                {{ getDefaultStatusText(record.enabled, t) }}
               </span>
             </RouterLink>
             <template v-else>
               {{ record.name }}
               <span v-if="record.enabled" class="text-theme-special ml-1">
-                ({{ t('email.messages.default') }})
+                {{ getDefaultStatusText(record.enabled, t) }}
               </span>
             </template>
           </template>
 
           <!-- Protocol column with message display -->
           <template v-if="column.dataIndex === 'protocol'">
-            {{ record.protocol?.message }}
+            {{ formatProtocolDisplay(record.protocol) }}
           </template>
 
           <!-- Action column with dropdown menu -->
@@ -253,7 +204,7 @@ onMounted(() => {
                 <Menu>
                   <!-- Set as default option -->
                   <MenuItem
-                    v-if="app.show('MailServerSetDefault')"
+                    v-if="app.show('MailServerSetDefault') && canSetAsDefault(record.enabled)"
                     :disabled="!app.has('MailServerSetDefault')"
                     @click="defaultEmail(record.id, record.enabled)">
                     <template #icon>
@@ -268,7 +219,7 @@ onMounted(() => {
 
                   <!-- Edit option -->
                   <MenuItem
-                    v-if="app.show('MailServerModify')"
+                    v-if="app.show('MailServerModify') && canEditServer(record)"
                     :disabled="!app.has('MailServerModify')">
                     <template #icon>
                       <Icon icon="icon-shuxie" />
@@ -280,7 +231,7 @@ onMounted(() => {
 
                   <!-- Delete option -->
                   <MenuItem
-                    v-if="app.show('MailServerDelete')"
+                    v-if="app.show('MailServerDelete') && canDeleteServer(record)"
                     :disabled="!app.has('MailServerDelete')"
                     @click="deleteConfig(record.id, record.name)">
                     <template #icon>
@@ -291,7 +242,7 @@ onMounted(() => {
 
                   <!-- Test option -->
                   <MenuItem
-                    v-if="app.show('MailServerTest')"
+                    v-if="app.show('MailServerTest') && canTestServer(record)"
                     :disabled="!app.has('MailServerTest')"
                     @click="testEmail(record.id, record.host)">
                     <template #icon>
@@ -308,11 +259,11 @@ onMounted(() => {
     </PureCard>
 
     <!-- Test email modal -->
-    <AsyncComponent :visible="visible">
+    <AsyncComponent :visible="state.visible">
       <Test
-        :id="testServerId"
-        v-model:visible="visible"
-        :address="testAddress" />
+        :id="state.testServerId"
+        v-model:visible="state.visible"
+        :address="state.testAddress" />
     </AsyncComponent>
   </div>
 </template>

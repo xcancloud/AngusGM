@@ -1,35 +1,33 @@
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from 'ant-design-vue';
 import { Colon, Input, Modal, notification } from '@xcan-angus/vue-ui';
 import { email } from '@/api';
 
-/**
- * Component props interface for email server testing
- */
-interface Props {
-  /** Whether the modal is visible */
-  visible: boolean;
-  /** Server identifier to test */
-  id: string;
-  /** Server address for display purposes */
-  address: string;
-}
+import { TestProps, TestState } from '../types';
+import { getModalConfig, createTestServerConfigRequest, isValidEmailAddress } from '../utils';
 
-const props = withDefaults(defineProps<Props>(), {});
-const emit = defineEmits<{(e: 'update:visible', value: boolean): void }>();
+// Component props with proper typing
+const props = withDefaults(defineProps<TestProps>(), {});
+
+// Component emits
+// eslint-disable-next-line func-call-spacing
+const emit = defineEmits<{
+  (e: 'update:visible', value: boolean): void;
+}>();
 
 const { t } = useI18n();
 
-// Reactive state management
-const loading = ref(false);
-const emailAddress = ref('');
-const inputRule = ref(false);
+// Component state management
+const state = reactive<TestState>({
+  loading: false,
+  emailAddress: '',
+  inputRule: false
+});
 
 // Configuration constants
-const MODAL_WIDTH = '540px';
-const MAX_EMAIL_LENGTH = 100;
+const modalConfig = getModalConfig();
 
 /**
  * Handle modal cancel action
@@ -43,16 +41,15 @@ const handleCancel = (): void => {
  */
 const handleOk = async (): Promise<void> => {
   // Validate email address input
-  if (!emailAddress.value.trim()) {
+  if (!isValidEmailAddress(state.emailAddress)) {
     return;
   }
 
-  loading.value = true;
   try {
-    const [error, data] = await email.testServerConfig({
-      serverId: props.id,
-      toAddress: [emailAddress.value.trim()]
-    });
+    state.loading = true;
+    const params = createTestServerConfigRequest(props.id, state.emailAddress);
+
+    const [error, data] = await email.testServerConfig(params);
 
     if (error) {
       console.error('Failed to test email server configuration:', error);
@@ -66,7 +63,7 @@ const handleOk = async (): Promise<void> => {
     console.error('Unexpected error testing email server:', err);
     notification.error(t('email.messages.testError'));
   } finally {
-    loading.value = false;
+    state.loading = false;
   }
 };
 
@@ -76,21 +73,21 @@ const handleOk = async (): Promise<void> => {
 const handleChange = (event: Event): void => {
   const target = event.target as HTMLInputElement;
   const value = target.value;
-  inputRule.value = !value.trim();
+  state.inputRule = !isValidEmailAddress(value);
 };
 
 /**
  * Reset component state when modal closes
  */
 const handleModalClose = (): void => {
-  emailAddress.value = '';
-  inputRule.value = false;
+  state.emailAddress = '';
+  state.inputRule = false;
 };
 </script>
 
 <template>
   <Modal
-    :width="MODAL_WIDTH"
+    :width="modalConfig.width"
     :title="t('email.messages.testEmail')"
     :centered="true"
     :maskClosable="false"
@@ -105,14 +102,14 @@ const handleModalClose = (): void => {
           {{ t('email.messages.emailAddress') }}<Colon />
         </span>
         <Input
-          v-model:value="emailAddress"
+          v-model:value="state.emailAddress"
           :placeholder="t('email.placeholder.receiveEmailAddress')"
-          :maxlength="MAX_EMAIL_LENGTH"
+          :maxlength="modalConfig.maxEmailLength"
           @change="handleChange" />
 
         <!-- Input validation message -->
         <div class="h-4 text-3 leading-3 text-rule mt-0.5">
-          <template v-if="inputRule">
+          <template v-if="state.inputRule">
             {{ t('email.placeholder.inputReceiveEmailAddress') }}
           </template>
         </div>
@@ -129,7 +126,7 @@ const handleModalClose = (): void => {
 
       <!-- Test button -->
       <Button
-        :loading="loading"
+        :loading="state.loading"
         type="primary"
         size="small"
         @click="handleOk">
