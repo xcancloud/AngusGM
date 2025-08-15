@@ -9,7 +9,7 @@ import { email } from '@/api';
 import { MailboxService } from './types';
 
 // Lazy load Test component for better performance
-const Test = defineAsyncComponent(() => import('@/views/system/email/server/components/test/index.vue'));
+const Test = defineAsyncComponent(() => import('@/views/system/email/server/test/index.vue'));
 
 const { t } = useI18n();
 
