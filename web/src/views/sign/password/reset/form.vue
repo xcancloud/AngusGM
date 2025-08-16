@@ -170,23 +170,18 @@ const validateEmail = () => {
  */
 const validateMobileForm = () => {
   let validationErrors = 0;
-
   if (!mobileRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!mobileVeriRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!mobilePassRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!mobileConfirmRef.value?.validateData()) {
     validationErrors++;
   }
-
   return validationErrors > 0;
 };
 
@@ -196,23 +191,18 @@ const validateMobileForm = () => {
  */
 const validateEmailForm = () => {
   let validationErrors = 0;
-
   if (!emailRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!emailVeriRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!emailPassRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!emailConfirmRef.value?.validateData()) {
     validationErrors++;
   }
-
   return validationErrors > 0;
 };
 
@@ -253,7 +243,7 @@ const toUpdate = async () => {
   }
 
   notification.success(t('sign.messages.resetPasswordSuccess'));
-  router.push('/signin');
+  await router.push('/signin');
 };
 
 /**
@@ -274,7 +264,7 @@ const confirm = async () => {
       return;
     }
 
-    toUpdate();
+    await toUpdate();
     return;
   }
 
@@ -319,7 +309,7 @@ const confirm = async () => {
         emailForm.value.accountDisabled = true;
         emailForm.value.passwordDisabled = true;
       }
-      toUpdate();
+      await toUpdate();
     }
   } finally {
     loading.value = false;

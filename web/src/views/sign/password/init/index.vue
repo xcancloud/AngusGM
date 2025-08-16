@@ -40,15 +40,12 @@ const init = () => {
  */
 const validate = () => {
   let validationErrors = 0;
-
   if (!passwordRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!confirmPasswordRef.value?.validateData()) {
     validationErrors++;
   }
-
   return validationErrors > 0;
 };
 
@@ -66,7 +63,6 @@ const confirm = async () => {
     loading.value = true;
 
     const [err] = await auth.updateUserInitPassword({ newPassword: password.value });
-
     if (err) {
       error.value = true;
       errorMessage.value = err.message;
