@@ -67,8 +67,6 @@ const mobileForm = reactive({
 });
 
 // Terms and privacy policy state
-const terms = ref();
-const privacy = ref();
 const termsContent = ref<string>('');
 const visible = ref(false);
 const modelTitle = ref('');
@@ -99,24 +97,6 @@ const isMobile = computed(() => {
 watch(() => props.type, () => {
   error.value = false;
 });
-
-// Terms and conditions loading (commented out for now)
-// const loadTerms = () => {
-//   http.get(`${PUB_ESS}/content/setting/termsAndConditions`)
-//     .then(([error, resp]) => {
-//       if (error) {
-//         return;
-//       }
-//       terms.value = resp.data;
-//     });
-//   http.get(`${PUB_ESS}/content/setting/privacyPolicy`)
-//     .then(([error, resp]) => {
-//       if (error) {
-//         return;
-//       }
-//       privacy.value = resp?.data || '';
-//     });
-// };
 
 /**
  * Open modal for terms or privacy policy
@@ -166,23 +146,18 @@ const validateEmail = () => {
  */
 const validateMobileForm = () => {
   let validationErrors = 0; // Count validation failures
-
   if (!mobileRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!mobileVerificationRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!mobilePassRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!mobileConfirmPassRef.value?.validateData()) {
     validationErrors++;
   }
-
   return validationErrors > 0;
 };
 
@@ -192,23 +167,18 @@ const validateMobileForm = () => {
  */
 const validateEmailForm = () => {
   let validationErrors = 0; // Count validation failures
-
   if (!emailRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!emailVeriRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!emailPassRef.value?.validateData()) {
     validationErrors++;
   }
-
   if (!emailConfirmPassRef.value?.validateData()) {
     validationErrors++;
   }
-
   return validationErrors > 0;
 };
 
@@ -244,17 +214,12 @@ const signup = async () => {
     }
 
     notification.success(t('sign.messages.registerSuccess'));
-    router.push('/signin');
+    await router.push('/signin');
   } finally {
     loading.value = false;
     validateData.value = false;
   }
 };
-
-// Load terms on mount (commented out for now)
-// onMounted(() => {
-//   loadTerms();
-// });
 </script>
 
 <template>
