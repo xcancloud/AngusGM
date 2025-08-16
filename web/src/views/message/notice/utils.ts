@@ -58,6 +58,51 @@ export const validateExpirationDate = (expirationDate: any, t: any) => {
 };
 
 /**
+ * Handle scope change in form
+ */
+export const handleScopeChange = (item: string, form: any) => {
+  if (item === NoticeScope.GLOBAL) {
+    form.appCode = undefined;
+    form.appName = undefined;
+    form.appId = undefined;
+    form.editionType = undefined;
+  }
+};
+
+/**
+ * Handle send type change in form
+ */
+export const handleSendTypeChange = (item: string, form: any) => {
+  if (item === SentType.SEND_NOW) {
+    form.sendTimingDate = undefined;
+  }
+};
+
+/**
+ * Handle app selection change
+ */
+export const handleAppChange = (_value: any, options: any, form: any) => {
+  form.appCode = options.appCode;
+  form.appName = options.appName;
+  form.appId = options.appId;
+  form.editionType = options.editionType.value;
+};
+
+/**
+ * Handle date change for send timing
+ */
+export const handleDateChange = (value: string, form: any): void => {
+  form.sendTimingDate = value;
+};
+
+/**
+ * Handle expiration date change
+ */
+export const handleExpirationDate = (value: string, form: any): void => {
+  form.expirationDate = value;
+};
+
+/**
  * Get form rules for notice form
  */
 export const getFormRules = (t: any) => {
@@ -209,49 +254,4 @@ export const getDetailColumns = (t: any) => {
       }
     ]
   ];
-};
-
-/**
- * Handle scope change in form
- */
-export const handleScopeChange = (item: string, form: any) => {
-  if (item === NoticeScope.GLOBAL) {
-    form.appCode = undefined;
-    form.appName = undefined;
-    form.appId = undefined;
-    form.editionType = undefined;
-  }
-};
-
-/**
- * Handle send type change in form
- */
-export const handleSendTypeChange = (item: string, form: any) => {
-  if (item === SentType.SEND_NOW) {
-    form.sendTimingDate = undefined;
-  }
-};
-
-/**
- * Handle app selection change
- */
-export const handleAppChange = (_value: any, options: any, form: any) => {
-  form.appCode = options.appCode;
-  form.appName = options.appName;
-  form.appId = options.appId;
-  form.editionType = options.editionType.value;
-};
-
-/**
- * Handle date change for send timing
- */
-export const handleDateChange = (value: string, form: any): void => {
-  form.sendTimingDate = value;
-};
-
-/**
- * Handle expiration date change
- */
-export const handleExpirationDate = (value: string, form: any): void => {
-  form.expirationDate = value;
 };

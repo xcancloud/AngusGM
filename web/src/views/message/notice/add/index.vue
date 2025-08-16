@@ -8,7 +8,10 @@ import { NoticeScope, SentType } from '@/enums/enums';
 import { useRouter } from 'vue-router';
 
 import type { NoticeFormType } from '../types';
-import { resetForm, handleScopeChange, handleSendTypeChange, handleAppChange, handleDateChange, handleExpirationDate } from '../utils';
+import {
+  resetForm, handleScopeChange, handleSendTypeChange, handleAppChange,
+  handleDateChange, handleExpirationDate, getFormRules
+} from '../utils';
 import { notice } from '@/api';
 
 const { t } = useI18n();
@@ -67,15 +70,17 @@ const submitForm = () => {
 // Enum lists for form options
 const enumsList: {
   noticeScopeList: Array<any> // Available notice scopes
-  SentTypeList: Array<any> // Available send types
+  sentTypeList: Array<any> // Available send types
 } = reactive({
   noticeScopeList: [],
-  SentTypeList: []
+  sentTypeList: []
 });
+
+const formRules = getFormRules(t);
 
 // Initialize enum data on component mount
 onMounted(() => {
-  enumsList.SentTypeList = enumUtils.enumToMessages(SentType);
+  enumsList.sentTypeList = enumUtils.enumToMessages(SentType);
 });
 </script>
 <template>
@@ -88,7 +93,6 @@ onMounted(() => {
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
       size="small">
-
       <!-- Notice content input -->
       <FormItem
         colon
@@ -163,7 +167,7 @@ onMounted(() => {
         name="sendType">
         <RadioGroup v-model:value="form.sendType" size="small">
           <Radio
-            v-for="item in enumsList.SentTypeList"
+            v-for="item in enumsList.sentTypeList"
             :key="item.value + item.message"
             :value="item.value"
             @change="(item) => handleSendTypeChange(item.value, form)">
