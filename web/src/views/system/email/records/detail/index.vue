@@ -85,7 +85,7 @@ onMounted(() => {
               v-for="(item, index) in text"
               :key="index"
               class="mr-4 text-theme-special"
-              :href="getAttachmentDownloadUrl(item, cookieUtils.get('access_token'))">
+              :href="getAttachmentDownloadUrl(item, cookieUtils.getTokenInfo().access_token)">
               {{ getAttachmentDisplayName(item) }}
             </a>
           </template>

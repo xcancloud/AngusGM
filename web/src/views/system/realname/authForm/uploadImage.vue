@@ -70,7 +70,7 @@ const fileChange = async function (el: any) {
 
       try {
         const _url = new URL(item.url);
-        const token = cookieUtils.get('access_token');
+        const token = cookieUtils.getTokenInfo().access_token;
         _url.searchParams.set('access_token', token as string);
         imageUrl.value = _url.toString();
       } catch {
@@ -120,7 +120,7 @@ const deleteImage = function () {
         type === '1' ? 'h-28 w-48' : 'h-40 w-32',
         { 'upload-error': error }
       ]">
-      
+
       <!-- Upload icon when no image is present -->
       <div v-if="!imageUrl" class="upload-placeholder" @click="selectFile">
         <Icon

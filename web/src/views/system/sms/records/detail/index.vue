@@ -68,7 +68,7 @@ onMounted(() => {
             v-for="(item,index) in text"
             :key="index"
             class="mr-4 text-theme-special"
-            :href="`${item.url}&access_token=${cookieUtils.get('access_token')}`">{{ item.name }}</a>
+            :href="`${item.url}&access_token=${cookieUtils.getTokenInfo().access_token}`">{{ item.name }}</a>
         </template>
       </Grid>
     </Skeleton>

@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{(e: 'update:visible', value: boolean): void, (e: 'refresh', value: boolean): void }>();
 
-const token = cookieUtils.get('access_token');
+const token = cookieUtils.getTokenInfo().access_token;
 const { t } = useI18n();
 const headers = {
   Authorization: `Bearer ${token}`

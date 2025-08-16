@@ -110,7 +110,7 @@ const load = async () => {
   pagination.total = +data.total;
   if (props.type === 'USER') {
     state.dataSource.forEach(item => {
-      item.avatar = item.avatar ? `${item.avatar}&access_token=${cookieUtils.get('access_token')}` : '';
+      item.avatar = item.avatar ? `${item.avatar}&access_token=${cookieUtils.getTokenInfo().access_token}` : '';
     });
   }
 };

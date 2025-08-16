@@ -83,7 +83,7 @@ const handleRefresh = () => {
  * <p>Download license file by license number using current access token.</p> TODO 移动到 api
  */
 const downloadLicense = async (licenseNo: string): Promise<void> => {
-  const token = cookieUtils.get('access_token');
+  const token = cookieUtils.getTokenInfo().access_token;
   await download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`);
 };
 

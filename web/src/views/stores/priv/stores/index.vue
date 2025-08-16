@@ -6,7 +6,7 @@ import { appContext, cookieUtils } from '@xcan-angus/infra';
 const router = useRouter();
 const route = useRoute();
 
-const accessToken = cookieUtils.get('access_token') || '';
+const accessToken = cookieUtils.getTokenInfo().access_token || '';
 const refreshToken = cookieUtils.get('refresh_token') || '';
 const localeCookie = cookieUtils.get('localeCookie') || '';
 const timezone = cookieUtils.get('timezone') || '';

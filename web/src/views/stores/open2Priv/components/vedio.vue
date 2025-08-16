@@ -37,7 +37,7 @@ const videoSrc = computed(() => {
 
   try {
     const url = new URL(props.src);
-    url.searchParams.set('access_token', cookieUtils.get('access_token') as string);
+    url.searchParams.set('access_token', cookieUtils.getTokenInfo().access_token as string);
     return url.href;
   } catch (error) {
     // Return original source if URL parsing fails

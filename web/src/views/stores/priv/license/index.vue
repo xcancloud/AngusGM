@@ -71,7 +71,7 @@ const handleRefresh = () => {
 };
 
 const downloadLicense = async (licenseNo: string): Promise<void> => {
-  const token = cookieUtils.get('access_token');
+  const token = cookieUtils.getTokenInfo().access_token;
   const url = routerUtils.getGMApiUrl(`/store/license/${licenseNo}/download?access_token=${token}`);
   await download(url);
 };
