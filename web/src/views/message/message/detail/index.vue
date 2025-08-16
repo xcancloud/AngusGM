@@ -19,7 +19,6 @@ const route = useRoute();
  * Stores all message details including metadata and recipient information
  */
 const content: ReceiveObjectData = reactive({});
-
 /**
  * Flag to track if this is the first data load
  * Used to show skeleton loading state only on initial load
@@ -35,7 +34,6 @@ const getMessageDetail = async () => {
 
   try {
     const [error, res] = await message.getMessageDetail(id);
-
     if (error) {
       return;
     }

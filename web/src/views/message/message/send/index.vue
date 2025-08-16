@@ -145,7 +145,6 @@ const submit = async () => {
 
   try {
     const [error, res] = await message.sendMessage(params);
-
     if (error) {
       return;
     }

@@ -69,15 +69,6 @@ const sendType = ref(SentType.SEND_NOW);
 const timingDate = ref();
 
 /**
- * Initialize component data
- * Loads enum data for message receive types and send types
- */
-const init = () => {
-  loadMessageReceiveType();
-  loadSentType();
-};
-
-/**
  * Message receive type options
  * Available options for how messages can be received
  */
@@ -117,6 +108,57 @@ const hasEmail = ref(false);
  */
 const disabledEmail = ref(false);
 
+
+// Form validation state
+const titleRule = ref(false);
+
+/**
+ * Handle title input change
+ * Validates title field and updates validation state
+ */
+const titleChange = (event: any) => {
+  const value = event.target.value;
+  titleRule.value = !value;
+};
+
+const contentRule = ref(false);
+const contentRuleMsg = ref(t('messages.placeholder.content'));
+
+const dateRule = ref(false);
+
+/**
+ * Handle date picker change
+ * Validates date field and updates validation state
+ */
+const dateChange = (value: any) => {
+  dateRule.value = !value;
+};
+
+/**
+ * Disable past dates in date picker
+ * Prevents scheduling messages in the past
+ */
+const disabledDate = isPastDate;
+
+/**
+ * Current time plus one minute
+ * Used for time picker validation
+ */
+const currTime = dayjs().add(1, 'minute');
+
+/**
+ * Disable past time options
+ * Prevents selecting past times for scheduled messages
+ */
+const disabledDateTime = () => getDisabledTimeOptions(currTime);
+
+/**
+ * File upload configuration
+ * Defines business keys for message file uploads
+ */
+const uploadOptions = { bizKey: 'messageFiles', mediaBizKey: 'messageFiles' };
+
+
 /**
  * Handle receive type change
  * Validates email server availability when email type is selected
@@ -147,31 +189,6 @@ const receiveTypeChange = async (e: any) => {
   }
 };
 
-// Form validation state
-const titleRule = ref(false);
-
-/**
- * Handle title input change
- * Validates title field and updates validation state
- */
-const titleChange = (event: any) => {
-  const value = event.target.value;
-  titleRule.value = !value;
-};
-
-const contentRule = ref(false);
-const contentRuleMsg = ref(t('messages.placeholder.content'));
-
-const dateRule = ref(false);
-
-/**
- * Handle date picker change
- * Validates date field and updates validation state
- */
-const dateChange = (value: any) => {
-  dateRule.value = !value;
-};
-
 /**
  * Watch content changes for validation
  * Monitors content length and updates validation rules
@@ -188,44 +205,6 @@ watch(() => content.value, (newValue) => {
     contentRuleMsg.value = t('messages.messages.inputContentLength');
   }
   contentRule.value = false;
-});
-
-/**
- * Set up watchers for form data synchronization
- * Ensures parent component receives updated form values
- */
-onMounted(() => {
-  init();
-
-  watch(() => title.value, (newValue) => {
-    emit('update:propsTitle', newValue);
-  }, {
-    immediate: true
-  });
-
-  watch(() => content.value, (newValue) => {
-    emit('update:propsContent', newValue);
-  }, {
-    immediate: true
-  });
-
-  watch(() => receiveType.value, (newValue) => {
-    emit('update:propsReceiveType', newValue);
-  }, {
-    immediate: true
-  });
-
-  watch(() => sendType.value, (newValue) => {
-    emit('update:propsSendType', newValue);
-  }, {
-    immediate: true
-  });
-
-  watch(() => timingDate.value, (newValue) => {
-    emit('update:propsTimingDate', newValue);
-  }, {
-    immediate: true
-  });
 });
 
 /**
@@ -247,30 +226,6 @@ watch(() => props.propsContentRuleMsg, (newValue) => {
 watch(() => props.propsDateRule, (newValue) => {
   dateRule.value = newValue;
 });
-
-/**
- * Disable past dates in date picker
- * Prevents scheduling messages in the past
- */
-const disabledDate = isPastDate;
-
-/**
- * Current time plus one minute
- * Used for time picker validation
- */
-const currTime = dayjs().add(1, 'minute');
-
-/**
- * Disable past time options
- * Prevents selecting past times for scheduled messages
- */
-const disabledDateTime = () => getDisabledTimeOptions(currTime);
-
-/**
- * File upload configuration
- * Defines business keys for message file uploads
- */
-const uploadOptions = { bizKey: 'messageFiles', mediaBizKey: 'messageFiles' };
 
 /**
  * Watch notification changes for form reset
@@ -314,6 +269,55 @@ defineExpose({
     return result;
   }
 });
+
+
+/**
+ * Initialize component data
+ * Loads enum data for message receive types and send types
+ */
+const init = () => {
+  loadMessageReceiveType();
+  loadSentType();
+};
+
+/**
+ * Set up watchers for form data synchronization
+ * Ensures parent component receives updated form values
+ */
+onMounted(() => {
+  init();
+
+  watch(() => title.value, (newValue) => {
+    emit('update:propsTitle', newValue);
+  }, {
+    immediate: true
+  });
+
+  watch(() => content.value, (newValue) => {
+    emit('update:propsContent', newValue);
+  }, {
+    immediate: true
+  });
+
+  watch(() => receiveType.value, (newValue) => {
+    emit('update:propsReceiveType', newValue);
+  }, {
+    immediate: true
+  });
+
+  watch(() => sendType.value, (newValue) => {
+    emit('update:propsSendType', newValue);
+  }, {
+    immediate: true
+  });
+
+  watch(() => timingDate.value, (newValue) => {
+    emit('update:propsTimingDate', newValue);
+  }, {
+    immediate: true
+  });
+});
+
 </script>
 
 <template>

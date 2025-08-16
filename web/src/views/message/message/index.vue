@@ -65,7 +65,6 @@ const getMessageList = async () => {
 
   try {
     const [error, res] = await message.searchMessageList(params);
-
     if (error) {
       return;
     }
