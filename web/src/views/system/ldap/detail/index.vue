@@ -143,7 +143,7 @@ const saveSubmit = async (val: FormSubmissionData): Promise<void> => {
     });
 
     notification.success(`ldap${isAdd ? t('ldap.detail-1') : t('ldap.detail-2')}${t('ldap.detail-3')}`);
-    await router.push(decodeURIComponent(query.r;
+    await router.push(decodeURIComponent(query.r as string));
   } finally {
     state.saveLoading = false;
   }
