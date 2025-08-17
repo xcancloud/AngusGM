@@ -198,7 +198,7 @@
       "accessToken": "Token",
       "messages": "Messages",
       "expense": "Expense",
-      "workOrder": "Ticket",
+      "ticket": "Ticket",
       "officialWebsite": "Official Website"
     }
   }

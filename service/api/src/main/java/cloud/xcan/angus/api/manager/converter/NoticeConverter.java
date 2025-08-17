@@ -24,7 +24,7 @@ import java.util.Map;
 public class NoticeConverter {
 
   /**
-   * Used by UC/Workorder/AAS.
+   * Used by UC/Ticket/AAS.
    */
   public static SendSmsParam toSendTemplateSmsParam(SmsBizKey bizKey, String outId,
       ReceiveObjectType receiveObjectType, List<Long> receiveUserIds,
@@ -66,7 +66,7 @@ public class NoticeConverter {
   }
 
   /**
-   * Used by UC/Workorder/AAS.
+   * Used by UC/Ticket/AAS.
    */
   public static SendEmailParam toSendTemplateEmailParam(EmailBizKey bizKey, String outId,
       ReceiveObjectType receiveObjectType, List<Long> receiveUserIds,
