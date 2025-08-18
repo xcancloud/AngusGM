@@ -1,66 +1,35 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { ConfigProvider, Denied, Header, NetworkError, NotFound, VuexHelper } from '@xcan-angus/vue-ui';
-import { sessionStore } from '@xcan-angus/infra';
-import { getTopRightMenu } from '@/utils/menus';
+import { computed } from 'vue';
+import { appContext } from '@xcan-angus/infra';
+import { ConfigProvider, Denied, Header, NetworkError, NotFound } from '@xcan-angus/vue-ui';
 
-const { t } = useI18n();
+import store from './utils/store';
 
-const { useState, useMutations } = VuexHelper;
-const { statusCode, layoutCode } = useState(['statusCode', 'layoutCode']);
-
-const topRightMenus = ref<{
-  code: string;
-  hasAuth: boolean;
-  showName: string;
-  url?: string;
-}[]>([]);
-
-onMounted(async () => {
-  if (!layoutCode.value) {
-    let tempLayoutCode = sessionStore.get('__LC__');
-    if (!['gm', 'pl'].includes(tempLayoutCode)) {
-      tempLayoutCode = 'gm';
-    }
-    setLayoutCodeCode(tempLayoutCode);
-  }
-  topRightMenus.value = await getTopRightMenu();
+const status = computed(() => {
+  return store.state.statusCode;
 });
-
-const codeMap = computed(() => {
-  return topRightMenus.value.reduce((prev, curv) => {
-    prev.set(curv.code, {
-      ...curv,
-      showName: t(curv.showName)
-    });
-    return prev;
-  }, new Map());
-});
-
-const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 </script>
 
 <template>
   <ConfigProvider>
-    <template v-if="statusCode === 200">
+    <template v-if="status === 200">
       <RouterView />
     </template>
     <template v-else>
-      <template id="layoutCode === 'pl'">
-        <Header :codeMap="codeMap" />
-      </template>
+      <Header
+        :menus="appContext.getAccessAppFuncTree() || []"
+        :codeMap="appContext.getAccessAppFuncCodeMap()" />
       <div class="exception-container bg-theme-main">
-        <template v-if="statusCode === 403">
+        <template v-if="status === 403">
           <Denied />
         </template>
-        <template v-else-if="statusCode === 404">
+        <template v-else-if="status === 404">
           <NotFound />
         </template>
-        <template v-else-if="statusCode === 405">
+        <template v-else-if="status === 405">
           <Denied />
         </template>
-        <template v-else-if="statusCode === 500">
+        <template v-else-if="status === 500">
           <NetworkError />
         </template>
       </div>

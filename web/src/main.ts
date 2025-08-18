@@ -277,8 +277,8 @@ window.addEventListener('unhandledrejection', (event) => {
 });
 
 // Error handling for global errors
-window.addEventListener('error', (event) => {
-  console.error('Global error:', event.error);
+window.addEventListener('error', (error) => {
+  console.error('Global error:', error);
 });
 
 // Start application

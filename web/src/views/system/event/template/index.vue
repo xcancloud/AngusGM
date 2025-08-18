@@ -137,6 +137,8 @@ onMounted(() => {
 });
 </script>
 
+<!-- TODO 控制台报错：`onSearch` should work with `showSearch` instead of use alone.-->
+
 <template>
   <div class="flex flex-col min-h-full">
     <!-- Event template description hint -->

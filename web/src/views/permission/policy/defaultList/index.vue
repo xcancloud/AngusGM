@@ -175,6 +175,7 @@ defineExpose({
             :disabled="!app.has('DefaultAppPolicySetting')"
             :placeholder="t('permission.policy.default.placeholder')"
             class="w-70"
+            showSearch
             size="small"
             @change="(value) => selectChange(value, record.appId, record.defaultPolicies)" />
         </template>

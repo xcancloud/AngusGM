@@ -60,6 +60,11 @@ const editTagName = (): void => {
       class="my-1"
       :text="t('tag.description')" />
 
+    <!-- TODO 控制台报错：
+      1. Extraneous non-props attributes (tag, tenantName, visible) were passed to component but could not be automatically inherited because component renders fragment or text root nodes.
+      2. Invalid prop: type check failed for prop "tagId". Expected String with value "undefined", got Undefined
+    -->
+
     <div class="flex space-x-2 flex-1 min-h-0">
       <List
         ref="listRef"

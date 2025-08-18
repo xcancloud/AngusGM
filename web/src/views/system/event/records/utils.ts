@@ -189,7 +189,10 @@ export const createSearchOptions = (t: (key: string) => string): SearchOption[] 
   {
     valueKey: 'createdDate',
     type: 'date-range',
-    placeholder: ''
+    placeholder: [
+      t('event.records.placeholder.selectTime'),
+      t('event.records.placeholder.selectTime')
+    ]
   }
 ];
 

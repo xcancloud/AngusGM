@@ -47,7 +47,7 @@ export interface EventRecord {
  */
 export interface SearchOption {
   /** Placeholder text */
-  placeholder: string;
+  placeholder: string | string[];
   /** Value key for the search field */
   valueKey: string;
   /** Input type */

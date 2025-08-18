@@ -277,6 +277,11 @@ watch(() => state.tab, () => {
 });
 </script>
 
+<!-- TODO 控制台报错：
+1. Invalid prop: type check failed for prop "appId". Expected Number with value NaN, got Undefined
+2. Invalid prop: type check failed for prop "appId". Expected Number with value 100005, got String with value "100005".
+-->
+
 <template>
   <div class="flex h-full">
     <!-- Left Sidebar - Application Selection and Target Panels -->

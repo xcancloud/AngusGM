@@ -215,6 +215,14 @@ onMounted(async () => {
 });
 
 </script>
+<!-- TODO 控制台报错：
+1. Invalid prop: type check failed for prop "signinLimit". Expected Object, got Undefined
+2. Invalid prop: type check failed for prop "signupAllow". Expected Object, got Undefined
+3. Missing required prop: "signupSwitchLoading"
+4. Invalid prop: type check failed for prop "passwordPolicy". Expected Object, got Undefined
+5. Missing required prop: "loading"
+6. Invalid prop: type check failed for prop "alarm". Expected Object, got Undefined
+-->
 <template>
   <LoginRestrictions
     class="mb-2"
