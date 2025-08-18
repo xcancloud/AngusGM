@@ -4,7 +4,7 @@ import { DomainManager, AppOrServiceRoute, appContext } from '@xcan-angus/infra'
 export const getTopRightMenu = async () => {
   const domainManager = DomainManager.getInstance();
   const expenseUrl = domainManager.getAppDomain(AppOrServiceRoute.expense);
-  const ticketUrl = domainManager.getAppDomain(AppOrServiceRoute.wo);
+  const ticketUrl = domainManager.getAppDomain(AppOrServiceRoute.ticket);
   const officialWebsiteUrl = domainManager.getAppDomain(AppOrServiceRoute.www);
 
   let menus = [
