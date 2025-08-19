@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { Breadcrumb, Header, Sidebar, VuexHelper } from '@xcan-angus/vue-ui';
-import { appContext } from '@xcan-angus/infra';
+import { appContext, AuthAppFuncTree } from '@xcan-angus/infra';
 
 const { useMutations } = VuexHelper;
 
@@ -10,7 +10,7 @@ const { setLayoutCodeCode } = useMutations(['setLayoutCodeCode']);
 
 const route = useRoute();
 const logoDefaultImg = new URL('./assets/angus-gm.png', import.meta.url).href;
-const sidebarMenus = ref<Array<unknown>>([]);
+const sidebarMenus = ref<Array<AuthAppFuncTree>>([]);
 const menuList = appContext.getAccessAppFuncTree() || [];
 const menuCodeMap = appContext.getAccessAppFuncCodeMap();
 onMounted(() => {
