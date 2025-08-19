@@ -15,7 +15,7 @@ function setCode (code: number): void {
 
 const startupGuard = (): void => {
   // debugMode is true, turn on debug mode, do not check routing permissions
-  guard.navigationGuard(router, appContext.getAccessAppFuncTree() || [], setCode, true); // TODO navigationGuard appContext#menuList
+  guard.navigationGuard(router, appContext.getAccessAppFuncTree() || [], setCode, true);
 };
 
 export { startupGuard };

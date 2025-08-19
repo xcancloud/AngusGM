@@ -96,7 +96,6 @@ spring:
     timeZone: ${TIMEZONE:Asia/Shanghai}
     generator:
       write_numbers_as_strings: true
-
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
