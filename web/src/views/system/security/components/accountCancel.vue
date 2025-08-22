@@ -31,7 +31,6 @@ const getTenantDetail = async () => {
 
 /**
  * Handle switch change events for account cancellation
- * @param value - Boolean value indicating cancellation state
  */
 const switchChange = async (value: boolean) => {
   // Revoke cancellation request
@@ -52,7 +51,6 @@ const switchChange = async (value: boolean) => {
 
 /**
  * Handle modal update events
- * @param value - Boolean value indicating if update was successful
  */
 const handleUpdate = (value: boolean) => {
   if (value) {

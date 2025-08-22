@@ -88,7 +88,6 @@ const resetPageNoLoad = debounce(duration.search, () => {
 
 /**
  * Handle table pagination changes
- * @param page - Pagination change event
  */
 const listChange = (page: any) => {
   pagination.current = page.current;
@@ -98,7 +97,6 @@ const listChange = (page: any) => {
 
 /**
  * Toggle policy enable/disable status
- * @param record - Policy record to toggle
  */
 const toggleEnable = async (record: PolicyRecordType) => {
   const params = [{ id: record.id as string, enabled: !record.enabled }];
@@ -132,8 +130,6 @@ const toggleEnable = async (record: PolicyRecordType) => {
 
 /**
  * Delete policy by ID
- * @param id - Policy ID to delete
- * @param name - Policy name for confirmation
  */
 const delByIds = (id: string, name: string) => {
   modal.confirm({
@@ -163,7 +159,6 @@ const policyId = ref('');
 
 /**
  * Open authorization modal for a policy
- * @param id - Policy ID to authorize
  */
 const grantAuth = (id: string) => {
   authVisible.value = true;
@@ -172,7 +167,6 @@ const grantAuth = (id: string) => {
 
 /**
  * Edit policy - emit edit event to parent
- * @param record - Policy record to edit
  */
 const edit = (record: PolicyRecordType) => {
   emit('edit', { policyId: record.id, appId: record.appId });

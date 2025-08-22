@@ -34,7 +34,6 @@ const state = reactive<OperationLogState>({
 
 /**
  * Handle search criteria changes and reset pagination
- * @param data - Search filters data containing key, value, and operation
  */
 const searchChange = async (data: SearchCriteria): Promise<void> => {
   resetPagination(state.params);
@@ -68,9 +67,6 @@ const getList = async (): Promise<void> => {
 
 /**
  * Handle table pagination, sorting, and filtering changes
- * @param _pagination - Pagination object from table
- * @param _filters - Filter object from table
- * @param sorter - Sorting configuration with orderBy and orderSort
  */
 const tableChange = async (_pagination: any, _filters: any, sorter: TableChangeParams['sorter']): Promise<void> => {
   updatePaginationParams(state.params, _pagination);

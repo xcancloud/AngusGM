@@ -68,7 +68,6 @@ const getList = async (): Promise<void> => {
 
 /**
  * Handle user logout
- * @param item - Online user to logout
  */
 const handleLogOut = async (item: OnlineUser): Promise<void> => {
   item.loading = true;
@@ -86,9 +85,6 @@ const handleLogOut = async (item: OnlineUser): Promise<void> => {
 
 /**
  * Handle table pagination, filtering, and sorting changes
- * @param _pagination - Pagination object
- * @param _filters - Filter criteria
- * @param sorter - Sorting information
  */
 const tableChange = async (_pagination: any, _filters: any, sorter: TableChangeParams['sorter']): Promise<void> => {
   updatePaginationParams(state.params, _pagination);
@@ -101,7 +97,6 @@ const tableChange = async (_pagination: any, _filters: any, sorter: TableChangeP
 
 /**
  * Handle search criteria changes
- * @param data - Search criteria array
  */
 const searchChange = async (data: SearchCriteria[]): Promise<void> => {
   resetPagination(state.params);

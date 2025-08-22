@@ -19,8 +19,6 @@ export const EDITION_TYPE_ICONS: EditionTypeIcons = {
 /**
  * Get edition type icon based on edition type key
  * Returns appropriate icon class for different edition types
- * @param key - Edition type key
- * @returns Icon class name
  */
 export const getEditionTypeIcon = (key: string): string => {
   return EDITION_TYPE_ICONS[key as keyof EditionTypeIcons] || '';
@@ -29,7 +27,6 @@ export const getEditionTypeIcon = (key: string): string => {
 /**
  * Update column visibility based on upgrade status
  * Hides features column when no features are available
- * @param columns - Grid columns to update
  */
 export const updateColumnsVisibility = (columns: any[]): void => {
   for (let i = 0; i < columns.length; i++) {
@@ -42,9 +39,6 @@ export const updateColumnsVisibility = (columns: any[]): void => {
 
 /**
  * Calculate remaining days between two dates
- * @param endDate - End date string
- * @param startDate - Start date string (defaults to current date)
- * @returns Number of remaining days
  */
 export const calculateRemainingDays = (endDate: string, startDate?: string): number => {
   const end = new Date(endDate);
@@ -55,9 +49,6 @@ export const calculateRemainingDays = (endDate: string, startDate?: string): num
 
 /**
  * Format date for display
- * @param dateString - Date string to format
- * @param format - Date format (defaults to 'YYYY-MM-DD')
- * @returns Formatted date string
  */
 export const formatDate = (dateString: string, format = 'YYYY-MM-DD'): string => {
   if (!dateString) return '';
@@ -78,8 +69,6 @@ export const formatDate = (dateString: string, format = 'YYYY-MM-DD'): string =>
 
 /**
  * Validate license information
- * @param license - License object to validate
- * @returns Validation result object
  */
 export const validateLicense = (license: any): { isValid: boolean, errors: string[] } => {
   const errors: string[] = [];
@@ -114,8 +103,6 @@ export const validateLicense = (license: any): { isValid: boolean, errors: strin
 /**
  * Create cloud edition grid columns configuration
  * Defines the layout and fields for cloud service version display
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createCloudEditionColumns = (t: (key: string) => string): GridColumns => [
   [
@@ -158,8 +145,6 @@ export const createCloudEditionColumns = (t: (key: string) => string): GridColum
  * Create private edition grid columns configuration
  * Defines the layout and fields for private version display
  * Includes additional fields like license number and MD5 signature
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createPrivateEditionColumns = (t: (key: string) => string): GridColumns => [
   [
@@ -209,8 +194,6 @@ export const createPrivateEditionColumns = (t: (key: string) => string): GridCol
 /**
  * Create current version grid columns configuration
  * Shows version introduction and current version information
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createCurrentVersionColumns = (t: (key: string) => string): GridColumns => [
   [
@@ -233,8 +216,6 @@ export const createCurrentVersionColumns = (t: (key: string) => string): GridCol
 /**
  * Create upgradeable version grid columns configuration
  * Shows version introduction and upgrade information
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createUpgradeableColumns = (t: (key: string) => string): GridColumns => [
   [

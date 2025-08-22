@@ -84,9 +84,6 @@ const addTag = () => {
 /**
  * Handle tag save from modal
  * Processes selected tag IDs and handles add/delete operations
- * @param _tagIds - Array of tag IDs to add
- * @param _tags - Array of tag objects
- * @param deleteTagIds - Array of tag IDs to delete
  */
 const saveUserTags = async (_tagIds: string[], _tags: { id: string, name: string }[], deleteTagIds: string[]) => {
   if (deleteTagIds.length) {
@@ -109,7 +106,6 @@ const saveUserTags = async (_tagIds: string[], _tags: { id: string, name: string
 /**
  * Add tags to user
  * Calls API to associate tags with user
- * @param _tagIds - Array of tag IDs to add
  */
 const addUserTag = async (_tagIds: string[]) => {
   updateLoading.value = true;
@@ -123,8 +119,6 @@ const addUserTag = async (_tagIds: string[]) => {
 /**
  * Delete tags from user
  * Calls API to remove tag associations
- * @param _tagIds - Array of tag IDs to delete
- * @param type - Operation type ('Modal' or 'Table')
  */
 const delUserTag = async (_tagIds: string[], type?: 'Modal' | 'Table') => {
   updateLoading.value = true;
@@ -153,7 +147,6 @@ const delUserTag = async (_tagIds: string[], type?: 'Modal' | 'Table') => {
 /**
  * Cancel/Remove tag from user
  * Calls delete function for table operations
- * @param id - Tag ID to remove
  */
 const handleCancel = async (id) => {
   await delUserTag([id], 'Table');
@@ -162,7 +155,6 @@ const handleCancel = async (id) => {
 /**
  * Handle search input with debouncing
  * Filters tags by name with end matching
- * @param event - Input change event
  */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
@@ -195,7 +187,6 @@ const pagination = computed(() => {
 /**
  * Handle table pagination changes
  * Updates parameters and reloads data based on table interactions
- * @param _pagination - Pagination object from table
  */
 const handleChange = async (_pagination) => {
   const { current, pageSize } = _pagination;

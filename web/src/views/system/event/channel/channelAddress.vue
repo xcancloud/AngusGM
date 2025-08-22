@@ -60,8 +60,6 @@ const getReceiveSettingDetail = async (): Promise<void> => {
 /**
  * Add new HTTP item
  * Validates form and saves new channel configuration
- * @param index - Index of the form to validate
- * @param item - Channel data item to save
  */
 const addHttpItem = async (index: number, item: ChannelData): Promise<void> => {
   try {
@@ -91,8 +89,6 @@ const addHttpItem = async (index: number, item: ChannelData): Promise<void> => {
 /**
  * Edit HTTP item confirmation
  * Validates form and updates existing channel configuration
- * @param index - Index of the form to validate
- * @param item - Channel data item to update
  */
 const editHttpItemConfirm = async (index: number, item: ChannelData): Promise<void> => {
   try {
@@ -122,7 +118,6 @@ const editHttpItemConfirm = async (index: number, item: ChannelData): Promise<vo
 /**
  * Delete confirmation modal
  * Shows confirmation dialog before deleting channel
- * @param id - Channel ID to delete
  */
 const deleteConfirm = (id: string): void => {
   modal.confirm({
@@ -138,7 +133,6 @@ const deleteConfirm = (id: string): void => {
 /**
  * Delete HTTP configuration
  * Removes channel configuration from the system
- * @param id - Channel ID to delete
  */
 const delHttpConfig = async (id: string): Promise<void> => {
   try {
@@ -160,8 +154,6 @@ const delHttpConfig = async (id: string): Promise<void> => {
 /**
  * Test channel configuration
  * Validates and tests channel configuration
- * @param index - Index of the form to validate
- * @param item - Channel data item to test
  */
 const testConfig = async (index: number, item: ChannelData): Promise<void> => {
   try {
@@ -190,7 +182,6 @@ const testConfig = async (index: number, item: ChannelData): Promise<void> => {
 /**
  * Edit channel address
  * Enables edit mode for existing channel
- * @param item - Channel data item to edit
  */
 const editAddress = (item: ChannelData): void => {
   item.oldName = item.name;
@@ -201,8 +192,6 @@ const editAddress = (item: ChannelData): void => {
 /**
  * Cancel edit operation
  * Restores original values and disables edit mode
- * @param item - Channel data item to cancel edit for
- * @param index - Index of the form to clear validation for
  */
 const cancelEdit = (item: ChannelData, index: number): void => {
   if (item.oldName !== undefined) {

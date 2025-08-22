@@ -44,8 +44,6 @@ const hasData = computed(() => {
 
 /**
  * Get alternating row background class
- * @param index - Row index
- * @returns CSS class for alternating backgrounds
  */
 const getRowBackgroundClass = (index: number): string => {
   return index % 2 > 0 ? 'bg-gray-light' : '';
@@ -53,8 +51,6 @@ const getRowBackgroundClass = (index: number): string => {
 
 /**
  * Get display value with fallback
- * @param value - Value to display
- * @returns Formatted value or fallback
  */
 const getDisplayValue = (value: any): string => {
   return formatDataForDisplay(value);

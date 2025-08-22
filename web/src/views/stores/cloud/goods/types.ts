@@ -71,8 +71,6 @@ const goodsCloudTypes = ['CLOUD_SERVICE'];
 
 /**
  * Check if goods is considered private goods
- * @param applyEditionTypes - Array of edition types to check
- * @returns true if goods applies to private edition types
  */
 export const isPriGoods = (applyEditionTypes: { value: string, message: string }[] = []): boolean => {
   return (applyEditionTypes || []).some(i => goodsPriTypes.includes(i.value));
@@ -80,8 +78,6 @@ export const isPriGoods = (applyEditionTypes: { value: string, message: string }
 
 /**
  * Check if goods is a cloud service
- * @param applyEditionTypes - Array of edition types to check
- * @returns true if goods is a cloud service type
  */
 export const isCloudGoods = (applyEditionTypes: { value: string, message: string }[] = []): boolean => {
   return (applyEditionTypes || []).some(i => goodsCloudTypes.includes(i.value));
@@ -89,8 +85,6 @@ export const isCloudGoods = (applyEditionTypes: { value: string, message: string
 
 /**
  * Check if goods has multiple private edition types
- * @param goods - The goods object to check
- * @returns true if goods has multiple private edition types
  */
 export const multipleEditionTypes = (goods: Goods): boolean => {
   return (goods.applyEditionTypes || []).filter(i => goodsPriTypes.includes(i.value)).length > 1;
@@ -98,8 +92,6 @@ export const multipleEditionTypes = (goods: Goods): boolean => {
 
 /**
  * Get downloadable edition types for private goods
- * @param goods - The goods object to check
- * @returns Array of edition types that can be downloaded
  */
 export const downloadEditionTypes = (goods: Goods) => {
   return (goods.applyEditionTypes || []).filter(i => goodsPriTypes.includes(i.value));

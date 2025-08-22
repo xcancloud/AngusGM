@@ -2,8 +2,6 @@ import type { TableColumn, GridColumn, SearchOption, SmsSendStatus, PaginationCo
 
 /**
  * Get color for SMS send status badge
- * @param value - SMS send status
- * @returns Color string for badge styling
  */
 export const getSendStatusColor = (value: SmsSendStatus): string => {
   switch (value) {
@@ -20,10 +18,6 @@ export const getSendStatusColor = (value: SmsSendStatus): string => {
 
 /**
  * Create pagination configuration object
- * @param current - Current page number
- * @param pageSize - Page size
- * @param total - Total number of records
- * @returns Pagination configuration object
  */
 export const createPaginationConfig = (
   current: number,
@@ -37,8 +31,6 @@ export const createPaginationConfig = (
 
 /**
  * Parse third-party output parameters
- * @param thirdOutputParam - Raw third-party output parameters
- * @returns Parsed parameters object
  */
 export const parseThirdPartyOutputParams = (thirdOutputParam: any): any => {
   if (!thirdOutputParam) return null;
@@ -55,8 +47,6 @@ export const parseThirdPartyOutputParams = (thirdOutputParam: any): any => {
 
 /**
  * Format JSON for display
- * @param data - Data to format
- * @returns Formatted JSON string
  */
 export const formatJsonForDisplay = (data: any): string => {
   if (!data) return '';
@@ -72,8 +62,6 @@ export const formatJsonForDisplay = (data: any): string => {
 /**
  * Create table columns configuration for SMS records
  * Defines the structure and display properties for the SMS records table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createSmsRecordsColumns = (t: (key: string) => string): TableColumn[] => [
   {
@@ -153,8 +141,6 @@ export const createSmsRecordsColumns = (t: (key: string) => string): TableColumn
 /**
  * Create grid columns configuration for SMS record detail
  * Defines the structure and display properties for the detail grid
- * @param t - i18n translation function
- * @returns Array of grid column configurations
  */
 export const createSmsRecordDetailColumns = (t: (key: string) => string): GridColumn[][] => [
   [
@@ -226,9 +212,6 @@ export const createSmsRecordDetailColumns = (t: (key: string) => string): GridCo
 /**
  * Create search options configuration for SMS records
  * Defines the search and filter options for the records list
- * @param t - i18n translation function
- * @param ProcessStatus - Process status enum from infrastructure
- * @returns Array of search option configurations
  */
 export const createSmsRecordsSearchOptions = (
   t: (key: string) => string,

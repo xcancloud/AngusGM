@@ -31,7 +31,6 @@ const currEnabled = ref(false);
 /**
  * Handle registration switch change with debounce
  * Automatically generates invitation code if enabled and none exists
- * @param value - Boolean value indicating if registration is enabled
  */
 const enabledChange = debounce(duration.search, async (value) => {
   if (!props.signupAllow?.invitationCode && value) {

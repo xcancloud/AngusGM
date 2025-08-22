@@ -79,7 +79,6 @@ const loading = ref(false); // Loading state for form submission
 /**
  * Add new user to system
  * Handles form validation, API call, and navigation
- * @param isContinueAdd - Whether to continue adding after successful submission
  */
 const addUser = async (isContinueAdd?: boolean) => {
   if (loading.value) {
@@ -228,7 +227,6 @@ const openUploadModal = () => {
 
 /**
  * Handle successful avatar upload
- * @param value - Upload response data
  */
 const uploadSuccess = (value) => {
   formState.value.avatar = value?.data[0]?.url;
@@ -419,7 +417,6 @@ const loadUserDetail = async () => {
 /**
  * Analyze password strength and update validation status
  * Called on password input change
- * @param e - Input change event
  */
 const changeStrength = (e: { target: { value: string } }) => {
   const { value = '' } = e.target;
@@ -432,7 +429,6 @@ const changeStrength = (e: { target: { value: string } }) => {
 /**
  * Handle ITC (International Telephone Code) change
  * Updates country code when ITC changes
- * @param value - Selected ITC value
  */
 const changeItc = (value: string) => {
   formState.value.itc = value;
@@ -455,7 +451,6 @@ const loadUserGender = async () => {
 /**
  * Handle first name changes with debouncing
  * Auto-generates full name from first and last name
- * @param event - Input change event
  */
 const firstNameChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
@@ -477,7 +472,6 @@ const firstNameChange = debounce(duration.search, (event: any) => {
 /**
  * Handle last name changes with debouncing
  * Auto-generates full name from first and last name
- * @param event - Input change event
  */
 const lastNameChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;

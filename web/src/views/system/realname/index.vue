@@ -112,7 +112,6 @@ const reAudit = () => {
 
 /**
  * Navigate to authentication form
- * @param type - Authentication type (PERSONAL, ENTERPRISE, GOVERNMENT)
  */
 const toAuditForm = (type: TenantType) => {
   resetVisible();

@@ -55,7 +55,6 @@ const loadServiceList = async () => {
 
 /**
  * Handle service selection change
- * @param value - Selected service value
  */
 const serviceChange = async (value: any) => {
   if (value) {
@@ -98,7 +97,6 @@ const loadInstancesList = async () => {
 
 /**
  * Handle instance selection change
- * @param value - Selected instance value
  */
 const instancesChange = async (value: any) => {
   await loadApp(value);
@@ -106,7 +104,6 @@ const instancesChange = async (value: any) => {
 
 /**
  * Load app storage data for the specified instance address
- * @param address - Instance address to load data from
  */
 const loadApp = async (address: string) => {
   try {

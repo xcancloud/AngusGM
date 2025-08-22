@@ -73,7 +73,6 @@ const loadSmsConfig = async (): Promise<void> => {
 
 /**
  * Set channel state with default values
- * @param data - Raw channel data from API
  */
 const setState = (data: Aisle[]) => {
   state.aisles = processChannelData(data);
@@ -81,7 +80,6 @@ const setState = (data: Aisle[]) => {
 
 /**
  * Show confirmation dialog for enabling/disabling channel
- * @param item - Channel item to update
  */
 const updateStateConfirm = (item: Aisle) => {
   const isEnabling = !item.enabled;
@@ -97,7 +95,6 @@ const updateStateConfirm = (item: Aisle) => {
 
 /**
  * Update channel enabled state via API
- * @param item - Channel item to update
  */
 const patchUpdateState = async (item: Aisle): Promise<void> => {
   try {
@@ -119,7 +116,6 @@ const patchUpdateState = async (item: Aisle): Promise<void> => {
 
 /**
  * Save channel configuration via API
- * @param item - Channel item to save
  */
 const patchSave = async (item: Aisle): Promise<void> => {
   item.loading = true;
@@ -142,7 +138,6 @@ const patchSave = async (item: Aisle): Promise<void> => {
 
 /**
  * Show save confirmation dialog after form validation
- * @param item - Channel item to save
  */
 const saveConfirm = (item: Aisle) => {
   validate().then(() => {
@@ -160,7 +155,6 @@ const saveConfirm = (item: Aisle) => {
 
 /**
  * Open configuration form for a specific channel
- * @param val - Channel item to configure
  */
 const openConfig = (val: Aisle) => {
   // Close all other configuration forms
@@ -176,7 +170,6 @@ const openConfig = (val: Aisle) => {
 
 /**
  * Open SMS sending dialog for a channel
- * @param item - Channel item to send SMS from
  */
 const openSmsMessage = (item: Aisle) => {
   item.display = false;
@@ -185,8 +178,6 @@ const openSmsMessage = (item: Aisle) => {
 
 /**
  * Close SMS sending dialog
- * @param value - Dialog visibility state
- * @param aisle - Channel item
  */
 const closeSmsMessage = (value: boolean, aisle: Aisle) => {
   aisle.visible = value;
@@ -194,7 +185,6 @@ const closeSmsMessage = (value: boolean, aisle: Aisle) => {
 
 /**
  * Close configuration form and reset form data
- * @param item - Channel item
  */
 const closeConfig = (item: Aisle) => {
   resetFields();

@@ -7,8 +7,6 @@ import type { ColumnsProps, Token, ServiceSelectionData } from './types';
 
 /**
  * Check if token is expired
- * @param item - Token item to check
- * @returns True if token is expired, false otherwise
  */
 export const isTokenExpired = (item: Token): boolean => {
   return new Date(item.expiredDate) < new Date();
@@ -16,8 +14,6 @@ export const isTokenExpired = (item: Token): boolean => {
 
 /**
  * Get token expiration status color
- * @param item - Token item to check
- * @returns Color string for badge display
  */
 export const getTokenExpirationColor = (item: Token): string => {
   return isTokenExpired(item) ? 'orange' : 'green';
@@ -25,9 +21,6 @@ export const getTokenExpirationColor = (item: Token): string => {
 
 /**
  * Get token expiration status text
- * @param item - Token item to check
- * @param t - i18n translation function
- * @returns Localized expiration status text
  */
 export const getTokenExpirationText = (item: Token, t: (key: string) => string): string => {
   return isTokenExpired(item)
@@ -37,8 +30,6 @@ export const getTokenExpirationText = (item: Token, t: (key: string) => string):
 
 /**
  * Process service selection data to grant data format
- * @param dataSource - Array of service selection data
- * @returns Processed grant data array
  */
 export const processServiceSelectionData = (dataSource: ServiceSelectionData[]): any[] => {
   const result: any[] = [];
@@ -55,8 +46,6 @@ export const processServiceSelectionData = (dataSource: ServiceSelectionData[]):
 
 /**
  * Get selected service codes from data source
- * @param dataSource - Array of service selection data
- * @returns Array of selected service codes
  */
 export const getSelectedServiceCodes = (dataSource: ServiceSelectionData[]): string[] => {
   return dataSource.map(i => i.serviceCode).filter(Boolean) as string[];
@@ -64,10 +53,6 @@ export const getSelectedServiceCodes = (dataSource: ServiceSelectionData[]): str
 
 /**
  * Validate service selection
- * @param serviceCode - Selected service code
- * @param dataSource - Current data source
- * @param t - i18n translation function
- * @returns Validation result object
  */
 export const validateServiceSelection = (
   serviceCode: string | undefined,
@@ -93,8 +78,6 @@ export const validateServiceSelection = (
 
 /**
  * Calculate days until token expiration
- * @param expiredDate - Token expiration date
- * @returns Number of days until expiration (negative if expired)
  */
 export const calculateDaysUntilExpiration = (expiredDate: string): number => {
   const expiration = new Date(expiredDate);
@@ -106,8 +89,6 @@ export const calculateDaysUntilExpiration = (expiredDate: string): number => {
 /**
  * Create table columns configuration for token management
  * Defines the structure and display properties for the token table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createTokenTableColumns = (t: (key: string) => string): ColumnsProps[] => [
   {

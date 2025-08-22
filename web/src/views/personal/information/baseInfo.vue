@@ -33,7 +33,6 @@ const upload = (): void => {
 /**
  * Handles successful avatar upload
  * Updates user avatar in backend and local context
- * @param jsonData - Upload response data containing avatar URL
  */
 const uploadSuccess = async (jsonData: any): Promise<void> => {
   const avatar = jsonData.data[0].url;

@@ -83,8 +83,6 @@ const selectApis = ref<string[]>([]);
 /**
  * Handle tree node selection
  * Updates the selected APIs when a tree node is selected
- * @param {string[]} id - Selected node IDs
- * @param {any} funcs - Function data containing API information
  */
 const handleSelect = (id: string[], funcs) => {
   if (id.length) {
@@ -97,7 +95,6 @@ const handleSelect = (id: string[], funcs) => {
 /**
  * Process data source to disable checkbox operations
  * Recursively processes the tree data to set appropriate disabled states
- * @param {DataRecordType[]} data - Tree data to process
  */
 const handlerDataSource = (data: DataRecordType[]) => {
   const fn = (list: DataRecordType[]) => {

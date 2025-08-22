@@ -10,7 +10,6 @@ const emit = defineEmits(['confirm', 'cancel']);
 
 /**
  * Handle button click events
- * @param type - true for confirm, false for cancel
  */
 const buttonClick = function (type: boolean) {
   emit(type ? 'confirm' : 'cancel');

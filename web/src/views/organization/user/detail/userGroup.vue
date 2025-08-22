@@ -78,9 +78,6 @@ const addGroup = () => {
 /**
  * Handle group save from modal
  * Processes selected group IDs and handles add/delete operations
- * @param _groupIds - Array of group IDs to add
- * @param _groups - Array of group objects
- * @param deleteGroupIds - Array of group IDs to delete
  */
 const saveGroup = async (_groupIds: string[], _groups: { id: string, name: string }[], deleteGroupIds: string[]) => {
   if (deleteGroupIds.length) {
@@ -105,7 +102,6 @@ const saveGroup = async (_groupIds: string[], _groups: { id: string, name: strin
 /**
  * Add groups to user
  * Calls API to associate groups with user
- * @param _groupIds - Array of group IDs to add
  */
 const addUserGroup = async (_groupIds: string[]) => {
   updateLoading.value = true;
@@ -119,8 +115,6 @@ const addUserGroup = async (_groupIds: string[]) => {
 /**
  * Delete groups from user
  * Calls API to remove group associations
- * @param _groupIds - Array of group IDs to delete
- * @param type - Operation type ('Modal' or 'Table')
  */
 const delUserGroup = async (_groupIds: string[], type?: 'Modal' | 'Table') => {
   updateLoading.value = true;
@@ -149,7 +143,6 @@ const delUserGroup = async (_groupIds: string[], type?: 'Modal' | 'Table') => {
 /**
  * Cancel/Remove group from user
  * Calls delete function for table operations
- * @param id - Group ID to remove
  */
 const handleCancel = async (id) => {
   await delUserGroup([id], 'Table');
@@ -158,7 +151,6 @@ const handleCancel = async (id) => {
 /**
  * Handle search input with debouncing
  * Filters groups by name with end matching
- * @param event - Input change event
  */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
@@ -190,7 +182,6 @@ const pagination = computed(() => {
 /**
  * Handle table pagination changes
  * Updates parameters and reloads data based on table interactions
- * @param _pagination - Pagination object from table
  */
 const handleChange = async (_pagination) => {
   const { current, pageSize } = _pagination;

@@ -59,7 +59,6 @@ const loadEnums = async () => {
 /**
  * Handle storage type change
  * Resets form values and enables edit mode
- * @param e - Radio change event
  */
 const handleChange = (e: any) => {
   state.storeType = e.target.value;
@@ -118,7 +117,6 @@ const cancelEdit = () => {
 
 /**
  * Handle proxy address input change
- * @param event - Input change event
  */
 const proxyAddressChange = (event: any) => {
   const value = event.target.value;
@@ -128,7 +126,6 @@ const proxyAddressChange = (event: any) => {
 
 /**
  * Handle local directory input change
- * @param event - Input change event
  */
 const localDirChange = (event: any) => {
   const value = event.target.value;
@@ -138,7 +135,6 @@ const localDirChange = (event: any) => {
 
 /**
  * Handle region input change
- * @param event - Input change event
  */
 const regionChange = (event: any) => {
   formValues.region = event.target.value;
@@ -146,7 +142,6 @@ const regionChange = (event: any) => {
 
 /**
  * Handle endpoint input change
- * @param event - Input change event
  */
 const endpointChange = (event: any) => {
   const value = event.target.value;
@@ -156,7 +151,6 @@ const endpointChange = (event: any) => {
 
 /**
  * Handle access key input change
- * @param event - Input change event
  */
 const accessKeyChange = (event: any) => {
   const value = event.target.value;
@@ -166,7 +160,6 @@ const accessKeyChange = (event: any) => {
 
 /**
  * Handle secret key input change
- * @param event - Input change event
  */
 const secretKeyChange = (event: any) => {
   const value = event.target.value;

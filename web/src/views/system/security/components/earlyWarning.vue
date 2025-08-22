@@ -37,7 +37,6 @@ const currEnabled = ref(false);
 
 /**
  * Handle early warning switch change with debounce
- * @param value - Boolean value indicating if early warning is enabled
  */
 const enabledChange = debounce(duration.search, (value) => {
   emit('change', value, 'enabled', 'earlySwitch');
@@ -68,8 +67,6 @@ const checkBoxChange = () => {
 
 /**
  * Save selected users for alarm reception
- * @param _userIds - Array of user IDs
- * @param _users - Array of user objects with id and fullName
  */
 const userSave = async (_userIds: string[], _users: { id: string, fullName: string }[]) => {
   userVisible.value = false;
@@ -79,7 +76,6 @@ const userSave = async (_userIds: string[], _users: { id: string, fullName: stri
 
 /**
  * Remove user from alarm reception list
- * @param userId - ID of user to remove
  */
 const delUser = (userId: string) => {
   receiveUser.value = receiveUser.value.filter(item => item.id !== userId);

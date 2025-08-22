@@ -25,7 +25,6 @@ const emit = defineEmits<{(e: 'change', value: string | boolean, type: string, o
 /**
  * Handle locked password error number change with debounce
  * Validates input value and emits change event
- * @param event - Input change event
  */
 const lockedPasswordErrorNumChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
@@ -38,7 +37,6 @@ const lockedPasswordErrorNumChange = debounce(duration.search, (event: any) => {
 /**
  * Handle locked duration change with debounce
  * Validates input value and emits change event
- * @param event - Input change event
  */
 const lockedDurationInMinutesChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
@@ -51,7 +49,6 @@ const lockedDurationInMinutesChange = debounce(duration.search, (event: any) => 
 /**
  * Handle password error interval change with debounce
  * Validates input value and emits change event
- * @param event - Input change event
  */
 const passwordErrorIntervalInMinutesChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;
@@ -66,7 +63,6 @@ const currEnabled = ref(false);
 
 /**
  * Handle login restrictions switch change
- * @param value - Boolean value indicating if login restrictions are enabled
  */
 const enabledChange = (value) => {
   emit('change', value, 'enabled', 'signinSwitch');

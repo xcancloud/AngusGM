@@ -2,10 +2,6 @@ import type { TableColumn, PaginationConfig, OperationLogRecord } from './types'
 
 /**
  * Create pagination configuration object
- * @param current - Current page number
- * @param pageSize - Page size
- * @param total - Total number of records
- * @returns Pagination configuration object
  */
 export const createPaginationConfig = (
   current: number,
@@ -19,8 +15,6 @@ export const createPaginationConfig = (
 
 /**
  * Process operation log list data
- * @param logList - Raw log list data from API
- * @returns Processed log list
  */
 export const processOperationLogList = (logList: OperationLogRecord[]): OperationLogRecord[] => {
   if (!Array.isArray(logList)) return [];
@@ -29,8 +23,6 @@ export const processOperationLogList = (logList: OperationLogRecord[]): Operatio
 
 /**
  * Update pagination parameters
- * @param params - Current query parameters
- * @param pagination - New pagination values
  */
 export const updatePaginationParams = (
   params: { pageNo: number; pageSize: number },
@@ -43,8 +35,6 @@ export const updatePaginationParams = (
 
 /**
  * Update sorting parameters
- * @param params - Current query parameters
- * @param sorter - New sorting values
  */
 export const updateSortingParams = (
   params: { orderBy?: string; orderSort?: any },
@@ -56,7 +46,6 @@ export const updateSortingParams = (
 
 /**
  * Reset pagination to first page
- * @param params - Query parameters to reset
  */
 export const resetPagination = (params: { pageNo: number }): void => {
   params.pageNo = 1;
@@ -64,8 +53,6 @@ export const resetPagination = (params: { pageNo: number }): void => {
 
 /**
  * Extract system settings from API response
- * @param response - API response object
- * @returns Extracted settings or undefined
  */
 export const extractSystemSettings = (response: any): { clearBeforeDay?: string } | undefined => {
   if (!response?.data) return undefined;
@@ -77,8 +64,6 @@ export const extractSystemSettings = (response: any): { clearBeforeDay?: string 
 
 /**
  * Toggle statistics visibility
- * @param currentState - Current show count state
- * @returns New show count state
  */
 export const toggleStatisticsVisibility = (currentState: boolean): boolean => {
   return !currentState;
@@ -87,8 +72,6 @@ export const toggleStatisticsVisibility = (currentState: boolean): boolean => {
 /**
  * Create table columns configuration for operation logs
  * Defines the structure and display properties for the operation logs table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createOperationLogColumns = (t: (key: string) => string): TableColumn[] => [
   {

@@ -77,7 +77,6 @@ const addPolicy = () => {
 /**
  * Handle policy save from modal
  * Processes selected policy IDs and calls add function
- * @param addIds - Array of policy IDs to add
  */
 const policySave = (addIds: string[]) => {
   if (!addIds.length) {
@@ -89,7 +88,6 @@ const policySave = (addIds: string[]) => {
 /**
  * Add policies to user
  * Calls API to associate policies with user
- * @param _addIds - Array of policy IDs to add
  */
 const addUserPolicy = async (_addIds: string[]) => {
   updateLoading.value = true;
@@ -107,7 +105,6 @@ const addUserPolicy = async (_addIds: string[]) => {
 /**
  * Cancel/Remove policy from user
  * Calls API to remove policy association
- * @param id - Policy ID to remove
  */
 const handleCancel = async (id) => {
   if (loading.value) {
@@ -131,7 +128,6 @@ const handleCancel = async (id) => {
 /**
  * Handle search input with debouncing
  * Filters policies by name with end matching
- * @param event - Input change event
  */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
@@ -150,9 +146,6 @@ const handleSearch = debounce(duration.search, async (event: any) => {
 /**
  * Handle table pagination, sorting, and filtering changes
  * Updates parameters and reloads data based on table interactions
- * @param _pagination - Pagination object from table
- * @param _filters - Filter object from table
- * @param sorter - Sorting object from table
  */
 const handleChange = async (_pagination, _filters, sorter) => {
   const { current, pageSize } = _pagination;
@@ -168,8 +161,6 @@ const handleChange = async (_pagination, _filters, sorter) => {
 /**
  * Get authorization type display text
  * Combines default and open authorization types
- * @param record - Policy record object
- * @returns Formatted authorization type string
  */
 const getAuthorizationType = (record) => {
   const resultArr: string[] = [];

@@ -197,7 +197,6 @@ const rules = {
 
 /**
  * Remove error code from upload error array
- * @param code - Error code to remove
  */
 const deleteCode = function (code: number) {
   errorUpload.value = errorUpload.value.filter(item => item !== code);
@@ -205,8 +204,6 @@ const deleteCode = function (code: number) {
 
 /**
  * Custom validation rules for upload components
- * @param rules - Validation rules object
- * @param errCode - Error code for specific validation
  */
 async function errorRules (rules: { message: string }, errCode: number) {
   // Add delay for validation
@@ -297,8 +294,6 @@ const confirm = function () {
 
 /**
  * Handle file upload change events
- * @param label - Upload component identifier
- * @param value - Uploaded file ID or URL
  */
 const loadChange = function (label: string, value: any) {
   /* Process uploaded image ID or URL */

@@ -50,8 +50,6 @@ const loading = ref(false); // Loading state for form submission
 
 /**
  * Get popup container for tooltips and hints
- * @param node - HTML element to find parent for
- * @returns Parent element or document body as fallback
  */
 const getPopupContainer = (node: HTMLElement): HTMLElement => {
   if (node) {
@@ -113,8 +111,6 @@ const ok = async (): Promise<void> => {
 
 /**
  * Handle password input changes for all password fields
- * @param event - Input change event
- * @param passwordType - Type of password field (1: old, 2: new, 3: confirm)
  */
 const changeHandle = (event: any, passwordType: 1 | 2 | 3): void => {
   const value = event.target.value;
@@ -138,7 +134,6 @@ const changeHandle = (event: any, passwordType: 1 | 2 | 3): void => {
 /**
  * Handle blur events for password fields
  * Triggers validation when user leaves a password field
- * @param passwordType - Type of password field to validate
  */
 const onBlur = (passwordType: 1 | 2 | 3) => {
   switch (passwordType) {

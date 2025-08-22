@@ -53,7 +53,6 @@ const selectFile = function () {
 
 /**
  * Handle file selection and upload
- * @param el - File input event target
  */
 const fileChange = async function (el: any) {
   const file: File = el.target.files?.[0];

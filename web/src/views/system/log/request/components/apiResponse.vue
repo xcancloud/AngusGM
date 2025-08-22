@@ -37,8 +37,6 @@ const tabs = computed(() => createResponseTabs(t));
 
 /**
  * Check if tab is currently active
- * @param id - Tab identifier
- * @returns True if tab is active, false otherwise
  */
 const isActive = (id: string): boolean => {
   return currentTabId.value === id;
@@ -46,7 +44,6 @@ const isActive = (id: string): boolean => {
 
 /**
  * Handle tab selection
- * @param id - Selected tab identifier
  */
 const handleSelect = (id: string): void => {
   currentTabId.value = id;
@@ -68,8 +65,6 @@ const hasResponseBody = computed(() => {
 
 /**
  * Get alternating row background class
- * @param index - Row index
- * @returns CSS class for alternating backgrounds
  */
 const getRowBackgroundClass = (index: number): string => {
   return index % 2 > 0 ? 'bg-gray-light' : '';
@@ -77,8 +72,6 @@ const getRowBackgroundClass = (index: number): string => {
 
 /**
  * Get display value with fallback
- * @param value - Value to display
- * @returns Formatted value or fallback
  */
 const getDisplayValue = (value: any): string => {
   return formatDataForDisplay(value);

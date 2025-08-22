@@ -92,7 +92,6 @@ const getList = async (): Promise<void> => {
 
 /**
  * Fetch detailed information for a specific API log entry
- * @param id - The unique identifier of the log entry
  */
 const getDetail = async (id: string): Promise<void> => {
   if (!id) return;
@@ -107,7 +106,6 @@ const getDetail = async (id: string): Promise<void> => {
 
 /**
  * Handle search criteria changes and trigger new search
- * @param data - Array of search criteria with key, value, and operation
  */
 const searchChange = async (data: SearchCriteria[]): Promise<void> => {
   resetPagination(state.params);
@@ -144,8 +142,6 @@ const resize = (element: HTMLElement): void => {
 
 /**
  * Handle pagination changes and fetch new data
- * @param page - Current page number
- * @param size - Number of items per page
  */
 const paginationChange = async (page: number, size: number): Promise<void> => {
   updatePaginationParams(state.params, page, size);
@@ -161,7 +157,6 @@ const paginationChange = async (page: number, size: number): Promise<void> => {
 /**
  * Handle API log item selection
  * Updates selected item and fetches detailed information
- * @param item - The selected log item
  */
 const handleClick = async (item: DataRecordType): Promise<void> => {
   state.selectedApi = item;

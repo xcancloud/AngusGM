@@ -16,8 +16,6 @@ export const STATUS_COLOR_MAP: Record<string, string> = {
 /**
  * Get status color for a given status key
  * Returns the appropriate color for status badge display
- * @param key - Status key to get color for
- * @returns Color string for the status badge
  */
 export const getStatusColor = (key: string): string => {
   return STATUS_COLOR_MAP[key] || 'default';
@@ -26,8 +24,6 @@ export const getStatusColor = (key: string): string => {
 /**
  * Get status text for a given status key
  * Returns the appropriate color for status badge display
- * @param key - Status key to get text for
- * @returns Color string for the status badge
  */
 export const getStatusText = (key: string): string => {
   return getStatusColor(key);
@@ -200,8 +196,6 @@ export const createDetailGridColumns = () => {
 /**
  * Check if recipient type should be excluded from selection
  * Filters out certain recipient types that are not selectable
- * @param item - Object containing value property
- * @returns Boolean indicating if the type should be excluded
  */
 export const shouldExcludeRecipientType = ({ value }: { value: any }): boolean => {
   return [ReceiveObjectType.TO_POLICY, ReceiveObjectType.POLICY, ReceiveObjectType.ALL].includes(value);
@@ -210,8 +204,6 @@ export const shouldExcludeRecipientType = ({ value }: { value: any }): boolean =
 /**
  * Format sent number for display
  * Handles special cases like negative values
- * @param value - The sent number value
- * @returns Formatted string for display
  */
 export const formatSentNumber = (value: any): string => {
   return +value > -1 ? value : '--';
@@ -220,8 +212,6 @@ export const formatSentNumber = (value: any): string => {
 /**
  * Get recipient display name
  * Returns appropriate display name for recipient type
- * @param receiveTenantName - Tenant name if available
- * @returns Display name string
  */
 export const getRecipientDisplayName = (receiveTenantName?: string): string => {
   return receiveTenantName || '';
@@ -230,9 +220,6 @@ export const getRecipientDisplayName = (receiveTenantName?: string): string => {
 /**
  * Generate range of numbers
  * Utility function for time picker options
- * @param start - Start number
- * @param end - End number
- * @returns Array of numbers from start to end
  */
 export const generateRange = (start: number, end: number): number[] => {
   const result: number[] = [];
@@ -245,8 +232,6 @@ export const generateRange = (start: number, end: number): number[] => {
 /**
  * Check if date is in the past
  * Prevents scheduling messages in the past
- * @param current - Date to check
- * @returns Boolean indicating if date is in the past
  */
 export const isPastDate = (current: any): boolean => {
   return current && current < dayjs();
@@ -255,8 +240,6 @@ export const isPastDate = (current: any): boolean => {
 /**
  * Get disabled time options for date picker
  * Prevents selecting past times for scheduled messages
- * @param currentTime - Current time plus one minute
- * @returns Object with disabled hours and minutes
  */
 export const getDisabledTimeOptions = (currentTime: any) => {
   return {
@@ -268,8 +251,6 @@ export const getDisabledTimeOptions = (currentTime: any) => {
 /**
  * Build hierarchical tree structure from flat list
  * Converts flat department list to nested tree structure
- * @param treeData - Flat array of items with id and pid properties
- * @returns Nested tree structure
  */
 export const buildTree = (treeData: any[]): any[] => {
   if (!treeData?.length) {

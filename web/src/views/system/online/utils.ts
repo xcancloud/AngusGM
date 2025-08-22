@@ -2,10 +2,6 @@ import type { TableColumn, SearchOption, PaginationConfig, OnlineUser, LogoutPar
 
 /**
  * Create pagination configuration object
- * @param current - Current page number
- * @param pageSize - Page size
- * @param total - Total number of records
- * @returns Pagination configuration object
  */
 export const createPaginationConfig = (
   current: number,
@@ -19,8 +15,6 @@ export const createPaginationConfig = (
 
 /**
  * Process online user list data and add loading state
- * @param userList - Raw user list data from API
- * @returns Processed users with loading state
  */
 export const processOnlineUserList = (userList: OnlineUser[]): OnlineUser[] => {
   if (!Array.isArray(userList)) return [];
@@ -33,8 +27,6 @@ export const processOnlineUserList = (userList: OnlineUser[]): OnlineUser[] => {
 
 /**
  * Create logout parameters for API call
- * @param userId - User ID to logout
- * @returns Logout parameters object
  */
 export const createLogoutParams = (userId: string): LogoutParams => ({
   receiveObjectIds: [userId],
@@ -44,8 +36,6 @@ export const createLogoutParams = (userId: string): LogoutParams => ({
 
 /**
  * Get online status color for badge
- * @param isOnline - Whether user is online
- * @returns Color string for badge styling
  */
 export const getOnlineStatusColor = (isOnline: boolean): string => {
   return isOnline ? 'rgba(82,196,26,1)' : 'rgba(217, 217, 217,1)';
@@ -53,9 +43,6 @@ export const getOnlineStatusColor = (isOnline: boolean): string => {
 
 /**
  * Get online status text for display
- * @param isOnline - Whether user is online
- * @param t - i18n translation function
- * @returns Localized status text
  */
 export const getOnlineStatusText = (isOnline: boolean, t: (key: string) => string): string => {
   return isOnline ? t('onlineUser.messages.online') : t('onlineUser.messages.offline');
@@ -63,8 +50,6 @@ export const getOnlineStatusText = (isOnline: boolean, t: (key: string) => strin
 
 /**
  * Update pagination parameters
- * @param params - Current query parameters
- * @param pagination - New pagination values
  */
 export const updatePaginationParams = (
   params: { pageNo: number; pageSize: number },
@@ -77,8 +62,6 @@ export const updatePaginationParams = (
 
 /**
  * Update sorting parameters
- * @param params - Current query parameters
- * @param sorter - New sorting values
  */
 export const updateSortingParams = (
   params: { orderBy: string; orderSort: string },
@@ -90,7 +73,6 @@ export const updateSortingParams = (
 
 /**
  * Reset pagination to first page
- * @param params - Query parameters to reset
  */
 export const resetPagination = (params: { pageNo: number }): void => {
   params.pageNo = 1;
@@ -99,8 +81,6 @@ export const resetPagination = (params: { pageNo: number }): void => {
 /**
  * Create table columns configuration for online users
  * Defines the structure and display properties for the online users table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createOnlineUserColumns = (t: (key: string) => string): TableColumn[] => [
   {
@@ -177,8 +157,6 @@ export const createOnlineUserColumns = (t: (key: string) => string): TableColumn
 /**
  * Create search options configuration for online users
  * Defines the search and filter options for the online users list
- * @param t - i18n translation function
- * @returns Array of search option configurations
  */
 export const createOnlineUserSearchOptions = (t: (key: string) => string): SearchOption[] => [
   {

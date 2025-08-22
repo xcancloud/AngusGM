@@ -78,7 +78,6 @@ const load = async () => {
 /**
  * Handle target selection changes
  * Updates the form with selected target identifiers
- * @param {string[]} value - Array of selected target IDs
  */
 const targetChange = (value: string[]) => {
   state.form.targetId = value;

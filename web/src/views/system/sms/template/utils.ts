@@ -2,8 +2,6 @@ import type { TableColumn, Template, EditableTemplateValues, PaginationConfig, V
 
 /**
  * Process SMS templates and add edit state
- * @param values - Raw template data from API
- * @returns Processed templates with edit state
  */
 export const processSmsTemplates = (values: Template[]): Template[] => {
   if (!values.length) {
@@ -19,8 +17,6 @@ export const processSmsTemplates = (values: Template[]): Template[] => {
 
 /**
  * Create default edit values for a template
- * @param template - Template to create edit values for
- * @returns Default edit values object
  */
 export const createDefaultEditValues = (template: Template): EditableTemplateValues => ({
   name: template.name,
@@ -32,7 +28,6 @@ export const createDefaultEditValues = (template: Template): EditableTemplateVal
 
 /**
  * Enable edit mode for a template
- * @param record - Template record to edit
  */
 export const enableTemplateEdit = (record: Template): void => {
   record.showEdit = true;
@@ -41,7 +36,6 @@ export const enableTemplateEdit = (record: Template): void => {
 
 /**
  * Cancel edit mode for a template
- * @param record - Template record to cancel editing
  */
 export const cancelTemplateEdit = (record: Template): void => {
   record.showEdit = false;
@@ -49,9 +43,6 @@ export const cancelTemplateEdit = (record: Template): void => {
 
 /**
  * Validate template edit values
- * @param record - Template record to validate
- * @param t - i18n translation function
- * @returns Validation result object
  */
 export const validateTemplateEdit = (record: Template, t: (key: string) => string): ValidationResult => {
   const editValueKeys: (keyof EditableTemplateValues)[] = ['name', 'thirdCode', 'language', 'signature', 'content'];
@@ -72,9 +63,6 @@ export const validateTemplateEdit = (record: Template, t: (key: string) => strin
 
 /**
  * Get column title for a given key
- * @param key - Column key
- * @param t - i18n translation function
- * @returns Column title
  */
 export const getColumnTitle = (key: keyof EditableTemplateValues, t: (key: string) => string): string => {
   const columnTitles: Record<keyof EditableTemplateValues, string> = {
@@ -90,8 +78,6 @@ export const getColumnTitle = (key: keyof EditableTemplateValues, t: (key: strin
 
 /**
  * Check if template values have changed
- * @param record - Template record to check
- * @returns True if values have changed, false otherwise
  */
 export const hasTemplateChanges = (record: Template): boolean => {
   const editValueKeys: (keyof EditableTemplateValues)[] = ['name', 'thirdCode', 'language', 'signature', 'content'];
@@ -101,7 +87,6 @@ export const hasTemplateChanges = (record: Template): boolean => {
 
 /**
  * Update template with new values
- * @param record - Template record to update
  */
 export const updateTemplateValues = (record: Template): void => {
   const { name, thirdCode, language, signature, content } = record.editValues;
@@ -115,10 +100,6 @@ export const updateTemplateValues = (record: Template): void => {
 
 /**
  * Create pagination configuration object
- * @param current - Current page number
- * @param pageSize - Page size
- * @param total - Total number of records
- * @returns Pagination configuration object
  */
 export const createPaginationConfig = (
   current: number,
@@ -133,8 +114,6 @@ export const createPaginationConfig = (
 /**
  * Create table columns configuration for SMS templates
  * Defines the structure and display properties for the SMS templates table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createSmsTemplateColumns = (t: (key: string) => string): TableColumn[] => [
   {

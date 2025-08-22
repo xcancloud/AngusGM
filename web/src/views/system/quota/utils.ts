@@ -2,10 +2,6 @@ import type { TableColumn, PaginationConfig, QuotaQueryParams, EditionType, AppO
 
 /**
  * Create pagination configuration object
- * @param current - Current page number
- * @param pageSize - Page size
- * @param total - Total number of records
- * @returns Pagination configuration object
  */
 export const createPaginationConfig = (
   current: number,
@@ -19,8 +15,6 @@ export const createPaginationConfig = (
 
 /**
  * Process app list data for select options
- * @param appList - Raw app list data from API
- * @returns Processed app options for select component
  */
 export const processAppListForOptions = (appList: string[]): AppOption[] => {
   if (!Array.isArray(appList)) return [];
@@ -33,10 +27,6 @@ export const processAppListForOptions = (appList: string[]): AppOption[] => {
 
 /**
  * Validate quota input value
- * @param value - Quota value to validate
- * @param min - Minimum allowed value
- * @param max - Maximum allowed value
- * @returns True if valid, false otherwise
  */
 export const isValidQuotaValue = (value: number, min: number, max: number): boolean => {
   if (value === null || value === undefined) return false;
@@ -48,8 +38,6 @@ export const isValidQuotaValue = (value: number, min: number, max: number): bool
 
 /**
  * Check if edition type is cloud service
- * @param editionType - Edition type to check
- * @returns True if cloud service, false otherwise
  */
 export const isCloudService = (editionType: EditionType): boolean => {
   return editionType === 'CLOUD_SERVICE';
@@ -57,9 +45,6 @@ export const isCloudService = (editionType: EditionType): boolean => {
 
 /**
  * Get API domain for cloud tips
- * @param DomainManager - Domain manager class from infrastructure
- * @param AppOrServiceRoute - Route enum from infrastructure
- * @returns API domain string
  */
 export const getApiDomain = (
   DomainManager: any,
@@ -71,9 +56,6 @@ export const getApiDomain = (
 
 /**
  * Create query parameters for quota API call
- * @param baseParams - Base query parameters
- * @param appCode - Optional app code filter
- * @returns Query parameters object
  */
 export const createQuotaQueryParams = (
   baseParams: QuotaQueryParams,
@@ -87,8 +69,6 @@ export const createQuotaQueryParams = (
 
 /**
  * Update pagination parameters
- * @param params - Current query parameters
- * @param pagination - New pagination values
  */
 export const updatePaginationParams = (
   params: QuotaQueryParams,
@@ -101,9 +81,6 @@ export const updatePaginationParams = (
 
 /**
  * Format boolean status for display
- * @param value - Boolean value to format
- * @param t - i18n translation function
- * @returns Localized status text
  */
 export const formatBooleanStatus = (value: boolean, t: (key: string) => string): string => {
   return value ? t('common.status.yes') : t('common.status.no');
@@ -111,8 +88,6 @@ export const formatBooleanStatus = (value: boolean, t: (key: string) => string):
 
 /**
  * Get quota name display value
- * @param name - Quota name object
- * @returns Display value or fallback
  */
 export const getQuotaNameDisplay = (name: { value: string; message: string }): string => {
   return name?.value || name?.message || '--';
@@ -120,8 +95,6 @@ export const getQuotaNameDisplay = (name: { value: string; message: string }): s
 
 /**
  * Get quota name message
- * @param name - Quota name object
- * @returns Message value or fallback
  */
 export const getQuotaNameMessage = (name: { value: string; message: string }): string => {
   return name?.message || name?.value || '--';
@@ -130,8 +103,6 @@ export const getQuotaNameMessage = (name: { value: string; message: string }): s
 /**
  * Create cloud service table columns configuration
  * Defines the structure and display properties for cloud service quota table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createCloudQuotaColumns = (t: (key: string) => string): TableColumn[] => [
   {
@@ -174,8 +145,6 @@ export const createCloudQuotaColumns = (t: (key: string) => string): TableColumn
 /**
  * Create private service table columns configuration
  * Defines the structure and display properties for private service quota table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createPrivateQuotaColumns = (t: (key: string) => string): TableColumn[] => [
   {
@@ -230,9 +199,6 @@ export const createPrivateQuotaColumns = (t: (key: string) => string): TableColu
 
 /**
  * Get appropriate table columns based on edition type
- * @param editionType - Edition type (CLOUD_SERVICE or PRIVATE_SERVICE)
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const getQuotaTableColumns = (editionType: EditionType, t: (key: string) => string): TableColumn[] => {
   if (editionType === 'CLOUD_SERVICE') {

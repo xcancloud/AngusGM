@@ -99,7 +99,6 @@ const init = async (): Promise<void> => {
 /**
  * Handle search criteria changes from SearchPanel component
  * Resets pagination to first page and reloads data with new filters
- * @param data - Search criteria array from SearchPanel
  */
 const searchChange = async (data: SearchCriteria[]): Promise<void> => {
   params.value = handleSearchChange(params.value, data);
@@ -114,9 +113,6 @@ const searchChange = async (data: SearchCriteria[]): Promise<void> => {
 /**
  * Handle table pagination, sorting, and filtering changes
  * Updates parameters and reloads data based on table interactions
- * @param _pagination - Pagination object from table
- * @param _filters - Filter object from table
- * @param sorter - Sorting object from table
  */
 const tableChange = async (_pagination: any, _filters: any, sorter: any): Promise<void> => {
   params.value = handleTableChange(params.value, _pagination, sorter);
@@ -131,9 +127,6 @@ const tableChange = async (_pagination: any, _filters: any, sorter: any): Promis
 /**
  * Show confirmation modal for setting/canceling system administrator
  * Provides user confirmation before changing system admin status
- * @param id - User ID
- * @param name - User name for display in confirmation message
- * @param sysAdmin - Current system admin status
  */
 const setAdminConfirm = (id: string, name: string, sysAdmin: boolean): void => {
   showAdminConfirm(name, sysAdmin, t, async () => {
@@ -147,8 +140,6 @@ const setAdminConfirm = (id: string, name: string, sysAdmin: boolean): void => {
 /**
  * Show confirmation modal for user deletion
  * Provides user confirmation before deleting a user account
- * @param id - User ID
- * @param name - User name for display in confirmation message
  */
 const delUserConfirm = (id: string, name: string): void => {
   showDeleteConfirm(name, t, async () => {
@@ -168,9 +159,6 @@ const delUserConfirm = (id: string, name: string): void => {
 /**
  * Show confirmation modal for enabling/disabling user
  * Provides user confirmation before changing user enabled status
- * @param id - User ID
- * @param name - User name for display in confirmation message
- * @param enabled - Current enabled status
  */
 const updateStatusConfirm = (id: string, name: string, enabled: boolean): void => {
   showStatusConfirm(name, enabled, t, async () => {
@@ -184,7 +172,6 @@ const updateStatusConfirm = (id: string, name: string, enabled: boolean): void =
 /**
  * Open user lock modal
  * Sets the current user ID and shows the lock modal
- * @param id - User ID to lock
  */
 const openLockedModal = (id: string): void => {
   state.currentUserId = id;
@@ -211,8 +198,6 @@ const saveLock = async (): Promise<void> => {
 /**
  * Unlock user with confirmation
  * Shows confirmation dialog before unlocking a user
- * @param id - User ID
- * @param name - User name for display in confirmation message
  */
 const unlock = (id: string, name: string): void => {
   showUnlockConfirm(name, t, async () => {
@@ -226,7 +211,6 @@ const unlock = (id: string, name: string): void => {
 /**
  * Open password reset modal
  * Sets the current user ID and shows the password reset modal
- * @param id - User ID for password reset
  */
 const openUpdatePasswdModal = (id: string): void => {
   state.currentUserId = id;

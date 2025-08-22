@@ -23,8 +23,6 @@ export const loadTokenData = async (): Promise<{ data: TokenRecord[]; total: num
 
 /**
  * Create a new token
- * @param params - Token creation parameters
- * @returns Promise with created token value
  */
 export const createToken = async (params: CreateTokenParams): Promise<string | null> => {
   try {
@@ -44,8 +42,6 @@ export const createToken = async (params: CreateTokenParams): Promise<string | n
 
 /**
  * Delete a token by ID
- * @param record - Token record to delete
- * @returns Promise indicating success/failure
  */
 export const deleteTokenById = async (record: TokenRecord): Promise<boolean> => {
   try {
@@ -65,8 +61,6 @@ export const deleteTokenById = async (record: TokenRecord): Promise<boolean> => 
 
 /**
  * Fetch token value from API
- * @param tokenId - ID of the token to fetch
- * @returns Promise with token value
  */
 export const fetchTokenValue = async (tokenId: string): Promise<string | null> => {
   try {
@@ -106,8 +100,6 @@ export const getTokenQuota = async (): Promise<number> => {
 
 /**
  * Check if token is expired
- * @param item - Token record to check
- * @returns boolean indicating if token is expired
  */
 export const isTokenExpired = (item: TokenRecord): boolean => {
   try {
@@ -133,12 +125,6 @@ export const isTokenExpired = (item: TokenRecord): boolean => {
 
 /**
  * Validate form data for token creation
- * @param name - Token name
- * @param password - User password
- * @param prevName - Previous token name for change detection
- * @param total - Current token count
- * @param quota - Token quota limit
- * @returns boolean indicating if form is valid
  */
 export const validateTokenForm = (
   name: string,
@@ -157,7 +143,6 @@ export const validateTokenForm = (
 
 /**
  * Reset form fields to initial state
- * @param formRefs - Object containing form field references
  */
 export const resetForm = (formRefs: {
   name: { value: string };

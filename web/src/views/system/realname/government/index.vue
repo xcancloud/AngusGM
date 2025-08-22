@@ -41,7 +41,6 @@ onMounted(() => {
 
 /**
  * Initialize government organization certification form data
- * @param data - Government certification data from API
  */
 function start (data: any) {
   form.value = { ...data.governmentCert, status: data.status.value, reason: data?.auditRecord?.reason };

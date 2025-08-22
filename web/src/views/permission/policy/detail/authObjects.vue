@@ -68,7 +68,6 @@ const pagination: PaginationConfig = {
 /**
  * Handle target selection change
  * Updates the selected value when user makes a selection
- * @param {string | undefined} value - Selected target value
  */
 const targetChange = (value: string | undefined) => {
   state.selectedValue = value;
@@ -163,7 +162,6 @@ const saveTargets = async () => {
 /**
  * Delete a target from the policy
  * Removes the specified user, department, or group from the current policy
- * @param {AuthObjectDataType} item - Target item to delete
  */
 const delTarget = (item: AuthObjectDataType) => {
   modal.confirm({

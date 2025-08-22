@@ -48,7 +48,6 @@ const loadSmsRecordList = async (): Promise<void> => {
 
 /**
  * Handle search criteria changes
- * @param data - Search criteria array
  */
 const searchChange = (data: SearchCriteriaType[]): void => {
   state.params.pageNo = 1;
@@ -58,9 +57,6 @@ const searchChange = (data: SearchCriteriaType[]): void => {
 
 /**
  * Handle table pagination, filtering, and sorting changes
- * @param _pagination - Pagination object
- * @param _filters - Filter criteria
- * @param sorter - Sorting information
  */
 const tableChange = (_pagination: any, _filters: any, sorter: any): void => {
   const { current, pageSize } = _pagination;

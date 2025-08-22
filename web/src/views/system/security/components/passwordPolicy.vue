@@ -23,7 +23,6 @@ const emit = defineEmits<{(e: 'change', value: string, type: string): void }>();
 /**
  * Handle minimum password length change with debounce
  * Validates input value and emits change event
- * @param event - Input change event
  */
 const minLengthChange = debounce(duration.search, (event: any) => {
   const value = event.target.value;

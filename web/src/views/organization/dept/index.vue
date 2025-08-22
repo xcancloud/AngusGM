@@ -223,10 +223,6 @@ const treeFieldNames = {
  *
  * Handles when a user selects a different department in the tree.
  * This is the main entry point for loading department-specific data.
- *
- * @param _selectedKeys - Array of selected keys (unused)
- * @param selected - Whether the node is being selected or deselected
- * @param info - Information about the selected node
  */
 const changeSelect = async (
   _selectedKeys: string[],

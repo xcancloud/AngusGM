@@ -39,7 +39,6 @@ let loading = false; // Loading state for send operation
 /**
  * Handle verification code input changes
  * Emits the input value to parent component
- * @param event - Input change event
  */
 const changeHandle = (event: any) => {
   const value = event.target.value;

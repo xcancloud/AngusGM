@@ -35,7 +35,6 @@ const getControlSetting = async () => {
 
 /**
  * Update monitoring data retention setting with debounced API call
- * @param value - Number of days to retain monitoring data (1-3650)
  */
 const handleSetControl = debounce(duration.search, async (value) => {
   loading.value = true;
@@ -76,7 +75,6 @@ const getActivitySetting = async () => {
 
 /**
  * Update activity data retention setting with debounced API call
- * @param value - Number of activities to retain (1-10000)
  */
 const handleSetActivity = debounce(duration.search, async (value) => {
   loading.value = true;

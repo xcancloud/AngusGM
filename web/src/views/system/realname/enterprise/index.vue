@@ -47,7 +47,6 @@ onMounted(async () => {
 
 /**
  * Initialize enterprise certification form data
- * @param data - Enterprise certification data from API
  */
 function start (data: any) {
   form.value = {

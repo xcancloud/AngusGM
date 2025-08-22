@@ -70,8 +70,6 @@ const confirmPasswordHandle = () => {
 /**
  * Handle successful binding of mobile or email
  * Updates local state with the new information
- * @param info - Object containing mobile/email information
- * @param type - Type of binding operation ('email' or 'mobile')
  */
 const bindMobileEmailOk = (info: {
   mobile: string;
@@ -91,7 +89,6 @@ const bindMobileEmailOk = (info: {
 
 /**
  * Navigate to modification modal based on security item type
- * @param key - Security item to modify ('email', 'mobile', or 'password')
  */
 const toModify = (key: KeyType | 'password') => {
   switch (key) {
@@ -109,8 +106,6 @@ const toModify = (key: KeyType | 'password') => {
 /**
  * Handle successful modification of security information
  * Updates local state and closes the modal
- * @param key - Type of modified information
- * @param value - New value for the information
  */
 const ok = (key: string, value: UserInfoParams) => {
   switch (key) {

@@ -43,8 +43,6 @@ const updateLoading = ref({
 /**
  * Update tenant security configuration
  * Handles loading states and error recovery for different operations
- * @param params - Configuration parameters to update
- * @param operation - Type of operation being performed
  */
 const updateTenantSafetyConfig = async function (params, operation ?: Operation) {
   const oldSafetyConfig = JSON.parse(JSON.stringify(safetyConfig.value));
@@ -98,9 +96,6 @@ const updateTenantSafetyConfig = async function (params, operation ?: Operation)
 /**
  * Handle login restrictions module changes
  * Updates signinLimit configuration and triggers API update
- * @param value - New value for the setting
- * @param type - Type of setting to update
- * @param operation - Operation type for loading state management
  */
 const signinLimitChange = (value, type, operation ?: Operation) => {
   if (!safetyConfig.value) {
@@ -123,9 +118,6 @@ const signinLimitChange = (value, type, operation ?: Operation) => {
 /**
  * Handle registration module changes
  * Updates signupAllow configuration and triggers API update
- * @param value - New value for the setting
- * @param type - Type of setting to update
- * @param operation - Operation type for loading state management
  */
 const registrationChange = (value, type, operation?: Operation) => {
   if (!safetyConfig.value) {
@@ -149,8 +141,6 @@ const registrationChange = (value, type, operation?: Operation) => {
 /**
  * Handle password policy module changes
  * Updates passwordPolicy configuration and triggers API update
- * @param value - New value for the setting
- * @param type - Type of setting to update
  */
 const passwordPolicyChange = (value, type) => {
   if (!safetyConfig.value) {
@@ -172,9 +162,6 @@ const passwordPolicyChange = (value, type) => {
 /**
  * Handle security alert module changes
  * Updates alarm configuration and triggers API update
- * @param value - New value for the setting
- * @param type - Type of setting to update
- * @param operation - Operation type for loading state management
  */
 const earlyWarningChange = (value, type, operation?: Operation) => {
   if (!safetyConfig.value) {

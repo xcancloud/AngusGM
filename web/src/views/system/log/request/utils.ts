@@ -37,8 +37,6 @@ export const createPageSizeOptions = (): readonly string[] => {
 
 /**
  * Process headers data for display
- * @param headers - Raw headers data
- * @returns Processed headers array
  */
 export const processHeaders = (headers: any): HeaderItem[] => {
   if (!headers) return [];
@@ -63,8 +61,6 @@ export const processHeaders = (headers: any): HeaderItem[] => {
 
 /**
  * Process request body data for display
- * @param requestBody - Raw request body string
- * @returns Processed body data array
  */
 export const processRequestBody = (requestBody: string): HeaderItem[] => {
   if (!requestBody) return [];
@@ -86,8 +82,6 @@ export const processRequestBody = (requestBody: string): HeaderItem[] => {
 
 /**
  * Check if value is an array
- * @param value - Value to check
- * @returns True if value is an array, false otherwise
  */
 export const isArrayValue = (value: any): boolean => {
   return Object.prototype.toString.call(value) === '[object Array]';
@@ -95,9 +89,6 @@ export const isArrayValue = (value: any): boolean => {
 
 /**
  * Get HTTP method color class
- * @param method - HTTP method string
- * @param colors - Color mapping object
- * @returns CSS class name for the method
  */
 export const getHttpMethodColor = (method: string, colors: HttpMethodColors): string => {
   return colors[method as keyof HttpMethodColors] || 'text-gray-500';
@@ -105,8 +96,6 @@ export const getHttpMethodColor = (method: string, colors: HttpMethodColors): st
 
 /**
  * Check if HTTP status indicates success
- * @param status - HTTP status code
- * @returns True if status indicates success, false otherwise
  */
 export const isHttpStatusSuccess = (status: string): boolean => {
   return status.startsWith('2');
@@ -114,8 +103,6 @@ export const isHttpStatusSuccess = (status: string): boolean => {
 
 /**
  * Get status icon based on HTTP status
- * @param status - HTTP status code
- * @returns Icon name for the status
  */
 export const getStatusIcon = (status: string): string => {
   return isHttpStatusSuccess(status) ? 'icon-right' : 'icon-cuowu';
@@ -123,8 +110,6 @@ export const getStatusIcon = (status: string): string => {
 
 /**
  * Get status text color class
- * @param status - HTTP status code
- * @returns CSS class name for status text color
  */
 export const getStatusTextColor = (status: string): string => {
   return isHttpStatusSuccess(status) ? 'text-success' : 'text-danger';
@@ -132,8 +117,6 @@ export const getStatusTextColor = (status: string): string => {
 
 /**
  * Format elapsed time for display
- * @param elapsedMillis - Elapsed time in milliseconds
- * @returns Formatted time string
  */
 export const formatElapsedTime = (elapsedMillis: number): string => {
   if (!elapsedMillis) return '0ms';
@@ -148,8 +131,6 @@ export const formatElapsedTime = (elapsedMillis: number): string => {
 
 /**
  * Validate search criteria
- * @param criteria - Search criteria to validate
- * @returns True if valid, false otherwise
  */
 export const isValidSearchCriteria = (criteria: any[]): boolean => {
   if (!Array.isArray(criteria)) return false;
@@ -164,7 +145,6 @@ export const isValidSearchCriteria = (criteria: any[]): boolean => {
 
 /**
  * Reset pagination to first page
- * @param params - Query parameters to reset
  */
 export const resetPagination = (params: { pageNo: number }): void => {
   params.pageNo = 1;
@@ -172,9 +152,6 @@ export const resetPagination = (params: { pageNo: number }): void => {
 
 /**
  * Update pagination parameters
- * @param params - Current query parameters
- * @param page - New page number
- * @param size - New page size
  */
 export const updatePaginationParams = (
   params: { pageNo: number; pageSize: number },
@@ -187,9 +164,6 @@ export const updatePaginationParams = (
 
 /**
  * Check if item is selected
- * @param item - Item to check
- * @param selectedId - ID of selected item
- * @returns True if item is selected, false otherwise
  */
 export const isItemSelected = (item: any, selectedId: string): boolean => {
   return item?.id === selectedId;
@@ -197,8 +171,6 @@ export const isItemSelected = (item: any, selectedId: string): boolean => {
 
 /**
  * Get content type for response formatting
- * @param responseBody - Response body content
- * @returns Content type string
  */
 export const getContentType = (responseBody: string): string => {
   if (!responseBody) return 'text';
@@ -213,8 +185,6 @@ export const getContentType = (responseBody: string): string => {
 
 /**
  * Format request/response data for display
- * @param data - Raw data to format
- * @returns Formatted data string
  */
 export const formatDataForDisplay = (data: any): string => {
   if (!data) return '-';
@@ -236,10 +206,6 @@ export const formatDataForDisplay = (data: any): string => {
 
 /**
  * Create search options configuration for the search panel
- * @param t - i18n translation function
- * @param GM - GM instance for service actions
- * @param HttpMethod - HTTP method enum
- * @returns Array of search option configurations
  */
 export const createSearchOptions = (
   t: (key: string) => string,
@@ -346,8 +312,6 @@ export const createSearchOptions = (
 
 /**
  * Create grid columns configuration for displaying log details
- * @param t - i18n translation function
- * @returns Array of grid column configurations
  */
 export const createGridColumns = (t: (key: string) => string): GridColumn[][] => [
   [
@@ -392,8 +356,6 @@ export const createGridColumns = (t: (key: string) => string): GridColumn[][] =>
 
 /**
  * Create tab configuration for response component
- * @param t - i18n translation function
- * @returns Array of tab configurations
  */
 export const createResponseTabs = (t: (key: string) => string): TabConfig[] => [
   {

@@ -67,7 +67,6 @@ const loadUser = async () => {
 /**
  * Initiates account binding process for specified platform
  * Currently supports Google, WeChat, and GitHub
- * @param type - Platform type to bind account to
  */
 const bindAccount = async (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): Promise<void> => {
   if (type === 'GOOGLE') {
@@ -78,7 +77,6 @@ const bindAccount = async (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): Promise<void> 
 /**
  * Initiates account unbinding process with confirmation dialog
  * Shows confirmation modal before proceeding with unbinding
- * @param type - Platform type to unbind account from
  */
 const unbind = (type: 'GITHUB' | 'WECHAT' | 'GOOGLE'): void => {
   let typeText = '';

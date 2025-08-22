@@ -61,7 +61,6 @@ const loadList = async (): Promise<void> => {
 
 /**
  * Handle pagination changes
- * @param _pagination - Pagination object from table
  */
 const changePagination = async (_pagination: any): Promise<void> => {
   updatePaginationParams(state.params, _pagination);
@@ -81,7 +80,6 @@ const appChange = async (): Promise<void> => {
 
 /**
  * Open edit quota modal
- * @param rowData - Quota record to edit
  */
 const openEditModal = (rowData: Quota): void => {
   state.currQuota = rowData;

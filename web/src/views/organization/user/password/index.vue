@@ -123,7 +123,6 @@ const rules = {
 const handle = {
   /**
    * Toggle password strength tips visibility
-   * @param flag - Whether to show tips
    */
   changeShowTips: (flag: boolean) => {
     state.isShowTips = flag;
@@ -132,7 +131,6 @@ const handle = {
   /**
    * Analyze password strength and update validation status
    * Called on password input change
-   * @param e - Input change event
    */
   changeStrength: (e: { target: { value: string } }) => {
     const { value = '' } = e.target;

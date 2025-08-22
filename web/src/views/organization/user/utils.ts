@@ -7,8 +7,6 @@ import { OrgTargetType } from '@/enums/enums';
 
 /**
  * Load user list from API with error handling
- * @param params - Search and pagination parameters
- * @returns Promise with user data and total count
  */
 export const loadUserList = async (params: PageQuery): Promise<{ list: User[]; total: number }> => {
   try {
@@ -26,10 +24,6 @@ export const loadUserList = async (params: PageQuery): Promise<{ list: User[]; t
 
 /**
  * Update user's system administrator status
- * @param id - User ID
- * @param sysAdmin - Current system admin status
- * @param t - Translation function
- * @returns Promise indicating success/failure
  */
 export const updateSysAdmin = async (
   id: string,
@@ -52,9 +46,6 @@ export const updateSysAdmin = async (
 
 /**
  * Delete user from system
- * @param id - User ID to delete
- * @param t - Translation function
- * @returns Promise indicating success/failure
  */
 export const deleteUser = async (
   id: string,
@@ -76,10 +67,6 @@ export const deleteUser = async (
 
 /**
  * Toggle user enabled/disabled status
- * @param id - User ID
- * @param enabled - Current enabled status
- * @param t - Translation function
- * @returns Promise indicating success/failure
  */
 export const toggleUserStatus = async (
   id: string,
@@ -102,9 +89,6 @@ export const toggleUserStatus = async (
 
 /**
  * Unlock user account
- * @param id - User ID
- * @param t - Translation function
- * @returns Promise indicating success/failure
  */
 export const unlockUser = async (
   id: string,
@@ -126,10 +110,6 @@ export const unlockUser = async (
 
 /**
  * Show confirmation modal for setting/canceling system administrator
- * @param name - User name for display
- * @param sysAdmin - Current system admin status
- * @param t - Translation function
- * @param onConfirm - Callback function to execute on confirmation
  */
 export const showAdminConfirm = (
   name: string,
@@ -151,9 +131,6 @@ export const showAdminConfirm = (
 
 /**
  * Show confirmation modal for user deletion
- * @param name - User name for display
- * @param t - Translation function
- * @param onConfirm - Callback function to execute on confirmation
  */
 export const showDeleteConfirm = (
   name: string,
@@ -172,10 +149,6 @@ export const showDeleteConfirm = (
 
 /**
  * Show confirmation modal for enabling/disabling user
- * @param name - User name for display
- * @param enabled - Current enabled status
- * @param t - Translation function
- * @param onConfirm - Callback function to execute on confirmation
  */
 export const showStatusConfirm = (
   name: string,
@@ -197,9 +170,6 @@ export const showStatusConfirm = (
 
 /**
  * Show confirmation modal for unlocking user
- * @param name - User name for display
- * @param t - Translation function
- * @param onConfirm - Callback function to execute on confirmation
  */
 export const showUnlockConfirm = (
   name: string,
@@ -218,10 +188,6 @@ export const showUnlockConfirm = (
 
 /**
  * Calculate current page after deletion to handle edge cases
- * @param currentPage - Current page number
- * @param pageSize - Page size
- * @param total - Total number of items
- * @returns Calculated page number
  */
 export const calculateCurrentPage = (currentPage: number, pageSize: number, total: number): number => {
   return utils.getCurrentPage(currentPage, pageSize, total);
@@ -229,9 +195,6 @@ export const calculateCurrentPage = (currentPage: number, pageSize: number, tota
 
 /**
  * Check operation permissions based on user's system admin status
- * @param sysAdmin - Whether the user is a system administrator
- * @param isCurrentUserSysAdmin - Whether current user is system admin
- * @returns Whether the operation should be disabled
  */
 export const checkOperationPermissions = (sysAdmin: boolean, isCurrentUserSysAdmin: boolean): boolean => {
   return sysAdmin && !isCurrentUserSysAdmin;
@@ -239,9 +202,6 @@ export const checkOperationPermissions = (sysAdmin: boolean, isCurrentUserSysAdm
 
 /**
  * Handle search criteria changes
- * @param currentParams - Current search parameters
- * @param newFilters - New search filters
- * @returns Updated parameters with reset pagination
  */
 export const handleSearchChange = (currentParams: PageQuery, newFilters: SearchCriteria[]): PageQuery => {
   return {
@@ -253,10 +213,6 @@ export const handleSearchChange = (currentParams: PageQuery, newFilters: SearchC
 
 /**
  * Handle table pagination, sorting, and filtering changes
- * @param currentParams - Current parameters
- * @param pagination - Pagination object from table
- * @param sorter - Sorting object from table
- * @returns Updated parameters
  */
 export const handleTableChange = (
   currentParams: PageQuery,
@@ -274,8 +230,6 @@ export const handleTableChange = (
 
 /**
  * Load user detail information from API
- * @param userId - User ID to load details for
- * @returns Promise with user detail data
  */
 export const loadUserDetail = async (userId: string): Promise<Detail | null> => {
   try {
@@ -292,9 +246,6 @@ export const loadUserDetail = async (userId: string): Promise<Detail | null> => 
 
 /**
  * Update user enabled/disabled status
- * @param userDetail - User detail data
- * @param t - Translation function
- * @returns Promise indicating success/failure
  */
 export const updateUserStatus = async (
   userDetail: Detail,
@@ -321,9 +272,6 @@ export const updateUserStatus = async (
 
 /**
  * Show confirmation modal for user deletion
- * @param userName - User name for display
- * @param t - Translation function
- * @param onConfirm - Callback function to execute on confirmation
  */
 export const showDeleteUserConfirm = (
   userName: string,
@@ -342,9 +290,6 @@ export const showDeleteUserConfirm = (
 
 /**
  * Check if current user can modify system administrator accounts
- * @param userDetail - User detail data
- * @param isSysAdmin - Whether current user is system admin
- * @returns Boolean indicating if operation is allowed
  */
 export const canModifyUser = (userDetail: Detail | undefined, isSysAdmin: boolean): boolean => {
   return !isSysAdmin && userDetail?.sysAdmin !== true;
@@ -352,9 +297,6 @@ export const canModifyUser = (userDetail: Detail | undefined, isSysAdmin: boolea
 
 /**
  * Handle user lock operations
- * @param locked - Whether to lock or unlock the user
- * @param visible - Lock modal visibility state
- * @param onUnlock - Callback for unlock operation
  */
 export const handleUserLock = (
   locked: boolean,
@@ -370,8 +312,6 @@ export const handleUserLock = (
 
 /**
  * Close lock modal and refresh user data
- * @param visible - Lock modal visibility state
- * @param onRefresh - Callback to refresh user data
  */
 export const closeLockModal = (
   visible: { value: boolean },
@@ -383,7 +323,6 @@ export const closeLockModal = (
 
 /**
  * Open password reset modal
- * @param state - Modal state object
  */
 export const openPasswordResetModal = (state: { updatePasswdVisible: boolean }): void => {
   state.updatePasswdVisible = true;
@@ -391,7 +330,6 @@ export const openPasswordResetModal = (state: { updatePasswdVisible: boolean }):
 
 /**
  * Close password reset modal
- * @param state - Modal state object
  */
 export const closePasswordResetModal = (state: { updatePasswdVisible: boolean }): void => {
   state.updatePasswdVisible = false;
@@ -401,8 +339,6 @@ export const closePasswordResetModal = (state: { updatePasswdVisible: boolean })
 
 /**
  * Create user grid columns configuration
- * @param t - Translation function
- * @returns Grid columns configuration array
  */
 export const createUserGridColumns = (t: (key: string) => string) => [
   [
@@ -423,8 +359,6 @@ export const createUserGridColumns = (t: (key: string) => string) => [
 
 /**
  * Create user tag table columns configuration
- * @param t - Translation function
- * @returns Table columns configuration array
  */
 export const createUserTagColumns = (t: (key: string) => string) => [
   {
@@ -468,8 +402,6 @@ export const createUserTagColumns = (t: (key: string) => string) => [
 
 /**
  * Create user department table columns configuration
- * @param t - Translation function
- * @returns Table columns configuration array
  */
 export const createUserDeptColumns = (t: (key: string) => string) => [
   {
@@ -525,8 +457,6 @@ export const createUserDeptColumns = (t: (key: string) => string) => [
 
 /**
  * Create user group table columns configuration
- * @param t - Translation function
- * @returns Table columns configuration array
  */
 export const createUserGroupColumns = (t: (key: string) => string) => [
   {
@@ -581,9 +511,6 @@ export const createUserGroupColumns = (t: (key: string) => string) => [
 
 /**
  * Create search options configuration for SearchPanel component
- * @param t - Translation function
- * @param GM - GM route constant
- * @returns Search options configuration array
  */
 export const createSearchOptions = (
   t: (key: string, params?: { name: string }) => string,
@@ -635,8 +562,6 @@ export const createSearchOptions = (
 
 /**
  * Create table columns configuration
- * @param t - Translation function
- * @returns Table columns configuration array
  */
 export const createTableColumns = (t: (key: string) => string) => [
   {

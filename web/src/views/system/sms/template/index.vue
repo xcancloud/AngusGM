@@ -34,7 +34,6 @@ const pageTotal = ref<number>(10);
 
 /**
  * Handle pagination changes
- * @param _pagination - Pagination object from table
  */
 const changePagination = (_pagination: any): void => {
   const { current, pageSize } = _pagination;
@@ -61,7 +60,6 @@ const loadSmsTemplates = async (): Promise<void> => {
 
 /**
  * Save template edits after validation
- * @param record - Template record to save
  */
 const saveEdit = (record: Template): void => {
   const validation = validateTemplateEdit(record, t);
@@ -84,7 +82,6 @@ const saveEdit = (record: Template): void => {
 
 /**
  * Update template via API
- * @param record - Template record to update
  */
 const handleEditTemplate = async (record: Template): Promise<void> => {
   loading.value = true;

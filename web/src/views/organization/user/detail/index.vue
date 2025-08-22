@@ -83,7 +83,6 @@ const updateStatus = async () => {
 
 /**
  * Handle user lock/unlock operations
- * @param locked - Whether to lock or unlock the user
  */
 const lockingUser = (locked: boolean) => {
   handleUserLock(locked, visible, unlock);

@@ -84,8 +84,6 @@ const goodsPriTypes = ['DATACENTER', 'ENTERPRISE', 'COMMUNITY'];
 
 /**
  * Check if goods is considered private goods
- * @param goods - The goods object to check
- * @returns true if goods applies to private edition types
  */
 export const isPriGoods = (goods: Goods): boolean => {
   return (goods.applyEditionTypes || []).some(i => goodsPriTypes.includes(i.value));
@@ -109,8 +107,6 @@ export const goodsTypeColor = {
 /**
  * Convert enum array to display string
  * Joins enum messages with Chinese separator (、)
- * @param enums - Array of enum objects with value and message
- * @returns Joined string of enum messages
  */
 export const getEnumMessages = (enums: { value: string, message: string }[] = []): string => {
   return (enums || []).map(i => i.message).join('、');

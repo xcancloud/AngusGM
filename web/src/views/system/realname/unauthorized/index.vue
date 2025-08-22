@@ -49,7 +49,6 @@ const contentsPerson = [
 
 /**
  * Handle authentication type selection
- * @param type - Authentication type (PERSONAL, ENTERPRISE, GOVERNMENT)
  */
 const handleClick = (type: TenantType) => {
   emit('clickAuth', type);

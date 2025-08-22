@@ -8,8 +8,6 @@ import { STORAGE_TYPES, ERROR_CODES } from './types';
 
 /**
  * Check if storage type is local storage
- * @param storeType - Storage type to check
- * @returns True if local storage, false otherwise
  */
 export const isLocalStorage = (storeType: string | undefined): boolean => {
   return storeType === STORAGE_TYPES.LOCAL;
@@ -17,8 +15,6 @@ export const isLocalStorage = (storeType: string | undefined): boolean => {
 
 /**
  * Check if storage type is AWS S3 storage
- * @param storeType - Storage type to check
- * @returns True if AWS S3 storage, false otherwise
  */
 export const isAwsS3Storage = (storeType: string | undefined): boolean => {
   return storeType === STORAGE_TYPES.AWS_S3;
@@ -26,9 +22,6 @@ export const isAwsS3Storage = (storeType: string | undefined): boolean => {
 
 /**
  * Validate form fields based on storage type
- * @param formValues - Form field values to validate
- * @param storeType - Current storage type
- * @returns Validation result object
  */
 export const validateStorageForm = (
   formValues: FormFieldValues,
@@ -72,10 +65,6 @@ export const validateStorageForm = (
 
 /**
  * Check if storage settings have changed
- * @param currentValues - Current form values
- * @param originalStorage - Original storage settings
- * @param storeType - Current storage type
- * @returns True if changes detected, false otherwise
  */
 export const hasStorageChanges = (
   currentValues: FormFieldValues,
@@ -126,8 +115,6 @@ export const resetValidationRules = (): ValidationState => ({
 
 /**
  * Reset form values to current storage settings
- * @param storage - Current storage settings
- * @returns Form field values
  */
 export const resetFormValues = (storage: any): FormFieldValues => {
   if (!storage) {
@@ -154,8 +141,6 @@ export const resetFormValues = (storage: any): FormFieldValues => {
 
 /**
  * Check if error code requires force confirmation
- * @param errorCode - Error code to check
- * @returns True if force confirmation required, false otherwise
  */
 export const requiresForceConfirmation = (errorCode: string): boolean => {
   return errorCode === ERROR_CODES.BST001;
@@ -163,9 +148,6 @@ export const requiresForceConfirmation = (errorCode: string): boolean => {
 
 /**
  * Format storage path for display
- * @param path - Storage path to format
- * @param maxLength - Maximum length for display (default: 50)
- * @returns Formatted path string
  */
 export const formatStoragePath = (path: string, maxLength = 50): string => {
   if (!path) return '';
@@ -179,8 +161,6 @@ export const formatStoragePath = (path: string, maxLength = 50): string => {
 
 /**
  * Validate storage endpoint URL format
- * @param endpoint - Endpoint URL to validate
- * @returns True if valid URL format, false otherwise
  */
 export const isValidEndpointUrl = (endpoint: string): boolean => {
   if (!endpoint) return false;
@@ -195,8 +175,6 @@ export const isValidEndpointUrl = (endpoint: string): boolean => {
 
 /**
  * Validate local directory path format
- * @param path - Directory path to validate
- * @returns True if valid path format, false otherwise
  */
 export const isValidLocalPath = (path: string): boolean => {
   if (!path) return false;
@@ -208,9 +186,6 @@ export const isValidLocalPath = (path: string): boolean => {
 
 /**
  * Get storage type display name
- * @param storeType - Storage type value
- * @param t - i18n translation function
- * @returns Localized storage type name
  */
 export const getStorageTypeDisplayName = (
   storeType: string | undefined,
@@ -228,8 +203,6 @@ export const getStorageTypeDisplayName = (
 /**
  * Create app storage table columns configuration
  * Defines the structure and display properties for app storage display
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createAppStorageColumns = (t: (key: string) => string): StorageColumn[][] => [
   [
@@ -245,8 +218,6 @@ export const createAppStorageColumns = (t: (key: string) => string): StorageColu
 /**
  * Create AWS S3 storage table columns configuration
  * Defines the structure and display properties for AWS S3 storage
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createAwsStorageColumns = (t: (key: string) => string): StorageColumn[][] => [
   [
@@ -280,8 +251,6 @@ export const createAwsStorageColumns = (t: (key: string) => string): StorageColu
 /**
  * Create local storage table columns configuration
  * Defines the structure and display properties for local storage
- * @param t - i18n translation function
- * @returns Grid columns configuration
  */
 export const createLocalStorageColumns = (t: (key: string) => string): StorageColumn[][] => [
   [

@@ -72,8 +72,6 @@ const rules = {
 
 /**
  * Handle checkbox selection changes
- * @param _keys - Selected keys
- * @param info - Selection information with checked nodes
  */
 const onCheck = (_keys, info: { checkedNodes: DataRecordType[] }) => {
   state.checkedNodes = info.checkedNodes;
@@ -114,8 +112,6 @@ const loadResourceByAppId = async () => {
 
 /**
  * Handle application selection change
- * @param _value - Selected value
- * @param option - Selected option with appName and appId
  */
 const selectedAppChange = (_value: any, option: any) => {
   if (option && option.appName && option.appId) {
@@ -129,7 +125,6 @@ const selectedAppChange = (_value: any, option: any) => {
 
 /**
  * Edit policy - load policy details and function tree for display
- * @param item - Object containing appId and policyId
  */
 const editPolicy = (item: { appId: string | number, policyId: string | number }) => {
   const reqList = [

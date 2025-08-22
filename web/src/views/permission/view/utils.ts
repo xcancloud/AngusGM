@@ -4,9 +4,6 @@ import type { EntityType } from './types';
  * Get tenant authorization type name for display
  * Constructs a human-readable string representing the tenant authorization type
  * by checking currentDefault and openAuth flags on the record
- * @param record - Record containing authorization flags
- * @param t - i18n translation function
- * @returns Formatted authorization type string
  */
 export const getTenantAuthTypeName = (record: any, t: (key: string) => string): string => {
   const result: string[] = [];
@@ -23,8 +20,6 @@ export const getTenantAuthTypeName = (record: any, t: (key: string) => string): 
  * Get entity type name for policy modal
  * Generates the appropriate entity type string for the policy modal
  * based on the currently selected tab
- * @param tab - Current active tab
- * @returns Entity type string
  */
 export const getEntityType = (tab: 'USER' | 'DEPT' | 'GROUP'): EntityType => {
   return tab === 'USER'
@@ -38,9 +33,6 @@ export const getEntityType = (tab: 'USER' | 'DEPT' | 'GROUP'): EntityType => {
  * Get entity type name for display
  * Generates the localized name for the current entity type
  * to be used in search placeholders and other UI elements
- * @param type - Entity type
- * @param t - i18n translation function
- * @returns Localized entity type name
  */
 export const getEntityTypeName = (type: 'USER' | 'DEPT' | 'GROUP', t: (key: string) => string): string => {
   return type === 'DEPT'
@@ -53,9 +45,6 @@ export const getEntityTypeName = (type: 'USER' | 'DEPT' | 'GROUP', t: (key: stri
 /**
  * Get entity type name for delete confirmation
  * Returns the appropriate entity type name for delete confirmation messages
- * @param tab - Current active tab
- * @param t - i18n translation function
- * @returns Entity type name for confirmation
  */
 export const getEntityTypeNameForDelete = (tab: 'USER' | 'DEPT' | 'GROUP', t: (key: string) => string): string => {
   return tab === 'USER'
@@ -68,9 +57,6 @@ export const getEntityTypeNameForDelete = (tab: 'USER' | 'DEPT' | 'GROUP', t: (k
 /**
  * Handle pagination changes
  * Updates pagination state and triggers data reload
- * @param page - Pagination change event
- * @param pagination - Current pagination state
- * @param loadFunction - Function to reload data
  */
 export const handlePaginationChange = (
   page: { current: number, pageSize: number },
@@ -85,8 +71,6 @@ export const handlePaginationChange = (
 /**
  * Create table columns for user policy table
  * Defines the structure and display properties for the user policy table
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createUserPolicyColumns = (t: (key: string) => string) => [
   {
@@ -136,8 +120,6 @@ export const createUserPolicyColumns = (t: (key: string) => string) => [
 /**
  * Create table columns for department/group policy table
  * Defines the structure and display properties for department and group tables
- * @param t - i18n translation function
- * @returns Array of table column configurations
  */
 export const createDeptOrGroupPolicyColumns = (t: (key: string) => string) => [
   {

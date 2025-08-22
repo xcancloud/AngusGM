@@ -56,9 +56,6 @@ const load = async () => {
 
 /**
  * Update and save default policy for an application
- * @param appId - Application ID
- * @param policyId - Policy ID to set as default
- * @param policyName - Policy name for display
  */
 const updateSave = async (appId: string, policyId: string, policyName: string) => {
   if (!policyId) {
@@ -94,9 +91,6 @@ const updateSave = async (appId: string, policyId: string, policyName: string) =
 
 /**
  * Handle radio button change for predefined policies
- * @param e - Radio change event
- * @param appId - Application ID
- * @param options - Available policy options
  */
 const radioChange = (e: any, appId: string, options: PolicyDefaultRecordType[]) => {
   const value = e.target?.value;
@@ -108,9 +102,6 @@ const radioChange = (e: any, appId: string, options: PolicyDefaultRecordType[]) 
 
 /**
  * Handle select change for user-defined policies
- * @param value - Selected policy ID
- * @param appId - Application ID
- * @param options - Available policy options
  */
 const selectChange = (value: string, appId: string, options: PolicyDefaultRecordType[]) => {
   const policyName = value ? options.find(policy => policy.id === value)?.name : options.find(policy => policy.currentDefault)?.name;

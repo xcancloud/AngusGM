@@ -29,7 +29,6 @@ const load = () => {
 
 /**
  * Edit policy handler
- * @param item - Object containing appId and policyId
  * Scrolls to the form component after editing
  */
 const editPolicy = (item: { appId: string | number | undefined, policyId: string | number | undefined }) => {

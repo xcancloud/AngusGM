@@ -77,8 +77,6 @@ const addDept = () => {
  * Handle department save from modal
  * Processes selected department IDs and handles add/delete operations
  * Note: Delete operations must be performed before add operations
- * @param addIds - Array of department IDs to add
- * @param delIds - Array of department IDs to delete
  */
 const deptSave = async (addIds: string[], delIds: string[]) => {
   // Note: Delete operations must be performed before add operations
@@ -103,7 +101,6 @@ const deptSave = async (addIds: string[], delIds: string[]) => {
 /**
  * Add departments to user
  * Calls API to associate departments with user
- * @param _addIds - Array of department IDs to add
  */
 const addUserDept = async (_addIds: string[]) => {
   updateLoading.value = true;
@@ -117,8 +114,6 @@ const addUserDept = async (_addIds: string[]) => {
 /**
  * Delete departments from user
  * Calls API to remove department associations
- * @param _delIds - Array of department IDs to delete
- * @param type - Operation type ('Modal' or 'Table')
  */
 const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
   updateLoading.value = true;
@@ -148,7 +143,6 @@ const delUserDept = async (_delIds: string[], type?: 'Modal' | 'Table') => {
 /**
  * Cancel/Remove department from user
  * Calls delete function for table operations
- * @param id - Department ID to remove
  */
 const handleCancel = async (id) => {
   await delUserDept([id], 'Table');
@@ -157,7 +151,6 @@ const handleCancel = async (id) => {
 /**
  * Handle search input with debouncing
  * Filters departments by name with end matching
- * @param event - Input change event
  */
 const handleSearch = debounce(duration.search, async (event: any) => {
   const value = event.target.value;
@@ -190,7 +183,6 @@ const pagination = computed(() => {
 /**
  * Handle table pagination changes
  * Updates parameters and reloads data based on table interactions
- * @param _pagination - Pagination object from table
  */
 const handleChange = async (_pagination) => {
   const { current, pageSize } = _pagination;
