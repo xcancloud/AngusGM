@@ -46,5 +46,4 @@ export default class App {
         return `${GM}/app/${appId}/unauth/user`;
     }
   }
-
 }

@@ -6,9 +6,9 @@ import { Icon } from '@xcan-angus/vue-ui';
 
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 import { defineEmits, defineProps, ref, watch, withDefaults } from 'vue';
+
+const { t } = useI18n();
 
 interface Props {
   mess: string, // Message or image name
@@ -119,13 +119,15 @@ const deleteImage = function () {
         type === '1' ? 'h-28 w-48' : 'h-40 w-32',
         { 'upload-error': error }
       ]">
-
       <!-- Upload icon when no image is present -->
-      <div v-if="!imageUrl" class="upload-placeholder" @click="selectFile">
+      <div
+        v-if="!imageUrl"
+        class="upload-placeholder"
+        @click="selectFile">
         <Icon
           icon="icon-shangchuanzhengjian"
           class="upload-icon" />
-        <span class="upload-text">{{ t('common.actions.upload')}}</span>
+        <span class="upload-text">{{ t('common.actions.upload') }}</span>
       </div>
 
       <!-- Display uploaded image -->

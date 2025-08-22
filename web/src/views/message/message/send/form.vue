@@ -108,7 +108,6 @@ const hasEmail = ref(false);
  */
 const disabledEmail = ref(false);
 
-
 // Form validation state
 const titleRule = ref(false);
 
@@ -157,7 +156,6 @@ const disabledDateTime = () => getDisabledTimeOptions(currTime);
  * Defines business keys for message file uploads
  */
 const uploadOptions = { bizKey: 'messageFiles', mediaBizKey: 'messageFiles' };
-
 
 /**
  * Handle receive type change
@@ -269,7 +267,6 @@ defineExpose({
     return result;
   }
 });
-
 
 /**
  * Initialize component data

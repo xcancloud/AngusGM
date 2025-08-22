@@ -223,7 +223,10 @@ const copyID = () => {
     </div>
 
     <!-- Account information grid -->
-    <Grid class="ml-12" labelStyle="font-weight: 700;" :columns="columns">
+    <Grid
+      class="ml-12"
+      labelStyle="font-weight: 700;"
+      :columns="columns">
       <!-- Tenant ID with copy functionality -->
       <template #tenantId>
         <div class="flex space-x-2 items-center">
