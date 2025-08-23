@@ -1,4 +1,4 @@
-import { http } from '@xcan-angus/infra';
+import { http, PageQuery } from '@xcan-angus/infra';
 
 let baseUrl: string;
 export default class Event {
@@ -6,14 +6,7 @@ export default class Event {
     baseUrl = prefix + '/event';
   }
 
-  getEventList (params: {
-    pageNo: number,
-    pageSize: number;
-    orderSort?: string;
-    orderBy?: string;
-    filters?: Record<string, string>[];
-    fullTextSearch?: boolean
-  }): Promise<[Error | null, any]> {
+  getEventList (params: PageQuery): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}`, params);
   }
 
@@ -37,12 +30,7 @@ export default class Event {
     return http.get(`${baseUrl}/template/${id}/current`);
   }
 
-  getTemplateList (params: {
-    pageNo: number,
-    pageSize: number;
-    filters?: Record<string, string>[];
-    fullTextSearch?: boolean
-    }): Promise<[Error | null, any]> {
+  getTemplateList (params: PageQuery): Promise<[Error | null, any]> {
     return http.get(`${baseUrl}/template`, params);
   }
 

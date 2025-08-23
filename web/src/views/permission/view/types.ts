@@ -105,7 +105,7 @@ export interface AuthorizationConfig {
  */
 export interface TargetPanelProps {
   type: 'USER' | 'DEPT' | 'GROUP',
-  appId: number,
+  appId: string | number,
   selectedTargetId?: string
 }
 
@@ -114,7 +114,7 @@ export interface TargetPanelProps {
  */
 export interface AddMembersProps {
   visible: boolean,
-  appId: number,
+  appId: string | number,
   type: 'USER' | 'DEPT' | 'GROUP'
 }
 
@@ -129,7 +129,7 @@ export type EntityType = 'User' | 'Dept' | 'Group'
 export interface PolicyApiParams {
   pageNo: number,
   pageSize: number,
-  appId: string
+  appId: string | number
 }
 
 /**

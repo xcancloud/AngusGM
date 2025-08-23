@@ -117,15 +117,6 @@ export const calculateCurrentPage = (pageNo: number, pageSize: number, total: nu
 };
 
 /**
- * Pagination change handler
- */
-export const createPaginationHandler = (callback: (page: number, size: number) => void) => {
-  return async (page: number, size: number) => {
-    callback(page, size);
-  };
-};
-
-/**
  * Table change handler
  */
 export const createTableChangeHandler = (callback: (pagination: any) => void) => {

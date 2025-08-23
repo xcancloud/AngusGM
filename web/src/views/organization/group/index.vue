@@ -5,7 +5,7 @@ import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
   AsyncComponent, ButtonAuth, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { app, Enabled, GM, PageQuery, SearchCriteria } from '@xcan-angus/infra';
+import { app, GM, PageQuery, SearchCriteria } from '@xcan-angus/infra';
 
 // Import local types and utility functions
 import { ListGroup } from './types';
@@ -121,7 +121,7 @@ const delGroupUser = async (_userIds: string[]) => {
 };
 
 // Search options for the search panel
-const searchOptions = ref(createSearchOptions(t, Enabled, GM));
+const searchOptions = ref(createSearchOptions(t, GM));
 
 // Computed columns with internationalized titles
 const columns = computed(() => {

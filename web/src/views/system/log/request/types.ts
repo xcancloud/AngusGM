@@ -200,7 +200,7 @@ export interface SearchOption {
   /** Input type */
   type: 'input' | 'select' | 'select-app' | 'select-enum' | 'select-dept' | 'select-group' | 'select-intl' | 'select-itc' | 'select-user' | 'select-service' | 'select-tag' | 'select-tenant' | 'date' | 'date-range' | 'tree-select';
   /** Search operation */
-  op?: string;
+  op?: 'EQUAL' | 'GREATER_THAN' | 'GREATER_THAN_EQUAL' | 'IN' | 'LESS_THAN' | 'LESS_THAN_EQUAL' | 'MATCH' | 'MATCH_END' | 'NOT_EQUAL' | 'NOT_IN';
   /** Whether to allow clearing */
   allowClear: boolean;
   /** Additional options for select types */

@@ -67,7 +67,7 @@ const addPolicyConfig: PolicyAdditionConfig = {
  * Application ID for current permission context
  * Used to filter policies and targets by specific application
  */
-const appId = ref();
+const appId = ref<string | number | undefined>();
 
 /**
  * Pagination Configuration
@@ -154,6 +154,10 @@ const targetChange = (targetId: string, type: string) => {
  * Handles different entity types and updates the UI accordingly.
  */
 const deleteTargetPolicy = (item: PolicyRecordType) => {
+  if (!state.targetId) {
+    return;
+  }
+
   const typeName = getEntityTypeNameForDelete(state.tab, t);
 
   modal.confirm({
@@ -166,11 +170,11 @@ const deleteTargetPolicy = (item: PolicyRecordType) => {
       try {
         // Call appropriate delete API based on entity type
         if (state.tab === 'USER') {
-          res = await auth.deleteUserPolicy(state.targetId as string, [item.id]);
+          res = await auth.deleteUserPolicy(state.targetId!, [item.id]);
         } else if (state.tab === 'DEPT') {
-          res = await auth.deletePolicyByDept(state.targetId as string, [item.id]);
+          res = await auth.deletePolicyByDept(state.targetId!, [item.id]);
         } else {
-          res = await auth.deleteGroupPolicy(state.targetId as string, [item.id]);
+          res = await auth.deleteGroupPolicy(state.targetId!, [item.id]);
         }
 
         const [error] = res;
@@ -277,11 +281,6 @@ watch(() => state.tab, () => {
 });
 </script>
 
-<!-- TODO 控制台报错：
-1. Invalid prop: type check failed for prop "appId". Expected Number with value NaN, got Undefined
-2. Invalid prop: type check failed for prop "appId". Expected Number with value 100005, got String with value "100005".
--->
-
 <template>
   <div class="flex h-full">
     <!-- Left Sidebar - Application Selection and Target Panels -->
@@ -310,6 +309,7 @@ watch(() => state.tab, () => {
           key="USER"
           :tab="t('permission.check.user')">
           <target-panel
+            v-if="appId"
             ref="userRef"
             v-model:selectedTargetId="state.targetId"
             :appId="appId"
@@ -319,6 +319,7 @@ watch(() => state.tab, () => {
         </TabPane>
         <TabPane key="DEPT" :tab="t('permission.check.dept')">
           <target-panel
+            v-if="appId"
             ref="deptRef"
             v-model:selectedTargetId="state.targetId"
             :appId="appId"
@@ -328,6 +329,7 @@ watch(() => state.tab, () => {
         </TabPane>
         <TabPane key="GROUP" :tab="t('permission.check.group')">
           <target-panel
+            v-if="appId"
             ref="groupRef"
             v-model:selectedTargetId="state.targetId"
             :appId="appId"
@@ -438,8 +440,9 @@ watch(() => state.tab, () => {
 
       <!-- Add Policy Modal -->
       <PolicyModal
+        v-if="appId"
         v-model:visible="addVisible"
-        :appId="appId"
+        :appId="String(appId)"
         :type="getType"
         :userId="state.targetId"
         :deptId="state.targetId"

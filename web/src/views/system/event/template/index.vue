@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, enumUtils, CombinedTargetType } from '@xcan-angus/infra';
+import { app, enumUtils, enumOptionUtils, CombinedTargetType, EventType } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { appopen, event } from '@/api';
 
@@ -34,7 +34,8 @@ const state = reactive<EventTemplateState>({
 });
 
 // Search panel options configuration
-const searchOptions = ref(createSearchOptions(t));
+const eventTypeOptions = enumOptionUtils.loadEnumAsOptions(EventType);
+const searchOptions = ref(createSearchOptions(eventTypeOptions, t));
 
 // Table columns configuration
 const tableColumns = ref(createTableColumns(t));
@@ -65,9 +66,8 @@ const loadEnums = (): void => {
  */
 const loadAppOptions = async (pageSize = 10): Promise<void> => {
   try {
-    const appList = await loadAppOptionsRecursively(appopen.getList, pageSize);
-    state.appList = appList;
-    processAppListForSearch(appList, searchOptions.value);
+    state.appList = await loadAppOptionsRecursively(appopen.getList, pageSize);
+    processAppListForSearch(state.appList, searchOptions.value);
     state.appLoaded = true;
   } catch (error) {
     console.error('Failed to load app options:', error);
@@ -86,11 +86,9 @@ const getEventTemplate = async (): Promise<void> => {
   try {
     state.loading = true;
     const [error, res] = await event.getTemplateList(state.params);
-
     if (error) {
       return;
     }
-
     state.eventConfigList = res.data.list;
     state.total = Number(res.data.total) || 0;
   } catch (error) {
@@ -137,8 +135,6 @@ onMounted(() => {
 });
 </script>
 
-<!-- TODO 控制台报错：`onSearch` should work with `showSearch` instead of use alone.-->
-
 <template>
   <div class="flex flex-col min-h-full">
     <!-- Event template description hint -->
@@ -166,6 +162,8 @@ onMounted(() => {
         :pagination="pagination"
         rowKey="id"
         size="small"
+        :noDataSize="'small'"
+        :noDataText="t('common.messages.noData')"
         @change="changePagination">
         <template #bodyCell="{ column, text, record }">
           <!-- Event code column with truncation -->

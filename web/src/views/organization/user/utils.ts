@@ -1,8 +1,7 @@
 import { modal, notification } from '@xcan-angus/vue-ui';
-import { utils } from '@xcan-angus/infra';
 import { user } from '@/api';
-import type { User, Detail } from './types';
-import type { PageQuery, SearchCriteria } from '@xcan-angus/infra';
+import { User, Detail } from './types';
+import { PageQuery, SearchCriteria, Enabled, UserSource, utils } from '@xcan-angus/infra';
 import { OrgTargetType } from '@/enums/enums';
 
 /**
@@ -530,17 +529,17 @@ export const createSearchOptions = (
     allowClear: true
   },
   {
-    placeholder: t('user.placeholder.enabled'),
+    placeholder: t('common.status.validStatus'),
     valueKey: 'enabled',
     type: 'select-enum' as const,
-    enumKey: 'Enabled',
+    enumKey: Enabled,
     allowClear: true
   },
   {
     placeholder: t('user.placeholder.source'),
     valueKey: 'source',
     type: 'select-enum' as const,
-    enumKey: 'UserSource',
+    enumKey: UserSource,
     allowClear: true
   },
   {

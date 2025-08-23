@@ -304,7 +304,7 @@ const policyParams = { enabled: true, adminFullAssociated: true };
       <template #polices>
         <Select
           v-model:value="state.selectedPolicyIds"
-          placeholder="permission.view.selectPolicy"
+          :placeholder="t('permission.view.selectPolicy')"
           :params="policyParams"
           class="w-full"
           mode="multiple"

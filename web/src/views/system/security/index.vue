@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { appContext } from '@xcan-angus/infra';
+import { useI18n } from 'vue-i18n';
 
 import { setting } from '@/api';
 import { Operation, SafetyConfig } from './types';
@@ -11,6 +12,8 @@ const Invitation = defineAsyncComponent(() => import('./components/invitation.vu
 const PasswordPolicy = defineAsyncComponent(() => import('./components/passwordPolicy.vue'));
 const EarlyWarning = defineAsyncComponent(() => import('./components/earlyWarning.vue'));
 const AccountCancellation = defineAsyncComponent(() => import('./components/accountCancel.vue'));
+
+const { t } = useI18n();
 
 // Security configuration state
 const safetyConfig = ref<SafetyConfig>();
@@ -200,38 +203,39 @@ onMounted(async () => {
   editionType.value = appContext.getEditionType();
   await getTenantSafetyConfig();
 });
-
 </script>
-<!-- TODO 控制台报错：
-1. Invalid prop: type check failed for prop "signinLimit". Expected Object, got Undefined
-2. Invalid prop: type check failed for prop "signupAllow". Expected Object, got Undefined
-3. Missing required prop: "signupSwitchLoading"
-4. Invalid prop: type check failed for prop "passwordPolicy". Expected Object, got Undefined
-5. Missing required prop: "loading"
-6. Invalid prop: type check failed for prop "alarm". Expected Object, got Undefined
--->
 <template>
-  <LoginRestrictions
-    class="mb-2"
-    :signinLimit="safetyConfig?.signinLimit"
-    :signinSwitchLoading="updateLoading.signinSwitchLoading"
-    @change="signinLimitChange" />
-  <Invitation
-    class="mb-2"
-    :signupAllow="safetyConfig?.signupAllow"
-    :registSwitchLoading="updateLoading.signupSwitchLoading"
-    :resetButtonLoading="updateLoading.resetButtonLoading"
-    @change="registrationChange" />
-  <PasswordPolicy
-    class="mb-2"
-    :passwordPolicy="safetyConfig?.passwordPolicy"
-    @change="passwordPolicyChange" />
-  <template v-if="editionType === 'CLOUD_SERVICE'">
-    <AccountCancellation class="mb-2" />
+  <template v-if="safetyConfig">
+    <LoginRestrictions
+      class="mb-2"
+      :signinLimit="safetyConfig.signinLimit"
+      :signinSwitchLoading="updateLoading.signinSwitchLoading"
+      @change="signinLimitChange" />
+    <Invitation
+      class="mb-2"
+      :signupAllow="safetyConfig.signupAllow"
+      :signupSwitchLoading="updateLoading.signupSwitchLoading"
+      :resetButtonLoading="updateLoading.resetButtonLoading"
+      @change="registrationChange" />
+    <PasswordPolicy
+      class="mb-2"
+      :passwordPolicy="safetyConfig.passwordPolicy"
+      :loading="updateLoading.safetyCheckBoxLoading"
+      @change="passwordPolicyChange" />
+    <template v-if="editionType === 'CLOUD_SERVICE'">
+      <AccountCancellation class="mb-2" />
+    </template>
+    <EarlyWarning
+      :alarm="safetyConfig.alarm"
+      :earlySwitchLoading="updateLoading.earlySwitchLoading"
+      :safetyCheckBoxLoading="updateLoading.safetyCheckBoxLoading"
+      @change="earlyWarningChange" />
   </template>
-  <EarlyWarning
-    :alarm="safetyConfig?.alarm"
-    :earlySwitchLoading="updateLoading.earlySwitchLoading"
-    :safetyCheckBoxLoading="updateLoading.safetyCheckBoxLoading"
-    @change="earlyWarningChange" />
+  
+  <!-- Loading state -->
+  <template v-else>
+    <div class="flex items-center justify-center h-32">
+      <div class="text-theme-sub-content">{{ t('common.messages.loading') }}</div>
+    </div>
+  </template>
 </template>

@@ -62,7 +62,6 @@ const loadEventTypes = async (): Promise<void> => {
         label: m.message
       };
     });
-
     state.eventTypes = eventTypes || [];
   } catch (error) {
     console.error('Failed to load event types:', error);
@@ -76,7 +75,6 @@ const loadEventTypes = async (): Promise<void> => {
 const loadCurrentChannels = async (): Promise<void> => {
   try {
     const [error, res] = await event.getCurrentTemplates(props.id);
-
     if (error) {
       return;
     }
@@ -115,11 +113,9 @@ const loadCurrentChannels = async (): Promise<void> => {
 const loadReceiveSettingDetail = async (key: string): Promise<ChannelOption[]> => {
   try {
     const [error, res] = await event.getTypeChannel(key);
-
     if (error || !res.data) {
       return [];
     }
-
     return res.data.map(i => ({ ...i }));
   } catch (error) {
     console.error(`Failed to load receive setting for ${key}:`, error);
@@ -183,16 +179,13 @@ const getPlaceholder = (key: string): string => {
 const handleOk = async (): Promise<void> => {
   try {
     const channelIds = collectSelectedChannelIds(state.selectedType, state.channelValues);
-
     const [error] = await event.replaceTemplateChannel({
       id: props.id,
       channelIds
     });
-
     if (error) {
       return;
     }
-
     emit('update:visible', false);
   } catch (error) {
     console.error('Failed to save template channel:', error);

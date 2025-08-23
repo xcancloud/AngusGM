@@ -70,4 +70,13 @@ export default class CloudStore {
   openApp (goodsId: string): Promise<[Error | null, any]> {
     return http.post(`${baseUrl}/purchase/free/open`, { goodsId });
   }
+
+  /**
+   * Download license file by license number
+   * @param licenseNo - License number to download
+   * @returns Promise that resolves when download is complete
+   */
+  downloadLicense (licenseNo: string): Promise<[Error | null, any]> {
+    return http.get(`${baseUrl}/license/${licenseNo}/download`);
+  }
 }

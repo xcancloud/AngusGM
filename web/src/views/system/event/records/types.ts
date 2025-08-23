@@ -1,3 +1,5 @@
+import type { PageQuery } from '@xcan-angus/infra';
+
 /**
  * Event record interface for individual event data
  */
@@ -99,7 +101,7 @@ export interface PaginationParams {
   /** Page size */
   pageSize: number;
   /** Sort order */
-  orderSort: string;
+  orderSort: 'ASC' | 'DESC';
   /** Sort by field */
   sortBy: string;
   /** Whether to enable full text search */
@@ -117,14 +119,14 @@ export interface EventRecordsState {
   /** List of event records */
   eventRecordList: EventRecord[];
   /** Pagination parameters */
-  params: PaginationParams;
+  params: PageQuery;
   /** Total count */
   total: number;
   /** Loading state */
   loading: boolean;
   /** Disabled state */
   disabled: boolean;
-  /** Selected item for viewing */
+  /** Selected item for configuration */
   selectedItem: EventRecord;
   /** Whether modal is visible */
   visible: boolean;
@@ -144,7 +146,7 @@ export interface CheckContentConfig {
  * Status style mapping interface
  */
 export interface StatusStyleMapping {
-  [key: string]: string;
+  [key: string]: 'default' | 'error' | 'success' | 'warning' | 'processing';
 }
 
 /**

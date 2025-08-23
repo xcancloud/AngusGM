@@ -79,46 +79,6 @@ export interface SystemLogState {
 }
 
 /**
- * API response interface for discovery services
- */
-export interface DiscoveryServicesResponse {
-  /** List of available service names */
-  data: string[];
-}
-
-/**
- * API response interface for service instances
- */
-export interface ServiceInstancesResponse {
-  /** List of available instance names */
-  data: string[];
-}
-
-/**
- * API response interface for log files
- */
-export interface LogFilesResponse {
-  /** List of available log file names */
-  data: string[];
-}
-
-/**
- * API response interface for log content
- */
-export interface LogContentResponse {
-  /** Log content data */
-  data: string;
-}
-
-/**
- * Timer interface for auto-refresh functionality
- */
-export interface AutoRefreshTimer {
-  /** Timer reference */
-  timer: ReturnType<typeof setTimeout> | null;
-}
-
-/**
  * File export configuration interface
  */
 export interface FileExportConfig {
@@ -169,12 +129,4 @@ export interface AutoRefreshChangeParams {
 export interface FullscreenToggleParams {
   /** New fullscreen state */
   value: boolean;
-}
-
-/**
- * Browse change parameters interface
- */
-export interface BrowseChangeParams {
-  /** New browse value */
-  value: string;
 }

@@ -52,6 +52,8 @@ export interface SearchOption {
   op?: 'EQUAL';
   /** Whether to allow clearing */
   allowClear?: boolean;
+  /** Whether to show search */
+  showSearch?: boolean;
   /** Enum key for select-enum type */
   enumKey?: any;
   /** Options for select type */

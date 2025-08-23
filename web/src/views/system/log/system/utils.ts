@@ -4,32 +4,6 @@ import type {
 import dayjs from 'dayjs';
 
 /**
- * Create browse options configuration for log line selection
- */
-export const createBrowseOptions = (t: (key: string, params: any) => string): BrowseOption[] => [
-  {
-    value: '50',
-    label: t('log.system.messages.browseLines', { lines: '50' }),
-    type: 0
-  },
-  {
-    value: '500',
-    label: t('log.system.messages.browseLines', { lines: '500' }),
-    type: 0
-  },
-  {
-    value: '1000',
-    label: t('log.system.messages.browseLines', { lines: '1000' }),
-    type: 0
-  },
-  {
-    value: '10000',
-    label: t('log.system.messages.browseLines', { lines: '10000' }),
-    type: 0
-  }
-];
-
-/**
  * Create service options from service names
  */
 export const createServiceOptions = (services: string[]): ServiceOption[] => {
@@ -274,3 +248,29 @@ export const isReadyForInstanceLoading = (serviceId?: string): boolean => {
 export const isReadyForLogFileLoading = (instance?: string): boolean => {
   return isValidInstanceSelection(instance);
 };
+
+/**
+ * Create browse options configuration for log line selection
+ */
+export const createBrowseOptions = (t: (key: string, params: any) => string): BrowseOption[] => [
+  {
+    value: '50',
+    label: t('log.system.messages.browseLines', { lines: '50' }),
+    type: 0
+  },
+  {
+    value: '500',
+    label: t('log.system.messages.browseLines', { lines: '500' }),
+    type: 0
+  },
+  {
+    value: '1000',
+    label: t('log.system.messages.browseLines', { lines: '1000' }),
+    type: 0
+  },
+  {
+    value: '10000',
+    label: t('log.system.messages.browseLines', { lines: '10000' }),
+    type: 0
+  }
+];

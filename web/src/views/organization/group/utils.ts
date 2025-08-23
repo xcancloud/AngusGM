@@ -1,4 +1,4 @@
-import { PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
+import { Enabled, PageQuery, SearchCriteria, utils } from '@xcan-angus/infra';
 import { modal, notification } from '@xcan-angus/vue-ui';
 import { group, auth } from '@/api';
 import type { Ref } from 'vue';
@@ -345,7 +345,7 @@ export const loadGroupUserList = async (
 /**
  * Create search options for group list
  */
-export const createSearchOptions = (t: (key: string) => string, Enabled: any, GM: string) => [
+export const createSearchOptions = (t: (key: string) => string, GM: string) => [
   {
     placeholder: t('group.placeholder.id'),
     valueKey: 'id',

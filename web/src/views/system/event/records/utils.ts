@@ -2,6 +2,7 @@ import type {
   SearchOption, TableColumn, EventRecord, StatusStyleMapping,
   PaginationParams, CheckContentConfig, GridColumn
 } from './types';
+import { PageQuery } from '@xcan-angus/infra';
 import { EventPushStatus, EventType } from '@xcan-angus/infra';
 
 /**
@@ -18,7 +19,7 @@ export const createStatusStyleMapping = (): StatusStyleMapping => ({
 /**
  * Get status style for push status
  */
-export const getStatusStyle = (key: string, statusMapping: StatusStyleMapping): string => {
+export const getStatusStyle = (key: string, statusMapping: StatusStyleMapping): 'default' | 'error' | 'success' | 'warning' | 'processing' => {
   return statusMapping[key] || 'default';
 };
 
@@ -73,11 +74,11 @@ export const createPaginationObject = (params: PaginationParams, total: number) 
  * Update pagination parameters from table change
  */
 export const updatePaginationParams = (
-  params: PaginationParams,
-  changeParams: { orderSort: string; sortBy: string; current: number; pageSize: number }
+  params: PageQuery,
+  changeParams: { orderSort: any; sortBy: string; current: number; pageSize: number }
 ): void => {
   params.orderSort = changeParams.orderSort;
-  params.sortBy = changeParams.sortBy;
+  params.orderBy = changeParams.sortBy;
   params.pageNo = changeParams.current;
   params.pageSize = changeParams.pageSize;
 };

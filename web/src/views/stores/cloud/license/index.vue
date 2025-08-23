@@ -5,7 +5,7 @@ import { ButtonAuth, IconRefresh, Input, PureCard, Table } from '@xcan-angus/vue
 import { PageQuery, SearchCriteria, cookieUtils, download, duration, ESS } from '@xcan-angus/infra';
 import { debounce } from 'throttle-debounce';
 
-import { license } from '@/api';
+import { license, store } from '@/api';
 import { Licensed } from './types';
 
 const { t } = useI18n();
@@ -80,11 +80,13 @@ const handleRefresh = () => {
 };
 
 /**
- * <p>Download license file by license number using current access token.</p> TODO 移动到 api
+ * Download license file by license number using CloudStore API.
  */
 const downloadLicense = async (licenseNo: string): Promise<void> => {
-  const token = cookieUtils.getTokenInfo().access_token;
-  await download(`${ESS}/store/license/${licenseNo}/download?access_token=${token}`);
+  const [error] = await store.downloadLicense(licenseNo);
+  if (error) {
+    console.error('Failed to download license:', error);
+  }
 };
 
 const columns = [

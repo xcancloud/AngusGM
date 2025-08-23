@@ -131,24 +131,24 @@ export const getFormRules = (t: any) => {
 export const getSearchOptions = (t: any) => {
   return [
     {
+      placeholder: t('notification.placeholder.content'),
       type: 'input',
       allowClear: true,
-      valueKey: 'content',
-      placeholder: t('notification.placeholder.content')
+      valueKey: 'content'
     },
     {
+      placeholder: t('notification.placeholder.scope'),
       type: 'select-enum',
       allowClear: true,
       valueKey: 'scope',
-      enumKey: NoticeScope,
-      placeholder: t('notification.placeholder.scope')
+      enumKey: NoticeScope
     },
     {
+      placeholder: t('notification.placeholder.sendType'),
       type: 'select-enum',
       allowClear: true,
       valueKey: 'sendType',
-      enumKey: SentType,
-      placeholder: t('notification.placeholder.sendType')
+      enumKey: SentType
     }
   ];
 };

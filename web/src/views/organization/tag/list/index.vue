@@ -230,94 +230,96 @@ defineExpose({ openEditName });
 </script>
 
 <template>
-  <PureCard class="pr-0 flex flex-col justify-between p-3.5 w-100">
-    <!-- Search and action toolbar -->
-    <div class="flex items-center mb-2 space-x-2 mr-3.5">
-      <Input
+  <div class="flex flex-col h-full">
+    <PureCard class="pr-0 flex flex-col justify-between p-3.5 w-100">
+      <!-- Search and action toolbar -->
+      <div class="flex items-center mb-2 space-x-2 mr-3.5">
+        <Input
+          size="small"
+          allowClear
+          :placeholder="t('tag.placeholder.name')"
+          @change="handleSearch" />
+        <ButtonAuth
+          code="TagAdd"
+          type="primary"
+          icon="icon-tianjia"
+          @click="addTag" />
+        <IconRefresh
+          :loading="loading"
+          :disabled="disabled"
+          @click="handleRefresh" />
+      </div>
+
+      <!-- Tag list with loading state -->
+      <Spin :spinning="loading" class="flex-1 overflow-hidden hover:overflow-y-auto">
+        <template
+          v-for="item in tagList"
+          :key="item.id">
+          <!-- Edit mode: show input field -->
+          <template v-if="item.isEdit">
+            <Input
+              ref="inputRef"
+              :value="item.name"
+              :maxlength="100"
+              class="mr-3.5 mb-2"
+              size="small"
+              style="width: 370px;"
+              :placeholder="t('tag.placeholder.addNameTip')"
+              @blur="editName($event,item)"
+              @pressEnter="editName($event, item)" />
+          </template>
+          <!-- Display mode: show tag -->
+          <template v-else>
+            <Tag
+              :closable="app.has('TagDelete')"
+              class="tag truncate cursor-pointer"
+              :class="{
+                'border-theme-divider-selected': item.id === checkedTag?.id,
+                'selected': item.id === checkedTag?.id
+              }"
+              style="max-width: 372px;"
+              @close.prevent="deleteConfirm(item.id,item.name)"
+              @click="selectTag(item)"
+              @dblclick="app.has('TagModify') && openEditName(item)">
+              <!-- Show full name if short, truncated with tooltip if long -->
+              <template v-if="item.name.length<=15">
+                {{ item.name }}
+              </template>
+              <template v-else>
+                <Tooltip
+                  :title="item.name"
+                  placement="bottomLeft">
+                  {{ item.name.slice(0,15) }}...
+                </Tooltip>
+              </template>
+            </Tag>
+          </template>
+        </template>
+      </Spin>
+
+      <!-- Pagination controls -->
+      <Pagination
+        :current="params.pageNo"
+        :pageSize="params.pageSize"
+        :pageSizeOptions="pageSizeOptions"
+        :total="total"
+        :showLessItems="true"
+        :hideOnSinglePage="false"
+        :showSizeChanger="false"
         size="small"
-        allowClear
-        :placeholder="t('tag.placeholder.name')"
-        @change="handleSearch" />
-      <ButtonAuth
-        code="TagAdd"
-        type="primary"
-        icon="icon-tianjia"
-        @click="addTag" />
-      <IconRefresh
-        :loading="loading"
-        :disabled="disabled"
-        @click="handleRefresh" />
-    </div>
+        class="text-right mr-4.5 mt-2"
+        @change="paginationChange" />
+    </PureCard>
 
-    <!-- Tag list with loading state -->
-    <Spin :spinning="loading" class="flex-1 overflow-hidden hover:overflow-y-auto">
-      <template
-        v-for="item in tagList"
-        :key="item.id">
-        <!-- Edit mode: show input field -->
-        <template v-if="item.isEdit">
-          <Input
-            ref="inputRef"
-            :value="item.name"
-            :maxlength="100"
-            class="mr-3.5 mb-2"
-            size="small"
-            style="width: 370px;"
-            :placeholder="t('tag.placeholder.addNameTip')"
-            @blur="editName($event,item)"
-            @pressEnter="editName($event, item)" />
-        </template>
-        <!-- Display mode: show tag -->
-        <template v-else>
-          <Tag
-            :closable="app.has('TagDelete')"
-            class="tag truncate cursor-pointer"
-            :class="{
-              'border-theme-divider-selected': item.id === checkedTag?.id,
-              'selected': item.id === checkedTag?.id
-            }"
-            style="max-width: 372px;"
-            @close.prevent="deleteConfirm(item.id,item.name)"
-            @click="selectTag(item)"
-            @dblclick="app.has('TagModify') && openEditName(item)">
-            <!-- Show full name if short, truncated with tooltip if long -->
-            <template v-if="item.name.length<=15">
-              {{ item.name }}
-            </template>
-            <template v-else>
-              <Tooltip
-                :title="item.name"
-                placement="bottomLeft">
-                {{ item.name.slice(0,15) }}...
-              </Tooltip>
-            </template>
-          </Tag>
-        </template>
-      </template>
-    </Spin>
-
-    <!-- Pagination controls -->
-    <Pagination
-      :current="params.pageNo"
-      :pageSize="params.pageSize"
-      :pageSizeOptions="pageSizeOptions"
-      :total="total"
-      :showLessItems="true"
-      :hideOnSinglePage="false"
-      :showSizeChanger="false"
-      size="small"
-      class="text-right mr-4.5 mt-2"
-      @change="paginationChange" />
-  </PureCard>
-
-  <!-- Add tag modal -->
-  <AsyncComponent :visible="addVisible">
-    <AddModal
-      v-if="addVisible"
-      v-model:visible="addVisible"
-      :loading="addLoading"
-      @ok="addOK" />
-  </AsyncComponent>
+    <!-- Add tag modal -->
+    <AsyncComponent :visible="addVisible">
+      <AddModal
+        v-if="addVisible"
+        v-model:visible="addVisible"
+        :loading="addLoading"
+        @ok="addOK" />
+    </AsyncComponent>
+  </div>
 </template>
 
 <style scoped>

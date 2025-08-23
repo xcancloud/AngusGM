@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, onMounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/infra';
+import { app, GM, PageQuery } from '@xcan-angus/infra';
 import DOMPurify from 'dompurify';
 
 import { event } from '@/api';
@@ -78,7 +78,7 @@ const getEventList = async (): Promise<void> => {
  * Handle table change events
  * Updates pagination and sorting parameters
  */
-const tableChange = async (_pagination: any, _filter: any, sorter: any): Promise<void> => {
+const tableChange = async (_pagination: any, _filter: any, sorter: { orderSort: any; sortBy: string }): Promise<void> => {
   updatePaginationParams(state.params, {
     orderSort: sorter.orderSort,
     sortBy: sorter.sortBy,
@@ -133,10 +133,6 @@ onMounted(() => {
 });
 </script>
 
-<!-- TODO 控制台报错
- 1.
- -->
-
 <template>
   <div class="flex flex-col min-h-full">
     <!-- Event records description hint -->
@@ -148,6 +144,7 @@ onMounted(() => {
         resource="Event"
         :barTitle="t('statistics.metrics.newEvents')"
         :router="GM"
+        dateType="YEAR"
         :visible="state.showCount" />
 
       <!-- Search panel and controls -->
@@ -173,7 +170,8 @@ onMounted(() => {
         :columns="tableColumns"
         :pagination="pagination"
         :loading="state.loading"
-        bodyCell="--"
+        :noDataSize="'small'"
+        :noDataText="t('common.messages.noData')"
         @change="tableChange">
         <template #bodyCell="{ column, record }">
           <!-- ID column with view link -->

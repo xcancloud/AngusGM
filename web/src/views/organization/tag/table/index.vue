@@ -22,12 +22,12 @@ const GroupModal = defineAsyncComponent(() => import('@/components/GroupModal/in
 
 // Component props interface
 interface Props {
-  tagId: string;
+  tagId?: string;
   visible: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  tagId: undefined,
+  tagId: '',
   visible: true
 });
 
@@ -61,7 +61,7 @@ const pagination = computed(() => {
 
 // Load tag targets from API
 const loadTagTargetList = async (): Promise<void> => {
-  if (loading.value) {
+  if (loading.value || !props.tagId) {
     return;
   }
 

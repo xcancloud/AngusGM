@@ -1,7 +1,7 @@
 import type {
   SearchOption, TableColumn, EventConfigList, ChannelOption, ChannelValues, AppItem
 } from './types';
-import { PageQuery, EventType } from '@xcan-angus/infra';
+import { PageQuery } from '@xcan-angus/infra';
 
 /**
  * Create initial pagination parameters
@@ -230,7 +230,7 @@ export const canConfigureEvent = (record: EventConfigList): boolean => {
 /**
  * Create search options configuration for search panel
  */
-export const createSearchOptions = (t: (key: string) => string): SearchOption[] => [
+export const createSearchOptions = (eventTypeOptions: any, t: (key: string) => string): SearchOption[] => [
   {
     placeholder: t('event.template.placeholder.searchEventName'),
     valueKey: 'eventName',
@@ -238,12 +238,11 @@ export const createSearchOptions = (t: (key: string) => string): SearchOption[] 
     allowClear: true
   },
   {
+    placeholder: t('event.template.placeholder.selectEventType'),
     valueKey: 'eventType',
-    type: 'select-enum',
-    op: 'EQUAL',
-    enumKey: EventType,
-    allowClear: true,
-    placeholder: t('event.template.placeholder.selectEventType')
+    type: 'select',
+    options: eventTypeOptions,
+    showSearch: true
   },
   {
     valueKey: 'appCode',
@@ -253,7 +252,8 @@ export const createSearchOptions = (t: (key: string) => string): SearchOption[] 
     fieldNames: {
       value: 'appCode',
       label: 'appShowName'
-    }
+    },
+    showSearch: true
   }
 ];
 
