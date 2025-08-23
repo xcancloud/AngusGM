@@ -8,7 +8,7 @@ import { Dropdown, Menu, MenuItem, TabPane, Tabs } from 'ant-design-vue';
 
 // Custom UI components from @xcan-angus/vue-ui
 import {
-  AsyncComponent, ButtonAuth, IconRefresh, Image, Input,
+  AsyncComponent, ButtonAuth, Icon, IconRefresh, Image, Input,
   notification, PureCard, Select, Table, Tree
 } from '@xcan-angus/vue-ui';
 

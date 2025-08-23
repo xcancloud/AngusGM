@@ -74,8 +74,6 @@ const onMove = () => emit('move', props.node);
       </div>
     </template>
 
-    <!-- TODO 控制台报错：Failed to resolve component: Icon   -->
-
     <!-- Department information display section -->
     <div v-show="props.node?.id" class="dept-info-display">
       <!-- Basic Information Row: Name, Code, ID -->
