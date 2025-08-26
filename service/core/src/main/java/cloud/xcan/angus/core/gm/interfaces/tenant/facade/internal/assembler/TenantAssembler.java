@@ -147,6 +147,7 @@ public class TenantAssembler {
         .rangeSearchFields("id", "createdDate", "applyCancelDate",
             "lastLockDate", "lockStartDate", "lockEndDate")
         .orderByFields("id", "name", "createdDate")
+        .matchSearchFields("name", "no")
         .build();
     return new GenericSpecification<>(filters);
   }
