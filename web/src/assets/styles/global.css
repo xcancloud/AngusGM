@@ -5,30 +5,30 @@
   /* Typography */
   --font-family-zh: "PingFang SC", Inter, "Apple System", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
   --font-family-en: -apple-system, "Segoe UI", Roboto, "Inter", "SF Pro Display", sans-serif;
-  
+
   /* Font Metrics */
   --letter-spacing-zh: 0;
   --letter-spacing-en: 0.1px;
   --line-height-zh: 1.5;
   --line-height-en: 1.6;
-  
+
   /* Layout */
   --app-min-width: 1200px;
   --app-min-width-mobile: 320px;
   --header-height: 54px;
   --container-padding: 16px;
-  
+
   /* Z-index Scale */
   --z-index-base: 1;
   --z-index-dropdown: 1000;
   --z-index-modal: 1050;
   --z-index-tooltip: 1070;
   --z-index-overlay: 1100;
-  
+
   /* Performance */
   --font-smoothing: antialiased;
   --font-rendering: optimizeLegibility;
-  
+
   /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
@@ -96,11 +96,11 @@ html[lang="en"] .btn {
   :root {
     --app-min-width: 100%;
   }
-  
+
   body {
     min-width: var(--app-min-width-mobile);
   }
-  
+
   #app {
     min-width: 100%;
   }
@@ -110,11 +110,11 @@ html[lang="en"] .btn {
   html {
     font-size: 14px;
   }
-  
+
   #app {
     font-size: 13px;
   }
-  
+
   :root {
     --container-padding: 12px;
   }
@@ -124,11 +124,11 @@ html[lang="en"] .btn {
   html {
     font-size: 13px;
   }
-  
+
   #app {
     font-size: 12px;
   }
-  
+
   :root {
     --container-padding: 8px;
   }
@@ -148,11 +148,11 @@ html[lang="en"] .btn {
     font-size: 12pt;
     line-height: 1.4;
   }
-  
+
   .no-print {
     display: none !important;
   }
-  
+
   body {
     background: white !important;
     color: black !important;
@@ -173,7 +173,7 @@ html[lang="en"] .btn {
 
 /* Focus styles for better accessibility */
 *:focus {
-  outline: 2px solid #007bff;
+  /*outline: 2px solid #007bff;*/
   outline-offset: 2px;
 }
 
