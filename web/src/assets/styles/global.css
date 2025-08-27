@@ -1,0 +1,263 @@
+/* Global Styles for AngusTester Application */
+
+/* ===== CSS Custom Properties - Design System Variables ===== */
+:root {
+  /* Typography */
+  --font-family-zh: "PingFang SC", Inter, "Apple System", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+  --font-family-en: -apple-system, "Segoe UI", Roboto, "Inter", "SF Pro Display", sans-serif;
+  
+  /* Font Metrics */
+  --letter-spacing-zh: 0;
+  --letter-spacing-en: 0.1px;
+  --line-height-zh: 1.5;
+  --line-height-en: 1.6;
+  
+  /* Layout */
+  --app-min-width: 1200px;
+  --app-min-width-mobile: 320px;
+  --header-height: 54px;
+  --container-padding: 16px;
+  
+  /* Z-index Scale */
+  --z-index-base: 1;
+  --z-index-dropdown: 1000;
+  --z-index-modal: 1050;
+  --z-index-tooltip: 1070;
+  --z-index-overlay: 1100;
+  
+  /* Performance */
+  --font-smoothing: antialiased;
+  --font-rendering: optimizeLegibility;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* ===== CSS Reset & Base Styles ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: var(--app-min-width);
+  height: 100%;
+  overflow: auto;
+  font-size: 16px;
+  -webkit-font-smoothing: var(--font-smoothing);
+  -moz-osx-font-smoothing: var(--font-smoothing);
+  font-feature-settings: var(--font-rendering);
+  text-rendering: optimizeLegibility;
+}
+
+/* ===== App Container Styles ===== */
+#app {
+  position: relative;
+  z-index: var(--z-index-base);
+  min-width: var(--app-min-width);
+  height: 100%;
+  font-family: var(--font-family-zh);
+  font-size: 14px;
+  letter-spacing: var(--letter-spacing-zh);
+  line-height: var(--line-height-zh);
+  -webkit-font-smoothing: var(--font-smoothing);
+  -moz-osx-font-smoothing: var(--font-smoothing);
+  font-feature-settings: var(--font-rendering);
+}
+
+/* ===== Language-Specific Overrides ===== */
+html[lang="en"] #app {
+  font-family: var(--font-family-en);
+  letter-spacing: var(--letter-spacing-en);
+  line-height: var(--line-height-en);
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+html[lang="en"] .btn {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1200px) {
+  :root {
+    --app-min-width: 100%;
+  }
+  
+  body {
+    min-width: var(--app-min-width-mobile);
+  }
+  
+  #app {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  #app {
+    font-size: 13px;
+  }
+  
+  :root {
+    --container-padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+  
+  #app {
+    font-size: 12px;
+  }
+  
+  :root {
+    --container-padding: 8px;
+  }
+}
+
+/* ===== High DPI Displays ===== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  #app {
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  #app {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ===== Accessibility Improvements ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles for better accessibility */
+*:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* ===== Dark Mode Support (Future Enhancement) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Add dark mode variables here when needed */
+    /* --bg-primary: #1a1a1a; */
+    /* --text-primary: #ffffff; */
+  }
+}
+
+/* ===== Utility Classes ===== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+/* ===== Performance Optimizations ===== */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Optimize animations for performance */
+.animate {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ===== Selection Styling ===== */
+::selection {
+  background-color: #007bff;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #007bff;
+  color: white;
+}
