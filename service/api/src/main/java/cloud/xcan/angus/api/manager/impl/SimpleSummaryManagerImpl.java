@@ -1,16 +1,19 @@
 package cloud.xcan.angus.api.manager.impl;
 
+import static cloud.xcan.angus.core.jpa.criteria.CriteriaUtils.findFirstValue;
 import static cloud.xcan.angus.core.jpa.repository.SimpleSummaryRepository.hasSummaryResource;
 import static cloud.xcan.angus.core.utils.CoreUtils.getDateStrBetween;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.setMultiTenantCtrl;
+import static cloud.xcan.angus.spec.experimental.BizConstant.DEFAULT_DATE_STR;
+import static cloud.xcan.angus.spec.utils.DateUtils.formatByDateTimePattern;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.convert;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 import static java.util.Objects.isNull;
 
 import cloud.xcan.angus.api.manager.SimpleSummaryManager;
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
-import cloud.xcan.angus.core.jpa.criteria.CriteriaUtils;
 import cloud.xcan.angus.core.jpa.repository.SummaryRepository;
 import cloud.xcan.angus.core.jpa.repository.summary.Aggregate;
 import cloud.xcan.angus.core.jpa.repository.summary.SummaryMode;
@@ -18,6 +21,7 @@ import cloud.xcan.angus.core.jpa.repository.summary.SummaryQueryBuilder;
 import cloud.xcan.angus.remote.search.SearchOperation;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -98,10 +102,10 @@ public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
 
         Map<String, Map<String, BigDecimal>> defaultAndSortedMap = new LinkedHashMap<>();
         String groupDateColumn = builder.getGroupByColumns().get(0);
-        String startDate = CriteriaUtils.findFirstValue(builder.getFilters(), groupDateColumn,
-            SearchOperation.GREATER_THAN_EQUAL);
-        String endDate = CriteriaUtils.findFirstValue(builder.getFilters(), groupDateColumn,
-            SearchOperation.LESS_THAN_EQUAL);
+        String startDate = stringSafe(findFirstValue(builder.getFilters(), groupDateColumn,
+            SearchOperation.GREATER_THAN_EQUAL), DEFAULT_DATE_STR);
+        String endDate = stringSafe(findFirstValue(builder.getFilters(), groupDateColumn,
+            SearchOperation.LESS_THAN_EQUAL), formatByDateTimePattern(new Date()));
         Map<String, BigDecimal> defaultValue = Map
             .of(columnName, BigDecimal.ZERO.setScale(0, RoundingMode.HALF_UP));
         List<String> dateRanges = getDateStrBetween(startDate, endDate, builder.getDateRangeType());
