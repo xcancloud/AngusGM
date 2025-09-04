@@ -3,8 +3,8 @@
 /* ===== CSS Custom Properties - Design System Variables ===== */
 :root {
   /* Typography */
-  --font-family-zh: "PingFang SC", Inter, "Apple System", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
-  --font-family-en: -apple-system, "Segoe UI", Roboto, "Inter", "SF Pro Display", sans-serif;
+  --font-family-zh: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-family-en: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
   /* Font Metrics */
   --letter-spacing-zh: 0;

@@ -184,7 +184,7 @@ export interface RequestLogState {
   /** Active tab key */
   activeKey: number;
   /** Search bar height for layout */
-  searchBarHeight: number;
+  globalSearchHeight: number;
   /** Log retention period */
   clearBeforeDay?: string;
 }

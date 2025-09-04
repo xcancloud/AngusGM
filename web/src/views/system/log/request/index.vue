@@ -9,7 +9,7 @@
 
     <PureCard class="p-3.5" style="height: calc(100% - 24px);">
       <!-- Search and statistics section -->
-      <div ref="searchBar">
+      <div ref="globalSearch">
         <Statistics
           resource="ApiLogs"
           :barTitle="t('log.request.messages.newRequests')"
@@ -38,7 +38,7 @@
 
       <!-- Main content area with log list and details -->
       <div
-        :style="{ height: `calc(100% - ${state.searchBarHeight}px)` }"
+        :style="{ height: `calc(100% - ${state.globalSearchHeight}px)` }"
         class="flex">
         <!-- Left panel: API log list -->
         <Spin
@@ -196,13 +196,13 @@ const state = reactive<RequestLogState>({
   detail: undefined,
   selectedApi: undefined,
   activeKey: 0,
-  searchBarHeight: 0,
+  globalSearchHeight: 0,
   clearBeforeDay: undefined
 });
 
 // UI state management
 const tabItemRefs = reactive<HTMLElement[]>([]);
-const searchBar = ref<HTMLElement | null>(null);
+const globalSearch = ref<HTMLElement | null>(null);
 
 // Element resize detector for dynamic height calculation
 const erd = elementResizeDetector();
@@ -297,7 +297,7 @@ const getSettings = async (): Promise<void> => {
  * Ensures proper layout when search bar height changes
  */
 const resize = (element: HTMLElement): void => {
-  state.searchBarHeight = element.offsetHeight;
+  state.globalSearchHeight = element.offsetHeight;
 };
 
 /**
@@ -333,8 +333,8 @@ onMounted(async () => {
 
   // Set up resize detection for search bar
   await nextTick();
-  if (searchBar.value) {
-    erd.listenTo(searchBar.value, resize);
+  if (globalSearch.value) {
+    erd.listenTo(globalSearch.value, resize);
   }
 });
 </script>
