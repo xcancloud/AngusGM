@@ -5,7 +5,7 @@ import { Badge, Dropdown, Menu, MenuItem } from 'ant-design-vue';
 import {
   AsyncComponent, ButtonAuth, Hints, Icon, IconCount, IconRefresh, Image, PureCard, SearchPanel, Table
 } from '@xcan-angus/vue-ui';
-import { app, appContext, GM, SearchCriteria, PageQuery } from '@xcan-angus/infra';
+import { app, appContext, GM, SearchCriteria, PageQuery, Gender, enumUtils } from '@xcan-angus/infra';
 
 import { User, UserState } from './types';
 import {
@@ -14,6 +14,7 @@ import {
   showUnlockConfirm, calculateCurrentPage, checkOperationPermissions, handleSearchChange,
   handleTableChange, createSearchOptions, createTableColumns
 } from './utils';
+import { ChartType, DateRangeType } from '@/components/dashboard/enums';
 
 /**
  * Async component definitions for lazy loading
@@ -22,6 +23,7 @@ import {
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/password/index.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
 
 // Internationalization setup
 const { t } = useI18n();
@@ -261,6 +263,33 @@ const searchOptions = computed(() => createSearchOptions(t, GM));
  */
 const columns = computed(() => createTableColumns(t));
 
+
+const dashboardConfig = {
+  charts: [
+      {
+        type: ChartType.LINE,
+        title: t('statistics.metrics.newUsers'),
+        field: 'created_date'
+      },
+      {
+        type: ChartType.PIE,
+        title: [t('common.status.validStatus'), t('common.status.lockStatus'), t('user.profile.gender'), t('user.profile.identity')],
+        field: ['enabled', 'locked', 'gender', 'sys_admin'],
+        enumKey: [
+          [{ value: 0, message: t('common.status.disabled') }, { value: 1, message: t('common.status.enabled') }],
+          [{ value: 0, message: t('common.status.unlocked') }, { value: 1, message: t('common.status.locked') }],
+          enumUtils.enumToMessages(Gender),
+          [{ value: 0, message: t('user.profile.generalUser') }, { value: 1, message: t('user.profile.systemAdmin') }]
+        ],
+        legendPosition: ['bottom', 'bottom', 'bottom', 'bottom']
+      }
+    ],
+    layout: {
+      cols: 2,
+      gap: 16
+    }
+}
+
 /**
  * Lifecycle hook - initialize component on mount
  * Loads initial user data when component is mounted
@@ -272,12 +301,20 @@ onMounted(() => {
 <template>
   <PureCard class="w-full min-h-full p-3.5">
     <!-- Statistics panel showing user metrics -->
-    <Statistics
+    <!-- <Statistics
       :visible="showCount"
       :barTitle="t('statistics.metrics.newUsers')"
       resource="User"
       dateType="YEAR"
-      :router="GM" />
+      :router="GM" /> -->
+    <Dashboard
+      v-show="showCount"
+      class="py-3"
+      :config="dashboardConfig"
+      :apiRouter="GM"
+      resource="User"
+      :dateType="DateRangeType.YEAR"
+      :showChartParam="true" />
 
     <!-- User management hints and tips -->
     <Hints :text="t('user.tip')" class="mb-1" />

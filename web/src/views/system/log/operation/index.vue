@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, onMounted, reactive } from 'vue';
 import { Hints, Image, PureCard, Table } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { GM } from '@xcan-angus/infra';
+import { GM, enumUtils } from '@xcan-angus/infra';
 
 import { setting, userLog } from '@/api';
 import { OperationLogState, PaginationConfig, TableChangeParams, SearchCriteria } from './types';
@@ -11,9 +11,12 @@ import {
   updateSortingParams, resetPagination, extractSystemSettings, toggleStatisticsVisibility
 } from './utils';
 
+import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+import {  OperationResourceType } from '@/enums/enums';
+
 // Async component imports
-const Statistics = defineAsyncComponent(() => import('@/views/system/log/operation/statistics/index.vue'));
 const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -105,6 +108,31 @@ const pagination = computed<PaginationConfig>(() => {
 // Create table columns using utility function
 const columns = computed(() => createOperationLogColumns(t));
 
+
+const dashboardConfig = {
+  charts: [
+      {
+        type: ChartType.LINE,
+        title: t('log.operation.statistics.newOperations'),
+        field: 'opt_date'
+      },
+      {
+        type: ChartType.PIE,
+        title: [t('log.operation.statistics.resource')],
+        field: ['resource'],
+        enumKey: [
+          enumUtils.enumToMessages(OperationResourceType),
+        ],
+        legendPosition: ['right'],
+        legendGroupSize: [9]
+      }
+    ],
+    layout: {
+      cols: 2,
+      gap: 16
+    }
+}
+
 // Lifecycle hook - initialize component
 onMounted(() => {
   getSettings();
@@ -121,12 +149,20 @@ onMounted(() => {
 
     <PureCard class="flex-1 p-3.5">
       <!-- Statistics component for operation logs -->
-      <Statistics
+      <!-- <Statistics
         resource="OperationLog"
         :barTitle="t('log.operation.statistics.newOperations')"
         dateType="DAY"
         :router="GM"
-        :visible="state.showCount" />
+        :visible="state.showCount" /> -->
+      <Dashboard
+        class="py-3"
+        :config="dashboardConfig"
+        :apiRouter="GM"
+        resource="OperationLog"
+        :dateType="DateRangeType.DAY"
+        dataKey="opt_date"
+        :showChartParam="true" />
 
       <!-- Search panel with filters and quick actions -->
       <SearchPanel

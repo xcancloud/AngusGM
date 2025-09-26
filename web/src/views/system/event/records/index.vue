@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, onMounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Badge, Button, Popover } from 'ant-design-vue';
 import { AsyncComponent, Hints, Icon, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM, PageQuery } from '@xcan-angus/infra';
+import { app, GM, enumUtils, EventType, EventPushStatus } from '@xcan-angus/infra';
 import DOMPurify from 'dompurify';
 
 import { event } from '@/api';
@@ -15,10 +15,13 @@ import {
   getStatusStyle, hasEventError, canViewEvent, canShowReceiveConfig
 } from './utils';
 
+import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+
 // Async component imports
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const ReceiveConfig = defineAsyncComponent(() => import('./receiveConfig.vue'));
 const ViewEvent = defineAsyncComponent(() => import('./view.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -127,6 +130,45 @@ const pagination = computed(() =>
   createPaginationObject(state.params, state.total)
 );
 
+// {
+//     key: 'type',
+//     value: t('statistics.metrics.eventType'),
+//     type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
+//     color: [COLOR[1], COLOR[3]]
+//   },
+//   {
+//     key: 'push_status',
+//     value: t('statistics.metrics.eventPushStatus'),
+//     type: [{ value: 1, message: t('components.statistics.metrics.yes') }, { value: 0, message: t('components.statistics.metrics.no') }],
+//     color: [COLOR[1], COLOR[3]]
+//   }
+
+const dashboardConfig = {
+  charts: [
+      {
+        type: ChartType.LINE,
+        title: t('statistics.metrics.newEvents'),
+        field: 'created_date'
+      },
+      {
+        type: ChartType.PIE,
+        title: [t('statistics.metrics.eventType'), t('statistics.metrics.eventPushStatus')],
+        field: ['type', 'push_status'],
+        enumKey: [
+          enumUtils.enumToMessages(EventType),
+
+          enumUtils.enumToMessages(EventPushStatus),
+
+        ],
+        legendPosition: ['right', 'right']
+      }
+    ],
+    layout: {
+      cols: 2,
+      gap: 16
+    }
+}
+
 // Lifecycle hooks
 onMounted(() => {
   getEventList();
@@ -140,12 +182,20 @@ onMounted(() => {
 
     <PureCard class="flex-1 p-3.5">
       <!-- Statistics component -->
-      <Statistics
+      <!-- <Statistics
         resource="Event"
         :barTitle="t('statistics.metrics.newEvents')"
         :router="GM"
         dateType="YEAR"
-        :visible="state.showCount" />
+        :visible="state.showCount" /> -->
+      <Dashboard
+        v-show="state.showCount"
+        class="py-3"
+        :config="dashboardConfig"
+        :apiRouter="GM"
+        resource="Event"
+        :dateType="DateRangeType.YEAR"
+        :showChartParam="true" />
 
       <!-- Search panel and controls -->
       <div class="flex items-center justify-between mb-2">

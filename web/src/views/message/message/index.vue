@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue';
 import { ButtonAuth, IconCount, IconRefresh, PureCard, SearchPanel, Table } from '@xcan-angus/vue-ui';
-import { app, GM } from '@xcan-angus/infra';
+import { app, GM, enumUtils } from '@xcan-angus/infra';
 import { useI18n } from 'vue-i18n';
 import { Badge } from 'ant-design-vue';
 import { message } from '@/api';
@@ -10,11 +10,15 @@ import type {
 } from './types';
 import { createSearchOptions, createTableColumns, getStatusText } from './utils';
 
+import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+import { SentType, NoticeScope, MessageReceiveType, MessageStatus } from '@/enums/enums';
+
 /**
  * Async component import for Statistics
  * Lazy loading to improve initial page load performance
  */
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -130,6 +134,34 @@ const columns = computed(() => createTableColumns());
  * Initialize component on mount
  * Loads initial message data when component is mounted
  */
+
+
+ const dashboardConfig = {
+  charts: [
+      {
+        type: ChartType.LINE,
+        title: t('statistics.metrics.newMessages'),
+        field: 'created_date'
+      },
+      {
+        type: ChartType.PIE,
+        title: [t('statistics.metrics.receiveType'), t('statistics.metrics.sendStatus')],
+        field: ['receive_type', 'status'],
+        enumKey: [
+          enumUtils.enumToMessages(MessageReceiveType),
+
+          enumUtils.enumToMessages(MessageStatus),
+
+        ],
+        legendPosition: ['right', 'right']
+      }
+    ],
+    layout: {
+      cols: 2,
+      gap: 16
+    }
+}
+
 onMounted(() => {
   getMessageList();
 });
@@ -138,12 +170,20 @@ onMounted(() => {
 <template>
   <PureCard class="min-h-full p-3.5">
     <!-- Statistics Section -->
-    <Statistics
+    <!-- <Statistics
       resource="Message"
       :barTitle="t('statistics.metrics.newMessages')"
       :router="GM"
       dateType="YEAR"
-      :visible="showCount" />
+      :visible="showCount" /> -->
+    <Dashboard
+      v-show="showCount"
+      class="py-3"
+      :config="dashboardConfig"
+      :apiRouter="GM"
+      resource="Message"
+      :dateType="DateRangeType.YEAR"
+      :showChartParam="true" />
 
     <!-- Search and Action Bar -->
     <div class="flex items-center justify-between my-2">

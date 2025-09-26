@@ -149,6 +149,30 @@
       "sendDate": "发送时间"
     }
   },
+  "chart": {
+    "timeUnit": "时间单位",
+    "total": "总数",
+    "today": "今日",
+    "last7Days": "近7天",
+    "lastMonth": "近1月",
+    "lastYear": "近1年",
+    "average": "平均",
+    "minimum": "最小",
+    "maximum": "最大",
+    "p50": "P50",
+    "p75": "P75",
+    "p90": "P90",
+    "p95": "P95",
+    "p99": "P99",
+    "p999": "P999",
+    "burndown": {
+      "remaining": "剩余量",
+      "expected": "期望值",
+      "completed": "完成量",
+      "countBurndown": "数量燃尽",
+      "workloadBurndown": "工作量燃尽"
+    }
+  },
   "components": {
     "accountInput": {
       "placeholder": {

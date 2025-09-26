@@ -10,12 +10,21 @@
     <PureCard class="p-3.5" style="height: calc(100% - 24px);">
       <!-- Search and statistics section -->
       <div ref="globalSearch">
-        <Statistics
+        <!-- <Statistics
           resource="ApiLogs"
           :barTitle="t('log.request.messages.newRequests')"
           dateType="DAY"
           :router="GM"
-          :visible="state.showCount" />
+          :visible="state.showCount" /> -->
+        <Dashboard
+          v-show="state.showCount"
+          class="py-3"
+          :config="dashboardConfig"
+          :apiRouter="GM"
+          resource="ApiLogs"
+          :dateType="DateRangeType.DAY"
+          :showChartParam="true" />
+
 
         <div class="flex items-start justify-between text-3 leading-3 mb-2">
           <SearchPanel
@@ -23,7 +32,7 @@
             class="flex-1 mr-2"
             @change="searchChange" />
 
-          <div>
+          <div class="flex">
             <IconCount
               v-model:value="state.showCount"
               class="mt-1.5 text-3.5" />
@@ -168,7 +177,7 @@ import { defineAsyncComponent, onMounted, reactive, computed, nextTick, ref } fr
 import { Pagination, TabPane, Tabs, Tooltip } from 'ant-design-vue';
 import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { SearchCriteria, GM, HttpMethod } from '@xcan-angus/infra';
+import { SearchCriteria, GM, HttpMethod, enumUtils, ApiType } from '@xcan-angus/infra';
 import elementResizeDetector from 'element-resize-detector';
 
 import { setting, userLog } from '@/api';
@@ -178,10 +187,14 @@ import {
   updatePaginationParams, getHttpMethodColor, getStatusIcon, getStatusTextColor, isItemSelected
 } from './utils';
 
+import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+import {  GroupSource } from '@/enums/enums';
+
 // Lazy load components for better performance
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const ApiRequest = defineAsyncComponent(() => import('./components/apiRequest.vue'));
 const ApiResponse = defineAsyncComponent(() => import('./components/apiResponse.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -322,6 +335,41 @@ const handleClick = async (item: DataRecordType): Promise<void> => {
   state.selectedApi = item;
   await getDetail(item.id);
 };
+
+
+
+const dashboardConfig = {
+  charts: [
+      {
+        type: ChartType.LINE,
+        title: t('log.request.messages.newRequests'),
+        field: 'request_date'
+      },
+      {
+        type: ChartType.PIE,
+        title: [t('statistics.metrics.apiType'), t('statistics.metrics.requestMethod'), t('statistics.metrics.httpStatus'), t('statistics.status.name')],
+        field: ['api_type', 'method', 'status', 'success'],
+        enumKey: [
+          enumUtils.enumToMessages(ApiType),
+          enumUtils.enumToMessages(HttpMethod),
+          [{ value: 100, message: '1xx' }, // Informational status codes
+            { value: 200, message: '2xx' }, // Success status codes
+            { value: 300, message: '3xx' }, // Redirection status codes
+            { value: 400, message: '4xx' }, // Client error status codes
+            { value: 500, message: '5xx' } // Server error status codes
+          ],
+          [{ value: 1, message: t('statistics.status.success') }, { value: 0, message: t('statistics.status.failed') }]
+        ],
+        legendPosition: ['bottom', 'bottom', 'bottom', 'bottom'],
+        size: 'small',
+        legendGroupSize: [4, 4]
+      }
+    ],
+    layout: {
+      cols: 2,
+      gap: 16
+    }
+}
 
 // Lifecycle hooks
 onMounted(async () => {

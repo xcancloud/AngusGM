@@ -150,6 +150,31 @@
       "sendDate": "Send Date"
     }
   },
+  "chart": {
+    "timeUnit": "Time Unit",
+    "total": "Total",
+    "today": "Today",
+    "last7Days": "Last 7 Days",
+    "lastMonth": "Last Month",
+    "lastYear": "Last Year",
+    "average": "Average",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "p50": "P50",
+    "p75": "P75",
+    "p90": "P90",
+    "p95": "P95",
+    "p99": "P99",
+    "burndown": {
+      "title": "Burndown Chart",
+      "myTitle": "My Burndown Chart",
+      "remaining": "Remaining",
+      "expected": "Expected",
+      "completed": "Completed",
+      "countBurndown": "Count Burndown",
+      "workloadBurndown": "Workload Burndown"
+    }
+  },
   "components": {
     "accountInput": {
       "placeholder": {
