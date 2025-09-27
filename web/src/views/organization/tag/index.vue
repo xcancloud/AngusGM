@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { app, GM, enumUtils } from '@xcan-angus/infra';
 
 import { OrgTag } from './types';
-import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
 import { OrgTargetType } from '@/enums/enums';
 
 // Async components
@@ -14,7 +14,7 @@ const Statistics = defineAsyncComponent(() => import('@/components/Statistics/in
 const List = defineAsyncComponent(() => import('@/views/organization/tag/list/index.vue'));
 const Table = defineAsyncComponent(() => import('@/views/organization/tag/table/index.vue'));
 const Info = defineAsyncComponent(() => import('@/views/organization/tag/info/index.vue'));
-const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -50,40 +50,32 @@ const editTagName = (): void => {
   listRef.value?.openEditName(tag.value);
 };
 
-
-
 const dashboardConfig = {
   charts: [
-      {
-        type: ChartType.LINE,
-        title: t('statistics.metrics.newTags'),
-        field: 'created_date'
-      },
-      {
-        type: ChartType.PIE,
-        title: [t('common.labels.association')],
-        field: ['target_type'],
-        enumKey: [
-          enumUtils.enumToMessages(OrgTargetType),
-        ],
-        legendPosition: ['right']
-      }
-    ],
-    layout: {
-      cols: 2,
-      gap: 16
+    {
+      type: ChartType.LINE,
+      title: t('statistics.metrics.newTags'),
+      field: 'created_date'
+    },
+    {
+      type: ChartType.PIE,
+      title: [t('common.labels.association')],
+      field: ['target_type'],
+      enumKey: [
+        enumUtils.enumToMessages(OrgTargetType)
+      ],
+      legendPosition: ['right']
     }
-}
+  ],
+  layout: {
+    cols: 2,
+    gap: 16
+  }
+};
 
 </script>
 <template>
   <PureCard class="p-3.5 flex flex-col h-full">
-    <!-- <Statistics
-      resource="OrgTagTarget"
-      :barTitle="t('statistics.metrics.newTags')"
-      :router="GM"
-      dateType="YEAR"
-      :visible="visible" /> -->
     <Dashboard
       class="py-3"
       :config="dashboardConfig"

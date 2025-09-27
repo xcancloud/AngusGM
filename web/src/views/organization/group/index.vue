@@ -15,13 +15,13 @@ import {
   loadGroupList as loadGroupListUtil, searchChange as searchChangeUtil,
   tableChange as tableChangeUtil, updateStatusConfirm as updateStatusConfirmUtil
 } from './utils';
-import { ChartType, DateRangeType } from '@/components/dashboard/enums';
-import {  GroupSource } from '@/enums/enums';
+import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
+import { GroupSource } from '@/enums/enums';
 
 // Define async components for lazy loading
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const UserModal = defineAsyncComponent(() => import('@/components/UserModal/index.vue'));
-const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
 
 // Initialize internationalization
 const { t } = useI18n();
@@ -142,32 +142,31 @@ const handleRefresh = () => {
 // Create group table columns
 const _columns = createGroupColumns(t);
 
-
 const dashboardConfig = {
   charts: [
-      {
-        type: ChartType.LINE,
-        title: t('statistics.metrics.newGroups'),
-        field: 'created_date'
-      },
-      {
-        type: ChartType.PIE,
-        title: [t('common.status.validStatus'), t('common.labels.source')],
-        field: ['enabled', 'source'],
-        enumKey: [
-          [{ value: 0, message: t('common.status.disabled') }, { value: 1, message: t('common.status.enabled') }],
+    {
+      type: ChartType.LINE,
+      title: t('statistics.metrics.newGroups'),
+      field: 'created_date'
+    },
+    {
+      type: ChartType.PIE,
+      title: [t('common.status.validStatus'), t('common.labels.source')],
+      field: ['enabled', 'source'],
+      enumKey: [
+        [{ value: 0, message: t('common.status.disabled') }, { value: 1, message: t('common.status.enabled') }],
 
-          enumUtils.enumToMessages(GroupSource),
+        enumUtils.enumToMessages(GroupSource)
 
-        ],
-        legendPosition: ['right', 'right']
-      }
-    ],
-    layout: {
-      cols: 2,
-      gap: 16
+      ],
+      legendPosition: ['right', 'right']
     }
-}
+  ],
+  layout: {
+    cols: 2,
+    gap: 16
+  }
+};
 
 // Component lifecycle - initialize on mount
 onMounted(() => {
@@ -178,21 +177,14 @@ onMounted(() => {
   <!-- Main container with statistics and group management -->
   <PureCard class="p-3.5 min-h-full">
     <!-- Statistics component showing new groups metrics -->
-    <!-- <Statistics
-      :visible="showCount"
-      :barTitle="t('statistics.metrics.newGroups')"
-      dateType="YEAR"
+    <Dashboard
+      v-show="showCount"
+      class="py-3"
+      :config="dashboardConfig"
+      :apiRouter="GM"
       resource="Group"
-      :router="GM"
-      class="mb-3" /> -->
-      <Dashboard
-        v-show="showCount"
-        class="py-3"
-        :config="dashboardConfig"
-        :apiRouter="GM"
-        resource="Group"
-        :dateType="DateRangeType.YEAR"
-        :showChartParam="true" />
+      :dateType="DateRangeType.YEAR"
+      :showChartParam="true" />
 
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-3">

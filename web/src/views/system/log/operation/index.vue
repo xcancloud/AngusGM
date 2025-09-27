@@ -11,12 +11,12 @@ import {
   updateSortingParams, resetPagination, extractSystemSettings, toggleStatisticsVisibility
 } from './utils';
 
-import { ChartType, DateRangeType } from '@/components/dashboard/enums';
-import {  OperationResourceType } from '@/enums/enums';
+import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
+import { OperationResourceType } from '@/enums/enums';
 
 // Async component imports
 const SearchPanel = defineAsyncComponent(() => import('@/views/system/log/operation/searchPanel/index.vue'));
-const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -108,30 +108,29 @@ const pagination = computed<PaginationConfig>(() => {
 // Create table columns using utility function
 const columns = computed(() => createOperationLogColumns(t));
 
-
 const dashboardConfig = {
   charts: [
-      {
-        type: ChartType.LINE,
-        title: t('log.operation.statistics.newOperations'),
-        field: 'opt_date'
-      },
-      {
-        type: ChartType.PIE,
-        title: [t('log.operation.statistics.resource')],
-        field: ['resource'],
-        enumKey: [
-          enumUtils.enumToMessages(OperationResourceType),
-        ],
-        legendPosition: ['right'],
-        legendGroupSize: [9]
-      }
-    ],
-    layout: {
-      cols: 2,
-      gap: 16
+    {
+      type: ChartType.LINE,
+      title: t('log.operation.statistics.newOperations'),
+      field: 'opt_date'
+    },
+    {
+      type: ChartType.PIE,
+      title: [t('log.operation.statistics.resource')],
+      field: ['resource'],
+      enumKey: [
+        enumUtils.enumToMessages(OperationResourceType)
+      ],
+      legendPosition: ['right'],
+      legendGroupSize: [9]
     }
-}
+  ],
+  layout: {
+    cols: 2,
+    gap: 16
+  }
+};
 
 // Lifecycle hook - initialize component
 onMounted(() => {
@@ -149,12 +148,6 @@ onMounted(() => {
 
     <PureCard class="flex-1 p-3.5">
       <!-- Statistics component for operation logs -->
-      <!-- <Statistics
-        resource="OperationLog"
-        :barTitle="t('log.operation.statistics.newOperations')"
-        dateType="DAY"
-        :router="GM"
-        :visible="state.showCount" /> -->
       <Dashboard
         class="py-3"
         :config="dashboardConfig"

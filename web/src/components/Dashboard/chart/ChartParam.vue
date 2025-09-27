@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { RadioButton, RadioGroup } from 'ant-design-vue';
 import { DatePicker } from '@xcan-angus/vue-ui';
 import { useI18n } from 'vue-i18n';
-import { DateRangeType } from '@/components/dashboard/enums';
+import { DateRangeType } from '@/components/Dashboard/enums';
 
 interface Props {
   datePicker: string[] | undefined;

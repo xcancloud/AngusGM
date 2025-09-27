@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="h-full">
     <!-- System hints showing log retention policy -->
@@ -10,12 +8,6 @@
     <PureCard class="p-3.5" style="height: calc(100% - 24px);">
       <!-- Search and statistics section -->
       <div ref="globalSearch">
-        <!-- <Statistics
-          resource="ApiLogs"
-          :barTitle="t('log.request.messages.newRequests')"
-          dateType="DAY"
-          :router="GM"
-          :visible="state.showCount" /> -->
         <Dashboard
           v-show="state.showCount"
           class="py-3"
@@ -24,7 +16,6 @@
           resource="ApiLogs"
           :dateType="DateRangeType.DAY"
           :showChartParam="true" />
-
 
         <div class="flex items-start justify-between text-3 leading-3 mb-2">
           <SearchPanel
@@ -172,243 +163,242 @@
       </div>
     </PureCard>
   </div>
-</template><script setup lang="ts">
-import { defineAsyncComponent, onMounted, reactive, computed, nextTick, ref } from 'vue';
-import { Pagination, TabPane, Tabs, Tooltip } from 'ant-design-vue';
-import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
-import { useI18n } from 'vue-i18n';
-import { SearchCriteria, GM, HttpMethod, enumUtils, ApiType } from '@xcan-angus/infra';
-import elementResizeDetector from 'element-resize-detector';
+  <script setup lang="ts">
+    import { defineAsyncComponent, onMounted, reactive, computed, nextTick, ref } from 'vue';
+    import { Pagination, TabPane, Tabs, Tooltip } from 'ant-design-vue';
+    import { Grid, Hints, Icon, IconCount, IconRefresh, NoData, PureCard, SearchPanel, Spin } from '@xcan-angus/vue-ui';
+    import { useI18n } from 'vue-i18n';
+    import { SearchCriteria, GM, HttpMethod, enumUtils, ApiType } from '@xcan-angus/infra';
+    import elementResizeDetector from 'element-resize-detector';
 
-import { setting, userLog } from '@/api';
-import { DataRecordType, RequestLogState } from './types';
-import {
-  createSearchOptions, createGridColumns, createHttpMethodColors, createPageSizeOptions, resetPagination,
-  updatePaginationParams, getHttpMethodColor, getStatusIcon, getStatusTextColor, isItemSelected
-} from './utils';
+    import { setting, userLog } from '@/api';
+    import { DataRecordType, RequestLogState } from './types';
+    import {
+    createSearchOptions, createGridColumns, createHttpMethodColors, createPageSizeOptions, resetPagination,
+    updatePaginationParams, getHttpMethodColor, getStatusIcon, getStatusTextColor, isItemSelected
+    } from './utils';
 
-import { ChartType, DateRangeType } from '@/components/dashboard/enums';
-import {  GroupSource } from '@/enums/enums';
+    import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
+    import { GroupSource } from '@/enums/enums';
 
-// Lazy load components for better performance
-const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
-const ApiRequest = defineAsyncComponent(() => import('./components/apiRequest.vue'));
-const ApiResponse = defineAsyncComponent(() => import('./components/apiResponse.vue'));
-const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
+    // Lazy load components for better performance
+    const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
+    const ApiRequest = defineAsyncComponent(() => import('./components/apiRequest.vue'));
+    const ApiResponse = defineAsyncComponent(() => import('./components/apiResponse.vue'));
+    const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
 
-const { t } = useI18n();
+    const { t } = useI18n();
 
-// Reactive state management
-const state = reactive<RequestLogState>({
-  showCount: true,
-  params: { pageNo: 1, pageSize: 10, filters: [] },
-  total: 0,
-  tableList: [],
-  loading: false,
-  disabled: false,
-  detail: undefined,
-  selectedApi: undefined,
-  activeKey: 0,
-  globalSearchHeight: 0,
-  clearBeforeDay: undefined
-});
+    // Reactive state management
+    const state = reactive<RequestLogState>({
+    showCount: true,
+    params: { pageNo: 1, pageSize: 10, filters: [] },
+    total: 0,
+    tableList: [],
+    loading: false,
+    disabled: false,
+    detail: undefined,
+    selectedApi: undefined,
+    activeKey: 0,
+    globalSearchHeight: 0,
+    clearBeforeDay: undefined
+    });
 
-// UI state management
-const tabItemRefs = reactive<HTMLElement[]>([]);
-const globalSearch = ref<HTMLElement | null>(null);
+    // UI state management
+    const tabItemRefs = reactive<HTMLElement[]>([]);
+    const globalSearch = ref<HTMLElement | null>(null);
 
-// Element resize detector for dynamic height calculation
-const erd = elementResizeDetector();
+    // Element resize detector for dynamic height calculation
+    const erd = elementResizeDetector();
 
-// Computed properties for better performance
-const hasData = computed(() => state.tableList.length > 0);
+    // Computed properties for better performance
+    const hasData = computed(() => state.tableList.length > 0);
 
-// HTTP method color mapping for visual distinction
-const textColor = computed(() => createHttpMethodColors());
+    // HTTP method color mapping for visual distinction
+    const textColor = computed(() => createHttpMethodColors());
 
-// Pagination configuration
-const pageSizeOptions = computed(() => createPageSizeOptions());
+    // Pagination configuration
+    const pageSizeOptions = computed(() => createPageSizeOptions());
 
-// Search options configuration for the search panel
-const options = computed(() => createSearchOptions(t, GM, HttpMethod));
+    // Search options configuration for the search panel
+    const options = computed(() => createSearchOptions(t, GM, HttpMethod));
 
-// Grid columns configuration for displaying log details
-const gridColumns = computed(() => createGridColumns(t));
+    // Grid columns configuration for displaying log details
+    const gridColumns = computed(() => createGridColumns(t));
 
-/**
- * Fetch API log list with pagination and filters
- * Includes debouncing to prevent multiple simultaneous requests
- */
-const getList = async (): Promise<void> => {
-  if (state.loading) {
+    /**
+    * Fetch API log list with pagination and filters
+    * Includes debouncing to prevent multiple simultaneous requests
+    */
+    const getList = async (): Promise<void> => {
+    if (state.loading) {
     return;
-  }
+    }
 
-  state.loading = true;
-  try {
+    state.loading = true;
+    try {
     const [error, { data = { list: [], total: 0 } }] = await userLog.getApiLog(state.params);
     if (error) {
-      return;
+    return;
     }
     if (data.list?.length) {
-      state.tableList = data.list;
-      state.total = +data.total;
-      state.selectedApi = data.list[0];
-      await getDetail(data.list[0].id);
-      return;
+    state.tableList = data.list;
+    state.total = +data.total;
+    state.selectedApi = data.list[0];
+    await getDetail(data.list[0].id);
+    return;
     }
     state.tableList = [];
     state.selectedApi = undefined;
     state.detail = undefined;
-  } finally {
+    } finally {
     state.loading = false;
-  }
-};
+    }
+    };
 
-/**
- * Fetch detailed information for a specific API log entry
- */
-const getDetail = async (id: string): Promise<void> => {
-  if (!id) return;
-  const [error, res] = await userLog.getApiLogDetail(id);
-  if (error) {
+    /**
+    * Fetch detailed information for a specific API log entry
+    */
+    const getDetail = async (id: string): Promise<void> => {
+    if (!id) return;
+    const [error, res] = await userLog.getApiLogDetail(id);
+    if (error) {
     return;
-  }
-  state.detail = res.data;
-};
+    }
+    state.detail = res.data;
+    };
 
-/**
- * Handle search criteria changes and trigger new search
- */
-const searchChange = async (data: SearchCriteria[]): Promise<void> => {
-  resetPagination(state.params);
-  state.params.filters = data;
-  state.disabled = true;
+    /**
+    * Handle search criteria changes and trigger new search
+    */
+    const searchChange = async (data: SearchCriteria[]): Promise<void> => {
+    resetPagination(state.params);
+    state.params.filters = data;
+    state.disabled = true;
 
-  try {
+    try {
     await getList();
-  } finally {
+    } finally {
     state.disabled = false;
-  }
-};
+    }
+    };
 
-/**
- * Fetch system settings for API log configuration
- * Retrieves the number of days to keep logs before automatic cleanup
- */
-const getSettings = async (): Promise<void> => {
-  const [error, { data }] = await setting.getSettingDetail('API_LOG_CONFIG');
-  if (error) {
+    /**
+    * Fetch system settings for API log configuration
+    * Retrieves the number of days to keep logs before automatic cleanup
+    */
+    const getSettings = async (): Promise<void> => {
+    const [error, { data }] = await setting.getSettingDetail('API_LOG_CONFIG');
+    if (error) {
     return;
-  }
+    }
 
-  state.clearBeforeDay = data.apiLog?.clearBeforeDay;
-};
+    state.clearBeforeDay = data.apiLog?.clearBeforeDay;
+    };
 
-/**
- * Handle element resize for dynamic height calculation
- * Ensures proper layout when search bar height changes
- */
-const resize = (element: HTMLElement): void => {
-  state.globalSearchHeight = element.offsetHeight;
-};
+    /**
+    * Handle element resize for dynamic height calculation
+    * Ensures proper layout when search bar height changes
+    */
+    const resize = (element: HTMLElement): void => {
+    state.globalSearchHeight = element.offsetHeight;
+    };
 
-/**
- * Handle pagination changes and fetch new data
- */
-const paginationChange = async (page: number, size: number): Promise<void> => {
-  updatePaginationParams(state.params, page, size);
-  state.disabled = true;
+    /**
+    * Handle pagination changes and fetch new data
+    */
+    const paginationChange = async (page: number, size: number): Promise<void> => {
+    updatePaginationParams(state.params, page, size);
+    state.disabled = true;
 
-  try {
+    try {
     await getList();
-  } finally {
+    } finally {
     state.disabled = false;
-  }
-};
+    }
+    };
 
-/**
- * Handle API log item selection
- * Updates selected item and fetches detailed information
- */
-const handleClick = async (item: DataRecordType): Promise<void> => {
-  state.selectedApi = item;
-  await getDetail(item.id);
-};
+    /**
+    * Handle API log item selection
+    * Updates selected item and fetches detailed information
+    */
+    const handleClick = async (item: DataRecordType): Promise<void> => {
+    state.selectedApi = item;
+    await getDetail(item.id);
+    };
 
-
-
-const dashboardConfig = {
-  charts: [
-      {
-        type: ChartType.LINE,
-        title: t('log.request.messages.newRequests'),
-        field: 'request_date'
-      },
-      {
-        type: ChartType.PIE,
-        title: [t('statistics.metrics.apiType'), t('statistics.metrics.requestMethod'), t('statistics.metrics.httpStatus'), t('statistics.status.name')],
-        field: ['api_type', 'method', 'status', 'success'],
-        enumKey: [
-          enumUtils.enumToMessages(ApiType),
-          enumUtils.enumToMessages(HttpMethod),
-          [{ value: 100, message: '1xx' }, // Informational status codes
-            { value: 200, message: '2xx' }, // Success status codes
-            { value: 300, message: '3xx' }, // Redirection status codes
-            { value: 400, message: '4xx' }, // Client error status codes
-            { value: 500, message: '5xx' } // Server error status codes
-          ],
-          [{ value: 1, message: t('statistics.status.success') }, { value: 0, message: t('statistics.status.failed') }]
-        ],
-        legendPosition: ['bottom', 'bottom', 'bottom', 'bottom'],
-        size: 'small',
-        legendGroupSize: [4, 4]
-      }
+    const dashboardConfig = {
+    charts: [
+    {
+    type: ChartType.LINE,
+    title: t('log.request.messages.newRequests'),
+    field: 'request_date'
+    },
+    {
+    type: ChartType.PIE,
+    title: [t('statistics.metrics.apiType'), t('statistics.metrics.requestMethod'), t('statistics.metrics.httpStatus'), t('statistics.status.name')],
+    field: ['api_type', 'method', 'status', 'success'],
+    enumKey: [
+    enumUtils.enumToMessages(ApiType),
+    enumUtils.enumToMessages(HttpMethod),
+    [{ value: 100, message: '1xx' }, // Informational status codes
+    { value: 200, message: '2xx' }, // Success status codes
+    { value: 300, message: '3xx' }, // Redirection status codes
+    { value: 400, message: '4xx' }, // Client error status codes
+    { value: 500, message: '5xx' } // Server error status codes
+    ],
+    [{ value: 1, message: t('statistics.status.success') }, { value: 0, message: t('statistics.status.failed') }]
+    ],
+    legendPosition: ['bottom', 'bottom', 'bottom', 'bottom'],
+    size: 'small',
+    legendGroupSize: [4, 4]
+    }
     ],
     layout: {
-      cols: 2,
-      gap: 16
+    cols: 2,
+    gap: 16
     }
-}
+    };
 
-// Lifecycle hooks
-onMounted(async () => {
-  // Initialize component data
-  await Promise.all([
+    // Lifecycle hooks
+    onMounted(async () => {
+    // Initialize component data
+    await Promise.all([
     getSettings(),
     getList()
-  ]);
+    ]);
 
-  // Set up resize detection for search bar
-  await nextTick();
-  if (globalSearch.value) {
+    // Set up resize detection for search bar
+    await nextTick();
+    if (globalSearch.value) {
     erd.listenTo(globalSearch.value, resize);
-  }
-});
-</script>
+    }
+    });
+  </script>
 
-<style scoped>
-/* Custom styling for selected item border */
-.border-selected {
-  border-left-color: var(--border-divider-selected);
-}
+  <style scoped>
+    /* Custom styling for selected item border */
+    .border-selected {
+    border-left-color: var(--border-divider-selected);
+    }
 
-/* Grid row styling for better visual separation */
-:deep(.grid-row > div) {
-  padding-right: 8px;
-  padding-left: 8px;
-}
+    /* Grid row styling for better visual separation */
+    :deep(.grid-row > div) {
+    padding-right: 8px;
+    padding-left: 8px;
+    }
 
-:deep(.grid-row > div > :first-child) {
-  padding: 8px;
-}
+    :deep(.grid-row > div > :first-child) {
+    padding: 8px;
+    }
 
-:deep(.grid-row > div:nth-child(2n)) {
-  background-color: var(--table-header-bg);
-}
+    :deep(.grid-row > div:nth-child(2n)) {
+    background-color: var(--table-header-bg);
+    }
 
-/* Ensure proper scrolling for tab content */
-:deep(.ant-tabs-content-holder) {
-  overflow-y: auto;
-}
-</style>
+    /* Ensure proper scrolling for tab content */
+    :deep(.ant-tabs-content-holder) {
+    overflow-y: auto;
+    }
+  </style>
+</template>

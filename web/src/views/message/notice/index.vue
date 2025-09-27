@@ -10,12 +10,12 @@ import { Tooltip } from 'ant-design-vue';
 import { notice } from '@/api';
 import type { NoticeDataType, PaginationType, SearchParamsType } from './types';
 import { getQueryParams, getSearchOptions, getTableColumns } from './utils';
-import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
 import { SentType, NoticeScope } from '@/enums/enums';
 
 // Lazy load Statistics component for better performance
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
-const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
 
 const router = useRouter();
 const { t } = useI18n();
@@ -117,32 +117,31 @@ const deleteNotice = (item: NoticeDataType) => {
 const searchOptions = getSearchOptions(t);
 const columns = getTableColumns(t);
 
-
 const dashboardConfig = {
   charts: [
-      {
-        type: ChartType.LINE,
-        title: t('statistics.metrics.newNotification'),
-        field: 'created_date'
-      },
-      {
-        type: ChartType.PIE,
-        title: [t('statistics.metrics.sendScope'), t('statistics.metrics.sendType')],
-        field: ['scope', 'send_type'],
-        enumKey: [
-          enumUtils.enumToMessages(NoticeScope),
+    {
+      type: ChartType.LINE,
+      title: t('statistics.metrics.newNotification'),
+      field: 'created_date'
+    },
+    {
+      type: ChartType.PIE,
+      title: [t('statistics.metrics.sendScope'), t('statistics.metrics.sendType')],
+      field: ['scope', 'send_type'],
+      enumKey: [
+        enumUtils.enumToMessages(NoticeScope),
 
-          enumUtils.enumToMessages(SentType),
+        enumUtils.enumToMessages(SentType)
 
-        ],
-        legendPosition: ['right', 'right']
-      }
-    ],
-    layout: {
-      cols: 2,
-      gap: 16
+      ],
+      legendPosition: ['right', 'right']
     }
-}
+  ],
+  layout: {
+    cols: 2,
+    gap: 16
+  }
+};
 
 // Initialize data on component mount
 onMounted(() => {
@@ -156,12 +155,6 @@ onMounted(() => {
     <Hints :text="t('notification.globalTip')" class="mb-1" />
     <PureCard class="p-3.5 flex-1">
       <!-- Statistics component showing notice metrics -->
-      <!-- <Statistics
-        resource="Notice"
-        :barTitle="t('statistics.metrics.newNotification')"
-        :router="GM"
-        dateType="YEAR"
-        :visible="showCount" /> -->
       <Dashboard
         class="py-3"
         :config="dashboardConfig"

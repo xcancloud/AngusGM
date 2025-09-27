@@ -5,9 +5,9 @@ import { fetchSummaryData, convertToLineChartData, getDefaultDateFilters, getDat
 import { GroupBy, AggregateFunction, DateRangeType, ChartType } from './enums';
 import type { ChartConfig } from './types';
 
-const LineChart = defineAsyncComponent(() => import('@/components/dashboard/chart/LineChart.vue'));
-const PieChart = defineAsyncComponent(() => import('@/components/dashboard/chart/PieChart.vue'));
-const ChartParam = defineAsyncComponent(() => import('@/components/dashboard/chart/ChartParam.vue'));
+const LineChart = defineAsyncComponent(() => import('@/components/Dashboard/chart/LineChart.vue'));
+const PieChart = defineAsyncComponent(() => import('@/components/Dashboard/chart/PieChart.vue'));
+const ChartParam = defineAsyncComponent(() => import('@/components/Dashboard/chart/ChartParam.vue'));
 
 interface Props {
   config: any;
@@ -297,18 +297,17 @@ onMounted(() => {
           :chartData="lineChartData" />
         <template v-else-if="chart.type === ChartType.PIE">
           <!-- If it's a pie chart, there may be multiple fields requiring multiple pie charts -->
-           <div class="flex">
-
-             <PieChart
-               v-for="pieData in pieChartData.filter(item =>
-                 Array.isArray(chart.field)
-                   ? chart.field.includes(item.key)
-                   : item.key === chart.field
-               )"
-               class="flex-1"
-               :key="pieData.key"
-               :chartData="pieData" />
-           </div>
+          <div class="flex">
+            <PieChart
+              v-for="pieData in pieChartData.filter(item =>
+                Array.isArray(chart.field)
+                  ? chart.field.includes(item.key)
+                  : item.key === chart.field
+              )"
+              :key="pieData.key"
+              class="flex-1"
+              :chartData="pieData" />
+          </div>
         </template>
       </div>
     </div>
