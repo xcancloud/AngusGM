@@ -10,7 +10,7 @@ import type {
 } from './types';
 import { createSearchOptions, createTableColumns, getStatusText } from './utils';
 
-import { ChartType, DateRangeType } from '@/components/dashboard/enums';
+import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
 import { SentType, NoticeScope, MessageReceiveType, MessageStatus } from '@/enums/enums';
 
 /**
@@ -18,7 +18,7 @@ import { SentType, NoticeScope, MessageReceiveType, MessageStatus } from '@/enum
  * Lazy loading to improve initial page load performance
  */
 const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
-const Dashboard = defineAsyncComponent(() => import('@/components/dashboard/Dashboard.vue'));
+const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
 
 const { t } = useI18n();
 
@@ -135,32 +135,31 @@ const columns = computed(() => createTableColumns());
  * Loads initial message data when component is mounted
  */
 
-
- const dashboardConfig = {
+const dashboardConfig = {
   charts: [
-      {
-        type: ChartType.LINE,
-        title: t('statistics.metrics.newMessages'),
-        field: 'created_date'
-      },
-      {
-        type: ChartType.PIE,
-        title: [t('statistics.metrics.receiveType'), t('statistics.metrics.sendStatus')],
-        field: ['receive_type', 'status'],
-        enumKey: [
-          enumUtils.enumToMessages(MessageReceiveType),
+    {
+      type: ChartType.LINE,
+      title: t('statistics.metrics.newMessages'),
+      field: 'created_date'
+    },
+    {
+      type: ChartType.PIE,
+      title: [t('statistics.metrics.receiveType'), t('statistics.metrics.sendStatus')],
+      field: ['receive_type', 'status'],
+      enumKey: [
+        enumUtils.enumToMessages(MessageReceiveType),
 
-          enumUtils.enumToMessages(MessageStatus),
+        enumUtils.enumToMessages(MessageStatus)
 
-        ],
-        legendPosition: ['right', 'right']
-      }
-    ],
-    layout: {
-      cols: 2,
-      gap: 16
+      ],
+      legendPosition: ['right', 'right']
     }
-}
+  ],
+  layout: {
+    cols: 2,
+    gap: 16
+  }
+};
 
 onMounted(() => {
   getMessageList();
@@ -170,12 +169,6 @@ onMounted(() => {
 <template>
   <PureCard class="min-h-full p-3.5">
     <!-- Statistics Section -->
-    <!-- <Statistics
-      resource="Message"
-      :barTitle="t('statistics.metrics.newMessages')"
-      :router="GM"
-      dateType="YEAR"
-      :visible="showCount" /> -->
     <Dashboard
       v-show="showCount"
       class="py-3"

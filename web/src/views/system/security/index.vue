@@ -231,7 +231,7 @@ onMounted(async () => {
       :safetyCheckBoxLoading="updateLoading.safetyCheckBoxLoading"
       @change="earlyWarningChange" />
   </template>
-  
+
   <!-- Loading state -->
   <template v-else>
     <div class="flex items-center justify-center h-32">

@@ -82,7 +82,7 @@ const chartsOption = computed(() => {
         name: item.name,
         icon: 'circle'
       }))
-    }
+    };
     if (props.chartData.legendPosition === 'bottom') {
       delete defaultConfig.top;
       defaultConfig.bottom = '0%';
@@ -95,8 +95,8 @@ const chartsOption = computed(() => {
         defaultConfig.top = 0;
       }
     }
-    
-    return defaultConfig
+
+    return defaultConfig;
   });
 
   return {
@@ -177,7 +177,10 @@ onBeforeUnmount(() => {
 <template>
   <div class="relative h-50">
     <div ref="chartsRef" class="h-full"></div>
-    <div v-if="props.chartData" class="mark-container leading-5" :class="{'sizes-small': props.chartData.size === 'small'}">
+    <div
+      v-if="props.chartData"
+      class="mark-container leading-5"
+      :class="{'sizes-small': props.chartData.size === 'small'}">
       <div class="text-3 text-center text-theme-title font-medium">{{ props.chartData.title }}</div>
       <div class="mt-1 text-4.5 leading-4.5 text-theme-title text-center">{{ props.chartData.total }}</div>
     </div>

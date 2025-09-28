@@ -2,8 +2,7 @@ import type {
   SearchOption, TableColumn, EventRecord, StatusStyleMapping,
   PaginationParams, CheckContentConfig, GridColumn
 } from './types';
-import { PageQuery } from '@xcan-angus/infra';
-import { EventPushStatus, EventType } from '@xcan-angus/infra';
+import { PageQuery, EventPushStatus, EventType } from '@xcan-angus/infra';
 
 /**
  * Create status style mapping for push status badges
