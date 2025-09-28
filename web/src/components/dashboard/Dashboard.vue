@@ -23,7 +23,9 @@ interface Props {
     value: string;
   }[];
   showChartParam?: boolean;
-  dataKey: 'created_date'|'opt_date'
+  dataKey: 'created_date'|'opt_date',
+  pieItemClass: string
+
 }
 const props = withDefaults(defineProps<Props>(), {
   apiRouter: TESTER,
@@ -32,7 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
   projectId: '',
   searchParams: () => [],
   showChartParam: false, // Default to not showing chart parameter control component
-  dataKey: 'created_date'
+  dataKey: 'created_date',
+  pieItemClass: ''
 });
 
 // Add datepicker related data
@@ -45,13 +48,14 @@ const pieChartData = ref<any[]>([]);
 
 // Calculate grid layout style
 const gridStyle = computed(() => {
-  const cols = props.config.layout?.cols || 2;
-  const gap = props.config.layout?.gap || 16;
-  return {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${cols}, 1fr)`,
-    gap: `${gap}px`
-  };
+  // const cols = props.config.layout?.cols || 2;
+  // const gap = props.config.layout?.gap || 16;
+  // return {
+  //   display: 'grid',
+  //   gridTemplateColumns: `repeat(${cols}, 1fr)`,
+  //   gap: `${gap}px`
+  // };
+  return {}
 });
 
 // Fetch statistical data
@@ -206,7 +210,7 @@ const fetchChartData = async () => {
           // Always create pie chart data, even when there's no data (use 0 values)
           const pieDataItem = {
             key: field,
-            title: (Array.isArray(chart.title) ? chart.title[fieldIndex] : (chart.title || '')) + (chartFields.length > 1 ? ` - ${field}` : ''),
+            title: (Array.isArray(chart.title) ? chart.title[fieldIndex] : (chart.title || '')),
             total: total,
             color: chart.pieConfig?.color || [
               '#67D7FF', '#FFB925', '#F5222D', '#2acab8', '#2D8EFF', '#52C41A',
@@ -291,24 +295,22 @@ onMounted(() => {
       <div
         v-for="chart in config.charts"
         :key="JSON.stringify(chart.field)"
+        :class="{'line-chart-item': chart.type === ChartType.LINE, 'pie-chart-item': chart.type === ChartType.PIE, [pieItemClass]: chart.type === ChartType.PIE}"
         class="chart-item">
         <LineChart
           v-if="chart.type === ChartType.LINE && lineChartData"
           :chartData="lineChartData" />
         <template v-else-if="chart.type === ChartType.PIE">
           <!-- If it's a pie chart, there may be multiple fields requiring multiple pie charts -->
-           <div class="flex">
-
-             <PieChart
-               v-for="pieData in pieChartData.filter(item =>
-                 Array.isArray(chart.field)
-                   ? chart.field.includes(item.key)
-                   : item.key === chart.field
-               )"
-               class="flex-1"
-               :key="pieData.key"
-               :chartData="pieData" />
-           </div>
+          <PieChart
+            v-for="pieData in pieChartData.filter(item =>
+              Array.isArray(chart.field)
+                ? chart.field.includes(item.key)
+                : item.key === chart.field
+            )"
+            class="flex-1"
+            :key="pieData.key"
+            :chartData="pieData" />
         </template>
       </div>
     </div>
@@ -322,5 +324,18 @@ onMounted(() => {
 
 .chart-item {
   min-height: 200px;
+}
+
+.statistics-dashboard {
+  display: flex;
+}
+
+.line-chart-item {
+  flex: 1
+}
+
+.pie-chart-item {
+  width: 50%;
+  display: flex;
 }
 </style>

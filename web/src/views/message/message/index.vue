@@ -183,7 +183,8 @@ onMounted(() => {
       :apiRouter="GM"
       resource="Message"
       :dateType="DateRangeType.YEAR"
-      :showChartParam="true" />
+      :showChartParam="true"
+      pieItemClass="!w-120" />
 
     <!-- Search and Action Bar -->
     <div class="flex items-center justify-between my-2">

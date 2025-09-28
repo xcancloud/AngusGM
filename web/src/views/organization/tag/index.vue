@@ -90,7 +90,8 @@ const dashboardConfig = {
       :apiRouter="GM"
       resource="OrgTagTarget"
       :dateType="DateRangeType.YEAR"
-      :showChartParam="true" />
+      :showChartParam="true"
+      pieItemClass="!w-60" />
 
     <Hints
       class="my-1"

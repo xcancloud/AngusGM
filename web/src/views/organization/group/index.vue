@@ -192,7 +192,8 @@ onMounted(() => {
         :apiRouter="GM"
         resource="Group"
         :dateType="DateRangeType.YEAR"
-        :showChartParam="true" />
+        :showChartParam="true"
+        pieItemClass="!w-120" />
 
     <!-- Search and action toolbar -->
     <div class="flex items-center justify-between mb-3">

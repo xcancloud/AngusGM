@@ -99,7 +99,6 @@ const chartsOption = computed(() => {
     return defaultConfig
   });
 
-  debugger;
   return {
     color: props.chartData.color,
     title: {
@@ -119,7 +118,7 @@ const chartsOption = computed(() => {
     legend: legendConfig,
     series: [
       {
-        center: props.chartData.size === 'small' ? [66, '30%'] : [66, '50%'],
+        center: props.chartData.size === 'small' ? [66, '30%'] : [66, '45%'],
         type: 'pie',
         selectedOffset: 5,
         left: 0,
