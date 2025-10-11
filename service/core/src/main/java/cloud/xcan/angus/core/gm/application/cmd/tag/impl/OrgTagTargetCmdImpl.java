@@ -189,7 +189,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         Set<OrgTagTarget> tagTargetDb = orgTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, OrgTargetType.USER, userId);
         if (isNotEmpty(tagTargetDb)) {
-          tagIds.removeAll(tagTargetDb.stream().map(OrgTagTarget::getTagId).toList());
+          tagTargetDb.stream().map(OrgTagTarget::getTagId).toList().forEach(tagIds::remove);
         }
 
         if (isNotEmpty(tagIds)) {
@@ -309,7 +309,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         Set<OrgTagTarget> tagTargetDb = orgTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, OrgTargetType.DEPT, deptId);
         if (isNotEmpty(tagTargetDb)) {
-          tagIds.removeAll(tagTargetDb.stream().map(OrgTagTarget::getTagId).toList());
+          tagTargetDb.stream().map(OrgTagTarget::getTagId).toList().forEach(tagIds::remove);
         }
 
         if (isNotEmpty(tagIds)) {
@@ -427,7 +427,7 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
         Set<OrgTagTarget> tagTargetDb = orgTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, OrgTargetType.GROUP, groupId);
         if (isNotEmpty(tagTargetDb)) {
-          tagIds.removeAll(tagTargetDb.stream().map(OrgTagTarget::getTagId).toList());
+          tagTargetDb.stream().map(OrgTagTarget::getTagId).toList().forEach(tagIds::remove);
         }
 
         if (isNotEmpty(tagIds)) {

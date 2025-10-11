@@ -173,7 +173,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
         Set<WebTagTarget> tagsTargetDb = webTagTargetRepo
             .findByTagIdInAndTargetTypeAndTargetId(tagIds, WebTagTargetType.APP, appId);
         if (isNotEmpty(tagsDb)) {
-          tagIds.removeAll(tagsTargetDb.stream().map(WebTagTarget::getTagId).toList());
+          tagsTargetDb.stream().map(WebTagTarget::getTagId).toList().forEach(tagIds::remove);
         }
 
         if (isNotEmpty(tagIds)) {
@@ -284,7 +284,7 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
         Set<WebTagTarget> tagsTargetDb = webTagTargetRepo.findByTagIdInAndTargetTypeNotAndTargetId(
             tagIds, WebTagTargetType.APP, funcId);
         if (isNotEmpty(tagsTargetDb)) {
-          tagIds.removeAll(tagsTargetDb.stream().map(WebTagTarget::getTagId).toList());
+          tagsTargetDb.stream().map(WebTagTarget::getTagId).toList().forEach(tagIds::remove);
         }
 
         if (isNotEmpty(tagIds)) {
