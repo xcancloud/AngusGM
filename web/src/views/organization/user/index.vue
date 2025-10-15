@@ -20,7 +20,6 @@ import { ChartType, DateRangeType } from '@/components/Dashboard/enums';
  * Async component definitions for lazy loading
  * These components are loaded only when needed to improve initial page load performance
  */
-const Statistics = defineAsyncComponent(() => import('@/components/Statistics/index.vue'));
 const Lock = defineAsyncComponent(() => import('@/components/Lock/index.vue'));
 const UpdatePasswd = defineAsyncComponent(() => import('@/views/organization/user/password/index.vue'));
 const Dashboard = defineAsyncComponent(() => import('@/components/Dashboard/Dashboard.vue'));
