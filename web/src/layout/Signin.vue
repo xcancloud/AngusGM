@@ -23,8 +23,8 @@ const preventDefaultListener = (e) => {
     </div>
     <div class="layout-inner-container">
       <div class="img-front">
-        <div class="title">AngusGM</div>
-        <div class="content text-with-line-break">
+        <div class="title font-serif">AngusGM</div>
+        <div class="content text-with-line-break font-serif">
           {{ t('sign.messages.signinTip') }}
         </div>
         <img
