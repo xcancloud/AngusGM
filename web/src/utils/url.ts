@@ -18,9 +18,9 @@ const getRedirectUrl = async (): Promise<string> => {
   const { searchParams } = new URL(location.href);
   const target = searchParams.get('t');
   const domainManager = DomainManager.getInstance();
-  let host = await domainManager.getApiDomain(AppOrServiceRoute.tester);
+  let host = await domainManager.getAppDomain(AppOrServiceRoute.tester);
   if (!host || host === 'undefined') {
-    host = await domainManager.getApiDomain(AppOrServiceRoute.gm);
+    host = await domainManager.getAppDomain(AppOrServiceRoute.gm);
   }
   if (!target) {
     return host;
@@ -32,7 +32,7 @@ const getRedirectUrl = async (): Promise<string> => {
 
     // Validate that the URL is from a trusted domain
     const allowedHosts = [window.location.hostname, 'localhost', '127.0.0.1'];
-    if (!allowedHosts.includes(url.hostname) && !url.hostname.endsWith('.xcan.company')) {
+    if (!allowedHosts.includes(url.hostname) && !url.hostname.endsWith('.xcan.cloud')) {
       console.warn('Untrusted redirect URL detected:', url.hostname);
       return host;
     }
