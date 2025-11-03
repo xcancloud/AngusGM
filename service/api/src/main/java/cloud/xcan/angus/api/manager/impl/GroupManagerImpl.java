@@ -11,13 +11,13 @@ import cloud.xcan.angus.api.commonlink.group.GroupRepo;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
 import cloud.xcan.angus.api.manager.GroupManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Biz
+@Service
 public class GroupManagerImpl implements GroupManager {
 
   @Autowired(required = false)

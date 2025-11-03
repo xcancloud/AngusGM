@@ -11,7 +11,6 @@ import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuota;
 import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuotaRepo;
 import cloud.xcan.angus.api.manager.SettingManager;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.exception.QuotaException;
 import cloud.xcan.angus.spec.unit.DataSize;
 import java.util.List;
@@ -20,9 +19,10 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-@Biz
+@Service
 public class SettingTenantQuotaManagerImpl implements SettingTenantQuotaManager {
 
   @Autowired(required = false)

@@ -6,15 +6,15 @@ import static java.util.Objects.isNull;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenant;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenantRepo;
 import cloud.xcan.angus.api.manager.SettingTenantManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import cloud.xcan.angus.spec.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-@Biz
+@Service
 public class SettingTenantManagerImpl implements SettingTenantManager {
 
   @Autowired(required = false)

@@ -11,12 +11,12 @@ import cloud.xcan.angus.api.gm.message.MessageCenterInnerRemote;
 import cloud.xcan.angus.api.gm.notice.dto.SendNoticeDto;
 import cloud.xcan.angus.api.gm.sms.SmsInnerRemote;
 import cloud.xcan.angus.api.manager.NoticeManager;
-import cloud.xcan.angus.core.biz.Biz;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-@Biz
+@Service
 public class NoticeManagerImpl implements NoticeManager {
 
   @Resource

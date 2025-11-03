@@ -12,7 +12,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.stringSafe;
 import static java.util.Objects.isNull;
 
 import cloud.xcan.angus.api.manager.SimpleSummaryManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.jpa.repository.SummaryRepository;
 import cloud.xcan.angus.core.jpa.repository.summary.Aggregate;
@@ -31,8 +30,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Biz
+@Service
 public class SimpleSummaryManagerImpl implements SimpleSummaryManager {
 
   private static final Logger log = LoggerFactory.getLogger(SimpleSummaryManagerImpl.class);

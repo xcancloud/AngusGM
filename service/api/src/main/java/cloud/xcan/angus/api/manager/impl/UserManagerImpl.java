@@ -35,7 +35,6 @@ import cloud.xcan.angus.api.enums.AuthObjectType;
 import cloud.xcan.angus.api.manager.DeptManager;
 import cloud.xcan.angus.api.manager.GroupManager;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.jpa.entity.projection.IdAndName;
 import cloud.xcan.angus.core.utils.BeanFieldUtils;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -51,8 +50,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
-@Biz
+@Service
 public class UserManagerImpl implements UserManager {
 
   @Autowired(required = false)

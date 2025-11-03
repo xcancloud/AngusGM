@@ -16,7 +16,6 @@ import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.social.Social;
 import cloud.xcan.angus.api.commonlink.setting.tenant.event.TesterEvent;
 import cloud.xcan.angus.api.manager.SettingManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.log.ApiLogProperties;
 import cloud.xcan.angus.core.log.OperationLogProperties;
 import cloud.xcan.angus.core.log.SystemLogProperties;
@@ -28,9 +27,10 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-@Biz
+@Service
 public class SettingManagerImpl implements SettingManager {
 
   @Autowired(required = false)
@@ -79,7 +79,8 @@ public class SettingManagerImpl implements SettingManager {
       log.error("Parse setting json exception:", e);
       throw SysException.of("Parse setting json exception:" + e.getMessage());
     } catch (NumberFormatException e) {
-      log.error("Invalid number format in setting value for key {}: {}", key, setting.getValue(), e);
+      log.error("Invalid number format in setting value for key {}: {}", key, setting.getValue(),
+          e);
       throw SysException.of("Invalid number format in setting: " + e.getMessage());
     } catch (Exception e) {
       log.error("Unexpected error processing setting for key {}: {}", key, setting.getValue(), e);

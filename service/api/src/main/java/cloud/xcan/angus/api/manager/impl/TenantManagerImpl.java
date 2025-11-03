@@ -9,15 +9,15 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
 import cloud.xcan.angus.api.manager.TenantManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.remote.message.SysException;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Biz
+@Service
 public class TenantManagerImpl implements TenantManager {
 
   @Autowired(required = false)

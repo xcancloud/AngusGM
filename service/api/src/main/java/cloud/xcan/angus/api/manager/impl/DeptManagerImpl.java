@@ -8,15 +8,15 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.commonlink.dept.DeptRepo;
 import cloud.xcan.angus.api.manager.DeptManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Biz
+@Service
 public class DeptManagerImpl implements DeptManager {
 
   @Autowired(required = false)
