@@ -337,22 +337,22 @@ watch(() => userInfo.value, (newValue: any) => {
               <Input
                 v-model:value="lastName"
                 :error="lastNameError"
-                placeholder="t('information.placeholder.lastName')"
-                title="t('information.placeholder.lastName')"
+                :placeholder="t('information.placeholder.lastName')"
+                :title="t('information.placeholder.lastName')"
                 class="mr-2"
                 @blur="lastNameBlur" />
               <Input
                 v-model:value="firstName"
                 :error="firstNameError"
-                placeholder="t('information.placeholder.firstName')"
-                title="t('information.placeholder.firstName')"
+                :placeholder="t('information.placeholder.firstName')"
+                :title="t('information.placeholder.firstName')"
                 class="mr-2"
                 @blur="firstNameBlur" />
               <Input
                 v-model:value="fullName"
                 :error="fullNameError"
-                placeholder="t('information.placeholder.fullName')"
-                title="t('information.placeholder.fullName')"
+                :placeholder="t('information.placeholder.fullName')"
+                :title="t('information.placeholder.fullName')"
                 @blur="fullNameBlur" />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
@@ -379,8 +379,8 @@ watch(() => userInfo.value, (newValue: any) => {
               class="absolute -top-1.5 flex flex-nowrap items-center whitespace-nowrap">
               <Input
                 v-model:value="title"
-                title="t('information.placeholder.title')"
-                placeholder="t('information.placeholder.title')"
+                :title="t('information.placeholder.title')"
+                :placeholder="t('information.placeholder.title')"
                 allowClear />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
@@ -406,8 +406,8 @@ watch(() => userInfo.value, (newValue: any) => {
               class="absolute -top-1.5 flex flex-nowrap items-center whitespace-nowrap">
               <Input
                 v-model:value="landline"
-                title="t('information.placeholder.landline')"
-                placeholder="t('information.placeholder.landline')"
+                :title="t('information.placeholder.landline')"
+                :placeholder="t('information.placeholder.landline')"
                 allowClear
                 dataType="number"
                 includes="-" />
@@ -435,8 +435,8 @@ watch(() => userInfo.value, (newValue: any) => {
               class="absolute -top-1.5 flex flex-nowrap items-center whitespace-nowrap">
               <Input
                 v-model:value="address"
-                title="t('information.placeholder.address')"
-                placeholder="t('information.placeholder.address')"
+                :title="t('information.placeholder.address')"
+                :placeholder="t('information.placeholder.address')"
                 allowClear />
               <a
                 class="flex flex-nowrap whitespace-nowrap ml-3 text-3 content-primary-text"
