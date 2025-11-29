@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.quota;
+package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.quota;
 
 import cloud.xcan.angus.api.commonlink.setting.Setting;
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;

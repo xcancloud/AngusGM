@@ -1,10 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.setting.facade.internal.assembler;
 
-import cloud.xcan.angus.api.commonlink.setting.user.apiproxy.UserApiProxy;
 import cloud.xcan.angus.api.commonlink.setting.user.preference.Preference;
 import cloud.xcan.angus.api.commonlink.setting.user.socialbinding.SocialBinding;
 import cloud.xcan.angus.api.gm.setting.dto.UserSocialUpdateDto;
-import cloud.xcan.angus.api.gm.setting.vo.UserApiProxyVo;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.user.UserPreferenceUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.user.UserSocialBindingVo;
@@ -20,13 +18,6 @@ public class SettingUserAssembler {
     return new UserPreferenceVo().setLanguage(preference.getLanguage())
         .setThemeCode(preference.getThemeCode())
         .setDefaultTimeZone(preference.getDefaultTimeZone());
-  }
-
-  public static UserApiProxyVo toApiProxyVo(UserApiProxy apiProxy) {
-    return new UserApiProxyVo().setNoProxy(apiProxy.getNoProxy())
-        .setClientProxy(apiProxy.getClientProxy())
-        .setServerProxy(apiProxy.getServerProxy())
-        .setCloudProxy(apiProxy.getCloudProxy());
   }
 
   public static SocialBinding updateDtoToSocialBinding(UserSocialUpdateDto dto) {

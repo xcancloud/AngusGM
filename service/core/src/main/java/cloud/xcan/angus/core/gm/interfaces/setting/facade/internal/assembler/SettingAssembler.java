@@ -6,23 +6,17 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
 
 import cloud.xcan.angus.api.commonlink.setting.Setting;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Func;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Perf;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Stability;
 import cloud.xcan.angus.api.commonlink.setting.locale.Locale;
 import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.social.Social;
 import cloud.xcan.angus.api.commonlink.setting.tenant.healthcheck.HealthCheck;
-import cloud.xcan.angus.api.gm.indicator.to.FuncTo;
-import cloud.xcan.angus.api.gm.indicator.to.PerfTo;
-import cloud.xcan.angus.api.gm.indicator.to.StabilityTo;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.SettingValueReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.tenant.TenantHealthCheckDto;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.locale.LocaleTo;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.quota.QuotaTo;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.security.SecurityTo;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.social.SocialTo;
+import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.locale.LocaleTo;
+import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.quota.QuotaTo;
+import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.security.SecurityTo;
+import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.social.SocialTo;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.SettingValueVo;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.tenant.TenantHealthCheckVo;
 import java.util.List;
@@ -53,10 +47,6 @@ public class SettingAssembler {
         .setSecurity(toSecurityTo(setting.getSecurity()))
         .setSocial(toSocialTo(setting.getSocial()))
         .setQuota(toQuotaTo(setting.getQuota()))
-        .setFunc(toFuncTo(setting.getFunc()))
-        .setPerf(toPerfTo(setting.getPerf()))
-        .setStability(toStabilityTo(setting.getStability()))
-        .setTesterEvent(setting.getTesterEvent())
         .setAiAgent(setting.getAiAgent())
         .setHealthCheck(toHealthCheckTo(setting.getHealthCheck()))
         .setApiLog(setting.getApiLog())
@@ -111,42 +101,6 @@ public class SettingAssembler {
                 .setMin(quota.getMin())
                 .setMax(quota.getMax()))
         .collect(Collectors.toList());
-  }
-
-  public static FuncTo toFuncTo(Func func) {
-    return isEmpty(func) ? null
-        : new FuncTo().setSmoke(func.isSmoke())
-            .setSmokeCheckSetting(func.getSmokeCheckSetting())
-            .setUserDefinedSmokeAssertion(func.getUserDefinedSmokeAssertion())
-            .setSecurity(func.isSecurity())
-            .setSecurityCheckSetting(func.getSecurityCheckSetting())
-            .setUserDefinedSecurityAssertion(func.getUserDefinedSecurityAssertion());
-  }
-
-  public static PerfTo toPerfTo(Perf perf) {
-    return isEmpty(perf) ? null
-        : new PerfTo().setThreads(perf.getThreads())
-            .setRampUpThreads(perf.getRampUpThreads())
-            .setRampUpInterval(perf.getRampUpInterval())
-            .setDuration(perf.getDuration())
-            .setArt(perf.getArt())
-            .setPercentile(perf.getPercentile())
-            .setTps(perf.getTps())
-            .setErrorRate(perf.getErrorRate());
-  }
-
-  public static StabilityTo toStabilityTo(Stability stability) {
-    return isEmpty(stability) ? null
-        : new StabilityTo().setThreads(stability.getThreads())
-            .setDuration(stability.getDuration())
-            .setArt(stability.getArt())
-            .setPercentile(stability.getPercentile())
-            .setErrorRate(stability.getErrorRate())
-            .setTps(stability.getTps())
-            .setCpu(stability.getCpu())
-            .setDisk(stability.getDisk())
-            .setMemory(stability.getMemory())
-            .setNetwork(stability.getNetwork());
   }
 
   public static HealthCheck toHealthCheckData(TenantHealthCheckDto dto) {

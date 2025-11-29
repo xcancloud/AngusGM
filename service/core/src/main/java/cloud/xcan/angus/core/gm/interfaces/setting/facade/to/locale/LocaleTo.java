@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.locale;
+package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.locale;
 
 import cloud.xcan.angus.spec.locale.SupportedLanguage;
 import io.swagger.v3.oas.annotations.media.Schema;

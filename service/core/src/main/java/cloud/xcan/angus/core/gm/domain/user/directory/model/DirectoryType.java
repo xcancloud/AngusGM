@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.domain.user.directory.model;
 
-import cloud.xcan.angus.spec.ValueObject;
 import cloud.xcan.angus.spec.experimental.EndpointRegister;
 import cloud.xcan.angus.spec.locale.EnumValueMessage;
 import lombok.Getter;

@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.setting;
 
 import cloud.xcan.angus.api.commonlink.setting.user.SettingUser;
-import cloud.xcan.angus.api.commonlink.setting.user.apiproxy.ApiProxyType;
 import cloud.xcan.angus.api.commonlink.setting.user.preference.Preference;
 import cloud.xcan.angus.api.commonlink.setting.user.socialbinding.SocialBinding;
 import cloud.xcan.angus.api.enums.SocialType;
@@ -14,13 +13,8 @@ public interface SettingUserCmd {
 
   void preferenceUpdate(Preference preference);
 
-  void proxyUpdate(String url);
-
-  void proxyEnabled(ApiProxyType name);
-
   void socialBindingUpdate(SocialType type, SocialBinding socialBinding);
 
   void socialUnbind(SocialType type);
-
 
 }

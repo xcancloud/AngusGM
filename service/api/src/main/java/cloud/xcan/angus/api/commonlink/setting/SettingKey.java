@@ -11,9 +11,9 @@ public enum SettingKey implements Value<String> {
   SOCIAL,
   QUOTA,
   /*COMMON_DATA_PERMISSION,*/
-  FUNC_INDICATOR,
-  PREF_INDICATOR,
-  STABILITY_INDICATOR,
+  //  FUNC_INDICATOR,
+  //  PREF_INDICATOR,
+  //  STABILITY_INDICATOR,
   /*EXCEPTION_ALARM,*/
   /*HEALTH_CHECK,*/
   OPERATION_LOG_CONFIG,
@@ -21,7 +21,7 @@ public enum SettingKey implements Value<String> {
   SYSTEM_LOG_CONFIG,
   MAX_RESOURCE_ACTIVITIES,
   MAX_METRICS_DAYS,
-  TESTER_EVENT,
+  //  TESTER_EVENT,
   AI_AGENT;
 
   @Override

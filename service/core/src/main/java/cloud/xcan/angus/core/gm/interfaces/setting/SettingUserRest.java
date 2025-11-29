@@ -1,11 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.setting;
 
 import cloud.xcan.angus.api.enums.SocialType;
-import cloud.xcan.angus.api.gm.setting.vo.UserApiProxyVo;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.SettingUserFacade;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.user.UserApiClientProxyUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.user.UserApiProxyEnabledDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.user.UserPreferenceUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.user.UserSocialBindingVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -51,33 +48,6 @@ public class SettingUserRest {
   @GetMapping(value = "/preference")
   public ApiLocaleResult<UserPreferenceVo> preferenceDetail() {
     return ApiLocaleResult.success(settingUserFacade.preferenceDetail());
-  }
-
-  @Operation(summary = "Update user API proxy configuration", operationId = "setting:user:apis:proxy:update")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "User API proxy configuration updated successfully")})
-  @PatchMapping("/apis/proxy")
-  public ApiLocaleResult<?> proxyUpdate(@Valid @RequestBody UserApiClientProxyUpdateDto dto) {
-    settingUserFacade.proxyUpdate(dto);
-    return ApiLocaleResult.success();
-  }
-
-  @Operation(summary = "Enable user API proxy service", operationId = "setting:user:apis:proxy:enabled")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "User API proxy service enabled successfully")})
-  @PatchMapping("/apis/proxy/enabled")
-  public ApiLocaleResult<?> proxyEnabled(@Valid @RequestBody UserApiProxyEnabledDto dto) {
-    settingUserFacade.proxyEnabled(dto);
-    return ApiLocaleResult.success();
-  }
-
-  @Operation(summary = "Get user API proxy configuration details", operationId = "setting:user:apis:proxy:detail")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "User API proxy configuration retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "User API proxy configuration not found")})
-  @GetMapping(value = "/apis/proxy")
-  public ApiLocaleResult<UserApiProxyVo> proxyDetail() {
-    return ApiLocaleResult.success(settingUserFacade.proxyDetail());
   }
 
   @Operation(summary = "Unbind user social account", operationId = "setting:user:social:unbind")

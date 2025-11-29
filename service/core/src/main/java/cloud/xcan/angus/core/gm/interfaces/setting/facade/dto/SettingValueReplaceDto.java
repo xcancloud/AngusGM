@@ -3,7 +3,7 @@ package cloud.xcan.angus.core.gm.interfaces.setting.facade.dto;
 import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.commonlink.setting.aiagent.AIAgent;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.tenant.TenantHealthCheckDto;
-import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.social.SocialTo;
+import cloud.xcan.angus.core.gm.interfaces.setting.facade.to.social.SocialTo;
 import cloud.xcan.angus.core.log.ApiLogProperties;
 import cloud.xcan.angus.core.log.OperationLogProperties;
 import cloud.xcan.angus.core.log.SystemLogProperties;

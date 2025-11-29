@@ -7,14 +7,10 @@ import cloud.xcan.angus.api.commonlink.setting.Setting;
 import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.commonlink.setting.SettingRepo;
 import cloud.xcan.angus.api.commonlink.setting.aiagent.AIAgent;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Func;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Perf;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Stability;
 import cloud.xcan.angus.api.commonlink.setting.locale.Locale;
 import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.social.Social;
-import cloud.xcan.angus.api.commonlink.setting.tenant.event.TesterEvent;
 import cloud.xcan.angus.api.manager.SettingManager;
 import cloud.xcan.angus.core.log.ApiLogProperties;
 import cloud.xcan.angus.core.log.OperationLogProperties;
@@ -55,14 +51,7 @@ public class SettingManagerImpl implements SettingManager {
         case QUOTA -> setting.setQuota(convert(setting.getValue(),
             new TypeReference<List<Quota>>() {
             }));
-        case TESTER_EVENT -> setting.setTesterEvent(convert(setting.getValue(),
-            new TypeReference<List<TesterEvent>>() {
-            }));
         case AI_AGENT -> setting.setAiAgent(convert(setting.getValue(), AIAgent.class));
-        case FUNC_INDICATOR -> setting.setFunc(convert(setting.getValue(), Func.class));
-        case PREF_INDICATOR -> setting.setPerf(convert(setting.getValue(), Perf.class));
-        case STABILITY_INDICATOR ->
-            setting.setStability(convert(setting.getValue(), Stability.class));
         case OPERATION_LOG_CONFIG ->
             setting.setOperationLog(convert(setting.getValue(), OperationLogProperties.class));
         case API_LOG_CONFIG ->

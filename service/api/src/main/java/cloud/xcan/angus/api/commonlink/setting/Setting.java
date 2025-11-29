@@ -4,14 +4,10 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 
 import cloud.xcan.angus.api.commonlink.setting.aiagent.AIAgent;
 import cloud.xcan.angus.api.commonlink.setting.alarm.Alarm;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Func;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Perf;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Stability;
 import cloud.xcan.angus.api.commonlink.setting.locale.Locale;
 import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.social.Social;
-import cloud.xcan.angus.api.commonlink.setting.tenant.event.TesterEvent;
 import cloud.xcan.angus.api.commonlink.setting.tenant.healthcheck.HealthCheck;
 import cloud.xcan.angus.core.log.ApiLogProperties;
 import cloud.xcan.angus.core.log.OperationLogProperties;
@@ -57,10 +53,6 @@ public class Setting extends EntitySupport<Setting, Long> implements Serializabl
   private transient Security security;
   private transient Social social;
   private transient List<Quota> quota;
-  private transient Func func;
-  private transient Perf perf;
-  private transient Stability stability;
-  private transient List<TesterEvent> testerEvent;
   private transient AIAgent aiAgent;
   /**
    * @see HealthCheck

@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.security;
+package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.security;
 
 
 import cloud.xcan.angus.api.commonlink.setting.alarm.Alarm;

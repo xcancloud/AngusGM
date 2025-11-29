@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.setting.social;
+package cloud.xcan.angus.core.gm.interfaces.setting.facade.to.social;
 
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static org.apache.commons.lang3.StringUtils.isAnyBlank;

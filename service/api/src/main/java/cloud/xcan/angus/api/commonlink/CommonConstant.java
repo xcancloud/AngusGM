@@ -86,7 +86,5 @@ public interface CommonConstant {
   long DISK_MB_BYTES = 1024 * 1024; // 1MB, used by add order
   /********* Default quota value *********/
 
-  String DEFAULT_LOCAL_API_PROXY = "ws://localhost:6806/angusProxy";
-  String DEFAULT_CLOUD_API_PROXY = "wss://bj-c1-prod-angusproxy.xcan.cloud/angusProxy";
 
 }

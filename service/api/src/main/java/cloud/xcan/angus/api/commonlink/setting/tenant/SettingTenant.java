@@ -1,20 +1,10 @@
 package cloud.xcan.angus.api.commonlink.setting.tenant;
 
-import cloud.xcan.angus.api.commonlink.setting.converter.FuncDataConverter;
 import cloud.xcan.angus.api.commonlink.setting.converter.LocaleDataConverter;
-import cloud.xcan.angus.api.commonlink.setting.converter.PerfDataConverter;
 import cloud.xcan.angus.api.commonlink.setting.converter.SecurityDataConverter;
-import cloud.xcan.angus.api.commonlink.setting.converter.ServerApiProxyDataConverter;
-import cloud.xcan.angus.api.commonlink.setting.converter.StabilityDataConverter;
-import cloud.xcan.angus.api.commonlink.setting.converter.TesterEventConverter;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Func;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Perf;
-import cloud.xcan.angus.api.commonlink.setting.indicator.Stability;
 import cloud.xcan.angus.api.commonlink.setting.locale.Locale;
 import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.security.SignupAllow;
-import cloud.xcan.angus.api.commonlink.setting.tenant.apiproxy.ServerApiProxy;
-import cloud.xcan.angus.api.commonlink.setting.tenant.event.TesterEvent;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.Column;
@@ -22,7 +12,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -57,30 +46,30 @@ public class SettingTenant extends TenantEntity<SettingTenant, Long> {
   @Convert(converter = LocaleDataConverter.class)
   private Locale localeData;
 
-  @Column(name = "func_data", columnDefinition = "json")
-  @Convert(converter = FuncDataConverter.class)
-  private Func funcData;
-
-  @Column(name = "perf_data", columnDefinition = "json")
-  @Convert(converter = PerfDataConverter.class)
-  private Perf perfData;
-
-  @Column(name = "stability_data")
-  @Convert(converter = StabilityDataConverter.class)
-  private Stability stabilityData;
+  //  @Column(name = "func_data", columnDefinition = "json")
+  //  @Convert(converter = FuncDataConverter.class)
+  //  private Func funcData;
+  //
+  //  @Column(name = "perf_data", columnDefinition = "json")
+  //  @Convert(converter = PerfDataConverter.class)
+  //  private Perf perfData;
+  //
+  //  @Column(name = "stability_data")
+  //  @Convert(converter = StabilityDataConverter.class)
+  //  private Stability stabilityData;
 
   @Column(name = "security_data")
   @Convert(converter = SecurityDataConverter.class)
   private Security securityData;
 
-  @Column(name = "tester_event_data")
-  @Convert(converter = TesterEventConverter.class)
-  private List<TesterEvent> testerEventData;
+  //  @Column(name = "tester_event_data")
+  //  @Convert(converter = TesterEventConverter.class)
+  //  private List<TesterEvent> testerEventData;
   ////////////////////////////Automatic initialization//////////////////////////////
 
-  @Column(name = "server_api_proxy_data")
-  @Convert(converter = ServerApiProxyDataConverter.class)
-  private ServerApiProxy serverApiProxyData;
+  //  @Column(name = "server_api_proxy_data")
+  //  @Convert(converter = ServerApiProxyDataConverter.class)
+  //  private ServerApiProxy serverApiProxyData;
 
   @Override
   public Long identity() {
