@@ -46,7 +46,7 @@ public class UserAssembler {
 
   public static User addDtoToDomain(UserAddDto dto, UserSource source) {
     Long userId = nullSafe(dto.getId(), getCachedUidGenerator().getUID());
-    String username = isEmpty(dto.getUsername()) ? genUsername() : dto.getUsername();
+    String username = isEmpty(dto.getUsername()) ? genUsername() : dto.getUsername().trim();
     dto.setId(userId);
     dto.setUsername(username);
 
@@ -140,7 +140,7 @@ public class UserAssembler {
   public static User updateDtoToDomain(UserUpdateDto dto) {
     return new User()
         .setId(dto.getId())
-        .setUsername(dto.getUsername())
+        .setUsername(isEmpty(dto.getUsername()) ? null: dto.getUsername().trim())
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
         .setFullName(dto.getFullName())
@@ -159,7 +159,7 @@ public class UserAssembler {
   public static User replaceDtoToDomain(UserReplaceDto dto) {
     return new User()
         .setId(dto.getId())
-        .setUsername(stringSafe(dto.getUsername()))
+        .setUsername(isEmpty(dto.getUsername()) ? "" : dto.getUsername().trim())
         .setFirstName(stringSafe(dto.getFirstName()))
         .setLastName(stringSafe(dto.getLastName()))
         .setFullName(stringSafe(dto.getFullName()))
