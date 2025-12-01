@@ -1,11 +1,10 @@
 package cloud.xcan.angus.core.gm.interfaces.auth.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.token.UserTokenAddDto;
-import cloud.xcan.angus.core.gm.interfaces.auth.facade.vo.token.UserTokenInfoVo;
-import cloud.xcan.angus.core.gm.interfaces.auth.facade.vo.token.UserTokenValueVo;
+import cloud.xcan.angus.api.gm.auth.dto.UserTokenAddDto;
+import cloud.xcan.angus.api.gm.auth.vo.UserTokenInfoVo;
+import cloud.xcan.angus.api.gm.auth.vo.UserTokenValueVo;
 import java.util.HashSet;
 import java.util.List;
-
 
 public interface AuthUserTokenFacade {
 
@@ -15,6 +14,6 @@ public interface AuthUserTokenFacade {
 
   UserTokenValueVo value(Long id);
 
-  List<UserTokenInfoVo> list();
+  List<UserTokenInfoVo> list(String appCode);
 
 }

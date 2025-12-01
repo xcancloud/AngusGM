@@ -1,5 +1,6 @@
-package cloud.xcan.angus.core.gm.interfaces.auth.facade.dto.token;
+package cloud.xcan.angus.api.gm.auth.dto;
 
+import static cloud.xcan.angus.api.commonlink.UCConstant.GM_APP_CODE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
 import cloud.xcan.angus.api.commonlink.AuthConstant;
@@ -37,5 +38,8 @@ public class UserTokenAddDto {
   @NotNull
   @Schema(description = "Current user password for verification", requiredMode = RequiredMode.REQUIRED)
   private String password;
+
+  @Schema(description = "Application code for Generating User Tokens", defaultValue = GM_APP_CODE)
+  private String generateAppCode = GM_APP_CODE;
 
 }

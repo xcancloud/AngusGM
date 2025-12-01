@@ -8,7 +8,7 @@ public interface AuthUserTokenQuery {
 
   AuthUserToken value(Long id);
 
-  List<AuthUserToken> list();
+  List<AuthUserToken> list(String appCode);
 
   List<AuthUserToken> checkAndFind(Collection<Long> ids);
 

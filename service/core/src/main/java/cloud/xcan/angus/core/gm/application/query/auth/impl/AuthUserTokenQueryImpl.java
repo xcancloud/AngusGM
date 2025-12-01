@@ -7,6 +7,7 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getUserId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
@@ -81,12 +82,13 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
    * </p>
    */
   @Override
-  public List<AuthUserToken> list() {
+  public List<AuthUserToken> list(String appCode) {
     return new BizTemplate<List<AuthUserToken>>() {
 
       @Override
       protected List<AuthUserToken> process() {
-        return authUserTokenRepo.findAllByCreatedBy(getUserId());
+        return isNull(appCode) ? authUserTokenRepo.findAllByCreatedBy(getUserId())
+            : authUserTokenRepo.findAllByCreatedByAndGenerateAppCode(getUserId(), appCode);
       }
     }.execute();
   }

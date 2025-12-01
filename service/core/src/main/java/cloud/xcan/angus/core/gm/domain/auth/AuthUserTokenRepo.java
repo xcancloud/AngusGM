@@ -17,6 +17,8 @@ public interface AuthUserTokenRepo extends BaseRepository<AuthUserToken, Long> {
 
   List<AuthUserToken> findAllByCreatedBy(Long userId);
 
+  List<AuthUserToken> findAllByCreatedByAndGenerateAppCode(Long userId, String appCode);
+
   @Modifying
   @Query(value = "DELETE FROM auth_user_token WHERE id IN ?1", nativeQuery = true)
   void deleteByIdIn(Collection<Long> ids);

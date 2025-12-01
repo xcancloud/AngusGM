@@ -5,6 +5,8 @@ public interface UCConstant {
   String BID_USERNAME = "user";
   String BID_TENANT = "tenant";
 
+  String GM_APP_CODE = "AngusGM";
+
   //////////////////// Policy ////////////////////////////
   /**
    * GM Policy Code

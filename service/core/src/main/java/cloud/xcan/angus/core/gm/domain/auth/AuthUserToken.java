@@ -4,6 +4,7 @@ import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
 import cloud.xcan.angus.spec.experimental.Resources;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -37,6 +38,9 @@ public class AuthUserToken extends TenantEntity<AuthUserToken, Long> implements 
 
   @Column(name = "expired_date")
   private LocalDateTime expiredDate;
+
+  @Column(name = "generate_app_code")
+  private String generateAppCode;
 
   @CreatedBy
   @Column(name = "created_by", nullable = false, updatable = false)
