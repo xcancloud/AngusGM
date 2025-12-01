@@ -33,18 +33,14 @@ public class SystemTokenAssembler {
   public static List<SystemTokenResource> addDtoToResourceDomain(SystemTokenAddDto dto) {
     List<SystemTokenResource> resources = new ArrayList<>();
     for (AuthorizedResourceDto resource : dto.getResources()) {
-      if (ResourceAuthType.API.equals(dto.getAuthType())) {
-        for (Long apiId : resource.getApiIds()) {
-          resources.add(new SystemTokenResource()
-              .setResource(resource.getResource())
-              .setAuthority(String.valueOf(apiId)));
-        }
-      } else {
-        for (ResourceAclType acl : resource.getAcls()) {
-          resources.add(new SystemTokenResource()
-              .setResource(resource.getResource())
-              .setAuthority(acl.getValue()));
-        }
+      for (Long resourceId : resource.getResourceIds()) {
+        resources.add(new SystemTokenResource()
+            .setResource(resource.getResource())
+            .setResourceId(resourceId)
+            .setAuthorities(ResourceAuthType.API.equals(dto.getAuthType())
+                ? null : resource.getResourceAcls().get(resourceId).stream()
+                .map(ResourceAclType::getValue).collect(Collectors.toList()))
+        );
       }
     }
     return resources;
@@ -102,19 +98,23 @@ public class SystemTokenAssembler {
       if (systemToken.isApiAuth()) {
         resourceVos.add(new AuthorizedResourceVo()
             .setResource(resource)
-            .setApis(resources.stream().map(
+            .setResources(resources.stream().map(
                     x -> new AuthorizedResourceApiVo()
-                        .setId(x.getApi().getId())
+                        .setId(x.getResourceId())
                         .setCode(x.getApi().getOperationId())
                         .setName(x.getApi().getName())
                         .setDescription(x.getApi().getDescription()))
-                .collect(Collectors.toList())));
+                .collect(Collectors.toList()))
+            .setAcls(null));
       } else {
+        Map<Long, List<ResourceAclType>> acls = new java.util.HashMap<>();
+        for (SystemTokenResource res : resourceMap.get(resource)) {
+          acls.put(res.getResourceId(), res.getAuthorities().stream()
+              .map(ResourceAclType::valueOf).collect(Collectors.toList()));
+        }
         resourceVos.add(new AuthorizedResourceVo()
             .setResource(resource)
-            .setAcls(resources.stream().map(
-                    x -> ResourceAclType.valueOf(x.getAuthority()))
-                .collect(Collectors.toList())));
+            .setAcls(acls));
       }
     }
     return resourceVos;

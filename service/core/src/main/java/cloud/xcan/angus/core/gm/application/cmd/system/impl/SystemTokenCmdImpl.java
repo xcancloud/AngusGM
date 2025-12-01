@@ -108,7 +108,7 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
             .map(SystemTokenResource::getResource).collect(Collectors.toSet()));
         if (systemToken.isApiAuth()) {
           // Verify APIs exist for API authentication
-          List<Long> apiIds = resources.stream().map(x -> Long.valueOf(x.getAuthority()))
+          List<Long> apiIds = resources.stream().map(SystemTokenResource::getResourceId)
               .collect(Collectors.toList());
           apiQuery.checkAndFind(apiIds, true);
         }

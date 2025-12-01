@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,10 +25,10 @@ public class AuthorizedResourceDto {
   @Schema(description = "Authorized resource identifier name", requiredMode = RequiredMode.REQUIRED)
   private String resource;
 
-  @Schema(description = "API identifiers for authorized resources (required when authType=API)")
-  private LinkedHashSet<Long> apiIds;
+  @Schema(description = "Resource identifiers for authorized resources (required when authType=API)")
+  private LinkedHashSet<Long> resourceIds;
 
   @Schema(description = "Access control list types for authorized resources (required when authType=ACL)")
-  private List<ResourceAclType> acls;
+  private Map<Long, List<ResourceAclType>> resourceAcls;
 
 }

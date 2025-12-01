@@ -76,13 +76,13 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
         // Join resource API
         List<SystemTokenResource> resources = systemTokenResourceRepo.findBySystemTokenId(id);
         if (systemToken.isApiAuth()) {
-          List<Long> resourceIds = resources.stream().map(x -> Long.parseLong(x.getAuthority()))
+          List<Long> resourceIds = resources.stream().map(SystemTokenResource::getResourceId)
               .collect(Collectors.toList());
           List<Api> apis = apiQuery.findAllById(resourceIds);
           if (isNotEmpty(apis)) {
             Map<Long, Api> apiMap = apis.stream().collect(Collectors.toMap(Api::getId, x -> x));
             for (SystemTokenResource resource : resources) {
-              resource.setApi(apiMap.get(Long.parseLong(resource.getAuthority())));
+              resource.setApi(apiMap.get(resource.getResourceId()));
             }
           }
         }
