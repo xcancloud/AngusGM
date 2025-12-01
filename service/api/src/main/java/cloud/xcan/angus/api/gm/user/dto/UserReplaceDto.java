@@ -1,6 +1,7 @@
-package cloud.xcan.angus.core.gm.interfaces.user.facade.dto;
+package cloud.xcan.angus.api.gm.user.dto;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_ADDRESS_LENGTH;
+import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_COUNTRY_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_EMAIL_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_ITC_LENGTH;
@@ -10,15 +11,15 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_RELATION_QUOTA;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_URL_LENGTH_X2;
 
+import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
-import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.validator.Mobile;
+import cloud.xcan.angus.validator.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -31,18 +32,16 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class UserUpdateDto implements Serializable {
+public class UserReplaceDto implements Serializable {
 
-  @NotNull
-  @Schema(description = "Unique identifier of the user account to update", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "User identifier (required for updates, empty for new user creation)")
   private Long id;
 
   /**
    * Note: Is empty when signup add.
    */
-  @ResourceName
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Unique username for system identification")
+  @Schema(description = "Unique username for system identification (empty during signup)")
   private String username;
 
   @Length(max = MAX_NAME_LENGTH)
@@ -79,9 +78,10 @@ public class UserUpdateDto implements Serializable {
   @Schema(description = "User's landline phone number", example = "010-88287890")
   private String landline;
 
-  //  @Password(allowNull = true)
-  //  @Schema(description = "User's login password for system authentication", example = "xcan@123")
-  //  private String password;
+  @Password(allowNull = true)
+  @Schema(description = "User's login password for system authentication",
+      example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
+  private String password;
 
   @Length(max = MAX_URL_LENGTH_X2)
   @Schema(description = "User's profile picture URL", example = "http://prod-files.xcan.cloud/storage/pubapi/v1/file/logo.png")
@@ -97,6 +97,27 @@ public class UserUpdateDto implements Serializable {
   @Length(max = MAX_ADDRESS_LENGTH)
   @Schema(description = "User's residential or contact address")
   private String address;
+
+  ////////////// Note: Modification not allowed. ////////////
+
+  @Schema(description = "User registration method type (cannot be modified)", example = "EMAIL")
+  private SignupType signupType;
+
+  @Length(max = MAX_EMAIL_LENGTH)
+  @Schema(description = "Account used during registration (email or mobile number, cannot be modified)", example = "Jams@123@xcan.cloud")
+  private String signupAccount;
+
+  @Schema(description = "System administrator privilege flag (cannot be modified)", defaultValue = "false", example = "false")
+  private Boolean sysAdmin = false;
+
+  @Schema(description = "User account activation status", defaultValue = "true", example = "true")
+  private Boolean enabled = true;
+
+  @Length(max = MAX_CODE_LENGTH)
+  @Schema(description = "Invitation code for joining existing tenant account (cannot be modified)")
+  private String invitationCode;
+
+  ////////////// Note: Modification not allowed. ////////////
 
   @Valid
   @Size(max = MAX_RELATION_QUOTA)

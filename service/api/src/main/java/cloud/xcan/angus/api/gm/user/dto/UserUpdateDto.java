@@ -1,8 +1,6 @@
-package cloud.xcan.angus.core.gm.interfaces.user.facade.dto;
-
+package cloud.xcan.angus.api.gm.user.dto;
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_ADDRESS_LENGTH;
-import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_COUNTRY_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_EMAIL_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_ITC_LENGTH;
@@ -12,16 +10,15 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_RELATION_QUOTA;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_URL_LENGTH_X2;
 
-import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
+import cloud.xcan.angus.core.biz.ResourceName;
 import cloud.xcan.angus.validator.Mobile;
-import cloud.xcan.angus.validator.Password;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -30,20 +27,22 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
+
 @Setter
 @Getter
 @Accessors(chain = true)
-public class UserAddDto implements Serializable {
+public class UserUpdateDto implements Serializable {
 
-  @JsonIgnore
-  @Schema(hidden = true)
+  @NotNull
+  @Schema(description = "Unique identifier of the user account to update", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   /**
    * Note: Is empty when signup add.
    */
+  @ResourceName
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Unique username for system identification (empty during signup)")
+  @Schema(description = "Unique username for system identification")
   private String username;
 
   @Length(max = MAX_NAME_LENGTH)
@@ -80,10 +79,9 @@ public class UserAddDto implements Serializable {
   @Schema(description = "User's landline phone number", example = "010-88287890")
   private String landline;
 
-  @Password
-  @Schema(description = "User's login password for system authentication",
-      example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
-  private String password;
+  //  @Password(allowNull = true)
+  //  @Schema(description = "User's login password for system authentication", example = "xcan@123")
+  //  private String password;
 
   @Length(max = MAX_URL_LENGTH_X2)
   @Schema(description = "User's profile picture URL", example = "http://prod-files.xcan.cloud/storage/pubapi/v1/file/logo.png")
@@ -100,23 +98,6 @@ public class UserAddDto implements Serializable {
   @Schema(description = "User's residential or contact address")
   private String address;
 
-  @Schema(description = "User registration method type", example = "EMAIL")
-  private SignupType signupType;
-
-  @Length(max = MAX_EMAIL_LENGTH)
-  @Schema(description = "Account used during registration (email or mobile number)", example = "Jams@123@xcan.cloud")
-  private String signupAccount;
-
-  @Schema(description = "System administrator privilege flag", defaultValue = "false", example = "false")
-  private Boolean sysAdmin = false;
-
-  @Schema(description = "User account activation status", defaultValue = "true", example = "true")
-  private Boolean enabled = true;
-
-  @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Invitation code for joining existing tenant account")
-  private String invitationCode;
-
   @Valid
   @Size(max = MAX_RELATION_QUOTA)
   @Schema(description = "User's department assignments (maximum 2000 departments)")
@@ -131,5 +112,3 @@ public class UserAddDto implements Serializable {
   private LinkedHashSet<Long> tagIds;
 
 }
-
-

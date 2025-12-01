@@ -1,4 +1,5 @@
-package cloud.xcan.angus.core.gm.interfaces.user.facade.dto;
+package cloud.xcan.angus.api.gm.user.dto;
+
 
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_ADDRESS_LENGTH;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_CODE_LENGTH;
@@ -16,6 +17,7 @@ import cloud.xcan.angus.api.enums.Gender;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
 import cloud.xcan.angus.validator.Mobile;
 import cloud.xcan.angus.validator.Password;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.Valid;
@@ -28,13 +30,13 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
-
 @Setter
 @Getter
 @Accessors(chain = true)
-public class UserReplaceDto implements Serializable {
+public class UserAddDto implements Serializable {
 
-  @Schema(description = "User identifier (required for updates, empty for new user creation)")
+  @JsonIgnore
+  @Schema(hidden = true)
   private Long id;
 
   /**
@@ -78,7 +80,7 @@ public class UserReplaceDto implements Serializable {
   @Schema(description = "User's landline phone number", example = "010-88287890")
   private String landline;
 
-  @Password(allowNull = true)
+  @Password
   @Schema(description = "User's login password for system authentication",
       example = "xcan@123", requiredMode = RequiredMode.REQUIRED)
   private String password;
@@ -98,26 +100,22 @@ public class UserReplaceDto implements Serializable {
   @Schema(description = "User's residential or contact address")
   private String address;
 
-  ////////////// Note: Modification not allowed. ////////////
-
-  @Schema(description = "User registration method type (cannot be modified)", example = "EMAIL")
+  @Schema(description = "User registration method type", example = "EMAIL")
   private SignupType signupType;
 
   @Length(max = MAX_EMAIL_LENGTH)
-  @Schema(description = "Account used during registration (email or mobile number, cannot be modified)", example = "Jams@123@xcan.cloud")
+  @Schema(description = "Account used during registration (email or mobile number)", example = "Jams@123@xcan.cloud")
   private String signupAccount;
 
-  @Schema(description = "System administrator privilege flag (cannot be modified)", defaultValue = "false", example = "false")
+  @Schema(description = "System administrator privilege flag", defaultValue = "false", example = "false")
   private Boolean sysAdmin = false;
 
   @Schema(description = "User account activation status", defaultValue = "true", example = "true")
   private Boolean enabled = true;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Invitation code for joining existing tenant account (cannot be modified)")
+  @Schema(description = "Invitation code for joining existing tenant account")
   private String invitationCode;
-
-  ////////////// Note: Modification not allowed. ////////////
 
   @Valid
   @Size(max = MAX_RELATION_QUOTA)
@@ -133,3 +131,5 @@ public class UserReplaceDto implements Serializable {
   private LinkedHashSet<Long> tagIds;
 
 }
+
+
