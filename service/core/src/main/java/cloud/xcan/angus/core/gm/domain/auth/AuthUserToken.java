@@ -36,6 +36,8 @@ public class AuthUserToken extends TenantEntity<AuthUserToken, Long> implements 
 
   private String value;
 
+  private String hash;
+
   @Column(name = "expired_date")
   private LocalDateTime expiredDate;
 

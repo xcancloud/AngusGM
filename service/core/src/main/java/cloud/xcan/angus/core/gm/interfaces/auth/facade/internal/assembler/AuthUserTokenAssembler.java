@@ -19,7 +19,9 @@ public class AuthUserTokenAssembler {
 
   public static UserTokenValueVo toTokenValueVo(AuthUserToken userToken) {
     return new UserTokenValueVo().setId(userToken.getId())
+        .setName(userToken.getName())
         .setValue(userToken.getDecryptedValue())
+        .setHash(userToken.getHash())
         .setExpiredDate(userToken.getExpiredDate())
         .setGenerateAppCode(userToken.getGenerateAppCode());
   }
@@ -27,6 +29,7 @@ public class AuthUserTokenAssembler {
   public static UserTokenInfoVo toTokenInfoVo(AuthUserToken userToken) {
     return new UserTokenInfoVo().setId(userToken.getId())
         .setName(userToken.getName())
+        .setHash(userToken.getHash())
         .setExpiredDate(userToken.getExpiredDate())
         .setGenerateAppCode(userToken.getGenerateAppCode())
         .setCreatedBy(userToken.getCreatedBy())

@@ -38,6 +38,7 @@ import cloud.xcan.angus.security.authentication.dao.DaoAuthenticationProvider;
 import cloud.xcan.angus.security.client.CustomOAuth2RegisteredClient;
 import cloud.xcan.angus.spec.experimental.BizConstant.AuthKey;
 import jakarta.annotation.Resource;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -157,6 +158,7 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         String userAccessToken = result.get(AuthKey.ACCESS_TOKEN);
         userToken.setDecryptedValue(userAccessToken);
         userToken.setValue(authUserTokenQuery.encryptValue(userAccessToken));
+        userToken.setHash(hashToken(userAccessToken));
         userToken.setId(uidGenerator.getUID());
         insert0(userToken);
 
@@ -213,6 +215,28 @@ public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implement
         return null;
       }
     }.execute();
+  }
+
+
+  /**
+   * 对令牌进行哈希处理
+   */
+  public static String hashToken(String token) {
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] hash = digest.digest(token.getBytes());
+      StringBuilder hexString = new StringBuilder();
+      for (byte b : hash) {
+        String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
+      }
+      return hexString.toString();
+    } catch (Exception e) {
+      throw new RuntimeException("令牌哈希处理失败", e);
+    }
   }
 
   @Override

@@ -19,6 +19,9 @@ public class UserTokenInfoVo {
   @Schema(description = "User access token name")
   private String name;
 
+  @Schema(description = "User token hash value")
+  private String hash;
+
   @Schema(description = "User access token expired date")
   private LocalDateTime expiredDate;
 

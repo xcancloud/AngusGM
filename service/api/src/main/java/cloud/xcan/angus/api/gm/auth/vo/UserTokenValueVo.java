@@ -16,8 +16,14 @@ public class UserTokenValueVo {
   @Schema(description = "User access token id")
   private Long id;
 
+  @Schema(description = "User access token name")
+  private String name;
+
   @Schema(description = "User access token value")
   private String value;
+
+  @Schema(description = "User token hash value")
+  private String hash;
 
   @Schema(description = "User access token expired date")
   private LocalDateTime expiredDate;
