@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, Shield, Zap, KeyRound, Sparkles } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Card } from '../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Button } from '@/components/ui/button';  
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { AngusGMLogo } from '../AngusGMLogo';
+import { AngusGMLogo } from '@/components/AngusGMLogo';
 
 interface ForgotPasswordProps {
   onResetSuccess?: () => void;

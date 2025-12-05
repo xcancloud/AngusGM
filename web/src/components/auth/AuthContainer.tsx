@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Login } from './Login';
-import { Register } from './Register';
-import { ForgotPassword } from './ForgotPassword';
-import { UserAgreement } from './UserAgreement';
-import { PrivacyPolicy } from './PrivacyPolicy';
+import { Login } from '../../pages/login/Login';
+import { Register } from '../../pages/signUp/Register';
+import { ForgotPassword } from '../../pages/resetPassword/ForgotPassword';
+import { UserAgreement } from '../../pages/privacyPolicy/UserAgreement';
+import { PrivacyPolicy } from '../../pages/privacyPolicy/PrivacyPolicy';
 import { LanguageProvider } from './LanguageContext';
 
 interface AuthContainerProps {

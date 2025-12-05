@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Github, Shield, Zap, Globe, Sparkles, Languages, User } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Card } from '../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Separator } from '../ui/separator';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { AngusGMLogo } from '../AngusGMLogo';
-import { useLanguage } from './LanguageContext';
+import { AngusGMLogo } from '@/components/AngusGMLogo';
+import { useLanguage } from '@/components/auth/LanguageContext';
+
 
 interface LoginProps {
   onLoginSuccess?: () => void;

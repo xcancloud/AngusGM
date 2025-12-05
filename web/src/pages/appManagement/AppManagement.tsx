@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { AppWindow, Plus, Search, Edit, Trash2, X, Download, Settings, Eye, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { AppWindow, Plus, Search, Edit, Trash2, X, Download, Settings, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,6 +41,7 @@ interface AppManagementProps {
 }
 
 export function AppManagement({ onViewDetail, onViewMenu }: AppManagementProps) {
+  const navigate = useNavigate();
   // 可用标签列表
   const availableTags = [
     'HEADER_MENU_POPOVER',
@@ -157,6 +159,8 @@ export function AppManagement({ onViewDetail, onViewMenu }: AppManagementProps) 
     setSelectedApp(app);
     if (onViewDetail) {
       onViewDetail(app);
+    } else {
+      navigate(`/app-management/${app.id}`, { state: { app } });
     }
   };
 
@@ -215,9 +219,10 @@ export function AppManagement({ onViewDetail, onViewMenu }: AppManagementProps) 
   };
 
   const handleSaveNew = () => {
+    const { id, ...formDataWithoutId } = editFormData as Application;
     const newApp: Application = {
+      ...formDataWithoutId,
       id: `${100000 + applications.length + 1}`,
-      ...editFormData as Application,
     };
     setApplications([...applications, newApp]);
     setShowEditDialog(false);
@@ -485,7 +490,13 @@ export function AppManagement({ onViewDetail, onViewMenu }: AppManagementProps) 
                   <td className="p-4">
                     <div>
                       <button
-                        onClick={() => onViewMenu && onViewMenu(app)}
+                        onClick={() => {
+                          if (onViewMenu) {
+                            onViewMenu(app);
+                          } else {
+                            navigate(`/app-management/${app.id}/menu`, { state: { app } });
+                          }
+                        }}
                         className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline"
                       >
                         {app.name}

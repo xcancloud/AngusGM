@@ -1,5 +1,7 @@
-import { SidebarGM } from './components/SidebarGM';
-import { HeaderGM } from './components/HeaderGM';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import React from 'react';
+import { Layout } from '@/components/layout';
 import { Dashboard } from '@/pages/dashboard/Dashboard';
 import { UserManagement } from '@/pages/users/UserManagement';
 import { TenantManagement } from '@/pages/tenants/TenantManagement';
@@ -10,180 +12,90 @@ import { NotificationCenter } from '@/pages/notifications/NotificationCenter';
 import { SMSMessageManagement } from '@/pages/smsMessages/SMSMessageManagement';
 import { EmailManagement } from '@/pages/emailMessages/EmailManagement';
 import { SystemVersion } from '@/pages/systemVersion/SystemVersion';
-import { SecuritySettings } from './pages/securitySettings/SecuritySettings';
-import { LDAPIntegration } from './pages/ldapIntegration/LDAPIntegration';
-import { ResourceQuota } from './pages/resourceQuotas/ResourceQuota';
-import { AuditLogs } from './pages/auditLogs/AuditLogs';
-import { OnlineUsers } from './pages/onlineUsers/OnlineUsers';
-import { BackupRestore } from './pages/backupRestore/BackupRestore';
-import { AppManagement } from './pages/appManagement/AppManagement';
-import { AppDetail } from './pages/appManagement/AppDetail';
-import { AppMenuManagement } from './pages/appManagement/AppMenuManagement';
-import { ServiceManagement } from './pages/serviceManagement/ServiceManagement';
-import { InterfaceManagement } from './pages/interfaceManagement/InterfaceManagement';
-import { TagManagement } from './pages/tagManagement/TagManagement';
-import { PermissionPolicy } from './pages/permissionPolicies/PermissionPolicy';
-import { AuthorizationManagement } from './pages/viewAuthorization/AuthorizationManagement';
-import { UserSettings } from './pages/userSetting/UserSettings';
-import { UnderDevelopment } from './components/gm/UnderDevelopment';
-import { AuthContainer } from './components/auth/AuthContainer';
-import { ThemeProvider } from './components/ThemeProvider';
-import { Toaster } from './components/ui/sonner';
-import { useState } from 'react';
+import { SecuritySettings } from '@/pages/securitySettings/SecuritySettings';
+import { LDAPIntegration } from '@/pages/ldapIntegration/LDAPIntegration';
+import { ResourceQuota } from '@/pages/resourceQuotas/ResourceQuota';
+import { AuditLogs } from '@/pages/auditLogs/AuditLogs';
+import { OnlineUsers } from '@/pages/onlineUsers/OnlineUsers';
+import { BackupRestore } from '@/pages/backupRestore/BackupRestore';
+import { AppManagement } from '@/pages/appManagement/AppManagement';
+import { AppDetailWrapper } from '@/pages/appManagement/AppDetailWrapper';
+import { AppMenuManagementWrapper } from '@/pages/appManagement/AppMenuManagementWrapper';
+import { ServiceManagement } from '@/pages/serviceManagement/ServiceManagement';
+import { InterfaceManagement } from '@/pages/interfaceManagement/InterfaceManagement';
+import { TagManagement } from '@/pages/tagManagement/TagManagement';
+import { PermissionPolicy } from '@/pages/permissionPolicies/PermissionPolicy';
+import { AuthorizationManagement } from '@/pages/viewAuthorization/AuthorizationManagement';
+import { UnderDevelopment } from '@/components/gm/UnderDevelopment';
+import { AuthLayout } from '@/components/auth/AuthLayout';
+import { LoginWrapper } from '@/pages/login/LoginWrapper';
+import { RegisterWrapper } from '@/pages/signUp/RegisterWrapper';
+import { ForgotPasswordWrapper } from '@/pages/resetPassword/ForgotPasswordWrapper';
+import { PrivacyPolicy } from '@/pages/privacyPolicy/PrivacyPolicy';
+import { UserAgreement } from '@/pages/privacyPolicy/UserAgreement';
 
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [activePage, setActivePage] = useState('dashboard');
-  const [selectedApp, setSelectedApp] = useState<any>(null);
-  const [appSubPage, setAppSubPage] = useState<'list' | 'detail' | 'menu'>('list');
-  const [showSettings, setShowSettings] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<string | undefined>(undefined);
+// 受保护的路由组件
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const [isAuthenticated] = useState(true); // TODO: 从认证状态管理获取
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <React.Fragment>{children}</React.Fragment>;
+}
 
-  // 处理登录成功
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-  };
-
-  // 处理退出登录
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setActivePage('dashboard');
-  };
-
-  const getPageTitle = (page: string): string => {
-    const titles: { [key: string]: string } = {
-      'tenants': '租户管理',
-      'users': '用户管理',
-      'departments': '部门管理',
-      'groups': '组管理',
-      'permission-policies': '权限策略',
-      'view-authorization': '授权管理',
-      'notifications': '消息通知',
-      'sms-messages': '短信消息',
-      'email-messages': '电子邮件',
-      'system-version': '系统版本',
-      'security-settings': '安全设置',
-      'ldap-integration': 'LDAP集成',
-      'resource-quotas': '资源配额',
-      'audit-logs': '审计日志',
-      'online-users': '在线用户',
-      'backup-restore': '备份恢复',
-      'app-management': '应用管理',
-      'service-management': '服务管理',
-      'interface-management': '接口管理',
-      'tag-management': '标签管理',
-    };
-    return titles[page] || page;
-  };
-
+function App() {
   return (
-    <ThemeProvider>
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Toaster richColors position="top-right" />
-        
-        {!isAuthenticated ? (
-          <AuthContainer onAuthSuccess={handleAuthSuccess} />
-        ) : showSettings ? (
-          <UserSettings 
-            onClose={() => {
-              setShowSettings(false);
-              setSettingsTab(undefined);
-            }} 
-            initialTab={settingsTab as any}
-          />
-        ) : (
-          <>
-            <SidebarGM activePage={activePage} onPageChange={setActivePage} />
-            
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <HeaderGM 
-                onOpenSettings={(tab) => {
-                  setSettingsTab(tab);
-                  setShowSettings(true);
-                }}
-                onNavigate={(page) => {
-                  setActivePage(page);
-                }}
-                onLogout={handleLogout}
-              />
-              
-              <main className="flex-1 overflow-y-auto hide-scrollbar">
-                <div className="px-7 py-6 space-y-6">
-              {activePage === 'dashboard' && <Dashboard />}
-              {activePage === 'users' && <UserManagement />}
-              {activePage === 'tenants' && <TenantManagement />}
-              {activePage === 'departments' && <DepartmentManagement />}
-              {activePage === 'groups' && <GroupManagement />}
-              {activePage === 'app-announcements' && <AnnouncementManagement />}
-              {activePage === 'notifications' && <NotificationCenter />}
-              {activePage === 'sms-messages' && <SMSMessageManagement />}
-              {activePage === 'email-messages' && <EmailManagement />}
-              {activePage === 'system-version' && <SystemVersion />}
-              {activePage === 'security-settings' && <SecuritySettings />}
-              {activePage === 'ldap-integration' && <LDAPIntegration />}
-              {activePage === 'resource-quotas' && <ResourceQuota />}
-              {activePage === 'audit-logs' && <AuditLogs />}
-              {activePage === 'online-users' && <OnlineUsers />}
-              {activePage === 'backup-restore' && <BackupRestore />}
-              {activePage === 'app-management' && (
-                <div>
-                  {appSubPage === 'list' && (
-                    <AppManagement 
-                      onViewDetail={(app) => {
-                        setSelectedApp(app);
-                        setAppSubPage('detail');
-                      }}
-                      onViewMenu={(app) => {
-                        setSelectedApp(app);
-                        setAppSubPage('menu');
-                      }}
-                    />
-                  )}
-                  {appSubPage === 'detail' && selectedApp && (
-                    <AppDetail 
-                      app={selectedApp} 
-                      onBack={() => setAppSubPage('list')}
-                      onUpdate={(updatedApp) => {
-                        setSelectedApp(updatedApp);
-                      }}
-                    />
-                  )}
-                  {appSubPage === 'menu' && selectedApp && (
-                    <AppMenuManagement 
-                      app={selectedApp} 
-                      onBack={() => setAppSubPage('list')}
-                    />
-                  )}
-                </div>
-              )}
-              {activePage === 'service-management' && (
-                <ServiceManagement />
-              )}
-              {activePage === 'interface-management' && (
-                <InterfaceManagement />
-              )}
-              {activePage === 'tag-management' && (
-                <TagManagement />
-              )}
-              {activePage === 'permission-policies' && (
-                <PermissionPolicy />
-              )}
-              {activePage === 'view-authorization' && (
-                <AuthorizationManagement />
-              )}
-              
-              {activePage !== 'dashboard' && activePage !== 'users' && activePage !== 'tenants' && activePage !== 'departments' && activePage !== 'groups' && activePage !== 'app-announcements' && activePage !== 'notifications' && activePage !== 'sms-messages' && activePage !== 'email-messages' && activePage !== 'system-version' && activePage !== 'security-settings' && activePage !== 'ldap-integration' && activePage !== 'resource-quotas' && activePage !== 'audit-logs' && activePage !== 'online-users' && activePage !== 'backup-restore' && activePage !== 'app-management' && activePage !== 'service-management' && activePage !== 'interface-management' && activePage !== 'tag-management' && activePage !== 'permission-policies' && activePage !== 'view-authorization' && (
-                <UnderDevelopment 
-                  title={getPageTitle(activePage)}
-                  description={`${getPageTitle(activePage)}功能正在开发中，敬请期待...`}
-                />
-              )}
-            </div>
-          </main>
-        </div>
-          </>
-        )}
-      </div>
-    </ThemeProvider>
+    <Routes>
+      {/* 根路径重定向 */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      
+      {/* 认证路由 */}
+      <Route element={<AuthLayout />}>
+        <Route path="login" element={<LoginWrapper />} />
+        <Route path="register" element={<RegisterWrapper />} />
+        <Route path="forgot-password" element={<ForgotPasswordWrapper />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="user-agreement" element={<UserAgreement />} />
+      </Route>
+      
+      {/* 主应用路由 */}
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute children={<Layout />} />
+        }
+      >
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="tenants" element={<TenantManagement />} />
+        <Route path="departments" element={<DepartmentManagement />} />
+        <Route path="groups" element={<GroupManagement />} />
+        <Route path="app-announcements" element={<AnnouncementManagement />} />
+        <Route path="notifications" element={<NotificationCenter />} />
+        <Route path="sms-messages" element={<SMSMessageManagement />} />
+        <Route path="email-messages" element={<EmailManagement />} />
+        <Route path="system-version" element={<SystemVersion />} />
+        <Route path="security-settings" element={<SecuritySettings />} />
+        <Route path="ldap-integration" element={<LDAPIntegration />} />
+        <Route path="resource-quotas" element={<ResourceQuota />} />
+        <Route path="audit-logs" element={<AuditLogs />} />
+        <Route path="online-users" element={<OnlineUsers />} />
+        <Route path="backup-restore" element={<BackupRestore />} />
+        <Route path="app-management" element={<AppManagement />} />
+        <Route path="app-management/:appId" element={<AppDetailWrapper />} />
+        <Route path="app-management/:appId/menu" element={<AppMenuManagementWrapper />} />
+        <Route path="service-management" element={<ServiceManagement />} />
+        <Route path="interface-management" element={<InterfaceManagement />} />
+        <Route path="tag-management" element={<TagManagement />} />
+        <Route path="permission-policies" element={<PermissionPolicy />} />
+        <Route path="view-authorization" element={<AuthorizationManagement />} />
+        <Route path="*" element={<UnderDevelopment title="页面未找到" description="您访问的页面不存在" />} />
+      </Route>
+    </Routes>
   );
 }
+
+export default App;

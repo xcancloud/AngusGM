@@ -1,21 +1,26 @@
 import { ArrowLeft, FileText } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
-import { AngusGMLogo } from '../AngusGMLogo';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { AngusGMLogo } from '@/components/AngusGMLogo';
+import { useNavigate } from 'react-router-dom';
 
 interface UserAgreementProps {
   onBack?: () => void;
 }
 
 export function UserAgreement({ onBack }: UserAgreementProps) {
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-950 dark:via-blue-950 dark:to-gray-950">
+    <div className="w-full min-h-screen h-fit bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-950 dark:via-blue-950 dark:to-gray-950">
       <div className="max-w-4xl mx-auto p-6 lg:p-12">
         {/* 顶部 */}
         <div className="mb-8">
           <AngusGMLogo className="h-10 mb-6" />
           <button
-            onClick={onBack}
+            onClick={handleBack}
             className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -151,7 +156,7 @@ export function UserAgreement({ onBack }: UserAgreementProps) {
             {/* 底部按钮 */}
             <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
               <Button
-                onClick={onBack}
+                onClick={handleBack}
                 className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300"
               >
                 我已阅读并同意

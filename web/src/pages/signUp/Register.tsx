@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Check, Shield, Zap, Globe, Sparkles, CheckCircle2, Languages } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Card } from '../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { AngusGMLogo } from '../AngusGMLogo';
-import { useLanguage } from './LanguageContext';
+import { AngusGMLogo } from '@/components/AngusGMLogo';
+import { useLanguage } from '@/components/auth/LanguageContext';
 
 interface RegisterProps {
   onRegisterSuccess?: () => void;
@@ -239,12 +239,12 @@ export function Register({ onRegisterSuccess, onNavigateToLogin, onNavigateToAgr
         </div>
 
         {/* 右侧注册表单区 */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 xl:p-16">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 py-8 lg:px-12 xl:px-16">
           <div className="w-full max-w-lg">
             <Card className="border-0 shadow-2xl shadow-purple-500/10 dark:shadow-purple-500/5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl">
               <div className="p-6 sm:p-8 lg:p-10">
                 {/* 标题 */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-3">
                   <h2 className="text-2xl mb-2 text-gray-900 dark:text-white">创建账号</h2>
                 </div>
 
@@ -382,11 +382,11 @@ export function Register({ onRegisterSuccess, onNavigateToLogin, onNavigateToAgr
                         />
                         <label htmlFor="phone-agree" className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                           我已阅读并同意
-                          <a href="#" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToAgreement}>
+                          <a href="/user-agreement" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToAgreement}>
                             《用户协议》
                           </a>
                           和
-                          <a href="#" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToPrivacy}>
+                          <a href="/privacy-policy" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToPrivacy}>
                             《隐私政策》
                           </a>
                         </label>
@@ -394,7 +394,7 @@ export function Register({ onRegisterSuccess, onNavigateToLogin, onNavigateToAgr
 
                       <Button
                         type="submit"
-                        className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 mt-6"
+                        className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 mt-2"
                         disabled={loading}
                       >
                         {loading ? (
@@ -532,11 +532,11 @@ export function Register({ onRegisterSuccess, onNavigateToLogin, onNavigateToAgr
                         />
                         <label htmlFor="email-agree" className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                           我已阅读并同意
-                          <a href="#" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToAgreement}>
+                          <a href="/user-agreement" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToAgreement}>
                             《用户协议》
                           </a>
                           和
-                          <a href="#" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToPrivacy}>
+                          <a href="/privacy-policy" className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mx-1 transition-colors" onClick={onNavigateToPrivacy}>
                             《隐私政策》
                           </a>
                         </label>
@@ -544,7 +544,7 @@ export function Register({ onRegisterSuccess, onNavigateToLogin, onNavigateToAgr
 
                       <Button
                         type="submit"
-                        className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 mt-6"
+                        className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 mt-2"
                         disabled={loading}
                       >
                         {loading ? (
