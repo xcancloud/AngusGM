@@ -353,7 +353,7 @@ public class UserAssembler {
     // Build the final filters
     Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
         .rangeSearchFields("id", "createdDate")
-        .matchSearchFields("fullName", "mobile", "title", "username")
+        .matchSearchFields("fullName", "mobile", "email", "title", "username")
         .orderByFields("id", "fullName", "createdDate")
         //.inAndNotFields("tagId")
         .build();

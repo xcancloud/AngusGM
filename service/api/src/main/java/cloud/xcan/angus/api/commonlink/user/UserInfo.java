@@ -26,6 +26,10 @@ public class UserInfo implements Serializable {
 
   private String avatar;
 
+  public String getName() {
+    return fullName;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
