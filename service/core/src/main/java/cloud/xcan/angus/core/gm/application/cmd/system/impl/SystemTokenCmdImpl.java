@@ -254,8 +254,7 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
    */
   @Override
   public void deleteByApiIdIn(Collection<Long> ids) {
-    systemTokenResourceRepo.deleteByAuthorityIn(ids.stream().map(String::valueOf)
-        .collect(Collectors.toSet()));
+    systemTokenResourceRepo.deleteByResourceIdIn(ids);
   }
 
   /**

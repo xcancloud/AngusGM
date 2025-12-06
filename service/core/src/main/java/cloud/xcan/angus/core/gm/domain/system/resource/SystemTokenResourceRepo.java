@@ -16,6 +16,6 @@ public interface SystemTokenResourceRepo extends BaseRepository<SystemTokenResou
   @Query(value = "DELETE FROM system_token_resource WHERE system_token_id IN ?1", nativeQuery = true)
   void deleteBySystemTokenIdIn(Collection<Long> ids);
 
-  void deleteByAuthorityIn(Set<String> authorities);
+  void deleteByResourceIdIn(Collection<Long> resourceIds);
 
 }
