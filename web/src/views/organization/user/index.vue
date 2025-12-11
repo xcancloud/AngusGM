@@ -488,7 +488,7 @@ onMounted(() => {
                     :disabled="checkOperationPermissions(record.sysAdmin, appContext.isSysAdmin()) || !app.has('LockingUser')"
                     @click="unlock(record.id, record.fullName)">
                     <template #icon>
-                      <Icon icon="icon-jiesuo" />
+                      <Icon icon="icon-kaibiaojiemi" />
                     </template>
                     {{ t('user.actions.unlockUser') }}
                   </MenuItem>
