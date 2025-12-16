@@ -28,6 +28,7 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserBase;
 import cloud.xcan.angus.api.commonlink.user.UserBaseRepo;
+import cloud.xcan.angus.api.commonlink.user.UserInfo;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
@@ -629,6 +630,22 @@ public class UserManagerImpl implements UserManager {
     }
     return userBaseRepo.findByIdIn(userIds).stream()
         .collect(Collectors.toMap(UserBase::getId, o -> o));
+  }
+
+  @Override
+  public Map<String, UserInfo> getUserBaseMapByUsername(Collection<String> usernames) {
+    if (isEmpty(usernames)) {
+      return emptyMap();
+    }
+    return userBaseRepo.findByUsernameIn(usernames).stream()
+        .collect(Collectors.toMap(UserBase::getUsername,
+            o -> new UserInfo().setId(o.getId())
+                .setUsername(o.getUsername())
+                .setFullName(o.getFullName())
+                .setEmail(o.getEmail())
+                .setMobile(o.getMobile())
+                .setAvatar(o.getAvatar())
+            ));
   }
 
   @SneakyThrows

@@ -38,4 +38,6 @@ public interface UserBaseRepo extends NameJoinRepository<UserBase, Long>,
 
   UserBase findByUsername(String username);
 
+  Collection<UserBase> findByUsernameIn(Collection<String> usernames);
+
 }

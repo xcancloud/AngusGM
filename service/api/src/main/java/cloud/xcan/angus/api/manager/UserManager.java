@@ -3,6 +3,7 @@ package cloud.xcan.angus.api.manager;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserBase;
+import cloud.xcan.angus.api.commonlink.user.UserInfo;
 import cloud.xcan.angus.api.enums.AuthObjectType;
 import java.util.Collection;
 import java.util.List;
@@ -129,6 +130,8 @@ public interface UserManager {
   Map<Long, UserBase> getValidUserBaseMap(Collection<Long> userIds);
 
   Map<Long, UserBase> getUserBaseMap(Collection<Long> userIds);
+
+  Map<String, UserInfo> getUserBaseMapByUsername(Collection<String> usernames);
 
   void setUserNameAndAvatar(Collection<?> targets, String userIdField);
 
