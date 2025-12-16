@@ -52,7 +52,7 @@ const chartsOption = computed(() => {
     ? props.chartData.yData.reduce((sum, value) => (sum || 0) + (value || 0), 0)
     : 0;
 
-  const timeUnitMessageKey = 'time.' + props.chartData.unit.toLowerCase();
+  const timeUnitMessageKey = 'common.time.' + props.chartData.unit.toLowerCase();
 
   return {
     grid: {
