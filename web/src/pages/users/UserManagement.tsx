@@ -1,6 +1,6 @@
 import { Users, Plus, Search, X, Filter, MoreHorizontal, Eye, Edit, Trash2, UserCheck, UserX, Mail, Phone, Shield, TrendingUp, TrendingDown, Lock, LockOpen, UserPlus, Copy, RefreshCw, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '../../components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,9 +10,9 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { UserDetail } from '@/pages/users/UserDetail';
-import { UserInviteDialog } from '@/pages/users/UserInviteDialog';
-import { EditUserDialog } from '@/pages/users/EditUserDialog';
+import { UserDetail } from './UserDetail';
+import { UserInviteDialog } from './UserInviteDialog';
+import { EditUserDialog } from './EditUserDialog';
 
 interface User {
   id: string;

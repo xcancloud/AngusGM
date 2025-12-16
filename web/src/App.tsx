@@ -33,6 +33,8 @@ import { RegisterWrapper } from '@/pages/signUp/RegisterWrapper';
 import { ForgotPasswordWrapper } from '@/pages/resetPassword/ForgotPasswordWrapper';
 import { PrivacyPolicy } from '@/pages/privacyPolicy/PrivacyPolicy';
 import { UserAgreement } from '@/pages/privacyPolicy/UserAgreement';
+import { SystemMonitoring } from '@/pages/systemMonitoring/SystemMonitoring';
+import { InterfaceMonitoring } from '@/pages/interfaceMonitoring/InterfaceMonitoring';
 
 // 受保护的路由组件
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -79,10 +81,12 @@ function App() {
         <Route path="email-messages" element={<EmailManagement />} />
         <Route path="system-version" element={<SystemVersion />} />
         <Route path="security-settings" element={<SecuritySettings />} />
+        <Route path="system-monitoring" element={<SystemMonitoring />} />
+        <Route path="interface-monitoring" element={<InterfaceMonitoring />} />
         <Route path="ldap-integration" element={<LDAPIntegration />} />
         <Route path="resource-quotas" element={<ResourceQuota />} />
         <Route path="audit-logs" element={<AuditLogs />} />
-        <Route path="online-users" element={<OnlineUsers />} />
+        {/* <Route path="online-users" element={<OnlineUsers />} /> */}
         <Route path="backup-restore" element={<BackupRestore />} />
         <Route path="app-management" element={<AppManagement />} />
         <Route path="app-management/:appId" element={<AppDetailWrapper />} />

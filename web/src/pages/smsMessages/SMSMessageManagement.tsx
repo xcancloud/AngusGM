@@ -895,6 +895,9 @@ export function SMSMessageManagement() {
         <DialogContent className="max-w-2xl dark:bg-gray-800 dark:border-gray-700">
           <DialogHeader>
             <DialogTitle className="dark:text-white">短信详情</DialogTitle>
+            <DialogDescription className="dark:text-gray-400">
+              查看短信的详细信息
+            </DialogDescription>
           </DialogHeader>
           {selectedMessage && (
             <div className="space-y-4">

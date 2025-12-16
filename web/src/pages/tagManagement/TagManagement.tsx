@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Tag as TagIcon, Search, Plus, Edit2, Trash2, X, Clock, Shield, User } from 'lucide-react';
+import { Tag as TagIcon, Search, Plus, Edit2, Trash2, Shield, User } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription  } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
@@ -16,10 +16,11 @@ interface TagItem {
   creator: string;
   createTime: string;
   updateTime: string;
-  isSystem: boolean; // 是否为系统定义标签
+  isSystem: boolean;
 }
 
 export function TagManagement() {
+  // 标签数据
   const [tags, setTags] = useState<TagItem[]>([
     {
       id: '1',
@@ -132,14 +133,17 @@ export function TagManagement() {
   ]);
 
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // 标签相关状态
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [currentTag, setCurrentTag] = useState<TagItem | null>(null);
-  const [formData, setFormData] = useState({
+  const [tagFormData, setTagFormData] = useState({
     name: '',
     description: '',
   });
+
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -150,35 +154,33 @@ export function TagManagement() {
     tag.creator.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 分页
+  // 标签分页
   const totalPages = Math.ceil(filteredTags.length / pageSize);
   const paginatedTags = filteredTags.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
-  // 打开新增对话框
-  const handleAdd = () => {
-    setFormData({ name: '', description: '' });
+  // ========== 标签操作 ==========
+  const handleAddTag = () => {
+    setTagFormData({ name: '', description: '' });
     setShowAddDialog(true);
   };
 
-  // 打开编辑对话框
-  const handleEdit = (tag: TagItem) => {
+  const handleEditTag = (tag: TagItem) => {
     if (tag.isSystem) {
       toast.error('系统定义标签不允许编辑');
       return;
     }
     setCurrentTag(tag);
-    setFormData({
+    setTagFormData({
       name: tag.name,
       description: tag.description,
     });
     setShowEditDialog(true);
   };
 
-  // 打开删除对话框
-  const handleDelete = (tag: TagItem) => {
+  const handleDeleteTag = (tag: TagItem) => {
     if (tag.isSystem) {
       toast.error('系统定义标签不允许删除');
       return;
@@ -187,27 +189,25 @@ export function TagManagement() {
     setShowDeleteDialog(true);
   };
 
-  // 确认新增
-  const handleConfirmAdd = () => {
-    if (!formData.name.trim()) {
+  const handleConfirmAddTag = () => {
+    if (!tagFormData.name.trim()) {
       toast.error('请输入标签名称');
       return;
     }
-    if (!formData.description.trim()) {
+    if (!tagFormData.description.trim()) {
       toast.error('请输入标签描述');
       return;
     }
 
-    // 检查标签名称是否已存在
-    if (tags.some((tag) => tag.name === formData.name)) {
+    if (tags.some((tag) => tag.name === tagFormData.name)) {
       toast.error('标签名称已存在');
       return;
     }
 
     const newTag: TagItem = {
       id: String(Date.now()),
-      name: formData.name.trim(),
-      description: formData.description.trim(),
+      name: tagFormData.name.trim(),
+      description: tagFormData.description.trim(),
       creator: '当前用户',
       createTime: new Date().toLocaleString('zh-CN', {
         year: 'numeric',
@@ -235,21 +235,19 @@ export function TagManagement() {
     toast.success('标签创建成功');
   };
 
-  // 确认编辑
-  const handleConfirmEdit = () => {
+  const handleConfirmEditTag = () => {
     if (!currentTag) return;
 
-    if (!formData.name.trim()) {
+    if (!tagFormData.name.trim()) {
       toast.error('请输入标签名称');
       return;
     }
-    if (!formData.description.trim()) {
+    if (!tagFormData.description.trim()) {
       toast.error('请输入标签描述');
       return;
     }
 
-    // 检查标签名称是否与其他标签重复
-    if (tags.some((tag) => tag.id !== currentTag.id && tag.name === formData.name)) {
+    if (tags.some((tag) => tag.id !== currentTag.id && tag.name === tagFormData.name)) {
       toast.error('标签名称已存在');
       return;
     }
@@ -259,8 +257,8 @@ export function TagManagement() {
         tag.id === currentTag.id
           ? {
               ...tag,
-              name: formData.name.trim(),
-              description: formData.description.trim(),
+              name: tagFormData.name.trim(),
+              description: tagFormData.description.trim(),
               updateTime: new Date().toLocaleString('zh-CN', {
                 year: 'numeric',
                 month: '2-digit',
@@ -279,10 +277,8 @@ export function TagManagement() {
     toast.success('标签更新成功');
   };
 
-  // 确认删除
-  const handleConfirmDelete = () => {
+  const handleConfirmDeleteTag = () => {
     if (!currentTag) return;
-
     setTags(tags.filter((tag) => tag.id !== currentTag.id));
     setShowDeleteDialog(false);
     setCurrentTag(null);
@@ -307,7 +303,7 @@ export function TagManagement() {
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="dark:bg-gray-800 dark:border-gray-700 p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -328,8 +324,8 @@ export function TagManagement() {
                 {tags.filter((t) => t.isSystem).length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-              <Shield className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </Card>
@@ -342,20 +338,8 @@ export function TagManagement() {
                 {tags.filter((t) => !t.isSystem).length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-              <User className="w-6 h-6 text-green-600 dark:text-green-400" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="dark:bg-gray-800 dark:border-gray-700 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">本周新增</p>
-              <p className="text-2xl mt-2 dark:text-white">3</p>
-            </div>
             <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-              <Plus className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+              <User className="w-6 h-6 text-orange-600 dark:text-orange-400" />
             </div>
           </div>
         </Card>
@@ -376,7 +360,7 @@ export function TagManagement() {
               className="pl-10 dark:bg-gray-900 dark:border-gray-700"
             />
           </div>
-          <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={handleAddTag} className="bg-blue-600 hover:bg-blue-700">
             <Plus className="w-4 h-4 mr-2" />
             新增标签
           </Button>
@@ -394,7 +378,6 @@ export function TagManagement() {
                 <th className="text-left p-4 text-sm text-gray-600 dark:text-gray-400">描述</th>
                 <th className="text-left p-4 text-sm text-gray-600 dark:text-gray-400">创建人</th>
                 <th className="text-left p-4 text-sm text-gray-600 dark:text-gray-400">创建时间</th>
-                <th className="text-left p-4 text-sm text-gray-600 dark:text-gray-400">更新时间</th>
                 <th className="text-left p-4 text-sm text-gray-600 dark:text-gray-400">操作</th>
               </tr>
             </thead>
@@ -433,14 +416,11 @@ export function TagManagement() {
                       <span className="text-sm text-gray-500 dark:text-gray-400">{tag.createTime}</span>
                     </td>
                     <td className="p-4">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{tag.updateTime}</span>
-                    </td>
-                    <td className="p-4">
                       <div className="flex items-center gap-2">
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleEdit(tag)}
+                          onClick={() => handleEditTag(tag)}
                           disabled={tag.isSystem}
                           className={tag.isSystem ? 'opacity-50 cursor-not-allowed' : 'dark:hover:bg-gray-600'}
                         >
@@ -449,7 +429,7 @@ export function TagManagement() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDelete(tag)}
+                          onClick={() => handleDeleteTag(tag)}
                           disabled={tag.isSystem}
                           className={tag.isSystem ? 'opacity-50 cursor-not-allowed text-gray-400' : 'dark:hover:bg-gray-600 text-red-600 hover:text-red-700'}
                         >
@@ -461,7 +441,7 @@ export function TagManagement() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="p-12 text-center">
+                  <td colSpan={6} className="p-12 text-center">
                     <div className="text-gray-500 dark:text-gray-400">
                       <TagIcon className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>未找到匹配的标签</p>
@@ -499,7 +479,7 @@ export function TagManagement() {
                   onClick={() => setCurrentPage(page)}
                   className={
                     currentPage === page
-                      ? 'bg-blue-600 hover:bg-blue-700'
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
                       : 'dark:border-gray-600 dark:hover:bg-gray-700'
                   }
                 >
@@ -522,36 +502,34 @@ export function TagManagement() {
 
       {/* 新增标签对话框 */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent className="dark:bg-gray-800 dark:border-gray-700" aria-describedby={undefined}>
+        <DialogContent className="dark:bg-gray-800 dark:border-gray-700">
           <DialogHeader>
             <DialogTitle className="dark:text-white">新增标签</DialogTitle>
+            <DialogDescription className="dark:text-gray-400">
+              创建一个新的功能标签
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="add-name" className="dark:text-gray-300">
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label className="dark:text-gray-200">
                 标签名称 <span className="text-red-500">*</span>
               </Label>
               <Input
-                id="add-name"
-                placeholder="请输入标签名称（如：CLOUD_SERVICE）"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-2 dark:bg-gray-900 dark:border-gray-700"
+                placeholder="例如: FEATURE_NAME"
+                value={tagFormData.name}
+                onChange={(e) => setTagFormData({ ...tagFormData, name: e.target.value })}
+                className="dark:bg-gray-900 dark:border-gray-700"
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                建议使用大写字母和下划线组合
-              </p>
             </div>
-            <div>
-              <Label htmlFor="add-description" className="dark:text-gray-300">
+            <div className="space-y-2">
+              <Label className="dark:text-gray-200">
                 标签描述 <span className="text-red-500">*</span>
               </Label>
               <Textarea
-                id="add-description"
                 placeholder="请输入标签描述"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="mt-2 dark:bg-gray-900 dark:border-gray-700"
+                value={tagFormData.description}
+                onChange={(e) => setTagFormData({ ...tagFormData, description: e.target.value })}
+                className="dark:bg-gray-900 dark:border-gray-700"
                 rows={3}
               />
             </div>
@@ -564,7 +542,7 @@ export function TagManagement() {
             >
               取消
             </Button>
-            <Button onClick={handleConfirmAdd} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleConfirmAddTag} className="bg-blue-600 hover:bg-blue-700">
               确认
             </Button>
           </DialogFooter>
@@ -573,36 +551,34 @@ export function TagManagement() {
 
       {/* 编辑标签对话框 */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="dark:bg-gray-800 dark:border-gray-700" aria-describedby={undefined}>
+        <DialogContent className="dark:bg-gray-800 dark:border-gray-700">
           <DialogHeader>
             <DialogTitle className="dark:text-white">编辑标签</DialogTitle>
+            <DialogDescription className="dark:text-gray-400">
+              修改标签信息
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="edit-name" className="dark:text-gray-300">
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label className="dark:text-gray-200">
                 标签名称 <span className="text-red-500">*</span>
               </Label>
               <Input
-                id="edit-name"
-                placeholder="请输入标签名称"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-2 dark:bg-gray-900 dark:border-gray-700"
+                placeholder="例如: FEATURE_NAME"
+                value={tagFormData.name}
+                onChange={(e) => setTagFormData({ ...tagFormData, name: e.target.value })}
+                className="dark:bg-gray-900 dark:border-gray-700"
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                建议使用大写字母和下划线组合
-              </p>
             </div>
-            <div>
-              <Label htmlFor="edit-description" className="dark:text-gray-300">
+            <div className="space-y-2">
+              <Label className="dark:text-gray-200">
                 标签描述 <span className="text-red-500">*</span>
               </Label>
               <Textarea
-                id="edit-description"
                 placeholder="请输入标签描述"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="mt-2 dark:bg-gray-900 dark:border-gray-700"
+                value={tagFormData.description}
+                onChange={(e) => setTagFormData({ ...tagFormData, description: e.target.value })}
+                className="dark:bg-gray-900 dark:border-gray-700"
                 rows={3}
               />
             </div>
@@ -615,27 +591,22 @@ export function TagManagement() {
             >
               取消
             </Button>
-            <Button onClick={handleConfirmEdit} className="bg-blue-600 hover:bg-blue-700">
-              确认
+            <Button onClick={handleConfirmEditTag} className="bg-blue-600 hover:bg-blue-700">
+              保存
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* 删除确认对话框 */}
+      {/* 删除标签确认对话框 */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="dark:bg-gray-800 dark:border-gray-700" aria-describedby={undefined}>
+        <DialogContent className="dark:bg-gray-800 dark:border-gray-700">
           <DialogHeader>
-            <DialogTitle className="dark:text-white">删除标签</DialogTitle>
+            <DialogTitle className="dark:text-white">确认删除</DialogTitle>
+            <DialogDescription className="dark:text-gray-400">
+              确定要删除标签 &quot;{currentTag?.name}&quot; 吗？此操作无法撤销。
+            </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              确定要删除标签 <span className="font-mono text-blue-600 dark:text-blue-400">{currentTag?.name}</span> 吗？
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-              此操作不可恢复，删除后可能影响使用此标签的应用服务。
-            </p>
-          </div>
           <DialogFooter>
             <Button
               variant="outline"
@@ -645,10 +616,10 @@ export function TagManagement() {
               取消
             </Button>
             <Button
-              onClick={handleConfirmDelete}
+              onClick={handleConfirmDeleteTag}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
-              确认删除
+              删除
             </Button>
           </DialogFooter>
         </DialogContent>

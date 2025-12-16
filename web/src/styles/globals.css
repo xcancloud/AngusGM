@@ -197,3 +197,24 @@ html {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, and Opera */
 }
+
+/* Custom gray-750 color for hover states */
+.dark\:hover\:bg-gray-750:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+.dark .dark\:hover\:bg-gray-750:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+/* Smooth transitions for menu items */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,4 +1,4 @@
-import { ChevronRight, Edit, Ban, Trash2, UserX, Shield, ShieldCheck, Lock, LockOpen, Plus, Trash, Building2, Users, Calendar, Eye, FileText, Crown, User, Mail, Phone, MapPin, Briefcase } from 'lucide-react';
+import { ChevronRight, Edit, Ban, Trash2, UserX, Shield, ShieldCheck, Lock, LockOpen, Plus, Trash, Building2, Users, Calendar, Eye, FileText, Crown, User, Mail, Phone, MapPin, Briefcase, Clock, Monitor, Smartphone, MapPinned, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,10 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { ConfirmDialog } from '@/components/gm/ConfirmDialog';
-import { EditUserDialog } from '@/pages/users/EditUserDialog'; 
-import { SelectRoleDialog } from '@/pages/users/SelectRoleDialog';
-import { SelectDepartmentDialog } from '@/pages/users/SelectDepartmentDialog';
-import { SelectGroupDialog } from '@/pages/users/SelectGroupDialog';
+import { EditUserDialog } from './EditUserDialog';
+import { SelectRoleDialog } from './SelectRoleDialog';
+import { SelectDepartmentDialog } from './SelectDepartmentDialog';
+import { SelectGroupDialog } from './SelectGroupDialog';
 
 interface UserDetailProps {
   userId: string;
@@ -134,6 +134,94 @@ export function UserDetail({ userId, onBack }: UserDetailProps) {
       memberCount: 8,
       joinDate: '2024-03-01',
       role: '普通成员'
+    },
+  ];
+
+  // Mock activity logs data (including login records)
+  const activityLogs = [
+    {
+      id: 'A001',
+      type: '登录',
+      action: '用户登录',
+      device: 'Chrome on Windows',
+      ip: '192.168.1.100',
+      location: '北京市 朝阳区',
+      time: '2024-12-03 15:30:00',
+      status: '成功',
+    },
+    {
+      id: 'A002',
+      type: '操作',
+      action: '修改个人资料',
+      description: '更新了手机号码',
+      device: 'Chrome on Windows',
+      ip: '192.168.1.100',
+      location: '北京市 朝阳区',
+      time: '2024-12-03 14:20:00',
+      status: '成功',
+    },
+    {
+      id: 'A003',
+      type: '登录',
+      action: '用户登录',
+      device: 'Safari on iPhone',
+      ip: '10.0.2.15',
+      location: '北京市 海淀区',
+      time: '2024-12-03 09:15:00',
+      status: '成功',
+    },
+    {
+      id: 'A004',
+      type: '操作',
+      action: '创建项目',
+      description: '创建了新项目「Web应用重构」',
+      device: 'Chrome on Windows',
+      ip: '192.168.1.100',
+      location: '北京市 朝阳区',
+      time: '2024-12-02 16:45:00',
+      status: '成功',
+    },
+    {
+      id: 'A005',
+      type: '登录',
+      action: '用户登录',
+      device: 'Chrome on Windows',
+      ip: '192.168.1.100',
+      location: '北京市 朝阳区',
+      time: '2024-12-02 08:30:00',
+      status: '成功',
+    },
+    {
+      id: 'A006',
+      type: '登录',
+      action: '登录失败',
+      device: 'Chrome on Windows',
+      ip: '203.0.113.45',
+      location: '上海市 浦东新区',
+      time: '2024-12-01 22:10:00',
+      status: '失败',
+      reason: '密码错误',
+    },
+    {
+      id: 'A007',
+      type: '操作',
+      action: '删除文件',
+      description: '删除了文件「旧版本设计稿.pdf」',
+      device: 'Chrome on Windows',
+      ip: '192.168.1.100',
+      location: '北京市 朝阳区',
+      time: '2024-12-01 15:20:00',
+      status: '成功',
+    },
+    {
+      id: 'A008',
+      type: '登录',
+      action: '用户登录',
+      device: 'Edge on Windows',
+      ip: '192.168.1.100',
+      location: '北京市 朝阳区',
+      time: '2024-12-01 09:00:00',
+      status: '成功',
     },
   ];
 
@@ -285,6 +373,10 @@ export function UserDetail({ userId, onBack }: UserDetailProps) {
           <TabsTrigger value="groups">
             <Users className="w-4 h-4 mr-2" />
             关联组
+          </TabsTrigger>
+          <TabsTrigger value="activities">
+            <Activity className="w-4 h-4 mr-2" />
+            操作记录
           </TabsTrigger>
         </TabsList>
 
@@ -573,6 +665,56 @@ export function UserDetail({ userId, onBack }: UserDetailProps) {
                       >
                         <Trash className="w-4 h-4" />
                       </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
+
+        {/* Activities Tab */}
+        <TabsContent value="activities">
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-base dark:text-white mb-1">操作记录</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">该用户的操作记录</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {activityLogs.map((log) => (
+                  <div
+                    key={log.id}
+                    className="flex items-center justify-between p-4 rounded-lg border dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                        {log.type === '登录' ? (
+                          <LockOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        ) : (
+                          <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="dark:text-white">{log.action}</div>
+                        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          {log.description && <span>{log.description}</span>}
+                          <span>•</span>
+                          <span>设备: {log.device}</span>
+                          <span>•</span>
+                          <span>IP: {log.ip}</span>
+                          <span>•</span>
+                          <span>位置: {log.location}</span>
+                          <span>•</span>
+                          <span>时间: {log.time}</span>
+                          <span>•</span>
+                          <span>状态: {log.status}</span>
+                          {log.reason && <span>•</span>}
+                          {log.reason && <span>原因: {log.reason}</span>}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}

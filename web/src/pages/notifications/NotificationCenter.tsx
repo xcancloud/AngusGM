@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Bell, Search, RefreshCw, Check, Star, Archive, Trash2, ChevronDown, Circle, CheckCircle, AlertCircle, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Bell, Search, RefreshCw, Check, Star, Archive, Trash2, ChevronDown, Circle, CheckCircle, AlertCircle, TrendingUp, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { NotificationSettings } from './NotificationSettings';
 
 interface Notification {
   id: string;
@@ -27,6 +28,7 @@ export function NotificationCenter() {
   const [selectedSource, setSelectedSource] = useState('all');
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showSettings, setShowSettings] = useState(false);
   const itemsPerPage = 5;
 
   const [notifications, setNotifications] = useState<Notification[]>([
@@ -340,6 +342,11 @@ export function NotificationCenter() {
     }
   };
 
+  // If showing settings, render the NotificationSettings component
+  if (showSettings) {
+    return <NotificationSettings onBack={() => setShowSettings(false)} />;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -356,6 +363,15 @@ export function NotificationCenter() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowSettings(true)}
+            className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            设置
+          </Button>
           <Button
             variant="outline"
             size="sm"

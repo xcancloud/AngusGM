@@ -174,6 +174,8 @@ export function PermissionPolicy() {
   const [showUserAssignDialog, setShowUserAssignDialog] = useState(false);
   const [currentRole, setCurrentRole] = useState<Role | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDetail, setShowDetail] = useState(false);
+  const [detailRole, setDetailRole] = useState<Role | null>(null);
   const pageSize = 8;
 
   const [formData, setFormData] = useState({
@@ -453,20 +455,12 @@ export function PermissionPolicy() {
   // 打开权限配置对话框
   const handleConfigPermission = (role: Role) => {
     setCurrentRole(role);
-    // 初始化权限树（包含所有应用的菜单、按钮和看板）
-    const allPermissions: PermissionItem[] = [];
-    Object.entries(appPermissionsMap).forEach(([appId, perms]) => {
-      const app = applications.find(a => a.id === appId);
-      if (app) {
-        allPermissions.push({
-          id: appId,
-          name: app.name,
-          checked: false,
-          children: JSON.parse(JSON.stringify(perms)),
-        });
-      }
-    });
-    setPermissions(allPermissions);
+    // 只加载当前角色所属应用的权限树
+    if (role.appId && appPermissionsMap[role.appId]) {
+      setPermissions(JSON.parse(JSON.stringify(appPermissionsMap[role.appId])));
+    } else {
+      setPermissions([]);
+    }
     
     setShowPermissionDialog(true);
   };
@@ -479,6 +473,18 @@ export function PermissionPolicy() {
     setSelectedGroups([]);
     setAssignTab('user');
     setShowUserAssignDialog(true);
+  };
+
+  // 查看角色详情
+  const handleViewDetail = (role: Role) => {
+    setDetailRole(role);
+    setShowDetail(true);
+  };
+
+  // 从详情页返回列表
+  const handleBackToList = () => {
+    setShowDetail(false);
+    setDetailRole(null);
   };
 
   // 保存新增
@@ -653,6 +659,28 @@ export function PermissionPolicy() {
     setPermissions(updatePermissions(permissions));
   };
 
+  // 如果正在查看详情，显示详情页面
+  if (showDetail && detailRole) {
+    return (
+      <RoleDetail
+        role={detailRole}
+        onBack={handleBackToList}
+        onEdit={(role) => {
+          setShowDetail(false);
+          handleEdit(role);
+        }}
+        onConfigPermission={(role) => {
+          setShowDetail(false);
+          handleConfigPermission(role);
+        }}
+        onAssignUsers={(role) => {
+          setShowDetail(false);
+          handleAssignUsers(role);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* 页面标题 */}
@@ -796,7 +824,12 @@ export function PermissionPolicy() {
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                           <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          <span className="dark:text-gray-200">{role.name}</span>
+                          <button
+                            onClick={() => handleViewDetail(role)}
+                            className="dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer text-left"
+                          >
+                            {role.name}
+                          </button>
                         </div>
                         <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-0 font-mono text-xs w-fit">
                           {role.code}
@@ -1003,42 +1036,6 @@ export function PermissionPolicy() {
               </p>
             </div>
             
-            {/* 权限树展示（包含菜单、按钮和看板） */}
-            {formData.appId && permissions.length > 0 && (
-              <div className="space-y-2">
-                <Label className="dark:text-gray-300">权限配置预览</Label>
-                <div className="border dark:border-gray-700 rounded-lg p-4 max-h-64 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-                  <div className="space-y-3">
-                    {permissions.map((item) => (
-                      <div key={item.id} className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 bg-white dark:bg-gray-800 rounded">
-                          {item.children && item.children.length > 0 ? (
-                            <Layout className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          ) : (
-                            <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                          )}
-                          <span className="dark:text-gray-200">{item.name}</span>
-                        </div>
-                        {item.children && item.children.length > 0 && (
-                          <div className="ml-6 space-y-1">
-                            {item.children.map((btn) => (
-                              <div key={btn.id} className="flex items-center gap-2 p-2 text-sm">
-                                <MousePointer className="w-3 h-3 text-gray-500 dark:text-gray-400" />
-                                <span className="text-gray-600 dark:text-gray-400">{btn.name}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  展示该应用可配置的菜单、按钮和看板权限（创建后可在"配置权限"中详细设置）
-                </p>
-              </div>
-            )}
-            
             <div className="space-y-2">
               <Label className="dark:text-gray-300">角色描述</Label>
               <Textarea
@@ -1145,42 +1142,6 @@ export function PermissionPolicy() {
               </p>
             </div>
             
-            {/* 权限树展示（包含菜单、按钮和看板） */}
-            {formData.appId && permissions.length > 0 && (
-              <div className="space-y-2">
-                <Label className="dark:text-gray-300">权限配置预览</Label>
-                <div className="border dark:border-gray-700 rounded-lg p-4 max-h-64 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-                  <div className="space-y-3">
-                    {permissions.map((item) => (
-                      <div key={item.id} className="space-y-2">
-                        <div className="flex items-center gap-2 p-2 bg-white dark:bg-gray-800 rounded">
-                          {item.children && item.children.length > 0 ? (
-                            <Layout className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          ) : (
-                            <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                          )}
-                          <span className="dark:text-gray-200">{item.name}</span>
-                        </div>
-                        {item.children && item.children.length > 0 && (
-                          <div className="ml-6 space-y-1">
-                            {item.children.map((btn) => (
-                              <div key={btn.id} className="flex items-center gap-2 p-2 text-sm">
-                                <MousePointer className="w-3 h-3 text-gray-500 dark:text-gray-400" />
-                                <span className="text-gray-600 dark:text-gray-400">{btn.name}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  展示该应用可配置的菜单、按钮和看板权限（在"配置权限"中详细设置）
-                </p>
-              </div>
-            )}
-            
             <div className="space-y-2">
               <Label className="dark:text-gray-300">角色描述</Label>
               <Textarea
@@ -1257,75 +1218,54 @@ export function PermissionPolicy() {
               配置权限 - {currentRole?.name}
             </DialogTitle>
             <DialogDescription className="dark:text-gray-400">
-              为角色分配应用、菜单、按钮和看板访问权限
+              为角色配置 {currentRole?.appName} 应用的菜单、按钮和看板访问权限
             </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto py-4">
             <div className="space-y-6">
-              {/* 应用权限树（包含菜单、按钮和看板） */}
+              {/* 权限树（包含菜单、按钮和看板） */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Layout className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h3 className="dark:text-white">应用权限</h3>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">（包含菜单、按钮和看板）</span>
+                  <h3 className="dark:text-white">权限配置</h3>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">（菜单、按钮和看板）</span>
                 </div>
                 <Card className="dark:bg-gray-900 dark:border-gray-700 p-4">
                   <div className="space-y-3">
-                    {permissions.map((app) => (
-                      <div key={app.id} className="space-y-2">
-                        {/* 应用级别 */}
+                    {permissions.map((item) => (
+                      <div key={item.id} className="space-y-2">
+                        {/* 菜单/看板级别 */}
                         <div className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
                           <Checkbox
-                            id={app.id}
-                            checked={app.checked}
-                            onCheckedChange={() => togglePermission(app.id)}
+                            id={item.id}
+                            checked={item.checked}
+                            onCheckedChange={() => togglePermission(item.id)}
                             className="dark:border-gray-600"
                           />
-                          <AppWindow className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          <Label htmlFor={app.id} className="flex-1 cursor-pointer dark:text-gray-200">
-                            {app.name}
+                          {item.children && item.children.length > 0 ? (
+                            <Layout className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          ) : (
+                            <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                          )}
+                          <Label htmlFor={item.id} className="flex-1 cursor-pointer dark:text-gray-200">
+                            {item.name}
                           </Label>
                         </div>
-                        {/* 菜单/看板级别 */}
-                        {app.children && (
-                          <div className="ml-6 space-y-2">
-                            {app.children.map((item) => (
-                              <div key={item.id} className="space-y-1">
-                                <div className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
-                                  <Checkbox
-                                    id={item.id}
-                                    checked={item.checked}
-                                    onCheckedChange={() => togglePermission(item.id)}
-                                    className="dark:border-gray-600"
-                                  />
-                                  {item.children && item.children.length > 0 ? (
-                                    <Layout className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                                  ) : (
-                                    <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                                  )}
-                                  <Label htmlFor={item.id} className="flex-1 cursor-pointer dark:text-gray-300">
-                                    {item.name}
-                                  </Label>
-                                </div>
-                                {/* 按钮级别 */}
-                                {item.children && (
-                                  <div className="ml-6 space-y-1">
-                                    {item.children.map((btn) => (
-                                      <div key={btn.id} className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
-                                        <Checkbox
-                                          id={btn.id}
-                                          checked={btn.checked}
-                                          onCheckedChange={() => togglePermission(btn.id)}
-                                          className="dark:border-gray-600"
-                                        />
-                                        <MousePointer className="w-3 h-3 text-gray-400" />
-                                        <Label htmlFor={btn.id} className="flex-1 cursor-pointer text-sm dark:text-gray-400">
-                                          {btn.name}
-                                        </Label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
+                        {/* 按钮级别 */}
+                        {item.children && (
+                          <div className="ml-6 space-y-1">
+                            {item.children.map((btn) => (
+                              <div key={btn.id} className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <Checkbox
+                                  id={btn.id}
+                                  checked={btn.checked}
+                                  onCheckedChange={() => togglePermission(btn.id)}
+                                  className="dark:border-gray-600"
+                                />
+                                <MousePointer className="w-3 h-3 text-gray-400" />
+                                <Label htmlFor={btn.id} className="flex-1 cursor-pointer text-sm dark:text-gray-400">
+                                  {btn.name}
+                                </Label>
                               </div>
                             ))}
                           </div>

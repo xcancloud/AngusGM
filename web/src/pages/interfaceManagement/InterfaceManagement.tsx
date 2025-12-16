@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Network, Search, RefreshCw, Eye, ChevronLeft, ChevronRight as ChevronRightIcon, Clock, CheckCircle2, Server, Code, FileJson, Tag } from 'lucide-react';
+import { Network, Search, RefreshCw, Eye, ChevronLeft, ChevronRight as ChevronRightIcon, Clock, CheckCircle2, Server, Code, FileJson, Tag, List, Grid } from 'lucide-react';
 import { Card } from '@/components/ui/card' ;
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface ApiParameter {
   name: string;
@@ -713,6 +714,7 @@ export function InterfaceManagement() {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'list' | 'group'>('list');
   const pageSize = 10;
 
   // 统计数据
@@ -785,6 +787,67 @@ export function InterfaceManagement() {
     setSelectedService(service);
     setCurrentPage(1);
   };
+
+  // 按标签分组接口
+  const groupedInterfaces = (() => {
+    const groups: { [key: string]: ApiInterface[] } = {};
+    
+    filteredInterfaces.forEach((iface) => {
+      iface.tags.forEach((tag) => {
+        if (!groups[tag]) {
+          groups[tag] = [];
+        }
+        groups[tag].push(iface);
+      });
+    });
+    
+    return groups;
+  })();
+
+  // 渲染接口项
+  const renderInterfaceItem = (iface: ApiInterface) => (
+    <div
+      key={iface.id}
+      className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 group"
+    >
+      <div className="flex items-start gap-4">
+        <div className="mt-1">{getMethodBadge(iface.method)}</div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <Badge className="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border-0 text-xs font-mono">
+              {iface.code}
+            </Badge>
+            <code className="text-sm dark:text-white font-mono">{iface.path}</code>
+            {iface.deprecated && (
+              <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-0 text-xs">
+                已弃用
+              </Badge>
+            )}
+          </div>
+          <p className="text-sm dark:text-gray-300 mb-1">{iface.summary}</p>
+          <div className="flex items-center gap-2">
+            {iface.tags.map((tag) => (
+              <Badge
+                key={tag}
+                className="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border-0 text-xs"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => handleViewDetail(iface)}
+          className="dark:hover:bg-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Eye className="w-4 h-4 mr-1" />
+          详情
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -965,119 +1028,114 @@ export function InterfaceManagement() {
                 <h3 className="dark:text-white">
                   {selectedService?.displayName} - 接口列表
                 </h3>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  共 {filteredInterfaces.length} 个接口
-                </span>
+                <div className="flex items-center gap-3">
+                  <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'group')}>
+                    <TabsList className="dark:bg-gray-900">
+                      <TabsTrigger value="list" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                        <List className="w-4 h-4 mr-1" />
+                        列表视图
+                      </TabsTrigger>
+                      <TabsTrigger value="group" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                        <Grid className="w-4 h-4 mr-1" />
+                        分组视图
+                      </TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    共 {filteredInterfaces.length} 个接口
+                  </span>
+                </div>
               </div>
             </div>
 
-            {paginatedInterfaces.length > 0 ? (
+            {filteredInterfaces.length > 0 ? (
               <>
-                <div className="divide-y dark:divide-gray-700">
-                  {paginatedInterfaces.map((iface) => (
-                    <div
-                      key={iface.id}
-                      className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 group"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1">{getMethodBadge(iface.method)}</div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge className="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border-0 text-xs font-mono">
-                              {iface.code}
-                            </Badge>
-                            <code className="text-sm dark:text-white font-mono">{iface.path}</code>
-                            {iface.deprecated && (
-                              <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-0 text-xs">
-                                已弃用
-                              </Badge>
-                            )}
+                {viewMode === 'list' ? (
+                  <>
+                    <div className="divide-y dark:divide-gray-700">
+                      {paginatedInterfaces.map((iface) => renderInterfaceItem(iface))}
+                    </div>
+
+                    {/* 分页 */}
+                    {totalPages > 1 && (
+                      <div className="p-4 border-t dark:border-gray-700 flex items-center justify-between">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          显示 {(currentPage - 1) * pageSize + 1} 到{' '}
+                          {Math.min(currentPage * pageSize, filteredInterfaces.length)} 条，共{' '}
+                          {filteredInterfaces.length} 条
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="dark:border-gray-600 dark:hover:bg-gray-700"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                            上一页
+                          </Button>
+                          <div className="flex items-center gap-1">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1)
+                              .filter((page) => {
+                                return (
+                                  page === 1 ||
+                                  page === totalPages ||
+                                  (page >= currentPage - 1 && page <= currentPage + 1)
+                                );
+                              })
+                              .map((page, index, array) => (
+                                <div key={page} className="flex items-center">
+                                  {index > 0 && array[index - 1] !== page - 1 && (
+                                    <span className="px-2 text-gray-400">...</span>
+                                  )}
+                                  <Button
+                                    variant={currentPage === page ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setCurrentPage(page)}
+                                    className={
+                                      currentPage === page
+                                        ? 'bg-blue-600 hover:bg-blue-700'
+                                        : 'dark:border-gray-600 dark:hover:bg-gray-700'
+                                    }
+                                  >
+                                    {page}
+                                  </Button>
+                                </div>
+                              ))}
                           </div>
-                          <p className="text-sm dark:text-gray-300 mb-1">{iface.summary}</p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="dark:border-gray-600 dark:hover:bg-gray-700"
+                          >
+                            下一页
+                            <ChevronRightIcon className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="max-h-[700px] overflow-y-auto">
+                    {Object.entries(groupedInterfaces).map(([tag, interfaces]) => (
+                      <div key={tag} className="border-b dark:border-gray-700 last:border-0">
+                        <div className="bg-gray-50 dark:bg-gray-900/50 px-4 py-3 sticky top-0 z-10">
                           <div className="flex items-center gap-2">
-                            {iface.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                className="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border-0 text-xs"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
+                            <Tag className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                            <h4 className="dark:text-white">{tag}</h4>
+                            <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-0 text-xs">
+                              {interfaces.length} 个接口
+                            </Badge>
                           </div>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleViewDetail(iface)}
-                          className="dark:hover:bg-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <Eye className="w-4 h-4 mr-1" />
-                          详情
-                        </Button>
+                        <div className="divide-y dark:divide-gray-700">
+                          {interfaces.map((iface) => renderInterfaceItem(iface))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* 分页 */}
-                {totalPages > 1 && (
-                  <div className="p-4 border-t dark:border-gray-700 flex items-center justify-between">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      显示 {(currentPage - 1) * pageSize + 1} 到{' '}
-                      {Math.min(currentPage * pageSize, filteredInterfaces.length)} 条，共{' '}
-                      {filteredInterfaces.length} 条
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
-                        className="dark:border-gray-600 dark:hover:bg-gray-700"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                        上一页
-                      </Button>
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1)
-                          .filter((page) => {
-                            return (
-                              page === 1 ||
-                              page === totalPages ||
-                              (page >= currentPage - 1 && page <= currentPage + 1)
-                            );
-                          })
-                          .map((page, index, array) => (
-                            <div key={page} className="flex items-center">
-                              {index > 0 && array[index - 1] !== page - 1 && (
-                                <span className="px-2 text-gray-400">...</span>
-                              )}
-                              <Button
-                                variant={currentPage === page ? 'default' : 'outline'}
-                                size="sm"
-                                onClick={() => setCurrentPage(page)}
-                                className={
-                                  currentPage === page
-                                    ? 'bg-blue-600 hover:bg-blue-700'
-                                    : 'dark:border-gray-600 dark:hover:bg-gray-700'
-                                }
-                              >
-                                {page}
-                              </Button>
-                            </div>
-                          ))}
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                        disabled={currentPage === totalPages}
-                        className="dark:border-gray-600 dark:hover:bg-gray-700"
-                      >
-                        下一页
-                        <ChevronRightIcon className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    ))}
                   </div>
                 )}
               </>

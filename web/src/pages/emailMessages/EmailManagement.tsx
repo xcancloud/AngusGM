@@ -965,6 +965,9 @@ export function EmailManagement() {
         <DialogContent className="max-w-2xl dark:bg-gray-800 dark:border-gray-700">
           <DialogHeader>
             <DialogTitle className="dark:text-white">邮件详情</DialogTitle>
+            <DialogDescription className="dark:text-gray-400">
+              查看邮件的详细信息
+            </DialogDescription>
           </DialogHeader>
           {selectedEmail && (
             <div className="space-y-4">
