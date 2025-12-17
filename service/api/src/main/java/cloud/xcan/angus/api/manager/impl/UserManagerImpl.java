@@ -633,7 +633,7 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
-  public Map<Long, UserInfo> getUserBaseMapByIds(Collection<Long> userIds) {
+  public Map<Long, UserInfo> getUserInfoMapByIds(Collection<Long> userIds) {
     if (isEmpty(userIds)) {
       return emptyMap();
     }
@@ -649,7 +649,7 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
-  public Map<String, UserInfo> getUserBaseMapByUsername(Collection<String> usernames) {
+  public Map<String, UserInfo> getUserInfoMapByUsername(Collection<String> usernames) {
     if (isEmpty(usernames)) {
       return emptyMap();
     }
