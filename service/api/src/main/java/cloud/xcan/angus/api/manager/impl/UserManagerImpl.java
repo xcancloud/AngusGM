@@ -633,6 +633,22 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
+  public Map<Long, UserInfo> getUserBaseMapByIds(Collection<Long> userIds) {
+    if (isEmpty(userIds)) {
+      return emptyMap();
+    }
+    return userBaseRepo.findByIdIn(userIds).stream()
+        .collect(Collectors.toMap(UserBase::getId,
+            o -> new UserInfo().setId(o.getId())
+                .setUsername(o.getUsername())
+                .setFullName(o.getFullName())
+                .setEmail(o.getEmail())
+                .setMobile(o.getMobile())
+                .setAvatar(o.getAvatar())
+        ));
+  }
+
+  @Override
   public Map<String, UserInfo> getUserBaseMapByUsername(Collection<String> usernames) {
     if (isEmpty(usernames)) {
       return emptyMap();
@@ -645,7 +661,7 @@ public class UserManagerImpl implements UserManager {
                 .setEmail(o.getEmail())
                 .setMobile(o.getMobile())
                 .setAvatar(o.getAvatar())
-            ));
+        ));
   }
 
   @SneakyThrows

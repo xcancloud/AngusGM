@@ -131,6 +131,8 @@ public interface UserManager {
 
   Map<Long, UserBase> getUserBaseMap(Collection<Long> userIds);
 
+  Map<Long, UserInfo> getUserBaseMapByIds(Collection<Long> userIds);
+
   Map<String, UserInfo> getUserBaseMapByUsername(Collection<String> usernames);
 
   void setUserNameAndAvatar(Collection<?> targets, String userIdField);
