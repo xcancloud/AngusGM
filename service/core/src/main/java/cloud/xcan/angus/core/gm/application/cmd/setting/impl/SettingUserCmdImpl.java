@@ -13,7 +13,7 @@ import cloud.xcan.angus.api.commonlink.setting.user.SettingUserRepo;
 import cloud.xcan.angus.api.commonlink.setting.user.preference.Preference;
 import cloud.xcan.angus.api.commonlink.setting.user.socialbinding.SocialBinding;
 import cloud.xcan.angus.api.enums.SocialType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingTenantCmd;
@@ -32,15 +32,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of user setting command operations.
  * </p>
  * <p>
- * Manages user-specific settings including preferences, API proxy configurations,
- * and social binding information.
+ * Manages user-specific settings including preferences, API proxy configurations, and social
+ * binding information.
  * </p>
  * <p>
- * Provides user setting initialization, updates, and synchronization with
- * tenant-level configurations.
+ * Provides user setting initialization, updates, and synchronization with tenant-level
+ * configurations.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements SettingUserCmd {
 
   @Resource
@@ -59,8 +59,8 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
    * Finds and initializes user settings.
    * </p>
    * <p>
-   * Retrieves existing user settings or creates new ones with default values.
-   * Loads timezone configuration and refreshes API proxy settings from tenant configuration.
+   * Retrieves existing user settings or creates new ones with default values. Loads timezone
+   * configuration and refreshes API proxy settings from tenant configuration.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -92,8 +92,8 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
    * Initializes tenant and user settings for new users.
    * </p>
    * <p>
-   * Creates tenant settings and user settings when they don't exist,
-   * ensuring proper initialization for new tenant users.
+   * Creates tenant settings and user settings when they don't exist, ensuring proper initialization
+   * for new tenant users.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -122,8 +122,8 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
    * Updates user preference settings.
    * </p>
    * <p>
-   * Updates user preferences with new values while preserving existing
-   * settings that are not provided in the update.
+   * Updates user preferences with new values while preserving existing settings that are not
+   * provided in the update.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -145,8 +145,8 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
    * Updates social binding information for user.
    * </p>
    * <p>
-   * Updates social account binding with current timestamp and saves
-   * the binding information to user settings.
+   * Updates social account binding with current timestamp and saves the binding information to user
+   * settings.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -181,8 +181,8 @@ public class SettingUserCmdImpl extends CommCmd<SettingUser, Long> implements Se
    * Removes social binding for user.
    * </p>
    * <p>
-   * Unbinds the specified social account type by clearing the user ID
-   * and binding date for that social platform.
+   * Unbinds the specified social account type by clearing the user ID and binding date for that
+   * social platform.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

@@ -23,7 +23,7 @@ public class TenantConverter {
         .setAddress("")
         .setRemark("");
     tenant.setCreatedBy(-1L);
-    tenant.setLastModifiedBy(-1L);
+    tenant.setModifiedBy(-1L);
     return tenant;
   }
 

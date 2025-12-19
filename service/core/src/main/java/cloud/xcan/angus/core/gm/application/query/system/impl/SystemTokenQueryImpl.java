@@ -11,7 +11,7 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
 import cloud.xcan.angus.api.obf.Str0;
 import cloud.xcan.angus.api.pojo.Pair;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
@@ -34,15 +34,15 @@ import java.util.stream.Collectors;
  * Implementation of system token query operations.
  * </p>
  * <p>
- * Manages system token retrieval, validation, and encryption/decryption.
- * Provides comprehensive system token querying with resource association support.
+ * Manages system token retrieval, validation, and encryption/decryption. Provides comprehensive
+ * system token querying with resource association support.
  * </p>
  * <p>
- * Supports system token authentication, value retrieval, listing, encryption/decryption,
- * quota management, and resource association for comprehensive system token administration.
+ * Supports system token authentication, value retrieval, listing, encryption/decryption, quota
+ * management, and resource association for comprehensive system token administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SystemTokenQueryImpl implements SystemTokenQuery {
 
   @Resource
@@ -61,8 +61,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Authenticates system token with resource association.
    * </p>
    * <p>
-   * Fetches system token with API and service resource associations.
-   * Validates token existence and enriches with resource information.
+   * Fetches system token with API and service resource associations. Validates token existence and
+   * enriches with resource information.
    * </p>
    */
   @Override
@@ -106,8 +106,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Retrieves system token value with decryption.
    * </p>
    * <p>
-   * Fetches system token and decrypts its value for system administrators.
-   * Requires system administrator privileges for access.
+   * Fetches system token and decrypts its value for system administrators. Requires system
+   * administrator privileges for access.
    * </p>
    */
   @Override
@@ -134,8 +134,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Retrieves all system tokens.
    * </p>
    * <p>
-   * Returns complete list of system tokens without resource associations.
-   * Used for system token management and listing.
+   * Returns complete list of system tokens without resource associations. Used for system token
+   * management and listing.
    * </p>
    */
   @Override
@@ -153,8 +153,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Retrieves system token by ID without validation.
    * </p>
    * <p>
-   * Returns system token without existence validation.
-   * Returns null if system token does not exist.
+   * Returns system token without existence validation. Returns null if system token does not
+   * exist.
    * </p>
    */
   @Override
@@ -167,8 +167,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Validates system token name uniqueness.
    * </p>
    * <p>
-   * Ensures system token name does not already exist.
-   * Throws ResourceExisted if token name already exists.
+   * Ensures system token name does not already exist. Throws ResourceExisted if token name already
+   * exists.
    * </p>
    */
   @Override
@@ -182,8 +182,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Validates system token quota for tenant.
    * </p>
    * <p>
-   * Checks if adding system tokens would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding system tokens would exceed tenant quota limits. Throws appropriate exception
+   * if quota would be exceeded.
    * </p>
    */
   @Override
@@ -199,8 +199,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Encrypts system token value.
    * </p>
    * <p>
-   * Encrypts token value using AES encryption with tenant-specific key.
-   * Uses obfuscated key strings for security.
+   * Encrypts token value using AES encryption with tenant-specific key. Uses obfuscated key strings
+   * for security.
    * </p>
    */
   @Override
@@ -217,8 +217,8 @@ public class SystemTokenQueryImpl implements SystemTokenQuery {
    * Decrypts system token value.
    * </p>
    * <p>
-   * Decrypts token value using AES decryption with tenant-specific key.
-   * Uses obfuscated key strings for security.
+   * Decrypts token value using AES decryption with tenant-specific key. Uses obfuscated key strings
+   * for security.
    * </p>
    */
   @Override

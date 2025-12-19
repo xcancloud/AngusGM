@@ -10,7 +10,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.WebTagQuery;
@@ -36,15 +36,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of web tag query operations.
  * </p>
  * <p>
- * Manages web tag retrieval, validation, and application association.
- * Provides comprehensive web tag querying with full-text search support.
+ * Manages web tag retrieval, validation, and application association. Provides comprehensive web
+ * tag querying with full-text search support.
  * </p>
  * <p>
- * Supports web tag detail retrieval, paginated listing, name validation,
- * application association, and uniqueness checking for comprehensive web tag administration.
+ * Supports web tag detail retrieval, paginated listing, name validation, application association,
+ * and uniqueness checking for comprehensive web tag administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class WebTagQueryImpl implements WebTagQuery {
 
   @Resource
@@ -61,8 +61,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Retrieves detailed web tag information by ID.
    * </p>
    * <p>
-   * Fetches complete web tag record with existence validation.
-   * Throws ResourceNotFound exception if web tag does not exist.
+   * Fetches complete web tag record with existence validation. Throws ResourceNotFound exception if
+   * web tag does not exist.
    * </p>
    */
   @Override
@@ -81,8 +81,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Retrieves web tags with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated web tag results.
+   * Supports full-text search and specification-based filtering. Returns paginated web tag
+   * results.
    * </p>
    */
   @Override
@@ -104,8 +104,7 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Retrieves web tags by IDs.
    * </p>
    * <p>
-   * Returns web tags for the specified tag IDs.
-   * Returns empty list if no tags found.
+   * Returns web tags for the specified tag IDs. Returns empty list if no tags found.
    * </p>
    */
   @Override
@@ -118,8 +117,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Retrieves web tags by target ID.
    * </p>
    * <p>
-   * Returns web tags associated with the specified target.
-   * Returns null if no tags found for target.
+   * Returns web tags associated with the specified target. Returns null if no tags found for
+   * target.
    * </p>
    */
   @Override
@@ -137,8 +136,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Retrieves web tags by multiple target IDs.
    * </p>
    * <p>
-   * Returns web tags grouped by target ID for multiple targets.
-   * Associates tags with targets for complete data.
+   * Returns web tags grouped by target ID for multiple targets. Associates tags with targets for
+   * complete data.
    * </p>
    */
   @Override
@@ -165,8 +164,7 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Validates and retrieves web tag by ID.
    * </p>
    * <p>
-   * Returns web tag with existence validation.
-   * Throws ResourceNotFound if web tag does not exist.
+   * Returns web tag with existence validation. Throws ResourceNotFound if web tag does not exist.
    * </p>
    */
   @Override
@@ -179,8 +177,7 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Validates and retrieves web tags by IDs.
    * </p>
    * <p>
-   * Returns web tags with existence validation.
-   * Validates that all requested web tag IDs exist.
+   * Returns web tags with existence validation. Validates that all requested web tag IDs exist.
    * </p>
    */
   @Override
@@ -201,8 +198,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Validates web tag names for addition.
    * </p>
    * <p>
-   * Ensures web tag names do not already exist when adding new tags.
-   * Checks for duplicate names in parameters and existing tags.
+   * Ensures web tag names do not already exist when adding new tags. Checks for duplicate names in
+   * parameters and existing tags.
    * </p>
    */
   @Override
@@ -219,8 +216,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Validates web tag names for update.
    * </p>
    * <p>
-   * Ensures web tag name uniqueness when updating existing tags.
-   * Allows same tag to keep its name during update.
+   * Ensures web tag name uniqueness when updating existing tags. Allows same tag to keep its name
+   * during update.
    * </p>
    */
   @Override
@@ -245,8 +242,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Validates repeated tag names in parameters.
    * </p>
    * <p>
-   * Checks for duplicate tag names within the provided name list.
-   * Throws ProtocolException if duplicate names are found.
+   * Checks for duplicate tag names within the provided name list. Throws ProtocolException if
+   * duplicate names are found.
    * </p>
    */
   @Override
@@ -264,8 +261,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Sets application tags for application IDs.
    * </p>
    * <p>
-   * Associates web tags with applications by application IDs.
-   * Enriches applications with tag information for complete data.
+   * Associates web tags with applications by application IDs. Enriches applications with tag
+   * information for complete data.
    * </p>
    */
   @Override
@@ -287,8 +284,8 @@ public class WebTagQueryImpl implements WebTagQuery {
    * Sets application tags for application list.
    * </p>
    * <p>
-   * Associates web tags with applications in the provided list.
-   * Enriches applications with tag information for complete data.
+   * Associates web tags with applications in the provided list. Enriches applications with tag
+   * information for complete data.
    * </p>
    */
   @Override

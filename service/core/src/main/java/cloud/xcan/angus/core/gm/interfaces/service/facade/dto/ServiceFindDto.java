@@ -27,8 +27,4 @@ public class ServiceFindDto extends PageQuery {
   private Boolean enabled;
 
   private ServiceSource source;
-
-  @DateTimeFormat(pattern = DATE_FMT)
-  private LocalDateTime createdDate;
-
 }

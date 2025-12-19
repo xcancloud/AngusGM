@@ -11,7 +11,6 @@ import cloud.xcan.angus.api.commonlink.setting.user.socialbinding.SocialBinding;
 import cloud.xcan.angus.api.enums.SocialType;
 import cloud.xcan.angus.api.gm.setting.dto.UserSocialUpdateDto;
 import cloud.xcan.angus.api.gm.setting.vo.UserPreferenceVo;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingUserCmd;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingUserQuery;
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.SettingUserFacade;
@@ -19,7 +18,7 @@ import cloud.xcan.angus.core.gm.interfaces.setting.facade.dto.user.UserPreferenc
 import cloud.xcan.angus.core.gm.interfaces.setting.facade.vo.user.UserSocialBindingVo;
 import jakarta.annotation.Resource;
 
-@Biz
+@org.springframework.stereotype.Service
 public class SettingUserFacadeImpl implements SettingUserFacade {
 
   @Resource

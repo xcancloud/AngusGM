@@ -15,11 +15,11 @@ export type ListGroup = {
   tenantId: string;
   tenantName: string;
   createdBy: string;
-  createdByName: string;
+  creator: string;
   createdDate: string;
-  lastModifiedBy: string;
-  lastModifiedByName: string;
-  lastModifiedDate: string;
+  modifiedBy: string;
+  modifier: string;
+  modifiedDate: string;
   source?: any;
 }
 
@@ -35,7 +35,7 @@ export type FormState = {
 export type User = {
   avatar: string;
   createdBy: string;
-  createdByName: string;
+  creator: string;
   createdDate: string;
   fullName: string;
   groupCode: string;

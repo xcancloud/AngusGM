@@ -70,7 +70,8 @@ public class SmsChannelRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "SMS channel list retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<SmsChannelVo>> list(@Valid @ParameterObject SmsChannelFindDto dto) {
+  public ApiLocaleResult<PageResult<SmsChannelVo>> list(
+      @Valid @ParameterObject SmsChannelFindDto dto) {
     return ApiLocaleResult.success(smsChannelFacade.list(dto));
   }
 

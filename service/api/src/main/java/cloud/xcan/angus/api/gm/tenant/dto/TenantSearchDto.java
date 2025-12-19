@@ -37,9 +37,6 @@ public class TenantSearchDto extends PageQuery {
   @Schema(description = "Tenant lock status for security filtering. Used for account security and access control")
   private Boolean locked;
 
-  @Schema(description = "Tenant creation date for temporal filtering. Used for tenant lifecycle tracking and reporting")
-  private LocalDateTime createdDate;
-
   @Schema(description = "Tenant cancellation application date for lifecycle filtering. Used for tenant termination tracking")
   private LocalDateTime applyCancelDate;
 

@@ -25,12 +25,6 @@ public class UserGroupFindDto extends PageQuery {
   @Schema(description = "Group name for searching user-group relationships")
   private String groupName;
 
-  @Schema(description = "User ID who created the group relationship")
-  private Long createdBy;
-
-  @Schema(description = "Creation date of the group relationship")
-  private LocalDateTime createdDate;
-
   @Override
   public String getDefaultOrderBy() {
     return "createdDate";

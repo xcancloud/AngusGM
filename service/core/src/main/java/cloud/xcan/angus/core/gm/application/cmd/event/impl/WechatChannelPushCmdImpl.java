@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementation of WeChat channel push command for sending event notifications.
- * 
+ *
  * <p>This class provides WeChat robot integration functionality including:</p>
  * <ul>
  *   <li>Sending markdown formatted messages to WeChat robots</li>
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  *   <li>Converting event push data to WeChat robot format</li>
  *   <li>Managing push response status and error messages</li>
  * </ul>
- * 
+ *
  * <p>The implementation converts event notifications to WeChat markdown format
  * and sends them via WeChat robot webhook.</p>
  */
@@ -30,7 +30,7 @@ public class WechatChannelPushCmdImpl extends EventChannelPushCmdAbstract {
 
   /**
    * Pushes event notification to WeChat robot.
-   * 
+   *
    * <p>This method performs WeChat push including:</p>
    * <ul>
    *   <li>Converting event data to WeChat robot request format</li>
@@ -38,7 +38,7 @@ public class WechatChannelPushCmdImpl extends EventChannelPushCmdAbstract {
    *   <li>Handling API response and error codes</li>
    *   <li>Returning appropriate channel response</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data containing notification details
    * @return Channel send response with success status and message
    */
@@ -48,11 +48,11 @@ public class WechatChannelPushCmdImpl extends EventChannelPushCmdAbstract {
       // Create WeChat robot request with markdown content
       WeChatRobotRequest weChatRobotRequest = new WeChatRobotRequest();
       weChatRobotRequest.setMarkdown(new WeChatRobotRequest.MarkDown(eventPush.getContent()));
-      
+
       // Send request to WeChat robot webhook
       Map<?, ?> result = thirdPushClient.wechat(URI.create(eventPush.getAddress()),
           weChatRobotRequest);
-      
+
       // Parse response and return appropriate status
       return new ChannelSendResponse(Integer.parseInt(result.get("errcode").toString()) == 0,
           result.get("errmsg").toString());

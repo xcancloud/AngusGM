@@ -16,7 +16,7 @@ import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
@@ -48,15 +48,15 @@ import org.springframework.data.jpa.domain.JpaSort;
  * Implementation of application function query operations.
  * </p>
  * <p>
- * Manages application function retrieval, validation, and hierarchical relationships.
- * Provides comprehensive function querying with parent-child relationship support.
+ * Manages application function retrieval, validation, and hierarchical relationships. Provides
+ * comprehensive function querying with parent-child relationship support.
  * </p>
  * <p>
- * Supports function detail retrieval, hierarchical queries, validation checks,
- * and API/tag association for application function management.
+ * Supports function detail retrieval, hierarchical queries, validation checks, and API/tag
+ * association for application function management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AppFuncQueryImpl implements AppFuncQuery {
 
   @Resource
@@ -77,8 +77,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Retrieves detailed application function information by ID.
    * </p>
    * <p>
-   * Fetches complete function record with associated APIs and tags.
-   * Includes API and tag information for comprehensive function details.
+   * Fetches complete function record with associated APIs and tags. Includes API and tag
+   * information for comprehensive function details.
    * </p>
    */
   @Override
@@ -106,8 +106,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Retrieves list of application functions with optional full-text search.
    * </p>
    * <p>
-   * Supports both regular database queries and full-text search operations.
-   * Includes parent functions and target tags for complete function hierarchy.
+   * Supports both regular database queries and full-text search operations. Includes parent
+   * functions and target tags for complete function hierarchy.
    * </p>
    */
   @Override
@@ -139,8 +139,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Retrieves application functions and all their parent functions.
    * </p>
    * <p>
-   * Builds complete function hierarchy by recursively finding parent functions.
-   * Removes duplicates and returns unique functions with full ancestry.
+   * Builds complete function hierarchy by recursively finding parent functions. Removes duplicates
+   * and returns unique functions with full ancestry.
    * </p>
    */
   @Override
@@ -198,8 +198,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Validates and retrieves tenant application functions with multi-tenant control.
    * </p>
    * <p>
-   * Temporarily disables multi-tenant control for tenant-level function queries.
-   * Validates functions exist and optionally checks enabled status.
+   * Temporarily disables multi-tenant control for tenant-level function queries. Validates
+   * functions exist and optionally checks enabled status.
    * </p>
    */
   @Override
@@ -222,8 +222,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Validates function codes do not already exist for the application.
    * </p>
    * <p>
-   * Checks for duplicate function codes within the specified application.
-   * Throws ResourceExisted exception if any function code already exists.
+   * Checks for duplicate function codes within the specified application. Throws ResourceExisted
+   * exception if any function code already exists.
    * </p>
    */
   @Override
@@ -242,8 +242,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Validates function codes do not conflict during updates.
    * </p>
    * <p>
-   * Checks for duplicate function codes excluding the current function being updated.
-   * Throws ResourceExisted exception if function code conflicts with other functions.
+   * Checks for duplicate function codes excluding the current function being updated. Throws
+   * ResourceExisted exception if function code conflicts with other functions.
    * </p>
    */
   @Override
@@ -268,8 +268,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Validates and retrieves application function by ID with optional enabled status check.
    * </p>
    * <p>
-   * Verifies function exists and optionally checks enabled status.
-   * Throws appropriate exceptions for missing or disabled functions.
+   * Verifies function exists and optionally checks enabled status. Throws appropriate exceptions
+   * for missing or disabled functions.
    * </p>
    */
   @Override
@@ -284,11 +284,12 @@ public class AppFuncQueryImpl implements AppFuncQuery {
 
   /**
    * <p>
-   * Validates and retrieves multiple application functions by IDs with optional enabled status check.
+   * Validates and retrieves multiple application functions by IDs with optional enabled status
+   * check.
    * </p>
    * <p>
-   * Verifies all functions exist and optionally checks enabled status.
-   * Validates complete collection match and throws appropriate exceptions.
+   * Verifies all functions exist and optionally checks enabled status. Validates complete
+   * collection match and throws appropriate exceptions.
    * </p>
    */
   @Override
@@ -318,8 +319,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Retrieves all application functions by app ID with optional enabled filter.
    * </p>
    * <p>
-   * Fetches all functions for the specified application.
-   * Optionally filters to only enabled functions when onlyEnabled is true.
+   * Fetches all functions for the specified application. Optionally filters to only enabled
+   * functions when onlyEnabled is true.
    * </p>
    */
   @Override
@@ -346,8 +347,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Retrieves application functions and their sub-functions.
    * </p>
    * <p>
-   * Builds complete function hierarchy including all sub-functions recursively.
-   * Returns functions and all their descendants in the hierarchy.
+   * Builds complete function hierarchy including all sub-functions recursively. Returns functions
+   * and all their descendants in the hierarchy.
    * </p>
    */
   @Override
@@ -442,7 +443,8 @@ public class AppFuncQueryImpl implements AppFuncQuery {
    * Associates target tags with application functions.
    * </p>
    * <p>
-   * Enriches functions with their associated web tag targets for comprehensive function information.
+   * Enriches functions with their associated web tag targets for comprehensive function
+   * information.
    * </p>
    */
   @Override

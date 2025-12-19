@@ -36,13 +36,13 @@ public class TenantReplaceDto implements Serializable {
 
   @NotNull
   @Schema(description = "Tenant identifier for replacement operation. Used for identifying the specific tenant for replacement",
-    example = "1", requiredMode = RequiredMode.REQUIRED)
+      example = "1", requiredMode = RequiredMode.REQUIRED)
   private Long id;
 
   @NotBlank
   @Length(max = MAX_NAME_LENGTH)
-  @Schema(description = "Tenant name for identification and display. Used for tenant management and organization", 
-    example = "XCan Company",  requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Tenant name for identification and display. Used for tenant management and organization",
+      example = "XCan Company", requiredMode = RequiredMode.REQUIRED)
   private String name;
 
   @Schema(description = "Tenant type for classification and management. Used for determining tenant category and applicable policies")

@@ -37,7 +37,6 @@ import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
 import cloud.xcan.angus.api.enums.ProcessStatus;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.biz.exception.NoRollbackException;
@@ -77,7 +76,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of email command operations for managing email sending and verification.
- * 
+ *
  * <p>This class provides comprehensive functionality for email management including:</p>
  * <ul>
  *   <li>Sending emails with various delivery methods</li>
@@ -87,11 +86,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Managing email server configurations</li>
  *   <li>Handling email delivery status and retries</li>
  * </ul>
- * 
+ *
  * <p>The implementation supports both immediate and scheduled email delivery
  * with comprehensive error handling and status tracking.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
@@ -116,7 +115,7 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Sends email with comprehensive validation and delivery options.
-   * 
+   *
    * <p>This method performs email sending including:</p>
    * <ul>
    *   <li>Validating recipient configuration (address or organization type)</li>
@@ -125,8 +124,8 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
    *   <li>Handling batch and individual email delivery</li>
    *   <li>Managing email status and error handling</li>
    * </ul>
-   * 
-   * @param email Email entity to send
+   *
+   * @param email      Email entity to send
    * @param testServer Whether to use test server configuration
    */
   @Override
@@ -207,9 +206,9 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Sends email by job with template support.
-   * 
+   *
    * <p>Note: Future enhancement to support resending after failure.</p>
-   * 
+   *
    * @param email Email entity to send
    */
   @DoInFuture("Support resending after failure")
@@ -232,16 +231,16 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Validates verification code from email.
-   * 
+   *
    * <p>This method checks verification code validity including:</p>
    * <ul>
    *   <li>Checking code existence in cache</li>
    *   <li>Validating code correctness</li>
    *   <li>Cleaning up verification code cache</li>
    * </ul>
-   * 
-   * @param bizKey Business key for verification code
-   * @param email Email address
+   *
+   * @param bizKey           Business key for verification code
+   * @param email            Email address
    * @param verificationCode Verification code to validate
    */
   @Override
@@ -261,7 +260,7 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Deletes emails by identifiers.
-   * 
+   *
    * @param ids Set of email identifiers to delete
    */
   @Override
@@ -278,7 +277,7 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Updates email entities with batch processing.
-   * 
+   *
    * @param emails List of email entities to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -289,7 +288,7 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Sends email with comprehensive parameter assembly and delivery.
-   * 
+   *
    * <p>This method handles email delivery including:</p>
    * <ul>
    *   <li>Assembling email parameters</li>
@@ -297,10 +296,10 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
    *   <li>Managing verification code caching</li>
    *   <li>Handling delivery errors and status updates</li>
    * </ul>
-   * 
-   * @param serverTest Whether to use test server
-   * @param email Email entity to send
-   * @param template Email template
+   *
+   * @param serverTest    Whether to use test server
+   * @param email         Email entity to send
+   * @param template      Email template
    * @param enabledServer Email server configuration
    */
   @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
@@ -354,9 +353,9 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Sends email immediately with batch or individual delivery.
-   * 
-   * @param email Email entity to send
-   * @param template Email template
+   *
+   * @param email         Email entity to send
+   * @param template      Email template
    * @param enabledServer Email server configuration
    */
   private void sendEmailNow(Email email, EmailTemplate template, EmailServer enabledServer) {
@@ -398,12 +397,12 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Retrieves email addresses for different recipient object types.
-   * 
-   * @param receiveObjectType Type of recipient object
-   * @param receiveObjectIds Recipient object identifiers
+   *
+   * @param receiveObjectType  Type of recipient object
+   * @param receiveObjectIds   Recipient object identifiers
    * @param receivePolicyCodes Recipient policy codes
-   * @param page Zero-based page index, must not be negative
-   * @param size Size of the page to be returned, must be greater than 0
+   * @param page               Zero-based page index, must not be negative
+   * @param size               Size of the page to be returned, must be greater than 0
    * @return List of email addresses
    */
   public List<String> getReceiveObjectEmails(ReceiveObjectType receiveObjectType,
@@ -443,8 +442,8 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Caches verification code for email validation.
-   * 
-   * @param email Email entity
+   *
+   * @param email    Email entity
    * @param template Email template
    */
   private void cacheVerificationCode(Email email, EmailTemplate template) {
@@ -460,10 +459,10 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Deletes verification code cache entries.
-   * 
+   *
    * @param cacheKey Cache key to delete
-   * @param bizKey Business key
-   * @param email Email address
+   * @param bizKey   Business key
+   * @param email    Email address
    */
   private void deleteVerificationCodeCache(String cacheKey, EmailBizKey bizKey, String email) {
     stringRedisService.delete(cacheKey);
@@ -472,8 +471,8 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Translates basic mail sending exceptions to NoRollbackException.
-   * 
-   * @param e Exception to translate
+   *
+   * @param e     Exception to translate
    * @param email Email entity
    * @return Translated NoRollbackException
    */
@@ -494,10 +493,10 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Assembles email sending parameters.
-   * 
-   * @param serverTest Whether to use test server
-   * @param email Email entity
-   * @param template Email template
+   *
+   * @param serverTest  Whether to use test server
+   * @param email       Email entity
+   * @param template    Email template
    * @param emailServer Email server configuration
    */
   private void assembleEmailSendParam(boolean serverTest, Email email, EmailTemplate template,
@@ -522,7 +521,7 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
       email.setTemplateCode(template.getTemplateBiz().getTemplateCode());
     }
     if (!isUserAction()) {
-      email.setCreatedBy(email.getSendUserId()).setLastModifiedBy(email.getSendUserId());
+      email.setCreatedBy(email.getSendUserId()).setModifiedBy(email.getSendUserId());
     }
     // Enforce only one email receiving address
     if (email.isSendByAllPlatformUsers() || email.isTemplateEmail()) {
@@ -532,8 +531,8 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Assembles test channel parameters for email testing.
-   * 
-   * @param email Email entity
+   *
+   * @param email       Email entity
    * @param emailServer Email server configuration
    */
   private void assembleTestChannelParams(Email email, EmailServer emailServer) {
@@ -549,7 +548,7 @@ public class EmailCmdImpl extends CommCmd<Email, Long> implements EmailCmd {
 
   /**
    * Builds verification code parameters for email.
-   * 
+   *
    * @param email Email entity
    */
   private void assembleVerificationCodeParams(Email email) {

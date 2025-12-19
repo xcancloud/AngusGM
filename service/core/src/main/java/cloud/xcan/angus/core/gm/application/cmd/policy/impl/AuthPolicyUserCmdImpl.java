@@ -13,7 +13,7 @@ import static java.util.Collections.singleton;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -39,15 +39,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of user authorization policy command operations.
  * </p>
  * <p>
- * Manages the association between users and authorization policies,
- * providing bidirectional operations for adding and removing policy-user relationships.
+ * Manages the association between users and authorization policies, providing bidirectional
+ * operations for adding and removing policy-user relationships.
  * </p>
  * <p>
- * Supports both policy-centric and user-centric operations with proper
- * validation and audit logging.
+ * Supports both policy-centric and user-centric operations with proper validation and audit
+ * logging.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
     AuthPolicyUserCmd {
@@ -66,12 +66,11 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Associates users with a specific authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and users exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the policy and users exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * Only creates new associations for users that aren't already
-   * associated with the policy.
+   * Only creates new associations for users that aren't already associated with the policy.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -125,8 +124,8 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Removes user associations from a specific authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and users exist, checks permissions,
-   * and removes the specified user-policy associations.
+   * Validates that the policy and users exist, checks permissions, and removes the specified
+   * user-policy associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -163,12 +162,11 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Associates authorization policies with a specific user.
    * </p>
    * <p>
-   * Validates that the user and policies exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the user and policies exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * Only creates new associations for policies that aren't already
-   * associated with the user.
+   * Only creates new associations for policies that aren't already associated with the user.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -223,8 +221,8 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Removes authorization policy associations from a specific user.
    * </p>
    * <p>
-   * Validates that the user and policies exist, checks permissions,
-   * and removes the specified policy-user associations.
+   * Validates that the user and policies exist, checks permissions, and removes the specified
+   * policy-user associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -261,12 +259,12 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Batch removes user-policy associations.
    * </p>
    * <p>
-   * Used when deleting users or policies to clean up all related associations.
-   * Skips permission checks as this is typically called during cleanup operations.
+   * Used when deleting users or policies to clean up all related associations. Skips permission
+   * checks as this is typically called during cleanup operations.
    * </p>
    * <p>
-   * If policyIds is empty, removes all policy associations for the specified users.
-   * Otherwise, removes only the specified policy associations.
+   * If policyIds is empty, removes all policy associations for the specified users. Otherwise,
+   * removes only the specified policy associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -299,8 +297,8 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Completes authorization information for organization-based policy associations.
    * </p>
    * <p>
-   * Sets the policy type and application ID for each organization-policy association
-   * based on the provided policy information.
+   * Sets the policy type and application ID for each organization-policy association based on the
+   * provided policy information.
    * </p>
    */
   public static void assembleOrgAuthInfo(List<AuthPolicyOrg> policyOrg, AuthPolicy authPolicyDb) {
@@ -314,8 +312,8 @@ public class AuthPolicyUserCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Completes authorization information for policy-based organization associations.
    * </p>
    * <p>
-   * Sets the policy type and application ID for each policy-organization association
-   * based on the provided policy information.
+   * Sets the policy type and application ID for each policy-organization association based on the
+   * provided policy information.
    * </p>
    */
   public static void assemblePolicyAuthInfo(List<AuthPolicyOrg> policyOrg,

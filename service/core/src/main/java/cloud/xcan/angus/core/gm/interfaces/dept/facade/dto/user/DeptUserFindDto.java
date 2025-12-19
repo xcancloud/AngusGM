@@ -23,9 +23,6 @@ public class DeptUserFindDto extends PageQuery {
   @Schema(description = "User full name for filtering")
   private String fullName;
 
-  @Schema(description = "User creation date for filtering")
-  private LocalDateTime createdDate;
-
   @Schema(description = "Whether user is department head")
   private Boolean deptHead;
 

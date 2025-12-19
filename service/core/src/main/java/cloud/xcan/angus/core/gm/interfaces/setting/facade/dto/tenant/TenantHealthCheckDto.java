@@ -21,7 +21,8 @@ public class TenantHealthCheckDto implements Serializable {
   @Schema(description = "Enable tenant health monitoring and alerting system", defaultValue = "false", example = "true")
   private Boolean enabled = false;
 
-  @Schema(description = "Alert notification methods for health check abnormalities", allowableValues = {"SMS", "EMAIL"})
+  @Schema(description = "Alert notification methods for health check abnormalities", allowableValues = {
+      "SMS", "EMAIL"})
   private List<AlarmWay> alarmWay;
 
   @Size(max = MAX_HEALTH_ALARM_RECIPIENT)

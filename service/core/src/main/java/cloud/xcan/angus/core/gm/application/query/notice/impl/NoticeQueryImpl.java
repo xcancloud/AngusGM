@@ -9,7 +9,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Objects.nonNull;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.notice.NoticeQuery;
 import cloud.xcan.angus.core.gm.domain.SentType;
@@ -35,16 +35,16 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of notice query operations.
  * </p>
  * <p>
- * Manages notice retrieval, validation, and application information association.
- * Provides comprehensive notice querying with full-text search and summary support.
+ * Manages notice retrieval, validation, and application information association. Provides
+ * comprehensive notice querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports notice detail retrieval, latest notice queries (global and app-specific),
- * paginated listing, and application information enrichment for comprehensive notice management.
+ * Supports notice detail retrieval, latest notice queries (global and app-specific), paginated
+ * listing, and application information enrichment for comprehensive notice management.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Notice", table = "notice",
     groupByColumns = {"created_date", "scope", "send_type"})
 public class NoticeQueryImpl implements NoticeQuery {
@@ -61,8 +61,8 @@ public class NoticeQueryImpl implements NoticeQuery {
    * Retrieves detailed notice information by ID.
    * </p>
    * <p>
-   * Fetches complete notice record with application information association.
-   * Throws ResourceNotFound exception if notice does not exist.
+   * Fetches complete notice record with application information association. Throws
+   * ResourceNotFound exception if notice does not exist.
    * </p>
    */
   @Override
@@ -84,8 +84,8 @@ public class NoticeQueryImpl implements NoticeQuery {
    * Retrieves the latest global notice.
    * </p>
    * <p>
-   * Returns the most recent global notice that is not expired.
-   * Returns null if no valid global notice exists.
+   * Returns the most recent global notice that is not expired. Returns null if no valid global
+   * notice exists.
    * </p>
    */
   @Override
@@ -109,8 +109,8 @@ public class NoticeQueryImpl implements NoticeQuery {
    * Retrieves the latest notice for specific application.
    * </p>
    * <p>
-   * Returns the most recent app-specific notice or falls back to global notice.
-   * Prioritizes app-specific notices over global notices based on timing.
+   * Returns the most recent app-specific notice or falls back to global notice. Prioritizes
+   * app-specific notices over global notices based on timing.
    * </p>
    */
   @Override
@@ -145,8 +145,8 @@ public class NoticeQueryImpl implements NoticeQuery {
    * Retrieves notices with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Enriches results with application information for comprehensive display.
+   * Supports full-text search and specification-based filtering. Enriches results with application
+   * information for comprehensive display.
    * </p>
    */
   @Override
@@ -170,8 +170,8 @@ public class NoticeQueryImpl implements NoticeQuery {
    * Validates timing parameters for notice sending.
    * </p>
    * <p>
-   * Ensures timing date is provided when send type is TIMING_SEND.
-   * Throws ProtocolException if timing date is missing for timing send.
+   * Ensures timing date is provided when send type is TIMING_SEND. Throws ProtocolException if
+   * timing date is missing for timing send.
    * </p>
    */
   @Override

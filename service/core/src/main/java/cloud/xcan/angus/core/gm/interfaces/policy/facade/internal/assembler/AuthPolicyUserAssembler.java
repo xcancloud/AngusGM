@@ -79,8 +79,8 @@ public class AuthPolicyUserAssembler {
         .setTenantName(user.getTenantName())
         .setCreatedBy(user.getCreatedBy())
         .setCreatedDate(user.getCreatedDate())
-        .setLastModifiedBy(user.getLastModifiedBy())
-        .setLastModifiedDate(user.getLastModifiedDate());
+        .setModifiedBy(user.getModifiedBy())
+        .setModifiedDate(user.getModifiedDate());
     return userListVo;
   }
 

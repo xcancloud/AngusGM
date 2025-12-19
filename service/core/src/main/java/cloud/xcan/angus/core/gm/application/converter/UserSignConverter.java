@@ -39,8 +39,8 @@ public class UserSignConverter {
         .setLocked(false)
         .setCreatedBy(-1L)
         .setCreatedDate(LocalDateTime.now())
-        .setLastModifiedBy(-1L)
-        .setLastModifiedDate(LocalDateTime.now());
+        .setModifiedBy(-1L)
+        .setModifiedDate(LocalDateTime.now());
   }
 
 }

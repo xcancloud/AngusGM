@@ -53,7 +53,8 @@ public class AppFuncRest {
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Create application functions", operationId = "app:func:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Application functions created successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Application functions created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/{appId}/func")
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -79,7 +80,8 @@ public class AppFuncRest {
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Replace application functions", operationId = "app:func:replace")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Application functions replaced successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Application functions replaced successfully")})
   @PutMapping("/{appId}/func")
   public ApiLocaleResult<?> replace(
       @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,
@@ -92,7 +94,8 @@ public class AppFuncRest {
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Delete application functions", operationId = "app:func:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Application functions deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Application functions deleted successfully")})
   @DeleteMapping(value = "/{appId}/func")
   public void delete(
       @Parameter(name = "appId", description = "Application identifier", required = true) @PathVariable("appId") Long appId,

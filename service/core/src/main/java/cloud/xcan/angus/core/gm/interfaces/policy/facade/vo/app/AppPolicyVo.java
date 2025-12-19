@@ -40,7 +40,7 @@ public class AppPolicyVo {
   private Long createdBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 
   private LocalDateTime createdDate;
 

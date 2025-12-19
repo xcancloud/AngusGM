@@ -16,7 +16,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 import cloud.xcan.angus.api.enums.ProcessStatus;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsChannelQuery;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsQuery;
@@ -47,16 +47,16 @@ import org.springframework.data.jpa.domain.Specification;
  * Implementation of SMS query operations.
  * </p>
  * <p>
- * Manages SMS retrieval, validation, and sending verification.
- * Provides comprehensive SMS querying with full-text search and summary support.
+ * Manages SMS retrieval, validation, and sending verification. Provides comprehensive SMS querying
+ * with full-text search and summary support.
  * </p>
  * <p>
- * Supports SMS detail retrieval, paginated listing, verification code checking,
- * mobile format validation, channel validation, template validation, and provider management
- * for comprehensive SMS administration.
+ * Supports SMS detail retrieval, paginated listing, verification code checking, mobile format
+ * validation, channel validation, template validation, and provider management for comprehensive
+ * SMS administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Sms", table = "sms", isMultiTenantCtrl = false,
     groupByColumns = {"actual_send_date", "send_status", "urgent", "verification_code",
         "batch"})
@@ -78,8 +78,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Retrieves detailed SMS information by ID.
    * </p>
    * <p>
-   * Fetches complete SMS record with existence validation.
-   * Throws ResourceNotFound exception if SMS does not exist.
+   * Fetches complete SMS record with existence validation. Throws ResourceNotFound exception if SMS
+   * does not exist.
    * </p>
    */
   @Override
@@ -98,8 +98,7 @@ public class SmsQueryImpl implements SmsQuery {
    * Retrieves SMS records with optional filtering and pagination.
    * </p>
    * <p>
-   * Supports specification-based filtering and pagination.
-   * Returns paginated SMS results.
+   * Supports specification-based filtering and pagination. Returns paginated SMS results.
    * </p>
    */
   @Override
@@ -118,8 +117,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Retrieves pending SMS records for processing.
    * </p>
    * <p>
-   * Returns SMS records with PENDING status for batch processing.
-   * Limits the number of records returned for performance.
+   * Returns SMS records with PENDING status for batch processing. Limits the number of records
+   * returned for performance.
    * </p>
    */
   @Override
@@ -132,8 +131,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Validates verification code send repetition.
    * </p>
    * <p>
-   * Checks if verification code has been sent recently for each mobile number.
-   * Throws exception if verification code send is repeated too frequently.
+   * Checks if verification code has been sent recently for each mobile number. Throws exception if
+   * verification code send is repeated too frequently.
    * </p>
    */
   @Override
@@ -152,8 +151,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Validates mobile number format.
    * </p>
    * <p>
-   * Checks mobile number format for each mobile in SMS input parameters.
-   * Validates format only when sending by mobile numbers.
+   * Checks mobile number format for each mobile in SMS input parameters. Validates format only when
+   * sending by mobile numbers.
    * </p>
    */
   @Override
@@ -168,8 +167,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Validates and retrieves enabled SMS channel.
    * </p>
    * <p>
-   * Checks if enabled SMS channel exists and returns it.
-   * Throws SysException if no enabled SMS channel is available.
+   * Checks if enabled SMS channel exists and returns it. Throws SysException if no enabled SMS
+   * channel is available.
    * </p>
    */
   @Override
@@ -186,8 +185,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Validates and retrieves SMS template.
    * </p>
    * <p>
-   * Checks SMS template business configuration and template existence.
-   * Throws SysException if template configuration is missing or template not found.
+   * Checks SMS template business configuration and template existence. Throws SysException if
+   * template configuration is missing or template not found.
    * </p>
    */
   @Override
@@ -212,8 +211,8 @@ public class SmsQueryImpl implements SmsQuery {
    * Validates and retrieves SMS provider.
    * </p>
    * <p>
-   * Checks SMS provider availability and matches with enabled channel.
-   * Throws SysException if no SMS plugin is available.
+   * Checks SMS provider availability and matches with enabled channel. Throws SysException if no
+   * SMS plugin is available.
    * </p>
    */
   @Override

@@ -24,7 +24,7 @@ import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.enums.TenantStatus;
 import cloud.xcan.angus.api.enums.UserSource;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -48,15 +48,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant command operations.
  * </p>
  * <p>
- * Manages tenant lifecycle including creation, updates, status management,
- * and lock/unlock operations.
+ * Manages tenant lifecycle including creation, updates, status management, and lock/unlock
+ * operations.
  * </p>
  * <p>
- * Supports tenant creation with certificate audit, status management,
- * and scheduled lock/unlock operations via job processing.
+ * Supports tenant creation with certificate audit, status management, and scheduled lock/unlock
+ * operations via job processing.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
 
@@ -78,8 +78,8 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
    * Creates a new tenant with certificate audit and system administrator.
    * </p>
    * <p>
-   * Creates tenant, submits certificate audit if provided, and creates
-   * system administrator user for the tenant.
+   * Creates tenant, submits certificate audit if provided, and creates system administrator user
+   * for the tenant.
    * </p>
    * <p>
    * Allows tenants to submit their own certificates after creation.
@@ -126,8 +126,8 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
    * Updates tenant information and related data.
    * </p>
    * <p>
-   * Updates tenant details, certificate audit if applicable, and user information.
-   * Prevents name modification after real-name authentication is passed.
+   * Updates tenant details, certificate audit if applicable, and user information. Prevents name
+   * modification after real-name authentication is passed.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -177,8 +177,8 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
    * Replaces tenant information completely.
    * </p>
    * <p>
-   * Replaces tenant details, certificate audit if applicable, and user information.
-   * Validates certificate submission requirements.
+   * Replaces tenant details, certificate audit if applicable, and user information. Validates
+   * certificate submission requirements.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -265,8 +265,8 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
    * Locks or unlocks tenant with optional date constraints.
    * </p>
    * <p>
-   * Sets lock status with start and end dates, validates date constraints,
-   * and logs the operation for audit purposes.
+   * Sets lock status with start and end dates, validates date constraints, and logs the operation
+   * for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

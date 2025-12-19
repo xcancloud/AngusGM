@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
     code: undefined,
     appId: undefined,
     appName: undefined,
-    createdByName: undefined,
+    creator: undefined,
     createdDate: undefined,
     type: { value: undefined, message: undefined },
     enabled: false,
@@ -108,8 +108,8 @@ const { t } = useI18n();
           </div>
         </div>
         <div class="info-item">
-          <div class="info-label">{{ t('common.columns.createdByName') }}</div>
-          <div class="info-value">{{ textOrDash(props.detail?.createdByName) }}</div>
+          <div class="info-label">{{ t('common.columns.creator') }}</div>
+          <div class="info-value">{{ textOrDash(props.detail?.creator) }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('common.columns.createdDate') }}</div>

@@ -19,7 +19,7 @@ import cloud.xcan.angus.api.commonlink.group.GroupRepo;
 import cloud.xcan.angus.api.commonlink.group.GroupSource;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of group command operations for managing organizational groups.
- * 
+ *
  * <p>This class provides comprehensive functionality for group management including:</p>
  * <ul>
  *   <li>Creating and configuring organizational groups</li>
@@ -51,11 +51,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Managing directory-based group operations</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper group management with validation,
  * tag associations, and audit trail maintenance.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   @Resource
@@ -73,7 +73,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Creates multiple groups with comprehensive validation.
-   * 
+   *
    * <p>This method performs group creation including:</p>
    * <ul>
    *   <li>Validating group code uniqueness</li>
@@ -82,7 +82,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
    *   <li>Managing group tag associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param groups List of groups to create
    * @return List of created group identifiers
    */
@@ -120,7 +120,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Updates multiple groups with comprehensive validation.
-   * 
+   *
    * <p>This method performs group updates including:</p>
    * <ul>
    *   <li>Validating group code uniqueness</li>
@@ -129,7 +129,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
    *   <li>Replacing group tag associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param groups List of groups to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -168,7 +168,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Replaces groups with comprehensive validation and creation.
-   * 
+   *
    * <p>This method performs group replacement including:</p>
    * <ul>
    *   <li>Validating existing groups</li>
@@ -177,7 +177,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
    *   <li>Managing tag associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param groups List of groups to replace
    * @return List of created/updated group identifiers
    */
@@ -246,7 +246,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Deletes groups by their identifiers.
-   * 
+   *
    * <p>This method performs group deletion including:</p>
    * <ul>
    *   <li>Retrieving group information for audit logs</li>
@@ -254,7 +254,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
    *   <li>Cleaning up related associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param ids Set of group identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -280,7 +280,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Deletes groups and cleans up all related associations.
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Deleting group configurations</li>
@@ -288,7 +288,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
    *   <li>Cleaning up tag associations</li>
    *   <li>Removing authorization policies</li>
    * </ul>
-   * 
+   *
    * @param ids Set of group identifiers to delete
    */
   @Override
@@ -310,14 +310,14 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Updates group enabled/disabled status.
-   * 
+   *
    * <p>This method manages group status including:</p>
    * <ul>
    *   <li>Updating group enabled status</li>
    *   <li>Recording operation audit logs</li>
    *   <li>Separating enabled and disabled groups for logging</li>
    * </ul>
-   * 
+   *
    * @param groups List of groups to update status
    */
   @Transactional(rollbackFor = Exception.class)
@@ -334,7 +334,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
         operationLogCmd.addAll(GROUP, groupsDb.stream()
             .filter(Group::getEnabled).toList(), ENABLED);
         operationLogCmd.addAll(GROUP, groupsDb.stream()
-             .filter(x -> !x.getEnabled()).toList(), DISABLED);
+            .filter(x -> !x.getEnabled()).toList(), DISABLED);
         return null;
       }
     }.execute();
@@ -342,7 +342,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Empties directory groups by setting directory empty flag.
-   * 
+   *
    * @param groupIds Set of group identifiers to empty
    */
   @Transactional(rollbackFor = Exception.class)
@@ -353,7 +353,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Empties directory groups by directory identifier.
-   * 
+   *
    * @param directoryId Directory identifier
    */
   @Override
@@ -363,15 +363,15 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Deletes groups by directory with optional sync deletion.
-   * 
+   *
    * <p>This method handles directory-based deletion including:</p>
    * <ul>
    *   <li>Full deletion with sync flag</li>
    *   <li>Empty directory groups without sync</li>
    * </ul>
-   * 
+   *
    * @param directoryId Directory identifier
-   * @param deleteSync Whether to perform full deletion
+   * @param deleteSync  Whether to perform full deletion
    */
   @Override
   public void deleteByDirectory(Long directoryId, boolean deleteSync) {
@@ -386,9 +386,9 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
 
   /**
    * Builds organization tag targets for groups.
-   * 
+   *
    * <p>This method converts group tag IDs to domain objects for storage.</p>
-   * 
+   *
    * @param groups List of groups with tag associations
    * @return List of organization tag targets
    */

@@ -21,7 +21,6 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTagTargetRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -49,15 +48,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of organization tag target command operations.
  * </p>
  * <p>
- * Manages tag-target associations for users, departments, and groups.
- * Provides comprehensive tag assignment, replacement, and deletion functionality.
+ * Manages tag-target associations for users, departments, and groups. Provides comprehensive tag
+ * assignment, replacement, and deletion functionality.
  * </p>
  * <p>
- * Supports quota validation, deduplication, and audit logging for all tag operations.
- * Handles both individual and batch tag-target operations.
+ * Supports quota validation, deduplication, and audit logging for all tag operations. Handles both
+ * individual and batch tag-target operations.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements OrgTagTargetCmd {
 
@@ -83,8 +82,8 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
    * Adds tag targets to a specific tag.
    * </p>
    * <p>
-   * Validates tag existence and target deduplication for users, departments, and groups.
-   * Checks quota limits and logs operations for audit purposes.
+   * Validates tag existence and target deduplication for users, departments, and groups. Checks
+   * quota limits and logs operations for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -166,8 +165,8 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
    * Adds tags to a specific user.
    * </p>
    * <p>
-   * Validates user and tag existence, performs deduplication, and checks quota limits.
-   * Logs operations for audit purposes.
+   * Validates user and tag existence, performs deduplication, and checks quota limits. Logs
+   * operations for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -286,8 +285,8 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
    * Adds tags to a specific department.
    * </p>
    * <p>
-   * Validates department and tag existence, performs deduplication, and checks quota limits.
-   * Logs operations for audit purposes.
+   * Validates department and tag existence, performs deduplication, and checks quota limits. Logs
+   * operations for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -404,8 +403,8 @@ public class OrgTagTargetCmdImpl extends CommCmd<OrgTagTarget, Long> implements 
    * Adds tags to a specific group.
    * </p>
    * <p>
-   * Validates group and tag existence, performs deduplication, and checks quota limits.
-   * Logs operations for audit purposes.
+   * Validates group and tag existence, performs deduplication, and checks quota limits. Logs
+   * operations for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

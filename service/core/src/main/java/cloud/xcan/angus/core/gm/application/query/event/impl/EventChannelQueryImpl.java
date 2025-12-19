@@ -36,12 +36,12 @@ import org.springframework.stereotype.Service;
  * Implementation of event channel query operations.
  * </p>
  * <p>
- * Manages event channel retrieval, caching, and quota validation.
- * Provides comprehensive event channel querying with template association support.
+ * Manages event channel retrieval, caching, and quota validation. Provides comprehensive event
+ * channel querying with template association support.
  * </p>
  * <p>
- * Supports channel listing, template association queries, quota validation,
- * and usage checking for comprehensive event channel management.
+ * Supports channel listing, template association queries, quota validation, and usage checking for
+ * comprehensive event channel management.
  * </p>
  */
 @Slf4j
@@ -102,8 +102,8 @@ public class EventChannelQueryImpl implements EventChannelQuery {
    * Retrieves event channels associated with template using caching.
    * </p>
    * <p>
-   * Uses cache for performance optimization and returns channels for template.
-   * Returns null if no channels are associated with the template.
+   * Uses cache for performance optimization and returns channels for template. Returns null if no
+   * channels are associated with the template.
    * </p>
    */
   @Override
@@ -150,8 +150,8 @@ public class EventChannelQueryImpl implements EventChannelQuery {
    * Validates and retrieves event channel by ID.
    * </p>
    * <p>
-   * Verifies channel exists and returns channel information.
-   * Throws ResourceNotFound exception if channel does not exist.
+   * Verifies channel exists and returns channel information. Throws ResourceNotFound exception if
+   * channel does not exist.
    * </p>
    */
   @Override
@@ -165,8 +165,8 @@ public class EventChannelQueryImpl implements EventChannelQuery {
    * Validates and retrieves multiple event channels by IDs.
    * </p>
    * <p>
-   * Verifies all channels exist and returns channel information.
-   * Throws ResourceNotFound exception if any channel does not exist.
+   * Verifies all channels exist and returns channel information. Throws ResourceNotFound exception
+   * if any channel does not exist.
    * </p>
    */
   @Override
@@ -185,8 +185,8 @@ public class EventChannelQueryImpl implements EventChannelQuery {
    * Validates channel name uniqueness.
    * </p>
    * <p>
-   * Checks if channel name already exists for new or updated channels.
-   * Throws ResourceExisted exception if name is not unique.
+   * Checks if channel name already exists for new or updated channels. Throws ResourceExisted
+   * exception if name is not unique.
    * </p>
    */
   @Override
@@ -203,8 +203,8 @@ public class EventChannelQueryImpl implements EventChannelQuery {
    * Validates event channel quota for specified channel type.
    * </p>
    * <p>
-   * Checks if adding channels would exceed quota limits for the channel type.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding channels would exceed quota limits for the channel type. Throws appropriate
+   * exception if quota would be exceeded.
    * </p>
    */
   @Override
@@ -222,8 +222,8 @@ public class EventChannelQueryImpl implements EventChannelQuery {
    * Validates channel is not in use by any templates.
    * </p>
    * <p>
-   * Checks if channel is associated with any event templates.
-   * Throws appropriate exception if channel is currently in use.
+   * Checks if channel is associated with any event templates. Throws appropriate exception if
+   * channel is currently in use.
    * </p>
    */
   @Override

@@ -63,8 +63,8 @@ public class UserDirectoryAssembler {
         .setMembershipSchema(directory.getMembershipSchemaData())
         .setCreatedBy(directory.getCreatedBy())
         .setCreatedDate(directory.getCreatedDate())
-        .setLastModifiedBy(directory.getLastModifiedBy())
-        .setLastModifiedDate(directory.getLastModifiedDate());
+        .setModifiedBy(directory.getModifiedBy())
+        .setModifiedDate(directory.getModifiedDate());
   }
 
 }

@@ -64,8 +64,9 @@ public class AppUpdateDto {
   @Schema(description = "Application detailed description")
   private String description;
 
-  @Schema(description = "Enable authorization control for applications. If enabled, users must be granted "
-      + "corresponding access policies to use the application")
+  @Schema(description =
+      "Enable authorization control for applications. If enabled, users must be granted "
+          + "corresponding access policies to use the application")
   private Boolean authCtrl;
 
   @Length(max = MAX_URL_LENGTH)
@@ -78,8 +79,9 @@ public class AppUpdateDto {
   private Integer sequence = DEFAULT_SEQUENCE;
 
   @Size(max = MAX_APP_FUNC_API_NUM_AP)
-  @Schema(description = "Authorization API identifiers for application homepage access. The API endpoints "
-      + "invoked when accessing the application to validate permissions")
+  @Schema(description =
+      "Authorization API identifiers for application homepage access. The API endpoints "
+          + "invoked when accessing the application to validate permissions")
   private LinkedHashSet<Long> apiIds;
 
   @Version

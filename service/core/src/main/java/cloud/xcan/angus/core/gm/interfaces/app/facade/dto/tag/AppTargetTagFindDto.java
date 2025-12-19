@@ -29,10 +29,4 @@ public class AppTargetTagFindDto extends PageQuery {
   @Schema(description = "Application tag display name for filtering")
   private String tagName;
 
-  @Schema(description = "Application tag creator identifier for filtering")
-  private Long createdBy;
-
-  @Schema(description = "Application tag creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

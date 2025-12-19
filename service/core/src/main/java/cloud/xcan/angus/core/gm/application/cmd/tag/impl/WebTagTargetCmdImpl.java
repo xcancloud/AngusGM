@@ -16,7 +16,6 @@ import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTargetType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -44,15 +43,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of web tag target command operations.
  * </p>
  * <p>
- * Manages tag-target associations for applications and application functions.
- * Provides comprehensive tag assignment, replacement, and deletion functionality.
+ * Manages tag-target associations for applications and application functions. Provides
+ * comprehensive tag assignment, replacement, and deletion functionality.
  * </p>
  * <p>
- * Supports deduplication, audit logging, and proper target type management
- * for web application tag operations.
+ * Supports deduplication, audit logging, and proper target type management for web application tag
+ * operations.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements WebTagTargetCmd {
 
   @Resource
@@ -73,8 +72,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
    * Adds tag targets to a specific web tag.
    * </p>
    * <p>
-   * Validates tag existence and target deduplication for applications and functions.
-   * Logs operations for audit purposes.
+   * Validates tag existence and target deduplication for applications and functions. Logs
+   * operations for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -151,8 +150,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
    * Adds tags to a specific application.
    * </p>
    * <p>
-   * Validates application and tag existence, performs deduplication.
-   * Logs operations for audit purposes.
+   * Validates application and tag existence, performs deduplication. Logs operations for audit
+   * purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -262,8 +261,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
    * Adds tags to a specific application function.
    * </p>
    * <p>
-   * Validates function and tag existence, performs deduplication.
-   * Logs operations for audit purposes.
+   * Validates function and tag existence, performs deduplication. Logs operations for audit
+   * purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -389,8 +388,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
    * Tags a target with specific tag IDs.
    * </p>
    * <p>
-   * Deletes existing tag associations and creates new ones for the target.
-   * Validates application and tag existence.
+   * Deletes existing tag associations and creates new ones for the target. Validates application
+   * and tag existence.
    * </p>
    */
   @Override
@@ -440,8 +439,8 @@ public class WebTagTargetCmdImpl extends CommCmd<WebTagTarget, Long> implements 
    * Deletes all tag targets for specific target types and IDs, excluding APP type.
    * </p>
    * <p>
-   * Removes all tag associations for the specified target types and IDs,
-   * excluding targets of APP type.
+   * Removes all tag associations for the specified target types and IDs, excluding targets of APP
+   * type.
    * </p>
    */
   @Override

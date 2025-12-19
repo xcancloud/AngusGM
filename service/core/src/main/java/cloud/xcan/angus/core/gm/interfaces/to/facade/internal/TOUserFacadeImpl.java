@@ -56,7 +56,7 @@ public class TOUserFacadeImpl implements TOUserFacade {
   @Override
   public PageResult<TOUserVo> list(TOUserFindDto dto) {
     Page<TOUser> page = toUserQuery.list(getSpecification(dto), dto.tranPage()
-        ,dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+        , dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, TOUserAssembler::toVo);
   }
 }

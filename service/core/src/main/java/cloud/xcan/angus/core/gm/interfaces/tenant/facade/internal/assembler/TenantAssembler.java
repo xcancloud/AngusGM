@@ -85,8 +85,8 @@ public class TenantAssembler {
         .setLockEndDate(tenant.getLockEndDate())
         .setCreatedBy(tenant.getCreatedBy())
         .setCreatedDate(tenant.getCreatedDate())
-        .setLastModifiedBy(tenant.getLastModifiedBy())
-        .setLastModifiedDate(tenant.getLastModifiedDate())
+        .setModifiedBy(tenant.getModifiedBy())
+        .setModifiedDate(tenant.getModifiedDate())
         .setRemark(tenant.getRemark());
   }
 
@@ -108,8 +108,8 @@ public class TenantAssembler {
         .setRemark(tenant.getRemark())
         .setCreatedBy(tenant.getCreatedBy())
         .setCreatedDate(tenant.getCreatedDate())
-        .setLastModifiedBy(tenant.getLastModifiedBy())
-        .setLastModifiedDate(tenant.getLastModifiedDate());
+        .setModifiedBy(tenant.getModifiedBy())
+        .setModifiedDate(tenant.getModifiedDate());
   }
 
   public static Tenant replaceDtoToDomain(TenantReplaceDto dto) {

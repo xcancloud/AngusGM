@@ -30,10 +30,4 @@ public class WebTagTargetFindDto extends PageQuery {
   @Schema(description = "Web application resource display name for searching")
   private String targetName;
 
-  @Schema(description = "User identifier who created the tag relationship")
-  private Long createdBy;
-
-  @Schema(description = "Tag relationship creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

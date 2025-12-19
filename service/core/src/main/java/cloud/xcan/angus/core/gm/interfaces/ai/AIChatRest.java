@@ -29,7 +29,8 @@ public class AIChatRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Return successfully")})
   @GetMapping("/result")
-  public ApiLocaleResult<Map<String, Object>> chatResult(@Valid @ParameterObject AIChatResultDto dto) {
+  public ApiLocaleResult<Map<String, Object>> chatResult(
+      @Valid @ParameterObject AIChatResultDto dto) {
     return ApiLocaleResult.success(aiChatFacade.chatResult(dto));
   }
 

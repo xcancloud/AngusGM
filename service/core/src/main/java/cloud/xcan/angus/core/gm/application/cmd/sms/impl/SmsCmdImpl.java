@@ -26,7 +26,6 @@ import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
 import cloud.xcan.angus.api.enums.ProcessStatus;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.biz.exception.BizException;
@@ -72,15 +71,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of SMS command operations.
  * </p>
  * <p>
- * Manages SMS sending, verification code handling, and recipient management.
- * Supports various recipient types including users, departments, groups, and policies.
+ * Manages SMS sending, verification code handling, and recipient management. Supports various
+ * recipient types including users, departments, groups, and policies.
  * </p>
  * <p>
- * Provides immediate sending for verification codes and test messages,
- * with job-based scheduling for bulk messages.
+ * Provides immediate sending for verification codes and test messages, with job-based scheduling
+ * for bulk messages.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 @DependsOn({"pluginManager"})
 public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
@@ -109,12 +108,12 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
    * Sends SMS messages with comprehensive validation and processing.
    * </p>
    * <p>
-   * Validates recipient information, channel availability, and template configuration.
-   * Supports both mobile-based and organization-based sending with pagination for large recipient lists.
+   * Validates recipient information, channel availability, and template configuration. Supports
+   * both mobile-based and organization-based sending with pagination for large recipient lists.
    * </p>
    * <p>
-   * Verification code SMS and channel test SMS are sent immediately.
-   * Note: Future enhancement needed to support resending after failure.
+   * Verification code SMS and channel test SMS are sent immediately. Note: Future enhancement
+   * needed to support resending after failure.
    * </p>
    */
   @DoInFuture("Support resending after failure")
@@ -202,9 +201,9 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
    * Sends SMS messages by job processing.
    * </p>
    * <p>
-   * Used for scheduled SMS sending with pre-validated channel and provider.
-   * Verification code SMS and channel test SMS are sent immediately.
-   * Note: Future enhancement needed to support resending after failure.
+   * Used for scheduled SMS sending with pre-validated channel and provider. Verification code SMS
+   * and channel test SMS are sent immediately. Note: Future enhancement needed to support resending
+   * after failure.
    * </p>
    */
   @DoInFuture("Support resending after failure")
@@ -225,7 +224,8 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
    * Verifies SMS verification code.
    * </p>
    * <p>
-   * Validates verification code against cached value and removes cache after successful verification.
+   * Validates verification code against cached value and removes cache after successful
+   * verification.
    * </p>
    */
   @Override
@@ -282,8 +282,8 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
    * Sends SMS with comprehensive processing and error handling.
    * </p>
    * <p>
-   * Handles both immediate sending and job-based scheduling with proper error handling
-   * and verification code caching.
+   * Handles both immediate sending and job-based scheduling with proper error handling and
+   * verification code caching.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
@@ -355,9 +355,11 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
    * Gets mobile numbers for different recipient object types.
    * </p>
    * <p>
-   * Supports various recipient types including tenant, user, department, group, policy, and all users.
+   * Supports various recipient types including tenant, user, department, group, policy, and all
+   * users.
    * </p>
    * <p>
+   *
    * @param receiveObjectType  {@link ReceiveObjectType}
    * @param receiveObjectIds   receive object ids
    * @param receivePolicyCodes receive policy codes
@@ -577,7 +579,8 @@ public class SmsCmdImpl extends CommCmd<Sms, Long> implements SmsCmd {
    * Translates sending exceptions to no-rollback exceptions.
    * </p>
    * <p>
-   * Converts sending failures to appropriate exception types that don't trigger transaction rollback.
+   * Converts sending failures to appropriate exception types that don't trigger transaction
+   * rollback.
    * </p>
    */
   private void translateSendNoRollbackException(Exception e) {

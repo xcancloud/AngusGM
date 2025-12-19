@@ -98,7 +98,8 @@ public class WebTagRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Web application tag list retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<WebTagDetailVo>> list(@Valid @ParameterObject WebTagFindDto dto) {
+  public ApiLocaleResult<PageResult<WebTagDetailVo>> list(
+      @Valid @ParameterObject WebTagFindDto dto) {
     return ApiLocaleResult.success(webTagFacade.list(dto));
   }
 

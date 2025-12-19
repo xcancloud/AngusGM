@@ -58,8 +58,8 @@ public class AuthPolicyDeptAssembler {
         .setTenantId(dept.getTenantId())
         .setCreatedBy(dept.getCreatedBy())
         .setCreatedDate(dept.getCreatedDate())
-        .setLastModifiedBy(dept.getLastModifiedBy())
-        .setLastModifiedDate(dept.getLastModifiedDate());
+        .setModifiedBy(dept.getModifiedBy())
+        .setModifiedDate(dept.getModifiedDate());
   }
 
   public static GenericSpecification<Dept> getSpecification(AuthPolicyDeptFindDto dto) {

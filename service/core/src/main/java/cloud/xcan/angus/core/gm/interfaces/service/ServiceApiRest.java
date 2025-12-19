@@ -44,7 +44,8 @@ public class ServiceApiRest {
   @OperationClient
   @PreAuthorize("@PPS.isOpClient()")
   @Operation(summary = "Add multiple API endpoints to a service", operationId = "service:api:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "API endpoints created successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "API endpoints created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/api")
   public ApiLocaleResult<List<IdKey<Long, Object>>> apiAdd(

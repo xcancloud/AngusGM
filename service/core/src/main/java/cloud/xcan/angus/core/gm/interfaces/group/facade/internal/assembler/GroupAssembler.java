@@ -63,8 +63,8 @@ public class GroupAssembler {
         .setTenantId(group.getTenantId())
         .setCreatedBy(group.getCreatedBy())
         .setCreatedDate(group.getCreatedDate())
-        .setLastModifiedBy(group.getLastModifiedBy())
-        .setLastModifiedDate(group.getLastModifiedDate())
+        .setModifiedBy(group.getModifiedBy())
+        .setModifiedDate(group.getModifiedDate())
         .setTags(isEmpty(group.getTags()) ? null : group.getTags().stream()
             .map(tag -> new IdAndName().setId(tag.getTag().getId()).setName(tag.getTag().getName()))
             .collect(Collectors.toList()));
@@ -82,8 +82,8 @@ public class GroupAssembler {
         .setTenantId(group.getTenantId())
         .setCreatedBy(group.getCreatedBy())
         .setCreatedDate(group.getCreatedDate())
-        .setLastModifiedBy(group.getLastModifiedBy())
-        .setLastModifiedDate(group.getLastModifiedDate());
+        .setModifiedBy(group.getModifiedBy())
+        .setModifiedDate(group.getModifiedDate());
   }
 
   public static GenericSpecification<Group> getSpecification(GroupFindDto dto) {

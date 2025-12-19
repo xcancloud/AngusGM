@@ -33,12 +33,12 @@ import org.springframework.stereotype.Service;
  * Implementation of event template query operations.
  * </p>
  * <p>
- * Manages event template retrieval, caching, and tenant setting association.
- * Provides comprehensive event template querying with caching support.
+ * Manages event template retrieval, caching, and tenant setting association. Provides comprehensive
+ * event template querying with caching support.
  * </p>
  * <p>
- * Supports template detail retrieval, caching, tenant setting association,
- * and name/code uniqueness validation for comprehensive event template management.
+ * Supports template detail retrieval, caching, tenant setting association, and name/code uniqueness
+ * validation for comprehensive event template management.
  * </p>
  */
 @Slf4j
@@ -61,8 +61,8 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
    * Retrieves detailed event template information by ID.
    * </p>
    * <p>
-   * Fetches complete template record with optional tenant setting association.
-   * Throws ResourceNotFound exception if template does not exist.
+   * Fetches complete template record with optional tenant setting association. Throws
+   * ResourceNotFound exception if template does not exist.
    * </p>
    */
   @Override
@@ -120,8 +120,8 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
    * Validates and retrieves event template by ID.
    * </p>
    * <p>
-   * Verifies template exists and returns template information.
-   * Throws ResourceNotFound exception if template does not exist.
+   * Verifies template exists and returns template information. Throws ResourceNotFound exception if
+   * template does not exist.
    * </p>
    */
   @Override
@@ -135,8 +135,8 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
    * Retrieves event template by event code using caching.
    * </p>
    * <p>
-   * Uses cache for performance optimization and returns template for event code.
-   * Returns null if no template found for the event code.
+   * Uses cache for performance optimization and returns template for event code. Returns null if no
+   * template found for the event code.
    * </p>
    */
   @Override
@@ -158,8 +158,8 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
    * Validates event template name uniqueness.
    * </p>
    * <p>
-   * Checks if template name already exists for new or updated templates.
-   * Throws ResourceExisted exception if name is not unique.
+   * Checks if template name already exists for new or updated templates. Throws ResourceExisted
+   * exception if name is not unique.
    * </p>
    */
   @Override
@@ -175,8 +175,8 @@ public class EventTemplateQueryImpl implements EventTemplateQuery {
    * Validates event template code uniqueness.
    * </p>
    * <p>
-   * Checks if template code already exists for new or updated templates.
-   * Throws ResourceExisted exception if code is not unique.
+   * Checks if template code already exists for new or updated templates. Throws ResourceExisted
+   * exception if code is not unique.
    * </p>
    */
   @Override

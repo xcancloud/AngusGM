@@ -97,7 +97,7 @@ export interface PrivateGoods {
   /** User ID who created the record */
   createdBy: string;
   /** Name of the user who created the record */
-  createdByName: string;
+  creator: string;
   /** Creation timestamp */
   createdDate: string;
 

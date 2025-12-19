@@ -46,7 +46,8 @@ public class EmailInnerRest {
       @ApiResponse(responseCode = "200", description = "Verification code validated successfully")})
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/verificationCode/check")
-  public ApiLocaleResult<?> checkVerificationCode(@Valid @ParameterObject EmailVerificationCodeCheckDto dto) {
+  public ApiLocaleResult<?> checkVerificationCode(
+      @Valid @ParameterObject EmailVerificationCodeCheckDto dto) {
     emailDoorFacade.checkVerificationCode(dto);
     return ApiLocaleResult.success();
   }

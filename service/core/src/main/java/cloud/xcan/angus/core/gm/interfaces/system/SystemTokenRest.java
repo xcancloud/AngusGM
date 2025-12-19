@@ -57,7 +57,8 @@ public class SystemTokenRest {
 
   @Operation(summary = "Delete system access tokens", operationId = "system:token:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "System access tokens deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "System access tokens deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @NotEmpty @Size(max = MAX_BATCH_SIZE) @RequestParam("ids") HashSet<Long> ids) {

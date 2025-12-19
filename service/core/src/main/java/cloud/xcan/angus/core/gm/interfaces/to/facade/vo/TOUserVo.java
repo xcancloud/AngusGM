@@ -24,7 +24,7 @@ public class TOUserVo {
   private Long createdBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 
   @DateTimeFormat(pattern = DATE_FMT)
   private LocalDateTime createdDate;

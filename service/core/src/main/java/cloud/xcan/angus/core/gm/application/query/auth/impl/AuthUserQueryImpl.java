@@ -27,7 +27,7 @@ import cloud.xcan.angus.api.commonlink.authuser.AuthUserRepo;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.enums.SignInType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserQuery;
 import cloud.xcan.angus.lettucex.util.RedisService;
@@ -46,15 +46,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Implementation of authentication user query operations.
  * </p>
  * <p>
- * Manages authentication user retrieval, validation, and verification.
- * Provides comprehensive user authentication querying with security checks.
+ * Manages authentication user retrieval, validation, and verification. Provides comprehensive user
+ * authentication querying with security checks.
  * </p>
  * <p>
- * Supports user authentication, password validation, link secret verification,
- * and user status validation for secure authentication management.
+ * Supports user authentication, password validation, link secret verification, and user status
+ * validation for secure authentication management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthUserQueryImpl implements AuthUserQuery {
 
   @Resource
@@ -69,8 +69,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Authenticates users by account and password.
    * </p>
    * <p>
-   * Verifies account exists and validates password using password encoder.
-   * Returns filtered list of users with matching credentials.
+   * Verifies account exists and validates password using password encoder. Returns filtered list of
+   * users with matching credentials.
    * </p>
    */
   @Override
@@ -104,8 +104,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates user password by user ID.
    * </p>
    * <p>
-   * Verifies user exists and validates provided password against stored password.
-   * Throws appropriate exception if password validation fails.
+   * Verifies user exists and validates provided password against stored password. Throws
+   * appropriate exception if password validation fails.
    * </p>
    */
   @Override
@@ -131,8 +131,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates and retrieves user by account with authentication.
    * </p>
    * <p>
-   * Handles multi-tenant scenarios and different sign-in types.
-   * Supports user ID-based login control and password-based user selection.
+   * Handles multi-tenant scenarios and different sign-in types. Supports user ID-based login
+   * control and password-based user selection.
    * </p>
    */
   @Override
@@ -170,8 +170,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates email link secret for user operations.
    * </p>
    * <p>
-   * Verifies link secret from Redis cache for email modification operations.
-   * Supports different business keys for various email operations.
+   * Verifies link secret from Redis cache for email modification operations. Supports different
+   * business keys for various email operations.
    * </p>
    */
   @Override
@@ -195,8 +195,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates SMS link secret for user operations.
    * </p>
    * <p>
-   * Verifies link secret from Redis cache for mobile modification operations.
-   * Supports different business keys for various SMS operations.
+   * Verifies link secret from Redis cache for mobile modification operations. Supports different
+   * business keys for various SMS operations.
    * </p>
    */
   @Override
@@ -220,8 +220,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates user account status and validity.
    * </p>
    * <p>
-   * Checks if user is enabled, not locked, and not expired.
-   * Throws appropriate exceptions for invalid user status.
+   * Checks if user is enabled, not locked, and not expired. Throws appropriate exceptions for
+   * invalid user status.
    * </p>
    */
   @Override
@@ -241,8 +241,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates operation platform login access.
    * </p>
    * <p>
-   * Ensures only authorized users can access operation platform.
-   * Validates tenant ID and user role requirements.
+   * Ensures only authorized users can access operation platform. Validates tenant ID and user role
+   * requirements.
    * </p>
    */
   @Override
@@ -261,8 +261,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates and retrieves multiple authentication users by IDs.
    * </p>
    * <p>
-   * Verifies all users exist and validates complete collection match.
-   * Throws appropriate exceptions for missing or invalid users.
+   * Verifies all users exist and validates complete collection match. Throws appropriate exceptions
+   * for missing or invalid users.
    * </p>
    */
   @Override
@@ -286,8 +286,8 @@ public class AuthUserQueryImpl implements AuthUserQuery {
    * Validates and retrieves authentication user by ID.
    * </p>
    * <p>
-   * Verifies user exists and returns user information.
-   * Throws ResourceNotFound exception if user does not exist.
+   * Verifies user exists and returns user information. Throws ResourceNotFound exception if user
+   * does not exist.
    * </p>
    */
   @Override

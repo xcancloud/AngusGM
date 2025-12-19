@@ -2,7 +2,6 @@ package cloud.xcan.angus.api.gm.dept.dto;
 
 import cloud.xcan.angus.remote.PageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,11 +28,5 @@ public class DeptFindDto extends PageQuery {
 
   @Schema(description = "Department association tag identifier for categorization and grouping")
   private Long tagId;
-
-  @Schema(description = "User identifier who created the department. Used for audit and tracking purposes")
-  private Long createdBy;
-
-  @Schema(description = "Timestamp when the department was created. Used for audit and lifecycle tracking")
-  private LocalDateTime createdDate;
 
 }

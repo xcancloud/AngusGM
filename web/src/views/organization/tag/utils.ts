@@ -149,9 +149,9 @@ export const columns = (t: any) => [
     width: '20%'
   },
   {
-    key: 'createdByName',
-    title: t('user.columns.assocUser.createdByName'),
-    dataIndex: 'createdByName',
+    key: 'creator',
+    title: t('user.columns.assocUser.creator'),
+    dataIndex: 'creator',
     width: '20%'
   },
   {

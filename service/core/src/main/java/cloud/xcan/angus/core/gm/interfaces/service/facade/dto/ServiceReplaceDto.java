@@ -34,8 +34,8 @@ public class ServiceReplaceDto {
   private String code;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Detailed description of the service functionality and purpose", 
-    example = "Comprehensive user management service providing tenant, organization, and user administration capabilities")
+  @Schema(description = "Detailed description of the service functionality and purpose",
+      example = "Comprehensive user management service providing tenant, organization, and user administration capabilities")
   private String description;
 
   @Schema(description = "Source of the service (e.g., internal, external, third-party)")

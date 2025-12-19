@@ -14,7 +14,6 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.gm.notice.CombinedNoticeDoorRemote;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventCmd;
@@ -44,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of event command operations for managing system events.
- * 
+ *
  * <p>This class provides comprehensive functionality for event management including:</p>
  * <ul>
  *   <li>Creating and storing system events</li>
@@ -53,12 +52,12 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Managing event templates and channels</li>
  *   <li>Processing notice type events immediately</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper event processing with duplicate prevention,
  * template validation, and channel configuration management.</p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   @Resource
@@ -78,7 +77,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   /**
    * Adds multiple events with duplicate detection and immediate processing.
-   * 
+   *
    * <p>This method performs event creation including:</p>
    * <ul>
    *   <li>Filtering duplicate events using Redis locks</li>
@@ -87,7 +86,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
    *   <li>Setting event names from templates</li>
    *   <li>Handling exceptions gracefully</li>
    * </ul>
-   * 
+   *
    * @param events List of events to create
    * @return List of created event identifiers
    */
@@ -140,7 +139,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   /**
    * Generates push events for notification processing.
-   * 
+   *
    * <p>This method performs push event generation including:</p>
    * <ul>
    *   <li>Validating event templates exist</li>
@@ -149,7 +148,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
    *   <li>Updating event push status</li>
    *   <li>Storing push events for processing</li>
    * </ul>
-   * 
+   *
    * @param events List of events to generate push events for
    */
   @Transactional(rollbackFor = Exception.class)
@@ -203,7 +202,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   /**
    * Updates multiple events in batch.
-   * 
+   *
    * @param events List of events to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -214,14 +213,14 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   /**
    * Filters duplicate events using Redis-based locking mechanism.
-   * 
+   *
    * <p>This method prevents duplicate event processing by:</p>
    * <ul>
    *   <li>Using Redis locks with duplicate keys</li>
    *   <li>Setting expiration time for locks</li>
    *   <li>Filtering out events that cannot acquire locks</li>
    * </ul>
-   * 
+   *
    * @param events List of events to filter
    * @return List of non-duplicate events
    */
@@ -247,7 +246,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   /**
    * Sets event names from cached templates.
-   * 
+   *
    * @param events List of events to set names for
    */
   private void setEventName(List<Event> events) {
@@ -260,7 +259,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
 
   /**
    * Sends notice type messages immediately.
-   * 
+   *
    * <p>This method processes notice type events including:</p>
    * <ul>
    *   <li>Validating notice types configuration</li>
@@ -268,7 +267,7 @@ public class EventCmdImpl extends CommCmd<Event, Long> implements EventCmd {
    *   <li>Updating event push status</li>
    *   <li>Handling sending exceptions</li>
    * </ul>
-   * 
+   *
    * @param noticeTypeEvents List of notice type events to process
    */
   public void sendNoticeTypeMessage(List<Event> noticeTypeEvents) {

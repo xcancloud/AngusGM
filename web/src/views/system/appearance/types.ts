@@ -27,7 +27,7 @@ export interface AppInfo {
 
   // Creation information
   createdBy: string;
-  createdByName: string;
+  creator: string;
   createdDate: string;
 
   // UI state management properties

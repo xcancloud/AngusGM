@@ -15,7 +15,4 @@ public class TOUserFindDto extends PageQuery {
   @Schema(description = "Operational user account identifier for filtering")
   private Long userId;
 
-  @Schema(description = "Operational user account creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

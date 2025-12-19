@@ -9,7 +9,7 @@
       "receiveType": "Receiving Method",
       "status": "Sending Status",
       "failureReason": "Failure Reason",
-      "createdByName": "Sender",
+      "creator": "Sender",
       "receiveObjectType": "Recipient Type",
       "sentNum": "Number of Recipients",
       "readNum": "Number of Readers",

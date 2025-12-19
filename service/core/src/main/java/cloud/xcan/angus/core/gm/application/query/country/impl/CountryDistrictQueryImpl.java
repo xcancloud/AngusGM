@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.country.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.converter.DistrictConverter;
 import cloud.xcan.angus.core.gm.application.query.country.CountryDistrictQuery;
@@ -23,15 +23,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of country district query operations.
  * </p>
  * <p>
- * Manages country district retrieval, hierarchical queries, and tree structure generation.
- * Provides comprehensive district querying with full-text search support.
+ * Manages country district retrieval, hierarchical queries, and tree structure generation. Provides
+ * comprehensive district querying with full-text search support.
  * </p>
  * <p>
- * Supports district detail retrieval, hierarchical queries (province, city, area),
- * tree structure generation, and paginated listing for country district management.
+ * Supports district detail retrieval, hierarchical queries (province, city, area), tree structure
+ * generation, and paginated listing for country district management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class CountryDistrictQueryImpl implements CountryDistrictQuery {
 
   @Resource
@@ -63,8 +63,8 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
    * Retrieves districts with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated results for comprehensive district management.
+   * Supports full-text search and specification-based filtering. Returns paginated results for
+   * comprehensive district management.
    * </p>
    */
   @Override
@@ -146,8 +146,8 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
    * Generates hierarchical tree structure for country districts.
    * </p>
    * <p>
-   * Creates tree structure starting from the specified parent code.
-   * Converts districts to tree view objects for hierarchical display.
+   * Creates tree structure starting from the specified parent code. Converts districts to tree view
+   * objects for hierarchical display.
    * </p>
    */
   @Override
@@ -168,8 +168,8 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
    * Retrieves district by ID with validation.
    * </p>
    * <p>
-   * Verifies district exists and returns district information.
-   * Throws ResourceNotFound exception if district does not exist.
+   * Verifies district exists and returns district information. Throws ResourceNotFound exception if
+   * district does not exist.
    * </p>
    */
   @Override
@@ -183,8 +183,8 @@ public class CountryDistrictQueryImpl implements CountryDistrictQuery {
    * Builds hierarchical tree structure from district list.
    * </p>
    * <p>
-   * Recursively constructs tree structure starting from specified parent code.
-   * Filters districts by parent code and builds parent-child relationships.
+   * Recursively constructs tree structure starting from specified parent code. Filters districts by
+   * parent code and builds parent-child relationships.
    * </p>
    */
   private List<CountryDistrictTreeVo> makeTree(List<CountryDistrictTreeVo> districts,

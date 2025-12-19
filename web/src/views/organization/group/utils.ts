@@ -430,9 +430,9 @@ export const createGroupColumns = (t: (key: string) => string) => [
     }
   },
   {
-    key: 'createdByName',
-    title: t('common.columns.createdByName'),
-    dataIndex: 'createdByName',
+    key: 'creator',
+    title: t('common.columns.creator'),
+    dataIndex: 'creator',
     width: '10%'
   },
   {
@@ -474,9 +474,9 @@ export const createGroupUserColumns = (t: (key: string) => string) => [
     ellipsis: true
   },
   {
-    key: 'createdByName',
-    title: t('user.columns.assocUser.createdByName'),
-    dataIndex: 'createdByName',
+    key: 'creator',
+    title: t('user.columns.assocUser.creator'),
+    dataIndex: 'creator',
     width: '20%'
   },
   {

@@ -15,7 +15,6 @@ import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpenRepo;
 import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.user.User;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOpenCmd;
@@ -38,8 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of application open command operations for managing application access.
- * 
- * <p>This class provides comprehensive functionality for application access management including:</p>
+ *
+ * <p>This class provides comprehensive functionality for application access management
+ * including:</p>
  * <ul>
  *   <li>Opening applications for tenants with authorization setup</li>
  *   <li>Renewing application access after expiration</li>
@@ -47,15 +47,15 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Managing application expiration and cleanup</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>Note: This implementation handles internal non-multi-tenant tables and privatization.
  * Base applications and operation applications are excluded, and base applications
  * are initialized during tenant signup.</p>
- * 
+ *
  * @author XiaoLong Liu
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd {
 
   @Resource
@@ -75,7 +75,7 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   /**
    * Opens an application for a tenant with authorization setup.
-   * 
+   *
    * <p>This method performs comprehensive application opening including:</p>
    * <ul>
    *   <li>Validating application, tenant, and user existence</li>
@@ -83,8 +83,8 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
    *   <li>Initializing tenant authorization policies</li>
    *   <li>Recording opening audit logs</li>
    * </ul>
-   * 
-   * @param appOpen Application open entity with access details
+   *
+   * @param appOpen          Application open entity with access details
    * @param saveOperationLog Whether to record operation logs
    * @return Application open identifier with associated data
    */
@@ -147,7 +147,7 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
         authPolicyTenantCmd.intAppAndPolicyByTenantAndApp(appOpen.getTenantId(), appDb);
 
         // Record opening audit log if requested
-        if (saveOperationLog){
+        if (saveOperationLog) {
           if (!isUserAction()) {
             PrincipalContext.get().setClientId(appDb.getClientId())
                 .setTenantId(tenantDb.getId()).setTenantName(tenantDb.getName())
@@ -163,10 +163,10 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   /**
    * Renews application access after expiration.
-   * 
+   *
    * <p>This method handles application renewal by updating expiration dates
    * and maintaining authorization policies.</p>
-   * 
+   *
    * @param appOpen Application open entity with renewal details
    */
   @Transactional(rollbackFor = Exception.class)
@@ -226,14 +226,14 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   /**
    * Cancels application access and cleans up authorization policies.
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Removing application open records</li>
    *   <li>Canceling tenant authorization policies</li>
    *   <li>Recording cancellation audit logs</li>
    * </ul>
-   * 
+   *
    * @param appId Application identifier to cancel
    */
   @Transactional(rollbackFor = Exception.class)
@@ -281,7 +281,7 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   /**
    * Updates expired application records.
-   * 
+   *
    * <p>This method marks application open records as expired based on
    * current date for cleanup purposes.</p>
    */
@@ -299,12 +299,12 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   /**
    * Opens an application without validation checks.
-   * 
+   *
    * <p>This method provides a simplified application opening process
    * for internal use without comprehensive validation.</p>
-   * 
+   *
    * @param appOpen Application open entity
-   * @param appDb Application entity
+   * @param appDb   Application entity
    */
   @Override
   public void open0(AppOpen appOpen, App appDb) {
@@ -317,12 +317,12 @@ public class AppOpenCmdImpl extends CommCmd<AppOpen, Long> implements AppOpenCmd
 
   /**
    * Opens multiple applications without validation checks.
-   * 
+   *
    * <p>This method provides batch application opening for internal use
    * without comprehensive validation.</p>
-   * 
+   *
    * @param appOpens List of application open entities
-   * @param appDb Application entity
+   * @param appDb    Application entity
    */
   @Override
   public void open0(List<AppOpen> appOpens, App appDb) {

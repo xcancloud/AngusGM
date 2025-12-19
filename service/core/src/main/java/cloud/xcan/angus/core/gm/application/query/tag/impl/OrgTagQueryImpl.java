@@ -13,7 +13,7 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagRepo;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagQuery;
 import cloud.xcan.angus.core.gm.domain.tag.OrgTagSearchRepo;
@@ -34,15 +34,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of organization tag query operations.
  * </p>
  * <p>
- * Manages organization tag retrieval, validation, and quota management.
- * Provides comprehensive organization tag querying with full-text search and summary support.
+ * Manages organization tag retrieval, validation, and quota management. Provides comprehensive
+ * organization tag querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports organization tag detail retrieval, paginated listing, name validation,
- * quota management, and uniqueness checking for comprehensive organization tag administration.
+ * Supports organization tag detail retrieval, paginated listing, name validation, quota management,
+ * and uniqueness checking for comprehensive organization tag administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "OrgTag", table = "org_tag", topAuthority = TOP_TENANT_ADMIN,
     groupByColumns = {"created_date"})
 public class OrgTagQueryImpl implements OrgTagQuery {
@@ -59,8 +59,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Retrieves detailed organization tag information by ID.
    * </p>
    * <p>
-   * Fetches complete organization tag record with existence validation.
-   * Throws ResourceNotFound exception if organization tag does not exist.
+   * Fetches complete organization tag record with existence validation. Throws ResourceNotFound
+   * exception if organization tag does not exist.
    * </p>
    */
   @Override
@@ -79,8 +79,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Retrieves organization tags with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated organization tag results.
+   * Supports full-text search and specification-based filtering. Returns paginated organization tag
+   * results.
    * </p>
    */
   @Override
@@ -102,8 +102,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Validates and retrieves organization tag by ID.
    * </p>
    * <p>
-   * Returns organization tag with existence validation.
-   * Throws ResourceNotFound if organization tag does not exist.
+   * Returns organization tag with existence validation. Throws ResourceNotFound if organization tag
+   * does not exist.
    * </p>
    */
   @Override
@@ -116,8 +116,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Validates and retrieves organization tags by IDs.
    * </p>
    * <p>
-   * Returns organization tags with existence validation.
-   * Validates that all requested organization tag IDs exist.
+   * Returns organization tags with existence validation. Validates that all requested organization
+   * tag IDs exist.
    * </p>
    */
   @Override
@@ -138,8 +138,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Validates organization tag names in parameters.
    * </p>
    * <p>
-   * Checks for duplicate tag names within the provided tag list.
-   * Throws ResourceExisted if duplicate names are found.
+   * Checks for duplicate tag names within the provided tag list. Throws ResourceExisted if
+   * duplicate names are found.
    * </p>
    */
   @Override
@@ -155,8 +155,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Validates organization tag names for addition.
    * </p>
    * <p>
-   * Ensures organization tag names do not already exist when adding new tags.
-   * Throws ResourceExisted if tag names already exist.
+   * Ensures organization tag names do not already exist when adding new tags. Throws
+   * ResourceExisted if tag names already exist.
    * </p>
    */
   @Override
@@ -172,8 +172,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Validates organization tag names for update.
    * </p>
    * <p>
-   * Ensures organization tag name uniqueness when updating existing tags.
-   * Allows same tag to keep its name during update.
+   * Ensures organization tag name uniqueness when updating existing tags. Allows same tag to keep
+   * its name during update.
    * </p>
    */
   @Override
@@ -202,8 +202,8 @@ public class OrgTagQueryImpl implements OrgTagQuery {
    * Validates organization tag quota for tenant.
    * </p>
    * <p>
-   * Checks if adding organization tags would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding organization tags would exceed tenant quota limits. Throws appropriate
+   * exception if quota would be exceeded.
    * </p>
    */
   @Override

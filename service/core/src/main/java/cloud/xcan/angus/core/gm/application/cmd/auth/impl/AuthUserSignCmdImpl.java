@@ -52,7 +52,6 @@ import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.commonlink.user.SignupType;
 import cloud.xcan.angus.api.enums.SignInType;
 import cloud.xcan.angus.api.enums.UserSource;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizAssert;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
@@ -106,7 +105,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of user sign-in command operations for managing user authentication.
- * 
+ *
  * <p>This class provides comprehensive functionality for user authentication including:</p>
  * <ul>
  *   <li>User registration with verification codes</li>
@@ -116,11 +115,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Directory authentication integration</li>
  *   <li>Sign-in attempt limiting and security</li>
  * </ul>
- * 
+ *
  * <p>The implementation supports various authentication methods including
  * mobile, email, and directory authentication with comprehensive security features.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements AuthUserSignCmd {
 
@@ -153,14 +152,14 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Registers a new user with verification code validation.
-   * 
+   *
    * <p>This method performs user registration including:</p>
    * <ul>
    *   <li>Validating required parameters and verification codes</li>
    *   <li>Converting signup data to user format</li>
    *   <li>Creating user with appropriate source tracking</li>
    * </ul>
-   * 
+   *
    * @param user Authentication user entity with registration data
    * @return User identifier with associated data
    */
@@ -186,7 +185,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Authenticates user with OAuth2 token generation.
-   * 
+   *
    * <p>This method performs comprehensive user authentication including:</p>
    * <ul>
    *   <li>Validating required parameters and client credentials</li>
@@ -195,15 +194,15 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
    *   <li>Generating OAuth2 tokens</li>
    *   <li>Recording authentication audit logs</li>
    * </ul>
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
-   * @param signinType Type of sign-in (mobile, email, etc.)
-   * @param userId User identifier (optional)
-   * @param account User account (username, mobile, email)
-   * @param password User password
-   * @param scope Requested OAuth2 scope
-   * @param deviceId Device identifier for tracking
+   * @param signinType   Type of sign-in (mobile, email, etc.)
+   * @param userId       User identifier (optional)
+   * @param account      User account (username, mobile, email)
+   * @param password     User password
+   * @param scope        Requested OAuth2 scope
+   * @param deviceId     Device identifier for tracking
    * @return Map containing OAuth2 tokens and response data
    */
   @Override
@@ -268,15 +267,15 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Refreshes OAuth2 access token using refresh token.
-   * 
+   *
    * <p>This method handles token refresh including:</p>
    * <ul>
    *   <li>Validating client credentials</li>
    *   <li>Submitting refresh token request</li>
    *   <li>Returning new access token</li>
    * </ul>
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
    * @param refreshToken Refresh token for token renewal
    * @return Map containing new OAuth2 tokens
@@ -304,17 +303,17 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Signs out user by invalidating OAuth2 authorization.
-   * 
+   *
    * <p>This method handles user sign-out including:</p>
    * <ul>
    *   <li>Validating client credentials</li>
    *   <li>Finding and removing OAuth2 authorization</li>
    *   <li>Recording sign-out audit logs</li>
    * </ul>
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
-   * @param accessToken Access token to invalidate
+   * @param accessToken  Access token to invalidate
    */
   @Override
   public void signout(String clientId, String clientSecret, String accessToken) {
@@ -361,7 +360,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Resets user password using verification link secret.
-   * 
+   *
    * <p>This method handles password reset including:</p>
    * <ul>
    *   <li>Validating user existence and status</li>
@@ -369,10 +368,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
    *   <li>Updating password with security settings</li>
    *   <li>Recording password update audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId      User identifier
    * @param newPassword New password to set
-   * @param linkSecret Verification link secret from email/SMS
+   * @param linkSecret  Verification link secret from email/SMS
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -416,11 +415,11 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Updates directory password after successful directory authentication.
-   * 
+   *
    * <p>This method handles directory password updates when users successfully
    * authenticate through directory services like LDAP.</p>
-   * 
-   * @param user Authentication user entity
+   *
+   * @param user     Authentication user entity
    * @param password New password from directory authentication
    */
   private void updateNewDirectoryPassword(AuthUser user, String password) {
@@ -436,10 +435,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Caches user directory information for LDAP authentication.
-   * 
+   *
    * <p>This method prepares user directory information for use by
    * LDAP authentication providers.</p>
-   * 
+   *
    * @param user Authentication user entity
    */
   private void cacheUserDirectory(@Nullable AuthUser user) {
@@ -457,10 +456,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Cancels directory authentication when directory is deleted.
-   * 
+   *
    * <p>Note: This method will be enhanced to replace bcrypt password after
    * directory deletion and cancel authentication from directory.</p>
-   * 
+   *
    * @param user Authentication user entity
    */
   @DoInFuture("Replace bcrypt password after directory be deleted and cancel auth from the directory.")
@@ -475,17 +474,17 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Submits OAuth2 user sign-in request to authorization server.
-   * 
+   *
    * <p>This method constructs and sends OAuth2 password grant request
    * to the authorization server for token generation.</p>
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
-   * @param signinType Type of sign-in authentication
-   * @param userId User identifier
-   * @param account User account
-   * @param password User password
-   * @param scope Requested OAuth2 scope
+   * @param signinType   Type of sign-in authentication
+   * @param userId       User identifier
+   * @param account      User account
+   * @param password     User password
+   * @param scope        Requested OAuth2 scope
    * @return Map containing OAuth2 response data
    * @throws Throwable if authentication request fails
    */
@@ -504,8 +503,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Submits OAuth2 refresh token request to authorization server.
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
    * @param refreshToken Refresh token for renewal
    * @return Map containing OAuth2 response data
@@ -521,10 +520,10 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Sends OAuth2 request to authorization server.
-   * 
+   *
    * <p>This method handles HTTP communication with the OAuth2 authorization server
    * and processes the response for token generation.</p>
-   * 
+   *
    * @param authContent OAuth2 request content
    * @return Map containing OAuth2 response data
    * @throws Throwable if request fails
@@ -551,9 +550,9 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Validates required parameters for sign-in operation.
-   * 
-   * @param userId User identifier (optional)
-   * @param account User account
+   *
+   * @param userId   User identifier (optional)
+   * @param account  User account
    * @param deviceId Device identifier
    */
   private void checkRequiredParameters(Long userId, String account, String deviceId) {
@@ -563,7 +562,7 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Validates required parameters and verification codes for signup.
-   * 
+   *
    * @param user Authentication user entity with signup data
    */
   private void checkRequiredParamAndVerifyCode(AuthUser user) {
@@ -586,8 +585,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Validates forget password link secret from email/SMS.
-   * 
-   * @param userId User identifier
+   *
+   * @param userId     User identifier
    * @param linkSecret Link secret to validate
    */
   private void checkForgetPasswordLinkSecret(Long userId, String linkSecret) {
@@ -606,8 +605,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Checks sign-in password error limits and security settings.
-   * 
-   * @param tenantId Tenant identifier
+   *
+   * @param tenantId     Tenant identifier
    * @param finalAccount User account for error tracking
    */
   private void checkSignInPasswordErrorNum(String tenantId, String finalAccount) {
@@ -645,8 +644,8 @@ public class AuthUserSignCmdImpl extends CommCmd<AuthUser, Long> implements Auth
 
   /**
    * Records sign-in password error attempts for security tracking.
-   * 
-   * @param tenantId Tenant identifier
+   *
+   * @param tenantId     Tenant identifier
    * @param innerAccount User account for error tracking
    */
   public void recordSignInPasswordErrorNum(Long tenantId, String innerAccount) {

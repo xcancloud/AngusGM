@@ -21,7 +21,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpenRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOpenCmd;
@@ -58,15 +58,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of authorization policy command operations.
  * </p>
  * <p>
- * Provides comprehensive policy management functionality including creation, updates, deletion,
- * and initialization of authorization policies for different organizational entities.
+ * Provides comprehensive policy management functionality including creation, updates, deletion, and
+ * initialization of authorization policies for different organizational entities.
  * </p>
  * <p>
- * Supports both platform-level predefined policies and tenant-level user-defined policies
- * with proper permission validation and quota management.
+ * Supports both platform-level predefined policies and tenant-level user-defined policies with
+ * proper permission validation and quota management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements AuthPolicyCmd {
 
@@ -98,12 +98,12 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
    * Creates new authorization policies with comprehensive validation.
    * </p>
    * <p>
-   * Performs validation for policy code suffixes, duplicates, permissions, and quotas.
-   * Handles both platform-type and tenant-type policies with appropriate checks.
+   * Performs validation for policy code suffixes, duplicates, permissions, and quotas. Handles both
+   * platform-type and tenant-type policies with appropriate checks.
    * </p>
    * <p>
-   * Automatically associates policies with their corresponding application functions
-   * and generates operation logs for audit purposes.
+   * Automatically associates policies with their corresponding application functions and generates
+   * operation logs for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = {Exception.class})
@@ -198,8 +198,8 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
    * Updates existing authorization policies with validation.
    * </p>
    * <p>
-   * Ensures policies exist and validates permissions before allowing updates.
-   * Replaces associated functions when provided and maintains audit logs.
+   * Ensures policies exist and validates permissions before allowing updates. Replaces associated
+   * functions when provided and maintains audit logs.
    * </p>
    */
   @Transactional(rollbackFor = {Exception.class})
@@ -259,8 +259,8 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
    * Replaces authorization policies with a mix of new and updated policies.
    * </p>
    * <p>
-   * Creates new policies and updates existing ones in a single operation.
-   * Maintains data integrity by preserving immutable fields during updates.
+   * Creates new policies and updates existing ones in a single operation. Maintains data integrity
+   * by preserving immutable fields during updates.
    * </p>
    */
   @Transactional(rollbackFor = {Exception.class})
@@ -319,8 +319,8 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
    * Deletes authorization policies and their associated data.
    * </p>
    * <p>
-   * Removes policy functions, organization associations, and the policies themselves.
-   * Validates permissions before deletion and maintains audit logs.
+   * Removes policy functions, organization associations, and the policies themselves. Validates
+   * permissions before deletion and maintains audit logs.
    * </p>
    */
   @Transactional(rollbackFor = {Exception.class})
@@ -357,8 +357,8 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
    * Enables or disables authorization policies.
    * </p>
    * <p>
-   * Updates the enabled status of policies and logs the operation for audit purposes.
-   * Validates permissions before allowing status changes.
+   * Updates the enabled status of policies and logs the operation for audit purposes. Validates
+   * permissions before allowing status changes.
    * </p>
    */
   @Transactional(rollbackFor = {Exception.class})
@@ -397,12 +397,12 @@ public class AuthPolicyCmdImpl extends CommCmd<AuthPolicy, Long> implements Auth
    * Manually initializes predefined authorization policies for tenants.
    * </p>
    * <p>
-   * Used to authorize new application permissions to existing tenants.
-   * Ignores repeated initialization attempts.
+   * Used to authorize new application permissions to existing tenants. Ignores repeated
+   * initialization attempts.
    * </p>
    * <p>
-   * For admin policies: saves authorization when admin policy doesn't exist.
-   * For user/guest policies: saves authorization when default policy doesn't exist.
+   * For admin policies: saves authorization when admin policy doesn't exist. For user/guest
+   * policies: saves authorization when default policy doesn't exist.
    * </p>
    * <p>
    * Automatically opens applications when initialized for the first time.

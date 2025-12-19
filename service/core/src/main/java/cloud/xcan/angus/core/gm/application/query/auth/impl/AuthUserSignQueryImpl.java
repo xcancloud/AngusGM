@@ -15,7 +15,7 @@ import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenant;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenantRepo;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;
@@ -33,15 +33,15 @@ import java.util.concurrent.TimeUnit;
  * Implementation of authentication user sign-in query operations.
  * </p>
  * <p>
- * Manages user sign-in verification, email/SMS validation, and password policy checks.
- * Provides comprehensive sign-in querying with security validation support.
+ * Manages user sign-in verification, email/SMS validation, and password policy checks. Provides
+ * comprehensive sign-in querying with security validation support.
  * </p>
  * <p>
- * Supports email verification, SMS verification, password policy validation,
- * and tenant setting retrieval for secure user sign-in management.
+ * Supports email verification, SMS verification, password policy validation, and tenant setting
+ * retrieval for secure user sign-in management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthUserSignQueryImpl implements AuthUserSignQuery {
 
   @Resource
@@ -60,8 +60,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
    * Validates email verification and retrieves associated users.
    * </p>
    * <p>
-   * Verifies email verification code and generates link secrets for users.
-   * Stores link secrets in Redis cache for secure email operations.
+   * Verifies email verification code and generates link secrets for users. Stores link secrets in
+   * Redis cache for secure email operations.
    * </p>
    */
   @Override
@@ -95,8 +95,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
    * Validates SMS verification and retrieves associated users.
    * </p>
    * <p>
-   * Verifies SMS verification code and generates link secrets for users.
-   * Stores link secrets in Redis cache for secure mobile operations.
+   * Verifies SMS verification code and generates link secrets for users. Stores link secrets in
+   * Redis cache for secure mobile operations.
    * </p>
    */
   @Override
@@ -131,8 +131,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
    * Validates password length against tenant security policy.
    * </p>
    * <p>
-   * Checks if password meets minimum length requirement defined in tenant settings.
-   * Throws appropriate exception if password is too short.
+   * Checks if password meets minimum length requirement defined in tenant settings. Throws
+   * appropriate exception if password is too short.
    * </p>
    */
   @Override
@@ -149,8 +149,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
    * Validates and retrieves tenant settings.
    * </p>
    * <p>
-   * Verifies tenant settings exist and returns setting information.
-   * Throws SysException if tenant settings are not initialized.
+   * Verifies tenant settings exist and returns setting information. Throws SysException if tenant
+   * settings are not initialized.
    * </p>
    */
   @Override
@@ -164,8 +164,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
    * Validates email user existence.
    * </p>
    * <p>
-   * Verifies that users exist for the specified email address.
-   * Throws appropriate exception if no users found.
+   * Verifies that users exist for the specified email address. Throws appropriate exception if no
+   * users found.
    * </p>
    */
   private List<AuthUser> checkEmailUserExist(String email) {
@@ -179,8 +179,8 @@ public class AuthUserSignQueryImpl implements AuthUserSignQuery {
    * Validates mobile user existence.
    * </p>
    * <p>
-   * Verifies that users exist for the specified mobile number.
-   * Throws appropriate exception if no users found.
+   * Verifies that users exist for the specified mobile number. Throws appropriate exception if no
+   * users found.
    * </p>
    */
   private List<AuthUser> checkMobileUserExist(String mobile) {

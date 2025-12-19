@@ -23,14 +23,14 @@ import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddByMobileDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantAddDto;
+import cloud.xcan.angus.api.gm.user.dto.UserAddDto;
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
+import cloud.xcan.angus.api.gm.user.dto.UserReplaceDto;
+import cloud.xcan.angus.api.gm.user.dto.UserUpdateDto;
 import cloud.xcan.angus.api.gm.user.to.UserDeptTo;
 import cloud.xcan.angus.api.gm.user.to.UserGroupTo;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
 import cloud.xcan.angus.api.gm.user.vo.UserListVo;
-import cloud.xcan.angus.api.gm.user.dto.UserAddDto;
-import cloud.xcan.angus.api.gm.user.dto.UserReplaceDto;
-import cloud.xcan.angus.api.gm.user.dto.UserUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.UserSysAdminVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
@@ -81,7 +81,7 @@ public class UserAssembler {
     if (UserSource.BACKGROUND_ADDED.equals(source)) {
       user.setSignupAccount(null);
       user.setSignupAccountType(SignupType.NOOP);
-      user.setCreatedBy(getUserId()).setLastModifiedBy(getUserId());
+      user.setCreatedBy(getUserId()).setModifiedBy(getUserId());
     } else if (UserSource.PLATFORM_SIGNUP.equals(source)
         || UserSource.INVITATION_CODE_SIGNUP.equals(source)) {
       user.setInvitationCode(dto.getInvitationCode());
@@ -89,20 +89,20 @@ public class UserAssembler {
           isBlank(dto.getMobile()) ? SignupType.EMAIL : SignupType.MOBILE);
       user.setSignupAccount(
           isBlank(dto.getMobile()) ? dto.getEmail() : dto.getMobile());
-      user.setCreatedBy(getUserId()).setLastModifiedBy(getUserId());
+      user.setCreatedBy(getUserId()).setModifiedBy(getUserId());
     } else if (UserSource.BACKGROUND_SIGNUP.equals(source)) {
       // @see UserAssembler#addTenantToUserAddDto()
       user.setSignupAccountType(dto.getSignupType());
       user.setSignupAccount(dto.getSignupAccount());
-      user.setCreatedBy(getUserId()).setLastModifiedBy(getUserId());
+      user.setCreatedBy(getUserId()).setModifiedBy(getUserId());
     } else if (UserSource.LDAP_SYNCHRONIZE.equals(source)) {
       user.setSignupAccount(null);
       user.setSignupAccountType(SignupType.NOOP);
-      user.setCreatedBy(-1L).setLastModifiedBy(-1L);
+      user.setCreatedBy(-1L).setModifiedBy(-1L);
     } else if (UserSource.THIRD_PARTY_LOGIN.equals(source)) {
       user.setSignupAccount(null);
       user.setSignupAccountType(SignupType.NOOP);
-      user.setCreatedBy(-1L).setLastModifiedBy(-1L);
+      user.setCreatedBy(-1L).setModifiedBy(-1L);
     }
     return user;
   }
@@ -140,7 +140,7 @@ public class UserAssembler {
   public static User updateDtoToDomain(UserUpdateDto dto) {
     return new User()
         .setId(dto.getId())
-        .setUsername(isEmpty(dto.getUsername()) ? null: dto.getUsername().trim())
+        .setUsername(isEmpty(dto.getUsername()) ? null : dto.getUsername().trim())
         .setFirstName(dto.getFirstName())
         .setLastName(dto.getLastName())
         .setFullName(dto.getFullName())
@@ -188,7 +188,7 @@ public class UserAssembler {
         .setSignupAccount(null)
         .setSignupAccountType(isNull(dto.getId()) ? SignupType.NOOP : null)
         .setCreatedBy(isNull(dto.getId()) ? getUserId() : null)
-        .setLastModifiedBy(isNull(dto.getId()) ? getUserId() : null);
+        .setModifiedBy(isNull(dto.getId()) ? getUserId() : null);
   }
 
   public static UserDetailVo toDetailVo(User user) {
@@ -224,8 +224,8 @@ public class UserAssembler {
         .setTenantName(user.getTenantName())
         .setCreatedBy(user.getCreatedBy())
         .setCreatedDate(user.getCreatedDate())
-        .setLastModifiedBy(user.getLastModifiedBy())
-        .setLastModifiedDate(user.getLastModifiedDate())
+        .setModifiedBy(user.getModifiedBy())
+        .setModifiedDate(user.getModifiedDate())
         .setPasswordStrength(user.getPasswordStrength())
         .setPasswordExpired(user.getPasswordExpired())
         .setPasswordExpiredDate(user.getPasswordExpiredDate())
@@ -275,8 +275,8 @@ public class UserAssembler {
         .setTenantName(user.getTenantName())
         .setCreatedBy(user.getCreatedBy())
         .setCreatedDate(user.getCreatedDate())
-        .setLastModifiedBy(user.getLastModifiedBy())
-        .setLastModifiedDate(user.getLastModifiedDate());
+        .setModifiedBy(user.getModifiedBy())
+        .setModifiedDate(user.getModifiedDate());
   }
 
   public static User enabledDtoToDomain(EnabledOrDisabledDto dto) {

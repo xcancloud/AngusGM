@@ -34,11 +34,4 @@ public class AppTagTargetFindDto extends PageQuery {
   @Schema(description = "Application tag associated target display name")
   private String targetName;
 
-  @Schema(description = "Application tag association creator identifier")
-  private Long createdBy;
-
-  @DateTimeFormat(pattern = DATE_FMT)
-  @Schema(description = "Application tag association creation date")
-  private LocalDateTime createdDate;
-
 }

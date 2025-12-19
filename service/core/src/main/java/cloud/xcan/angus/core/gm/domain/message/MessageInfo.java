@@ -83,7 +83,7 @@ public class MessageInfo extends TenantEntity<MessageInfo, Long> {
   private Long createdBy;
 
   @Column(name = "created_by_name")
-  private String createdByName;
+  private String creator;
 
   @CreatedDate
   @DateTimeFormat(pattern = DATE_FMT)

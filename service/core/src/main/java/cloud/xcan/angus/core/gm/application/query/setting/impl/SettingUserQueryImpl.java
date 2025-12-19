@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.query.setting.impl;
 
 import cloud.xcan.angus.api.commonlink.setting.user.SettingUser;
 import cloud.xcan.angus.api.commonlink.setting.user.SettingUserRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuery;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingUserQuery;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -14,15 +14,15 @@ import java.util.Objects;
  * Implementation of user setting query operations.
  * </p>
  * <p>
- * Manages user setting retrieval, validation, and proxy configuration.
- * Provides comprehensive user setting querying with tenant setting support.
+ * Manages user setting retrieval, validation, and proxy configuration. Provides comprehensive user
+ * setting querying with tenant setting support.
  * </p>
  * <p>
- * Supports user setting detail retrieval, proxy configuration assembly,
- * and tenant setting integration for comprehensive user configuration administration.
+ * Supports user setting detail retrieval, proxy configuration assembly, and tenant setting
+ * integration for comprehensive user configuration administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SettingUserQueryImpl implements SettingUserQuery {
 
   @Resource
@@ -35,8 +35,8 @@ public class SettingUserQueryImpl implements SettingUserQuery {
    * Retrieves user setting by user ID with validation.
    * </p>
    * <p>
-   * Returns user setting with existence validation.
-   * Throws ResourceNotFound if user setting does not exist.
+   * Returns user setting with existence validation. Throws ResourceNotFound if user setting does
+   * not exist.
    * </p>
    */
   @Override
@@ -50,8 +50,8 @@ public class SettingUserQueryImpl implements SettingUserQuery {
    * Retrieves user setting by user ID without validation.
    * </p>
    * <p>
-   * Returns user setting without existence validation.
-   * Returns null if user setting does not exist.
+   * Returns user setting without existence validation. Returns null if user setting does not
+   * exist.
    * </p>
    */
   @Override

@@ -9,7 +9,7 @@
       "receiveType": "接收方式",
       "status": "发送状态",
       "failureReason": "失败原因",
-      "createdByName": "发送人",
+      "creator": "发送人",
       "receiveObjectType": "接收对象类型",
       "sentNum": "发送人数",
       "readNum": "阅读人数",

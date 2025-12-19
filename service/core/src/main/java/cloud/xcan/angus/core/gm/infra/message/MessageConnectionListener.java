@@ -27,7 +27,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class MessageConnectionListener implements ApplicationListener<AbstractSubProtocolEvent> {
 
   private static final Map<String, String> LOCAL_ONLINE_USERS_INTERNAL = new ConcurrentHashMap<>();
-  public static final Map<String, String> LOCAL_ONLINE_USERS = Collections.unmodifiableMap(LOCAL_ONLINE_USERS_INTERNAL);
+  public static final Map<String, String> LOCAL_ONLINE_USERS = Collections.unmodifiableMap(
+      LOCAL_ONLINE_USERS_INTERNAL);
 
   @Resource
   private MessageCenterOnlineCmd messageCenterOnlineCmd;
@@ -59,9 +60,11 @@ public class MessageConnectionListener implements ApplicationListener<AbstractSu
         .map(Object::toString).orElse("unknown");
     String userAgent = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_AGENT))
         .map(Object::toString).orElse("unknown");
-    String deviceId = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID))
+    String deviceId = Optional.ofNullable(
+            principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_DEVICE_ID))
         .map(Object::toString).orElse("unknown");
-    String remoteAddress = Optional.ofNullable(principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR))
+    String remoteAddress = Optional.ofNullable(
+            principal.get(INTROSPECTION_CLAIM_NAMES_REQUEST_REMOTE_ADDR))
         .map(Object::toString).orElse("unknown");
 
     LOCAL_ONLINE_USERS_INTERNAL.put(sessionId, username);

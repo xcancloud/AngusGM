@@ -18,7 +18,6 @@ import cloud.xcan.angus.api.commonlink.tenant.Tenant;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.enums.PasswordStrength;
 import cloud.xcan.angus.api.enums.TenantRealNameStatus;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
@@ -43,8 +42,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of authentication user command operations for managing user authentication.
- * 
- * <p>This class provides comprehensive functionality for user authentication management including:</p>
+ *
+ * <p>This class provides comprehensive functionality for user authentication management
+ * including:</p>
  * <ul>
  *   <li>Creating and updating authentication users</li>
  *   <li>Managing user passwords and security settings</li>
@@ -52,11 +52,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Deleting users and cleaning up related data</li>
  *   <li>Managing user authorization records</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper user authentication lifecycle management
  * and maintains consistency with user management services.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUserCmd {
 
@@ -85,27 +85,27 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
 
   /**
    * Replaces authentication user with user data and password.
-   * 
+   *
    * <p>This method handles user replacement including:</p>
    * <ul>
    *   <li>Converting user data to authentication user format</li>
    *   <li>Setting up tenant information</li>
    *   <li>Initializing tenant if requested</li>
    * </ul>
-   * 
-   * @param userDb User entity from user management service
-   * @param password User password for authentication
+   *
+   * @param userDb     User entity from user management service
+   * @param password   User password for authentication
    * @param initTenant Whether to initialize tenant
    */
   @Override
-  public void replaceAuthUser(User userDb, String password, boolean initTenant){
+  public void replaceAuthUser(User userDb, String password, boolean initTenant) {
     Tenant tenantDb = tenantQuery.checkAndFind(userDb.getTenantId());
     replace0(replaceToAuthUser(userDb, password, tenantDb), initTenant);
   }
 
   /**
    * Replaces authentication user with comprehensive setup.
-   * 
+   *
    * <p>This method performs comprehensive user replacement including:</p>
    * <ul>
    *   <li>Password encoding and validation</li>
@@ -113,8 +113,8 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
    *   <li>User creation or update</li>
    *   <li>Tenant authorization policy initialization</li>
    * </ul>
-   * 
-   * @param user Authentication user entity
+   *
+   * @param user       Authentication user entity
    * @param initTenant Whether to initialize tenant
    */
   @Override
@@ -157,7 +157,7 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
 
   /**
    * Deletes users and cleans up related data.
-   * 
+   *
    * <p>Note: User deletion must be initiated from the UC service.
    * This method performs comprehensive cleanup including:</p>
    * <ul>
@@ -165,7 +165,7 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
    *   <li>Removing organization authorization policies</li>
    *   <li>Cleaning up authentication user records</li>
    * </ul>
-   * 
+   *
    * @param ids Set of user identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -191,7 +191,7 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
 
   /**
    * Updates user password with validation and security checks.
-   * 
+   *
    * <p>This method performs password update including:</p>
    * <ul>
    *   <li>Validating user existence</li>
@@ -199,8 +199,8 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
    *   <li>Enforcing security restrictions for system administrators</li>
    *   <li>Updating password strength and modification date</li>
    * </ul>
-   * 
-   * @param id User identifier
+   *
+   * @param id          User identifier
    * @param newPassword New password for user
    */
   @Transactional(rollbackFor = Exception.class)
@@ -214,7 +214,8 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
         // Validate that user exists
         userDb = authUserQuery.checkAndFind(id);
         // Validate password length against tenant settings
-        authUserSignQuery.checkMinPasswordLengthByTenantSetting(Long.parseLong(userDb.getTenantId()),
+        authUserSignQuery.checkMinPasswordLengthByTenantSetting(
+            Long.parseLong(userDb.getTenantId()),
             newPassword);
         // Prevent modification of signup tenant system administrator password
         assertForbidden(!userDb.isSysAdmin() || userDb.getId().equals(getUserId().toString()),
@@ -238,11 +239,11 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
 
   /**
    * Updates tenant real-name verification status.
-   * 
+   *
    * <p>This method updates the real-name verification status for all users
    * within a specific tenant.</p>
-   * 
-   * @param tenantId Tenant identifier
+   *
+   * @param tenantId       Tenant identifier
    * @param realNameStatus Real-name verification status to set
    */
   @Transactional(rollbackFor = Exception.class)
@@ -260,14 +261,14 @@ public class AuthUserCmdImpl extends CommCmd<AuthUser, Long> implements AuthUser
 
   /**
    * Deletes authorization records for specified principals.
-   * 
+   *
    * <p>This method removes OAuth2 authorization records for the specified
    * principal names from the authorization service.</p>
-   * 
+   *
    * @param principalNames List of principal names to remove authorizations for
    */
   @Override
-  public void deleteAuthorization(List<String> principalNames){
+  public void deleteAuthorization(List<String> principalNames) {
     auth2AuthorizationService.removeByPrincipalName(principalNames);
   }
 

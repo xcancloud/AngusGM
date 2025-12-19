@@ -37,7 +37,6 @@ import cloud.xcan.angus.api.manager.TenantManager;
 import cloud.xcan.angus.api.manager.UserManager;
 import cloud.xcan.angus.api.obf.Str0;
 import cloud.xcan.angus.api.pojo.Pair;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
@@ -83,14 +82,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of user directory command operations.
  * </p>
  * <p>
- * Manages LDAP directory configuration, synchronization, and user/group management.
- * Provides comprehensive directory integration with secure password encryption.
+ * Manages LDAP directory configuration, synchronization, and user/group management. Provides
+ * comprehensive directory integration with secure password encryption.
  * </p>
  * <p>
- * Supports directory testing, synchronization scheduling, and membership management
- * with proper quota validation and audit logging.
+ * Supports directory testing, synchronization scheduling, and membership management with proper
+ * quota validation and audit logging.
  * </p>
  */
+
 /**
  * <p>
  * Implementation of user directory command operations.
@@ -104,7 +104,7 @@ import org.springframework.transaction.annotation.Transactional;
  * with proper quota validation and audit logging.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implements
     UserDirectoryCmd {
@@ -801,8 +801,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
           groupLdap.setTenantId(getOptTenantId())
               .setCreatedBy(longSafe(getUserId(), -1L/*By Job*/))
               .setCreatedDate(LocalDateTime.now())
-              .setLastModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
-              .setLastModifiedDate(LocalDateTime.now());
+              .setModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
+              .setModifiedDate(LocalDateTime.now());
           newGroups.add(groupLdap);
         }
       }
@@ -842,8 +842,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
           if (syncDescription) {
             groupDb.setRemark(groupLdap.getRemark());
           }
-          groupDb.setLastModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
-              .setLastModifiedDate(LocalDateTime.now());
+          groupDb.setModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
+              .setModifiedDate(LocalDateTime.now());
           updateGroupsDb.add(groupDb);
         }
       }
@@ -903,8 +903,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
         userLdap.setTenantId(getOptTenantId())
             .setCreatedBy(longSafe(getUserId(), -1L/*By Job*/))
             .setCreatedDate(LocalDateTime.now())
-            .setLastModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
-            .setLastModifiedDate(LocalDateTime.now());
+            .setModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
+            .setModifiedDate(LocalDateTime.now());
         newUsers.add(userLdap);
       }
     }
@@ -941,8 +941,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
               .setMobile(userLdap.getMobile())
               .setPassword(userLdap.getPassword())
               .setTenantRealNameStatus(tenantDb.getRealNameStatus());
-          userDb.setLastModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
-              .setLastModifiedDate(LocalDateTime.now());
+          userDb.setModifiedBy(longSafe(getUserId(), -1L /*By Job*/))
+              .setModifiedDate(LocalDateTime.now());
           updateUsersDb.add(userDb);
         }
       }

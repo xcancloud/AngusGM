@@ -667,7 +667,7 @@ public class UserManagerImpl implements UserManager {
   @SneakyThrows
   @Override
   public void setUserNameAndAvatar(Collection<?> targets, String userIdField) {
-    setUserNameAndAvatar(targets, userIdField, "createdByName", "avatar");
+    setUserNameAndAvatar(targets, userIdField, "creator", "avatar");
   }
 
   @SneakyThrows

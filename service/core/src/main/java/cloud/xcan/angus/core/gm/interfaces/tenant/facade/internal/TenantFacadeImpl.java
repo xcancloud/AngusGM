@@ -20,14 +20,14 @@ import cloud.xcan.angus.api.gm.tenant.dto.TenantReplaceDto;
 import cloud.xcan.angus.api.gm.tenant.dto.TenantUpdateDto;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantDetailVo;
 import cloud.xcan.angus.api.gm.tenant.vo.TenantVo;
+import cloud.xcan.angus.api.gm.user.dto.UserAddDto;
+import cloud.xcan.angus.api.gm.user.dto.UserUpdateDto;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.TenantFacade;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAuditAssembler;
-import cloud.xcan.angus.api.gm.user.dto.UserAddDto;
-import cloud.xcan.angus.api.gm.user.dto.UserUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.internal.assembler.UserAssembler;
 import cloud.xcan.angus.core.utils.CoreUtils;
 import cloud.xcan.angus.remote.PageResult;
@@ -50,7 +50,8 @@ public class TenantFacadeImpl implements TenantFacade {
   @Override
   public IdKey<Long, Object> add(TenantAddDto dto) {
     return tenantCmd.add(addDtoToDomain(dto), addDtoToTenantAudit(dto),
-        UserAssembler.addDtoToDomain(UserAssembler.addTenantUserDto(dto), UserSource.BACKGROUND_SIGNUP),
+        UserAssembler.addDtoToDomain(UserAssembler.addTenantUserDto(dto),
+            UserSource.BACKGROUND_SIGNUP),
         UserSource.BACKGROUND_SIGNUP);
   }
 

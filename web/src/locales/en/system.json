@@ -501,7 +501,7 @@
       "expiredDate": "Expiration Date",
       "token": "Token",
       "expired": "Expired",
-      "createdByName": "Created By",
+      "creator": "Created By",
       "createdDate": "Created Date",
       "action": "Action"
     },
@@ -861,7 +861,7 @@
       "port": "Port",
       "username": "Username",
       "status": "Status",
-      "createdByName": "Created By",
+      "creator": "Created By",
       "createdDate": "Created Date",
       "operation": "Operation",
       "directoryType": "Directory Type",

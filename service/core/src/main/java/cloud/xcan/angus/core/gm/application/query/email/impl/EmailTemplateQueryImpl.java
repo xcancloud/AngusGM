@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.query.email.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.email.EmailTemplateQuery;
 import cloud.xcan.angus.core.gm.domain.email.template.EmailTemplate;
@@ -19,15 +19,15 @@ import org.springframework.data.jpa.domain.Specification;
  * Implementation of email template query operations.
  * </p>
  * <p>
- * Manages email template retrieval, validation, and language-specific queries.
- * Provides comprehensive email template querying with multi-language support.
+ * Manages email template retrieval, validation, and language-specific queries. Provides
+ * comprehensive email template querying with multi-language support.
  * </p>
  * <p>
- * Supports template detail retrieval, language-based validation,
- * and specification-based filtering for comprehensive email template management.
+ * Supports template detail retrieval, language-based validation, and specification-based filtering
+ * for comprehensive email template management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class EmailTemplateQueryImpl implements EmailTemplateQuery {
 
   @Resource
@@ -38,8 +38,8 @@ public class EmailTemplateQueryImpl implements EmailTemplateQuery {
    * Retrieves detailed email template information by ID.
    * </p>
    * <p>
-   * Fetches complete template record with all associated information.
-   * Throws ResourceNotFound exception if template does not exist.
+   * Fetches complete template record with all associated information. Throws ResourceNotFound
+   * exception if template does not exist.
    * </p>
    */
   @Override
@@ -79,8 +79,8 @@ public class EmailTemplateQueryImpl implements EmailTemplateQuery {
    * Validates and retrieves email template by language and code.
    * </p>
    * <p>
-   * Verifies template exists for the specified language and code combination.
-   * Throws ResourceNotFound exception if template does not exist.
+   * Verifies template exists for the specified language and code combination. Throws
+   * ResourceNotFound exception if template does not exist.
    * </p>
    */
   @Override

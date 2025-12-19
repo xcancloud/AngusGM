@@ -4,7 +4,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.api.ApiRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.api.ApiLogsQuery;
 import cloud.xcan.angus.core.gm.domain.api.log.ApiLog;
@@ -28,16 +28,16 @@ import org.springframework.data.domain.Pageable;
  * Implementation of API logs query operations.
  * </p>
  * <p>
- * Manages API log retrieval, filtering, and information enrichment.
- * Provides comprehensive API log querying with summary statistics support.
+ * Manages API log retrieval, filtering, and information enrichment. Provides comprehensive API log
+ * querying with summary statistics support.
  * </p>
  * <p>
- * Supports API log detail retrieval, paginated listing, and API information
- * enrichment for log analysis and monitoring.
+ * Supports API log detail retrieval, paginated listing, and API information enrichment for log
+ * analysis and monitoring.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "ApiLogs", table = "api_log",
     groupByColumns = {"request_date", "api_type", "method", "status", "success", "client_source"})
 public class ApiLogsQueryImpl implements ApiLogsQuery {
@@ -54,8 +54,8 @@ public class ApiLogsQueryImpl implements ApiLogsQuery {
    * Retrieves detailed API log information by ID.
    * </p>
    * <p>
-   * Fetches complete API log record with all associated information.
-   * Throws ResourceNotFound exception if log does not exist.
+   * Fetches complete API log record with all associated information. Throws ResourceNotFound
+   * exception if log does not exist.
    * </p>
    */
   @Override
@@ -75,8 +75,8 @@ public class ApiLogsQueryImpl implements ApiLogsQuery {
    * Retrieves paginated list of API log information.
    * </p>
    * <p>
-   * Supports filtering and pagination for API log analysis.
-   * Returns enriched API log information with summary statistics.
+   * Supports filtering and pagination for API log analysis. Returns enriched API log information
+   * with summary statistics.
    * </p>
    */
   @Override
@@ -95,9 +95,9 @@ public class ApiLogsQueryImpl implements ApiLogsQuery {
    * Enriches API logs with API information.
    * </p>
    * <p>
-   * Matches API logs with corresponding API definitions based on service code,
-   * method, and URI pattern matching. Enhances logs with API code, name, and
-   * resource information for better analysis.
+   * Matches API logs with corresponding API definitions based on service code, method, and URI
+   * pattern matching. Enhances logs with API code, name, and resource information for better
+   * analysis.
    * </p>
    */
   @Override
@@ -105,13 +105,13 @@ public class ApiLogsQueryImpl implements ApiLogsQuery {
     // Group API logs by service code for efficient processing
     Map<String, List<ApiLog>> serviceApiLogMap = apiLogs.stream()
         .collect(Collectors.groupingBy(ApiLog::getServiceCode));
-    
+
     for (String serviceCode : serviceApiLogMap.keySet()) {
       // Retrieve APIs for the service and group by HTTP method
       Map<String, List<Api>> serviceApisMap = commonApiRepo
           .findAllByServiceCode(serviceCode.toUpperCase()).stream()
           .collect(Collectors.groupingBy(x -> x.getMethod().getValue()));
-      
+
       if (isNotEmpty(serviceApisMap)) {
         // Process each API log for the service
         for (ApiLog apiLog : serviceApiLogMap.get(serviceCode)) {

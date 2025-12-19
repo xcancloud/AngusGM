@@ -6,7 +6,7 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.hasToRole;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantClient;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertAuditQuery;
 import cloud.xcan.angus.core.gm.domain.tenant.audit.TenantCertAudit;
@@ -20,15 +20,15 @@ import jakarta.annotation.Resource;
  * Implementation of tenant certificate audit query operations.
  * </p>
  * <p>
- * Manages tenant certificate audit retrieval, validation, and data desensitization.
- * Provides comprehensive tenant certificate audit querying with security controls.
+ * Manages tenant certificate audit retrieval, validation, and data desensitization. Provides
+ * comprehensive tenant certificate audit querying with security controls.
  * </p>
  * <p>
- * Supports tenant certificate audit detail retrieval, validation, desensitization,
- * and access control for comprehensive tenant certificate audit administration.
+ * Supports tenant certificate audit detail retrieval, validation, desensitization, and access
+ * control for comprehensive tenant certificate audit administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
 
   @Resource
@@ -39,8 +39,8 @@ public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
    * Retrieves detailed tenant certificate audit information for current tenant.
    * </p>
    * <p>
-   * Fetches certificate audit record for the current tenant context.
-   * Applies desensitization based on user permissions.
+   * Fetches certificate audit record for the current tenant context. Applies desensitization based
+   * on user permissions.
    * </p>
    */
   @Override
@@ -59,8 +59,8 @@ public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
    * Retrieves tenant certificate audit by ID without validation.
    * </p>
    * <p>
-   * Returns certificate audit without existence validation.
-   * Returns null if certificate audit does not exist.
+   * Returns certificate audit without existence validation. Returns null if certificate audit does
+   * not exist.
    * </p>
    */
   @Override
@@ -73,8 +73,8 @@ public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
    * Validates and retrieves tenant certificate audit by ID.
    * </p>
    * <p>
-   * Returns certificate audit with existence validation and desensitization.
-   * Throws ResourceNotFound if certificate audit does not exist.
+   * Returns certificate audit with existence validation and desensitization. Throws
+   * ResourceNotFound if certificate audit does not exist.
    * </p>
    */
   @Override
@@ -90,8 +90,8 @@ public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
    * Validates and retrieves tenant certificate audit by tenant ID.
    * </p>
    * <p>
-   * Returns certificate audit with existence validation and desensitization.
-   * Throws ResourceNotFound if certificate audit does not exist.
+   * Returns certificate audit with existence validation and desensitization. Throws
+   * ResourceNotFound if certificate audit does not exist.
    * </p>
    */
   @Override
@@ -108,8 +108,8 @@ public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
    * Retrieves tenant certificate audit by tenant ID.
    * </p>
    * <p>
-   * Returns certificate audit with desensitization based on permissions.
-   * Returns null if certificate audit does not exist.
+   * Returns certificate audit with desensitization based on permissions. Returns null if
+   * certificate audit does not exist.
    * </p>
    */
   @Override
@@ -128,8 +128,8 @@ public class TenantCertAuditQueryImpl implements TenantCertAuditQuery {
    * Applies data desensitization to certificate audit information.
    * </p>
    * <p>
-   * Removes sensitive certificate data based on user permissions and certificate type.
-   * Applies different desensitization rules for personal, enterprise, and government certificates.
+   * Removes sensitive certificate data based on user permissions and certificate type. Applies
+   * different desensitization rules for personal, enterprise, and government certificates.
    * </p>
    */
   private void desensitizationCert(TenantCertAudit certAudit) {

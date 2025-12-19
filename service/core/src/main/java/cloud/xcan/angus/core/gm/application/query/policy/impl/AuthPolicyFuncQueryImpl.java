@@ -7,7 +7,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.NameJoin;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
@@ -31,15 +31,15 @@ import java.util.stream.Collectors;
  * Implementation of authentication policy function query operations.
  * </p>
  * <p>
- * Manages policy-function relationship queries, validation, and API association.
- * Provides comprehensive policy-function querying with application support.
+ * Manages policy-function relationship queries, validation, and API association. Provides
+ * comprehensive policy-function querying with application support.
  * </p>
  * <p>
- * Supports policy function queries, function validation, API association,
- * and function existence checking for comprehensive policy-function administration.
+ * Supports policy function queries, function validation, API association, and function existence
+ * checking for comprehensive policy-function administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthPolicyFuncQueryImpl implements AuthPolicyFuncQuery {
 
   @Resource
@@ -60,8 +60,8 @@ public class AuthPolicyFuncQueryImpl implements AuthPolicyFuncQuery {
    * Retrieves functions associated with specific policy.
    * </p>
    * <p>
-   * Queries application functions that are authorized by the specified policy.
-   * Validates policy existence and application opening status.
+   * Queries application functions that are authorized by the specified policy. Validates policy
+   * existence and application opening status.
    * </p>
    */
   @NameJoin

@@ -123,10 +123,10 @@ export const createTokenTableColumns = (t: (key: string) => string): ColumnsProp
     localesCode: 'systemToken.columns.expired'
   },
   {
-    key: 'createdByName',
-    title: t('systemToken.columns.createdByName'),
-    dataIndex: 'createdByName',
-    localesCode: 'common.columns.createdByName'
+    key: 'creator',
+    title: t('systemToken.columns.creator'),
+    dataIndex: 'creator',
+    localesCode: 'common.columns.creator'
   },
   {
     key: 'createdDate',

@@ -4,15 +4,15 @@ import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_BATCH_SIZE;
 import static cloud.xcan.angus.spec.experimental.BizConstant.MAX_NAME_LENGTH;
 
 import cloud.xcan.angus.api.enums.UserSource;
+import cloud.xcan.angus.api.gm.user.dto.UserAddDto;
 import cloud.xcan.angus.api.gm.user.dto.UserFindDto;
+import cloud.xcan.angus.api.gm.user.dto.UserReplaceDto;
+import cloud.xcan.angus.api.gm.user.dto.UserUpdateDto;
 import cloud.xcan.angus.api.gm.user.vo.UserDetailVo;
 import cloud.xcan.angus.api.gm.user.vo.UserListVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.UserFacade;
-import cloud.xcan.angus.api.gm.user.dto.UserAddDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.UserLockedDto;
-import cloud.xcan.angus.api.gm.user.dto.UserReplaceDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.dto.UserSysAdminSetDto;
-import cloud.xcan.angus.api.gm.user.dto.UserUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.UserSysAdminVo;
 import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.UsernameCheckVo;
 import cloud.xcan.angus.remote.ApiLocaleResult;
@@ -87,7 +87,8 @@ public class UserRest {
 
   @Operation(summary = "Delete multiple user accounts", operationId = "user:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User accounts deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "User accounts deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @RequestParam("ids") @Size(max = MAX_BATCH_SIZE) HashSet<Long> ids) {

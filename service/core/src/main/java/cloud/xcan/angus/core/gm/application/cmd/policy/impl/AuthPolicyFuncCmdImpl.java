@@ -11,7 +11,7 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -38,15 +38,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of authorization policy function command operations.
  * </p>
  * <p>
- * Manages the association between authorization policies and application functions,
- * providing operations to add, replace, and delete function-policy relationships.
+ * Manages the association between authorization policies and application functions, providing
+ * operations to add, replace, and delete function-policy relationships.
  * </p>
  * <p>
- * Supports hierarchical function authorization where parent functions are
- * automatically authorized when child functions are authorized.
+ * Supports hierarchical function authorization where parent functions are automatically authorized
+ * when child functions are authorized.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> implements
     AuthPolicyFuncCmd {
@@ -67,12 +67,12 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
    * Associates application functions with an authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and functions exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the policy and functions exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * When a child function is authorized, the parent function is also authorized
-   * automatically to maintain hierarchical consistency.
+   * When a child function is authorized, the parent function is also authorized automatically to
+   * maintain hierarchical consistency.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -106,7 +106,7 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
           add0(singletonList(policyDb), funcDb);
           return null;
         }
-        
+
         // Add only functions that don't already exist
         List<AppFunc> notExistedFuncDb = funcDb.stream()
             .filter(x -> !existedFuncIds.contains(x.getId())).collect(Collectors.toList());
@@ -128,12 +128,12 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
    * Replaces all function associations for an authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and functions exist, checks permissions,
-   * and completely replaces existing function associations.
+   * Validates that the policy and functions exist, checks permissions, and completely replaces
+   * existing function associations.
    * </p>
    * <p>
-   * When a child function is authorized, the parent function is also authorized
-   * automatically to maintain hierarchical consistency.
+   * When a child function is authorized, the parent function is also authorized automatically to
+   * maintain hierarchical consistency.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -171,7 +171,8 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
         replace0(singletonList(policyDb), funcDb);
 
         operationLogCmd.add(POLICY, policyDb, UPDATE_POLICY_FUNC, isNull(funcDb)
-            ? new Object[]{""} : funcDb.stream().map(AppFunc::getName).collect(Collectors.joining(",")));
+            ? new Object[]{""}
+            : funcDb.stream().map(AppFunc::getName).collect(Collectors.joining(",")));
         return null;
       }
     }.execute();
@@ -182,8 +183,8 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
    * Removes specific function associations from an authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and functions exist, checks permissions,
-   * and removes the specified function-policy associations.
+   * Validates that the policy and functions exist, checks permissions, and removes the specified
+   * function-policy associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -219,12 +220,12 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
    * Associates application functions with multiple authorization policies.
    * </p>
    * <p>
-   * Internal method used by other operations to batch create function-policy associations.
-   * Sets up the complete authorization information including app ID and function type.
+   * Internal method used by other operations to batch create function-policy associations. Sets up
+   * the complete authorization information including app ID and function type.
    * </p>
    * <p>
-   * When a child function is authorized, the parent function is also authorized
-   * automatically to maintain hierarchical consistency.
+   * When a child function is authorized, the parent function is also authorized automatically to
+   * maintain hierarchical consistency.
    * </p>
    */
   @Override
@@ -250,8 +251,8 @@ public class AuthPolicyFuncCmdImpl extends CommCmd<AuthPolicyFunc, Long> impleme
    * Replaces all function associations for multiple authorization policies.
    * </p>
    * <p>
-   * Internal method used by other operations to batch replace function-policy associations.
-   * First removes all existing associations, then creates new ones.
+   * Internal method used by other operations to batch replace function-policy associations. First
+   * removes all existing associations, then creates new ones.
    * </p>
    */
   @Override

@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.query.tenant.impl;
 
 import static cloud.xcan.angus.core.gm.domain.ThirdMessage.CERT_RECOGNIZE_ERROR;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertRecognizeQuery;
 import cloud.xcan.angus.core.gm.domain.tenant.cert.BusinessRecognize;
@@ -16,15 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Implementation of tenant certificate recognition query operations.
  * </p>
  * <p>
- * Manages tenant certificate recognition using Alibaba Cloud OCR services.
- * Provides comprehensive certificate recognition with business license and ID card support.
+ * Manages tenant certificate recognition using Alibaba Cloud OCR services. Provides comprehensive
+ * certificate recognition with business license and ID card support.
  * </p>
  * <p>
- * Supports business license recognition, ID card recognition, and error handling
- * for comprehensive tenant certificate recognition administration.
+ * Supports business license recognition, ID card recognition, and error handling for comprehensive
+ * tenant certificate recognition administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class TenantCertRecognizeQueryImpl implements TenantCertRecognizeQuery {
 
   @Autowired(required = false) // Valid only in the cloud service version
@@ -35,8 +35,8 @@ public class TenantCertRecognizeQueryImpl implements TenantCertRecognizeQuery {
    * Recognizes business license information from image URL.
    * </p>
    * <p>
-   * Uses Alibaba Cloud OCR service to extract business license data.
-   * Handles recognition errors and returns structured business information.
+   * Uses Alibaba Cloud OCR service to extract business license data. Handles recognition errors and
+   * returns structured business information.
    * </p>
    */
   @Override
@@ -59,8 +59,8 @@ public class TenantCertRecognizeQueryImpl implements TenantCertRecognizeQuery {
    * Recognizes ID card information from front and back image URLs.
    * </p>
    * <p>
-   * Uses Alibaba Cloud OCR service to extract ID card data.
-   * Handles recognition errors and returns structured ID card information.
+   * Uses Alibaba Cloud OCR service to extract ID card data. Handles recognition errors and returns
+   * structured ID card information.
    * </p>
    */
   @Override

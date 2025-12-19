@@ -222,9 +222,9 @@ const columns: TableColumn[] = [
     width: '5%'
   },
   {
-    key: 'createdByName',
-    title: t('common.columns.createdByName'),
-    dataIndex: 'createdByName',
+    key: 'creator',
+    title: t('common.columns.creator'),
+    dataIndex: 'creator',
     groupName: 'create',
     width: '9%'
   },
@@ -320,7 +320,7 @@ defineExpose({
         </template>
 
         <!-- Created by name column -->
-        <template v-if="column.dataIndex === 'createdByName'">
+        <template v-if="column.dataIndex === 'creator'">
           {{ text || t('common.messages.noData') }}
         </template>
 

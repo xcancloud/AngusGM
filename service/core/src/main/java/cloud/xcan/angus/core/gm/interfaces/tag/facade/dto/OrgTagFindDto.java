@@ -18,7 +18,4 @@ public class OrgTagFindDto extends PageQuery {
   @Schema(description = "Organizational tag display name for searching")
   private String name;
 
-  @Schema(description = "Organizational tag creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

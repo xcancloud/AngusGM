@@ -9,11 +9,11 @@ export type OrgTag = {
   tenantId: string;
   tenantName: string;
   createdBy: string;
-  createdByName: string;
+  creator: string;
   createdDate: string;
-  lastModifiedBy: string;
-  lastModifiedByName: string;
-  lastModifiedDate: string;
+  modifiedBy: string;
+  modifier: string;
+  modifiedDate: string;
   isEdit: boolean;
 }
 
@@ -29,10 +29,10 @@ export type Target = {
   tagName: string;
   createdDate: string;
   createdBy: string;
-  createdByName: string;
+  creator: string;
   targetCreatedDate: string;
   targetCreatedBy: string;
-  targetCreatedByName: string;
+  targetCreator: string;
 }
 
 /**

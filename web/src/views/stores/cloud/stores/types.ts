@@ -14,7 +14,7 @@ export interface Goods {
   type: { value: string, message: string };
   version: string;
   charge: boolean;
-  createdByName: string;
+  creator: string;
   createdDate: string;
   price: {
     finalPrice: string;

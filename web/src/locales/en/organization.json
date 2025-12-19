@@ -48,13 +48,13 @@
       "title": "Title",
       "address": "Address",
       "createdDate": "Join Date",
-      "createdByName": "Creator",
-      "lastModifiedByName": "Last Modifier",
-      "lastModifiedDate": "Last Modified Date",
+      "creator": "Creator",
+      "modifier": "Last Modifier",
+      "modifiedDate": "Last Modified Date",
       "assocUser": {
         "id": "User ID",
         "name": "User Name",
-        "createdByName": "Associated By",
+        "creator": "Associated By",
         "createdDate": "Associated Date"
       }
     },
@@ -194,14 +194,14 @@
       "parent": "Parent",
       "level": "Level",
       "createdDate": "Created Date",
-      "createdByName": "Creator",
-      "lastModifiedByName": "Last Modifier",
-      "lastModifiedDate": "Last Modified Date",
+      "creator": "Creator",
+      "modifier": "Last Modifier",
+      "modifiedDate": "Last Modified Date",
       "userDept": {
         "code": "Department Code",
         "name": "Department Name",
         "head": "Department Head",
-        "createdByName": "Associated By",
+        "creator": "Associated By",
         "createdDate": "Associated Date"
       }
     },
@@ -247,7 +247,7 @@
         "code": "Group Code",
         "name": "Group Name",
         "remark": "Group Remark",
-        "createdByName": "Associated By",
+        "creator": "Associated By",
         "createdDate": "Associated Date"
       }
     },
@@ -278,7 +278,7 @@
       "name": "Name",
       "userTag": {
         "name": "Tag Name",
-        "createdByName": "Associated By",
+        "creator": "Associated By",
         "createdDate": "Associated Date"
       }
     },

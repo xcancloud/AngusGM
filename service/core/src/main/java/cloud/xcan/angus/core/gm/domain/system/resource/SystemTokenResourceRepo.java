@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.domain.system.resource;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 

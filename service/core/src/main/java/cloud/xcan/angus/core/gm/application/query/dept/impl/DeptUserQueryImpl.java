@@ -12,7 +12,7 @@ import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.UserConverter;
@@ -33,15 +33,15 @@ import org.springframework.data.domain.Pageable;
  * Implementation of department user query operations.
  * </p>
  * <p>
- * Manages department-user relationship queries, validation, and quota management.
- * Provides comprehensive department-user querying with association support.
+ * Manages department-user relationship queries, validation, and quota management. Provides
+ * comprehensive department-user querying with association support.
  * </p>
  * <p>
- * Supports user-department queries, department-user queries, association management,
- * and quota validation for comprehensive department-user administration.
+ * Supports user-department queries, department-user queries, association management, and quota
+ * validation for comprehensive department-user administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class DeptUserQueryImpl implements DeptUserQuery {
 
   @Resource
@@ -60,8 +60,8 @@ public class DeptUserQueryImpl implements DeptUserQuery {
    * Retrieves user-department relationships with pagination.
    * </p>
    * <p>
-   * Queries department associations for specific users with validation.
-   * Requires userId parameter for proper filtering.
+   * Queries department associations for specific users with validation. Requires userId parameter
+   * for proper filtering.
    * </p>
    */
   @Override
@@ -89,8 +89,8 @@ public class DeptUserQueryImpl implements DeptUserQuery {
    * Retrieves department-user relationships with pagination.
    * </p>
    * <p>
-   * Queries user associations for specific departments with validation.
-   * Requires deptId parameter for proper filtering.
+   * Queries user associations for specific departments with validation. Requires deptId parameter
+   * for proper filtering.
    * </p>
    */
   @Override
@@ -172,8 +172,8 @@ public class DeptUserQueryImpl implements DeptUserQuery {
    * Retrieves all department associations for specific user.
    * </p>
    * <p>
-   * Returns all departments associated with the specified user.
-   * Loads department information for complete association data.
+   * Returns all departments associated with the specified user. Loads department information for
+   * complete association data.
    * </p>
    */
   @Override
@@ -197,8 +197,8 @@ public class DeptUserQueryImpl implements DeptUserQuery {
    * Validates department-user append quota for tenant.
    * </p>
    * <p>
-   * Checks if adding users to department would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding users to department would exceed tenant quota limits. Throws appropriate
+   * exception if quota would be exceeded.
    * </p>
    */
   @Override
@@ -215,8 +215,8 @@ public class DeptUserQueryImpl implements DeptUserQuery {
    * Validates user-department replace quota for tenant.
    * </p>
    * <p>
-   * Checks if replacing user departments would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if replacing user departments would exceed tenant quota limits. Throws appropriate
+   * exception if quota would be exceeded.
    * </p>
    */
   @Override
@@ -233,8 +233,8 @@ public class DeptUserQueryImpl implements DeptUserQuery {
    * Validates user-department append quota for tenant.
    * </p>
    * <p>
-   * Checks if adding departments to user would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding departments to user would exceed tenant quota limits. Throws appropriate
+   * exception if quota would be exceeded.
    * </p>
    */
   @Override

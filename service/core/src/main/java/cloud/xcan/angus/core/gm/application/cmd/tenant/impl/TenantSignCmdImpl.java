@@ -23,7 +23,7 @@ import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.TenantStatus;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -43,15 +43,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant sign command operations.
  * </p>
  * <p>
- * Manages tenant cancellation process including SMS verification,
- * cancellation confirmation, and scheduled cancellation processing.
+ * Manages tenant cancellation process including SMS verification, cancellation confirmation, and
+ * scheduled cancellation processing.
  * </p>
  * <p>
- * Supports tenant system administrator and TOP administrator permissions
- * for tenant cancellation operations.
+ * Supports tenant system administrator and TOP administrator permissions for tenant cancellation
+ * operations.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSignCmd {
 
@@ -73,8 +73,8 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
    * Cancels tenant sign cancellation request.
    * </p>
    * <p>
-   * Reverts tenant status from CANCELLING to ENABLED when cancellation
-   * is revoked by authorized administrators.
+   * Reverts tenant status from CANCELLING to ENABLED when cancellation is revoked by authorized
+   * administrators.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -111,8 +111,8 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
    * Processes expired tenant cancellations.
    * </p>
    * <p>
-   * Used by TenantSignCancelExpireJob to automatically cancel tenants
-   * when cancellation period expires.
+   * Used by TenantSignCancelExpireJob to automatically cancel tenants when cancellation period
+   * expires.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -136,8 +136,8 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
    * Sends SMS verification code for tenant cancellation.
    * </p>
    * <p>
-   * Validates administrator permissions and mobile number binding,
-   * then sends SMS verification code for cancellation confirmation.
+   * Validates administrator permissions and mobile number binding, then sends SMS verification code
+   * for cancellation confirmation.
    * </p>
    */
   @Override
@@ -170,8 +170,8 @@ public class TenantSignCmdImpl extends CommCmd<Tenant, Long> implements TenantSi
    * Confirms tenant cancellation with SMS verification code.
    * </p>
    * <p>
-   * Validates SMS verification code and initiates tenant cancellation process.
-   * Sets tenant status to CANCELLING and records cancellation application date.
+   * Validates SMS verification code and initiates tenant cancellation process. Sets tenant status
+   * to CANCELLING and records cancellation application date.
    * </p>
    */
   @Override

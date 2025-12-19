@@ -64,7 +64,8 @@ public class EmailRest {
 
   @Operation(summary = "Delete multiple emails", operationId = "email:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Emails deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Emails deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @Size(max = MAX_BATCH_SIZE) @RequestParam("ids") HashSet<Long> ids) {
@@ -76,7 +77,8 @@ public class EmailRest {
       @ApiResponse(responseCode = "200", description = "Verification code validated successfully")})
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/verificationCode/check")
-  public ApiLocaleResult<?> verificationCodeCheck(@Valid @ParameterObject EmailVerificationCodeCheckDto dto) {
+  public ApiLocaleResult<?> verificationCodeCheck(
+      @Valid @ParameterObject EmailVerificationCodeCheckDto dto) {
     emailFacade.verificationCodeCheck(dto);
     return ApiLocaleResult.success();
   }

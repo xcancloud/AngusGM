@@ -69,16 +69,6 @@ public class AppFindDto extends PageQuery {
   @Schema(description = "Application tag identifier for filtering")
   private Long tagId;
 
-  @Schema(description = "Application creator identifier for filtering")
-  private Long createdBy;
-
-  @Schema(description = "Tenant identifier for filtering")
-  private Long tenantId;
-
-  @DateTimeFormat(pattern = DATE_FMT)
-  @Schema(description = "Application creation date for filtering")
-  private LocalDateTime createdDate;
-
   @Override
   @JsonIgnore
   @Schema(hidden = true)

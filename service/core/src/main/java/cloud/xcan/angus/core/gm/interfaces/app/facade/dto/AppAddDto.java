@@ -57,7 +57,7 @@ public class AppAddDto {
       Application type.\s
       ***CLOUD_APP (Cloud Applications)***: Deliver scalable, on-demand services via cloud infrastructure, enabling remote access and elastic resource allocation.
       ***BASE_APP (Core Base Applications)***: Provide essential system functionalities and foundational services (e.g., authentication, data storage, system management) critical for platform operations.
-      ***OP_APP (Operational Applications)***: The operations platform centralizes and orchestrates business processes, real-time analytics, and system monitoring to enhance operational efficiency""", 
+      ***OP_APP (Operational Applications)***: The operations platform centralizes and orchestrates business processes, real-time analytics, and system monitoring to enhance operational efficiency""",
       requiredMode = RequiredMode.REQUIRED)
   private AppType type;
 
@@ -70,8 +70,9 @@ public class AppAddDto {
   private String description;
 
   @NotNull
-  @Schema(description = "Enable authorization control for applications. If enabled, users must be granted "
-      + "corresponding access policies to use the application", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description =
+      "Enable authorization control for applications. If enabled, users must be granted "
+          + "corresponding access policies to use the application", requiredMode = RequiredMode.REQUIRED)
   private Boolean authCtrl;
 
   @NotEmpty
@@ -87,8 +88,9 @@ public class AppAddDto {
   private Integer sequence = DEFAULT_SEQUENCE;
 
   @Size(max = MAX_APP_FUNC_API_NUM_AP)
-  @Schema(description = "Authorization API identifiers for application homepage access. The API endpoints "
-      + "invoked when accessing the application to validate permissions")
+  @Schema(description =
+      "Authorization API identifiers for application homepage access. The API endpoints "
+          + "invoked when accessing the application to validate permissions")
   private LinkedHashSet<Long> apiIds;
 
   @NotNull

@@ -53,9 +53,6 @@ public class AppFuncFindDto extends AbstractQuery {
   @Schema(description = "Function tag identifier for filtering")
   private Long tagId;
 
-  @Schema(description = "Function creation date for filtering")
-  private LocalDateTime createdDate;
-
   @Override
   @JsonIgnore
   @Schema(hidden = true)

@@ -31,7 +31,8 @@ public class OperationLogRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Operation logs retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<OperationLogVo>> list(@Valid @ParameterObject OperationLogFindDto dto) {
+  public ApiLocaleResult<PageResult<OperationLogVo>> list(
+      @Valid @ParameterObject OperationLogFindDto dto) {
     return ApiLocaleResult.success(optionFacade.list(dto));
   }
 

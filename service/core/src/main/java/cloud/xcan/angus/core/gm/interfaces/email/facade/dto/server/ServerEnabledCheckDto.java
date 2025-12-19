@@ -15,7 +15,8 @@ import lombok.experimental.Accessors;
 public class ServerEnabledCheckDto implements Serializable {
 
   @EnumPart(enumClass = EmailProtocol.class, allowableValues = {"SMTP"})
-  @Schema(description = "Email server protocol type to check. Currently only SMTP is supported", allowableValues = { "SMTP"})
+  @Schema(description = "Email server protocol type to check. Currently only SMTP is supported", allowableValues = {
+      "SMTP"})
   private EmailProtocol protocol;
 
 }

@@ -40,9 +40,6 @@ public class AppOpenFindDto extends PageQuery {
   @Schema(description = "User identifier for filtering")
   private Long userId;
 
-  @Schema(description = "Tenant identifier for filtering")
-  protected Long tenantId;
-
   @Schema(description = "Expiration deletion status for filtering")
   private Boolean expirationDeleted;
 
@@ -51,8 +48,5 @@ public class AppOpenFindDto extends PageQuery {
 
   @Schema(description = "Application expiration date for filtering")
   protected LocalDateTime expirationDate;
-
-  @Schema(description = "Record creation date for filtering")
-  protected LocalDateTime createdDate;
 
 }

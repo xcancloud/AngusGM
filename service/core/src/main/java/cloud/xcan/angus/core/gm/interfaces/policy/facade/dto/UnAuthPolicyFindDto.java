@@ -51,9 +51,6 @@ public class UnAuthPolicyFindDto extends PageQuery {
   @Schema(description = "Client application identifier")
   private String clientId;
 
-  @Schema(description = "Policy creation timestamp")
-  private LocalDateTime createdDate;
-
   @JsonIgnore
   @Schema(hidden = true)
   private Long orgId;

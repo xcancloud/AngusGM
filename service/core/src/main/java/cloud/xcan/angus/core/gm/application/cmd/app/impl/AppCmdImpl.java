@@ -16,7 +16,6 @@ import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.app.open.AppOpenRepo;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTargetType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppCmd;
@@ -45,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of application command operations for managing application lifecycle.
- * 
+ *
  * <p>This class provides comprehensive functionality for application management including:</p>
  * <ul>
  *   <li>Creating, updating, and deleting applications</li>
@@ -54,11 +53,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling site-specific application updates</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures data consistency across related entities such as functions,
  * policies, and authorization records when applications are modified or deleted.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   @Resource
@@ -86,7 +85,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   /**
    * Creates a new application with associated tags and authorities.
-   * 
+   *
    * <p>This method performs comprehensive application creation including:</p>
    * <ul>
    *   <li>Validating application uniqueness and dependencies</li>
@@ -94,7 +93,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
    *   <li>Setting up API authorities for access control</li>
    *   <li>Recording creation audit logs</li>
    * </ul>
-   * 
+   *
    * @param app Application entity to create
    * @return Application identifier with associated data
    */
@@ -132,7 +131,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   /**
    * Updates an existing application with new information.
-   * 
+   *
    * <p>This method ensures data consistency by:</p>
    * <ul>
    *   <li>Validating application uniqueness and dependencies</li>
@@ -140,7 +139,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
    *   <li>Replacing API authorities</li>
    *   <li>Recording update audit logs</li>
    * </ul>
-   * 
+   *
    * @param app Application entity with updated information
    */
   @Override
@@ -177,14 +176,14 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   /**
    * Replaces an application by creating new or updating existing.
-   * 
+   *
    * <p>This method handles both creation and update scenarios:</p>
    * <ul>
    *   <li>Creates new application if no ID is provided</li>
    *   <li>Updates existing application if ID is provided</li>
    *   <li>Maintains audit trails for all operations</li>
    * </ul>
-   * 
+   *
    * @param app Application entity to replace
    * @return Application identifier with associated data
    */
@@ -221,14 +220,14 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   /**
    * Updates application site-specific information.
-   * 
+   *
    * <p>This method handles site-specific updates with additional security checks:</p>
    * <ul>
    *   <li>Validates user permissions for cloud service editions</li>
    *   <li>Updates only site-specific fields (name, icon, URL)</li>
    *   <li>Maintains audit trails for site changes</li>
    * </ul>
-   * 
+   *
    * @param app Application entity with site-specific updates
    */
   @Override
@@ -261,7 +260,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   /**
    * Deletes applications and cleans up related data.
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Removing application functions</li>
@@ -270,7 +269,7 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
    *   <li>Removing tags and API authorities</li>
    *   <li>Recording deletion audit logs</li>
    * </ul>
-   * 
+   *
    * @param ids Set of application identifiers to delete
    */
   @Override
@@ -290,14 +289,14 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
         appRepo.deleteByIdIn(ids);
         // Remove associated application functions
         appFuncRepo.deleteByAppIdIn(ids);
-        
+
         // Delete associated authorization policies
         Set<Long> appPolicyIds = authPolicyQuery.findByAppIdIn(ids).stream()
             .map(AuthPolicy::getAppId).collect(Collectors.toSet());
         if (isNotEmpty(appPolicyIds)) {
           authPolicyCmd.delete(appPolicyIds);
         }
-        
+
         // Clean up application open records
         appOpenRepo.deleteByAppIdIn(ids);
         // Remove application tags
@@ -314,14 +313,14 @@ public class AppCmdImpl extends CommCmd<App, Long> implements AppCmd {
 
   /**
    * Enables or disables applications and synchronizes authorization status.
-   * 
+   *
    * <p>This method ensures authorization consistency by:</p>
    * <ul>
    *   <li>Updating application enabled status</li>
    *   <li>Synchronizing API authority status</li>
    *   <li>Recording status change audit logs</li>
    * </ul>
-   * 
+   *
    * @param apps List of applications with updated enabled status
    */
   @Override

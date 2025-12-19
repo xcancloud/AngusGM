@@ -120,7 +120,8 @@ public class SettingTenantQuotaRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Tenant quota list retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> list(@Valid @ParameterObject TenantQuotaFindDto dto) {
+  public ApiLocaleResult<PageResult<TenantQuotaDetailVo>> list(
+      @Valid @ParameterObject TenantQuotaFindDto dto) {
     return ApiLocaleResult.success(settingTenantQuotaFacade.list(dto));
   }
 

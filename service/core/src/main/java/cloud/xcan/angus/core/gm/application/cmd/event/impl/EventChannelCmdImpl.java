@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of event channel command operations for managing event channels.
- * 
+ *
  * <p>This class provides comprehensive functionality for event channel management including:</p>
  * <ul>
  *   <li>Creating and configuring event channels</li>
@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Testing channel connectivity and functionality</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper event channel management with validation
  * and audit trail maintenance.</p>
  */
@@ -57,7 +57,7 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
 
   /**
    * Creates a new event channel with comprehensive validation.
-   * 
+   *
    * <p>This method performs channel creation including:</p>
    * <ul>
    *   <li>Validating channel name uniqueness</li>
@@ -65,7 +65,7 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
    *   <li>Creating channel configuration</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param channel Event channel configuration to create
    * @return Created channel identifier with name information
    */
@@ -93,7 +93,7 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
 
   /**
    * Replaces an event channel configuration or creates a new one.
-   * 
+   *
    * <p>This method performs channel replacement including:</p>
    * <ul>
    *   <li>Validating channel existence if ID is provided</li>
@@ -101,7 +101,7 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
    *   <li>Creating new channel or updating existing one</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param channel Event channel configuration to replace
    * @return Channel identifier with name information
    */
@@ -140,7 +140,7 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
 
   /**
    * Deletes an event channel by its identifier.
-   * 
+   *
    * <p>This method performs channel deletion including:</p>
    * <ul>
    *   <li>Validating channel is not in use</li>
@@ -148,7 +148,7 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
    *   <li>Deleting channel configuration</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param id Channel identifier to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -178,14 +178,14 @@ public class EventChannelCmdImpl extends CommCmd<EventChannel, Long> implements 
 
   /**
    * Tests event channel connectivity and functionality.
-   * 
+   *
    * <p>This method performs channel testing including:</p>
    * <ul>
    *   <li>Retrieving appropriate push service for channel type</li>
    *   <li>Sending test push notification</li>
    *   <li>Validating push response success</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data for testing
    */
   @Override

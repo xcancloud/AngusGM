@@ -7,7 +7,7 @@ import static java.util.Collections.emptyList;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTargetType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter;
@@ -36,15 +36,15 @@ import org.springframework.data.jpa.domain.JpaSort;
  * Implementation of web tag target query operations.
  * </p>
  * <p>
- * Manages web tag target retrieval, validation, and application association.
- * Provides comprehensive web tag target querying with target association support.
+ * Manages web tag target retrieval, validation, and application association. Provides comprehensive
+ * web tag target querying with target association support.
  * </p>
  * <p>
- * Supports web tag target queries, target tag queries, deduplication,
- * and target association for comprehensive web tag target administration.
+ * Supports web tag target queries, target tag queries, deduplication, and target association for
+ * comprehensive web tag target administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class WebTagTargetQueryImpl implements WebTagTargetQuery {
 
   @Resource
@@ -61,8 +61,8 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
    * Retrieves tag targets for specific web tag.
    * </p>
    * <p>
-   * Queries targets associated with the specified web tag.
-   * Validates required parameters and returns paginated results.
+   * Queries targets associated with the specified web tag. Validates required parameters and
+   * returns paginated results.
    * </p>
    */
   @Override
@@ -90,8 +90,8 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
    * Retrieves target tags for specific target.
    * </p>
    * <p>
-   * Queries web tags associated with the specified target.
-   * Validates required parameters and returns paginated results.
+   * Queries web tags associated with the specified target. Validates required parameters and
+   * returns paginated results.
    * </p>
    */
   @Override
@@ -119,8 +119,8 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
    * Validates applications and performs deduplication.
    * </p>
    * <p>
-   * Checks application existence and removes duplicate tag targets.
-   * Returns validated application list for tag target operations.
+   * Checks application existence and removes duplicate tag targets. Returns validated application
+   * list for tag target operations.
    * </p>
    */
   @Override
@@ -147,8 +147,8 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
    * Validates application functions and performs deduplication.
    * </p>
    * <p>
-   * Checks application function existence and removes duplicate tag targets.
-   * Returns validated application function list for tag target operations.
+   * Checks application function existence and removes duplicate tag targets. Returns validated
+   * application function list for tag target operations.
    * </p>
    */
   @Override
@@ -175,8 +175,8 @@ public class WebTagTargetQueryImpl implements WebTagTargetQuery {
    * Retrieves target tags by target IDs.
    * </p>
    * <p>
-   * Returns web tag targets grouped by target ID for multiple targets.
-   * Queries all targets except applications for comprehensive coverage.
+   * Returns web tag targets grouped by target ID for multiple targets. Queries all targets except
+   * applications for comprehensive coverage.
    * </p>
    */
   @Override

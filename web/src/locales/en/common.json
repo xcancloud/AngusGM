@@ -88,9 +88,9 @@
       "type": "Type",
       "description": "Description",
       "createdDate": "Created Date",
-      "createdByName": "Creator",
-      "lastModifiedByName": "Last Modifier",
-      "lastModifiedDate": "Last Modified Date",
+      "creator": "Creator",
+      "modifier": "Last Modifier",
+      "modifiedDate": "Last Modified Date",
       "tags": "Tags",
       "tenantName": "Tenant Name"
     },

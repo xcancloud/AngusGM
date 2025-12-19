@@ -38,7 +38,7 @@ public interface UserRemote {
       @ApiResponse(responseCode = "200", description = "User profile updated successfully"),
       @ApiResponse(responseCode = "404", description = "User not found")})
   @PatchMapping("/api/v1/user")
-   ApiLocaleResult<?> update(@Valid @RequestBody UserUpdateDto dto);
+  ApiLocaleResult<?> update(@Valid @RequestBody UserUpdateDto dto);
 
   @Operation(summary = "Replace user profile with complete new information", operationId = "user:replace")
   @ApiResponses(value = {

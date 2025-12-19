@@ -30,13 +30,13 @@ public class WebTagTargetDetailVo {
   private Long createdBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 
   private LocalDateTime targetCreatedDate;
 
   private Long targetCreatedBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String targetCreatedByName;
+  private String targetCreator;
 
 }

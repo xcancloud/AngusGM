@@ -12,7 +12,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppFuncCmd;
@@ -41,8 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of application function command operations for managing application functions.
- * 
- * <p>This class provides comprehensive functionality for application function management including:</p>
+ *
+ * <p>This class provides comprehensive functionality for application function management
+ * including:</p>
  * <ul>
  *   <li>Creating, updating, and deleting application functions</li>
  *   <li>Managing function hierarchies and parent-child relationships</li>
@@ -51,11 +51,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Importing functions from external sources</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures data consistency across related entities such as APIs,
  * authorities, and tags when functions are modified or deleted.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd {
 
   @Resource
@@ -75,7 +75,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Creates new application functions with associated tags and authorities.
-   * 
+   *
    * <p>This method performs comprehensive function creation including:</p>
    * <ul>
    *   <li>Validating function hierarchy and uniqueness</li>
@@ -83,8 +83,8 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
    *   <li>Creating API authorities for access control</li>
    *   <li>Recording creation audit logs</li>
    * </ul>
-   * 
-   * @param appId Application identifier
+   *
+   * @param appId   Application identifier
    * @param appFunc List of application function entities to create
    * @return List of created function identifiers with associated data
    */
@@ -130,7 +130,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Updates existing application functions with new information.
-   * 
+   *
    * <p>This method ensures data consistency by:</p>
    * <ul>
    *   <li>Validating function hierarchy and uniqueness</li>
@@ -138,8 +138,8 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
    *   <li>Replacing API authorities</li>
    *   <li>Recording update audit logs</li>
    * </ul>
-   * 
-   * @param appId Application identifier
+   *
+   * @param appId   Application identifier
    * @param appFunc List of application function entities to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -188,15 +188,15 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Replaces application functions by creating new or updating existing.
-   * 
+   *
    * <p>This method handles both creation and update scenarios:</p>
    * <ul>
    *   <li>Creates new functions for entities without IDs</li>
    *   <li>Updates existing functions for entities with IDs</li>
    *   <li>Maintains data consistency across related entities</li>
    * </ul>
-   * 
-   * @param appId Application identifier
+   *
+   * @param appId   Application identifier
    * @param appFunc List of application function entities to replace
    */
   @Transactional(rollbackFor = Exception.class)
@@ -241,7 +241,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Deletes application functions and cleans up related data.
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Removing function tags</li>
@@ -249,8 +249,8 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
    *   <li>Handling cascading deletion of child functions</li>
    *   <li>Recording deletion audit logs</li>
    * </ul>
-   * 
-   * @param appId Application identifier
+   *
+   * @param appId   Application identifier
    * @param funcIds Set of function identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -288,7 +288,7 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Enables or disables application functions with cascading effects.
-   * 
+   *
    * <p>This method ensures authorization consistency by:</p>
    * <ul>
    *   <li>Updating function enabled status</li>
@@ -296,8 +296,8 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
    *   <li>Synchronizing API authority status</li>
    *   <li>Recording status change audit logs</li>
    * </ul>
-   * 
-   * @param appId Application identifier
+   *
+   * @param appId   Application identifier
    * @param appFunc List of application functions with updated enabled status
    */
   @Transactional(rollbackFor = Exception.class)
@@ -358,11 +358,11 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Imports application functions from external sources.
-   * 
+   *
    * <p>This method replaces existing functions with imported ones,
    * effectively performing a bulk import operation.</p>
-   * 
-   * @param appId Application identifier
+   *
+   * @param appId   Application identifier
    * @param appFunc List of application functions to import
    */
   @Override
@@ -378,11 +378,11 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Replaces function API authorities by deleting existing and creating new ones.
-   * 
+   *
    * <p>This method ensures that API authorities are properly synchronized
    * when function API associations change.</p>
-   * 
-   * @param app Application entity
+   *
+   * @param app     Application entity
    * @param appFunc List of application functions
    */
   private void replaceFuncApiAuthority(App app, List<AppFunc> appFunc) {
@@ -394,10 +394,10 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Deletes API authorities associated with functions.
-   * 
+   *
    * <p>This method removes all API authority records for the specified functions
    * to prepare for new authority creation.</p>
-   * 
+   *
    * @param appFunc List of application functions
    */
   private void deleteFuncApiAuthority(List<AppFunc> appFunc) {
@@ -409,11 +409,11 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Creates API authorities for functions and their associated APIs.
-   * 
+   *
    * <p>This method validates API associations and creates authority records
    * for proper access control.</p>
-   * 
-   * @param app Application entity
+   *
+   * @param app     Application entity
    * @param appFunc List of application functions
    */
   private void saveFuncApiAuthority(App app, List<AppFunc> appFunc) {
@@ -436,11 +436,11 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Sets application information for functions.
-   * 
+   *
    * <p>This method ensures that functions inherit the client ID and tenant ID
    * from their parent application.</p>
-   * 
-   * @param appDb Application entity
+   *
+   * @param appDb   Application entity
    * @param appFunc List of application functions
    */
   private void setFuncAppInfo(App appDb, List<AppFunc> appFunc) {
@@ -451,11 +451,11 @@ public class AppFuncCmdImpl extends CommCmd<AppFunc, Long> implements AppFuncCmd
 
   /**
    * Updates function API authority status.
-   * 
+   *
    * <p>This method synchronizes the enabled status of functions with their
    * associated API authorities.</p>
-   * 
-   * @param ids Collection of function identifiers
+   *
+   * @param ids     Collection of function identifiers
    * @param enabled Whether functions should be enabled
    */
   private void updateAppFuncAuthorityStatus(Collection<Long> ids, boolean enabled) {

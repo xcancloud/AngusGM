@@ -34,7 +34,8 @@ public class MessageCenterOnlineRest {
   private MessageCenterOnlineFacade messageCenterOnlineFacade;
 
   @Operation(summary = "Force users offline and logout", operationId = "message:center:offline")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Users forced offline successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Users forced offline successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PostMapping("/off")
   public ApiLocaleResult<?> offline(@Valid @RequestBody MessageCenterOfflineDto dto) {

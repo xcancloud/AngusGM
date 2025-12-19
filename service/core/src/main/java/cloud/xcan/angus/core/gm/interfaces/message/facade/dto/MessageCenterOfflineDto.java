@@ -22,7 +22,8 @@ public class MessageCenterOfflineDto implements Serializable {
 
   @NotNull
   @EnumPart(enumClass = ReceiveObjectType.class, allowableValues = {"TENANT", "USER"})
-  @Schema(description = "Target object type for forced offline operation", allowableValues = {"TENANT", "USER"})
+  @Schema(description = "Target object type for forced offline operation", allowableValues = {
+      "TENANT", "USER"})
   private ReceiveObjectType receiveObjectType;
 
   @Size(max = MAX_PUSH_OBJECT_NUM)

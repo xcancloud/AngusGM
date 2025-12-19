@@ -58,7 +58,8 @@ public class MessageAddDto implements Serializable {
   @NotNull
   @EnumPart(enumClass = ReceiveObjectType.class, allowableValues = {"TENANT", "DEPT", "GROUP",
       "USER", "ALL"})
-  @Schema(description = "Recipient object type for message targeting", allowableValues = {"TENANT", "DEPT",
+  @Schema(description = "Recipient object type for message targeting", allowableValues = {"TENANT",
+      "DEPT",
       "GROUP", "USER", "ALL"}, requiredMode = RequiredMode.REQUIRED)
   private ReceiveObjectType receiveObjectType;
 

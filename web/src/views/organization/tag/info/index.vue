@@ -54,9 +54,9 @@ const { t } = useI18n();
         <div class="info-item">
           <div class="info-label">
             <Icon icon="icon-yonghu" class="info-icon" />
-            {{ t('common.columns.createdByName') }}
+            {{ t('common.columns.creator') }}
           </div>
-          <div class="info-value">{{ props.tag?.createdByName || '--' }}</div>
+          <div class="info-value">{{ props.tag?.creator || '--' }}</div>
         </div>
       </div>
 
@@ -72,16 +72,16 @@ const { t } = useI18n();
         <div class="info-item">
           <div class="info-label">
             <Icon icon="icon-yonghu" class="info-icon" />
-            {{ t('department.columns.lastModifiedByName') }}
+            {{ t('department.columns.modifier') }}
           </div>
-          <div class="info-value">{{ props.tag?.lastModifiedByName || '--' }}</div>
+          <div class="info-value">{{ props.tag?.modifier || '--' }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">
             <Icon icon="icon-shijianriqi" class="info-icon" />
-            {{ t('department.columns.lastModifiedDate') }}
+            {{ t('department.columns.modifiedDate') }}
           </div>
-          <div class="info-value">{{ props.tag?.lastModifiedDate || '--' }}</div>
+          <div class="info-value">{{ props.tag?.modifiedDate || '--' }}</div>
         </div>
       </div>
     </div>

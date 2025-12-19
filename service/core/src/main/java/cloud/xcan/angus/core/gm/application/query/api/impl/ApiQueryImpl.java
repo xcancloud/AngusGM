@@ -11,7 +11,7 @@ import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.api.ApiRepo;
 import cloud.xcan.angus.api.commonlink.service.Service;
 import cloud.xcan.angus.api.commonlink.service.ServiceResource;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
@@ -33,15 +33,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of API query operations.
  * </p>
  * <p>
- * Manages API retrieval, validation, and service information enrichment.
- * Provides comprehensive API querying with full-text search support.
+ * Manages API retrieval, validation, and service information enrichment. Provides comprehensive API
+ * querying with full-text search support.
  * </p>
  * <p>
- * Supports API detail retrieval, paginated listing, validation checks,
- * and service information association for API management.
+ * Supports API detail retrieval, paginated listing, validation checks, and service information
+ * association for API management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Api", table = "api", isMultiTenantCtrl = false,
     groupByColumns = {"created_date", "method", "type", "enabled"})
 public class ApiQueryImpl implements ApiQuery {
@@ -58,8 +58,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Retrieves detailed API information by ID.
    * </p>
    * <p>
-   * Fetches complete API record with all associated information.
-   * Throws ResourceNotFound exception if API does not exist.
+   * Fetches complete API record with all associated information. Throws ResourceNotFound exception
+   * if API does not exist.
    * </p>
    */
   @Override
@@ -79,8 +79,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Retrieves paginated list of APIs with optional full-text search.
    * </p>
    * <p>
-   * Supports both regular database queries and full-text search operations.
-   * Returns filtered and paginated API results based on specification.
+   * Supports both regular database queries and full-text search operations. Returns filtered and
+   * paginated API results based on specification.
    * </p>
    */
   @Override
@@ -102,8 +102,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Retrieves multiple APIs by their IDs.
    * </p>
    * <p>
-   * Fetches API records for the specified collection of IDs.
-   * Returns null if the collection is empty.
+   * Fetches API records for the specified collection of IDs. Returns null if the collection is
+   * empty.
    * </p>
    */
   @Override
@@ -119,8 +119,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Validates and retrieves API by ID with enabled status check.
    * </p>
    * <p>
-   * Verifies API exists and is enabled. Throws appropriate exceptions
-   * for missing or disabled APIs.
+   * Verifies API exists and is enabled. Throws appropriate exceptions for missing or disabled
+   * APIs.
    * </p>
    */
   @Override
@@ -135,8 +135,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Validates and retrieves multiple APIs by IDs with optional enabled status check.
    * </p>
    * <p>
-   * Verifies all APIs exist and optionally checks enabled status.
-   * Validates complete collection match and throws appropriate exceptions.
+   * Verifies all APIs exist and optionally checks enabled status. Validates complete collection
+   * match and throws appropriate exceptions.
    * </p>
    */
   @Override
@@ -164,8 +164,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Validates APIs belong to a specific service.
    * </p>
    * <p>
-   * Verifies that all specified API IDs belong to the given service ID.
-   * Throws ResourceNotFound exception if any API is not found or doesn't belong to the service.
+   * Verifies that all specified API IDs belong to the given service ID. Throws ResourceNotFound
+   * exception if any API is not found or doesn't belong to the service.
    * </p>
    */
   @Override
@@ -185,8 +185,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Validates and retrieves service resources by resource names.
    * </p>
    * <p>
-   * Verifies that all specified resource names exist in the system.
-   * Returns grouped service resources by resource name.
+   * Verifies that all specified resource names exist in the system. Returns grouped service
+   * resources by resource name.
    * </p>
    */
   @Override
@@ -205,8 +205,8 @@ public class ApiQueryImpl implements ApiQuery {
    * Enriches APIs with service information.
    * </p>
    * <p>
-   * Associates APIs with their corresponding service details including
-   * service name, code, and enabled status for comprehensive API management.
+   * Associates APIs with their corresponding service details including service name, code, and
+   * enabled status for comprehensive API management.
    * </p>
    */
   @Override

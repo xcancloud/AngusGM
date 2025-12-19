@@ -12,7 +12,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailServerCmd;
@@ -30,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of email server command operations for managing email server configurations.
- * 
+ *
  * <p>This class provides comprehensive functionality for email server management including:</p>
  * <ul>
  *   <li>Creating and configuring email servers</li>
@@ -39,11 +38,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Ensuring only one server per protocol is enabled</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper email server management with automatic
  * sender instance updates and audit trail maintenance.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements EmailServerCmd {
 
   @Resource
@@ -57,7 +56,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
 
   /**
    * Creates a new email server with automatic enabled status management.
-   * 
+   *
    * <p>This method performs server creation including:</p>
    * <ul>
    *   <li>Validating server name uniqueness</li>
@@ -66,7 +65,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
    *   <li>Updating email sender instance</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param server Email server configuration to create
    * @return Created server identifier with host:port information
    */
@@ -108,7 +107,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
 
   /**
    * Updates an existing email server configuration.
-   * 
+   *
    * <p>This method performs server update including:</p>
    * <ul>
    *   <li>Validating server existence</li>
@@ -116,7 +115,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
    *   <li>Updating server configuration</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param server Email server configuration to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -149,7 +148,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
 
   /**
    * Replaces an email server configuration or creates a new one.
-   * 
+   *
    * <p>This method performs server replacement including:</p>
    * <ul>
    *   <li>Validating server existence if ID is provided</li>
@@ -158,7 +157,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
    *   <li>Updating email sender instance</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param server Email server configuration to replace
    * @return Server identifier with host:port information
    */
@@ -206,14 +205,14 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
 
   /**
    * Deletes email servers by their identifiers.
-   * 
+   *
    * <p>This method performs server deletion including:</p>
    * <ul>
    *   <li>Retrieving server information for audit logs</li>
    *   <li>Deleting server configurations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param ids Set of server identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -237,7 +236,7 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
 
   /**
    * Enables or disables an email server with automatic status management.
-   * 
+   *
    * <p>This method manages server enabled status including:</p>
    * <ul>
    *   <li>Validating server existence</li>
@@ -245,8 +244,8 @@ public class EmailServerCmdImpl extends CommCmd<EmailServer, Long> implements Em
    *   <li>Ensuring only one server per protocol is enabled</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param id Server identifier
+   *
+   * @param id      Server identifier
    * @param enabled Whether to enable the server
    */
   @Transactional(rollbackFor = Exception.class)

@@ -31,7 +31,7 @@ public class AuthClientUpdateDto {
   private String id;
 
   @Length(max = MAX_CLIENT_SECRET_LENGTH)
-  @Schema(description =  "Client secret for secure application authentication. Ensures only trusted clients access protected resources. Can be null if not available")
+  @Schema(description = "Client secret for secure application authentication. Ensures only trusted clients access protected resources. Can be null if not available")
   private String clientSecret;
 
   @Schema(description = "Timestamp when the client secret expires. Null if the secret does not expire. Used for secret lifecycle management")

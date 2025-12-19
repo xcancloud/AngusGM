@@ -13,7 +13,7 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuota;
 import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuotaRepo;
 import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingTenantQuotaCmd;
@@ -37,16 +37,16 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant quota setting command operations.
  * </p>
  * <p>
- * Manages tenant-level quota settings including resource limits, activity quotas,
- * and metrics retention periods.
+ * Manages tenant-level quota settings including resource limits, activity quotas, and metrics
+ * retention periods.
  * </p>
  * <p>
- * Provides quota initialization, updates, and batch operations with proper
- * validation and range checking.
+ * Provides quota initialization, updates, and batch operations with proper validation and range
+ * checking.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
     implements SettingTenantQuotaCmd {
 
@@ -64,8 +64,8 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
    * Replaces tenant quota setting with validation.
    * </p>
    * <p>
-   * Validates quota value against minimum and maximum limits before updating.
-   * Only updates if the new quota value differs from the current value.
+   * Validates quota value against minimum and maximum limits before updating. Only updates if the
+   * new quota value differs from the current value.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -102,8 +102,8 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
    * Replaces multiple quota settings in batch.
    * </p>
    * <p>
-   * Processes multiple quota updates in a single operation.
-   * Note: Future optimization needed to avoid performance issues with loop calls.
+   * Processes multiple quota updates in a single operation. Note: Future optimization needed to
+   * avoid performance issues with loop calls.
    * </p>
    */
   @DoInFuture("Optimize for loop calls to avoid performance problems")
@@ -127,8 +127,8 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
    * Replaces tenant quotas based on order status and expiration.
    * </p>
    * <p>
-   * Updates quotas based on order completion status and expiration flags.
-   * Handles quota addition for completed orders and quota release for expired orders.
+   * Updates quotas based on order completion status and expiration flags. Handles quota addition
+   * for completed orders and quota release for expired orders.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -215,8 +215,8 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
    * Initializes new quotas for all tenants.
    * </p>
    * <p>
-   * Creates quota settings for all existing tenants that don't have
-   * the specified quota type initialized.
+   * Creates quota settings for all existing tenants that don't have the specified quota type
+   * initialized.
    * </p>
    */
   @Override
@@ -283,8 +283,8 @@ public class SettingTenantQuotaCmdImpl extends CommCmd<SettingTenantQuota, Long>
    * Initializes quota settings for a new tenant.
    * </p>
    * <p>
-   * Creates quota settings for all quota types when a new tenant is created.
-   * Manual initialization is required when new quota types are added.
+   * Creates quota settings for all quota types when a new tenant is created. Manual initialization
+   * is required when new quota types are added.
    * </p>
    */
   @Override

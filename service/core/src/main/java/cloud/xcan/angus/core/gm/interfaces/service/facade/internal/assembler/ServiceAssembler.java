@@ -110,8 +110,8 @@ public class ServiceAssembler {
         .setApiNum(service.getApiNum())
         .setCreatedBy(service.getCreatedBy())
         .setCreatedDate(service.getCreatedDate())
-        .setLastModifiedBy(service.getLastModifiedBy())
-        .setLastModifiedDate(service.getLastModifiedDate());
+        .setModifiedBy(service.getModifiedBy())
+        .setModifiedDate(service.getModifiedDate());
   }
 
   public static ServiceApiVo toServiceApiVo(Api api) {

@@ -17,7 +17,7 @@ import cloud.xcan.angus.api.commonlink.to.TORoleUser;
 import cloud.xcan.angus.api.commonlink.to.TORoleUserRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.to.TORoleQuery;
 import cloud.xcan.angus.core.gm.domain.to.TORoleSearchRepo;
@@ -38,15 +38,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of TO (Tenant Operation) role query operations.
  * </p>
  * <p>
- * Manages TO role retrieval, validation, and user association.
- * Provides comprehensive TO role querying with full-text search support.
+ * Manages TO role retrieval, validation, and user association. Provides comprehensive TO role
+ * querying with full-text search support.
  * </p>
  * <p>
- * Supports TO role detail retrieval, paginated listing, validation,
- * and user association for comprehensive TO role administration.
+ * Supports TO role detail retrieval, paginated listing, validation, and user association for
+ * comprehensive TO role administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class TORoleQueryImpl implements TORoleQuery {
 
   @Resource
@@ -63,8 +63,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Retrieves detailed TO role information by ID or code.
    * </p>
    * <p>
-   * Fetches TO role by ID or code with user association.
-   * Supports both numeric ID and string code lookup.
+   * Fetches TO role by ID or code with user association. Supports both numeric ID and string code
+   * lookup.
    * </p>
    */
   @Override
@@ -95,8 +95,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Retrieves TO roles with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated TO role results.
+   * Supports full-text search and specification-based filtering. Returns paginated TO role
+   * results.
    * </p>
    */
   @Override
@@ -118,8 +118,7 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Retrieves TO role by ID without validation.
    * </p>
    * <p>
-   * Returns TO role without existence validation.
-   * Returns null if TO role does not exist.
+   * Returns TO role without existence validation. Returns null if TO role does not exist.
    * </p>
    */
   @Override
@@ -132,8 +131,7 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Retrieves TO roles by IDs.
    * </p>
    * <p>
-   * Returns TO roles for the specified role IDs.
-   * Returns empty list if no roles found.
+   * Returns TO roles for the specified role IDs. Returns empty list if no roles found.
    * </p>
    */
   @Override
@@ -146,8 +144,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Validates and retrieves TO role by ID.
    * </p>
    * <p>
-   * Returns TO role with existence validation and optional enabled check.
-   * Throws ResourceNotFound if TO role does not exist.
+   * Returns TO role with existence validation and optional enabled check. Throws ResourceNotFound
+   * if TO role does not exist.
    * </p>
    */
   @Override
@@ -160,8 +158,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Validates and retrieves TO roles by IDs.
    * </p>
    * <p>
-   * Returns TO roles with existence validation and optional enabled check.
-   * Validates that all requested TO role IDs exist.
+   * Returns TO roles with existence validation and optional enabled check. Validates that all
+   * requested TO role IDs exist.
    * </p>
    */
   @Override
@@ -189,8 +187,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Validates duplicate TO roles in parameters.
    * </p>
    * <p>
-   * Checks for duplicate code and name within the provided role list.
-   * Throws ProtocolException if duplicates are found.
+   * Checks for duplicate code and name within the provided role list. Throws ProtocolException if
+   * duplicates are found.
    * </p>
    */
   @Override
@@ -213,8 +211,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Validates TO role code and name uniqueness.
    * </p>
    * <p>
-   * Ensures TO role code and name are unique across the system.
-   * Handles both insert and update scenarios.
+   * Ensures TO role code and name are unique across the system. Handles both insert and update
+   * scenarios.
    * </p>
    */
   @Override
@@ -246,8 +244,8 @@ public class TORoleQueryImpl implements TORoleQuery {
    * Sets user association for TO role.
    * </p>
    * <p>
-   * Associates users with the specified TO role.
-   * Enriches TO role with user information for complete data.
+   * Associates users with the specified TO role. Enriches TO role with user information for
+   * complete data.
    * </p>
    */
   private void setPolicyUser(TORole toPolicyDb) {

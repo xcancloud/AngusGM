@@ -74,7 +74,8 @@ public class UserCurrentRest {
       @Parameter(name = "appCode", description = "Application identifier code for context-specific data", required = false) @RequestParam(value = "appCode", required = false) String appCode,
       @Parameter(name = "editionType", description = "Application edition type (COMMUNITY, ENTERPRISE, etc.)", required = false) @RequestParam(value = "editionType", required = false) EditionType editionType,
       Principal principal) {
-    return ApiLocaleResult.success(userCurrentFacade.currentDetail(infoScope, appCode, editionType, principal));
+    return ApiLocaleResult.success(
+        userCurrentFacade.currentDetail(infoScope, appCode, editionType, principal));
   }
 
   @Operation(summary = "Send SMS verification code to current user's mobile number", operationId = "user:current:sms:send")

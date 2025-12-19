@@ -19,8 +19,8 @@ public class AppOpenRenewDto {
 
   @Code
   @NotEmpty
-  @Schema(description = "Unique application code following specific pattern validation. Must match pattern for alphanumeric characters, underscores, hyphens, and dots. Used for application identification", 
-    pattern = "^[A-Za-z0-9_:\\-.]{1,80}$", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description = "Unique application code following specific pattern validation. Must match pattern for alphanumeric characters, underscores, hyphens, and dots. Used for application identification",
+      pattern = "^[A-Za-z0-9_:\\-.]{1,80}$", requiredMode = RequiredMode.REQUIRED)
   private String appCode;
 
   @NotNull

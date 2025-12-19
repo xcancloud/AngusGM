@@ -23,7 +23,7 @@ import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppOrgAuthQuery;
@@ -57,15 +57,15 @@ import org.springframework.lang.Nullable;
  * Implementation of application organization authorization query operations.
  * </p>
  * <p>
- * Manages application authorization queries for tenants, users, departments, and groups.
- * Provides comprehensive authorization checking and policy management.
+ * Manages application authorization queries for tenants, users, departments, and groups. Provides
+ * comprehensive authorization checking and policy management.
  * </p>
  * <p>
- * Supports authorized and unauthorized entity queries, policy validation,
- * and multi-tenant authorization management.
+ * Supports authorized and unauthorized entity queries, policy validation, and multi-tenant
+ * authorization management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
 
   @Resource
@@ -94,8 +94,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves tenants authorized for the specified application.
    * </p>
    * <p>
-   * Queries tenants that have open authorization for the application.
-   * Supports pagination and filtering for comprehensive tenant management.
+   * Queries tenants that have open authorization for the application. Supports pagination and
+   * filtering for comprehensive tenant management.
    * </p>
    */
   @Override
@@ -135,8 +135,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves users authorized for the specified application.
    * </p>
    * <p>
-   * Queries users that have authorization for the application within the tenant.
-   * Handles global authorization and individual user authorization scenarios.
+   * Queries users that have authorization for the application within the tenant. Handles global
+   * authorization and individual user authorization scenarios.
    * </p>
    */
   @Override
@@ -190,8 +190,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves departments authorized for the specified application.
    * </p>
    * <p>
-   * Queries departments that have authorization for the application within the tenant.
-   * Includes department authorization policy information.
+   * Queries departments that have authorization for the application within the tenant. Includes
+   * department authorization policy information.
    * </p>
    */
   @Override
@@ -230,8 +230,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves groups authorized for the specified application.
    * </p>
    * <p>
-   * Queries groups that have authorization for the application within the tenant.
-   * Includes group authorization policy information.
+   * Queries groups that have authorization for the application within the tenant. Includes group
+   * authorization policy information.
    * </p>
    */
   @Override
@@ -359,8 +359,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves applications authorized for the specified organization.
    * </p>
    * <p>
-   * Queries applications that the organization has authorization to access.
-   * Supports different organization types and includes policy information.
+   * Queries applications that the organization has authorization to access. Supports different
+   * organization types and includes policy information.
    * </p>
    */
   @Override
@@ -427,8 +427,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves authorization policies for organization and application.
    * </p>
    * <p>
-   * Queries policies that authorize the organization for the specified application.
-   * Supports pagination and filtering for comprehensive policy management.
+   * Queries policies that authorize the organization for the specified application. Supports
+   * pagination and filtering for comprehensive policy management.
    * </p>
    */
   @Override
@@ -504,8 +504,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves tenants not authorized for the specified application.
    * </p>
    * <p>
-   * Queries tenants that do not have open authorization for the application.
-   * Supports pagination and filtering for comprehensive tenant management.
+   * Queries tenants that do not have open authorization for the application. Supports pagination
+   * and filtering for comprehensive tenant management.
    * </p>
    */
   @Override
@@ -536,8 +536,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves users not authorized for the specified application.
    * </p>
    * <p>
-   * Queries users that do not have authorization for the application within the tenant.
-   * Handles global authorization scenarios appropriately.
+   * Queries users that do not have authorization for the application within the tenant. Handles
+   * global authorization scenarios appropriately.
    * </p>
    */
   @Override
@@ -697,8 +697,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves authorized organization IDs for the specified application and organization type.
    * </p>
    * <p>
-   * Queries organization IDs that have authorization for the application.
-   * Supports filtering by organization type and ID filters.
+   * Queries organization IDs that have authorization for the application. Supports filtering by
+   * organization type and ID filters.
    * </p>
    */
   @Override
@@ -715,8 +715,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Retrieves authorized policy IDs for the specified application and organization.
    * </p>
    * <p>
-   * Queries policy IDs that authorize the organization for the application.
-   * Supports filtering by organization type and policy ID filters.
+   * Queries policy IDs that authorize the organization for the application. Supports filtering by
+   * organization type and policy ID filters.
    * </p>
    */
   @Override
@@ -792,7 +792,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Associates department authorization policies with department list.
    * </p>
    * <p>
-   * Enriches departments with their authorization policies for comprehensive department information.
+   * Enriches departments with their authorization policies for comprehensive department
+   * information.
    * </p>
    */
   private void setDeptAuthPolicy(Long appId, Long tenantId, List<Dept> depts) {
@@ -854,8 +855,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Adds user authorization policies to principal context extension.
    * </p>
    * <p>
-   * Retrieves and stores user authorization policies in the principal context
-   * for access during request processing.
+   * Retrieves and stores user authorization policies in the principal context for access during
+   * request processing.
    * </p>
    */
   private void addUserAuthPolicyToExtension(Long appId, Long tenantId, User user,
@@ -884,8 +885,8 @@ public class AppOrgAuthQueryImpl implements AppOrgAuthQuery {
    * Adds organization authorization policies to principal context extension.
    * </p>
    * <p>
-   * Retrieves and stores organization authorization policies in the principal context
-   * for access during request processing.
+   * Retrieves and stores organization authorization policies in the principal context for access
+   * during request processing.
    * </p>
    */
   private void addAuthPolicyToExtension(Long appId, Long tenantId, AuthOrgType orgType,

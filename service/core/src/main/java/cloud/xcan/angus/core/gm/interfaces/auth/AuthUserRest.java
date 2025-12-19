@@ -140,7 +140,8 @@ public class AuthUserRest {
       @Parameter(name = "appIdOrCode", description = "Application identifier or code", required = true) @PathVariable("appIdOrCode") String appIdOrCode,
       @Parameter(name = "joinApi", description = "Include API information in function query", required = false) @RequestParam(value = "joinApi", required = false) Boolean joinApi,
       @Parameter(name = "onlyEnabled", description = "Return only enabled functions, default true", required = false) @RequestParam(value = "onlyEnabled", required = false) Boolean onlyEnabled) {
-    return ApiLocaleResult.success(userFacade.userAppFuncList(userId, appIdOrCode, joinApi, onlyEnabled));
+    return ApiLocaleResult.success(
+        userFacade.userAppFuncList(userId, appIdOrCode, joinApi, onlyEnabled));
   }
 
   @Operation(summary = "Retrieve user authorized application function tree", operationId = "auth:user:app:func:tree")
@@ -153,7 +154,8 @@ public class AuthUserRest {
       @Parameter(name = "appIdOrCode", description = "Application identifier or code", required = true) @PathVariable("appIdOrCode") String appIdOrCode,
       @Parameter(name = "joinApi", description = "Include API information in function query", required = false) @RequestParam(value = "joinApi", required = false) Boolean joinApi,
       @Parameter(name = "onlyEnabled", description = "Return only enabled functions, default true", required = false) @RequestParam(value = "onlyEnabled", required = false) Boolean onlyEnabled) {
-    return ApiLocaleResult.success(userFacade.appFuncTree(userId, appIdOrCode, joinApi, onlyEnabled));
+    return ApiLocaleResult.success(
+        userFacade.appFuncTree(userId, appIdOrCode, joinApi, onlyEnabled));
   }
 
 }

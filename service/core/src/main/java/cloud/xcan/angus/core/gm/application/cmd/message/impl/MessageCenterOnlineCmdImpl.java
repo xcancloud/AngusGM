@@ -9,7 +9,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of message center online command operations for managing user online status.
- * 
+ *
  * <p>This class provides comprehensive functionality for online status management including:</p>
  * <ul>
  *   <li>Managing user online/offline status</li>
@@ -33,12 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Forcing user logout and token invalidation</li>
  *   <li>Managing application shutdown procedures</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper user session management with
  * OAuth2 token invalidation and status tracking.</p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Long>
     implements MessageCenterOnlineCmd {
 
@@ -51,7 +51,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Forces users offline based on receive object type.
-   * 
+   *
    * <p>This method performs offline operations including:</p>
    * <ul>
    *   <li>Processing user-specific offline requests</li>
@@ -59,9 +59,9 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
    *   <li>Invalidating user access tokens</li>
    *   <li>Updating online status records</li>
    * </ul>
-   * 
+   *
    * @param receiveObjectType Type of receive object (USER, TENANT)
-   * @param receiveObjectIds List of object identifiers
+   * @param receiveObjectIds  List of object identifiers
    */
   @Override
   public void offline(ReceiveObjectType receiveObjectType, List<Long> receiveObjectIds) {
@@ -91,7 +91,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Updates user online status based on session information.
-   * 
+   *
    * <p>This method manages session-based status including:</p>
    * <ul>
    *   <li>Creating online records for new sessions</li>
@@ -99,13 +99,13 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
    *   <li>Managing user online status</li>
    *   <li>Tracking session metadata</li>
    * </ul>
-   * 
-   * @param sessionId Session identifier
-   * @param username User username
-   * @param userAgent User agent string
-   * @param deviceId Device identifier
+   *
+   * @param sessionId     Session identifier
+   * @param username      User username
+   * @param userAgent     User agent string
+   * @param deviceId      Device identifier
    * @param remoteAddress Remote IP address
-   * @param online Whether user is coming online
+   * @param online        Whether user is coming online
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -127,7 +127,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Handles application shutdown by updating all online users to offline.
-   * 
+   *
    * <p>This method performs shutdown cleanup including:</p>
    * <ul>
    *   <li>Retrieving all online usernames</li>
@@ -151,7 +151,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Forces specific users offline by user IDs.
-   * 
+   *
    * @param userIds List of user identifiers to force offline
    */
   private void offlineByUserIds(List<Long> userIds) {
@@ -163,14 +163,15 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Creates online session record and updates user status.
-   * 
-   * @param sessionId Session identifier
-   * @param userAgent User agent string
-   * @param deviceId Device identifier
+   *
+   * @param sessionId     Session identifier
+   * @param userAgent     User agent string
+   * @param deviceId      Device identifier
    * @param remoteAddress Remote IP address
-   * @param user User entity
+   * @param user          User entity
    */
-  private void onlineBySession(String sessionId, String userAgent, String deviceId, String remoteAddress,
+  private void onlineBySession(String sessionId, String userAgent, String deviceId,
+      String remoteAddress,
       User user) {
     // Save online session record
     insert0(assembleMessageCenterOnline(sessionId, user, userAgent, deviceId, remoteAddress));
@@ -180,9 +181,9 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Updates offline session record and user status.
-   * 
+   *
    * @param sessionId Session identifier
-   * @param userId User identifier
+   * @param userId    User identifier
    */
   private void offlineBySession(String sessionId, Long userId) {
     // Update offline session record
@@ -193,7 +194,7 @@ public class MessageCenterOnlineCmdImpl extends CommCmd<MessageCenterOnline, Lon
 
   /**
    * Forces users offline by user IDs.
-   * 
+   *
    * @param userIds Collection of user identifiers
    */
   private void offlineByUserId(Collection<Long> userIds) {

@@ -12,7 +12,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.service.ServiceResource;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthClientCmd;
@@ -46,15 +46,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of system token command operations.
  * </p>
  * <p>
- * Manages system token lifecycle including creation, deletion, and OAuth2 integration.
- * Provides secure token generation with proper authentication and authorization.
+ * Manages system token lifecycle including creation, deletion, and OAuth2 integration. Provides
+ * secure token generation with proper authentication and authorization.
  * </p>
  * <p>
  * Integrates with OAuth2 authorization server for token management and client registration.
  * Supports API authentication and resource-based access control.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements SystemTokenCmd {
 
   @Resource
@@ -83,8 +83,8 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
    * Creates a new system token with OAuth2 integration.
    * </p>
    * <p>
-   * Validates administrator permissions, token name uniqueness, and resource existence.
-   * Creates OAuth2 client, performs authentication, and saves encrypted token.
+   * Validates administrator permissions, token name uniqueness, and resource existence. Creates
+   * OAuth2 client, performs authentication, and saves encrypted token.
    * </p>
    * <p>
    * Integrates with OAuth2ClientCredentialsAuthenticationProvider and OAuth2AccessTokenGenerator
@@ -149,8 +149,8 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
    * Saves OAuth2 registered client for system token.
    * </p>
    * <p>
-   * Creates and configures OAuth2 client with proper credentials and expiration.
-   * Removes existing client with same ID before creating new one.
+   * Creates and configures OAuth2 client with proper credentials and expiration. Removes existing
+   * client with same ID before creating new one.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -170,8 +170,8 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
    * Saves system access token with encryption and resource associations.
    * </p>
    * <p>
-   * Encrypts access token, saves system token, and creates resource associations.
-   * Ensures resources are unique across all services.
+   * Encrypts access token, saves system token, and creates resource associations. Ensures resources
+   * are unique across all services.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -196,9 +196,9 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
    * Deletes system tokens and associated OAuth2 authorizations.
    * </p>
    * <p>
-   * Removes OAuth2 authorizations and client registrations for each token.
-   * Note: Access tokens automatically expire in OAuth2. After expiration,
-   * configuration needs to be manually deleted by the user.
+   * Removes OAuth2 authorizations and client registrations for each token. Note: Access tokens
+   * automatically expire in OAuth2. After expiration, configuration needs to be manually deleted by
+   * the user.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -262,8 +262,8 @@ public class SystemTokenCmdImpl extends CommCmd<SystemToken, Long> implements Sy
    * Converts system token resources with service code mapping.
    * </p>
    * <p>
-   * Maps resources to system token resources with proper service code assignment
-   * and unique ID generation.
+   * Maps resources to system token resources with proper service code assignment and unique ID
+   * generation.
    * </p>
    */
   private List<SystemTokenResource> toSystemTokenResource(Long systemTokenId,

@@ -117,8 +117,8 @@ public class AuthPolicyAssembler {
         .setTenantId(policy.getTenantId())
         .setCreatedBy(policy.getCreatedBy())
         .setCreatedDate(policy.getCreatedDate())
-        .setLastModifiedBy(policy.getLastModifiedBy())
-        .setLastModifiedDate(policy.getLastModifiedDate());
+        .setModifiedBy(policy.getModifiedBy())
+        .setModifiedDate(policy.getModifiedDate());
   }
 
   public static AuthPolicyVo toAuthPolicyVo(AuthPolicy policy) {

@@ -22,7 +22,6 @@ import cloud.xcan.angus.api.commonlink.api.ApiRepo;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.service.Service;
 import cloud.xcan.angus.api.enums.ApiType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.biz.exception.BizException;
@@ -54,7 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of API command operations for managing API endpoints and their lifecycle.
- * 
+ *
  * <p>This class provides comprehensive functionality for API management including:</p>
  * <ul>
  *   <li>Creating, updating, and deleting API endpoints</li>
@@ -63,12 +62,12 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling API authority and authorization</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
- * <p>The implementation ensures data consistency across related entities such as applications, 
+ *
+ * <p>The implementation ensures data consistency across related entities such as applications,
  * functions, and authorization policies when APIs are modified or deleted.</p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   @Resource
@@ -90,15 +89,15 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Creates new API endpoints and associates them with services.
-   * 
+   *
    * <p>This method performs the following operations:</p>
    * <ul>
    *   <li>Sets service information for each API</li>
    *   <li>Batch inserts APIs with validation</li>
    *   <li>Records operation logs for audit purposes</li>
    * </ul>
-   * 
-   * @param apis List of API entities to create
+   *
+   * @param apis             List of API entities to create
    * @param saveOperationLog Whether to record operation logs
    * @return List of created API identifiers with names
    */
@@ -125,15 +124,15 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Updates existing API endpoints with new information.
-   * 
+   *
    * <p>This method ensures data consistency by:</p>
    * <ul>
    *   <li>Validating that APIs exist before update</li>
    *   <li>Updating service information when service associations change</li>
    *   <li>Maintaining audit trails through operation logs</li>
    * </ul>
-   * 
-   * @param apis List of API entities to update
+   *
+   * @param apis             List of API entities to update
    * @param saveOperationLog Whether to record operation logs
    */
   @Transactional(rollbackFor = Exception.class)
@@ -148,7 +147,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         // Validate that APIs exist before update
         Set<Long> apiIds = apis.stream().map(Api::getId).collect(Collectors.toSet());
         apisDb = apiQuery.checkAndFind(apiIds, false);
-        
+
         // Validate associated services exist
         Set<Long> serviceIds = apis.stream().filter(Objects::nonNull)
             .map(Api::getServiceId).collect(Collectors.toSet());
@@ -176,14 +175,14 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Replaces APIs by creating new ones or updating existing ones.
-   * 
+   *
    * <p>This method handles both creation and update scenarios:</p>
    * <ul>
    *   <li>Creates new APIs for entities without IDs</li>
    *   <li>Updates existing APIs for entities with IDs</li>
    *   <li>Maintains data consistency across related entities</li>
    * </ul>
-   * 
+   *
    * @param apis List of API entities to replace
    * @return List of API identifiers with names
    */
@@ -232,7 +231,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Deletes API endpoints and cleans up related data.
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Removing API associations from applications and functions</li>
@@ -240,7 +239,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
    *   <li>Removing system token authorizations</li>
    *   <li>Recording deletion audit logs</li>
    * </ul>
-   * 
+   *
    * @param apiIds Collection of API identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -281,11 +280,11 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Enables or disables API endpoints and updates related authorization data.
-   * 
+   *
    * <p>Note: Enabling/disabling APIs can lead to authorization data consistency issues.
-   * This implementation focuses on maintaining valid data for production environments
-   * and considers API removal for later cleanup.</p>
-   * 
+   * This implementation focuses on maintaining valid data for production environments and considers
+   * API removal for later cleanup.</p>
+   *
    * @param apis List of APIs with updated enabled status
    */
   @Transactional(rollbackFor = Exception.class)
@@ -332,11 +331,11 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Synchronizes APIs from a specific service instance.
-   * 
+   *
    * <p>This method parses Swagger documentation from the service instance
    * and saves the discovered APIs to the database.</p>
-   * 
-   * @param instance Service instance containing API information
+   *
+   * @param instance  Service instance containing API information
    * @param serviceDb Service entity to associate with APIs
    */
   @Override
@@ -350,12 +349,12 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Synchronizes APIs from multiple service instances discovered through service discovery.
-   * 
+   *
    * <p>This method processes multiple services and their instances to discover
    * and synchronize API endpoints from Swagger documentation.</p>
-   * 
-   * @param instances List of discovered service instances
-   * @param servicesDb List of service entities in database
+   *
+   * @param instances         List of discovered service instances
+   * @param servicesDb        List of service entities in database
    * @param discoveryServices List of service codes to process
    */
   @Override
@@ -366,7 +365,7 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
         .collect(Collectors.toMap(service -> service.getCode().toLowerCase(), service -> service));
     Map<String, ServiceInstance> instancesMap = instances.stream()
         .collect(Collectors.toMap(ServiceInstance::getServiceId, si -> si));
-    
+
     for (Service serviceDb : serviceDbMap.values()) {
       // Parse APIs from Swagger documentation for each service
       List<Api> apis = parseApisFromSwagger(instancesMap.get(serviceDb.getCode()), serviceDb);
@@ -381,10 +380,10 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Updates API service status based on service enable/disable state.
-   * 
+   *
    * <p>This method propagates service status changes to associated APIs
    * to maintain consistency between services and their APIs.</p>
-   * 
+   *
    * @param services List of services with updated status
    */
   @Override
@@ -404,16 +403,16 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Saves synchronized APIs with intelligent update logic.
-   * 
+   *
    * <p>This method implements a sophisticated synchronization strategy:</p>
    * <ul>
    *   <li>Adds new APIs that don't exist in database</li>
    *   <li>Updates existing APIs with new information</li>
    *   <li>Marks APIs as deleted if they no longer exist in Swagger</li>
    * </ul>
-   * 
+   *
    * @param serviceCode Service code for API association
-   * @param apis List of APIs from Swagger documentation
+   * @param apis        List of APIs from Swagger documentation
    */
   @Override
   public void saveSyncApis(String serviceCode, List<Api> apis) {
@@ -460,10 +459,10 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Removes API associations from applications and functions.
-   * 
+   *
    * <p>This method ensures that when APIs are deleted, all references
    * to those APIs are properly cleaned up from applications and functions.</p>
-   * 
+   *
    * @param apiIds Collection of API identifiers to remove
    */
   private void deleteAppAndFuncApis(Collection<Long> apiIds) {
@@ -485,11 +484,11 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Updates function API associations when APIs are deleted.
-   * 
+   *
    * <p>This method removes deleted API references from application functions
    * to maintain data consistency.</p>
-   * 
-   * @param app Application entity
+   *
+   * @param app    Application entity
    * @param apiIds Collection of API identifiers to remove
    */
   private void updateFuncApis(App app, Collection<Long> apiIds) {
@@ -511,12 +510,12 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Parses APIs from Swagger documentation of a service instance.
-   * 
+   *
    * <p>This method fetches Swagger documentation from multiple endpoints
    * and parses API information for different API types (API, PUB_API, OPEN_API_2P).</p>
-   * 
+   *
    * @param serviceInstance Service instance to parse APIs from
-   * @param serviceDb Service entity for API association
+   * @param serviceDb       Service entity for API association
    * @return List of parsed API entities
    * @throws BizException if Swagger parsing fails
    */
@@ -544,12 +543,12 @@ public class ApiCmdImpl extends CommCmd<Api, Long> implements ApiCmd {
 
   /**
    * Updates service information when service associations change.
-   * 
+   *
    * <p>This method ensures that when an API's service association changes,
    * the service code and name are properly updated.</p>
-   * 
-   * @param apis List of APIs to update
-   * @param apisDb Existing APIs from database
+   *
+   * @param apis       List of APIs to update
+   * @param apisDb     Existing APIs from database
    * @param servicesDb Services from database
    */
   private void updateServiceWhenChanged(List<Api> apis, List<Api> apisDb,

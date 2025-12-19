@@ -14,7 +14,7 @@ import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
 import cloud.xcan.angus.api.commonlink.user.UserBase;
 import cloud.xcan.angus.api.commonlink.user.UserBaseRepo;
 import cloud.xcan.angus.api.enums.TenantStatus;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.SneakyThrow0;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
@@ -39,15 +39,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of tenant query operations.
  * </p>
  * <p>
- * Manages tenant retrieval, validation, and status management.
- * Provides comprehensive tenant querying with full-text search and summary support.
+ * Manages tenant retrieval, validation, and status management. Provides comprehensive tenant
+ * querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports tenant detail retrieval, paginated listing, status validation,
- * user count calculation, and lifecycle management for comprehensive tenant administration.
+ * Supports tenant detail retrieval, paginated listing, status validation, user count calculation,
+ * and lifecycle management for comprehensive tenant administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Tenant", table = "tenant", isMultiTenantCtrl = false, topAuthority = TOP_TENANT_ADMIN,
     groupByColumns = {"created_date", "source", "type", "status", "real_name_status",
         "locked"}, aggregateColumns = {"id", "user_count"})
@@ -65,8 +65,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Retrieves detailed tenant information by ID.
    * </p>
    * <p>
-   * Fetches complete tenant record with user count calculation.
-   * Validates tenant existence and enriches with user statistics.
+   * Fetches complete tenant record with user count calculation. Validates tenant existence and
+   * enriches with user statistics.
    * </p>
    */
   @Override
@@ -93,8 +93,7 @@ public class TenantQueryImpl implements TenantQuery {
    * Retrieves tenants by IDs.
    * </p>
    * <p>
-   * Returns tenants for the specified tenant IDs.
-   * Returns empty list if no tenants found.
+   * Returns tenants for the specified tenant IDs. Returns empty list if no tenants found.
    * </p>
    */
   @Override
@@ -112,8 +111,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Retrieves tenants with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated tenant results with user count calculation.
+   * Supports full-text search and specification-based filtering. Returns paginated tenant results
+   * with user count calculation.
    * </p>
    */
   @Override
@@ -136,8 +135,7 @@ public class TenantQueryImpl implements TenantQuery {
    * Retrieves tenant by ID without validation.
    * </p>
    * <p>
-   * Returns tenant without existence validation.
-   * Returns null if tenant does not exist.
+   * Returns tenant without existence validation. Returns null if tenant does not exist.
    * </p>
    */
   @Override
@@ -150,8 +148,7 @@ public class TenantQueryImpl implements TenantQuery {
    * Validates and retrieves tenant by ID.
    * </p>
    * <p>
-   * Returns tenant with existence validation.
-   * Throws ResourceNotFound if tenant does not exist.
+   * Returns tenant with existence validation. Throws ResourceNotFound if tenant does not exist.
    * </p>
    */
   @Override
@@ -164,8 +161,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Validates tenant status for authentication.
    * </p>
    * <p>
-   * Checks tenant existence and validates tenant status for login.
-   * Throws AccountNotFoundException for invalid tenant states.
+   * Checks tenant existence and validates tenant status for login. Throws AccountNotFoundException
+   * for invalid tenant states.
    * </p>
    */
   @Override
@@ -193,8 +190,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Finds tenants with expired cancellation lock.
    * </p>
    * <p>
-   * Returns tenant IDs that have exceeded cancellation lock period.
-   * Used for cleanup of expired cancellation requests.
+   * Returns tenant IDs that have exceeded cancellation lock period. Used for cleanup of expired
+   * cancellation requests.
    * </p>
    */
   @Override
@@ -208,8 +205,7 @@ public class TenantQueryImpl implements TenantQuery {
    * Finds tenants with expired lock.
    * </p>
    * <p>
-   * Returns tenant IDs that have exceeded lock period.
-   * Used for automatic unlock processing.
+   * Returns tenant IDs that have exceeded lock period. Used for automatic unlock processing.
    * </p>
    */
   @Override
@@ -222,8 +218,7 @@ public class TenantQueryImpl implements TenantQuery {
    * Finds tenants with expired unlock.
    * </p>
    * <p>
-   * Returns tenant IDs that have exceeded unlock period.
-   * Used for automatic lock processing.
+   * Returns tenant IDs that have exceeded unlock period. Used for automatic lock processing.
    * </p>
    */
   @Override
@@ -236,8 +231,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Validates tenant is not canceled.
    * </p>
    * <p>
-   * Ensures tenant status is not canceled for operations.
-   * Throws Forbidden exception if tenant is canceled.
+   * Ensures tenant status is not canceled for operations. Throws Forbidden exception if tenant is
+   * canceled.
    * </p>
    */
   @Override
@@ -250,8 +245,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Sets user count for tenant list.
    * </p>
    * <p>
-   * Calculates and sets user count for each tenant in the list.
-   * Uses database aggregation for efficient user count calculation.
+   * Calculates and sets user count for each tenant in the list. Uses database aggregation for
+   * efficient user count calculation.
    * </p>
    */
   @Override
@@ -272,8 +267,8 @@ public class TenantQueryImpl implements TenantQuery {
    * Generates unique tenant number.
    * </p>
    * <p>
-   * Creates tenant number using bid generator and random numeric suffix.
-   * Ensures unique tenant identification across the system.
+   * Creates tenant number using bid generator and random numeric suffix. Ensures unique tenant
+   * identification across the system.
    * </p>
    */
   public static String genTenantNo() {

@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.event.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.event.EventQuery;
 import cloud.xcan.angus.core.gm.domain.event.Event;
@@ -21,16 +21,16 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of event query operations.
  * </p>
  * <p>
- * Manages event retrieval, validation, and search capabilities.
- * Provides comprehensive event querying with full-text search and summary support.
+ * Manages event retrieval, validation, and search capabilities. Provides comprehensive event
+ * querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports event detail retrieval, paginated listing, full-text search,
- * and pending event queries for comprehensive event management.
+ * Supports event detail retrieval, paginated listing, full-text search, and pending event queries
+ * for comprehensive event management.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Event", table = "event",
     groupByColumns = {"created_date", "type", "push_status"})
 public class EventQueryImpl implements EventQuery {
@@ -45,8 +45,8 @@ public class EventQueryImpl implements EventQuery {
    * Retrieves detailed event information by ID.
    * </p>
    * <p>
-   * Fetches complete event record with validation.
-   * Throws ResourceNotFound exception if event does not exist.
+   * Fetches complete event record with validation. Throws ResourceNotFound exception if event does
+   * not exist.
    * </p>
    */
   @Override
@@ -71,8 +71,8 @@ public class EventQueryImpl implements EventQuery {
    * Retrieves events with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated results for comprehensive event management.
+   * Supports full-text search and specification-based filtering. Returns paginated results for
+   * comprehensive event management.
    * </p>
    */
   @Override
@@ -94,8 +94,8 @@ public class EventQueryImpl implements EventQuery {
    * Validates and retrieves event by ID.
    * </p>
    * <p>
-   * Verifies event exists and returns event information.
-   * Throws ResourceNotFound exception if event does not exist.
+   * Verifies event exists and returns event information. Throws ResourceNotFound exception if event
+   * does not exist.
    * </p>
    */
   @Override
@@ -108,8 +108,8 @@ public class EventQueryImpl implements EventQuery {
    * Retrieves unprocessed events for push processing.
    * </p>
    * <p>
-   * Returns events with pending push status for processing.
-   * Limits results by size for processing control.
+   * Returns events with pending push status for processing. Limits results by size for processing
+   * control.
    * </p>
    */
   @Override

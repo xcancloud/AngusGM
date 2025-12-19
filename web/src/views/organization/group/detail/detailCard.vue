@@ -127,8 +127,8 @@ const handleEdit = () => {
         <div class="info-grid one-col">
           <!-- Creator information -->
           <div class="info-item">
-            <div class="info-label">{{ t('common.columns.createdByName') }}</div>
-            <div class="info-value">{{ props.dataSource?.createdByName || '--' }}</div>
+            <div class="info-label">{{ t('common.columns.creator') }}</div>
+            <div class="info-value">{{ props.dataSource?.creator || '--' }}</div>
           </div>
           <!-- Creation date -->
           <div class="info-item">
@@ -137,13 +137,13 @@ const handleEdit = () => {
           </div>
           <!-- Last modifier information -->
           <div class="info-item">
-            <div class="info-label">{{ t('common.columns.lastModifiedByName') }}</div>
-            <div class="info-value">{{ props.dataSource?.lastModifiedByName || '--' }}</div>
+            <div class="info-label">{{ t('common.columns.modifier') }}</div>
+            <div class="info-value">{{ props.dataSource?.modifier || '--' }}</div>
           </div>
           <!-- Last modification date -->
           <div class="info-item">
-            <div class="info-label">{{ t('common.columns.lastModifiedDate') }}</div>
-            <div class="info-value muted">{{ props.dataSource?.lastModifiedDate || '--' }}</div>
+            <div class="info-label">{{ t('common.columns.modifiedDate') }}</div>
+            <div class="info-value muted">{{ props.dataSource?.modifiedDate || '--' }}</div>
           </div>
         </div>
       </div>

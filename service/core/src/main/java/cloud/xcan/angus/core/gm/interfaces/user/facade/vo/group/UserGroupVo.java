@@ -42,6 +42,6 @@ public class UserGroupVo implements Serializable {
   private Long tenantId;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 
 }

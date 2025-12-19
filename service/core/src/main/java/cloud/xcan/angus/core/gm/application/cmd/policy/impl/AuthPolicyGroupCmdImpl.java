@@ -15,7 +15,7 @@ import static java.util.Collections.singleton;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -41,15 +41,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of group authorization policy command operations.
  * </p>
  * <p>
- * Manages the association between groups and authorization policies,
- * providing bidirectional operations for adding and removing policy-group relationships.
+ * Manages the association between groups and authorization policies, providing bidirectional
+ * operations for adding and removing policy-group relationships.
  * </p>
  * <p>
- * Supports both policy-centric and group-centric operations with proper
- * validation and audit logging.
+ * Supports both policy-centric and group-centric operations with proper validation and audit
+ * logging.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
     AuthPolicyGroupCmd {
@@ -68,12 +68,11 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
    * Associates groups with a specific authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and groups exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the policy and groups exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * Only creates new associations for groups that aren't already
-   * associated with the policy.
+   * Only creates new associations for groups that aren't already associated with the policy.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -127,8 +126,8 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
    * Removes group associations from a specific authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and groups exist, checks permissions,
-   * and removes the specified group-policy associations.
+   * Validates that the policy and groups exist, checks permissions, and removes the specified
+   * group-policy associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -165,12 +164,11 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
    * Associates authorization policies with a specific group.
    * </p>
    * <p>
-   * Validates that the group and policies exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the group and policies exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * Only creates new associations for policies that aren't already
-   * associated with the group.
+   * Only creates new associations for policies that aren't already associated with the group.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -226,8 +224,8 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
    * Removes authorization policy associations from a specific group.
    * </p>
    * <p>
-   * Validates that the group and policies exist, checks permissions,
-   * and removes the specified policy-group associations.
+   * Validates that the group and policies exist, checks permissions, and removes the specified
+   * policy-group associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -264,12 +262,12 @@ public class AuthPolicyGroupCmdImpl extends CommCmd<AuthPolicyOrg, Long> impleme
    * Batch removes group-policy associations.
    * </p>
    * <p>
-   * Used when deleting groups or policies to clean up all related associations.
-   * Skips permission checks as this is typically called during cleanup operations.
+   * Used when deleting groups or policies to clean up all related associations. Skips permission
+   * checks as this is typically called during cleanup operations.
    * </p>
    * <p>
-   * If policyIds is empty, removes all policy associations for the specified groups.
-   * Otherwise, removes only the specified policy associations.
+   * If policyIds is empty, removes all policy associations for the specified groups. Otherwise,
+   * removes only the specified policy associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

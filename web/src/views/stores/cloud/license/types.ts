@@ -34,7 +34,7 @@ export type Licensed = {
   expired: false,
   revoke: false,
   createdBy: string;
-  createdByName: string;
+  creator: string;
   createdDate: string;
   licenseNo: string;
   mainLicenseNo: string;

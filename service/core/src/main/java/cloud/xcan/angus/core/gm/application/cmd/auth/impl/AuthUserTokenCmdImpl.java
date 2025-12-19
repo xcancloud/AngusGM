@@ -21,7 +21,6 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.enums.SignInType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserTokenCmd;
@@ -62,7 +61,7 @@ import org.springframework.transaction.annotation.Transactional;
  * <p>The implementation ensures secure token management with proper validation
  * and integration with OAuth2 authorization framework.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthUserTokenCmdImpl extends CommCmd<AuthUserToken, Long> implements AuthUserTokenCmd {
 
   @Resource

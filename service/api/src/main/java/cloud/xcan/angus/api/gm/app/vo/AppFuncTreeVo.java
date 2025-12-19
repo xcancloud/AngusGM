@@ -32,7 +32,7 @@ public class AppFuncTreeVo implements TreeNode<AppFuncTreeVo> {
   private Boolean enabled;
 
   private Long createdBy;
-  private String createdByName;
+  private String creator;
 
   //private String tenantName;
 

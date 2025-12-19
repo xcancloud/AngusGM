@@ -17,7 +17,7 @@ public class TenantLocaleReplaceDto implements Serializable {
 
   @NotNull
   @Schema(description = "Default language for tenant user interface and communications", defaultValue = "zh_CN",
-     example = "zh_CN", requiredMode = RequiredMode.REQUIRED)
+      example = "zh_CN", requiredMode = RequiredMode.REQUIRED)
   private SupportedLanguage defaultLanguage;
 
 }

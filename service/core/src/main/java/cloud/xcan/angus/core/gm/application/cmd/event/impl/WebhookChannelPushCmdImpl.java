@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementation of webhook channel push command for sending event notifications.
- * 
+ *
  * <p>This class provides webhook integration functionality including:</p>
  * <ul>
  *   <li>Sending event notifications to webhook endpoints</li>
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  *   <li>Managing webhook push response status</li>
  *   <li>Converting event data to webhook format</li>
  * </ul>
- * 
+ *
  * <p>The implementation sends event notifications to configured webhook URLs
  * and handles response status appropriately.</p>
  */
@@ -28,7 +28,7 @@ public class WebhookChannelPushCmdImpl extends EventChannelPushCmdAbstract {
 
   /**
    * Pushes event notification to webhook endpoint.
-   * 
+   *
    * <p>This method performs webhook push including:</p>
    * <ul>
    *   <li>Converting event data to webhook format</li>
@@ -36,7 +36,7 @@ public class WebhookChannelPushCmdImpl extends EventChannelPushCmdAbstract {
    *   <li>Handling webhook response status</li>
    *   <li>Returning appropriate channel response</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data containing notification details
    * @return Channel send response with success status and message
    */

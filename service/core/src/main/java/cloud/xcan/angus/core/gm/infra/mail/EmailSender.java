@@ -96,7 +96,8 @@ public class EmailSender {
       helper.setTo(toAddr);
       if (email.isTemplateEmail()) {
         if (Objects.isNull(bizTemplate) || Objects.isNull(baseTemplate)) {
-          log.error("Failed to send email to {}: template is null (bizTemplate={}, baseTemplate={})", 
+          log.error(
+              "Failed to send email to {}: template is null (bizTemplate={}, baseTemplate={})",
               toAddr, bizTemplate != null, baseTemplate != null);
           throw new IllegalStateException("Email template is not available for sending");
         }
@@ -221,7 +222,7 @@ public class EmailSender {
           // override the getPasswordAuthentication
           @Override
           protected PasswordAuthentication getPasswordAuthentication() {
-            if (Objects.nonNull(emailServer.getAuthAccountData()) && 
+            if (Objects.nonNull(emailServer.getAuthAccountData()) &&
                 Objects.nonNull(emailServer.getAuthAccountData().getAccount()) &&
                 Objects.nonNull(emailServer.getAuthAccountData().getPassword())) {
               return new PasswordAuthentication(emailServer.getAuthAccountData().getAccount(),

@@ -49,5 +49,5 @@ public class MessageVo implements Serializable {
   private Long createdBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 }

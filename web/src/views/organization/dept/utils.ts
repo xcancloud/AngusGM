@@ -80,12 +80,12 @@ export const loadDeptInfo = async (
       name: data.name || '',
       code: data.code || '',
       id: data.id || '',
-      createdByName: data.createdByName || '',
+      creator: data.creator || '',
       createdDate: data.createdDate || '',
       tags: data.tags || [],
       level: data.level || '',
-      lastModifiedDate: data.lastModifiedDate || '',
-      lastModifiedByName: data.lastModifiedByName || '--'
+      modifiedDate: data.modifiedDate || '',
+      modifier: data.modifier || '--'
     };
   } catch (error) {
     console.error('Error loading department info:', error);

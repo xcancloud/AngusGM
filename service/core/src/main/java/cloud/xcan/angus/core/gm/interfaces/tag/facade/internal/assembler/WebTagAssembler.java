@@ -28,8 +28,8 @@ public class WebTagAssembler {
         //.setTenantId(tag.getTenantId())
         .setCreatedBy(tag.getCreatedBy())
         .setCreatedDate(tag.getCreatedDate())
-        .setLastModifiedBy(tag.getLastModifiedBy())
-        .setLastModifiedDate(tag.getLastModifiedDate());
+        .setModifiedBy(tag.getModifiedBy())
+        .setModifiedDate(tag.getModifiedDate());
   }
 
   public static GenericSpecification<WebTag> getSpecification(WebTagFindDto dto) {

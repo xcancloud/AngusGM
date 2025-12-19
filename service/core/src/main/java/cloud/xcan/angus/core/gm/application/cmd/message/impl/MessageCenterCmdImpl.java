@@ -13,7 +13,7 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.api.gm.message.dto.MessageCenterPushDto;
 import cloud.xcan.angus.api.pojo.Message;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of message center command operations for managing message notifications.
- * 
+ *
  * <p>This class provides comprehensive functionality for message center management including:</p>
  * <ul>
  *   <li>Sending push notifications via WebSocket</li>
@@ -39,12 +39,12 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling broadcast messages across instances</li>
  *   <li>Routing messages to appropriate recipients</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper message delivery with broadcast support
  * and recipient filtering based on object types.</p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   @Resource
@@ -66,7 +66,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   /**
    * Pushes message notifications to recipients.
-   * 
+   *
    * <p>This method performs message pushing including:</p>
    * <ul>
    *   <li>Validating broadcast parameters</li>
@@ -74,7 +74,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
    *   <li>Sending local WebSocket messages</li>
    *   <li>Handling broadcast exceptions</li>
    * </ul>
-   * 
+   *
    * @param dto Message center push data
    */
   @Transactional(rollbackFor = Exception.class)
@@ -111,7 +111,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   /**
    * Sends offline notifications to users.
-   * 
+   *
    * <p>This method performs offline notification including:</p>
    * <ul>
    *   <li>Validating broadcast parameters</li>
@@ -119,7 +119,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
    *   <li>Processing local offline notifications</li>
    *   <li>Handling broadcast exceptions</li>
    * </ul>
-   * 
+   *
    * @param dto Message center offline data
    */
   @Transactional(rollbackFor = Exception.class)
@@ -156,7 +156,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   /**
    * Sends local WebSocket messages based on receive object type.
-   * 
+   *
    * <p>This method routes messages to appropriate recipients including:</p>
    * <ul>
    *   <li>All users in the system</li>
@@ -166,7 +166,7 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
    *   <li>Specific users by ID</li>
    *   <li>Users with specific policy roles</li>
    * </ul>
-   * 
+   *
    * @param message Message to send
    */
   public void sendLocalWebSocketMessage(Message message) {
@@ -221,9 +221,9 @@ public class MessageCenterCmdImpl implements MessageCenterCmd {
 
   /**
    * Validates required parameters for broadcast operations.
-   * 
+   *
    * @param objectType Receive object type
-   * @param objectIds Receive object identifiers
+   * @param objectIds  Receive object identifiers
    */
   private void checkRequiredParam(ReceiveObjectType objectType, List<Long> objectIds) {
     if (!objectType.equals(ReceiveObjectType.ALL) && isEmpty(objectIds)) {

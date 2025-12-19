@@ -53,7 +53,8 @@ public class AuthPolicyRest {
   private AuthPolicyFacade authPolicyFacade;
 
   @Operation(summary = "Create multiple authorization policies", operationId = "auth:policy:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Authorization policies created successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Authorization policies created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<List<IdKey<Long, Object>>> add(
@@ -133,7 +134,8 @@ public class AuthPolicyRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Authorization policy list retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<AuthPolicyVo>> list(@Valid @ParameterObject AuthPolicyFindDto dto) {
+  public ApiLocaleResult<PageResult<AuthPolicyVo>> list(
+      @Valid @ParameterObject AuthPolicyFindDto dto) {
     return ApiLocaleResult.success(authPolicyFacade.list(dto));
   }
 

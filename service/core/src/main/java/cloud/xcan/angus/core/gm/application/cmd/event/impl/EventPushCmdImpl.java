@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of event push command operations for managing event push notifications.
- * 
+ *
  * <p>This class provides comprehensive functionality for event push management including:</p>
  * <ul>
  *   <li>Sending event notifications via various channels</li>
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling channel-specific address signing</li>
  *   <li>Updating push status and tracking</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper event push processing with channel-specific
  * handling and status tracking.</p>
  */
@@ -51,7 +51,7 @@ public class EventPushCmdImpl extends CommCmd<EventPush, Long> implements EventP
 
   /**
    * Sends event push notification via job processing.
-   * 
+   *
    * <p>This method performs push sending including:</p>
    * <ul>
    *   <li>Signing channel-specific addresses (e.g., DingTalk)</li>
@@ -59,7 +59,7 @@ public class EventPushCmdImpl extends CommCmd<EventPush, Long> implements EventP
    *   <li>Updating push status and retry count</li>
    *   <li>Managing event main status updates</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data to send
    */
   @Transactional(rollbackFor = Exception.class)
@@ -99,7 +99,7 @@ public class EventPushCmdImpl extends CommCmd<EventPush, Long> implements EventP
 
   /**
    * Adds multiple event push records in batch.
-   * 
+   *
    * @param eventPushes List of event push records to add
    */
   @Transactional(rollbackFor = Exception.class)
@@ -110,7 +110,7 @@ public class EventPushCmdImpl extends CommCmd<EventPush, Long> implements EventP
 
   /**
    * Updates multiple event push records in batch.
-   * 
+   *
    * @param eventPushes List of event push records to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -121,9 +121,9 @@ public class EventPushCmdImpl extends CommCmd<EventPush, Long> implements EventP
 
   /**
    * Updates event push status to failure for specified events.
-   * 
+   *
    * @param eventIds Collection of event identifiers
-   * @param failMsg Failure message to set
+   * @param failMsg  Failure message to set
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -134,13 +134,13 @@ public class EventPushCmdImpl extends CommCmd<EventPush, Long> implements EventP
 
   /**
    * Signs DingTalk address with timestamp and signature if applicable.
-   * 
+   *
    * <p>This method adds DingTalk-specific security parameters including:</p>
    * <ul>
    *   <li>Timestamp for request validation</li>
    *   <li>Signature for security verification</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data containing address and secret
    * @return Signed address with security parameters
    */

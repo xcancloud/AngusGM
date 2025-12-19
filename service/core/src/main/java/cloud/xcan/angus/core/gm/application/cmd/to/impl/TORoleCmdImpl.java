@@ -8,7 +8,6 @@ import static java.util.Objects.nonNull;
 import cloud.xcan.angus.api.commonlink.to.TORole;
 import cloud.xcan.angus.api.commonlink.to.TORoleRepo;
 import cloud.xcan.angus.api.commonlink.to.TORoleUserRepo;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.to.TORoleCmd;
@@ -30,15 +29,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant operation role command operations.
  * </p>
  * <p>
- * Manages tenant operation role lifecycle including creation, updates, deletion,
- * and status management.
+ * Manages tenant operation role lifecycle including creation, updates, deletion, and status
+ * management.
  * </p>
  * <p>
- * Supports role management with application association, duplicate validation,
- * and comprehensive role-user relationship management.
+ * Supports role management with application association, duplicate validation, and comprehensive
+ * role-user relationship management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class TORoleCmdImpl extends CommCmd<TORole, Long> implements TORoleCmd {
 
   @Resource
@@ -55,8 +54,8 @@ public class TORoleCmdImpl extends CommCmd<TORole, Long> implements TORoleCmd {
    * Creates tenant operation roles with validation.
    * </p>
    * <p>
-   * Validates role code and name uniqueness, checks for duplicates in parameters
-   * and database, and verifies associated applications exist.
+   * Validates role code and name uniqueness, checks for duplicates in parameters and database, and
+   * verifies associated applications exist.
    * </p>
    */
   @Override
@@ -89,8 +88,8 @@ public class TORoleCmdImpl extends CommCmd<TORole, Long> implements TORoleCmd {
    * Updates tenant operation roles with validation.
    * </p>
    * <p>
-   * Validates role existence, checks for duplicates in parameters and database,
-   * and updates role information.
+   * Validates role existence, checks for duplicates in parameters and database, and updates role
+   * information.
    * </p>
    */
   @Override
@@ -123,8 +122,8 @@ public class TORoleCmdImpl extends CommCmd<TORole, Long> implements TORoleCmd {
    * Replaces tenant operation roles with comprehensive validation.
    * </p>
    * <p>
-   * Handles both new role creation and existing role updates in a single operation.
-   * Validates all roles and ensures proper data consistency.
+   * Handles both new role creation and existing role updates in a single operation. Validates all
+   * roles and ensures proper data consistency.
    * </p>
    */
   @Override

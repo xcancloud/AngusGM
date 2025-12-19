@@ -155,7 +155,8 @@ public class AppOrgAuthRest {
       @Parameter(name = "type", description = "Organization type", required = true) @PathVariable("type") AuthOrgType orgType,
       @Parameter(name = "id", description = "Organization identifier", required = true) @PathVariable("id") Long orgId,
       @Parameter(name = "joinPolicy", description = "Include policy information flag", required = false) @RequestParam(value = "joinPolicy", required = false, defaultValue = "false") Boolean joinPolicy) {
-    return ApiLocaleResult.success(appOrgAuthFacade.orgAuthApp(orgType, orgId, joinPolicy != null ? joinPolicy : false));
+    return ApiLocaleResult.success(
+        appOrgAuthFacade.orgAuthApp(orgType, orgId, joinPolicy != null ? joinPolicy : false));
   }
 
   @Operation(summary = "Check organization authorization for specific application", operationId = "org:auth:app:check")

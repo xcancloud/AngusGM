@@ -5,7 +5,7 @@ import static cloud.xcan.angus.core.gm.application.converter.EventTemplateConver
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateChannelCmd;
@@ -25,20 +25,22 @@ import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementation of event template channel command operations for managing template-channel associations.
- * 
- * <p>This class provides comprehensive functionality for template-channel management including:</p>
+ * Implementation of event template channel command operations for managing template-channel
+ * associations.
+ *
+ * <p>This class provides comprehensive functionality for template-channel management
+ * including:</p>
  * <ul>
  *   <li>Managing event template and channel associations</li>
  *   <li>Replacing channel configurations for templates</li>
  *   <li>Caching channel configurations for performance</li>
  *   <li>Handling batch channel assignments</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper template-channel relationship management
  * with caching for optimal performance.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class EventTemplateChannelCmdImpl extends CommCmd<EventTemplateChannel, Long>
     implements EventTemplateChannelCmd {
 
@@ -53,7 +55,7 @@ public class EventTemplateChannelCmdImpl extends CommCmd<EventTemplateChannel, L
 
   /**
    * Replaces channel associations for an event template.
-   * 
+   *
    * <p>This method performs channel replacement including:</p>
    * <ul>
    *   <li>Validating template existence</li>
@@ -61,8 +63,8 @@ public class EventTemplateChannelCmdImpl extends CommCmd<EventTemplateChannel, L
    *   <li>Creating new channel associations</li>
    *   <li>Caching channel configurations</li>
    * </ul>
-   * 
-   * @param id Template identifier
+   *
+   * @param id         Template identifier
    * @param channelIds Set of channel identifiers to associate
    */
   @Override
@@ -86,7 +88,7 @@ public class EventTemplateChannelCmdImpl extends CommCmd<EventTemplateChannel, L
           List<EventChannel> channelsDb = eventChannelQuery.find(channelIds);
           Map<Long, EventChannel> channelMap = channelsDb.stream()
               .collect(Collectors.toMap(EventChannel::getId, x -> x));
-          
+
           // Create template-channel associations
           List<EventTemplateChannel> eventTemplateChannels = channelIds.stream()
               .map(cid -> toEventTemplateChannel(uidGenerator.getUID(), id, cid, channelMap))

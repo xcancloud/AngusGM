@@ -10,7 +10,6 @@ import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailCmd;
@@ -28,15 +27,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of current user command operations.
  * </p>
  * <p>
- * Manages current user profile updates including basic information, mobile number,
- * and email address changes with verification.
+ * Manages current user profile updates including basic information, mobile number, and email
+ * address changes with verification.
  * </p>
  * <p>
- * Supports secure profile updates with SMS and email verification for sensitive
- * information changes.
+ * Supports secure profile updates with SMS and email verification for sensitive information
+ * changes.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class UserCurrentCmdImpl implements UserCurrentCmd {
 
   @Resource
@@ -57,8 +56,8 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
    * Updates current user profile information.
    * </p>
    * <p>
-   * Validates user existence and username uniqueness, updates user information,
-   * and refreshes OAuth2 user data.
+   * Validates user existence and username uniqueness, updates user information, and refreshes
+   * OAuth2 user data.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -92,8 +91,8 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
    * Updates current user mobile number with verification.
    * </p>
    * <p>
-   * Validates mobile format, SMS link secret, verification code, and mobile uniqueness.
-   * Updates user mobile information and refreshes OAuth2 user data.
+   * Validates mobile format, SMS link secret, verification code, and mobile uniqueness. Updates
+   * user mobile information and refreshes OAuth2 user data.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -135,8 +134,8 @@ public class UserCurrentCmdImpl implements UserCurrentCmd {
    * Updates current user email address with verification.
    * </p>
    * <p>
-   * Validates email link secret, verification code, and email uniqueness.
-   * Updates user email information and refreshes OAuth2 user data.
+   * Validates email link secret, verification code, and email uniqueness. Updates user email
+   * information and refreshes OAuth2 user data.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

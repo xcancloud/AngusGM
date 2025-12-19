@@ -11,7 +11,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isBlank;
 
 import cloud.xcan.angus.api.commonlink.authuser.AuthUser;
 import cloud.xcan.angus.api.commonlink.authuser.AuthUserRepo;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCurrentCmd;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserQuery;
@@ -22,19 +21,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of current user authentication command operations.
- * 
- * <p>This class provides comprehensive functionality for current user authentication management including:</p>
+ *
+ * <p>This class provides comprehensive functionality for current user authentication management
+ * including:</p>
  * <ul>
  *   <li>Updating current user password with validation</li>
  *   <li>Verifying current user password</li>
  *   <li>Initializing current user password</li>
  *   <li>Managing password strength and security settings</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures secure password management for the currently
  * authenticated user with proper validation and security checks.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthUserCurrentCmdImpl implements AuthUserCurrentCmd {
 
   @Resource
@@ -46,7 +46,7 @@ public class AuthUserCurrentCmdImpl implements AuthUserCurrentCmd {
 
   /**
    * Updates current user password with comprehensive validation.
-   * 
+   *
    * <p>This method performs password update including:</p>
    * <ul>
    *   <li>Validating that new password differs from old password</li>
@@ -54,7 +54,7 @@ public class AuthUserCurrentCmdImpl implements AuthUserCurrentCmd {
    *   <li>Encoding new password securely</li>
    *   <li>Updating password strength and modification date</li>
    * </ul>
-   * 
+   *
    * @param oldPassword Current password for verification
    * @param newPassword New password to set
    */
@@ -90,10 +90,10 @@ public class AuthUserCurrentCmdImpl implements AuthUserCurrentCmd {
 
   /**
    * Verifies current user password for authentication purposes.
-   * 
+   *
    * <p>This method validates the provided password against the current user's
    * stored password for authentication verification.</p>
-   * 
+   *
    * @param password Password to verify
    */
   @Override
@@ -118,10 +118,10 @@ public class AuthUserCurrentCmdImpl implements AuthUserCurrentCmd {
 
   /**
    * Initializes current user password for first-time setup.
-   * 
+   *
    * <p>This method sets up the initial password for a user who has not
    * yet set their password, typically after account creation.</p>
-   * 
+   *
    * @param newPassword New password to initialize
    */
   @Override

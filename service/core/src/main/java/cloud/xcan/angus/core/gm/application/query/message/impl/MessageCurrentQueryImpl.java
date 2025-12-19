@@ -33,8 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Provides comprehensive current message querying for user-specific message management.
  * </p>
  * <p>
- * Supports current user message detail retrieval, status counting,
- * and message information enrichment for comprehensive message management.
+ * Supports current user message detail retrieval, status counting, and message information
+ * enrichment for comprehensive message management.
  * </p>
  */
 @Slf4j
@@ -53,8 +53,8 @@ public class MessageCurrentQueryImpl implements MessageCurrentQuery {
    * Retrieves detailed current user message information by ID.
    * </p>
    * <p>
-   * Fetches complete message record for current user with message information association.
-   * Throws ResourceNotFound exception if message does not exist for current user.
+   * Fetches complete message record for current user with message information association. Throws
+   * ResourceNotFound exception if message does not exist for current user.
    * </p>
    */
   @Override
@@ -78,8 +78,8 @@ public class MessageCurrentQueryImpl implements MessageCurrentQuery {
    * Retrieves current user messages with specification-based filtering.
    * </p>
    * <p>
-   * Supports dynamic filtering and pagination for comprehensive message management.
-   * Enriches results with message information for complete display.
+   * Supports dynamic filtering and pagination for comprehensive message management. Enriches
+   * results with message information for complete display.
    * </p>
    */
   @Override
@@ -108,8 +108,8 @@ public class MessageCurrentQueryImpl implements MessageCurrentQuery {
    * Retrieves message status count statistics for user.
    * </p>
    * <p>
-   * Returns count statistics for all, read, and unread messages.
-   * Provides comprehensive status overview for message management.
+   * Returns count statistics for all, read, and unread messages. Provides comprehensive status
+   * overview for message management.
    * </p>
    */
   @Override

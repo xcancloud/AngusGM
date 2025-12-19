@@ -32,7 +32,7 @@ import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.gm.notice.dto.SendNoticeDto;
 import cloud.xcan.angus.api.manager.NoticeManager;
 import cloud.xcan.angus.api.manager.converter.NoticeConverter;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizAssert;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
@@ -62,16 +62,16 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant certificate audit command operations.
  * </p>
  * <p>
- * Manages tenant real-name authentication including certificate submission,
- * automatic and manual audit processes, and notification management.
+ * Manages tenant real-name authentication including certificate submission, automatic and manual
+ * audit processes, and notification management.
  * </p>
  * <p>
- * Supports personal and enterprise certificate validation with OCR recognition,
- * automatic audit for eligible certificates, and comprehensive audit logging.
+ * Supports personal and enterprise certificate validation with OCR recognition, automatic audit for
+ * eligible certificates, and comprehensive audit logging.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> implements
     TenantCertAuditCmd {
 
@@ -101,12 +101,12 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
    * Submits tenant certificate for audit.
    * </p>
    * <p>
-   * Validates certificate submission, performs automatic audit if enabled,
-   * and updates tenant real-name status accordingly.
+   * Validates certificate submission, performs automatic audit if enabled, and updates tenant
+   * real-name status accordingly.
    * </p>
    * <p>
-   * Supports both personal and enterprise certificate types with
-   * OCR-based validation and notification management.
+   * Supports both personal and enterprise certificate types with OCR-based validation and
+   * notification management.
    * </p>
    */
   @Override
@@ -281,8 +281,8 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
    * Performs manual audit of tenant certificate.
    * </p>
    * <p>
-   * Validates audit requirements and updates status based on audit result.
-   * Sends appropriate notifications and updates tenant information.
+   * Validates audit requirements and updates status based on audit result. Sends appropriate
+   * notifications and updates tenant information.
    * </p>
    */
   @Override
@@ -383,8 +383,8 @@ public class TenantCertAuditCmdImpl extends CommCmd<TenantCertAudit, Long> imple
    * Checks certificate validity.
    * </p>
    * <p>
-   * Validates certificate information based on type (personal or enterprise).
-   * Government type certificates are not supported for automatic checking.
+   * Validates certificate information based on type (personal or enterprise). Government type
+   * certificates are not supported for automatic checking.
    * </p>
    */
   @Override

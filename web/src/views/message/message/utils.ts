@@ -108,9 +108,9 @@ export const createTableColumns = () => {
       width: '17%'
     },
     {
-      title: t('messages.columns.createdByName'),
-      key: 'createdByName',
-      dataIndex: 'createdByName',
+      title: t('messages.columns.creator'),
+      key: 'creator',
+      dataIndex: 'creator',
       width: '8%'
     },
     {
@@ -160,7 +160,7 @@ export const createDetailGridColumns = () => {
   return [
     [
       {
-        label: t('messages.columns.createdByName'),
+        label: t('messages.columns.creator'),
         dataIndex: 'fullName'
       },
       {

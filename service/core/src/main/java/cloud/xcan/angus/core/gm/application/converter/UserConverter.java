@@ -202,7 +202,8 @@ public class UserConverter {
           try {
             return new String((byte[]) attribute.get(), DEFAULT_ENCODING);
           } catch (UnsupportedEncodingException e) {
-            log.error("Error converting byte array to string with encoding {}", DEFAULT_ENCODING, e);
+            log.error("Error converting byte array to string with encoding {}", DEFAULT_ENCODING,
+                e);
             return attribute.get().toString(); // fallback to toString
           }
         } else {

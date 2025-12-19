@@ -16,7 +16,7 @@ import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupUserCmd;
@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of group user command operations for managing group-user relationships.
- * 
+ *
  * <p>This class provides comprehensive functionality for group-user management including:</p>
  * <ul>
  *   <li>Adding users to groups and groups to users</li>
@@ -44,11 +44,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling group-user quotas and validations</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper group-user relationship management
  * with quota controls and audit trail maintenance.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupUserCmd {
 
   @Resource
@@ -64,7 +64,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Adds groups to a user with comprehensive validation.
-   * 
+   *
    * <p>This method performs group assignment including:</p>
    * <ul>
    *   <li>Validating user existence</li>
@@ -74,8 +74,8 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
    *   <li>Creating group-user associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId   User identifier
    * @param groupIds Set of group identifiers to assign
    * @return List of created association identifiers
    */
@@ -122,7 +122,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Replaces user's group associations with new ones.
-   * 
+   *
    * <p>This method performs group replacement including:</p>
    * <ul>
    *   <li>Validating user and group existence</li>
@@ -131,8 +131,8 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
    *   <li>Creating new associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId   User identifier
    * @param groupIds Set of new group identifiers
    */
   @Transactional(rollbackFor = Exception.class)
@@ -178,15 +178,15 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Removes groups from a user.
-   * 
+   *
    * <p>This method performs group removal including:</p>
    * <ul>
    *   <li>Validating user and group existence</li>
    *   <li>Removing group-user associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId   User identifier
    * @param groupIds Set of group identifiers to remove
    */
   @Transactional(rollbackFor = Exception.class)
@@ -217,7 +217,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Adds users to a group with comprehensive validation.
-   * 
+   *
    * <p>This method performs user assignment including:</p>
    * <ul>
    *   <li>Validating group existence</li>
@@ -227,8 +227,8 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
    *   <li>Creating user-group associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param groupId Group identifier
+   *
+   * @param groupId    Group identifier
    * @param groupUsers List of user-group associations to create
    * @return List of created association identifiers
    */
@@ -274,14 +274,14 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Removes users from a group.
-   * 
+   *
    * <p>This method performs user removal including:</p>
    * <ul>
    *   <li>Validating group and user existence</li>
    *   <li>Removing user-group associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param groupId Group identifier
    * @param userIds Set of user identifiers to remove
    */
@@ -313,9 +313,9 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Adds group-user associations with validation.
-   * 
+   *
    * <p>This method ensures groups exist and creates associations.</p>
-   * 
+   *
    * @param groupUsers List of group-user associations to create
    * @return List of created association identifiers
    */
@@ -333,7 +333,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Adds group-user associations without validation.
-   * 
+   *
    * @param groupUsers List of group-user associations to create
    * @return List of created association identifiers
    */
@@ -348,9 +348,9 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Deletes LDAP garbage relationships by directory.
-   * 
+   *
    * @param directoryId Directory identifier
-   * @param groupUsers List of group-user associations to clean
+   * @param groupUsers  List of group-user associations to clean
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -363,7 +363,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Deletes all group-user associations by group identifiers.
-   * 
+   *
    * @param groupIds Set of group identifiers
    */
   @Transactional(rollbackFor = Exception.class)
@@ -374,7 +374,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Deletes all group-user associations by user identifiers.
-   * 
+   *
    * @param userIds Set of user identifiers
    */
   @Transactional(rollbackFor = Exception.class)
@@ -385,7 +385,7 @@ public class GroupUserCmdImpl extends CommCmd<GroupUser, Long> implements GroupU
 
   /**
    * Deletes all group-user associations by tenant identifiers.
-   * 
+   *
    * @param tenantIds Set of tenant identifiers
    */
   @Override

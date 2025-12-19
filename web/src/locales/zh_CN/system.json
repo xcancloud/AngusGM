@@ -501,7 +501,7 @@
       "expiredDate": "到期时间",
       "token": "令牌",
       "expired": "是否到期",
-      "createdByName": "创建人",
+      "creator": "创建人",
       "createdDate": "创建时间",
       "action": "操作"
     },
@@ -861,7 +861,7 @@
       "port": "端口",
       "username": "用户名",
       "status": "状态",
-      "createdByName": "创建人",
+      "creator": "创建人",
       "createdDate": "创建时间",
       "operation": "操作",
       "directoryType": "目录类型",

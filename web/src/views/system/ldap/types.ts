@@ -144,7 +144,7 @@ export interface LdapDirectoryConfig {
   /** Membership configuration */
   membershipSchema?: MembershipConfig;
   /** Created by user name */
-  createdByName?: string;
+  creator?: string;
   /** Creation date */
   createdDate?: string;
 }

@@ -49,7 +49,8 @@ public class EmailServerRest {
   private EmailServerFacade emailServerFacade;
 
   @Operation(summary = "Create new email server", operationId = "email:server:add")
-  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Email server created successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Email server created successfully")})
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public ApiLocaleResult<IdKey<Long, Object>> add(@Valid @RequestBody ServerAddDto dto) {
@@ -57,7 +58,8 @@ public class EmailServerRest {
   }
 
   @Operation(summary = "Update email server configuration", operationId = "email:server:update")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Email server updated successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Email server updated successfully")})
   @ResponseStatus(HttpStatus.OK)
   @PatchMapping
   public ApiLocaleResult<?> update(@Valid @RequestBody ServerUpdateDto dto) {
@@ -66,7 +68,8 @@ public class EmailServerRest {
   }
 
   @Operation(summary = "Replace email server configuration", operationId = "email:server:replace")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Email server replaced successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Email server replaced successfully")})
   @ResponseStatus(HttpStatus.OK)
   @PutMapping
   public ApiLocaleResult<IdKey<Long, Object>> replace(@Valid @RequestBody ServerReplaceDto dto) {
@@ -75,7 +78,8 @@ public class EmailServerRest {
 
   @Operation(summary = "Delete multiple email servers", operationId = "email:server:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Email servers deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Email servers deleted successfully")})
   @DeleteMapping
   public void delete(
       @Valid @NotEmpty @Size(max = MAX_MAIL_SERVER_QUOTA) @RequestParam("ids") HashSet<Long> ids) {
@@ -120,7 +124,8 @@ public class EmailServerRest {
       @ApiResponse(responseCode = "200", description = "Email server list retrieved successfully")})
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
-  public ApiLocaleResult<PageResult<ServerDetailVo>> list(@Valid @ParameterObject ServerFindDto dto) {
+  public ApiLocaleResult<PageResult<ServerDetailVo>> list(
+      @Valid @ParameterObject ServerFindDto dto) {
     return ApiLocaleResult.success(emailServerFacade.list(dto));
   }
 

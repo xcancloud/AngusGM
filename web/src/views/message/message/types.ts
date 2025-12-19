@@ -44,7 +44,7 @@ export interface ReceiveObjectData {
   sentType?: string; // Type of send operation (immediate, scheduled)
   receiveType?: Record<string, any>; // Type of receive operation (push, email, SMS)
   receiveTenantName?: string; // Name of the receiving tenant
-  createdByName?: string; // Name of the message creator
+  creator?: string; // Name of the message creator
   failureReason?: string; // Reason for message failure if applicable
 }
 

@@ -8,7 +8,7 @@ import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
@@ -32,15 +32,15 @@ import java.util.stream.Collectors;
  * Implementation of authentication policy tenant query operations.
  * </p>
  * <p>
- * Manages tenant-policy relationship queries, validation, and application management.
- * Provides comprehensive tenant-policy querying with application support.
+ * Manages tenant-policy relationship queries, validation, and application management. Provides
+ * comprehensive tenant-policy querying with application support.
  * </p>
  * <p>
- * Supports default policy queries, tenant application queries, application function queries,
- * and admin authorization queries for comprehensive tenant-policy administration.
+ * Supports default policy queries, tenant application queries, application function queries, and
+ * admin authorization queries for comprehensive tenant-policy administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
 
   @Resource
@@ -59,8 +59,8 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
    * Retrieves default policies for tenant.
    * </p>
    * <p>
-   * Returns default policies available for the current tenant.
-   * Handles application opening status and client filtering.
+   * Returns default policies available for the current tenant. Handles application opening status
+   * and client filtering.
    * </p>
    */
   @Override
@@ -109,8 +109,8 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
    * Retrieves tenant application list.
    * </p>
    * <p>
-   * Returns applications opened by the current tenant.
-   * Validates application existence and opening status.
+   * Returns applications opened by the current tenant. Validates application existence and opening
+   * status.
    * </p>
    */
   @Override
@@ -134,8 +134,8 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
    * Retrieves tenant application function list.
    * </p>
    * <p>
-   * Returns application functions available for the specified application and tenant.
-   * Validates application opening status and admin authorization.
+   * Returns application functions available for the specified application and tenant. Validates
+   * application opening status and admin authorization.
    * </p>
    */
   @Override
@@ -160,8 +160,8 @@ public class AuthPolicyTenantQueryImpl implements AuthPolicyTenantQuery {
    * Retrieves admin open authorization by application ID and tenant ID.
    * </p>
    * <p>
-   * Returns admin authorization policy for the specified application and tenant.
-   * Throws ResourceNotFound if admin authorization not found.
+   * Returns admin authorization policy for the specified application and tenant. Throws
+   * ResourceNotFound if admin authorization not found.
    * </p>
    */
   @Override

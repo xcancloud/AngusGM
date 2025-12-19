@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.api.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.api.ApiLogCmd;
@@ -18,19 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of API log command operations for managing API request logs.
- * 
+ *
  * <p>This class provides functionality for:</p>
  * <ul>
  *   <li>Storing API request logs for analysis and monitoring</li>
  *   <li>Cleaning up old log records based on retention policies</li>
  *   <li>Joining API information with log records for comprehensive reporting</li>
  * </ul>
- * 
+ *
  * <p>Note: Future implementation will include sharding by tenant for better scalability.</p>
  */
 @DoInFuture("Sharding by tenant")
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class ApiLogCmdImpl extends CommCmd<ApiLog, Long> implements ApiLogCmd {
 
   @Resource
@@ -40,14 +40,14 @@ public class ApiLogCmdImpl extends CommCmd<ApiLog, Long> implements ApiLogCmd {
 
   /**
    * Adds API request logs to the database with associated API information.
-   * 
+   *
    * <p>This method performs the following operations:</p>
    * <ul>
    *   <li>Joins API information with log records for comprehensive reporting</li>
    *   <li>Batch inserts log records for optimal performance</li>
    *   <li>Returns identifiers for created log entries</li>
    * </ul>
-   * 
+   *
    * @param apiLogs List of API log entities to store
    * @return List of created log identifiers with associated data
    */
@@ -66,10 +66,10 @@ public class ApiLogCmdImpl extends CommCmd<ApiLog, Long> implements ApiLogCmd {
 
   /**
    * Cleans up old API operation logs based on retention policy.
-   * 
+   *
    * <p>This method removes log records older than the specified number of days
    * to maintain database performance and comply with data retention policies.</p>
-   * 
+   *
    * @param clearBeforeDay Number of days before current date to retain logs
    */
   @Override

@@ -38,11 +38,11 @@ export interface User {
   tenantId: string; // Tenant identifier
   tenantName: string; // Tenant name
   createdBy: string; // ID of user who created this user
-  createdByName: string; // Name of user who created this user
+  creator: string; // Name of user who created this user
   createdDate: string; // Date when user was created
-  lastModifiedBy: string; // ID of user who last modified this user
-  lastModifiedByName: string; // Name of user who last modified this user
-  lastModifiedDate: string; // Date when user was last modified
+  modifiedBy: string; // ID of user who last modified this user
+  modifier: string; // Name of user who last modified this user
+  modifiedDate: string; // Date when user was last modified
 }
 
 /**
@@ -81,11 +81,11 @@ export interface Dept {
   tenantId: string; // Tenant identifier
   tenantName: string; // Tenant name
   createdBy: string; // ID of user who created this department
-  createdByName: string; // Name of user who created this department
+  creator: string; // Name of user who created this department
   createdDate: string; // Date when department was created
-  lastModifiedBy: string; // ID of user who last modified this department
-  lastModifiedByName: string; // Name of user who last modified this department
-  lastModifiedDate: string; // Date when department was last modified
+  modifiedBy: string; // ID of user who last modified this department
+  modifier: string; // Name of user who last modified this department
+  modifiedDate: string; // Date when department was last modified
   hasSubDept: boolean; // Whether department has sub-departments
 }
 
@@ -119,7 +119,7 @@ export type UserGroup = {
   createdBy: string; // Who created the association
   tenantId: string; // Tenant identifier
   groupRemark: string; // Group remarks
-  createdByName: string; // Name of who created the association
+  creator: string; // Name of who created the association
 }
 
 /**
@@ -141,7 +141,7 @@ export type UserDept = {
   createdDate: string; // When the association was created
   createdBy: string; // Who created the association
   tenantId: string; // Tenant identifier
-  createdByName: string; // Name of who created the association
+  creator: string; // Name of who created the association
 }
 
 /**
@@ -155,10 +155,10 @@ export type UserTag = {
   targetType: string; // Type of target object
   targetName: string; // Name of target object
   createdBy: string; // Who created the association
-  createdByName: string; // Name of who created the association
+  creator: string; // Name of who created the association
   createdDate: string; // When the association was created
   targetCreatedBy: string; // Who created the target
-  targetCreatedByName: string; // Name of who created the target
+  targetCreator: string; // Name of who created the target
   targetCreatedDate: string; // When the target was created
 }
 
@@ -191,11 +191,11 @@ export interface Detail {
   tenantId: string; // Tenant identifier
   tenantName: string; // Tenant name
   createdBy: string; // ID of user who created this user
-  createdByName: string; // Name of user who created this user
+  creator: string; // Name of user who created this user
   createdDate: string; // Date when user was created
-  lastModifiedBy: string; // ID of user who last modified this user
-  lastModifiedByName: string; // Name of user who last modified this user
-  lastModifiedDate: string; // Date when user was last modified
+  modifiedBy: string; // ID of user who last modified this user
+  modifier: string; // Name of user who last modified this user
+  modifiedDate: string; // Date when user was last modified
   passwordStrength: EnumMessage<PasswordStrength>; // Password strength with localized message
   passwordExpired: boolean; // Whether password has expired
   passwordExpiredDate: string; // Date when password expires

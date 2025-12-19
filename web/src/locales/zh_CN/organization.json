@@ -48,13 +48,13 @@
       "title": "职务",
       "address": "地址",
       "createdDate": "加入时间",
-      "createdByName": "添加人",
-      "lastModifiedByName": "最后修改人",
-      "lastModifiedDate": "最后修改时间",
+      "creator": "添加人",
+      "modifier": "最后修改人",
+      "modifiedDate": "最后修改时间",
       "assocUser": {
         "id": "用户ID",
         "name": "用户名称",
-        "createdByName": "关联人",
+        "creator": "关联人",
         "createdDate": "关联时间"
       }
     },
@@ -194,14 +194,14 @@
       "parent": "上级",
       "level": "部门层级",
       "createdDate": "添加时间",
-      "createdByName": "添加人",
-      "lastModifiedByName": "最后修改人",
-      "lastModifiedDate": "最后修改时间",
+      "creator": "添加人",
+      "modifier": "最后修改人",
+      "modifiedDate": "最后修改时间",
       "userDept": {
         "code": "部门编码",
         "name": "部门名称",
         "head": "部门负责人",
-        "createdByName": "关联人",
+        "creator": "关联人",
         "createdDate": "关联时间"
       }
     },
@@ -247,7 +247,7 @@
         "code": "组编码",
         "name": "组名称",
         "remark": "组说明",
-        "createdByName": "关联人",
+        "creator": "关联人",
         "createdDate": "关联时间"
       }
     },
@@ -278,7 +278,7 @@
       "name": "名称",
       "userTag": {
         "name": "标签名称",
-        "createdByName": "关联人",
+        "creator": "关联人",
         "createdDate": "关联时间"
       }
     },

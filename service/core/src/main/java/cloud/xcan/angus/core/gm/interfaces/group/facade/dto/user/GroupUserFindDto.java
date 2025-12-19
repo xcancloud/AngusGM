@@ -23,7 +23,4 @@ public class GroupUserFindDto extends PageQuery {
   @Schema(description = "User full name for filtering")
   private String fullName;
 
-  @Schema(description = "User creation timestamp")
-  private LocalDateTime createdDate;
-
 }

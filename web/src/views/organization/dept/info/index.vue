@@ -106,9 +106,9 @@ const onMove = () => emit('move', props.node);
         <div class="info-item">
           <div class="info-label">
             <Icon icon="icon-yonghu" class="info-icon" />
-            {{ t('common.columns.createdByName') }}
+            {{ t('common.columns.creator') }}
           </div>
-          <div class="info-value">{{ props.deptInfo.createdByName || '--' }}</div>
+          <div class="info-value">{{ props.deptInfo.creator || '--' }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">
@@ -131,16 +131,16 @@ const onMove = () => emit('move', props.node);
         <div class="info-item">
           <div class="info-label">
             <Icon icon="icon-yonghu" class="info-icon" />
-            {{ t('department.columns.lastModifiedByName') }}
+            {{ t('department.columns.modifier') }}
           </div>
-          <div class="info-value">{{ props.deptInfo.lastModifiedByName || '--' }}</div>
+          <div class="info-value">{{ props.deptInfo.modifier || '--' }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">
             <Icon icon="icon-shijianriqi" class="info-icon" />
-            {{ t('department.columns.lastModifiedDate') }}
+            {{ t('department.columns.modifiedDate') }}
           </div>
-          <div class="info-value">{{ props.deptInfo.lastModifiedDate || '--' }}</div>
+          <div class="info-value">{{ props.deptInfo.modifiedDate || '--' }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">

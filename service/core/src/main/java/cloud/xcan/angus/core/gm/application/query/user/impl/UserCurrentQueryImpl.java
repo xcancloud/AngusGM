@@ -18,7 +18,7 @@ import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailCmd;
@@ -39,15 +39,15 @@ import java.util.concurrent.TimeUnit;
  * Implementation of current user query operations.
  * </p>
  * <p>
- * Manages current user information retrieval, SMS/email verification, and binding.
- * Provides comprehensive current user querying with verification support.
+ * Manages current user information retrieval, SMS/email verification, and binding. Provides
+ * comprehensive current user querying with verification support.
  * </p>
  * <p>
- * Supports current user detail retrieval, SMS/email sending, verification code checking,
- * and binding operations for comprehensive current user administration.
+ * Supports current user detail retrieval, SMS/email sending, verification code checking, and
+ * binding operations for comprehensive current user administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class UserCurrentQueryImpl implements UserCurrentQuery {
 
   @Resource
@@ -66,8 +66,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Retrieves detailed current user information.
    * </p>
    * <p>
-   * Fetches current user details with optional association joining.
-   * Uses current user context for data retrieval.
+   * Fetches current user details with optional association joining. Uses current user context for
+   * data retrieval.
    * </p>
    */
   @Override
@@ -86,8 +86,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Sends SMS verification to current user.
    * </p>
    * <p>
-   * Validates mobile format and user ownership before sending SMS.
-   * Ensures mobile belongs to current user for security.
+   * Validates mobile format and user ownership before sending SMS. Ensures mobile belongs to
+   * current user for security.
    * </p>
    */
   @Override
@@ -119,8 +119,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Validates SMS verification code and generates link secret.
    * </p>
    * <p>
-   * Checks verification code correctness and user ownership.
-   * Generates and stores link secret for binding confirmation.
+   * Checks verification code correctness and user ownership. Generates and stores link secret for
+   * binding confirmation.
    * </p>
    */
   @Override
@@ -160,8 +160,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Sends email verification to current user.
    * </p>
    * <p>
-   * Validates email ownership before sending email.
-   * Ensures email belongs to current user for security.
+   * Validates email ownership before sending email. Ensures email belongs to current user for
+   * security.
    * </p>
    */
   @Override
@@ -188,8 +188,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Validates email verification code and generates link secret.
    * </p>
    * <p>
-   * Checks verification code correctness and user ownership.
-   * Generates and stores link secret for binding confirmation.
+   * Checks verification code correctness and user ownership. Generates and stores link secret for
+   * binding confirmation.
    * </p>
    */
   @Override
@@ -226,8 +226,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Validates mobile number ownership for current user.
    * </p>
    * <p>
-   * Checks if mobile belongs to current user or is available for binding.
-   * Throws appropriate exception for unauthorized access.
+   * Checks if mobile belongs to current user or is available for binding. Throws appropriate
+   * exception for unauthorized access.
    * </p>
    */
   private void checkUserMobile(String mobile, SmsBizKey bizKey) {
@@ -246,8 +246,8 @@ public class UserCurrentQueryImpl implements UserCurrentQuery {
    * Validates email ownership for current user.
    * </p>
    * <p>
-   * Checks if email belongs to current user or is available for binding.
-   * Throws appropriate exception for unauthorized access.
+   * Checks if email belongs to current user or is available for binding. Throws appropriate
+   * exception for unauthorized access.
    * </p>
    */
   private void checkUserEmail(String email, EmailBizKey bizKey) {

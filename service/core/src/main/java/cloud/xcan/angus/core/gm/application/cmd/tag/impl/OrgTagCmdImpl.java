@@ -9,7 +9,6 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getOptTenantId;
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTargetRepo;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -27,15 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of organization tag command operations.
  * </p>
  * <p>
- * Manages organization tag lifecycle including creation, updates, and deletion.
- * Provides tag management with quota validation and audit logging.
+ * Manages organization tag lifecycle including creation, updates, and deletion. Provides tag
+ * management with quota validation and audit logging.
  * </p>
  * <p>
- * Supports tenant-specific tag management with proper validation and
- * cascading deletion of tag targets.
+ * Supports tenant-specific tag management with proper validation and cascading deletion of tag
+ * targets.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
 
   @Resource
@@ -52,8 +51,8 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
    * Creates organization tags with validation.
    * </p>
    * <p>
-   * Validates tag names, checks for duplicates, and verifies quota limits.
-   * Creates tags and logs the operation for audit purposes.
+   * Validates tag names, checks for duplicates, and verifies quota limits. Creates tags and logs
+   * the operation for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -86,8 +85,8 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
    * Updates organization tags with validation.
    * </p>
    * <p>
-   * Validates tag names and checks for uniqueness during updates.
-   * Updates tags and logs the operation for audit purposes.
+   * Validates tag names and checks for uniqueness during updates. Updates tags and logs the
+   * operation for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -116,8 +115,8 @@ public class OrgTagCmdImpl extends CommCmd<OrgTag, Long> implements OrgTagCmd {
    * Deletes organization tags and associated targets.
    * </p>
    * <p>
-   * Removes tags and cascades deletion to associated tag targets.
-   * Logs the operation for audit purposes.
+   * Removes tags and cascades deletion to associated tag targets. Logs the operation for audit
+   * purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

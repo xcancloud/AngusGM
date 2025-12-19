@@ -66,9 +66,9 @@ export const createTableColumns = (t: (key: string) => string): TableColumn[] =>
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('ldap.columns.createdByName'),
-    dataIndex: 'createdByName',
-    key: 'createdByName',
+    title: t('ldap.columns.creator'),
+    dataIndex: 'creator',
+    key: 'creator',
     width: '7%'
   },
   {

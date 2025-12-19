@@ -395,7 +395,7 @@ onMounted(async () => {
           </template>
 
           <!-- Created by name column with fallback -->
-          <template v-if="column.dataIndex === 'createdByName'">
+          <template v-if="column.dataIndex === 'creator'">
             {{ text || '--' }}
           </template>
           <!-- Token value column with copy and hide functionality -->

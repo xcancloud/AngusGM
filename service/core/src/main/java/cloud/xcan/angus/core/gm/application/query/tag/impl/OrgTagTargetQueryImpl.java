@@ -15,7 +15,7 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTagTargetRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.OrgTagTargetConverter;
@@ -40,15 +40,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of organization tag target query operations.
  * </p>
  * <p>
- * Manages organization tag target retrieval, validation, and quota management.
- * Provides comprehensive organization tag target querying with target association support.
+ * Manages organization tag target retrieval, validation, and quota management. Provides
+ * comprehensive organization tag target querying with target association support.
  * </p>
  * <p>
- * Supports organization tag target queries, target tag queries, quota validation,
- * deduplication, and target association for comprehensive organization tag target administration.
+ * Supports organization tag target queries, target tag queries, quota validation, deduplication,
+ * and target association for comprehensive organization tag target administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "OrgTagTarget", table = "org_tag_target", topAuthority = TOP_TENANT_ADMIN,
     groupByColumns = {"created_date", "target_type"})
 public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
@@ -73,8 +73,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Retrieves tag targets for specific organization tag.
    * </p>
    * <p>
-   * Queries targets associated with the specified organization tag.
-   * Validates required parameters and returns paginated results.
+   * Queries targets associated with the specified organization tag. Validates required parameters
+   * and returns paginated results.
    * </p>
    */
   @Override
@@ -102,8 +102,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Retrieves target tags for specific target.
    * </p>
    * <p>
-   * Queries organization tags associated with the specified target.
-   * Validates required parameters and returns paginated results.
+   * Queries organization tags associated with the specified target. Validates required parameters
+   * and returns paginated results.
    * </p>
    */
   @Override
@@ -131,8 +131,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates target tag quota for replacement.
    * </p>
    * <p>
-   * Checks if replacing target tags would exceed quota limits.
-   * Validates quota for specific organization ID.
+   * Checks if replacing target tags would exceed quota limits. Validates quota for specific
+   * organization ID.
    * </p>
    */
   @Override
@@ -150,8 +150,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates target append tag quota.
    * </p>
    * <p>
-   * Checks if appending target tags would exceed quota limits.
-   * Validates quota for specific organization ID.
+   * Checks if appending target tags would exceed quota limits. Validates quota for specific
+   * organization ID.
    * </p>
    */
   @Override
@@ -168,8 +168,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates target tag quota for multiple targets.
    * </p>
    * <p>
-   * Checks quota for replacement operations across multiple targets.
-   * Groups targets by target ID for efficient quota checking.
+   * Checks quota for replacement operations across multiple targets. Groups targets by target ID
+   * for efficient quota checking.
    * </p>
    */
   @Override
@@ -189,8 +189,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates target append tag quota for multiple targets.
    * </p>
    * <p>
-   * Checks quota for append operations across multiple targets.
-   * Groups targets by target ID for efficient quota checking.
+   * Checks quota for append operations across multiple targets. Groups targets by target ID for
+   * efficient quota checking.
    * </p>
    */
   @Override
@@ -210,8 +210,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Retrieves all organization tag targets for specific target.
    * </p>
    * <p>
-   * Returns organization tag targets with tag associations.
-   * Enriches results with tag information for complete data.
+   * Returns organization tag targets with tag associations. Enriches results with tag information
+   * for complete data.
    * </p>
    */
   @Override
@@ -236,8 +236,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates users and performs deduplication.
    * </p>
    * <p>
-   * Checks user existence and removes duplicate tag targets.
-   * Returns validated user list for tag target operations.
+   * Checks user existence and removes duplicate tag targets. Returns validated user list for tag
+   * target operations.
    * </p>
    */
   @Override
@@ -264,8 +264,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates departments and performs deduplication.
    * </p>
    * <p>
-   * Checks department existence and removes duplicate tag targets.
-   * Returns validated department list for tag target operations.
+   * Checks department existence and removes duplicate tag targets. Returns validated department
+   * list for tag target operations.
    * </p>
    */
   @Override
@@ -292,8 +292,8 @@ public class OrgTagTargetQueryImpl implements OrgTagTargetQuery {
    * Validates groups and performs deduplication.
    * </p>
    * <p>
-   * Checks group existence and removes duplicate tag targets.
-   * Returns validated group list for tag target operations.
+   * Checks group existence and removes duplicate tag targets. Returns validated group list for tag
+   * target operations.
    * </p>
    */
   @Override

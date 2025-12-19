@@ -19,7 +19,6 @@ import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptUserCmd;
@@ -41,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of department user command operations for managing user-department relationships.
- * 
+ *
  * <p>This class provides comprehensive functionality for department-user management including:</p>
  * <ul>
  *   <li>Adding users to departments and departments to users</li>
@@ -50,11 +49,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Managing department-user quotas and validations</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper user-department relationship management
  * with quota controls and audit trail maintenance.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUserCmd {
 
   @Resource
@@ -74,7 +73,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Adds departments to a user with comprehensive validation.
-   * 
+   *
    * <p>This method performs department assignment including:</p>
    * <ul>
    *   <li>Validating user existence</li>
@@ -84,8 +83,8 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
    *   <li>Creating department-user associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId    User identifier
    * @param deptUsers List of department-user associations to create
    * @return List of created association identifiers
    */
@@ -131,7 +130,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Replaces user's department associations with new ones.
-   * 
+   *
    * <p>This method performs comprehensive department replacement including:</p>
    * <ul>
    *   <li>Validating user and department existence</li>
@@ -141,8 +140,8 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
    *   <li>Creating new associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId    User identifier
    * @param deptUsers List of new department-user associations
    */
   @Transactional(rollbackFor = Exception.class)
@@ -194,7 +193,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Removes departments from a user.
-   * 
+   *
    * <p>This method performs department removal including:</p>
    * <ul>
    *   <li>Validating user and department existence</li>
@@ -202,8 +201,8 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
    *   <li>Clearing user main department references</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param userId User identifier
+   *
+   * @param userId  User identifier
    * @param deptIds Set of department identifiers to remove
    */
   @Transactional(rollbackFor = Exception.class)
@@ -238,7 +237,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Adds users to a department with comprehensive validation.
-   * 
+   *
    * <p>This method performs user assignment including:</p>
    * <ul>
    *   <li>Validating department existence</li>
@@ -248,8 +247,8 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
    *   <li>Creating user-department associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param deptId Department identifier
+   *
+   * @param deptId    Department identifier
    * @param deptUsers List of user-department associations to create
    * @return List of created association identifiers
    */
@@ -296,7 +295,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Removes users from a department.
-   * 
+   *
    * <p>This method performs user removal including:</p>
    * <ul>
    *   <li>Validating department and user existence</li>
@@ -304,8 +303,8 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
    *   <li>Clearing user main department references</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
-   * @param deptId Department identifier
+   *
+   * @param deptId  Department identifier
    * @param userIds Set of user identifiers to remove
    */
   @Transactional(rollbackFor = Exception.class)
@@ -338,7 +337,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Replaces department head assignment.
-   * 
+   *
    * <p>This method manages department head assignments including:</p>
    * <ul>
    *   <li>Validating department and user existence</li>
@@ -346,10 +345,10 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
    *   <li>Updating user department head status</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param deptId Department identifier
    * @param userId User identifier
-   * @param head Whether user should be department head
+   * @param head   Whether user should be department head
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
@@ -385,10 +384,10 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Adds department-user associations with validation.
-   * 
+   *
    * <p>This method ensures users can only have one primary department
    * and validates department existence.</p>
-   * 
+   *
    * @param deptUsers List of department-user associations to create
    * @return List of created association identifiers
    */
@@ -405,7 +404,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Deletes department-user associations by user identifiers.
-   * 
+   *
    * @param userIds Set of user identifiers
    */
   @Override
@@ -415,7 +414,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Deletes department-user associations by tenant identifiers.
-   * 
+   *
    * @param tenantIds Set of tenant identifiers
    */
   @Override
@@ -425,7 +424,7 @@ public class DeptUserCmdImpl extends CommCmd<DeptUser, Long> implements DeptUser
 
   /**
    * Deletes department-user associations by department identifiers.
-   * 
+   *
    * @param deptIds Collection of department identifiers
    */
   @Override

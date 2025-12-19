@@ -90,7 +90,8 @@ public class OrgTagRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Organizational tag list retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<OrgTagDetailVo>> list(@Valid @ParameterObject OrgTagFindDto dto) {
+  public ApiLocaleResult<PageResult<OrgTagDetailVo>> list(
+      @Valid @ParameterObject OrgTagFindDto dto) {
     return ApiLocaleResult.success(orgTagFacade.list(dto));
   }
 

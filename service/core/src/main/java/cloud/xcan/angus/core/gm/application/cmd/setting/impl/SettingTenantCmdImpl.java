@@ -11,7 +11,7 @@ import cloud.xcan.angus.api.commonlink.setting.locale.Locale;
 import cloud.xcan.angus.api.commonlink.setting.security.Security;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenant;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenantRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -32,15 +32,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant setting command operations.
  * </p>
  * <p>
- * Manages tenant-level settings including locale, security, API proxy,
- * and performance indicator configurations.
+ * Manages tenant-level settings including locale, security, API proxy, and performance indicator
+ * configurations.
  * </p>
  * <p>
- * Provides tenant setting initialization, updates, and cache management
- * for real-time configuration updates.
+ * Provides tenant setting initialization, updates, and cache management for real-time configuration
+ * updates.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implements SettingTenantCmd {
 
@@ -60,8 +60,8 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
    * Replaces tenant locale settings.
    * </p>
    * <p>
-   * Updates tenant locale configuration and evicts related cache entries
-   * to ensure real-time updates across the system.
+   * Updates tenant locale configuration and evicts related cache entries to ensure real-time
+   * updates across the system.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -86,8 +86,8 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
    * Replaces tenant security settings.
    * </p>
    * <p>
-   * Updates security configuration including invitation code settings
-   * and logs the modification for audit purposes.
+   * Updates security configuration including invitation code settings and logs the modification for
+   * audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -114,8 +114,8 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
    * Generates invitation code for tenant.
    * </p>
    * <p>
-   * Creates a unique invitation code using bid generator and random string
-   * for tenant invitation purposes.
+   * Creates a unique invitation code using bid generator and random string for tenant invitation
+   * purposes.
    * </p>
    */
   @Override
@@ -137,8 +137,8 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
    * Updates tenant setting with cache eviction.
    * </p>
    * <p>
-   * Saves tenant setting to database and evicts related cache entries
-   * to ensure real-time updates across the system.
+   * Saves tenant setting to database and evicts related cache entries to ensure real-time updates
+   * across the system.
    * </p>
    */
   @CacheEvict(key = "'key_' + #tenantId", value = "settingTenant")
@@ -151,8 +151,7 @@ public class SettingTenantCmdImpl extends CommCmd<SettingTenant, Long> implement
    * Initializes tenant settings.
    * </p>
    * <p>
-   * Creates default tenant settings with timezone configuration
-   * when tenant settings don't exist.
+   * Creates default tenant settings with timezone configuration when tenant settings don't exist.
    * </p>
    */
   @Override

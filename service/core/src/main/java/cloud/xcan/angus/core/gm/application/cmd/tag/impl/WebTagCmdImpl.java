@@ -6,7 +6,6 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationType.DELETED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 
 import cloud.xcan.angus.api.commonlink.app.tag.WebTag;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -27,15 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of web tag command operations.
  * </p>
  * <p>
- * Manages web tag lifecycle including creation, updates, and deletion.
- * Provides tag management with validation and audit logging.
+ * Manages web tag lifecycle including creation, updates, and deletion. Provides tag management with
+ * validation and audit logging.
  * </p>
  * <p>
- * Supports web application tag management with proper validation and
- * cascading deletion of tag targets.
+ * Supports web application tag management with proper validation and cascading deletion of tag
+ * targets.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
 
   @Resource
@@ -55,8 +54,8 @@ public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
    * Creates web tags with validation.
    * </p>
    * <p>
-   * Validates tag names and checks for duplicates before creation.
-   * Creates tags and logs the operation for audit purposes.
+   * Validates tag names and checks for duplicates before creation. Creates tags and logs the
+   * operation for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -84,8 +83,8 @@ public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
    * Updates web tags with validation.
    * </p>
    * <p>
-   * Validates tag names and checks for uniqueness during updates.
-   * Updates tags and logs the operation for audit purposes.
+   * Validates tag names and checks for uniqueness during updates. Updates tags and logs the
+   * operation for audit purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -112,8 +111,8 @@ public class WebTagCmdImpl extends CommCmd<WebTag, Long> implements WebTagCmd {
    * Deletes web tags and associated targets.
    * </p>
    * <p>
-   * Removes tags and cascades deletion to associated tag targets.
-   * Logs the operation for audit purposes.
+   * Removes tags and cascades deletion to associated tag targets. Logs the operation for audit
+   * purposes.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

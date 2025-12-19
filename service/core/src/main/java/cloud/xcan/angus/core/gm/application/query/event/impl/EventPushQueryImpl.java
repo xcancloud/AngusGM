@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
  * Implementation of event push query operations.
  * </p>
  * <p>
- * Manages event push retrieval and pending event processing.
- * Provides comprehensive event push querying for event processing.
+ * Manages event push retrieval and pending event processing. Provides comprehensive event push
+ * querying for event processing.
  * </p>
  * <p>
- * Supports pending event retrieval with retry limit validation
- * for comprehensive event push management.
+ * Supports pending event retrieval with retry limit validation for comprehensive event push
+ * management.
  * </p>
  */
 @Slf4j
@@ -33,8 +33,8 @@ public class EventPushQueryImpl implements EventPushQuery {
    * Retrieves pending event push records for processing.
    * </p>
    * <p>
-   * Returns events that are pending for push with retry limit validation.
-   * Limits results by size and maximum retry number for processing control.
+   * Returns events that are pending for push with retry limit validation. Limits results by size
+   * and maximum retry number for processing control.
    * </p>
    */
   @Override

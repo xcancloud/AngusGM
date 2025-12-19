@@ -12,7 +12,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.commonlink.dept.DeptRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.converter.AuthPolicyOrgConverter;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyDeptQuery;
@@ -40,11 +40,11 @@ import org.springframework.data.jpa.domain.JpaSort;
  * Provides comprehensive department-policy querying with authorization support.
  * </p>
  * <p>
- * Supports policy-department queries, department-policy queries, authorization management,
- * and unauthorized policy queries for comprehensive department-policy administration.
+ * Supports policy-department queries, department-policy queries, authorization management, and
+ * unauthorized policy queries for comprehensive department-policy administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
 
   @Resource
@@ -63,8 +63,8 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
    * Retrieves departments associated with specific policy.
    * </p>
    * <p>
-   * Queries departments that are authorized by the specified policy.
-   * Validates policy existence and handles multi-tenant control.
+   * Queries departments that are authorized by the specified policy. Validates policy existence and
+   * handles multi-tenant control.
    * </p>
    */
   @Override
@@ -99,8 +99,8 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
    * Retrieves departments not associated with specific policy.
    * </p>
    * <p>
-   * Queries departments that are not authorized by the specified policy.
-   * Validates policy existence for proper filtering.
+   * Queries departments that are not authorized by the specified policy. Validates policy existence
+   * for proper filtering.
    * </p>
    */
   @Override
@@ -132,8 +132,8 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
    * Retrieves policies associated with specific department.
    * </p>
    * <p>
-   * Queries policies that are authorized to the specified department.
-   * Validates organization parameters and handles authorization filtering.
+   * Queries policies that are authorized to the specified department. Validates organization
+   * parameters and handles authorization filtering.
    * </p>
    */
   @Override
@@ -167,8 +167,8 @@ public class AuthPolicyDeptQueryImpl implements AuthPolicyDeptQuery {
    * Retrieves policies not authorized to department.
    * </p>
    * <p>
-   * Queries policies that the current authorizer does not authorize to department.
-   * Compares authorized policies with all available policies to find unauthorized ones.
+   * Queries policies that the current authorizer does not authorize to department. Compares
+   * authorized policies with all available policies to find unauthorized ones.
    * </p>
    */
   @Override

@@ -13,7 +13,7 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
 import cloud.xcan.angus.api.obf.Str0;
 import cloud.xcan.angus.api.pojo.Pair;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserTokenQuery;
 import cloud.xcan.angus.core.gm.domain.auth.AuthUserToken;
@@ -29,15 +29,15 @@ import java.util.List;
  * Implementation of authentication user token query operations.
  * </p>
  * <p>
- * Manages user token retrieval, validation, and encryption/decryption.
- * Provides comprehensive token querying with security encryption support.
+ * Manages user token retrieval, validation, and encryption/decryption. Provides comprehensive token
+ * querying with security encryption support.
  * </p>
  * <p>
- * Supports token detail retrieval, quota validation, encryption/decryption,
- * and token name validation for secure user token management.
+ * Supports token detail retrieval, quota validation, encryption/decryption, and token name
+ * validation for secure user token management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
 
   @Resource
@@ -50,8 +50,8 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
    * Retrieves detailed user token information with decrypted value.
    * </p>
    * <p>
-   * Fetches complete token record and decrypts the token value.
-   * Verifies token belongs to current user for security.
+   * Fetches complete token record and decrypts the token value. Verifies token belongs to current
+   * user for security.
    * </p>
    */
   @Override
@@ -98,8 +98,8 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
    * Validates and retrieves multiple user tokens by IDs.
    * </p>
    * <p>
-   * Verifies all tokens exist and belong to current user.
-   * Validates complete collection match and throws appropriate exceptions.
+   * Verifies all tokens exist and belong to current user. Validates complete collection match and
+   * throws appropriate exceptions.
    * </p>
    */
   @Override
@@ -122,8 +122,8 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
    * Retrieves user tokens by IDs without validation.
    * </p>
    * <p>
-   * Returns tokens that belong to current user without validation checks.
-   * Used for non-critical token lookups.
+   * Returns tokens that belong to current user without validation checks. Used for non-critical
+   * token lookups.
    * </p>
    */
   @Override
@@ -136,8 +136,8 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
    * Validates token name does not already exist.
    * </p>
    * <p>
-   * Checks for duplicate token names to ensure uniqueness.
-   * Throws ResourceExisted exception if token name already exists.
+   * Checks for duplicate token names to ensure uniqueness. Throws ResourceExisted exception if
+   * token name already exists.
    * </p>
    */
   @Override
@@ -151,8 +151,8 @@ public class AuthUserTokenQueryImpl implements AuthUserTokenQuery {
    * Validates user token quota for tenant.
    * </p>
    * <p>
-   * Checks if adding tokens would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding tokens would exceed tenant quota limits. Throws appropriate exception if quota
+   * would be exceeded.
    * </p>
    */
   @Override

@@ -52,7 +52,8 @@ public class MessageRest {
   }
 
   @Operation(summary = "Delete multiple messages", operationId = "message:delete")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Messages deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Messages deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(

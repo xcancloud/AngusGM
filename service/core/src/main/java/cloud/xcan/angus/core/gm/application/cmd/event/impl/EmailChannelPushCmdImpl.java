@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementation of email channel push command for sending event notifications.
- * 
+ *
  * <p>This class provides email notification functionality including:</p>
  * <ul>
  *   <li>Sending event notifications via email</li>
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  *   <li>Handling email sending responses</li>
  *   <li>Managing email channel integration</li>
  * </ul>
- * 
+ *
  * <p>The implementation converts event notifications to email format
  * and sends them using the internal email service.</p>
  */
@@ -40,7 +40,7 @@ public class EmailChannelPushCmdImpl implements EventChannelPushCmd {
 
   /**
    * Pushes event notification via email channel.
-   * 
+   *
    * <p>This method performs email push including:</p>
    * <ul>
    *   <li>Converting event data to email send format</li>
@@ -48,7 +48,7 @@ public class EmailChannelPushCmdImpl implements EventChannelPushCmd {
    *   <li>Sending email via internal email service</li>
    *   <li>Handling email sending responses</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data containing notification details
    * @return Channel send response with success status and message
    */
@@ -68,7 +68,7 @@ public class EmailChannelPushCmdImpl implements EventChannelPushCmd {
       emailSendDto.setType(EmailType.CUSTOM);
       emailSendDto.setSendTenantId(getOptTenantId());
       emailSendDto.setSendUserId(getUserId());
-      
+
       // Send email via internal email service
       emailInnerRemote.send(emailSendDto).orElseThrow();
       return new ChannelSendResponse(true, null);

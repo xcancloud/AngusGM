@@ -89,8 +89,9 @@ public class AuthUserPubRest {
   }
 
   @Operation(summary = "Refresh access token",
-      description = "Use OAuth2 refresh token enables clients to securely obtain a new access token "
-          + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources",
+      description =
+          "Use OAuth2 refresh token enables clients to securely obtain a new access token "
+              + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources",
       operationId = "auth:user:renew")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
@@ -101,10 +102,11 @@ public class AuthUserPubRest {
   }
 
   @Operation(summary = "Refresh access token via GET request",
-      description = "Use OAuth2 refresh token enables clients to securely obtain a new access token "
-          + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources. "
-          + "Note: The GET request interface is used for convenient debugging or quick retrieval of access tokens, "
-          + "while the POST method is recommended in production environments",
+      description =
+          "Use OAuth2 refresh token enables clients to securely obtain a new access token "
+              + "without requiring user re-authentication, ensuring uninterrupted and secure access to protected resources. "
+              + "Note: The GET request interface is used for convenient debugging or quick retrieval of access tokens, "
+              + "while the POST method is recommended in production environments",
       hidden = true, operationId = "auth:user:renew:get")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
@@ -128,10 +130,11 @@ public class AuthUserPubRest {
   }
 
   @Operation(summary = "Terminate user session via GET request",
-      description = "Enable securely terminates authenticated sessions by invalidating access token, "
-          + "preventing unauthorized access to protected resources. "
-          + "Note: The GET request interface is used for convenient debugging or quick logout system, "
-          + "while the POST method is recommended in production environments",
+      description =
+          "Enable securely terminates authenticated sessions by invalidating access token, "
+              + "preventing unauthorized access to protected resources. "
+              + "Note: The GET request interface is used for convenient debugging or quick logout system, "
+              + "while the POST method is recommended in production environments",
       hidden = true, operationId = "auth:user:signout:get")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {
@@ -143,8 +146,9 @@ public class AuthUserPubRest {
   }
 
   @Operation(summary = "Retrieve registered tenant accounts",
-      description = "Retrieve registered tenant accounts to choose and access a specific tenant during the login process. "
-          + "Note: Only return accounts that match both the account and password",
+      description =
+          "Retrieve registered tenant accounts to choose and access a specific tenant during the login process. "
+              + "Note: Only return accounts that match both the account and password",
       operationId = "auth:user:signin:account")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {

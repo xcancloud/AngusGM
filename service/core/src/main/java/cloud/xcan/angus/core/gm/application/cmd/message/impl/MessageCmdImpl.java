@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of message command operations for managing system messages.
- * 
+ *
  * <p>This class provides comprehensive functionality for message management including:</p>
  * <ul>
  *   <li>Creating and sending system messages</li>
@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling message status tracking</li>
  *   <li>Managing message recipients and quotas</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper message delivery with status tracking
  * and recipient management across different delivery channels.</p>
  */
@@ -70,7 +70,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
   /**
    * Creates a new message with comprehensive validation.
-   * 
+   *
    * <p>This method performs message creation including:</p>
    * <ul>
    *   <li>Validating tenant access permissions</li>
@@ -78,7 +78,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
    *   <li>Setting tenant context appropriately</li>
    *   <li>Creating message record</li>
    * </ul>
-   * 
+   *
    * @param message Message to create
    * @return Created message identifier
    */
@@ -119,7 +119,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
   /**
    * Deletes messages by marking them as deleted.
-   * 
+   *
    * @param ids Set of message identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -138,7 +138,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
   /**
    * Sends in-site messages via WebSocket with comprehensive tracking.
-   * 
+   *
    * <p>This method performs in-site message delivery including:</p>
    * <ul>
    *   <li>Sending messages via WebSocket</li>
@@ -146,7 +146,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
    *   <li>Updating message status and statistics</li>
    *   <li>Handling delivery failures</li>
    * </ul>
-   * 
+   *
    * @param message Message to send
    */
   @Transactional(rollbackFor = Exception.class)
@@ -196,14 +196,14 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
   /**
    * Sends email messages with comprehensive tracking.
-   * 
+   *
    * <p>This method performs email message delivery including:</p>
    * <ul>
    *   <li>Sending messages via email service</li>
    *   <li>Updating message status and statistics</li>
    *   <li>Handling delivery failures</li>
    * </ul>
-   * 
+   *
    * @param message Message to send
    */
   @Transactional(rollbackFor = Exception.class)
@@ -244,7 +244,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
   /**
    * Increments read count for specified messages.
-   * 
+   *
    * @param messageIds Set of message identifiers to update read count
    */
   @Override
@@ -254,7 +254,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
 
   /**
    * Retrieves user IDs for message recipients based on receive object type.
-   * 
+   *
    * <p>This method determines recipients including:</p>
    * <ul>
    *   <li>All users in system or specific tenant</li>
@@ -262,7 +262,7 @@ public class MessageCmdImpl extends CommCmd<Message, Long> implements MessageCmd
    *   <li>Users within specific departments</li>
    *   <li>Specific users by ID</li>
    * </ul>
-   * 
+   *
    * @param message Message containing recipient information
    * @return Set of user identifiers for message recipients
    */

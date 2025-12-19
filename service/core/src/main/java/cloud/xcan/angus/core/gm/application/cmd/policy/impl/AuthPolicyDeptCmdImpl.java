@@ -15,7 +15,7 @@ import static java.util.Collections.singleton;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -40,15 +40,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of department authorization policy command operations.
  * </p>
  * <p>
- * Manages the association between departments and authorization policies,
- * providing bidirectional operations for adding and removing policy-department relationships.
+ * Manages the association between departments and authorization policies, providing bidirectional
+ * operations for adding and removing policy-department relationships.
  * </p>
  * <p>
- * Supports both policy-centric and department-centric operations with proper
- * validation and audit logging.
+ * Supports both policy-centric and department-centric operations with proper validation and audit
+ * logging.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
     AuthPolicyDeptCmd {
@@ -67,12 +67,11 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Associates departments with a specific authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and departments exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the policy and departments exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * Only creates new associations for departments that aren't already
-   * associated with the policy.
+   * Only creates new associations for departments that aren't already associated with the policy.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -126,8 +125,8 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Removes department associations from a specific authorization policy.
    * </p>
    * <p>
-   * Validates that the policy and departments exist, checks permissions,
-   * and removes the specified department-policy associations.
+   * Validates that the policy and departments exist, checks permissions, and removes the specified
+   * department-policy associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -164,12 +163,11 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Associates authorization policies with a specific department.
    * </p>
    * <p>
-   * Validates that the department and policies exist, checks permissions,
-   * and prevents duplicate associations.
+   * Validates that the department and policies exist, checks permissions, and prevents duplicate
+   * associations.
    * </p>
    * <p>
-   * Only creates new associations for policies that aren't already
-   * associated with the department.
+   * Only creates new associations for policies that aren't already associated with the department.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -225,8 +223,8 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Removes authorization policy associations from a specific department.
    * </p>
    * <p>
-   * Validates that the department and policies exist, checks permissions,
-   * and removes the specified policy-department associations.
+   * Validates that the department and policies exist, checks permissions, and removes the specified
+   * policy-department associations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -263,8 +261,8 @@ public class AuthPolicyDeptCmdImpl extends CommCmd<AuthPolicyOrg, Long> implemen
    * Batch removes department-policy associations.
    * </p>
    * <p>
-   * Used when deleting departments or policies to clean up all related associations.
-   * Skips permission checks as this is typically called during cleanup operations.
+   * Used when deleting departments or policies to clean up all related associations. Skips
+   * permission checks as this is typically called during cleanup operations.
    * </p>
    * <p>
    * If policyIds is empty, removes all policy associations for the specified departments.

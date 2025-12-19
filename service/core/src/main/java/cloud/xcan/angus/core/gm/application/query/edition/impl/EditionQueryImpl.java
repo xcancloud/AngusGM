@@ -7,7 +7,7 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isPrivateEdition
 import cloud.xcan.angus.api.commonlink.license.LicenseInstalled;
 import cloud.xcan.angus.api.commonlink.license.LicenseInstalledRepo;
 import cloud.xcan.angus.api.enums.EditionType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.edition.EditionQuery;
@@ -20,15 +20,15 @@ import java.util.List;
  * Implementation of edition query operations.
  * </p>
  * <p>
- * Manages edition retrieval and installation status checking.
- * Provides comprehensive edition querying with license support.
+ * Manages edition retrieval and installation status checking. Provides comprehensive edition
+ * querying with license support.
  * </p>
  * <p>
- * Supports installed edition retrieval, license-based edition checking,
- * and private edition handling for comprehensive edition management.
+ * Supports installed edition retrieval, license-based edition checking, and private edition
+ * handling for comprehensive edition management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class EditionQueryImpl implements EditionQuery {
 
   @Resource
@@ -42,8 +42,8 @@ public class EditionQueryImpl implements EditionQuery {
    * Retrieves installed edition information for specified goods code.
    * </p>
    * <p>
-   * Checks license-based installation for private editions.
-   * Falls back to application-based edition for non-private editions.
+   * Checks license-based installation for private editions. Falls back to application-based edition
+   * for non-private editions.
    * </p>
    */
   @Override
@@ -51,7 +51,7 @@ public class EditionQueryImpl implements EditionQuery {
     return new BizTemplate<InstalledEditionVo>() {
       @Override
       protected InstalledEditionVo process() {
-        if (isPrivateEdition()){
+        if (isPrivateEdition()) {
           // Private edition may not have installed licenses
           List<LicenseInstalled> licenses = licenseInstalledRepo.findByGoodsCode(goodsCode);
           if (!licenses.isEmpty()) {

@@ -124,20 +124,20 @@ const tt = (key: string, fallback: string): string => {
       </div>
       <div class="info-grid">
         <div class="info-item">
-          <div class="info-label">{{ t('common.columns.createdByName') }}</div>
-          <div class="info-value">{{ textOrDash(props.dataSource?.createdByName) }}</div>
+          <div class="info-label">{{ t('common.columns.creator') }}</div>
+          <div class="info-value">{{ textOrDash(props.dataSource?.creator) }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">{{ t('common.columns.createdDate') }}</div>
           <div class="info-value muted">{{ textOrDash(props.dataSource?.createdDate) }}</div>
         </div>
         <div class="info-item">
-          <div class="info-label">{{ t('common.columns.lastModifiedByName') }}</div>
-          <div class="info-value">{{ textOrDash(props.dataSource?.lastModifiedByName) }}</div>
+          <div class="info-label">{{ t('common.columns.modifier') }}</div>
+          <div class="info-value">{{ textOrDash(props.dataSource?.modifier) }}</div>
         </div>
         <div class="info-item">
-          <div class="info-label">{{ t('common.columns.lastModifiedDate') }}</div>
-          <div class="info-value muted">{{ textOrDash(props.dataSource?.lastModifiedDate) }}</div>
+          <div class="info-label">{{ t('common.columns.modifiedDate') }}</div>
+          <div class="info-value muted">{{ textOrDash(props.dataSource?.modifiedDate) }}</div>
         </div>
       </div>
     </div>

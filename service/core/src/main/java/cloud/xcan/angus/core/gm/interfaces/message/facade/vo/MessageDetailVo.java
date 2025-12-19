@@ -54,5 +54,5 @@ public class MessageDetailVo implements Serializable {
 
   private Long createdBy;
 
-  private String createdByName;
+  private String creator;
 }

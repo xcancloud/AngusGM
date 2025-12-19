@@ -5,7 +5,6 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationResourceType.SM
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -24,15 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of SMS template command operations.
  * </p>
  * <p>
- * Manages SMS template lifecycle including initialization, updates, and synchronization
- * with SMS channels.
+ * Manages SMS template lifecycle including initialization, updates, and synchronization with SMS
+ * channels.
  * </p>
  * <p>
- * Provides template initialization for new channels and template updates
- * with audit logging.
+ * Provides template initialization for new channels and template updates with audit logging.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SmsTemplateCmdImpl extends CommCmd<SmsTemplate, Long> implements SmsTemplateCmd {
 
   @Resource
@@ -45,8 +43,8 @@ public class SmsTemplateCmdImpl extends CommCmd<SmsTemplate, Long> implements Sm
    * Initializes SMS templates for new channels.
    * </p>
    * <p>
-   * Creates template instances for each channel using default templates.
-   * Only initializes templates for channels that don't already have templates.
+   * Creates template instances for each channel using default templates. Only initializes templates
+   * for channels that don't already have templates.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

@@ -46,7 +46,8 @@ public class CountryRest {
       @ApiResponse(responseCode = "200", description = "Country list retrieved successfully")})
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
-  public ApiLocaleResult<PageResult<CountryDetailVo>> list(@Valid @ParameterObject CountryFindDto dto) {
+  public ApiLocaleResult<PageResult<CountryDetailVo>> list(
+      @Valid @ParameterObject CountryFindDto dto) {
     return ApiLocaleResult.success(countryFacade.list(dto));
   }
 

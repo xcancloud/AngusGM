@@ -66,7 +66,7 @@ public class ServerReplaceDto implements Serializable {
   private Boolean sslEnabled = true;
 
   // TODO new add
-  
+
   @Schema(description = "Whether mail server authentication is required", defaultValue = "true")
   private Boolean authEnabled = true;
 

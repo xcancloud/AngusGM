@@ -24,7 +24,8 @@ public class ApiAuthorityConverter {
         .setSource(ApiAuthoritySource.APP_FUNC).setSourceId(func.getId())
         .setSourceEnabled(func.getEnabled())
         .setAppId(app.getId()).setAppEnabled(app.getEnabled())
-        .setApiId(api.getId()).setApiOperationId(api.getOperationId()).setApiEnabled(api.getEnabled())
+        .setApiId(api.getId()).setApiOperationId(api.getOperationId())
+        .setApiEnabled(api.getEnabled())
         .setServiceId(api.getServiceId()).setServiceCode(api.getServiceCode())
         .setServiceEnabled(api.getServiceEnabled());
   }

@@ -5,7 +5,7 @@ import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.manager.SettingManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.SystemAssert;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingQuery;
@@ -19,15 +19,15 @@ import lombok.extern.slf4j.Slf4j;
  * Implementation of setting query operations.
  * </p>
  * <p>
- * Manages system setting retrieval, validation, and quota management.
- * Provides comprehensive setting querying with quota support.
+ * Manages system setting retrieval, validation, and quota management. Provides comprehensive
+ * setting querying with quota support.
  * </p>
  * <p>
- * Supports setting detail retrieval, quota validation, and setting management
- * for comprehensive system configuration administration.
+ * Supports setting detail retrieval, quota validation, and setting management for comprehensive
+ * system configuration administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class SettingQueryImpl implements SettingQuery {
 
@@ -39,8 +39,8 @@ public class SettingQueryImpl implements SettingQuery {
    * Retrieves detailed setting information by key.
    * </p>
    * <p>
-   * Fetches complete setting record for the specified key.
-   * Returns setting with full configuration details.
+   * Fetches complete setting record for the specified key. Returns setting with full configuration
+   * details.
    * </p>
    */
   @Override
@@ -59,8 +59,8 @@ public class SettingQueryImpl implements SettingQuery {
    * Retrieves setting by key without business template.
    * </p>
    * <p>
-   * Returns setting directly from setting manager.
-   * Used for internal operations that don't require business template.
+   * Returns setting directly from setting manager. Used for internal operations that don't require
+   * business template.
    * </p>
    */
   @Override
@@ -73,8 +73,8 @@ public class SettingQueryImpl implements SettingQuery {
    * Validates and retrieves quota by name.
    * </p>
    * <p>
-   * Validates quota resource existence and returns quota configuration.
-   * Throws ResourceNotFound if quota resource or setting not found.
+   * Validates quota resource existence and returns quota configuration. Throws ResourceNotFound if
+   * quota resource or setting not found.
    * </p>
    */
   @Override

@@ -17,7 +17,7 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.manager.DeptManager;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagTargetQuery;
@@ -46,15 +46,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of department query operations.
  * </p>
  * <p>
- * Manages department retrieval, validation, hierarchical queries, and quota management.
- * Provides comprehensive department querying with full-text search and summary support.
+ * Manages department retrieval, validation, hierarchical queries, and quota management. Provides
+ * comprehensive department querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports department detail retrieval, navigation queries, hierarchical management,
- * quota validation, and tag management for comprehensive department administration.
+ * Supports department detail retrieval, navigation queries, hierarchical management, quota
+ * validation, and tag management for comprehensive department administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 @SummaryQueryRegister(name = "Dept", table = "dept", topAuthority = TOP_TENANT_ADMIN,
     groupByColumns = {"created_date", "level"})
@@ -80,8 +80,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Retrieves department navigation information with parent chain.
    * </p>
    * <p>
-   * Fetches department details and builds complete parent hierarchy chain.
-   * Validates parent relationship data integrity.
+   * Fetches department details and builds complete parent hierarchy chain. Validates parent
+   * relationship data integrity.
    * </p>
    */
   @Override
@@ -140,8 +140,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Retrieves departments with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Sets sub-department status for comprehensive department management.
+   * Supports full-text search and specification-based filtering. Sets sub-department status for
+   * comprehensive department management.
    * </p>
    */
   @Override
@@ -152,7 +152,7 @@ public class DeptQueryImpl implements DeptQuery {
       @Override
       protected Page<Dept> process() {
         Page<Dept> page = fullTextSearch
-            ? deptSearchRepo.find(spec.getCriteria(), pageable,  Dept.class, match)
+            ? deptSearchRepo.find(spec.getCriteria(), pageable, Dept.class, match)
             : deptListRepo.find(spec.getCriteria(), pageable, Dept.class, null);
         setHasSubDept(page.getContent());
         return page;
@@ -165,8 +165,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Retrieves department sub-count statistics.
    * </p>
    * <p>
-   * Counts sub-departments and users under the specified department.
-   * Provides comprehensive statistics for department hierarchy management.
+   * Counts sub-departments and users under the specified department. Provides comprehensive
+   * statistics for department hierarchy management.
    * </p>
    */
   @Override
@@ -239,8 +239,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates and retrieves department by ID.
    * </p>
    * <p>
-   * Verifies department exists and returns department information.
-   * Throws appropriate exception if department does not exist.
+   * Verifies department exists and returns department information. Throws appropriate exception if
+   * department does not exist.
    * </p>
    */
   @Override
@@ -253,8 +253,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates and retrieves multiple departments by IDs.
    * </p>
    * <p>
-   * Verifies all departments exist and returns department information.
-   * Throws appropriate exceptions for missing departments.
+   * Verifies all departments exist and returns department information. Throws appropriate
+   * exceptions for missing departments.
    * </p>
    */
   @Override
@@ -280,8 +280,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates department hierarchy for nested duplicates.
    * </p>
    * <p>
-   * Checks for circular references and nested duplicate relationships.
-   * Throws appropriate exception if nested duplicates are found.
+   * Checks for circular references and nested duplicate relationships. Throws appropriate exception
+   * if nested duplicates are found.
    * </p>
    */
   @Override
@@ -302,8 +302,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates department code uniqueness for new departments.
    * </p>
    * <p>
-   * Checks if department codes already exist within the tenant.
-   * Throws ResourceExisted exception if codes are not unique.
+   * Checks if department codes already exist within the tenant. Throws ResourceExisted exception if
+   * codes are not unique.
    * </p>
    */
   @Override
@@ -319,8 +319,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates department code uniqueness for updated departments.
    * </p>
    * <p>
-   * Checks if department codes conflict with existing departments.
-   * Allows same code for the same department during updates.
+   * Checks if department codes conflict with existing departments. Allows same code for the same
+   * department during updates.
    * </p>
    */
   @Override
@@ -349,8 +349,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates department quota for tenant.
    * </p>
    * <p>
-   * Checks if adding departments would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding departments would exceed tenant quota limits. Throws appropriate exception if
+   * quota would be exceeded.
    * </p>
    */
   @Override
@@ -366,8 +366,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates department level quota for tenant.
    * </p>
    * <p>
-   * Checks if department hierarchy levels would exceed tenant quota limits.
-   * Supports both add and update operations with different validation logic.
+   * Checks if department hierarchy levels would exceed tenant quota limits. Supports both add and
+   * update operations with different validation logic.
    * </p>
    */
   @Override
@@ -423,8 +423,8 @@ public class DeptQueryImpl implements DeptQuery {
    * Validates tag quota for departments.
    * </p>
    * <p>
-   * Checks if department tag associations would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if department tag associations would exceed tenant quota limits. Throws appropriate
+   * exception if quota would be exceeded.
    * </p>
    */
   @Override

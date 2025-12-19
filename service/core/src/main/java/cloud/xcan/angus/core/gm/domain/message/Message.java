@@ -93,7 +93,7 @@ public class Message extends TenantEntity<Message, Long> {
   private Long createdBy;
 
   @Column(name = "created_by_name")
-  private String createdByName;
+  private String creator;
 
   @CreatedDate
   @DateTimeFormat(pattern = DATE_FMT)

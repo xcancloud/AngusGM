@@ -27,14 +27,14 @@ public class OrgTagTargetVo implements Serializable {
   private Long createdBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 
   private LocalDateTime createdDate;
 
   private Long targetCreatedBy;
 
   @NameJoinField(id = "targetCreatedBy", repository = "commonUserBaseRepo")
-  private String targetCreatedByName;
+  private String targetCreator;
 
   private LocalDateTime targetCreatedDate;
 

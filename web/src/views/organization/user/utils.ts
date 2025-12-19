@@ -385,9 +385,9 @@ export const createUserTagColumns = (t: (key: string) => string) => [
     }
   },
   {
-    title: t('tag.columns.userTag.createdByName'),
-    dataIndex: 'createdByName',
-    key: 'createdByName',
+    title: t('tag.columns.userTag.creator'),
+    dataIndex: 'creator',
+    key: 'creator',
     width: '20%'
   },
   {
@@ -440,9 +440,9 @@ export const createUserDeptColumns = (t: (key: string) => string) => [
     }
   },
   {
-    title: t('department.columns.userDept.createdByName'),
-    dataIndex: 'createdByName',
-    key: 'createdByName',
+    title: t('department.columns.userDept.creator'),
+    dataIndex: 'creator',
+    key: 'creator',
     width: '13%'
   },
   {
@@ -494,9 +494,9 @@ export const createUserGroupColumns = (t: (key: string) => string) => [
     }
   },
   {
-    title: t('group.columns.assocGroup.createdByName'),
-    dataIndex: 'createdByName',
-    key: 'createdByName',
+    title: t('group.columns.assocGroup.creator'),
+    dataIndex: 'creator',
+    key: 'creator',
     width: '13%'
   },
   {
@@ -696,9 +696,9 @@ export const createTableColumns = (t: (key: string) => string) => [
     customCell: () => ({ style: 'white-space:nowrap;' })
   },
   {
-    title: t('user.columns.createdByName'),
-    dataIndex: 'createdByName',
-    key: 'createdByName',
+    title: t('user.columns.creator'),
+    dataIndex: 'creator',
+    key: 'creator',
     groupName: 'date',
     hide: true,
     width: '11%',
@@ -706,9 +706,9 @@ export const createTableColumns = (t: (key: string) => string) => [
     customRender: ({ text }: { text: string }): string => text || '--'
   },
   {
-    title: t('user.columns.lastModifiedByName'),
-    dataIndex: 'lastModifiedByName',
-    key: 'lastModifiedByName',
+    title: t('user.columns.modifier'),
+    dataIndex: 'modifier',
+    key: 'modifier',
     groupName: 'date',
     hide: true,
     width: '11%',
@@ -716,9 +716,9 @@ export const createTableColumns = (t: (key: string) => string) => [
     customRender: ({ text }: { text: string }): string => text || '--'
   },
   {
-    title: t('user.columns.lastModifiedDate'),
-    dataIndex: 'lastModifiedDate',
-    key: 'lastModifiedDate',
+    title: t('user.columns.modifiedDate'),
+    dataIndex: 'modifiedDate',
+    key: 'modifiedDate',
     groupName: 'date',
     customRender: ({ text }: { text: string }): string => text || '--',
     hide: true,

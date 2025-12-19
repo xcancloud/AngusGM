@@ -35,7 +35,8 @@ public class AuthClientSignInnerRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "OAuth2 client registered successfully")})
   @PostMapping(value = "/signup")
-  public ApiLocaleResult<AuthClientSignupVo> signupByDoor(@Valid @RequestBody AuthClientSignupDto dto) {
+  public ApiLocaleResult<AuthClientSignupVo> signupByDoor(
+      @Valid @RequestBody AuthClientSignupDto dto) {
     return ApiLocaleResult.success(authClientSignFacade.signupByDoor(dto));
   }
 

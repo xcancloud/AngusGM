@@ -75,7 +75,7 @@
   <contributors/>
 
   <properties>
-    <xcan-infra.bom.version>1.0.0</xcan-infra.bom.version>
+    <xcan-infra.bom.version>2.0.0</xcan-infra.bom.version>
     <xcan-angusstorage.version>1.0.0</xcan-angusstorage.version>
   </properties>
 

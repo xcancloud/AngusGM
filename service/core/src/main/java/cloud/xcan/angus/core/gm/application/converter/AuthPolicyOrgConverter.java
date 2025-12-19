@@ -119,8 +119,8 @@ public class AuthPolicyOrgConverter {
     policy.setTenantId(convert(objects[10], Long.class))
         .setCreatedBy(convert(objects[11], Long.class))
         .setCreatedDate(convert(objects[12], LocalDateTime.class))
-        .setLastModifiedBy(convert(objects[13], Long.class))
-        .setLastModifiedDate(convert(objects[14], LocalDateTime.class));
+        .setModifiedBy(convert(objects[13], Long.class))
+        .setModifiedDate(convert(objects[14], LocalDateTime.class));
     return policy;
   }
 }

@@ -13,7 +13,7 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserNum;
 import cloud.xcan.angus.api.manager.GroupManager;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.group.GroupUserQuery;
@@ -38,15 +38,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of group query operations.
  * </p>
  * <p>
- * Manages group retrieval, validation, and user count association.
- * Provides comprehensive group querying with full-text search and summary support.
+ * Manages group retrieval, validation, and user count association. Provides comprehensive group
+ * querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports group detail retrieval, user count association, quota validation,
- * and code uniqueness checking for comprehensive group management.
+ * Supports group detail retrieval, user count association, quota validation, and code uniqueness
+ * checking for comprehensive group management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Group", table = "group0", topAuthority = TOP_TENANT_ADMIN,
     groupByColumns = {"created_date", "enabled", "source"})
 public class GroupQueryImpl implements GroupQuery {
@@ -71,8 +71,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Retrieves detailed group information with associated tags and user count.
    * </p>
    * <p>
-   * Fetches complete group record with tag associations and user count.
-   * Throws ResourceNotFound exception if group does not exist.
+   * Fetches complete group record with tag associations and user count. Throws ResourceNotFound
+   * exception if group does not exist.
    * </p>
    */
   @Override
@@ -93,8 +93,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Retrieves groups with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Sets user count for comprehensive group management.
+   * Supports full-text search and specification-based filtering. Sets user count for comprehensive
+   * group management.
    * </p>
    */
   @Override
@@ -132,8 +132,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates and retrieves group by ID.
    * </p>
    * <p>
-   * Verifies group exists and returns group information.
-   * Throws appropriate exception if group does not exist.
+   * Verifies group exists and returns group information. Throws appropriate exception if group does
+   * not exist.
    * </p>
    */
   @Override
@@ -146,8 +146,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates and retrieves multiple groups by IDs.
    * </p>
    * <p>
-   * Verifies all groups exist and returns group information.
-   * Throws appropriate exceptions for missing groups.
+   * Verifies all groups exist and returns group information. Throws appropriate exceptions for
+   * missing groups.
    * </p>
    */
   @Override
@@ -160,8 +160,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates and retrieves valid group by ID.
    * </p>
    * <p>
-   * Verifies group exists and is valid, returns group information.
-   * Throws appropriate exception if group does not exist or is invalid.
+   * Verifies group exists and is valid, returns group information. Throws appropriate exception if
+   * group does not exist or is invalid.
    * </p>
    */
   @Override
@@ -174,8 +174,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates and retrieves multiple valid groups by IDs.
    * </p>
    * <p>
-   * Verifies all groups exist and are valid, returns group information.
-   * Throws appropriate exceptions for missing or invalid groups.
+   * Verifies all groups exist and are valid, returns group information. Throws appropriate
+   * exceptions for missing or invalid groups.
    * </p>
    */
   @Override
@@ -188,8 +188,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates group code uniqueness for new groups.
    * </p>
    * <p>
-   * Checks if group codes already exist within the tenant.
-   * Throws ResourceExisted exception if codes are not unique.
+   * Checks if group codes already exist within the tenant. Throws ResourceExisted exception if
+   * codes are not unique.
    * </p>
    */
   @Override
@@ -205,8 +205,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates group code uniqueness for updated groups.
    * </p>
    * <p>
-   * Checks if group codes conflict with existing groups.
-   * Allows same code for the same group during updates.
+   * Checks if group codes conflict with existing groups. Allows same code for the same group during
+   * updates.
    * </p>
    */
   @Override
@@ -235,8 +235,8 @@ public class GroupQueryImpl implements GroupQuery {
    * Validates group quota for tenant.
    * </p>
    * <p>
-   * Checks if adding groups would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding groups would exceed tenant quota limits. Throws appropriate exception if quota
+   * would be exceeded.
    * </p>
    */
   @Override

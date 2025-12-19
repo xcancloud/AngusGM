@@ -81,7 +81,7 @@ export interface UserRecordType {
   /** Whether this is the main department for the user */
   mainDept: boolean;
   /** Created by name */
-  createdByName?: string;
+  creator?: string;
 }
 
 // Department state interface
@@ -101,15 +101,15 @@ export interface DeptState {
 
 // Department info interface
 export interface DeptInfo {
-  createdByName: string;
+  creator: string;
   createdDate: string;
   tags: { id: string; name: string }[];
   level: string;
   name: string;
   code: string;
   id: string;
-  lastModifiedDate: string;
-  lastModifiedByName: string;
+  modifiedDate: string;
+  modifier: string;
 }
 
 /**

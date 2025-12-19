@@ -147,7 +147,7 @@ public class AppFuncAssembler {
         .setAppId(appFunc.getAppId())
         .setSequence(appFunc.getSequence())
         .setCreatedBy(appFunc.getCreatedBy())
-        .setCreatedByName(appFunc.getCreatedByName())
+        .setCreator(appFunc.getCreator())
         .setTags(toTagVos(appFunc.getTags()));
   }
 
@@ -166,7 +166,7 @@ public class AppFuncAssembler {
         .setSequence(appFunc.getSequence())
         .setHit(appFunc.getHit())
         .setCreatedBy(appFunc.getCreatedBy())
-        .setCreatedByName(appFunc.getCreatedByName())
+        .setCreator(appFunc.getCreator())
         .setTags(toTargetTagVos(appFunc));
   }
 

@@ -38,8 +38,4 @@ public class ApiFindDto extends PageQuery {
   @Schema(description = "Angus platform API type for filtering")
   private ApiType type;
 
-  @DateTimeFormat(pattern = DATE_FMT)
-  @Schema(description = "API creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

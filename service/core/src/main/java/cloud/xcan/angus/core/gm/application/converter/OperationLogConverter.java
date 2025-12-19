@@ -50,14 +50,15 @@ public class OperationLogConverter {
 
   public static List<OperationLog> toOperations(OperationResourceType resourceType,
       List<? extends Resources<?>> resources, OperationType operation, Object... params) {
-    if (isEmpty(resources)){
+    if (isEmpty(resources)) {
       return null;
     }
     Principal principal = PrincipalContext.get();
     Long tenantId = nonNull(principal.getTenantId()) ? principal.getTenantId() : -1L;
     List<OperationLog> operations = new ArrayList<>(resources.size());
     for (Resources<?> resource : resources) {
-      OperationLog operation0 = assembleOperationLog(resourceType, resource, operation, principal, params);
+      OperationLog operation0 = assembleOperationLog(resourceType, resource, operation, principal,
+          params);
       operation0.setTenantId(tenantId);
       operations.add(operation0);
     }
@@ -65,7 +66,7 @@ public class OperationLogConverter {
   }
 
   public static OperationLog toModifiedOperation(String resourceId, String resourceName,
-      boolean private0, ModifiedResourceType resourceType){
+      boolean private0, ModifiedResourceType resourceType) {
     String message = message("xcm.gm.activity.MODIFIED", new Object[]{resourceType});
     OperationLog operation0 = new OperationLog()
         .setRequestId(getRequestId())

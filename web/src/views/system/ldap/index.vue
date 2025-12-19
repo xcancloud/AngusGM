@@ -377,7 +377,7 @@ const handleTestResult = (data: TestResultData): void => {
           </template>
 
           <!-- Created By Name Column -->
-          <template v-if="column.dataIndex === 'createdByName'">
+          <template v-if="column.dataIndex === 'creator'">
             {{ text || '--' }}
           </template>
 

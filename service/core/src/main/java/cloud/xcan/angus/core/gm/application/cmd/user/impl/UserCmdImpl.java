@@ -46,7 +46,6 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.TenantSource;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.manager.SettingTenantManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthUserCmd;
@@ -78,16 +77,16 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of user command operations.
  * </p>
  * <p>
- * Manages user lifecycle including creation, updates, deletion, status management,
- * and lock/unlock operations.
+ * Manages user lifecycle including creation, updates, deletion, status management, and lock/unlock
+ * operations.
  * </p>
  * <p>
- * Supports comprehensive user management with department, group, and tag associations,
- * OAuth2 integration, and audit logging.
+ * Supports comprehensive user management with department, group, and tag associations, OAuth2
+ * integration, and audit logging.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
   @Resource
@@ -118,12 +117,12 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
    * Creates a new user with comprehensive validation and associations.
    * </p>
    * <p>
-   * Validates user information, tenant initialization, quota limits, and duplicate checks.
-   * Creates user with department, group, and tag associations, and initializes OAuth2 user.
+   * Validates user information, tenant initialization, quota limits, and duplicate checks. Creates
+   * user with department, group, and tag associations, and initializes OAuth2 user.
    * </p>
    * <p>
-   * Supports different user sources including platform signup, invitation code signup,
-   * background signup, and LDAP synchronization.
+   * Supports different user sources including platform signup, invitation code signup, background
+   * signup, and LDAP synchronization.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -207,8 +206,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
    * Updates user information and associated data.
    * </p>
    * <p>
-   * Validates user existence and uniqueness constraints, updates user information,
-   * and manages associated department, group, and tag relationships.
+   * Validates user existence and uniqueness constraints, updates user information, and manages
+   * associated department, group, and tag relationships.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -265,8 +264,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
    * Replaces user information completely.
    * </p>
    * <p>
-   * Handles both new user creation and existing user updates with comprehensive validation.
-   * Manages user associations and OAuth2 integration.
+   * Handles both new user creation and existing user updates with comprehensive validation. Manages
+   * user associations and OAuth2 integration.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -387,8 +386,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
    * Enables or disables users.
    * </p>
    * <p>
-   * Updates user status and ensures at least one system administrator remains.
-   * Manages OAuth2 user status and forces disabled users to logout.
+   * Updates user status and ensures at least one system administrator remains. Manages OAuth2 user
+   * status and forces disabled users to logout.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -425,13 +424,13 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
 
         // Delete OAuth2 authorizations for disabled users to force logout
         List<User> disabledUsers = usersDb.stream().filter(x -> !x.getEnabled()).toList();
-        if (isNotEmpty(disabledUsers)){
+        if (isNotEmpty(disabledUsers)) {
           authUserCmd.deleteAuthorization(disabledUsers.stream().map(User::getUsername).toList());
         }
 
         // Log operations for audit
         operationLogCmd.addAll(USER, usersDb.stream().filter(User::getEnabled).toList(), ENABLED);
-        operationLogCmd.addAll(USER, disabledUsers , DISABLED);
+        operationLogCmd.addAll(USER, disabledUsers, DISABLED);
         return null;
       }
     }.execute();
@@ -442,8 +441,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
    * Locks or unlocks users with optional date constraints.
    * </p>
    * <p>
-   * Validates date constraints and administrator permissions, updates lock status,
-   * and manages OAuth2 authorizations.
+   * Validates date constraints and administrator permissions, updates lock status, and manages
+   * OAuth2 authorizations.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -493,7 +492,7 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
         authUserCmd.replaceAuthUser(userDb, null, false);
 
         // Delete OAuth2 authorization to force user logout when locked
-        if (locked){
+        if (locked) {
           authUserCmd.deleteAuthorization(List.of(userDb.getUsername()));
         }
 
@@ -593,8 +592,8 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
    * Deletes directory users and associated data.
    * </p>
    * <p>
-   * Removes users, associated relationships, and OAuth2 users.
-   * Ensures at least one system administrator remains.
+   * Removes users, associated relationships, and OAuth2 users. Ensures at least one system
+   * administrator remains.
    * </p>
    */
   @Override

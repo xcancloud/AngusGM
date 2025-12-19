@@ -7,7 +7,6 @@ import static cloud.xcan.angus.core.gm.domain.operation.OperationType.ENABLED;
 import static cloud.xcan.angus.core.gm.domain.operation.OperationType.UPDATED;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -35,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Supports channel replacement from plugins and ensures only one channel is enabled at a time.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsChannelCmd {
 
   @Resource
@@ -73,8 +72,8 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
    * Replaces SMS channels from plugin state.
    * </p>
    * <p>
-   * Used by SmsPluginStateListener to synchronize channels with plugin state.
-   * Initializes SMS templates for new channels.
+   * Used by SmsPluginStateListener to synchronize channels with plugin state. Initializes SMS
+   * templates for new channels.
    * </p>
    */
   @Override
@@ -95,8 +94,8 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
    * Deletes SMS channels.
    * </p>
    * <p>
-   * Removes channels and logs the deletion operation.
-   * Note: Future enhancement needed to remove channels after plugin uninstallation.
+   * Removes channels and logs the deletion operation. Note: Future enhancement needed to remove
+   * channels after plugin uninstallation.
    * </p>
    */
   @DoInFuture("Remove the channel after uninstalling the plug-in")
@@ -107,7 +106,7 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
       @Override
       protected Void process() {
         List<SmsChannel> channels = smsChannelRepo.findAllById(ids);
-        if (!channels.isEmpty()){
+        if (!channels.isEmpty()) {
           smsChannelRepo.deleteByIdIn(ids);
           operationLogCmd.addAll(SMS_CHANNEL, channels, DELETED);
         }
@@ -121,8 +120,8 @@ public class SmsChannelCmdImpl extends CommCmd<SmsChannel, Long> implements SmsC
    * Enables or disables SMS channel.
    * </p>
    * <p>
-   * Ensures only one channel is enabled at a time by disabling all other channels
-   * when enabling a specific channel.
+   * Ensures only one channel is enabled at a time by disabling all other channels when enabling a
+   * specific channel.
    * </p>
    */
   @Override

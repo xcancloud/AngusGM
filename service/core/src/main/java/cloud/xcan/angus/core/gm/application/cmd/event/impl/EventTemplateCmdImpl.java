@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of event template command operations for managing event templates.
- * 
+ *
  * <p>This class provides comprehensive functionality for event template management including:</p>
  * <ul>
  *   <li>Creating and configuring event templates</li>
@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Caching template configurations for performance</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper template management with validation,
  * caching, and audit trail maintenance.</p>
  */
@@ -64,7 +64,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
 
   /**
    * Creates a new event template with comprehensive validation.
-   * 
+   *
    * <p>This method performs template creation including:</p>
    * <ul>
    *   <li>Validating exceptional event requirements</li>
@@ -73,7 +73,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
    *   <li>Creating template configuration</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param template Event template configuration to create
    * @return Created template identifier
    */
@@ -106,7 +106,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
 
   /**
    * Replaces an event template configuration or creates a new one.
-   * 
+   *
    * <p>This method performs template replacement including:</p>
    * <ul>
    *   <li>Validating template existence if ID is provided</li>
@@ -115,7 +115,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
    *   <li>Updating template cache</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param template Event template configuration to replace
    * @return Template identifier with name information
    */
@@ -158,7 +158,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
 
   /**
    * Deletes an event template by its identifier.
-   * 
+   *
    * <p>This method performs template deletion including:</p>
    * <ul>
    *   <li>Validating template existence</li>
@@ -166,7 +166,7 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
    *   <li>Removing template-receiver associations</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param id Template identifier to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -199,15 +199,15 @@ public class EventTemplateCmdImpl extends CommCmd<EventTemplate, Long> implement
 
   /**
    * Manages template-channel associations during template updates.
-   * 
+   *
    * <p>This method handles channel association updates including:</p>
    * <ul>
    *   <li>Identifying removed channel types</li>
    *   <li>Removing outdated channel associations</li>
    *   <li>Maintaining channel association consistency</li>
    * </ul>
-   * 
-   * @param template New template configuration
+   *
+   * @param template   New template configuration
    * @param templateDb Existing template configuration
    */
   public void deleteTemplateChannel(EventTemplate template, EventTemplate templateDb) {

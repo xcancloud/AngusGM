@@ -22,8 +22,4 @@ public class AppTagFindDto extends PageQuery {
   @Schema(description = "Application tag display name for filtering")
   private String name;
 
-  @DateTimeFormat(pattern = DATE_FMT)
-  @Schema(description = "Application tag creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

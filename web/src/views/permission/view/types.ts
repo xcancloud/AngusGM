@@ -21,7 +21,7 @@ export interface TargetDataType {
   id: string,
   userId?: string,
   avatar?: string,
-  createdByName?: string,
+  creator?: string,
   userName?: string,
   deptName?: string,
   groupName?: string,

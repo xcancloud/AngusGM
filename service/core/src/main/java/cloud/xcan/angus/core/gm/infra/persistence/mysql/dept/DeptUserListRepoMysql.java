@@ -69,7 +69,9 @@ public class DeptUserListRepoMysql extends AbstractSearchRepository<DeptUser> im
       sql.append(" AND t.name = '").append(deptNameEqualValue.replace("'", "''")).append("'");
     }
     if (StringUtils.isNotBlank(deptNameMatchValue)) {
-      sql.append(" AND t.name like '").append(deptNameMatchValue.replace("'", "''").replace("%", "\\%").replace("_", "\\_")).append("%'");
+      sql.append(" AND t.name like '")
+          .append(deptNameMatchValue.replace("'", "''").replace("%", "\\%").replace("_", "\\_"))
+          .append("%'");
     }
     sql.append(" INNER JOIN user0 org ON a.user_id = org.id ")
         .append(" AND org.tenant_id = ").append(tenantId);
@@ -77,10 +79,13 @@ public class DeptUserListRepoMysql extends AbstractSearchRepository<DeptUser> im
       sql.append(" AND org.id = ").append(Long.parseLong(userIdEqualValue.trim()));
     }
     if (StringUtils.isNotBlank(fullNameEqualValue)) {
-      sql.append(" AND org.full_name = '").append(fullNameEqualValue.replace("'", "''")).append("'");
+      sql.append(" AND org.full_name = '").append(fullNameEqualValue.replace("'", "''"))
+          .append("'");
     }
     if (StringUtils.isNotBlank(fullNameMatchValue)) {
-      sql.append(" AND org.full_name like '").append(fullNameMatchValue.replace("'", "''").replace("%", "\\%").replace("_", "\\_")).append("%'");
+      sql.append(" AND org.full_name like '")
+          .append(fullNameMatchValue.replace("'", "''").replace("%", "\\%").replace("_", "\\_"))
+          .append("%'");
     }
     return sql;
   }

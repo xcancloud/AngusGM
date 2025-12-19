@@ -3,7 +3,6 @@ package cloud.xcan.angus.api.gm.user.dto;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.remote.PageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -37,12 +36,6 @@ public class UserFindDto extends PageQuery {
 
   @Schema(description = "User system administrator flag for role filtering. Used for administrative access and permissions")
   private Boolean sysAdmin;
-
-  @Schema(description = "User creator identifier for creation tracking. Used for user lifecycle and audit tracking")
-  private Long createdBy;
-
-  @Schema(description = "User creation date for temporal filtering. Used for user lifecycle tracking and reporting")
-  private LocalDateTime createdDate;
 
   @Schema(description = "User tag identifier for categorization filtering. Used for user organization and grouping")
   private Long tagId;

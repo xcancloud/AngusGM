@@ -192,9 +192,9 @@ export const getTableColumns = (t: any) => {
       }
     },
     {
-      title: t('common.columns.createdByName'),
-      key: 'createdByName',
-      dataIndex: 'createdByName',
+      title: t('common.columns.creator'),
+      key: 'creator',
+      dataIndex: 'creator',
       width: '14%'
     },
     {
@@ -231,8 +231,8 @@ export const getDetailColumns = (t: any) => {
         label: t('notification.columns.sendType')
       },
       {
-        dataIndex: 'createdByName',
-        label: t('common.columns.createdByName')
+        dataIndex: 'creator',
+        label: t('common.columns.creator')
       },
       {
         dataIndex: 'createdDate',

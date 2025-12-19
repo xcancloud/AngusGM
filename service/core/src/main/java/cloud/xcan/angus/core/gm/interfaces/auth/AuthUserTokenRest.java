@@ -41,8 +41,9 @@ public class AuthUserTokenRest {
   private AuthUserTokenFacade authUserTokenFacade;
 
   @Operation(summary = "Create user access token",
-      description = "Create custom access token for current user with identical permissions to the associated user's access privileges. "
-          + "Used for customizing user authorization duration scenarios",
+      description =
+          "Create custom access token for current user with identical permissions to the associated user's access privileges. "
+              + "Used for customizing user authorization duration scenarios",
       operationId = "auth:user:token:add")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "User access token created successfully")})

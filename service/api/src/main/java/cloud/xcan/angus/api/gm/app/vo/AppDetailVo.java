@@ -57,7 +57,7 @@ public class AppDetailVo {
   private Long createdBy;
 
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
 
   private Long tenantId;
 

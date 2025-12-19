@@ -12,7 +12,7 @@ import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.api.ApiRepo;
 import cloud.xcan.angus.api.commonlink.service.Service;
 import cloud.xcan.angus.api.commonlink.service.ServiceRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.api.ApiCmd;
@@ -38,15 +38,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of service command operations.
  * </p>
  * <p>
- * Manages service lifecycle including creation, updates, deletion, and synchronization
- * with service discovery systems like Eureka.
+ * Manages service lifecycle including creation, updates, deletion, and synchronization with service
+ * discovery systems like Eureka.
  * </p>
  * <p>
- * Provides comprehensive service management functionality with API association,
- * status management, and discovery integration.
+ * Provides comprehensive service management functionality with API association, status management,
+ * and discovery integration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd {
 
   @Resource
@@ -94,8 +94,8 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Updates an existing service with validation.
    * </p>
    * <p>
-   * Validates service existence and code uniqueness, then updates the service
-   * and synchronizes related API information.
+   * Validates service existence and code uniqueness, then updates the service and synchronizes
+   * related API information.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -126,8 +126,8 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Replaces a service with new or updated data.
    * </p>
    * <p>
-   * Creates new service if ID is null, otherwise updates existing service.
-   * Preserves immutable fields during updates.
+   * Creates new service if ID is null, otherwise updates existing service. Preserves immutable
+   * fields during updates.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -138,7 +138,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
 
       @Override
       protected void checkParams() {
-        if(nonNull(service.getId())){
+        if (nonNull(service.getId())) {
           // Verify service exists
           serviceDb = serviceQuery.checkAndFind(service.getId());
           // Verify service code uniqueness
@@ -167,8 +167,8 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Enables or disables services and synchronizes related components.
    * </p>
    * <p>
-   * Updates service status and synchronizes API status and authority status
-   * to maintain consistency across the system.
+   * Updates service status and synchronizes API status and authority status to maintain consistency
+   * across the system.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -203,8 +203,8 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Deletes services and their associated data.
    * </p>
    * <p>
-   * Removes services and synchronously deletes associated APIs and authorities
-   * to maintain data consistency.
+   * Removes services and synchronously deletes associated APIs and authorities to maintain data
+   * consistency.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -280,8 +280,8 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Synchronizes service APIs from service discovery.
    * </p>
    * <p>
-   * Retrieves service instances from discovery client and synchronizes
-   * their APIs with the database.
+   * Retrieves service instances from discovery client and synchronizes their APIs with the
+   * database.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -316,8 +316,8 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Synchronizes all services with discovery center.
    * </p>
    * <p>
-   * Discovers all services from the discovery center and synchronizes
-   * their APIs with the database for services that exist in both systems.
+   * Discovers all services from the discovery center and synchronizes their APIs with the database
+   * for services that exist in both systems.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -368,8 +368,7 @@ public class ServiceCmdImpl extends CommCmd<Service, Long> implements ServiceCmd
    * Updates API service name and code when service information changes.
    * </p>
    * <p>
-   * Synchronizes service name and code changes to associated APIs
-   * to maintain consistency.
+   * Synchronizes service name and code changes to associated APIs to maintain consistency.
    * </p>
    */
   private void updateApiServiceNameAndCode(Service service, Service serviceDb) {

@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOpenCmd;
@@ -49,19 +49,19 @@ import org.springframework.transaction.annotation.Transactional;
  * Manages tenant-level authorization policies which include two main components:
  * </p>
  * <p>
- * 1. Default authorization granted to tenants during signup, automatically
- * effective for system administrators.
+ * 1. Default authorization granted to tenants during signup, automatically effective for system
+ * administrators.
  * </p>
  * <p>
- * 2. User default access application policies set by tenant administrators,
- * effective for all tenant users. Manual setup required if not configured.
+ * 2. User default access application policies set by tenant administrators, effective for all
+ * tenant users. Manual setup required if not configured.
  * </p>
  * <p>
- * Supports both cloud service and operation client environments with appropriate
- * initialization and cleanup operations.
+ * Supports both cloud service and operation client environments with appropriate initialization and
+ * cleanup operations.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements
     AuthPolicyTenantCmd {
@@ -84,12 +84,11 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Sets the default authorization policy for a specific application.
    * </p>
    * <p>
-   * Validates that the application and policy exist, ensures consistency,
-   * and creates or updates the default policy association for the tenant.
+   * Validates that the application and policy exist, ensures consistency, and creates or updates
+   * the default policy association for the tenant.
    * </p>
    * <p>
-   * Only allows setting predefined and user-defined policies that belong
-   * to the current tenant.
+   * Only allows setting predefined and user-defined policies that belong to the current tenant.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -148,8 +147,8 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Removes the default authorization policy for a specific application.
    * </p>
    * <p>
-   * Prevents new users from accessing the application by removing the
-   * default policy association for the tenant.
+   * Prevents new users from accessing the application by removing the default policy association
+   * for the tenant.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -179,8 +178,8 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Removes the default authorization policy for a specific application and tenant.
    * </p>
    * <p>
-   * Internal method used to prevent new users from accessing the application
-   * by removing the default policy association.
+   * Internal method used to prevent new users from accessing the application by removing the
+   * default policy association.
    * </p>
    */
   @Override
@@ -193,14 +192,14 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Initializes applications and policies for a tenant during signup.
    * </p>
    * <p>
-   * For base applications:
-   * 1. Authorizes _ADMIN policy to system administrator (opening authorization)
-   * 2. Authorizes _GUEST policy as default permission to all tenant users (default authorization)
+   * For base applications: 1. Authorizes _ADMIN policy to system administrator (opening
+   * authorization) 2. Authorizes _GUEST policy as default permission to all tenant users (default
+   * authorization)
    * </p>
    * <p>
-   * For cloud applications:
-   * 1. Authorizes _ADMIN policy to system administrator (opening authorization)
-   * 2. Authorizes _USER policy as default permission to all tenant users (default authorization)
+   * For cloud applications: 1. Authorizes _ADMIN policy to system administrator (opening
+   * authorization) 2. Authorizes _USER policy as default permission to all tenant users (default
+   * authorization)
    * </p>
    */
   @Override
@@ -256,8 +255,8 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Initializes applications and policies for a specific tenant and application.
    * </p>
    * <p>
-   * Performs opening authorization for administrator and default authorization
-   * for tenant users based on application type.
+   * Performs opening authorization for administrator and default authorization for tenant users
+   * based on application type.
    * </p>
    * <p>
    * Operation client applications require manual authorization for default policies.
@@ -295,10 +294,10 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Cancels application opening policies for a tenant.
    * </p>
    * <p>
-   * Note: This method is intentionally left empty as canceling subscriptions
-   * and application expiration requires complex policy invalidation and
-   * user-defined policy reference cleanup. All policy authorizations are
-   * retained, and a global verification method @CheckAppNotExpired is provided.
+   * Note: This method is intentionally left empty as canceling subscriptions and application
+   * expiration requires complex policy invalidation and user-defined policy reference cleanup. All
+   * policy authorizations are retained, and a global verification method @CheckAppNotExpired is
+   * provided.
    * </p>
    */
   @Override
@@ -328,8 +327,8 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Sets default guest or user authorization for a tenant application.
    * </p>
    * <p>
-   * Creates default authorization when it doesn't exist, ensuring all tenant
-   * users have appropriate access permissions.
+   * Creates default authorization when it doesn't exist, ensuring all tenant users have appropriate
+   * access permissions.
    * </p>
    */
   private void defaultGuestOrUserAuth(Long tenantId, App app, Stream<AuthPolicy> authPolicyStream) {
@@ -355,8 +354,8 @@ public class AuthPolicyTenantCmdImpl extends CommCmd<AuthPolicyOrg, Long> implem
    * Sets opening authorization for administrator on a tenant application.
    * </p>
    * <p>
-   * Creates administrator authorization when it doesn't exist, ensuring
-   * system administrators have appropriate access permissions.
+   * Creates administrator authorization when it doesn't exist, ensuring system administrators have
+   * appropriate access permissions.
    * </p>
    */
   private void openAdminAuth(Long tenantId, List<AuthPolicy> policies, App app) {

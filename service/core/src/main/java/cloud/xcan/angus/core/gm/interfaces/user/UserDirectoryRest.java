@@ -128,7 +128,8 @@ public class UserDirectoryRest {
   @PreAuthorize("@PPS.isCloudTenantSecurity()")
   @Operation(summary = "Delete directory service configuration", operationId = "user:directory:delete")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Directory service configuration deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Directory service configuration deleted successfully")})
   @DeleteMapping("/{id}")
   public void delete(
       @Parameter(name = "id", description = "Unique identifier of the directory service configuration", required = true) @PathVariable("id") Long id,

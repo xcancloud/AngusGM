@@ -32,7 +32,7 @@ public class DeptUpdateDto implements Serializable {
   private String name;
 
   @Length(max = MAX_CODE_LENGTH)
-  @Schema(description = "Unique code for the department",  example = "HR")
+  @Schema(description = "Unique code for the department", example = "HR")
   private String code;
 
   @Range(min = DEFAULT_ROOT_PID)

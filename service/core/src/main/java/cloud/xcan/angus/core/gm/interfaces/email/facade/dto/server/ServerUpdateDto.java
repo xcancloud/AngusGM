@@ -36,7 +36,8 @@ public class ServerUpdateDto implements Serializable {
 
   @DoInFuture("Support the receiving protocol: POP3, IMAP")
   @EnumPart(enumClass = EmailProtocol.class, allowableValues = {"SMTP"})
-  @Schema(description = "Email server protocol type. Currently only SMTP is supported", allowableValues = { "SMTP"})
+  @Schema(description = "Email server protocol type. Currently only SMTP is supported", allowableValues = {
+      "SMTP"})
   private EmailProtocol protocol;
 
   @Length(max = MAX_REMARK_LENGTH)

@@ -58,8 +58,8 @@ public class AuthPolicyGroupAssembler {
         .setTenantId(group.getTenantId())
         .setCreatedBy(group.getCreatedBy())
         .setCreatedDate(group.getCreatedDate())
-        .setLastModifiedBy(group.getLastModifiedBy())
-        .setLastModifiedDate(group.getLastModifiedDate());
+        .setModifiedBy(group.getModifiedBy())
+        .setModifiedDate(group.getModifiedDate());
   }
 
   public static GenericSpecification<Group> getSpecification(AuthPolicyGroupFindDto dto) {

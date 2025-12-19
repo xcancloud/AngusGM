@@ -12,7 +12,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.EmailConstant;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.exception.QuotaException;
 import cloud.xcan.angus.core.gm.application.query.email.EmailServerQuery;
@@ -36,15 +36,15 @@ import org.springframework.data.jpa.domain.Specification;
  * Implementation of email server query operations.
  * </p>
  * <p>
- * Manages email server retrieval, health checking, and quota validation.
- * Provides comprehensive email server querying with caching support.
+ * Manages email server retrieval, health checking, and quota validation. Provides comprehensive
+ * email server querying with caching support.
  * </p>
  * <p>
- * Supports server detail retrieval, health monitoring, quota validation,
- * and name uniqueness checking for comprehensive email server management.
+ * Supports server detail retrieval, health monitoring, quota validation, and name uniqueness
+ * checking for comprehensive email server management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class EmailServerQueryImpl implements EmailServerQuery {
 
@@ -60,8 +60,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Retrieves detailed email server information by ID.
    * </p>
    * <p>
-   * Fetches complete server record with validation.
-   * Throws ResourceNotFound exception if server does not exist.
+   * Fetches complete server record with validation. Throws ResourceNotFound exception if server
+   * does not exist.
    * </p>
    */
   @Override
@@ -105,8 +105,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Validates email server availability for specified protocol.
    * </p>
    * <p>
-   * Verifies that enabled servers exist for the specified protocol.
-   * Throws appropriate exception if no servers are available.
+   * Verifies that enabled servers exist for the specified protocol. Throws appropriate exception if
+   * no servers are available.
    * </p>
    */
   @Override
@@ -132,8 +132,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Validates email server health status for specified protocol.
    * </p>
    * <p>
-   * Tests server connectivity with caching for performance optimization.
-   * Supports future POP3 and IMAP protocol implementations.
+   * Tests server connectivity with caching for performance optimization. Supports future POP3 and
+   * IMAP protocol implementations.
    * </p>
    */
   @DoInFuture("Support the receiving protocol: POP3, IMAP")
@@ -176,8 +176,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Validates and retrieves email server by ID.
    * </p>
    * <p>
-   * Verifies server exists and returns server information.
-   * Throws ResourceNotFound exception if server does not exist.
+   * Verifies server exists and returns server information. Throws ResourceNotFound exception if
+   * server does not exist.
    * </p>
    */
   @Override
@@ -191,8 +191,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Retrieves enabled email server for specified protocol.
    * </p>
    * <p>
-   * Returns first enabled server for the protocol with validation.
-   * Throws appropriate exception if no enabled servers found.
+   * Returns first enabled server for the protocol with validation. Throws appropriate exception if
+   * no enabled servers found.
    * </p>
    */
   @Override
@@ -224,8 +224,8 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Validates email server quota for tenant.
    * </p>
    * <p>
-   * Checks if adding servers would exceed maximum quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding servers would exceed maximum quota limits. Throws appropriate exception if
+   * quota would be exceeded.
    * </p>
    */
   @Override
@@ -242,8 +242,7 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Validates server name uniqueness for new servers.
    * </p>
    * <p>
-   * Checks if server name already exists.
-   * Throws ResourceExisted exception if name is not unique.
+   * Checks if server name already exists. Throws ResourceExisted exception if name is not unique.
    * </p>
    */
   @Override
@@ -258,14 +257,14 @@ public class EmailServerQueryImpl implements EmailServerQuery {
    * Validates server name uniqueness for updated servers.
    * </p>
    * <p>
-   * Checks if server name conflicts with existing servers.
-   * Allows same name for the same server during updates.
+   * Checks if server name conflicts with existing servers. Allows same name for the same server
+   * during updates.
    * </p>
    */
   @Override
   public void checkUpdateName(EmailServer emailServer) {
     List<EmailServer> servers = emailServerRepo.findByNameAndIdNot(emailServer.getName(),
-      emailServer.getId());
+        emailServer.getId());
     assertResourceExisted(servers, SERVER_NAME_EXISTED_EXISTED_T,
         new Object[]{emailServer.getName()});
   }

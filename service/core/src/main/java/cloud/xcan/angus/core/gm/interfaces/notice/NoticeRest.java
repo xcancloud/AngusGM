@@ -53,7 +53,8 @@ public class NoticeRest {
   }
 
   @Operation(summary = "Delete multiple application notifications", operationId = "notice:delete")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Notifications deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Notifications deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(

@@ -34,7 +34,7 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
@@ -66,15 +66,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of authentication policy query operations.
  * </p>
  * <p>
- * Manages authentication policy retrieval, validation, and permission management.
- * Provides comprehensive policy querying with full-text search and summary support.
+ * Manages authentication policy retrieval, validation, and permission management. Provides
+ * comprehensive policy querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports policy detail retrieval, paginated listing, permission validation,
- * quota management, and policy uniqueness checking for comprehensive policy administration.
+ * Supports policy detail retrieval, paginated listing, permission validation, quota management, and
+ * policy uniqueness checking for comprehensive policy administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "AuthPolicy", table = "auth_policy",
     groupByColumns = {"created_date", "type", "grant_stage"/*Only OP Client*/, "enabled"})
 public class AuthPolicyQueryImpl implements AuthPolicyQuery {
@@ -103,8 +103,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Retrieves detailed policy information by ID or code.
    * </p>
    * <p>
-   * Fetches complete policy record with tenant and application validation.
-   * Throws ResourceNotFound exception if policy does not exist.
+   * Fetches complete policy record with tenant and application validation. Throws ResourceNotFound
+   * exception if policy does not exist.
    * </p>
    */
   @Override
@@ -140,8 +140,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Retrieves policies with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Enriches results with application information for comprehensive display.
+   * Supports full-text search and specification-based filtering. Enriches results with application
+   * information for comprehensive display.
    * </p>
    */
   @Override
@@ -166,8 +166,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Retrieves tenant application default policies.
    * </p>
    * <p>
-   * Returns default policies for tenant's opened applications.
-   * Handles cloud service edition filtering for private edition applications.
+   * Returns default policies for tenant's opened applications. Handles cloud service edition
+   * filtering for private edition applications.
    * </p>
    */
   @Override
@@ -225,7 +225,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates and retrieves policy by ID.
    * </p>
    * <p>
-   * Important: Consider turning off multi tenant control when you need to check predefined policies.
+   * Important: Consider turning off multi tenant control when you need to check predefined
+   * policies.
    * </p>
    */
   @Override
@@ -252,7 +253,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates and retrieves multiple policies by IDs.
    * </p>
    * <p>
-   * Important: Consider turning off multi tenant control when you need to check predefined policies.
+   * Important: Consider turning off multi tenant control when you need to check predefined
+   * policies.
    * </p>
    */
   @Override
@@ -296,8 +298,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates and retrieves application administrator policy.
    * </p>
    * <p>
-   * Returns application administrator policy for the specified application.
-   * Throws ResourceNotFound if application administrator not found.
+   * Returns application administrator policy for the specified application. Throws ResourceNotFound
+   * if application administrator not found.
    * </p>
    */
   @Override
@@ -311,8 +313,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates policy quota for tenant.
    * </p>
    * <p>
-   * Checks if adding policies would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding policies would exceed tenant quota limits. Throws appropriate exception if
+   * quota would be exceeded.
    * </p>
    */
   @Override
@@ -356,8 +358,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates operation policy permission.
    * </p>
    * <p>
-   * Ensures current user has appropriate operation policy permissions.
-   * Throws Forbidden exception if permission is insufficient.
+   * Ensures current user has appropriate operation policy permissions. Throws Forbidden exception
+   * if permission is insufficient.
    * </p>
    */
   @Override
@@ -433,9 +435,10 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Authorizer must have authorization policy permission.
    * </p>
    * <p>
+   *
    * @param appId     Authorized application id
    * @param policyIds Authorized policy ids
-   * </p>
+   *                  </p>
    */
   @Override
   public void checkAuthPolicyPermission(Long appId, Collection<Long> policyIds) {
@@ -450,8 +453,9 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Authorizer must have authorization policy permission.
    * </p>
    * <p>
+   *
    * @param policyIds Authorized policy ids
-   * </p>
+   *                  </p>
    */
   @Override
   public void checkAuthPolicyPermission(Collection<Long> policyIds) {
@@ -467,8 +471,9 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Authorizer must have authorization policy permission.
    * </p>
    * <p>
+   *
    * @param policies Authorized policies
-   * </p>
+   *                 </p>
    */
   @Override
   public void checkAuthPolicyPermission(List<AuthPolicy> policies) {
@@ -491,10 +496,11 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Authorizer must have authorization policy permission.
    * </p>
    * <p>
+   *
    * @param appId     Authorized application id
    * @param userId    Authorized user ids
    * @param policyIds Authorized policy ids
-   * </p>
+   *                  </p>
    */
   @Override
   public void checkAuthPolicyPermission(Long appId, Long userId, Collection<Long> policyIds) {
@@ -540,8 +546,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates duplicate parameters in policy list.
    * </p>
    * <p>
-   * Checks for duplicate codes and names within the provided policy list.
-   * Ensures only one application policies can be added at a time.
+   * Checks for duplicate codes and names within the provided policy list. Ensures only one
+   * application policies can be added at a time.
    * </p>
    */
   @Override
@@ -574,8 +580,8 @@ public class AuthPolicyQueryImpl implements AuthPolicyQuery {
    * Validates unique code and name suffix for policies.
    * </p>
    * <p>
-   * Ensures policy codes and names are unique within the application.
-   * Handles both insert and update scenarios.
+   * Ensures policy codes and names are unique within the application. Handles both insert and
+   * update scenarios.
    * </p>
    */
   @Override

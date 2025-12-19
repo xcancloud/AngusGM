@@ -5,7 +5,6 @@ import cloud.xcan.angus.api.commonlink.to.TORoleUserRepo;
 import cloud.xcan.angus.api.commonlink.to.TOUser;
 import cloud.xcan.angus.api.commonlink.to.TOUserRepo;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.to.TOUserCmd;
@@ -23,15 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant operation user command operations.
  * </p>
  * <p>
- * Manages tenant operation user lifecycle including creation and deletion.
- * Provides user management with OAuth2 integration and role association cleanup.
+ * Manages tenant operation user lifecycle including creation and deletion. Provides user management
+ * with OAuth2 integration and role association cleanup.
  * </p>
  * <p>
- * Supports tenant operation user creation with validation and proper
- * cleanup of associated roles and OAuth2 user flags.
+ * Supports tenant operation user creation with validation and proper cleanup of associated roles
+ * and OAuth2 user flags.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class TOUserCmdImpl extends CommCmd<TOUser, Long> implements TOUserCmd {
 
   @Resource
@@ -50,8 +49,8 @@ public class TOUserCmdImpl extends CommCmd<TOUser, Long> implements TOUserCmd {
    * Creates tenant operation users with validation.
    * </p>
    * <p>
-   * Validates user existence and checks for duplicate operation users.
-   * Updates OAuth2 user flags and creates tenant operation user records.
+   * Validates user existence and checks for duplicate operation users. Updates OAuth2 user flags
+   * and creates tenant operation user records.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -86,8 +85,8 @@ public class TOUserCmdImpl extends CommCmd<TOUser, Long> implements TOUserCmd {
    * Deletes tenant operation users and associated data.
    * </p>
    * <p>
-   * Removes tenant operation users, associated roles, and updates OAuth2 user flags.
-   * Ensures proper cleanup of all related data.
+   * Removes tenant operation users, associated roles, and updates OAuth2 user flags. Ensures proper
+   * cleanup of all related data.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -113,8 +112,8 @@ public class TOUserCmdImpl extends CommCmd<TOUser, Long> implements TOUserCmd {
    * Deletes tenant operation users without OAuth2 flag update.
    * </p>
    * <p>
-   * Removes tenant operation users and associated roles without updating
-   * OAuth2 user flags. Used for internal cleanup operations.
+   * Removes tenant operation users and associated roles without updating OAuth2 user flags. Used
+   * for internal cleanup operations.
    * </p>
    */
   @Override

@@ -15,7 +15,7 @@ import cloud.xcan.angus.api.commonlink.service.Service;
 import cloud.xcan.angus.api.commonlink.service.ServiceRepo;
 import cloud.xcan.angus.api.commonlink.service.ServiceResource;
 import cloud.xcan.angus.api.commonlink.service.ServiceResourceApi;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
 import cloud.xcan.angus.core.gm.domain.service.ServiceResourceApiRepo;
@@ -40,15 +40,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of service query operations.
  * </p>
  * <p>
- * Manages service retrieval, validation, and API association.
- * Provides comprehensive service querying with full-text search and summary support.
+ * Manages service retrieval, validation, and API association. Provides comprehensive service
+ * querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports service detail retrieval, paginated listing, API management,
- * resource queries, and service validation for comprehensive service administration.
+ * Supports service detail retrieval, paginated listing, API management, resource queries, and
+ * service validation for comprehensive service administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Service", table = "service", isMultiTenantCtrl = false,
     groupByColumns = {"created_date", "source", /*"api_doc_type",*/ "enabled"})
 public class ServiceQueryImpl implements ServiceQuery {
@@ -67,8 +67,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Retrieves detailed service information by ID.
    * </p>
    * <p>
-   * Fetches complete service record with API count association.
-   * Throws ResourceNotFound exception if service does not exist.
+   * Fetches complete service record with API count association. Throws ResourceNotFound exception
+   * if service does not exist.
    * </p>
    */
   @Override
@@ -90,8 +90,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Retrieves services with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Enriches results with API count information for comprehensive display.
+   * Supports full-text search and specification-based filtering. Enriches results with API count
+   * information for comprehensive display.
    * </p>
    */
   @Override
@@ -102,8 +102,8 @@ public class ServiceQueryImpl implements ServiceQuery {
       @Override
       protected Page<Service> process() {
         Page<Service> servicePage = fullTextSearch
-        ? serviceSearchRepo.find(spec.getCriteria(), pageable, Service.class, match)
-        : serviceRepo.findAll(spec, pageable);
+            ? serviceSearchRepo.find(spec.getCriteria(), pageable, Service.class, match)
+            : serviceRepo.findAll(spec, pageable);
         setApiNum(servicePage.getContent());
         return servicePage;
       }
@@ -115,8 +115,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Retrieves API list for specific service.
    * </p>
    * <p>
-   * Returns all APIs associated with the specified service.
-   * Validates service existence before retrieving APIs.
+   * Returns all APIs associated with the specified service. Validates service existence before
+   * retrieving APIs.
    * </p>
    */
   @Override
@@ -138,8 +138,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Retrieves resource list for services.
    * </p>
    * <p>
-   * Returns service resources with optional authentication filtering.
-   * Handles both specific service code and all services scenarios.
+   * Returns service resources with optional authentication filtering. Handles both specific service
+   * code and all services scenarios.
    * </p>
    */
   @Override
@@ -181,8 +181,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Retrieves resource API list for specific service.
    * </p>
    * <p>
-   * Returns service resource APIs with optional authentication filtering.
-   * Supports both all resources and specific resource name scenarios.
+   * Returns service resource APIs with optional authentication filtering. Supports both all
+   * resources and specific resource name scenarios.
    * </p>
    */
   @Transactional
@@ -217,8 +217,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Validates and retrieves service by ID.
    * </p>
    * <p>
-   * Returns service by ID with existence validation.
-   * Throws ResourceNotFound if service does not exist.
+   * Returns service by ID with existence validation. Throws ResourceNotFound if service does not
+   * exist.
    * </p>
    */
   @Override
@@ -231,8 +231,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Validates and retrieves services by service codes.
    * </p>
    * <p>
-   * Returns services by codes with existence validation.
-   * Validates that all requested service codes exist.
+   * Returns services by codes with existence validation. Validates that all requested service codes
+   * exist.
    * </p>
    */
   @Override
@@ -254,8 +254,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Validates and retrieves services by IDs with optional enabled check.
    * </p>
    * <p>
-   * Returns services by IDs with existence validation.
-   * Optionally validates that all services are enabled.
+   * Returns services by IDs with existence validation. Optionally validates that all services are
+   * enabled.
    * </p>
    */
   @Override
@@ -282,8 +282,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Validates service code for addition.
    * </p>
    * <p>
-   * Ensures service code does not already exist when adding new service.
-   * Throws ResourceExisted if service code already exists.
+   * Ensures service code does not already exist when adding new service. Throws ResourceExisted if
+   * service code already exists.
    * </p>
    */
   @Override
@@ -297,8 +297,8 @@ public class ServiceQueryImpl implements ServiceQuery {
    * Validates service code for update.
    * </p>
    * <p>
-   * Ensures service code uniqueness when updating existing service.
-   * Allows same service to keep its code during update.
+   * Ensures service code uniqueness when updating existing service. Allows same service to keep its
+   * code during update.
    * </p>
    */
   @Override

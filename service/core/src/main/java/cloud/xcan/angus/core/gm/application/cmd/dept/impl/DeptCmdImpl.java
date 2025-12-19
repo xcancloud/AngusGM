@@ -17,7 +17,6 @@ import cloud.xcan.angus.api.commonlink.dept.Dept;
 import cloud.xcan.angus.api.commonlink.dept.DeptRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.dept.DeptCmd;
@@ -57,7 +56,7 @@ import org.springframework.transaction.annotation.Transactional;
  * <p>The implementation ensures proper organizational structure management
  * with hierarchical relationships and data consistency.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
 
@@ -364,8 +363,8 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
    * <p>This method handles department hierarchy updates when departments are moved,
    * ensuring proper level calculations and parent relationship maintenance.</p>
    *
-   * @param dept List of departments to update
-   * @param deptDbMap Map of existing departments
+   * @param dept            List of departments to update
+   * @param deptDbMap       Map of existing departments
    * @param parentDeptDbMap Map of parent departments
    */
   private void setAndUpdateLevelAndParentLikeId(List<Dept> dept, Map<Long, Dept> deptDbMap,
@@ -416,7 +415,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
   /**
    * Calculates department level based on parent department.
    *
-   * @param dept Department entity
+   * @param dept            Department entity
    * @param parentDeptDbMap Map of parent departments
    * @return Calculated department level
    */
@@ -428,7 +427,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
   /**
    * Assembles parent-like ID for department hierarchy tracking.
    *
-   * @param pid Parent department identifier
+   * @param pid             Parent department identifier
    * @param parentDeptDbMap Map of parent departments
    * @return Assembled parent-like ID string
    */
@@ -444,7 +443,7 @@ public class DeptCmdImpl extends CommCmd<Dept, Long> implements DeptCmd {
   /**
    * Assembles parent-like ID for single parent department.
    *
-   * @param pid Parent department identifier
+   * @param pid          Parent department identifier
    * @param parentDeptDb Parent department entity
    * @return Assembled parent-like ID string
    */

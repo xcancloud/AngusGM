@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.country.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.country.CountryQuery;
 import cloud.xcan.angus.core.gm.domain.country.Country;
@@ -17,15 +17,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of country query operations.
  * </p>
  * <p>
- * Manages country retrieval, validation, and search capabilities.
- * Provides comprehensive country querying with full-text search support.
+ * Manages country retrieval, validation, and search capabilities. Provides comprehensive country
+ * querying with full-text search support.
  * </p>
  * <p>
- * Supports country detail retrieval, paginated listing, and specification-based
- * filtering for country management.
+ * Supports country detail retrieval, paginated listing, and specification-based filtering for
+ * country management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class CountryQueryImpl implements CountryQuery {
 
   @Resource
@@ -38,8 +38,8 @@ public class CountryQueryImpl implements CountryQuery {
    * Retrieves detailed country information by ID.
    * </p>
    * <p>
-   * Fetches complete country record with all associated information.
-   * Throws ResourceNotFound exception if country does not exist.
+   * Fetches complete country record with all associated information. Throws ResourceNotFound
+   * exception if country does not exist.
    * </p>
    */
   @Override
@@ -59,8 +59,8 @@ public class CountryQueryImpl implements CountryQuery {
    * Retrieves countries with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated results for comprehensive country management.
+   * Supports full-text search and specification-based filtering. Returns paginated results for
+   * comprehensive country management.
    * </p>
    */
   @Override

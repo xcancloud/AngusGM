@@ -8,7 +8,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.app.AppOrgAuthCmd;
@@ -27,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of application organization authorization command operations.
- * 
+ *
  * <p>This class provides comprehensive functionality for managing organization-based
  * authorization policies including:</p>
  * <ul>
@@ -36,11 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Validating organization and policy existence</li>
  *   <li>Handling policy authorization permissions</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper authorization management across different
  * organization types (users, departments, groups) within applications.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements AppOrgAuthCmd {
 
   @Resource
@@ -52,12 +51,12 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
 
   /**
    * Assigns authorization policies to users.
-   * 
+   *
    * <p>This method creates authorization associations between users and policies,
    * ignoring existing associations to avoid duplicates.</p>
-   * 
-   * @param appId Application identifier
-   * @param userIds Set of user identifiers
+   *
+   * @param appId     Application identifier
+   * @param userIds   Set of user identifiers
    * @param policyIds Set of policy identifiers
    * @return List of created authorization identifiers
    */
@@ -95,12 +94,12 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
 
   /**
    * Assigns authorization policies to departments.
-   * 
+   *
    * <p>This method creates authorization associations between departments and policies,
    * ignoring existing associations to avoid duplicates.</p>
-   * 
-   * @param appId Application identifier
-   * @param deptIds Set of department identifiers
+   *
+   * @param appId     Application identifier
+   * @param deptIds   Set of department identifiers
    * @param policyIds Set of policy identifiers
    * @return List of created authorization identifiers
    */
@@ -137,12 +136,12 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
 
   /**
    * Assigns authorization policies to groups.
-   * 
+   *
    * <p>This method creates authorization associations between groups and policies,
    * ignoring existing associations to avoid duplicates.</p>
-   * 
-   * @param appId Application identifier
-   * @param groupIds Set of group identifiers
+   *
+   * @param appId     Application identifier
+   * @param groupIds  Set of group identifiers
    * @param policyIds Set of policy identifiers
    * @return List of created authorization identifiers
    */
@@ -179,14 +178,14 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
 
   /**
    * Removes authorization policies from users.
-   * 
+   *
    * <p>This method removes authorization associations between users and policies.
-   * When policyIds is empty, all user authorizations are deleted, excluding
-   * those of other associated organizations. To cancel all authorization completely,
-   * the global default authorization must also be canceled.</p>
-   * 
-   * @param appId Application identifier
-   * @param userIds Set of user identifiers
+   * When policyIds is empty, all user authorizations are deleted, excluding those of other
+   * associated organizations. To cancel all authorization completely, the global default
+   * authorization must also be canceled.</p>
+   *
+   * @param appId     Application identifier
+   * @param userIds   Set of user identifiers
    * @param policyIds Set of policy identifiers (optional)
    */
   @Transactional(rollbackFor = Exception.class)
@@ -220,13 +219,13 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
 
   /**
    * Removes authorization policies from departments.
-   * 
+   *
    * <p>This method removes authorization associations between departments and policies.
-   * When policyIds is empty, all department authorizations are deleted. To cancel
-   * all authorization completely, the global default authorization must also be canceled.</p>
-   * 
-   * @param appId Application identifier
-   * @param deptIds Set of department identifiers
+   * When policyIds is empty, all department authorizations are deleted. To cancel all authorization
+   * completely, the global default authorization must also be canceled.</p>
+   *
+   * @param appId     Application identifier
+   * @param deptIds   Set of department identifiers
    * @param policyIds Set of policy identifiers (optional)
    */
   @Transactional(rollbackFor = Exception.class)
@@ -260,13 +259,13 @@ public class AppOrgAuthCmdImpl extends CommCmd<AuthPolicyOrg, Long> implements A
 
   /**
    * Removes authorization policies from groups.
-   * 
+   *
    * <p>This method removes authorization associations between groups and policies.
-   * When policyIds is empty, all group authorizations are deleted. To cancel
-   * all authorization completely, the global default authorization must also be canceled.</p>
-   * 
-   * @param appId Application identifier
-   * @param groupIds Set of group identifiers
+   * When policyIds is empty, all group authorizations are deleted. To cancel all authorization
+   * completely, the global default authorization must also be canceled.</p>
+   *
+   * @param appId     Application identifier
+   * @param groupIds  Set of group identifiers
    * @param policyIds Set of policy identifiers (optional)
    */
   @Transactional(rollbackFor = Exception.class)

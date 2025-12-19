@@ -15,7 +15,7 @@ public class AppConfig {
 
   @Bean
   @ConditionalOnMissingBean
-  public SpringAppDirUtils appDirUtils(){
+  public SpringAppDirUtils appDirUtils() {
     return new SpringAppDirUtils();
   }
 

@@ -23,8 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "Sms Template", description = "SMS template management system. Standardizes SMS content creation through reusable "
-    + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency")
+@Tag(name = "Sms Template", description =
+    "SMS template management system. Standardizes SMS content creation through reusable "
+        + "templates with dynamic variables and multi-language support, maintaining brand consistency and operational efficiency")
 @Validated
 @RestController
 @RequestMapping("/api/v1/sms/template")
@@ -59,7 +60,8 @@ public class SmsTemplateRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "SMS template list retrieved successfully")})
   @GetMapping
-  public ApiLocaleResult<PageResult<SmsTemplateDetailVo>> list(@Valid @ParameterObject SmsTemplateFindDto dto) {
+  public ApiLocaleResult<PageResult<SmsTemplateDetailVo>> list(
+      @Valid @ParameterObject SmsTemplateFindDto dto) {
     return ApiLocaleResult.success(smsTemplateFacade.list(dto));
   }
 

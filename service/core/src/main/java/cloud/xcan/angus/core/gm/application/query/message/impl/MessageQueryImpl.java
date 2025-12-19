@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.message.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.message.MessageQuery;
 import cloud.xcan.angus.core.gm.domain.message.Message;
@@ -25,16 +25,16 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of message query operations.
  * </p>
  * <p>
- * Manages message retrieval, validation, and pending message processing.
- * Provides comprehensive message querying with full-text search and summary support.
+ * Manages message retrieval, validation, and pending message processing. Provides comprehensive
+ * message querying with full-text search and summary support.
  * </p>
  * <p>
- * Supports message detail retrieval, paginated listing, full-text search,
- * and pending message queries for comprehensive message management.
+ * Supports message detail retrieval, paginated listing, full-text search, and pending message
+ * queries for comprehensive message management.
  * </p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Message", table = "message",
     groupByColumns = {"created_date", "receive_type", "status"})
 public class MessageQueryImpl implements MessageQuery {
@@ -51,8 +51,8 @@ public class MessageQueryImpl implements MessageQuery {
    * Retrieves detailed message information by ID.
    * </p>
    * <p>
-   * Fetches complete message record with all associated information.
-   * Throws ResourceNotFound exception if message does not exist.
+   * Fetches complete message record with all associated information. Throws ResourceNotFound
+   * exception if message does not exist.
    * </p>
    */
   @Override
@@ -71,8 +71,8 @@ public class MessageQueryImpl implements MessageQuery {
    * Retrieves message information with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Returns paginated results for comprehensive message management.
+   * Supports full-text search and specification-based filtering. Returns paginated results for
+   * comprehensive message management.
    * </p>
    */
   @Override
@@ -94,8 +94,8 @@ public class MessageQueryImpl implements MessageQuery {
    * Retrieves pending messages for processing.
    * </p>
    * <p>
-   * Returns messages that are pending for processing with timing validation.
-   * Limits results by size for processing control.
+   * Returns messages that are pending for processing with timing validation. Limits results by size
+   * for processing control.
    * </p>
    */
   @Override

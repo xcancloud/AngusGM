@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
     code: undefined,
     appId: undefined,
     appName: undefined,
-    createdByName: undefined,
+    creator: undefined,
     createdDate: undefined,
     type: { value: undefined, message: undefined },
     enabled: false,

@@ -85,7 +85,7 @@ public class AppFunc extends TenantAuditingEntity<AppFunc, Long> implements
   private Boolean auth;
   @Transient
   @NameJoinField(id = "createdBy", repository = "commonUserBaseRepo")
-  private String createdByName;
+  private String creator;
   @Transient
   private List<Api> apis;
   @Transient

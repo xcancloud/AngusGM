@@ -45,7 +45,8 @@ public class SystemLogRest {
   public ApiLocaleResult<String> fileDetail(
       @Parameter(name = "id", description = "Service instance unique identifier", required = true) @PathVariable("id") String instanceId,
       @Parameter(name = "name", description = "Log file name to read", required = true) @PathVariable("name") String fileName,
-      @Parameter(name = "linesNum", description = "Number of log lines to read, defaults to " + DEFAULT_READ_LINE_NUM) @RequestParam("linesNum") Integer linesNum,
+      @Parameter(name = "linesNum", description = "Number of log lines to read, defaults to "
+          + DEFAULT_READ_LINE_NUM) @RequestParam("linesNum") Integer linesNum,
       @Parameter(name = "tail", description = "Whether to read from the end of file, defaults to true") @RequestParam("tail") Boolean tail) {
     return ApiLocaleResult.successData(
         systemLogFacade.fileDetail(instanceId, fileName, linesNum, tail));

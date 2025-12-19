@@ -39,7 +39,7 @@ public class Api extends AuditingEntity<Api, Long> implements Resources<Long> {
   /**
    * OSA3 operationId
    */
-  @Column(name ="operation_id")
+  @Column(name = "operation_id")
   private String operationId;
 
   /**

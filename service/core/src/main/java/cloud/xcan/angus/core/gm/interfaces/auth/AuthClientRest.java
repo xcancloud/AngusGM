@@ -79,12 +79,14 @@ public class AuthClientRest {
       @ApiResponse(responseCode = "404", description = "Client not found")
   })
   @PutMapping
-  public ApiLocaleResult<IdKey<String, Object>> replace(@Valid @RequestBody AuthClientReplaceDto dto) {
+  public ApiLocaleResult<IdKey<String, Object>> replace(
+      @Valid @RequestBody AuthClientReplaceDto dto) {
     return ApiLocaleResult.success(authClientFacade.replace(dto));
   }
 
   @Operation(summary = "Delete OAuth2 clients", operationId = "client:delete")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Clients deleted successfully")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Clients deleted successfully")})
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping
   public void delete(

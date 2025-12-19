@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.message.impl;
 
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.message.MessageCenterOnlineQuery;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;
@@ -18,15 +18,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of message center online query operations.
  * </p>
  * <p>
- * Manages message center online retrieval and user information association.
- * Provides comprehensive message center online querying with full-text search support.
+ * Manages message center online retrieval and user information association. Provides comprehensive
+ * message center online querying with full-text search support.
  * </p>
  * <p>
- * Supports message center online detail retrieval, paginated listing,
- * and user information enrichment for comprehensive message center management.
+ * Supports message center online detail retrieval, paginated listing, and user information
+ * enrichment for comprehensive message center management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
 
   @Resource
@@ -41,8 +41,8 @@ public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
    * Retrieves detailed message center online information by ID.
    * </p>
    * <p>
-   * Fetches complete message center online record with all associated information.
-   * Throws ResourceNotFound exception if record does not exist.
+   * Fetches complete message center online record with all associated information. Throws
+   * ResourceNotFound exception if record does not exist.
    * </p>
    */
   @Override
@@ -62,8 +62,8 @@ public class MessageCenterOnlineQueryImpl implements MessageCenterOnlineQuery {
    * Retrieves message center online records with optional filtering and search capabilities.
    * </p>
    * <p>
-   * Supports full-text search and specification-based filtering.
-   * Enriches results with user information for comprehensive display.
+   * Supports full-text search and specification-based filtering. Enriches results with user
+   * information for comprehensive display.
    * </p>
    */
   @Override

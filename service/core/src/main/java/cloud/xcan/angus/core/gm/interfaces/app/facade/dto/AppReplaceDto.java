@@ -75,8 +75,9 @@ public class AppReplaceDto {
   private String description;
 
   @NotNull
-  @Schema(description = "Enable authorization control for applications. If enabled, users must be granted "
-      + "corresponding access policies to use the application", requiredMode = RequiredMode.REQUIRED)
+  @Schema(description =
+      "Enable authorization control for applications. If enabled, users must be granted "
+          + "corresponding access policies to use the application", requiredMode = RequiredMode.REQUIRED)
   private Boolean authCtrl;
 
   @NotEmpty
@@ -92,8 +93,9 @@ public class AppReplaceDto {
   private Integer sequence = DEFAULT_SEQUENCE;
 
   @Size(max = MAX_APP_FUNC_API_NUM_AP)
-  @Schema(description = "Authorization API identifiers for application homepage access. The API endpoints "
-      + "invoked when accessing the application to validate permissions")
+  @Schema(description =
+      "Authorization API identifiers for application homepage access. The API endpoints "
+          + "invoked when accessing the application to validate permissions")
   private LinkedHashSet<Long> apiIds;
 
   @NotNull
@@ -107,7 +109,7 @@ public class AppReplaceDto {
 
       ***SIGNUP***: Automatically activates the application upon successful user registration.
       ***AUTH_PASSED***: Activates the application after real-name authentication is verified.
-      ***OPEN_SUCCESS***: Activates the application once manually enabled by the user""", 
+      ***OPEN_SUCCESS***: Activates the application once manually enabled by the user""",
       requiredMode = RequiredMode.REQUIRED)
   private OpenStage openStage;
 

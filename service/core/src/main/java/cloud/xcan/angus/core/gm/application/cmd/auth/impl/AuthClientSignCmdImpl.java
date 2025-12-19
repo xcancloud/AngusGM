@@ -11,7 +11,6 @@ import static org.springframework.security.oauth2.core.AuthorizationGrantType.CL
 import cloud.xcan.angus.api.commonlink.AuthConstant;
 import cloud.xcan.angus.api.commonlink.client.Client2pSignupBiz;
 import cloud.xcan.angus.api.commonlink.client.ClientAuth;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthClientSignCmd;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthClientQuery;
@@ -26,20 +25,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Implementation of OAuth2 client sign-in command operations.
- * 
- * <p>This class provides comprehensive functionality for OAuth2 client authentication including:</p>
+ *
+ * <p>This class provides comprehensive functionality for OAuth2 client authentication
+ * including:</p>
  * <ul>
  *   <li>Client credentials authentication for OAuth2 clients</li>
  *   <li>Private client registration for business operations</li>
  *   <li>Client secret management and renewal</li>
  *   <li>OAuth2 token generation for client authentication</li>
  * </ul>
- * 
+ *
  * <p>The implementation supports both standard OAuth2 client authentication
  * and private client registration for internal business operations.</p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class AuthClientSignCmdImpl implements AuthClientSignCmd {
 
   @Resource
@@ -51,7 +51,7 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
 
   /**
    * Authenticates OAuth2 client using client credentials grant type.
-   * 
+   *
    * <p>This method performs client authentication including:</p>
    * <ul>
    *   <li>Validating client credentials and scope</li>
@@ -59,10 +59,10 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
    *   <li>Submitting OAuth2 authentication request</li>
    *   <li>Returning access token and related information</li>
    * </ul>
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
-   * @param scope Requested OAuth2 scope
+   * @param scope        Requested OAuth2 scope
    * @return Map containing access token and related OAuth2 response data
    */
   @Override
@@ -95,7 +95,7 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
 
   /**
    * Registers private OAuth2 client for business operations.
-   * 
+   *
    * <p>This method handles private client registration including:</p>
    * <ul>
    *   <li>Generating client ID based on tenant and business parameters</li>
@@ -103,9 +103,9 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
    *   <li>Managing client secret renewal for existing clients</li>
    *   <li>Returning client authentication information</li>
    * </ul>
-   * 
-   * @param signupBiz Business operation type for client registration
-   * @param tenantId Tenant identifier
+   *
+   * @param signupBiz  Business operation type for client registration
+   * @param tenantId   Tenant identifier
    * @param tenantName Tenant name
    * @param resourceId Resource identifier
    * @return Client authentication information with credentials
@@ -120,7 +120,7 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
         String clientId = String.format(AuthConstant.SIGN2P_CLIENT_ID_FMT, tenantId,
             signupBiz.name().toLowerCase(), resourceId);
         CustomOAuth2RegisteredClient clientDb = authClientQuery.findValidByClientId0(clientId);
-        
+
         if (clientDb != null) {
           // Renew access authorization and update client authentication information
           String clientSecret = UUID.randomUUID().toString();
@@ -143,13 +143,13 @@ public class AuthClientSignCmdImpl implements AuthClientSignCmd {
 
   /**
    * Submits OAuth2 client sign-in request to authorization server.
-   * 
+   *
    * <p>This method constructs and sends OAuth2 client credentials request
    * to the authorization server for token generation.</p>
-   * 
-   * @param clientId OAuth2 client identifier
+   *
+   * @param clientId     OAuth2 client identifier
    * @param clientSecret OAuth2 client secret
-   * @param scope Requested OAuth2 scope
+   * @param scope        Requested OAuth2 scope
    * @return Map containing OAuth2 response data
    * @throws Throwable if authentication request fails
    */

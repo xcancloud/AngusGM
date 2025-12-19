@@ -24,7 +24,7 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.converter.AuthPolicyOrgConverter;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;
@@ -55,15 +55,15 @@ import org.springframework.data.jpa.domain.JpaSort;
  * Implementation of authentication policy user query operations.
  * </p>
  * <p>
- * Manages user-policy relationship queries, validation, and authorization management.
- * Provides comprehensive user-policy querying with authorization support.
+ * Manages user-policy relationship queries, validation, and authorization management. Provides
+ * comprehensive user-policy querying with authorization support.
  * </p>
  * <p>
- * Supports policy-user queries, user-policy queries, authorization management,
- * application function queries, and unauthorized policy queries for comprehensive user-policy administration.
+ * Supports policy-user queries, user-policy queries, authorization management, application function
+ * queries, and unauthorized policy queries for comprehensive user-policy administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
 
   @Resource
@@ -90,8 +90,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Retrieves users associated with specific policy.
    * </p>
    * <p>
-   * Queries users that are authorized by the specified policy.
-   * Validates policy existence and handles multi-tenant control.
+   * Queries users that are authorized by the specified policy. Validates policy existence and
+   * handles multi-tenant control.
    * </p>
    */
   @Override
@@ -126,8 +126,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Retrieves users not associated with specific policy.
    * </p>
    * <p>
-   * Queries users that are not authorized by the specified policy.
-   * Validates policy existence for proper filtering.
+   * Queries users that are not authorized by the specified policy. Validates policy existence for
+   * proper filtering.
    * </p>
    */
   @Override
@@ -159,8 +159,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Retrieves policies associated with specific user.
    * </p>
    * <p>
-   * Queries policies that are authorized to the specified user.
-   * Validates organization parameters and handles authorization filtering.
+   * Queries policies that are authorized to the specified user. Validates organization parameters
+   * and handles authorization filtering.
    * </p>
    */
   @Override
@@ -263,8 +263,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Retrieves policies not authorized to user.
    * </p>
    * <p>
-   * Queries policies that the current authorizer does not authorize to user.
-   * Compares authorized policies with all available policies to find unauthorized ones.
+   * Queries policies that the current authorizer does not authorize to user. Compares authorized
+   * policies with all available policies to find unauthorized ones.
    * </p>
    */
   @Override
@@ -301,8 +301,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Retrieves user application list.
    * </p>
    * <p>
-   * Returns applications that the specified user has access to.
-   * Validates user existence and authorization permissions.
+   * Returns applications that the specified user has access to. Validates user existence and
+   * authorization permissions.
    * </p>
    */
   @Override
@@ -336,8 +336,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Retrieves user application function list.
    * </p>
    * <p>
-   * Returns application functions available for the specified user and application.
-   * Handles admin privileges and authorization filtering.
+   * Returns application functions available for the specified user and application. Handles admin
+   * privileges and authorization filtering.
    * </p>
    */
   @Override
@@ -488,7 +488,8 @@ public class AuthPolicyUserQueryImpl implements AuthPolicyUserQuery {
    * Judges if user has admin privileges for application functions.
    * </p>
    * <p>
-   * Determines admin status for application function access based on system and application admin privileges.
+   * Determines admin status for application function access based on system and application admin
+   * privileges.
    * </p>
    */
   private boolean judgeIsAdminAppFunc(App appDb, User userDb) {

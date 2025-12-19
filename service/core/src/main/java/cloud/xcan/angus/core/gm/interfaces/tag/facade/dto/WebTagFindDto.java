@@ -18,7 +18,4 @@ public class WebTagFindDto extends PageQuery {
   @Schema(description = "Web application tag display name for searching")
   private String name;
 
-  @Schema(description = "Web application tag creation date for filtering")
-  private LocalDateTime createdDate;
-
 }

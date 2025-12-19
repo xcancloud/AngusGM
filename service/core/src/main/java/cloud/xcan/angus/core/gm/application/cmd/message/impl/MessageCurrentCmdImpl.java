@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of message current command operations for managing user message records.
- * 
+ *
  * <p>This class provides comprehensive functionality for message current management including:</p>
  * <ul>
  *   <li>Managing user message records</li>
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Deleting user message records</li>
  *   <li>Updating message statistics</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper user message record management
  * with read tracking and statistics updates.</p>
  */
@@ -39,13 +39,13 @@ public class MessageCurrentCmdImpl extends CommCmd<MessageSent, Long> implements
 
   /**
    * Deletes user message records by marking them as deleted.
-   * 
+   *
    * <p>This method performs soft deletion including:</p>
    * <ul>
    *   <li>Marking message records as deleted</li>
    *   <li>Setting deletion timestamp</li>
    * </ul>
-   * 
+   *
    * @param ids Set of message record identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -64,14 +64,14 @@ public class MessageCurrentCmdImpl extends CommCmd<MessageSent, Long> implements
 
   /**
    * Marks user message records as read.
-   * 
+   *
    * <p>This method performs read status update including:</p>
    * <ul>
    *   <li>Updating message read status</li>
    *   <li>Setting read timestamp</li>
    *   <li>Incrementing message read count</li>
    * </ul>
-   * 
+   *
    * @param ids Set of message record identifiers to mark as read
    */
   @Transactional(rollbackFor = Exception.class)

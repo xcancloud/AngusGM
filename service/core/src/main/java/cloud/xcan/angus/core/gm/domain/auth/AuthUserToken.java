@@ -4,7 +4,6 @@ import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
 import cloud.xcan.angus.core.jpa.multitenancy.TenantEntity;
 import cloud.xcan.angus.spec.experimental.Resources;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

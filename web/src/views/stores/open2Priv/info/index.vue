@@ -40,7 +40,7 @@ const goods = ref<Goods>({
   type: { value: '', message: '' },
   version: '',
   charge: true,
-  createdByName: '',
+  creator: '',
   createdDate: '',
   price: {
     finalPrice: '0',

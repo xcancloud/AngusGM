@@ -14,7 +14,7 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpenRepo;
 import cloud.xcan.angus.api.enums.EditionType;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
@@ -38,15 +38,15 @@ import org.springframework.data.domain.PageRequest;
  * Implementation of application open query operations.
  * </p>
  * <p>
- * Manages application open status retrieval, validation, and filtering.
- * Provides comprehensive application open querying with edition-based filtering.
+ * Manages application open status retrieval, validation, and filtering. Provides comprehensive
+ * application open querying with edition-based filtering.
  * </p>
  * <p>
- * Supports application open status validation, expiration checks, and
- * tenant-specific application access management.
+ * Supports application open status validation, expiration checks, and tenant-specific application
+ * access management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AppOpenQueryImpl implements AppOpenQuery {
 
   @Resource
@@ -61,8 +61,8 @@ public class AppOpenQueryImpl implements AppOpenQuery {
    * Retrieves paginated list of application open records.
    * </p>
    * <p>
-   * Supports filtering by tenant and edition type based on client context.
-   * Enriches results with application information and tags for comprehensive data.
+   * Supports filtering by tenant and edition type based on client context. Enriches results with
+   * application information and tags for comprehensive data.
    * </p>
    */
   @Override
@@ -100,8 +100,8 @@ public class AppOpenQueryImpl implements AppOpenQuery {
    * Validates and retrieves application open record by app ID and tenant ID.
    * </p>
    * <p>
-   * Verifies application open status exists for the specified tenant and app.
-   * Optionally checks for expiration status and throws appropriate exceptions.
+   * Verifies application open status exists for the specified tenant and app. Optionally checks for
+   * expiration status and throws appropriate exceptions.
    * </p>
    */
   @Override
@@ -114,8 +114,8 @@ public class AppOpenQueryImpl implements AppOpenQuery {
    * Validates and retrieves multiple application open records.
    * </p>
    * <p>
-   * Verifies application open status exists for the specified tenant and apps.
-   * Optionally checks for expiration status and throws appropriate exceptions.
+   * Verifies application open status exists for the specified tenant and apps. Optionally checks
+   * for expiration status and throws appropriate exceptions.
    * </p>
    */
   @Override
@@ -142,8 +142,8 @@ public class AppOpenQueryImpl implements AppOpenQuery {
    * Retrieves opened applications by tenant ID.
    * </p>
    * <p>
-   * Fetches valid application open records for the specified tenant.
-   * Uses platform code as fallback when client ID is empty for inner API calls.
+   * Fetches valid application open records for the specified tenant. Uses platform code as fallback
+   * when client ID is empty for inner API calls.
    * </p>
    */
   @Override
@@ -172,8 +172,8 @@ public class AppOpenQueryImpl implements AppOpenQuery {
    * Retrieves valid application IDs by tenant ID and edition type.
    * </p>
    * <p>
-   * Returns list of application IDs that are validly opened for the specified tenant
-   * and edition type combination.
+   * Returns list of application IDs that are validly opened for the specified tenant and edition
+   * type combination.
    * </p>
    */
   @Override

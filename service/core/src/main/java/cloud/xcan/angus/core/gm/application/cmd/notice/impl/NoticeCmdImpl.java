@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of notice command operations for managing system notices.
- * 
+ *
  * <p>This class provides comprehensive functionality for notice management including:</p>
  * <ul>
  *   <li>Creating and publishing system notices</li>
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Deleting notice records</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper notice management with validation
  * and audit trail maintenance.</p>
  */
@@ -47,14 +47,14 @@ public class NoticeCmdImpl extends CommCmd<Notice, Long> implements NoticeCmd {
 
   /**
    * Creates a new notice with comprehensive validation.
-   * 
+   *
    * <p>This method performs notice creation including:</p>
    * <ul>
    *   <li>Validating notice timing parameters</li>
    *   <li>Creating notice record</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param notice Notice to create
    * @return Created notice identifier
    */
@@ -81,14 +81,14 @@ public class NoticeCmdImpl extends CommCmd<Notice, Long> implements NoticeCmd {
 
   /**
    * Deletes notices by their identifiers.
-   * 
+   *
    * <p>This method performs notice deletion including:</p>
    * <ul>
    *   <li>Retrieving notice information for audit logs</li>
    *   <li>Deleting notice records</li>
    *   <li>Recording operation audit logs</li>
    * </ul>
-   * 
+   *
    * @param ids List of notice identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -99,7 +99,7 @@ public class NoticeCmdImpl extends CommCmd<Notice, Long> implements NoticeCmd {
       protected Void process() {
         // Retrieve notices for audit logging
         List<Notice> notices = noticeRepo.findAllById(ids);
-        if (isNotEmpty(notices)){
+        if (isNotEmpty(notices)) {
           // Delete notice records
           noticeRepo.deleteByIdIn(ids);
           // Record operation audit logs

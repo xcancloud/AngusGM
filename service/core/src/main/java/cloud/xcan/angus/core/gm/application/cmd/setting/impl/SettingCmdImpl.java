@@ -17,7 +17,7 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isPrivateEdition
 import cloud.xcan.angus.api.commonlink.setting.Setting;
 import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.commonlink.setting.SettingRepo;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -34,15 +34,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of system setting command operations.
  * </p>
  * <p>
- * Manages global system settings including social configurations, AI agent settings,
- * log configurations, and resource quotas.
+ * Manages global system settings including social configurations, AI agent settings, log
+ * configurations, and resource quotas.
  * </p>
  * <p>
- * Provides centralized setting management with proper permission validation
- * and cache eviction for real-time updates.
+ * Provides centralized setting management with proper permission validation and cache eviction for
+ * real-time updates.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 public class SettingCmdImpl extends CommCmd<Setting, Long> implements SettingCmd {
 
@@ -56,12 +56,12 @@ public class SettingCmdImpl extends CommCmd<Setting, Long> implements SettingCmd
    * Updates system settings with validation and cache management.
    * </p>
    * <p>
-   * Validates permissions for setting modifications and updates the database.
-   * Automatically evicts related cache entries to ensure real-time updates.
+   * Validates permissions for setting modifications and updates the database. Automatically evicts
+   * related cache entries to ensure real-time updates.
    * </p>
    * <p>
-   * Supports various setting types including social, AI agent, logging,
-   * and resource quota configurations.
+   * Supports various setting types including social, AI agent, logging, and resource quota
+   * configurations.
    * </p>
    */
   @CacheEvict(key = "'key_' + #key", value = "setting")

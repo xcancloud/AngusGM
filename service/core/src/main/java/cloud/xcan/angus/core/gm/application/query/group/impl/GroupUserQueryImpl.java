@@ -12,7 +12,7 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserNum;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.UserConverter;
@@ -33,15 +33,15 @@ import org.springframework.data.domain.Pageable;
  * Implementation of group user query operations.
  * </p>
  * <p>
- * Manages group-user relationship queries, validation, and quota management.
- * Provides comprehensive group-user querying with association support.
+ * Manages group-user relationship queries, validation, and quota management. Provides comprehensive
+ * group-user querying with association support.
  * </p>
  * <p>
- * Supports user-group queries, group-user queries, association management,
- * and quota validation for comprehensive group-user administration.
+ * Supports user-group queries, group-user queries, association management, and quota validation for
+ * comprehensive group-user administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class GroupUserQueryImpl implements GroupUserQuery {
 
   @Resource
@@ -60,8 +60,8 @@ public class GroupUserQueryImpl implements GroupUserQuery {
    * Retrieves user-group relationships with pagination.
    * </p>
    * <p>
-   * Queries group associations for specific users with validation.
-   * Requires userId parameter for proper filtering.
+   * Queries group associations for specific users with validation. Requires userId parameter for
+   * proper filtering.
    * </p>
    */
   @Override
@@ -87,8 +87,8 @@ public class GroupUserQueryImpl implements GroupUserQuery {
    * Retrieves group-user relationships with pagination.
    * </p>
    * <p>
-   * Queries user associations for specific groups with validation.
-   * Requires groupId parameter for proper filtering.
+   * Queries user associations for specific groups with validation. Requires groupId parameter for
+   * proper filtering.
    * </p>
    */
   @Override
@@ -114,8 +114,8 @@ public class GroupUserQueryImpl implements GroupUserQuery {
    * Retrieves all group associations for specific user.
    * </p>
    * <p>
-   * Returns all groups associated with the specified user.
-   * Loads group information for complete association data.
+   * Returns all groups associated with the specified user. Loads group information for complete
+   * association data.
    * </p>
    */
   @Override
@@ -152,8 +152,8 @@ public class GroupUserQueryImpl implements GroupUserQuery {
    * Validates user-group replace quota for tenant.
    * </p>
    * <p>
-   * Checks if replacing user groups would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if replacing user groups would exceed tenant quota limits. Throws appropriate exception
+   * if quota would be exceeded.
    * </p>
    */
   @Override
@@ -170,8 +170,8 @@ public class GroupUserQueryImpl implements GroupUserQuery {
    * Validates group-user append quota for tenant.
    * </p>
    * <p>
-   * Checks if adding users to group would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding users to group would exceed tenant quota limits. Throws appropriate exception
+   * if quota would be exceeded.
    * </p>
    */
   @Override
@@ -188,8 +188,8 @@ public class GroupUserQueryImpl implements GroupUserQuery {
    * Validates user-group append quota for tenant.
    * </p>
    * <p>
-   * Checks if adding groups to user would exceed tenant quota limits.
-   * Throws appropriate exception if quota would be exceeded.
+   * Checks if adding groups to user would exceed tenant quota limits. Throws appropriate exception
+   * if quota would be exceeded.
    * </p>
    */
   @Override

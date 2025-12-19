@@ -31,7 +31,7 @@ public class MessageAssembler {
         .setStatus(MessageStatus.PENDING)
         .setReceiveTenantId(dto.getReceiveTenantId())
         .setDeleted(false)
-        .setCreatedByName(getUserFullName());
+        .setCreator(getUserFullName());
   }
 
   public static MessageDetailVo toDetailVo(Message message) {
@@ -49,7 +49,7 @@ public class MessageAssembler {
         .setReceiveType(message.getReceiveType())
         .setReceiveTenantId(message.getReceiveTenantId())
         .setCreatedBy(message.getCreatedBy())
-        .setCreatedByName(message.getCreatedByName());
+        .setCreator(message.getCreator());
   }
 
   public static MessageVo toVo(MessageInfo message) {
@@ -64,7 +64,7 @@ public class MessageAssembler {
         .setReceiveType(message.getReceiveType())
         .setReceiveTenantId(message.getReceiveTenantId())
         .setCreatedBy(message.getCreatedBy())
-        .setCreatedByName(message.getCreatedByName());
+        .setCreator(message.getCreator());
   }
 
   public static GenericSpecification<MessageInfo> getSpecification(MessageFindDto dto) {

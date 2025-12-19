@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.cmd.country.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.country.CountryCmd;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of country command operations for managing country data.
- * 
+ *
  * <p>This class provides comprehensive functionality for country management including:</p>
  * <ul>
  *   <li>Adding multiple countries with batch operations</li>
@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Deleting countries by identifiers</li>
  *   <li>Handling country data consistency</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper country data management with
  * transactional safety and batch processing capabilities.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class CountryCmdImpl extends CommCmd<Country, Long> implements CountryCmd {
 
   @Resource
@@ -35,7 +35,7 @@ public class CountryCmdImpl extends CommCmd<Country, Long> implements CountryCmd
 
   /**
    * Adds multiple countries with batch processing and duplicate handling.
-   * 
+   *
    * <p>This method performs batch country creation including:</p>
    * <ul>
    *   <li>Validating country data integrity</li>
@@ -43,7 +43,7 @@ public class CountryCmdImpl extends CommCmd<Country, Long> implements CountryCmd
    *   <li>Batch inserting for optimal performance</li>
    *   <li>Returning created country identifiers</li>
    * </ul>
-   * 
+   *
    * @param countries List of country entities to create
    * @return List of created country identifiers with associated data
    */
@@ -61,14 +61,14 @@ public class CountryCmdImpl extends CommCmd<Country, Long> implements CountryCmd
 
   /**
    * Updates multiple countries with batch processing.
-   * 
+   *
    * <p>This method performs batch country updates including:</p>
    * <ul>
    *   <li>Validating country existence</li>
    *   <li>Updating country information</li>
    *   <li>Handling not found scenarios</li>
    * </ul>
-   * 
+   *
    * @param countries List of country entities to update
    */
   @Transactional(rollbackFor = Exception.class)
@@ -86,14 +86,14 @@ public class CountryCmdImpl extends CommCmd<Country, Long> implements CountryCmd
 
   /**
    * Deletes countries by identifiers with individual deletion.
-   * 
+   *
    * <p>This method performs country deletion including:</p>
    * <ul>
    *   <li>Validating country existence</li>
    *   <li>Deleting countries individually</li>
    *   <li>Handling deletion errors</li>
    * </ul>
-   * 
+   *
    * @param ids Set of country identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)

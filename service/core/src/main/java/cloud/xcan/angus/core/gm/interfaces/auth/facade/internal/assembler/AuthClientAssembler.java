@@ -210,8 +210,8 @@ public class AuthClientAssembler {
         .setTenantName(client.getTenantName())
         .setCreatedBy(client.getCreatedBy())
         .setCreatedDate(LocalDateTime.from(client.getCreatedDate()))
-        .setLastModifiedBy(client.getLastModifiedBy())
-        .setLastModifiedDate(LocalDateTime.from(client.getLastModifiedDate()));
+        .setModifiedBy(client.getLastModifiedBy())
+        .setModifiedDate(LocalDateTime.from(client.getLastModifiedDate()));
   }
 
 }

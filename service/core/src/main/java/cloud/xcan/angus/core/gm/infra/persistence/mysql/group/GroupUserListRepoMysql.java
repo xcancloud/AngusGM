@@ -46,8 +46,9 @@ public class GroupUserListRepoMysql extends AbstractSearchRepository<GroupUser> 
 
   @Override
   public String getReturnFieldsCondition(Set<SearchCriteria> criteria, Object[] params) {
-    return "a.id, a.tenant_id, a.created_by, a.created_date, t.id groupId, t.name groupName, t.code groupCode, "
-        + "t.enabled groupEnabled, t.remark, org.id userId, org.full_name fullName, org.avatar, org.mobile";
+    return
+        "a.id, a.tenant_id, a.created_by, a.created_date, t.id groupId, t.name groupName, t.code groupCode, "
+            + "t.enabled groupEnabled, t.remark, org.id userId, org.full_name fullName, org.avatar, org.mobile";
   }
 
   public static StringBuilder assembleTagJoinCondition(Set<SearchCriteria> criteria) {

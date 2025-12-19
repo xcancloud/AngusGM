@@ -8,7 +8,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 
 import cloud.xcan.angus.api.commonlink.EmailConstant;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.email.EmailQuery;
 import cloud.xcan.angus.core.gm.application.query.email.EmailTemplateQuery;
@@ -30,15 +30,15 @@ import org.springframework.data.jpa.domain.Specification;
  * Implementation of email query operations.
  * </p>
  * <p>
- * Manages email retrieval, template validation, and attachment quota checking.
- * Provides comprehensive email querying with summary support.
+ * Manages email retrieval, template validation, and attachment quota checking. Provides
+ * comprehensive email querying with summary support.
  * </p>
  * <p>
- * Supports email detail retrieval, template validation, pending email queries,
- * and attachment quota validation for comprehensive email management.
+ * Supports email detail retrieval, template validation, pending email queries, and attachment quota
+ * validation for comprehensive email management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @SummaryQueryRegister(name = "Email", table = "email", isMultiTenantCtrl = false,
     groupByColumns = {"actual_send_date", "send_status", "urgent", "verification_code",
         "batch"})
@@ -56,8 +56,8 @@ public class EmailQueryImpl implements EmailQuery {
    * Retrieves detailed email information by ID.
    * </p>
    * <p>
-   * Fetches complete email record with all associated information.
-   * Throws ResourceNotFound exception if email does not exist.
+   * Fetches complete email record with all associated information. Throws ResourceNotFound
+   * exception if email does not exist.
    * </p>
    */
   @Override
@@ -96,8 +96,8 @@ public class EmailQueryImpl implements EmailQuery {
    * Validates and retrieves email template for email.
    * </p>
    * <p>
-   * Verifies template exists and is properly configured for the email business key.
-   * Throws appropriate exception if template configuration is invalid.
+   * Verifies template exists and is properly configured for the email business key. Throws
+   * appropriate exception if template configuration is invalid.
    * </p>
    */
   @Override
@@ -144,8 +144,8 @@ public class EmailQueryImpl implements EmailQuery {
    * Validates email attachment quota limits.
    * </p>
    * <p>
-   * Verifies that the number of attachments does not exceed the maximum limit.
-   * Throws appropriate exception if quota is exceeded.
+   * Verifies that the number of attachments does not exceed the maximum limit. Throws appropriate
+   * exception if quota is exceeded.
    * </p>
    */
   @Override

@@ -80,8 +80,8 @@ public class ApiAssembler {
         .setCreatedBy(api.getCreatedBy())
         .setCreatedDate(api.getCreatedDate())
         //.setUserName() // Auto join
-        .setLastModifiedBy(api.getLastModifiedBy())
-        .setLastModifiedDate(api.getLastModifiedDate());
+        .setModifiedBy(api.getModifiedBy())
+        .setModifiedDate(api.getModifiedDate());
   }
 
   public static ApiInfoVo toInfo(Api api) {

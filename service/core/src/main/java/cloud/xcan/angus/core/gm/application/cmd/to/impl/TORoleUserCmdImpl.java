@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.application.cmd.to.impl;
 import cloud.xcan.angus.api.commonlink.to.TORoleUser;
 import cloud.xcan.angus.api.commonlink.to.TORoleUserRepo;
 import cloud.xcan.angus.api.manager.UserManager;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.to.TORoleUserCmd;
@@ -21,15 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of tenant operation role-user command operations.
  * </p>
  * <p>
- * Manages role-user authorization relationships including assignment and removal.
- * Provides comprehensive role-user management with proper validation.
+ * Manages role-user authorization relationships including assignment and removal. Provides
+ * comprehensive role-user management with proper validation.
  * </p>
  * <p>
- * Supports both user-centric and role-centric authorization management
- * with proper cleanup and validation.
+ * Supports both user-centric and role-centric authorization management with proper cleanup and
+ * validation.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class TORoleUserCmdImpl extends CommCmd<TORoleUser, Long> implements TORoleUserCmd {
 
   @Resource
@@ -44,8 +43,8 @@ public class TORoleUserCmdImpl extends CommCmd<TORoleUser, Long> implements TORo
    * Assigns roles to a specific user.
    * </p>
    * <p>
-   * Validates user and role existence, removes existing authorizations,
-   * and creates new role-user assignments.
+   * Validates user and role existence, removes existing authorizations, and creates new role-user
+   * assignments.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -101,8 +100,8 @@ public class TORoleUserCmdImpl extends CommCmd<TORoleUser, Long> implements TORo
    * Assigns a specific role to multiple users.
    * </p>
    * <p>
-   * Validates users and role existence, removes existing authorizations,
-   * and creates new role-user assignments.
+   * Validates users and role existence, removes existing authorizations, and creates new role-user
+   * assignments.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)

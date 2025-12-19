@@ -2,7 +2,7 @@ package cloud.xcan.angus.core.gm.application.cmd.event.impl;
 
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateReceiverCmd;
@@ -14,20 +14,22 @@ import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementation of event template receiver command operations for managing template-receiver associations.
- * 
- * <p>This class provides comprehensive functionality for template-receiver management including:</p>
+ * Implementation of event template receiver command operations for managing template-receiver
+ * associations.
+ *
+ * <p>This class provides comprehensive functionality for template-receiver management
+ * including:</p>
  * <ul>
  *   <li>Managing event template and receiver associations</li>
  *   <li>Replacing receiver configurations for templates</li>
  *   <li>Handling receiver type and identifier assignments</li>
  *   <li>Validating receiver configuration requirements</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper template-receiver relationship management
  * with validation and configuration consistency.</p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class EventTemplateReceiverCmdImpl extends CommCmd<EventTemplateReceiver, Long>
     implements EventTemplateReceiverCmd {
 
@@ -39,7 +41,7 @@ public class EventTemplateReceiverCmdImpl extends CommCmd<EventTemplateReceiver,
 
   /**
    * Replaces receiver associations for an event template.
-   * 
+   *
    * <p>This method performs receiver replacement including:</p>
    * <ul>
    *   <li>Validating template existence</li>
@@ -47,7 +49,7 @@ public class EventTemplateReceiverCmdImpl extends CommCmd<EventTemplateReceiver,
    *   <li>Creating new receiver associations</li>
    *   <li>Validating receiver configuration requirements</li>
    * </ul>
-   * 
+   *
    * @param receiver Event template receiver configuration to replace
    */
   @Override

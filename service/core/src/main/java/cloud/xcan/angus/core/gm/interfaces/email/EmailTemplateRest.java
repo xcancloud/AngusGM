@@ -62,7 +62,8 @@ public class EmailTemplateRest {
       @ApiResponse(responseCode = "200", description = "Email template list retrieved successfully")})
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
-  public ApiLocaleResult<PageResult<EmailTemplateDetailVo>> list(@Valid @ParameterObject EmailTemplateFindDto dto) {
+  public ApiLocaleResult<PageResult<EmailTemplateDetailVo>> list(
+      @Valid @ParameterObject EmailTemplateFindDto dto) {
     return ApiLocaleResult.success(templateFacade.list(dto));
   }
 

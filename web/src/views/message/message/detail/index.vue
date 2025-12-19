@@ -43,7 +43,7 @@ const getMessageDetail = async () => {
     content.sentNum = res.data.sentNum;
     content.status = res.data.status;
     content.timingDate = res.data.timingDate;
-    content.fullName = res.data.createdByName;
+    content.fullName = res.data.creator;
     content.title = res.data.title;
     content.receiveObjectType = res.data.receiveObjectType;
     content.receiveObjectData = res.data.receiveObjects;

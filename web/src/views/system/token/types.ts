@@ -49,7 +49,7 @@ export interface Token {
     value: string;
     message: string;
   };
-  createdByName?: string;
+  creator?: string;
   createdDate: string;
 }
 

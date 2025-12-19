@@ -33,8 +33,8 @@ public class ServiceAddDto {
   private String code;
 
   @Length(max = MAX_DESC_LENGTH)
-  @Schema(description = "Detailed description of the service functionality and purpose", 
-    example = "Comprehensive user management service providing tenant, organization, and user administration capabilities")
+  @Schema(description = "Detailed description of the service functionality and purpose",
+      example = "Comprehensive user management service providing tenant, organization, and user administration capabilities")
   private String description;
 
   @Schema(description = "Source of the service (e.g., internal, external, third-party)")
@@ -53,13 +53,13 @@ public class ServiceAddDto {
   private String url;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "Health check endpoint URL for monitoring service status", 
+  @Schema(description = "Health check endpoint URL for monitoring service status",
       example = "https://api.example.com:8080/actuator/health")
   private String healthUrl;
 
   @Length(max = MAX_URL_LENGTH_X2)
-  @Schema(description = "OpenAPI documentation URL for the service API specification", 
-        example = "https://api.example.com:8080/v3/api-docs?group=UserAPI")
+  @Schema(description = "OpenAPI documentation URL for the service API specification",
+      example = "https://api.example.com:8080/v3/api-docs?group=UserAPI")
   private String apiDocUrl;
 
 }

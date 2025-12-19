@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.sms.impl;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.sms.SmsTemplateQuery;
 import cloud.xcan.angus.core.gm.domain.sms.template.SmsTemplate;
@@ -16,15 +16,15 @@ import org.springframework.data.jpa.domain.Specification;
  * Implementation of SMS template query operations.
  * </p>
  * <p>
- * Manages SMS template retrieval, validation, and listing.
- * Provides comprehensive SMS template querying with pagination support.
+ * Manages SMS template retrieval, validation, and listing. Provides comprehensive SMS template
+ * querying with pagination support.
  * </p>
  * <p>
- * Supports SMS template detail retrieval and paginated listing
- * for comprehensive SMS template administration.
+ * Supports SMS template detail retrieval and paginated listing for comprehensive SMS template
+ * administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class SmsTemplateQueryImpl implements SmsTemplateQuery {
 
   @Resource
@@ -35,8 +35,8 @@ public class SmsTemplateQueryImpl implements SmsTemplateQuery {
    * Retrieves detailed SMS template information by ID.
    * </p>
    * <p>
-   * Fetches complete SMS template record with existence validation.
-   * Throws ResourceNotFound exception if SMS template does not exist.
+   * Fetches complete SMS template record with existence validation. Throws ResourceNotFound
+   * exception if SMS template does not exist.
    * </p>
    */
   @Override
@@ -56,8 +56,7 @@ public class SmsTemplateQueryImpl implements SmsTemplateQuery {
    * Retrieves SMS templates with optional filtering and pagination.
    * </p>
    * <p>
-   * Supports specification-based filtering and pagination.
-   * Returns paginated SMS template results.
+   * Supports specification-based filtering and pagination. Returns paginated SMS template results.
    * </p>
    */
   @Override

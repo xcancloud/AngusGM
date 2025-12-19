@@ -73,8 +73,8 @@ public class DeptAssembler {
         .setTenantId(dept.getTenantId())
         .setCreatedBy(dept.getCreatedBy())
         .setCreatedDate(dept.getCreatedDate())
-        .setLastModifiedBy(dept.getLastModifiedBy())
-        .setLastModifiedDate(dept.getLastModifiedDate())
+        .setModifiedBy(dept.getModifiedBy())
+        .setModifiedDate(dept.getModifiedDate())
         .setTags(isEmpty(dept.getTags()) ? null : dept.getTags().stream()
             .map(tag -> new IdAndName().setId(tag.getTag().getId()).setName(tag.getTag().getName()))
             .collect(Collectors.toList()));
@@ -90,8 +90,8 @@ public class DeptAssembler {
         .setTenantId(dept.getTenantId())
         .setCreatedBy(dept.getCreatedBy())
         .setCreatedDate(dept.getCreatedDate())
-        .setLastModifiedBy(dept.getLastModifiedBy())
-        .setLastModifiedDate(dept.getLastModifiedDate());
+        .setModifiedBy(dept.getModifiedBy())
+        .setModifiedDate(dept.getModifiedDate());
   }
 
   public static GenericSpecification<Dept> getSpecification(DeptFindDto dto) {

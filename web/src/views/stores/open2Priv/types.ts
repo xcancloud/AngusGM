@@ -40,7 +40,7 @@ export interface Goods {
   /** Whether the goods requires payment */
   charge: boolean;
   /** Name of the user who created the goods */
-  createdByName: string;
+  creator: string;
   /** Creation date string */
   createdDate: string;
   /** Pricing information */

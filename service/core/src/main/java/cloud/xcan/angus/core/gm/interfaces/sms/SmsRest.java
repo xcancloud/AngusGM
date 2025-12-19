@@ -63,7 +63,8 @@ public class SmsRest {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "SMS verification code validated successfully")})
   @GetMapping("/verificationCode/check")
-  public ApiLocaleResult<?> verificationCodeCheck(@Valid @ParameterObject SmsVerificationCodeCheckDto dto) {
+  public ApiLocaleResult<?> verificationCodeCheck(
+      @Valid @ParameterObject SmsVerificationCodeCheckDto dto) {
     smsFacade.verificationCodeCheck(dto);
     return ApiLocaleResult.success();
   }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementation of DingTalk channel push command for sending event notifications.
- * 
+ *
  * <p>This class provides DingTalk robot integration functionality including:</p>
  * <ul>
  *   <li>Sending markdown formatted messages to DingTalk robots</li>
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  *   <li>Converting event push data to DingTalk robot format</li>
  *   <li>Managing push response status and error messages</li>
  * </ul>
- * 
+ *
  * <p>The implementation converts event notifications to DingTalk markdown format
  * and sends them via DingTalk robot webhook.</p>
  */
@@ -30,7 +30,7 @@ public class DingTalkChannelPushCmdImpl extends EventChannelPushCmdAbstract {
 
   /**
    * Pushes event notification to DingTalk robot.
-   * 
+   *
    * <p>This method performs DingTalk push including:</p>
    * <ul>
    *   <li>Converting event data to DingTalk robot request format</li>
@@ -38,7 +38,7 @@ public class DingTalkChannelPushCmdImpl extends EventChannelPushCmdAbstract {
    *   <li>Handling API response and error codes</li>
    *   <li>Returning appropriate channel response</li>
    * </ul>
-   * 
+   *
    * @param eventPush Event push data containing notification details
    * @return Channel send response with success status and message
    */
@@ -49,11 +49,11 @@ public class DingTalkChannelPushCmdImpl extends EventChannelPushCmdAbstract {
       DingTalkRobotRequest dingTalkRobotRequest = new DingTalkRobotRequest();
       dingTalkRobotRequest.setMarkdown(new DingTalkRobotRequest.MarkDown(eventPush.getName(),
           eventPush.getContent()));
-      
+
       // Send request to DingTalk robot webhook
       Map<?, ?> result = thirdPushClient
           .dingTalk(URI.create(eventPush.getAddress()), dingTalkRobotRequest);
-      
+
       // Parse response and return appropriate status
       return new ChannelSendResponse(Integer.parseInt(result.get("errcode").toString()) == 0,
           result.get("errmsg").toString());

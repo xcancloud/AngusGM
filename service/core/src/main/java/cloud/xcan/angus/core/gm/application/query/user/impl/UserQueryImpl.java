@@ -26,7 +26,7 @@ import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUser;
 import cloud.xcan.angus.api.enums.UserSource;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.biz.SneakyThrow0;
@@ -67,7 +67,7 @@ import org.springframework.data.domain.Pageable;
  * handling for comprehensive user administration.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 @Slf4j
 @SummaryQueryRegister(name = "User", table = "user0", topAuthority = TOP_TENANT_ADMIN, ignoreDeleted = true,
     groupByColumns = {"created_date", "enabled", "locked", "gender", "sys_admin"})

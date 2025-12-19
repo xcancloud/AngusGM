@@ -12,7 +12,6 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.client.ClientSource;
-import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.auth.AuthClientCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;
@@ -29,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of OAuth2 client command operations for managing OAuth2 clients.
- * 
+ *
  * <p>This class provides comprehensive functionality for OAuth2 client management including:</p>
  * <ul>
  *   <li>Creating, updating, and deleting OAuth2 clients</li>
@@ -37,12 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
  *   <li>Handling system token client operations</li>
  *   <li>Recording operation logs for audit trails</li>
  * </ul>
- * 
+ *
  * <p>The implementation ensures proper OAuth2 client lifecycle management
  * and maintains authorization service consistency.</p>
  */
 @Slf4j
-@Biz
+@org.springframework.stereotype.Service
 public class AuthClientCmdImpl implements AuthClientCmd {
 
   @Resource
@@ -56,14 +55,14 @@ public class AuthClientCmdImpl implements AuthClientCmd {
 
   /**
    * Creates a new OAuth2 client with validation and audit logging.
-   * 
+   *
    * <p>This method performs comprehensive client creation including:</p>
    * <ul>
    *   <li>Validating that client does not already exist</li>
    *   <li>Saving client configuration to repository</li>
    *   <li>Recording creation audit logs</li>
    * </ul>
-   * 
+   *
    * @param client OAuth2 client entity to create
    * @return Client identifier with associated data
    */
@@ -92,14 +91,14 @@ public class AuthClientCmdImpl implements AuthClientCmd {
 
   /**
    * Updates an existing OAuth2 client with new configuration.
-   * 
+   *
    * <p>This method ensures data consistency by:</p>
    * <ul>
    *   <li>Validating that client exists before update</li>
    *   <li>Preserving immutable fields during update</li>
    *   <li>Recording update audit logs</li>
    * </ul>
-   * 
+   *
    * @param client OAuth2 client entity with updated configuration
    */
   @Transactional(rollbackFor = Exception.class)
@@ -127,7 +126,7 @@ public class AuthClientCmdImpl implements AuthClientCmd {
 
   /**
    * Replaces an OAuth2 client by creating new or updating existing.
-   * 
+   *
    * <p>This method handles both creation and update scenarios:</p>
    * <ul>
    *   <li>Creates new client if no ID is provided</li>
@@ -135,7 +134,7 @@ public class AuthClientCmdImpl implements AuthClientCmd {
    *   <li>Preserves immutable fields during replacement</li>
    *   <li>Maintains audit trails for all operations</li>
    * </ul>
-   * 
+   *
    * @param client OAuth2 client entity to replace
    * @return Client identifier with associated data
    */
@@ -174,14 +173,14 @@ public class AuthClientCmdImpl implements AuthClientCmd {
 
   /**
    * Deletes OAuth2 clients and cleans up related authorization data.
-   * 
+   *
    * <p>This method performs comprehensive cleanup including:</p>
    * <ul>
    *   <li>Removing client configurations from repository</li>
    *   <li>Cleaning up authorization service data</li>
    *   <li>Recording deletion audit logs</li>
    * </ul>
-   * 
+   *
    * @param clientIds Set of client identifiers to delete
    */
   @Transactional(rollbackFor = Exception.class)
@@ -210,12 +209,12 @@ public class AuthClientCmdImpl implements AuthClientCmd {
 
   /**
    * Deletes system token client by name and source.
-   * 
+   *
    * <p>This method removes system token clients used for internal
    * authentication purposes.</p>
-   * 
+   *
    * @param tokenName Name of the system token
-   * @param source Source of the client
+   * @param source    Source of the client
    */
   @Override
   public void deleteSystemTokenClient(String tokenName, ClientSource source) {

@@ -145,15 +145,15 @@ const currentActionNode = ref<ActionNode>({ id: '', name: '', pid: '' });
  * This data is displayed in the info panel and used for various operations.
  */
 const deptInfo = reactive<DeptInfo>({
-  createdByName: '', // Name of the user who created the department
+  creator: '', // Name of the user who created the department
   createdDate: '', // Date when the department was created
   tags: [], // Associated tags for the department
   level: '', // Hierarchical level of the department
   name: '', // Department name
   code: '', // Department code
   id: '', // Department unique identifier
-  lastModifiedDate: '', // Date of last modification
-  lastModifiedByName: '' // Name of the user who last modified the department
+  modifiedDate: '', // Date of last modification
+  modifier: '' // Name of the user who last modified the department
 });
 
 /**
@@ -840,9 +840,9 @@ const userColumns: TableColumn[] = [
     ellipsis: true
   },
   {
-    title: t('user.columns.assocUser.createdByName'),
-    key: 'createdByName',
-    dataIndex: 'createdByName',
+    title: t('user.columns.assocUser.creator'),
+    key: 'creator',
+    dataIndex: 'creator',
     width: '22%'
   },
   {

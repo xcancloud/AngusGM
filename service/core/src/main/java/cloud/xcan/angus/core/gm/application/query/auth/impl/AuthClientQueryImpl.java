@@ -7,7 +7,7 @@ import static cloud.xcan.angus.remote.message.http.Unauthorized.M.INVALID_CLIENT
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import cloud.xcan.angus.core.biz.Biz;
+
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthClientQuery;
 import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;
@@ -28,15 +28,15 @@ import org.springframework.util.StringUtils;
  * Implementation of OAuth2 client query operations.
  * </p>
  * <p>
- * Manages OAuth2 client retrieval, validation, and authentication.
- * Provides comprehensive client querying with scope validation support.
+ * Manages OAuth2 client retrieval, validation, and authentication. Provides comprehensive client
+ * querying with scope validation support.
  * </p>
  * <p>
- * Supports client detail retrieval, authentication validation, scope checking,
- * and enabled status verification for OAuth2 client management.
+ * Supports client detail retrieval, authentication validation, scope checking, and enabled status
+ * verification for OAuth2 client management.
  * </p>
  */
-@Biz
+@org.springframework.stereotype.Service
 public class AuthClientQueryImpl implements AuthClientQuery {
 
   @Resource
@@ -49,8 +49,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Retrieves detailed OAuth2 client information by ID.
    * </p>
    * <p>
-   * Fetches complete client record with all associated information.
-   * Throws ResourceNotFound exception if client does not exist.
+   * Fetches complete client record with all associated information. Throws ResourceNotFound
+   * exception if client does not exist.
    * </p>
    */
   @Override
@@ -71,8 +71,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Retrieves OAuth2 clients with optional filtering.
    * </p>
    * <p>
-   * Supports filtering by ID, client ID, and tenant ID.
-   * Builds dynamic SQL filter based on provided parameters.
+   * Supports filtering by ID, client ID, and tenant ID. Builds dynamic SQL filter based on provided
+   * parameters.
    * </p>
    */
   @Override
@@ -106,8 +106,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Validates and retrieves OAuth2 client by client ID.
    * </p>
    * <p>
-   * Verifies client exists and returns client information.
-   * Throws ResourceNotFound exception if client does not exist.
+   * Verifies client exists and returns client information. Throws ResourceNotFound exception if
+   * client does not exist.
    * </p>
    */
   @Override
@@ -122,8 +122,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Validates OAuth2 client authentication with client secret.
    * </p>
    * <p>
-   * Verifies client exists and validates client secret using password encoder.
-   * Throws Unauthorized exception if authentication fails.
+   * Verifies client exists and validates client secret using password encoder. Throws Unauthorized
+   * exception if authentication fails.
    * </p>
    */
   @Override
@@ -138,8 +138,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Validates OAuth2 client authentication with scope validation.
    * </p>
    * <p>
-   * Verifies client exists, validates client secret, and checks requested scopes.
-   * Throws appropriate exceptions for authentication or scope validation failures.
+   * Verifies client exists, validates client secret, and checks requested scopes. Throws
+   * appropriate exceptions for authentication or scope validation failures.
    * </p>
    */
   @Override
@@ -162,8 +162,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Validates and retrieves OAuth2 client with optional enabled status check.
    * </p>
    * <p>
-   * Verifies client exists and optionally checks enabled status.
-   * Throws appropriate exceptions for missing or disabled clients.
+   * Verifies client exists and optionally checks enabled status. Throws appropriate exceptions for
+   * missing or disabled clients.
    * </p>
    */
   @Override
@@ -180,8 +180,8 @@ public class AuthClientQueryImpl implements AuthClientQuery {
    * Retrieves valid OAuth2 client by client ID without exceptions.
    * </p>
    * <p>
-   * Returns client if it exists and is enabled, otherwise returns null.
-   * Used for non-critical client lookups.
+   * Returns client if it exists and is enabled, otherwise returns null. Used for non-critical
+   * client lookups.
    * </p>
    */
   @Override
