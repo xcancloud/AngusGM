@@ -17,7 +17,6 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.manager.DeptManager;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.dept.DeptQuery;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagTargetQuery;

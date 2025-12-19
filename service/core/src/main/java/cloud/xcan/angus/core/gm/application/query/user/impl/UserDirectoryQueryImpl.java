@@ -4,7 +4,6 @@ import static cloud.xcan.angus.api.commonlink.UCConstant.MAX_USER_DIRECTORY_NUM;
 import static cloud.xcan.angus.core.biz.exception.QuotaException.M.QUOTA_OVER_LIMIT_T2;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.biz.exception.QuotaException;

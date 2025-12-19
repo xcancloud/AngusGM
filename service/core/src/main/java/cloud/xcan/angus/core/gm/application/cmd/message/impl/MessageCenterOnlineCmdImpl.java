@@ -9,7 +9,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
-
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;

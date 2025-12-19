@@ -12,7 +12,6 @@ import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUser;
 import cloud.xcan.angus.api.commonlink.user.dept.DeptUserRepo;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.UserConverter;

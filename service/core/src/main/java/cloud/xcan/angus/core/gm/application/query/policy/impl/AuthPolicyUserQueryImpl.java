@@ -24,7 +24,6 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.commonlink.user.UserRepo;
 import cloud.xcan.angus.api.manager.UserManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.converter.AuthPolicyOrgConverter;
 import cloud.xcan.angus.core.gm.application.query.app.AppFuncQuery;

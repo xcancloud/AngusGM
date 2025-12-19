@@ -5,7 +5,6 @@ import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.manager.SettingManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.SystemAssert;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingQuery;

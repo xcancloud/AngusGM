@@ -32,7 +32,6 @@ import cloud.xcan.angus.api.enums.TenantRealNameStatus;
 import cloud.xcan.angus.api.gm.notice.dto.SendNoticeDto;
 import cloud.xcan.angus.api.manager.NoticeManager;
 import cloud.xcan.angus.api.manager.converter.NoticeConverter;
-
 import cloud.xcan.angus.core.biz.BizAssert;
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;

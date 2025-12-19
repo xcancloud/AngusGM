@@ -8,7 +8,6 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 
 import cloud.xcan.angus.api.commonlink.EmailConstant;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.email.EmailQuery;
 import cloud.xcan.angus.core.gm.application.query.email.EmailTemplateQuery;

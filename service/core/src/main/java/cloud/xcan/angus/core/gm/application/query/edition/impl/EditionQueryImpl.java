@@ -7,7 +7,6 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isPrivateEdition
 import cloud.xcan.angus.api.commonlink.license.LicenseInstalled;
 import cloud.xcan.angus.api.commonlink.license.LicenseInstalledRepo;
 import cloud.xcan.angus.api.enums.EditionType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;
 import cloud.xcan.angus.core.gm.application.query.edition.EditionQuery;

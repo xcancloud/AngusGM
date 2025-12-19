@@ -11,7 +11,6 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;

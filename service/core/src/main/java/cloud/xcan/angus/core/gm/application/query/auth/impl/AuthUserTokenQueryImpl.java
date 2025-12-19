@@ -13,7 +13,6 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
 import cloud.xcan.angus.api.obf.Str0;
 import cloud.xcan.angus.api.pojo.Pair;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserTokenQuery;
 import cloud.xcan.angus.core.gm.domain.auth.AuthUserToken;

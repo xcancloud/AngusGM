@@ -12,7 +12,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.commonlink.AuthOrgType;
 import cloud.xcan.angus.api.commonlink.group.Group;
 import cloud.xcan.angus.api.commonlink.group.GroupRepo;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.converter.AuthPolicyOrgConverter;
 import cloud.xcan.angus.core.gm.application.query.policy.AuthPolicyGroupQuery;

@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.application.query.setting.impl;
 
 import cloud.xcan.angus.api.commonlink.setting.user.SettingUser;
 import cloud.xcan.angus.api.commonlink.setting.user.SettingUserRepo;
-
 import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuery;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingUserQuery;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;

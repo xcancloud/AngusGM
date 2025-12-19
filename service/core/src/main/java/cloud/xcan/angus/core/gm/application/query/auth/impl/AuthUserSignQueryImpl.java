@@ -15,7 +15,6 @@ import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenant;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenantRepo;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.email.EmailCmd;
 import cloud.xcan.angus.core.gm.application.cmd.sms.SmsCmd;

@@ -13,7 +13,6 @@ import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.commonlink.tag.OrgTag;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagRepo;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.tag.OrgTagQuery;
 import cloud.xcan.angus.core.gm.domain.tag.OrgTagSearchRepo;

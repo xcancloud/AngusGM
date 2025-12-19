@@ -6,7 +6,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 import cloud.xcan.angus.api.commonlink.api.Api;
 import cloud.xcan.angus.api.commonlink.api.ApiRepo;
 import cloud.xcan.angus.api.commonlink.service.Service;
-
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.authority.ApiAuthorityCmd;
 import cloud.xcan.angus.core.gm.domain.app.App;

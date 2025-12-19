@@ -14,7 +14,6 @@ import cloud.xcan.angus.api.commonlink.tenant.TenantRepo;
 import cloud.xcan.angus.api.commonlink.user.UserBase;
 import cloud.xcan.angus.api.commonlink.user.UserBaseRepo;
 import cloud.xcan.angus.api.enums.TenantStatus;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.SneakyThrow0;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;

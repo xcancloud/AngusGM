@@ -5,7 +5,6 @@ import static cloud.xcan.angus.core.gm.application.converter.EventTemplateConver
 import static cloud.xcan.angus.spec.principal.PrincipalContext.getTenantId;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateChannelCmd;

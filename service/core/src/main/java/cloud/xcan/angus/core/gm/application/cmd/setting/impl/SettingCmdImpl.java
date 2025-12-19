@@ -17,7 +17,6 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isPrivateEdition
 import cloud.xcan.angus.api.commonlink.setting.Setting;
 import cloud.xcan.angus.api.commonlink.setting.SettingKey;
 import cloud.xcan.angus.api.commonlink.setting.SettingRepo;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.operation.OperationLogCmd;

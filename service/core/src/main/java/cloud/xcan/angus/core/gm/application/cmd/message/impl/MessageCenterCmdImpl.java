@@ -13,7 +13,6 @@ import cloud.xcan.angus.api.commonlink.user.group.GroupUserRepo;
 import cloud.xcan.angus.api.enums.ReceiveObjectType;
 import cloud.xcan.angus.api.gm.message.dto.MessageCenterPushDto;
 import cloud.xcan.angus.api.pojo.Message;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterCmd;
 import cloud.xcan.angus.core.gm.application.cmd.message.MessageCenterOnlineCmd;

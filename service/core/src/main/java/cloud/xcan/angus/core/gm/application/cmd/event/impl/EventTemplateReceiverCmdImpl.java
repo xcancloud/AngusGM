@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.application.cmd.event.impl;
 
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNotEmpty;
 
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.event.EventTemplateReceiverCmd;

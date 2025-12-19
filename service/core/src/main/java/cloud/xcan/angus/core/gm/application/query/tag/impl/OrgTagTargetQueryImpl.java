@@ -15,7 +15,6 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTagTargetRepo;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.User;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.OrgTagTargetConverter;

@@ -19,7 +19,6 @@ import cloud.xcan.angus.api.commonlink.group.GroupRepo;
 import cloud.xcan.angus.api.commonlink.group.GroupSource;
 import cloud.xcan.angus.api.commonlink.tag.OrgTagTarget;
 import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;

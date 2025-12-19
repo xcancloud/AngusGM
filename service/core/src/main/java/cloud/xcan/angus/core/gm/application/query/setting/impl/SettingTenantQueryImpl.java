@@ -4,7 +4,6 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.getApplicationIn
 
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenant;
 import cloud.xcan.angus.api.commonlink.setting.tenant.SettingTenantRepo;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingTenantQuery;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;

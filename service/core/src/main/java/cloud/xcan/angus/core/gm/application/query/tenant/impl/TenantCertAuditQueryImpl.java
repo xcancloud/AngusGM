@@ -6,7 +6,6 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.hasToRole;
 import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantClient;
 import static cloud.xcan.angus.spec.utils.ObjectUtils.isNull;
 
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantCertAuditQuery;
 import cloud.xcan.angus.core.gm.domain.tenant.audit.TenantCertAudit;

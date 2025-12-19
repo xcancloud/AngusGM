@@ -13,7 +13,6 @@ import cloud.xcan.angus.api.commonlink.setting.user.SettingUserRepo;
 import cloud.xcan.angus.api.commonlink.setting.user.preference.Preference;
 import cloud.xcan.angus.api.commonlink.setting.user.socialbinding.SocialBinding;
 import cloud.xcan.angus.api.enums.SocialType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.setting.SettingTenantCmd;

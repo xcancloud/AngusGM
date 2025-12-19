@@ -13,7 +13,6 @@ import cloud.xcan.angus.api.commonlink.tag.OrgTargetType;
 import cloud.xcan.angus.api.commonlink.user.group.GroupUserNum;
 import cloud.xcan.angus.api.manager.GroupManager;
 import cloud.xcan.angus.api.manager.SettingTenantQuotaManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.application.query.group.GroupUserQuery;

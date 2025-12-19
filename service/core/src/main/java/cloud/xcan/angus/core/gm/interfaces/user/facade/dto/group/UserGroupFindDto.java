@@ -4,7 +4,6 @@ package cloud.xcan.angus.core.gm.interfaces.user.facade.dto.group;
 import cloud.xcan.angus.remote.PageQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

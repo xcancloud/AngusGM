@@ -12,7 +12,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import static java.util.Objects.nonNull;
 
 import cloud.xcan.angus.api.commonlink.EmailConstant;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.exception.QuotaException;
 import cloud.xcan.angus.core.gm.application.query.email.EmailServerQuery;

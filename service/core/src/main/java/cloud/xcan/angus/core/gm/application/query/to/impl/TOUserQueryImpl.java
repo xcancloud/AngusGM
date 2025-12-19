@@ -11,7 +11,6 @@ import cloud.xcan.angus.api.commonlink.to.TORoleUser;
 import cloud.xcan.angus.api.commonlink.to.TORoleUserRepo;
 import cloud.xcan.angus.api.commonlink.to.TOUser;
 import cloud.xcan.angus.api.commonlink.to.TOUserRepo;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.to.TOUserQuery;
 import cloud.xcan.angus.core.gm.domain.to.TOUserSearchRepo;

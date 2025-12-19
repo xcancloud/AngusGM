@@ -9,7 +9,6 @@ import cloud.xcan.angus.api.commonlink.setting.quota.Quota;
 import cloud.xcan.angus.api.commonlink.setting.quota.QuotaResource;
 import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuota;
 import cloud.xcan.angus.api.commonlink.setting.tenant.quota.SettingTenantQuotaRepo;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.query.setting.SettingQuery;

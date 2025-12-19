@@ -96,12 +96,12 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of user directory command operations.
  * </p>
  * <p>
- * Manages LDAP directory configuration, synchronization, and user/group management.
- * Provides comprehensive directory integration with secure password encryption.
+ * Manages LDAP directory configuration, synchronization, and user/group management. Provides
+ * comprehensive directory integration with secure password encryption.
  * </p>
  * <p>
- * Supports directory testing, synchronization scheduling, and membership management
- * with proper quota validation and audit logging.
+ * Supports directory testing, synchronization scheduling, and membership management with proper
+ * quota validation and audit logging.
  * </p>
  */
 @org.springframework.stereotype.Service
@@ -147,8 +147,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
    * Creates a new user directory with validation and synchronization.
    * </p>
    * <p>
-   * Validates directory configuration, encrypts server password, and optionally
-   * synchronizes users and groups from the directory.
+   * Validates directory configuration, encrypts server password, and optionally synchronizes users
+   * and groups from the directory.
    * </p>
    * <p>
    * Supports test mode for directory validation without permanent storage.
@@ -207,8 +207,8 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
    * Replaces user directory configuration.
    * </p>
    * <p>
-   * Updates directory settings, re-encrypts password if changed, and optionally
-   * synchronizes users and groups from the directory.
+   * Updates directory settings, re-encrypts password if changed, and optionally synchronizes users
+   * and groups from the directory.
    * </p>
    */
   @Transactional(rollbackFor = Exception.class)
@@ -1024,11 +1024,12 @@ public class UserDirectoryCmdImpl extends CommCmd<UserDirectory, Long> implement
    * Creates LDAP template for directory operations.
    * </p>
    * <p>
-   * Configures LDAP context source with directory settings and creates template.
-   * Supports both LDAP and LDAPS protocols.
+   * Configures LDAP context source with directory settings and creates template. Supports both LDAP
+   * and LDAPS protocols.
    * </p>
    * <p>
-   * LDAPS reference: <a href="https://blog.csdn.net/wokoone/article/details/127843172">reference</a>
+   * LDAPS reference: <a
+   * href="https://blog.csdn.net/wokoone/article/details/127843172">reference</a>
    * </p>
    */
   public LdapTemplate getLdapTemplate(UserDirectory directory, boolean onlyTest) {

@@ -7,7 +7,6 @@ import static cloud.xcan.angus.remote.message.http.Unauthorized.M.INVALID_CLIENT
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthClientQuery;
 import cloud.xcan.angus.security.client.CustomOAuth2ClientRepository;

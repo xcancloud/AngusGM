@@ -14,7 +14,6 @@ import static cloud.xcan.angus.spec.utils.ObjectUtils.isEmpty;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpen;
 import cloud.xcan.angus.api.commonlink.app.open.AppOpenRepo;
 import cloud.xcan.angus.api.enums.EditionType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.app.AppOpenQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;

@@ -1,7 +1,5 @@
 package cloud.xcan.angus.core.gm.interfaces.app.facade.dto;
 
-import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
-
 import cloud.xcan.angus.api.enums.AppType;
 import cloud.xcan.angus.api.enums.EditionType;
 import cloud.xcan.angus.api.enums.OpenStage;
@@ -9,11 +7,9 @@ import cloud.xcan.angus.remote.OrderSort;
 import cloud.xcan.angus.remote.PageQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Getter

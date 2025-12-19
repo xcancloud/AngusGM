@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.application.query.message.impl;
 
 import cloud.xcan.angus.api.manager.UserManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.message.MessageCenterOnlineQuery;
 import cloud.xcan.angus.core.gm.domain.message.center.MessageCenterOnline;

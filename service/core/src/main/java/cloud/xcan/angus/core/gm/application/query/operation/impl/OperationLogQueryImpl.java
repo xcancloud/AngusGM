@@ -4,7 +4,6 @@ import static cloud.xcan.angus.core.utils.PrincipalContextUtils.isTenantClient;
 import static cloud.xcan.angus.spec.experimental.BizConstant.XCAN_TENANT_PLATFORM_CODE;
 
 import cloud.xcan.angus.api.manager.UserManager;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.operation.OperationLogQuery;
 import cloud.xcan.angus.core.gm.domain.operation.OperationLog;

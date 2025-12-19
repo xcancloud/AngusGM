@@ -27,7 +27,6 @@ import cloud.xcan.angus.api.commonlink.authuser.AuthUserRepo;
 import cloud.xcan.angus.api.commonlink.email.EmailBizKey;
 import cloud.xcan.angus.api.commonlink.sms.SmsBizKey;
 import cloud.xcan.angus.api.enums.SignInType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.auth.AuthUserQuery;
 import cloud.xcan.angus.lettucex.util.RedisService;

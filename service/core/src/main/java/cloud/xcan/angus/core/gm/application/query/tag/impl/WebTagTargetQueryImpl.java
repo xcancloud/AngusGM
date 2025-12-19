@@ -7,7 +7,6 @@ import static java.util.Collections.emptyList;
 import cloud.xcan.angus.api.commonlink.app.func.AppFunc;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTarget;
 import cloud.xcan.angus.api.commonlink.app.tag.WebTagTargetType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.biz.ProtocolAssert;
 import cloud.xcan.angus.core.gm.application.converter.AppTagTargetConverter;

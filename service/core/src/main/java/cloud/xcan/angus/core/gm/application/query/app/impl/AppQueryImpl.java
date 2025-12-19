@@ -15,7 +15,6 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.math.NumberUtils.isDigits;
 
 import cloud.xcan.angus.api.enums.EditionType;
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.api.ApiQuery;
 import cloud.xcan.angus.core.gm.application.query.app.AppQuery;

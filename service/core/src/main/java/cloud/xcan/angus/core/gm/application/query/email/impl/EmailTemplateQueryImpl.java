@@ -2,7 +2,6 @@ package cloud.xcan.angus.core.gm.application.query.email.impl;
 
 import static cloud.xcan.angus.core.biz.ProtocolAssert.assertResourceNotFound;
 
-
 import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.email.EmailTemplateQuery;
 import cloud.xcan.angus.core.gm.domain.email.template.EmailTemplate;
