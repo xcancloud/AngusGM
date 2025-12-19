@@ -3,18 +3,18 @@
 -- ----------------------------
 -- Table data for id_config
 -- ----------------------------
-INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `seq_length`, `mode`, `scope`, `tenant_id`, `max_id`, `step`, `create_date`, `last_modified_date`)
+INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `seq_length`, `mode`, `scope`, `tenant_id`, `max_id`, `step`, `create_date`, `modified_date`)
                 VALUES ('180601', 'tenant', 'PREFIX_DATE_SEQ', 'T', 'YYYYMM', 6, 'REDIS', 'PLATFORM', -1, 0, 100, '2024-01-01 00:00:00', '2024-01-01 00:00:00');
-INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `seq_length`, `mode`, `scope`, `tenant_id`, `max_id`, `step`, `create_date`, `last_modified_date`)
+INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `seq_length`, `mode`, `scope`, `tenant_id`, `max_id`, `step`, `create_date`, `modified_date`)
                 VALUES ('180602', 'user', 'PREFIX_DATE_SEQ', 'U', 'YYYYMM', 5, 'REDIS', 'PLATFORM', -1, 0, 500, '2024-01-01 00:00:00', '2024-01-01 00:00:00');
-INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `seq_length`, `mode`, `scope`, `tenant_id`, `max_id`, `step`, `create_date`, `last_modified_date`)
+INSERT INTO `id_config` (`pk`, `biz_key`, `format`, `prefix`, `date_format`, `seq_length`, `mode`, `scope`, `tenant_id`, `max_id`, `step`, `create_date`, `modified_date`)
                 VALUES ('181101', 'invitationCode', 'PREFIX_DATE_SEQ', 'IC', 'YYYYMM', 5, 'REDIS', 'PLATFORM', -1, 0, 100, '2024-01-01 00:00:00', '2024-01-01 00:00:00');
 
 -- ----------------------------
 -- Table data for tenant
 -- ----------------------------
 INSERT INTO `tenant` (`id`, `no`, `name`, `type`, `source`, `real_name_status`, `status`, `apply_cancel_date`, `address`, `locked`, `last_lock_date`, `lock_start_date`,
-                      `lock_end_date`, `remark`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                      `lock_end_date`, `remark`, `created_by`, `created_date`, `modified_by`, `modified_date`)
             VALUES (:TENANT_ID, 'T202401010000', ':TENANT_NAME', 'UNKNOWN', 'PLATFORM_SIGNUP', 'NOT_SUBMITTED', 'ENABLED', NULL, '', 0, NULL, NULL,
                         NULL, '', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 
@@ -24,12 +24,12 @@ INSERT INTO `tenant` (`id`, `no`, `name`, `type`, `source`, `real_name_status`, 
 INSERT INTO `user0` (`id`, `username`, `first_name`, `last_name`, `full_name`, `itc`, `country`, `email`, `mobile`, `signup_account_type`, `signup_account`, `signup_device_id`,
                      `landline`, `tenant_id`, `tenant_name`, `avatar`, `title`, `gender`, `address`, `source`, `directory_id`, `main_dept_id`, `online`, `online_date`,
                      `offline_date`, `dept_head`, `sys_admin`, `expired`, `expired_date`, `enabled`, `disable_reason`, `deleted`, `locked`, `last_lock_date`, `lock_start_date`,
-                     `lock_end_date`, `last_modified_password_date`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                     `lock_end_date`, `last_modified_password_date`, `created_by`, `created_date`, `modified_by`, `modified_date`)
             VALUES (:GM_ADMIN_USER_ID, ':GM_ADMIN_USERNAME', '', '', ':GM_ADMIN_FULL_NAME', '86', 'CN', ':GM_ADMIN_EMAIL', '', 'EMAIL', ':GM_ADMIN_EMAIL', NULL,
                     '', :TENANT_ID, ':TENANT_NAME', NULL, NULL, 'UNKNOWN', NULL, 'BACKGROUND_ADDED', NULL, NULL, 0, NULL,
                     NULL, 0, 1, 0, NULL, 1, '', 0, 0, NULL, NULL,
                     NULL, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
-UPDATE `user0` SET `created_date` = now(), `last_modified_date` = now();
+UPDATE `user0` SET `created_date` = now(), `modified_date` = now();
 
 -- ----------------------------
 -- Table data for oauth2_user
@@ -46,13 +46,13 @@ INSERT INTO `oauth2_user` (`id`, `username`, `password`, `enabled`, `account_non
 -- ----------------------------
 INSERT INTO `oauth2_registered_client` (`id`, `client_id`, `client_name`, `client_authentication_methods`, `authorization_grant_types`, `redirect_uris`, `post_logout_redirect_uris`,
                                         `scopes`, `platform`, `source`, `client_id_issued_at`, `client_secret`, `client_secret_expires_at`, `biz_tag`, `client_settings`, `token_settings`,
-                                        `description`, `enabled`, `tenant_id`, `tenant_name`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                                        `description`, `enabled`, `tenant_id`, `tenant_name`, `created_by`, `created_date`, `modified_by`, `modified_date`)
                                 VALUES ('1', 'xcan_tp', 'Tenant Client', 'client_secret_post,client_secret_basic', 'refresh_token,password', '', '',
                                         'user_trust', 'XCAN_TP', 'XCAN_TP_SIGNIN', '2025-04-07 11:44:52', '{noop}6917ae827c964acc8dd7638fe0581b67', NULL, '', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-authorization-consent\":false}', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.reuse-refresh-tokens\":false,\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",36000.000000000],\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat\",\"value\":\"reference\"},\"settings.token.refresh-token-time-to-live\":[\"java.time.Duration\",72000.000000000],\"settings.token.authorization-code-time-to-live\":[\"java.time.Duration\",300.000000000],\"settings.token.device-code-time-to-live\":[\"java.time.Duration\",300.000000000]}',
                                         'Tenant-side access client', 1, :TENANT_ID, ':TENANT_NAME', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `oauth2_registered_client` (`id`, `client_id`, `client_name`, `client_authentication_methods`, `authorization_grant_types`, `redirect_uris`, `post_logout_redirect_uris`,
                                         `scopes`, `platform`, `source`, `client_id_issued_at`, `client_secret`, `client_secret_expires_at`, `biz_tag`, `client_settings`, `token_settings`,
-                                        `description`, `enabled`, `tenant_id`, `tenant_name`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                                        `description`, `enabled`, `tenant_id`, `tenant_name`, `created_by`, `created_date`, `modified_by`, `modified_date`)
                                 VALUES ('6', ':OAUTH2_INTROSPECT_CLIENT_ID', 'Client Credentials Introspect Client', 'client_secret_post,client_secret_basic', 'client_credentials', '', '',
                                         'inner_api_trust,opaque_token_introspect_trust', 'XCAN_INNER', 'XCAN_SYS_INTROSPECT', '2025-04-07 13:03:17', '{noop}:OAUTH2_INTROSPECT_CLIENT_SECRET', NULL, '', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-authorization-consent\":false}', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat\",\"value\":\"reference\"},\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",360000000.000000000]}',
                                         'Internal resource service authentication token client (for /innerapi)', 1, :TENANT_ID, ':TENANT_NAME', -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
@@ -61,24 +61,24 @@ INSERT INTO `oauth2_registered_client` (`id`, `client_id`, `client_name`, `clien
 -- Table data for event_template
 -- ----------------------------
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
-                              `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                              `created_by`, `created_date`, `modified_by`, `modified_date`)
                     VALUES (1, 'ProtocolError', '协议错误', 'PROTOCOL', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
-                              `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                              `created_by`, `created_date`, `modified_by`, `modified_date`)
                     VALUES (2, 'UnauthorizedError', '未经授权', 'SECURITY', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
-                              `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                              `created_by`, `created_date`, `modified_by`, `modified_date`)
                     VALUES (3, 'ForbiddenError', '禁止访问', 'SECURITY', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
-                              `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                              `created_by`, `created_date`, `modified_by`, `modified_date`)
                     VALUES (4, 'BusinessError', '业务错误', 'BUSINESS', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
-                              `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                              `created_by`, `created_date`, `modified_by`, `modified_date`)
                     VALUES (5, 'SystemError', '系统错误', 'SYSTEM', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 INSERT INTO `event_template` (`id`, `event_code`, `event_name`, `event_type`, `e_key`, `target_type`, `app_code`, `private0`, `allowed_channel_type_data`,
-                              `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+                              `created_by`, `created_date`, `modified_by`, `modified_date`)
                     VALUES (6, 'QuotaError', '配额错误', 'QUOTA', NULL, NULL, 'AngusGM', 1, NULL, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
-UPDATE `event_template` SET `created_date` = now(), `last_modified_date` = now();
+UPDATE `event_template` SET `created_date` = now(), `modified_date` = now();
 
 -- ----------------------------
 -- Table data for c_setting
@@ -371,9 +371,9 @@ INSERT INTO `sms_template_biz` (`template_code`, `biz_key`, `private0`) VALUES (
 -- ----------------------------
 -- Table data for bucket
 -- ----------------------------
-INSERT INTO `bucket` (`id`, `name`, `acl`, `tenant_created`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+INSERT INTO `bucket` (`id`, `name`, `acl`, `tenant_created`, `created_by`, `created_date`, `modified_by`, `modified_date`)
                 VALUES (1, 'xcan-baseapp', 'Private', 0, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
-INSERT INTO `bucket` (`id`, `name`, `acl`, `tenant_created`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`)
+INSERT INTO `bucket` (`id`, `name`, `acl`, `tenant_created`, `created_by`, `created_date`, `modified_by`, `modified_date`)
                 VALUES (2, 'xcan-angustester', 'Private', 0, -1, '2024-01-01 00:00:00', -1, '2024-01-01 00:00:00');
 
 -- ----------------------------
