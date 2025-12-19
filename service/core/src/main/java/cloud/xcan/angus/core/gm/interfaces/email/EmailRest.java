@@ -1,5 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.email;
 
+import cloud.xcan.angus.common.result.ApiLocaleResult;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.EmailFacade;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailFindDto;
@@ -12,138 +13,122 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Email Management", description = "APIs for email sending, templating, and delivery management")
 @RestController
 @RequestMapping("/api/v1/emails")
 @RequiredArgsConstructor
-@Tag(name = "Email Management", description = "APIs for email sending, templating, and delivery management")
 public class EmailRest {
     
     private final EmailFacade emailFacade;
     
-    @PostMapping
     @Operation(summary = "Create email", description = "Create a new email for sending")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Email created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Email created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    public ResponseEntity<EmailDetailVo> create(@RequestBody EmailCreateDto dto) {
-        EmailDetailVo vo = emailFacade.create(dto);
-        return ResponseEntity.ok(vo);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiLocaleResult<EmailDetailVo> create(@Valid @RequestBody EmailCreateDto dto) {
+        return ApiLocaleResult.success(emailFacade.create(dto));
     }
     
-    @PatchMapping("/{id}")
     @Operation(summary = "Update email", description = "Update an existing email")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Email updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Email not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "404", description = "Email not found")
     })
-    public ResponseEntity<EmailDetailVo> update(
+    @PatchMapping("/{id}")
+    public ApiLocaleResult<EmailDetailVo> update(
             @Parameter(description = "Email ID") @PathVariable Long id,
-            @RequestBody EmailUpdateDto dto) {
-        EmailDetailVo vo = emailFacade.update(id, dto);
-        return ResponseEntity.ok(vo);
+            @Valid @RequestBody EmailUpdateDto dto) {
+        dto.setId(id);
+        return ApiLocaleResult.success(emailFacade.update(dto));
     }
     
-    @PostMapping("/send")
     @Operation(summary = "Send email immediately", description = "Send an email immediately")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Email sent successfully"),
-            @ApiResponse(responseCode = "404", description = "Email not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Email sent successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    public ResponseEntity<Void> send(@RequestBody EmailCreateDto dto) {
-        EmailDetailVo email = emailFacade.create(dto);
-        emailFacade.send(email.getId());
-        return ResponseEntity.ok().build();
+    @PostMapping("/send")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiLocaleResult<EmailDetailVo> send(@Valid @RequestBody EmailCreateDto dto) {
+        return ApiLocaleResult.success(emailFacade.send(dto));
     }
     
-    @PostMapping("/{id}/retry")
     @Operation(summary = "Retry failed email", description = "Retry sending a failed email")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Email retry initiated"),
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Email retry initiated successfully"),
             @ApiResponse(responseCode = "404", description = "Email not found"),
-            @ApiResponse(responseCode = "400", description = "Email cannot be retried"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "400", description = "Cannot retry email in current status")
     })
-    public ResponseEntity<Void> retry(@Parameter(description = "Email ID") @PathVariable Long id) {
+    @PostMapping("/{id}/retry")
+    public ApiLocaleResult<Void> retry(@Parameter(description = "Email ID") @PathVariable Long id) {
         emailFacade.retry(id);
-        return ResponseEntity.ok().build();
+        return ApiLocaleResult.success();
     }
     
-    @PostMapping("/{id}/cancel")
     @Operation(summary = "Cancel pending email", description = "Cancel a pending email")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Email cancelled successfully"),
             @ApiResponse(responseCode = "404", description = "Email not found"),
-            @ApiResponse(responseCode = "400", description = "Email cannot be cancelled"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "400", description = "Cannot cancel email in current status")
     })
-    public ResponseEntity<Void> cancel(@Parameter(description = "Email ID") @PathVariable Long id) {
+    @PostMapping("/{id}/cancel")
+    public ApiLocaleResult<Void> cancel(@Parameter(description = "Email ID") @PathVariable Long id) {
         emailFacade.cancel(id);
-        return ResponseEntity.ok().build();
+        return ApiLocaleResult.success();
     }
     
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete email", description = "Delete an email record")
-    @ApiResponses(value = {
+    @Operation(summary = "Delete email", description = "Delete an email message")
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Email deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Email not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "404", description = "Email not found")
     })
-    public ResponseEntity<Void> delete(@Parameter(description = "Email ID") @PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ApiLocaleResult<Void> delete(@Parameter(description = "Email ID") @PathVariable Long id) {
         emailFacade.delete(id);
-        return ResponseEntity.ok().build();
+        return ApiLocaleResult.success();
     }
     
+    @Operation(summary = "Get email details", description = "Get details of a specific email message")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Email retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Email not found")
+    })
     @GetMapping("/{id}")
-    @Operation(summary = "Get email details", description = "Get detailed information about an email")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Email found"),
-            @ApiResponse(responseCode = "404", description = "Email not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    public ResponseEntity<EmailDetailVo> findById(@Parameter(description = "Email ID") @PathVariable Long id) {
-        EmailDetailVo vo = emailFacade.findById(id);
-        return ResponseEntity.ok(vo);
+    public ApiLocaleResult<EmailDetailVo> getById(@Parameter(description = "Email ID") @PathVariable Long id) {
+        return ApiLocaleResult.success(emailFacade.findById(id));
     }
     
+    @Operation(summary = "List email messages", description = "Get a paginated list of email messages with optional filters")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Email list retrieved successfully")
+    })
     @GetMapping
-    @Operation(summary = "List emails", description = "Get list of emails with optional filters")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Emails retrieved successfully"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    public ResponseEntity<List<EmailListVo>> findAll(
-            @Parameter(description = "Filter by status") @RequestParam(required = false) String status,
-            @Parameter(description = "Filter by type") @RequestParam(required = false) String type,
-            @Parameter(description = "Filter by recipient") @RequestParam(required = false) String recipient,
-            @Parameter(description = "Filter by subject") @RequestParam(required = false) String subject) {
-        EmailFindDto dto = new EmailFindDto();
-        dto.setStatus(status);
-        dto.setType(type);
-        dto.setRecipient(recipient);
-        dto.setSubject(subject);
-        List<EmailListVo> vos = emailFacade.findAll(dto);
-        return ResponseEntity.ok(vos);
+    public ApiLocaleResult<Page<EmailListVo>> list(
+            @ParameterObject EmailFindDto dto,
+            @ParameterObject Pageable pageable) {
+        return ApiLocaleResult.success(emailFacade.findAll(dto, pageable));
     }
     
-    @GetMapping("/stats")
-    @Operation(summary = "Get email statistics", description = "Get email statistics including counts by status and type")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Statistics retrieved successfully"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+    @Operation(summary = "Get email statistics", description = "Get email statistics")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Email statistics retrieved successfully")
     })
-    public ResponseEntity<EmailStatsVo> getStatistics() {
-        EmailStatsVo vo = emailFacade.getStatistics();
-        return ResponseEntity.ok(vo);
+    @GetMapping("/stats")
+    public ApiLocaleResult<EmailStatsVo> getStats() {
+        return ApiLocaleResult.success(emailFacade.getStats());
     }
 }

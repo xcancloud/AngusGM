@@ -7,6 +7,7 @@ import java.util.Map;
 
 @Data
 public class EmailUpdateDto {
+    private Long id;
     private String subject;
     private List<String> toRecipients;
     private List<String> ccRecipients;

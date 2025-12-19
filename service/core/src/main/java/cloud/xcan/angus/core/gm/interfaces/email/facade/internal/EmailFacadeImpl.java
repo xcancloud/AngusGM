@@ -14,6 +14,9 @@ import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailListVo;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailStatsVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,15 +38,18 @@ public class EmailFacadeImpl implements EmailFacade {
     }
     
     @Override
-    public EmailDetailVo update(Long id, EmailUpdateDto dto) {
+    public EmailDetailVo update(EmailUpdateDto dto) {
         Email email = emailAssembler.toEntity(dto);
-        Email updated = emailCmd.update(id, email);
+        Email updated = emailCmd.update(dto.getId(), email);
         return emailAssembler.toDetailVo(updated);
     }
     
     @Override
-    public void send(Long id) {
-        emailCmd.send(id);
+    public EmailDetailVo send(EmailCreateDto dto) {
+        Email email = emailAssembler.toEntity(dto);
+        Email created = emailCmd.create(email);
+        emailCmd.send(created.getId());
+        return emailAssembler.toDetailVo(created);
     }
     
     @Override
@@ -69,7 +75,7 @@ public class EmailFacadeImpl implements EmailFacade {
     }
     
     @Override
-    public List<EmailListVo> findAll(EmailFindDto dto) {
+    public Page<EmailListVo> findAll(EmailFindDto dto, Pageable pageable) {
         List<Email> emails;
         
         if (dto.getStatus() != null) {
@@ -84,11 +90,12 @@ public class EmailFacadeImpl implements EmailFacade {
             emails = emailQuery.findAll();
         }
         
-        return emailAssembler.toListVo(emails);
+        List<EmailListVo> vos = emailAssembler.toListVo(emails);
+        return new PageImpl<>(vos, pageable, vos.size());
     }
     
     @Override
-    public EmailStatsVo getStatistics() {
+    public EmailStatsVo getStats() {
         Map<String, Object> stats = emailQuery.getStatistics();
         return emailAssembler.toStatsVo(stats);
     }

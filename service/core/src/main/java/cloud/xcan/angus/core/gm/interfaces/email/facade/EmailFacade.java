@@ -6,16 +6,16 @@ import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailListVo;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailStatsVo;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface EmailFacade {
     
     EmailDetailVo create(EmailCreateDto dto);
     
-    EmailDetailVo update(Long id, EmailUpdateDto dto);
+    EmailDetailVo update(EmailUpdateDto dto);
     
-    void send(Long id);
+    EmailDetailVo send(EmailCreateDto dto);
     
     void retry(Long id);
     
@@ -25,7 +25,7 @@ public interface EmailFacade {
     
     EmailDetailVo findById(Long id);
     
-    List<EmailListVo> findAll(EmailFindDto dto);
+    Page<EmailListVo> findAll(EmailFindDto dto, Pageable pageable);
     
-    EmailStatsVo getStatistics();
+    EmailStatsVo getStats();
 }
