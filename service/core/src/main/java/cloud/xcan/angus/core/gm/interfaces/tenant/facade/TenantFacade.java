@@ -24,6 +24,16 @@ public interface TenantFacade {
   TenantDetailVo update(Long id, TenantUpdateDto dto);
 
   /**
+   * Enable tenant
+   */
+  void enable(Long id);
+
+  /**
+   * Disable tenant
+   */
+  void disable(Long id);
+
+  /**
    * Delete tenant
    */
   void delete(Long id);
@@ -42,14 +52,4 @@ public interface TenantFacade {
    * Get tenant statistics
    */
   TenantStatsVo getStats();
-
-  /**
-   * Enable tenant
-   */
-  void enable(Long id);
-
-  /**
-   * Disable tenant
-   */
-  void disable(Long id);
 }

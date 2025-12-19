@@ -7,6 +7,7 @@ import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.domain.tenant.Tenant;
 import cloud.xcan.angus.core.gm.domain.tenant.TenantRepo;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantStatus;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.remote.message.http.ProtocolException;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
@@ -41,7 +42,7 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
       protected Tenant process() {
         // Set default status if not provided
         if (tenant.getStatus() == null) {
-          tenant.setStatus("已启用");
+          tenant.setStatus(TenantStatus.ENABLED);
         }
         // Insert tenant
         insert(tenant);
@@ -110,7 +111,7 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
       protected Void process() {
         Tenant tenant = new Tenant();
         tenant.setId(id);
-        tenant.setStatus("已启用");
+        tenant.setStatus(TenantStatus.ENABLED);
         tenantRepo.save(tenant);
         return null;
       }
@@ -130,7 +131,7 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
       protected Void process() {
         Tenant tenant = new Tenant();
         tenant.setId(id);
-        tenant.setStatus("已禁用");
+        tenant.setStatus(TenantStatus.DISABLED);
         tenantRepo.save(tenant);
         return null;
       }

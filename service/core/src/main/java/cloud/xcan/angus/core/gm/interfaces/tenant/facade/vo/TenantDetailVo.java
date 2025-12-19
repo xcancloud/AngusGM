@@ -1,5 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo;
 
+import cloud.xcan.angus.core.gm.domain.tenant.enums.AccountType;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantStatus;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantType;
 import cloud.xcan.angus.spec.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -23,10 +26,10 @@ public class TenantDetailVo extends TenantAuditingVo {
   private String code;
 
   @Schema(description = "租户类型")
-  private String type;
+  private TenantType type;
 
   @Schema(description = "账号类型")
-  private String accountType;
+  private AccountType accountType;
 
   @Schema(description = "管理员姓名")
   private String adminName;
@@ -44,7 +47,7 @@ public class TenantDetailVo extends TenantAuditingVo {
   private Long departmentCount;
 
   @Schema(description = "状态")
-  private String status;
+  private TenantStatus status;
 
   @Schema(description = "地址")
   private String address;

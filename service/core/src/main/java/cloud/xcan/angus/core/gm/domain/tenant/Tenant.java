@@ -2,9 +2,14 @@ package cloud.xcan.angus.core.gm.domain.tenant;
 
 import static cloud.xcan.angus.spec.SpecConstant.DateFormat.DATE_FMT;
 
+import cloud.xcan.angus.core.gm.domain.tenant.enums.AccountType;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantStatus;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantType;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -32,11 +37,13 @@ public class Tenant extends TenantAuditingEntity<Tenant, Long> {
   @Column(name = "code", nullable = false, length = 50, unique = true)
   private String code;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "type", length = 20)
-  private String type;
+  private TenantType type;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "account_type", length = 20)
-  private String accountType;
+  private AccountType accountType;
 
   @Column(name = "admin_name", length = 50)
   private String adminName;
@@ -54,8 +61,9 @@ public class Tenant extends TenantAuditingEntity<Tenant, Long> {
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private LocalDate expireDate;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "status", length = 20)
-  private String status;
+  private TenantStatus status;
 
   @Column(name = "logo", length = 500)
   private String logo;
