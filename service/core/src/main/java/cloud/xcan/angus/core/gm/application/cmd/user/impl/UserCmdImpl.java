@@ -12,6 +12,7 @@ import cloud.xcan.angus.core.gm.domain.user.enums.UserStatus;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import cloud.xcan.angus.remote.message.http.ResourceExisted;
 import jakarta.annotation.Resource;
+import java.util.Set;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -208,5 +209,25 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Override
   protected BaseRepository<User, Long> getRepository() {
     return userRepo;
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void batchDelete(Set<Long> ids) {
+    new BizTemplate<Void>() {
+      @Override
+      protected void checkParams() {
+        // Check all users exist
+        for (Long id : ids) {
+          userQuery.findAndCheck(id);
+        }
+      }
+
+      @Override
+      protected Void process() {
+        userRepo.deleteAllById(ids);
+        return null;
+      }
+    }.execute();
   }
 }

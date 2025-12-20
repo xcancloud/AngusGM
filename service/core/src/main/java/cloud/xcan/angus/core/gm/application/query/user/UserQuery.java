@@ -1,6 +1,8 @@
 package cloud.xcan.angus.core.gm.application.query.user;
 
 import cloud.xcan.angus.core.gm.domain.user.User;
+import cloud.xcan.angus.core.gm.domain.user.enums.EnableStatus;
+import cloud.xcan.angus.core.gm.domain.user.enums.UserStatus;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,4 +32,19 @@ public interface UserQuery {
    * Check if email exists
    */
   boolean existsByEmail(String email);
+
+  /**
+   * Count total users
+   */
+  long count();
+
+  /**
+   * Count users by status
+   */
+  long countByStatus(UserStatus status);
+
+  /**
+   * Count users by enable status
+   */
+  long countByEnableStatus(EnableStatus enableStatus);
 }

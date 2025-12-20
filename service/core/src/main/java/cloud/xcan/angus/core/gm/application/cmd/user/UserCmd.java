@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.user;
 
 import cloud.xcan.angus.core.gm.domain.user.User;
+import java.util.Set;
 
 /**
  * User command service interface
@@ -46,4 +47,9 @@ public interface UserCmd {
    * Reset password
    */
   void resetPassword(Long id, String newPassword);
+
+  /**
+   * Batch delete users
+   */
+  void batchDelete(Set<Long> ids);
 }

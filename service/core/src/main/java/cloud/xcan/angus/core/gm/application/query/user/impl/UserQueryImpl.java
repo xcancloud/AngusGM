@@ -5,6 +5,8 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.user.User;
 import cloud.xcan.angus.core.gm.domain.user.UserRepo;
+import cloud.xcan.angus.core.gm.domain.user.enums.EnableStatus;
+import cloud.xcan.angus.core.gm.domain.user.enums.UserStatus;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
@@ -58,5 +60,20 @@ public class UserQueryImpl implements UserQuery {
   @Override
   public boolean existsByEmail(String email) {
     return userRepo.existsByEmail(email);
+  }
+
+  @Override
+  public long count() {
+    return userRepo.count();
+  }
+
+  @Override
+  public long countByStatus(UserStatus status) {
+    return userRepo.countByStatus(status);
+  }
+
+  @Override
+  public long countByEnableStatus(EnableStatus enableStatus) {
+    return userRepo.countByEnableStatus(enableStatus);
   }
 }
