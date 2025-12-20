@@ -1,5 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.tenant.facade.dto;
 
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantStatus;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -15,8 +17,8 @@ public class TenantUpdateDto {
   @Schema(description = "租户名称")
   private String name;
 
-  @Schema(description = "租户类型（个人/企业）")
-  private String type;
+  @Schema(description = "租户类型")
+  private TenantType type;
 
   @Size(max = 50)
   @Schema(description = "管理员姓名")
@@ -37,8 +39,8 @@ public class TenantUpdateDto {
   @Schema(description = "过期日期（yyyy-MM-dd）")
   private String expireDate;
 
-  @Schema(description = "状态（已启用/已禁用）")
-  private String status;
+  @Schema(description = "状态")
+  private TenantStatus status;
 
   @Size(max = 500)
   @Schema(description = "Logo URL")

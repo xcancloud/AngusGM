@@ -41,29 +41,7 @@ public class TenantRest {
   @Resource
   private TenantFacade tenantFacade;
 
-  @Operation(operationId = "getTenantsStats", summary = "获取租户统计数据", 
-      description = "获取租户统计数据，包括总数、启用/禁用数量、增长率等")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "统计数据获取成功")
-  })
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping("/stats")
-  public ApiLocaleResult<TenantStatsVo> getStats() {
-    return ApiLocaleResult.success(tenantFacade.getStats());
-  }
-
-  @Operation(operationId = "getTenantList", summary = "获取租户列表", 
-      description = "获取租户列表，支持分页、搜索和筛选")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "租户列表获取成功")
-  })
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping
-  public ApiLocaleResult<PageResult<TenantListVo>> list(
-      @Valid @ParameterObject TenantFindDto dto) {
-    return ApiLocaleResult.success(tenantFacade.list(dto));
-  }
-
+  // 创建
   @Operation(operationId = "createTenant", summary = "创建租户", description = "创建新租户")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "租户创建成功")
@@ -75,19 +53,7 @@ public class TenantRest {
     return ApiLocaleResult.success(tenantFacade.create(dto));
   }
 
-  @Operation(operationId = "getTenantDetail", summary = "获取租户详情", 
-      description = "获取指定租户的详细信息")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "租户详情获取成功"),
-      @ApiResponse(responseCode = "404", description = "租户不存在")
-  })
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping("/{id}")
-  public ApiLocaleResult<TenantDetailVo> getDetail(
-      @Parameter(description = "租户ID") @PathVariable Long id) {
-    return ApiLocaleResult.success(tenantFacade.getDetail(id));
-  }
-
+  // 更新
   @Operation(operationId = "updateTenant", summary = "更新租户", 
       description = "更新租户基本信息")
   @ApiResponses(value = {
@@ -101,18 +67,7 @@ public class TenantRest {
     return ApiLocaleResult.success(tenantFacade.update(id, dto));
   }
 
-  @Operation(operationId = "deleteTenant", summary = "删除租户", 
-      description = "删除指定租户")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "删除成功")
-  })
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @DeleteMapping("/{id}")
-  public void delete(
-      @Parameter(description = "租户ID") @PathVariable Long id) {
-    tenantFacade.delete(id);
-  }
-
+  // 修改状态 - 启用
   @Operation(operationId = "enableTenant", summary = "启用租户", 
       description = "启用指定租户")
   @ApiResponses(value = {
@@ -126,6 +81,7 @@ public class TenantRest {
     return ApiLocaleResult.success(null);
   }
 
+  // 修改状态 - 禁用
   @Operation(operationId = "disableTenant", summary = "禁用租户", 
       description = "禁用指定租户")
   @ApiResponses(value = {
@@ -137,5 +93,57 @@ public class TenantRest {
       @Parameter(description = "租户ID") @PathVariable Long id) {
     tenantFacade.disable(id);
     return ApiLocaleResult.success(null);
+  }
+
+  // 删除
+  @Operation(operationId = "deleteTenant", summary = "删除租户", 
+      description = "删除指定租户")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "删除成功")
+  })
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @DeleteMapping("/{id}")
+  public void delete(
+      @Parameter(description = "租户ID") @PathVariable Long id) {
+    tenantFacade.delete(id);
+  }
+
+  // 查询详细
+  @Operation(operationId = "getTenantDetail", summary = "获取租户详情", 
+      description = "获取指定租户的详细信息")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "租户详情获取成功"),
+      @ApiResponse(responseCode = "404", description = "租户不存在")
+  })
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/{id}")
+  public ApiLocaleResult<TenantDetailVo> getDetail(
+      @Parameter(description = "租户ID") @PathVariable Long id) {
+    return ApiLocaleResult.success(tenantFacade.getDetail(id));
+  }
+
+  // 查询列表
+  @Operation(operationId = "getTenantList", summary = "获取租户列表", 
+      description = "获取租户列表，支持分页、搜索和筛选")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "租户列表获取成功")
+  })
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping
+  public ApiLocaleResult<PageResult<TenantListVo>> list(
+      @Valid @ParameterObject TenantFindDto dto) {
+    return ApiLocaleResult.success(tenantFacade.list(dto));
+  }
+
+  // 查询统计
+  @Operation(operationId = "getTenantsStats", summary = "获取租户统计数据", 
+      description = "获取租户统计数据，包括总数、启用/禁用数量、增长率等")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "统计数据获取成功")
+  })
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/stats")
+  public ApiLocaleResult<TenantStatsVo> getStats() {
+    return ApiLocaleResult.success(tenantFacade.getStats());
   }
 }
