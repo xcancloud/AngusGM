@@ -164,18 +164,6 @@ public class EmailRest {
     return ApiLocaleResult.success(emailFacade.listRecords(dto));
   }
 
-  @Operation(operationId = "getEmailTrackingStats", summary = "获取邮件打开/点击统计", description = "获取指定邮件的打开和点击统计")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "获取成功"),
-      @ApiResponse(responseCode = "404", description = "邮件不存在")
-  })
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping("/{id}/stats")
-  public ApiLocaleResult<EmailTrackingVo> getEmailStats(
-      @Parameter(description = "邮件ID") @PathVariable Long id) {
-    return ApiLocaleResult.success(emailFacade.getEmailStats(id));
-  }
-
   @Operation(operationId = "getEmailTemplates", summary = "获取邮件模板列表", description = "分页获取邮件模板列表")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "获取成功")

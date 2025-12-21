@@ -26,23 +26,36 @@ public class EmailFacadeImpl implements EmailFacade {
     private final EmailQuery emailQuery;
     private final EmailAssembler emailAssembler;
     
-    // ==================== 统计与记录 ====================
+    // ==================== 邮件模板管理 ====================
     
     @Override
-    public EmailStatsVo getStats() {
-        Map<String, Object> stats = emailQuery.getStatistics();
-        return emailAssembler.toStatsVo(stats);
-    }
-    
-    @Override
-    public PageResult<EmailRecordVo> listRecords(EmailRecordFindDto dto) {
-        // TODO: 实现分页查询邮件记录列表
+    public EmailTemplateVo createTemplate(EmailTemplateCreateDto dto) {
+        // TODO: 实现创建邮件模板
         return null;
     }
     
     @Override
-    public EmailTrackingVo getEmailStats(Long id) {
-        // TODO: 实现获取邮件打开/点击统计
+    public EmailTemplateVo updateTemplate(Long id, EmailTemplateUpdateDto dto) {
+        // TODO: 实现更新邮件模板
+        return null;
+    }
+    
+    @Override
+    public EmailTemplateStatusVo updateTemplateStatus(Long id, EmailTemplateStatusDto dto) {
+        // TODO: 实现更新邮件模板状态
+        return null;
+    }
+    
+    @Override
+    public void deleteTemplate(Long id) {
+        // TODO: 实现删除邮件模板
+    }
+
+    // ==================== SMTP配置 ====================
+    
+    @Override
+    public EmailSmtpVo updateSmtpConfig(EmailSmtpUpdateDto dto) {
+        // TODO: 实现更新SMTP配置
         return null;
     }
 
@@ -66,7 +79,19 @@ public class EmailFacadeImpl implements EmailFacade {
         return null;
     }
 
-    // ==================== 邮件模板管理 ====================
+    // ==================== 查询 ====================
+    
+    @Override
+    public EmailStatsVo getStats() {
+        Map<String, Object> stats = emailQuery.getStatistics();
+        return emailAssembler.toStatsVo(stats);
+    }
+    
+    @Override
+    public PageResult<EmailRecordVo> listRecords(EmailRecordFindDto dto) {
+        // TODO: 实现分页查询邮件记录列表
+        return null;
+    }
     
     @Override
     public PageResult<EmailTemplateVo> listTemplates(EmailTemplateFindDto dto) {
@@ -75,39 +100,8 @@ public class EmailFacadeImpl implements EmailFacade {
     }
     
     @Override
-    public EmailTemplateVo createTemplate(EmailTemplateCreateDto dto) {
-        // TODO: 实现创建邮件模板
-        return null;
-    }
-    
-    @Override
-    public EmailTemplateVo updateTemplate(Long id, EmailTemplateUpdateDto dto) {
-        // TODO: 实现更新邮件模板
-        return null;
-    }
-    
-    @Override
-    public void deleteTemplate(Long id) {
-        // TODO: 实现删除邮件模板
-    }
-    
-    @Override
-    public EmailTemplateStatusVo updateTemplateStatus(Long id, EmailTemplateStatusDto dto) {
-        // TODO: 实现更新邮件模板状态
-        return null;
-    }
-
-    // ==================== SMTP配置 ====================
-    
-    @Override
     public EmailSmtpVo getSmtpConfig() {
         // TODO: 实现获取SMTP配置
-        return null;
-    }
-    
-    @Override
-    public EmailSmtpVo updateSmtpConfig(EmailSmtpUpdateDto dto) {
-        // TODO: 实现更新SMTP配置
         return null;
     }
     
@@ -134,14 +128,6 @@ public class EmailFacadeImpl implements EmailFacade {
     }
     
     @Deprecated
-    public EmailDetailVo send(EmailCreateDto dto) {
-        Email email = emailAssembler.toEntity(dto);
-        Email created = emailCmd.create(email);
-        emailCmd.send(created.getId());
-        return emailAssembler.toDetailVo(created);
-    }
-    
-    @Deprecated
     public void retry(Long id) {
         emailCmd.retry(id);
     }
@@ -161,6 +147,14 @@ public class EmailFacadeImpl implements EmailFacade {
         Email email = emailQuery.findById(id)
                 .orElseThrow(() -> new RuntimeException("Email not found"));
         return emailAssembler.toDetailVo(email);
+    }
+    
+    @Deprecated
+    public EmailDetailVo send(EmailCreateDto dto) {
+        Email email = emailAssembler.toEntity(dto);
+        Email created = emailCmd.create(email);
+        emailCmd.send(created.getId());
+        return emailAssembler.toDetailVo(created);
     }
     
     @Deprecated

@@ -5,11 +5,9 @@ import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.SmsCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.SmsUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.SmsDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.SmsListVo;
-import org.springframework.stereotype.Component;
 
-@Component
 public class SmsAssembler {
-    public Sms toEntity(SmsCreateDto dto) {
+    public static Sms toEntity(SmsCreateDto dto) {
         Sms sms = new Sms();
         sms.setPhone(dto.getPhone());
         sms.setContent(dto.getContent());
@@ -21,7 +19,7 @@ public class SmsAssembler {
         return sms;
     }
     
-    public Sms toEntity(SmsUpdateDto dto) {
+    public static Sms toEntity(SmsUpdateDto dto) {
         Sms sms = new Sms();
         sms.setId(dto.getId());
         sms.setPhone(dto.getPhone());
@@ -33,7 +31,7 @@ public class SmsAssembler {
         return sms;
     }
     
-    public SmsDetailVo toDetailVo(Sms sms) {
+    public static SmsDetailVo toDetailVo(Sms sms) {
         SmsDetailVo vo = new SmsDetailVo();
         vo.setId(sms.getId());
         vo.setPhone(sms.getPhone());
@@ -55,7 +53,7 @@ public class SmsAssembler {
         return vo;
     }
     
-    public SmsListVo toListVo(Sms sms) {
+    public static SmsListVo toListVo(Sms sms) {
         SmsListVo vo = new SmsListVo();
         vo.setId(sms.getId());
         vo.setPhone(sms.getPhone());

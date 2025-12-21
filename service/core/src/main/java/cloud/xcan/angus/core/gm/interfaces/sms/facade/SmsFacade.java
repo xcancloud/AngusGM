@@ -8,11 +8,19 @@ import java.util.List;
 
 public interface SmsFacade {
     
-    // ==================== 统计与记录 ====================
+    // ==================== 短信模板管理 ====================
     
-    SmsStatsVo getStats();
+    SmsTemplateVo createTemplate(SmsTemplateCreateDto dto);
     
-    PageResult<SmsRecordVo> listRecords(SmsRecordFindDto dto);
+    SmsTemplateVo updateTemplate(Long id, SmsTemplateUpdateDto dto);
+    
+    SmsTemplateStatusVo updateTemplateStatus(Long id, SmsTemplateStatusDto dto);
+    
+    void deleteTemplate(Long id);
+    
+    // ==================== 服务商配置 ====================
+    
+    SmsProviderVo createProvider(SmsProviderCreateDto dto);
     
     // ==================== 短信发送 ====================
     
@@ -22,21 +30,13 @@ public interface SmsFacade {
     
     SmsTestVo test(SmsTestDto dto);
     
-    // ==================== 短信模板管理 ====================
+    // ==================== 查询 ====================
+    
+    SmsStatsVo getStats();
+    
+    PageResult<SmsRecordVo> listRecords(SmsRecordFindDto dto);
     
     PageResult<SmsTemplateVo> listTemplates(SmsTemplateFindDto dto);
     
-    SmsTemplateVo createTemplate(SmsTemplateCreateDto dto);
-    
-    SmsTemplateVo updateTemplate(Long id, SmsTemplateUpdateDto dto);
-    
-    void deleteTemplate(Long id);
-    
-    SmsTemplateStatusVo updateTemplateStatus(Long id, SmsTemplateStatusDto dto);
-    
-    // ==================== 服务商配置 ====================
-    
     List<SmsProviderVo> listProviders();
-    
-    SmsProviderVo createProvider(SmsProviderCreateDto dto);
 }

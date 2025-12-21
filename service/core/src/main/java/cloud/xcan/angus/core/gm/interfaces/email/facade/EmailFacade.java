@@ -6,13 +6,19 @@ import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.*;
 
 public interface EmailFacade {
     
-    // ==================== 统计与记录 ====================
+    // ==================== 邮件模板管理 ====================
     
-    EmailStatsVo getStats();
+    EmailTemplateVo createTemplate(EmailTemplateCreateDto dto);
     
-    PageResult<EmailRecordVo> listRecords(EmailRecordFindDto dto);
+    EmailTemplateVo updateTemplate(Long id, EmailTemplateUpdateDto dto);
     
-    EmailTrackingVo getEmailStats(Long id);
+    EmailTemplateStatusVo updateTemplateStatus(Long id, EmailTemplateStatusDto dto);
+    
+    void deleteTemplate(Long id);
+    
+    // ==================== SMTP配置 ====================
+    
+    EmailSmtpVo updateSmtpConfig(EmailSmtpUpdateDto dto);
     
     // ==================== 邮件发送 ====================
     
@@ -22,23 +28,15 @@ public interface EmailFacade {
     
     EmailSendVo sendCustom(EmailSendCustomDto dto);
     
-    // ==================== 邮件模板管理 ====================
+    // ==================== 查询 ====================
+    
+    EmailStatsVo getStats();
+    
+    PageResult<EmailRecordVo> listRecords(EmailRecordFindDto dto);
     
     PageResult<EmailTemplateVo> listTemplates(EmailTemplateFindDto dto);
     
-    EmailTemplateVo createTemplate(EmailTemplateCreateDto dto);
-    
-    EmailTemplateVo updateTemplate(Long id, EmailTemplateUpdateDto dto);
-    
-    void deleteTemplate(Long id);
-    
-    EmailTemplateStatusVo updateTemplateStatus(Long id, EmailTemplateStatusDto dto);
-    
-    // ==================== SMTP配置 ====================
-    
     EmailSmtpVo getSmtpConfig();
-    
-    EmailSmtpVo updateSmtpConfig(EmailSmtpUpdateDto dto);
     
     EmailSmtpTestVo testSmtpConnection(EmailSmtpTestDto dto);
 }
