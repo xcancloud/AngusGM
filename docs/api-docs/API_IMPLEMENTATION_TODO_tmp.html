@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>API_IMPLEMENTATION_TODO.md</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+html,footer,header{
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Custom MD PDF CSS
+ */
+html,footer,header{
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+
+ }
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+<link rel="stylesheet" href="file:///Volumes/workspace/workspace_angus/seek/github_coderboy/AngusGM/R%3A%5C2.Travail%5C1.Enseignement%5CCours%5C_1.Outils%5C2.Developpement%5C1.SCSS%5Cmain.css" type="text/css"><link rel="stylesheet" href="file:///Volumes/workspace/workspace_angus/seek/github_coderboy/AngusGM/D%3A%5Crdaros%5CCours%5C_1.Outils%5C2.Developpement%5C1.SCSS%5Cmain.css" type="text/css">
+</head>
+
+<body>
+    <h1 id="api%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E4%BC%98%E5%8C%96todo">API接口实现优化TODO</h1>
+<h2 id="%E4%BC%98%E5%8C%96%E7%9B%AE%E6%A0%87">优化目标</h2>
+<p>根据各模块接口文档，确保后端实现与接口文档完全一致，遵循DDD分层架构规范。</p>
+<hr>
+<h2 id="%E9%80%9A%E7%94%A8%E4%BC%98%E5%8C%96%E6%8C%87%E4%BB%A4">通用优化指令</h2>
+<h3 id="%E6%AF%8F%E4%B8%AA%E6%A8%A1%E5%9D%97%E9%9C%80%E6%89%A7%E8%A1%8C%E7%9A%84%E4%BC%98%E5%8C%96%E6%AD%A5%E9%AA%A4">每个模块需执行的优化步骤</h3>
+<h4 id="%E7%AC%AC1%E6%AD%A5%E5%AF%B9%E6%AF%94%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E4%B8%8E%E7%8E%B0%E6%9C%89%E5%AE%9E%E7%8E%B0">第1步：对比接口文档与现有实现</h4>
+<ol>
+<li>阅读对应的接口文档（如 <code>03-用户管理模块接口文档.md</code>）</li>
+<li>查找对应的REST控制器（如 <code>UserRest.java</code>）</li>
+<li>对比接口端点、HTTP方法、请求参数、响应结构</li>
+<li>确认接口路径是否与文档一致（如 <code>/api/v1/users</code>）</li>
+</ol>
+<h4 id="%E7%AC%AC2%E6%AD%A5http%E6%96%B9%E6%B3%95%E5%92%8C%E7%8A%B6%E6%80%81%E7%A0%81%E8%A7%84%E8%8C%83">第2步：HTTP方法和状态码规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox0"><label for="checkbox0"></label><strong>创建操作</strong>：使用 <code>POST</code> + <code>@ResponseStatus(HttpStatus.CREATED)</code> 返回 201</li>
+<li><input type="checkbox" id="checkbox1"><label for="checkbox1"></label><strong>全量更新</strong>：使用 <code>PUT</code> + <code>@ResponseStatus(HttpStatus.OK)</code> 返回 200</li>
+<li><input type="checkbox" id="checkbox2"><label for="checkbox2"></label><strong>部分更新/状态修改</strong>：使用 <code>PATCH</code> + <code>@ResponseStatus(HttpStatus.OK)</code> 返回 200</li>
+<li><input type="checkbox" id="checkbox3"><label for="checkbox3"></label><strong>删除操作</strong>：使用 <code>DELETE</code> + <code>@ResponseStatus(HttpStatus.NO_CONTENT)</code> 返回 204，<strong>无响应体</strong><pre class="hljs"><code><div><span class="hljs-comment">// 创建 - POST 201</span>
+<span class="hljs-meta">@ResponseStatus</span>(HttpStatus.CREATED)
+<span class="hljs-meta">@PostMapping</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> ApiLocaleResult&lt;XxxDetailVo&gt; <span class="hljs-title">create</span><span class="hljs-params">(@Valid @RequestBody XxxCreateDto dto)</span> </span>{
+    <span class="hljs-keyword">return</span> ApiLocaleResult.success(xxxFacade.create(dto));
+}
+
+<span class="hljs-comment">// 全量更新 - PUT 200</span>
+<span class="hljs-meta">@ResponseStatus</span>(HttpStatus.OK)
+<span class="hljs-meta">@PutMapping</span>(<span class="hljs-string">"/{id}"</span>)
+<span class="hljs-function"><span class="hljs-keyword">public</span> ApiLocaleResult&lt;XxxDetailVo&gt; <span class="hljs-title">update</span><span class="hljs-params">(@PathVariable Long id, @Valid @RequestBody XxxUpdateDto dto)</span> </span>{
+    <span class="hljs-keyword">return</span> ApiLocaleResult.success(xxxFacade.update(id, dto));
+}
+
+<span class="hljs-comment">// 状态修改 - PATCH 200</span>
+<span class="hljs-meta">@ResponseStatus</span>(HttpStatus.OK)
+<span class="hljs-meta">@PatchMapping</span>(<span class="hljs-string">"/{id}/status"</span>)
+<span class="hljs-function"><span class="hljs-keyword">public</span> ApiLocaleResult&lt;XxxDetailVo&gt; <span class="hljs-title">updateStatus</span><span class="hljs-params">(@PathVariable Long id, @Valid @RequestBody XxxStatusDto dto)</span> </span>{
+    <span class="hljs-keyword">return</span> ApiLocaleResult.success(xxxFacade.updateStatus(id, dto));
+}
+
+<span class="hljs-comment">// 删除 - DELETE 204 无响应体</span>
+<span class="hljs-meta">@ResponseStatus</span>(HttpStatus.NO_CONTENT)
+<span class="hljs-meta">@DeleteMapping</span>(<span class="hljs-string">"/{id}"</span>)
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">delete</span><span class="hljs-params">(@PathVariable Long id)</span> </span>{
+    xxxFacade.delete(id);
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC3%E6%AD%A5swagger%E6%B3%A8%E8%A7%A3%E8%A7%84%E8%8C%83">第3步：Swagger注解规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox4"><label for="checkbox4">控制器类使用 </label><code>@Tag</code> 定义API分组</li>
+<li><input type="checkbox" id="checkbox5"><label for="checkbox5">方法使用 </label><code>@Operation</code> 描述操作（含 <code>operationId</code>, <code>summary</code>, <code>description</code>）</li>
+<li><input type="checkbox" id="checkbox6"><label for="checkbox6">使用 </label><code>@ApiResponses</code> 定义响应状态码说明</li>
+<li><input type="checkbox" id="checkbox7"><label for="checkbox7">路径参数使用 </label><code>@Parameter</code> 描述</li>
+<li><input type="checkbox" id="checkbox8"><label for="checkbox8">查询参数对象使用 </label><code>@ParameterObject</code> 注解<pre class="hljs"><code><div><span class="hljs-meta">@Tag</span>(name = <span class="hljs-string">"User"</span>, description = <span class="hljs-string">"用户管理 - 用户的创建、查询、修改、删除"</span>)
+<span class="hljs-meta">@RestController</span>
+<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/api/v1/users"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserRest</span> </span>{
+
+    <span class="hljs-meta">@Operation</span>(operationId = <span class="hljs-string">"getUser"</span>, summary = <span class="hljs-string">"获取用户详情"</span>, description = <span class="hljs-string">"根据ID获取用户详细信息"</span>)
+    <span class="hljs-meta">@ApiResponses</span>(value = {
+        <span class="hljs-meta">@ApiResponse</span>(responseCode = <span class="hljs-string">"200"</span>, description = <span class="hljs-string">"用户详情获取成功"</span>),
+        <span class="hljs-meta">@ApiResponse</span>(responseCode = <span class="hljs-string">"404"</span>, description = <span class="hljs-string">"用户不存在"</span>)
+    })
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/{id}"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> ApiLocaleResult&lt;UserDetailVo&gt; <span class="hljs-title">getDetail</span><span class="hljs-params">(
+        @Parameter(description = <span class="hljs-string">"用户ID"</span>)</span> @PathVariable Long id) </span>{
+        <span class="hljs-keyword">return</span> ApiLocaleResult.success(userFacade.getDetail(id));
+    }
+
+    <span class="hljs-meta">@Operation</span>(operationId = <span class="hljs-string">"listUsers"</span>, summary = <span class="hljs-string">"获取用户列表"</span>, description = <span class="hljs-string">"分页获取用户列表"</span>)
+    <span class="hljs-meta">@GetMapping</span>
+    <span class="hljs-keyword">public</span> ApiLocaleResult&lt;PageResult&lt;UserListVo&gt;&gt; list(
+        <span class="hljs-meta">@Valid</span> <span class="hljs-meta">@ParameterObject</span> UserFindDto dto) {
+        <span class="hljs-keyword">return</span> ApiLocaleResult.success(userFacade.list(dto));
+    }
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC4%E6%AD%A5dtovo%E5%8F%82%E6%95%B0%E6%A3%80%E6%9F%A5">第4步：DTO/VO参数检查</h4>
+<ul>
+<li><input type="checkbox" id="checkbox9"><label for="checkbox9">检查DTO参数是否与接口文档请求体一致</label></li>
+<li><input type="checkbox" id="checkbox10"><label for="checkbox10">检查VO参数是否与接口文档响应体一致</label></li>
+<li><input type="checkbox" id="checkbox11"><label for="checkbox11">补充缺失的DTO类（如状态更新、批量操作等）</label></li>
+<li><input type="checkbox" id="checkbox12"><label for="checkbox12">补充缺失的VO类（如操作响应、统计信息等）</label></li>
+<li><input type="checkbox" id="checkbox13"><label for="checkbox13">使用 </label><code>@Schema</code> 注解描述所有字段</li>
+<li><input type="checkbox" id="checkbox14"><label for="checkbox14">使用Bean Validation注解进行参数校验，</label><strong>不需要添加message属性</strong><pre class="hljs"><code><div><span class="hljs-comment">// 正确示例</span>
+<span class="hljs-meta">@NotBlank</span>
+<span class="hljs-meta">@Size</span>(max = <span class="hljs-number">100</span>)
+<span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"名称"</span>, requiredMode = RequiredMode.REQUIRED)
+<span class="hljs-keyword">private</span> String name;
+
+<span class="hljs-comment">// 错误示例（不需要message）</span>
+<span class="hljs-meta">@NotBlank</span>(message = <span class="hljs-string">"名称不能为空"</span>)
+<span class="hljs-keyword">private</span> String name;
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC5%E6%AD%A5dto%E7%BB%A7%E6%89%BF%E8%A7%84%E8%8C%83">第5步：DTO继承规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox15"><label for="checkbox15"></label><strong>分页查询DTO</strong> 必须继承 <code>PageQuery</code> 类，获得分页、排序、全文搜索能力，即内置分页和全文检索字段（pageNo、pageSize、infoScope、keyword、tenantId、createdBy、createdDate、modifiedBy、modifiedDate、filters）</li>
+<li><input type="checkbox" id="checkbox16"><label for="checkbox16"></label><strong>创建/更新DTO</strong> 直接定义，不需要继承<pre class="hljs"><code><div><span class="hljs-comment">// 分页查询DTO - 继承PageQuery</span>
+<span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@EqualsAndHashCode</span>(callSuper = <span class="hljs-keyword">true</span>)
+<span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"查询用户请求参数"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserFindDto</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">PageQuery</span> </span>{
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"用户名"</span>)
+    <span class="hljs-keyword">private</span> String username;
+    
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"状态"</span>)
+    <span class="hljs-keyword">private</span> UserStatus status;
+}
+
+<span class="hljs-comment">// 创建DTO - 不继承</span>
+<span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"创建用户请求参数"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserCreateDto</span> </span>{
+    <span class="hljs-meta">@NotBlank</span>
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"用户名"</span>, requiredMode = RequiredMode.REQUIRED)
+    <span class="hljs-keyword">private</span> String username;
+}
+</div></code></pre>
+</li>
+<li><input type="checkbox" id="checkbox17"><label for="checkbox17"></label><strong>PageQuery定义</strong></li>
+</ul>
+<pre class="hljs"><code><div>public abstract class PageQuery {
+
+  @Schema(description = &quot;Field name to sort the data by&quot;)
+  protected String orderBy;
+
+  @Schema(description = &quot;Specifies the direction of the sorting (ascending or descending)&quot;)
+  protected OrderSort orderSort;
+
+  /**
+   * @see SearchCriteria#INFO_SCOPE_KEY
+   */
+  @Schema(description = &quot;Scope of information to query (BASIC or DETAIL). &quot;
+      + &quot;Interface performance optimization parameters, only valid for some interfaces&quot;)
+  public InfoScope infoScope;
+
+  @JsonIgnore
+  @Schema(description = &quot;Whether to use full-text search (default: false, uses DB index search if false)&quot;, hidden = true)
+  public boolean fullTextSearch = false;
+
+  @Schema(description = &quot;Search keyword&quot;)
+  private String keyword;
+
+  @Schema(description = &quot;Tenant ID to which this belongs&quot;)
+  private Long tenantId;
+  @Schema(description = &quot;ID of the creator&quot;)
+  private Long createdBy;
+  @Schema(description = &quot;Creation date, the format is `2024-10-12 00:00:00`&quot;)
+  private LocalDateTime createdDate;
+  @Schema(description = &quot;ID of the last modifier&quot;)
+  private Long modifiedBy;
+  @Schema(description = &quot;Last modification date, the format is `2024-10-12 00:00:00`&quot;)
+  private LocalDateTime modifiedDate;
+
+  @Parameter(description = &quot;Dynamic filter/search conditions (array of SearchCriteria)&quot;,
+      array = @ArraySchema(schema = @Schema(type = &quot;object&quot;, implementation = SearchCriteria.class)))
+  protected List&lt;SearchCriteria&gt; filters = new ArrayList&lt;&gt;();
+}
+</div></code></pre>
+<h4 id="%E7%AC%AC6%E6%AD%A5vo%E7%BB%A7%E6%89%BF%E8%A7%84%E8%8C%83">第6步：VO继承规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox18"><label for="checkbox18"></label><strong>详情VO</strong> 继承 <code>TenantAuditingVo</code>，包含审计字段（tenantId, createdBy, creator, createdDate, modifiedBy, modifier, modifiedDate）</li>
+<li><input type="checkbox" id="checkbox19"><label for="checkbox19"></label><strong>列表VO</strong> 可继承详情VO或单独定义（通常字段更少）</li>
+<li><input type="checkbox" id="checkbox20"><label for="checkbox20">使用 </label><code>@NameJoinField</code> 自动填充关联名称<pre class="hljs"><code><div><span class="hljs-comment">// 详情VO - 继承TenantAuditingVo</span>
+<span class="hljs-meta">@Data</span>
+<span class="hljs-meta">@EqualsAndHashCode</span>(callSuper = <span class="hljs-keyword">true</span>)
+<span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"用户详情"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserDetailVo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TenantAuditingVo</span> </span>{
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"用户ID"</span>)
+    <span class="hljs-keyword">private</span> Long id;
+    
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"用户名"</span>)
+    <span class="hljs-keyword">private</span> String username;
+    
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"部门ID"</span>)
+    <span class="hljs-keyword">private</span> Long deptId;
+    
+    <span class="hljs-meta">@Schema</span>(description = <span class="hljs-string">"部门名称"</span>)
+    <span class="hljs-meta">@NameJoinField</span>(id = <span class="hljs-string">"deptId"</span>, repository = <span class="hljs-string">"deptRepo"</span>)
+    <span class="hljs-keyword">private</span> String deptName;
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC7%E6%AD%A5%E6%97%A5%E6%9C%9F%E5%AD%97%E6%AE%B5%E8%A7%84%E8%8C%83">第7步：日期字段规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox21"><label for="checkbox21">所有日期字段使用 </label><code>LocalDateTime</code> 类型</li>
+<li><input type="checkbox" id="checkbox22"><label for="checkbox22">不需要手动格式化（框架自动处理）</label></li>
+<li><input type="checkbox" id="checkbox23"><label for="checkbox23">检查VO中的日期字段类型</label></li>
+</ul>
+<h4 id="%E7%AC%AC8%E6%AD%A5%E6%9E%9A%E4%B8%BE%E7%B1%BB%E8%A7%84%E8%8C%83">第8步：枚举类规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox24"><label for="checkbox24">检查接口文档中的枚举值</label></li>
+<li><input type="checkbox" id="checkbox25"><label for="checkbox25">将枚举值定义为枚举类，</label><strong>不需要考虑枚举属性字段和Message</strong></li>
+<li><input type="checkbox" id="checkbox26"><label for="checkbox26">枚举类放到对应Entity所在目录（</label><code>domain/xxx/enums/</code>）<pre class="hljs"><code><div><span class="hljs-comment">// 正确示例（简单枚举）</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> UserStatus {
+    ACTIVE,
+    INACTIVE,
+    PENDING,
+    LOCKED
+}
+
+<span class="hljs-comment">// 错误示例（不需要额外属性和message）</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> UserStatus {
+    ACTIVE(<span class="hljs-string">"active"</span>, <span class="hljs-string">"活跃"</span>),
+    INACTIVE(<span class="hljs-string">"inactive"</span>, <span class="hljs-string">"未激活"</span>);
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String code;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String message;
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC9%E6%AD%A5%E9%97%A8%E9%9D%A2%E5%B1%82%E8%A7%84%E8%8C%83">第9步：门面层规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox27"><label for="checkbox27">门面层(Facade)注入 </label><code>XXXCmd</code>（命令服务）和 <code>XXXQuery</code>（查询服务）</li>
+<li><input type="checkbox" id="checkbox28"><label for="checkbox28">门面层查询</label><strong>必须</strong>使用 <code>XXXQuery</code> 类方法，<strong>禁止</strong>直接使用 <code>XXXRepo</code></li>
+<li><input type="checkbox" id="checkbox29"><label for="checkbox29">使用 </label><code>Assembler</code> 进行 DTO → Domain → VO 转换</li>
+<li><input type="checkbox" id="checkbox30"><label for="checkbox30">使用 </label><code>buildVoPageResult()</code> 构建分页结果</li>
+<li><input type="checkbox" id="checkbox31"><label for="checkbox31">如Query接口缺少方法，需先在Query接口和实现类中添加</label><pre class="hljs"><code><div><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserFacadeImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">UserFacade</span> </span>{
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> UserCmd userCmd;      <span class="hljs-comment">// 命令服务（写操作）</span>
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> UserQuery userQuery;  <span class="hljs-comment">// 查询服务（读操作）</span>
+    
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> UserDetailVo <span class="hljs-title">create</span><span class="hljs-params">(UserCreateDto dto)</span> </span>{
+        <span class="hljs-comment">// DTO -&gt; Domain</span>
+        User user = UserAssembler.toCreateDomain(dto);
+        <span class="hljs-comment">// 调用命令服务</span>
+        User saved = userCmd.create(user);
+        <span class="hljs-comment">// Domain -&gt; VO</span>
+        <span class="hljs-keyword">return</span> UserAssembler.toDetailVo(saved);
+    }
+    
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> PageResult&lt;UserListVo&gt; <span class="hljs-title">list</span><span class="hljs-params">(UserFindDto dto)</span> </span>{
+        <span class="hljs-comment">// Dto有name或者description字段，需要全文检索时</span>
+        GenericSpecification&lt;User&gt; spec = UserAssembler.getSpecification(dto);
+        Page&lt;User&gt; page = userQuery.find(spec, dto.tranPage(),
+            dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+
+        <span class="hljs-comment">// Dto没有name或者description字段，不需要全文检索时</span>
+        <span class="hljs-comment">// GenericSpecification&lt;User&gt; spec = UserAssembler.getSpecification(dto);</span>
+        <span class="hljs-comment">// Page&lt;User&gt; page = userQuery.find(spec, dto.tranPage());</span>
+        <span class="hljs-keyword">return</span> buildVoPageResult(page, UserAssembler::toListVo);
+    }
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC10%E6%AD%A5%E5%BA%94%E7%94%A8%E5%B1%82cmd%E6%9C%8D%E5%8A%A1%E8%A7%84%E8%8C%83">第10步：应用层Cmd服务规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox32"><label for="checkbox32">Cmd接口定义写操作方法，参数和返回值使用Domain对象</label></li>
+<li><input type="checkbox" id="checkbox33"><label for="checkbox33">Cmd实现类继承 </label><code>CommCmd&lt;Entity, Long&gt;</code> 获得基础CRUD能力</li>
+<li><input type="checkbox" id="checkbox34"><label for="checkbox34">使用 </label><code>@Transactional</code> 保证事务性</li>
+<li><input type="checkbox" id="checkbox35"><label for="checkbox35">使用 </label><code>BizTemplate</code> 进行业务处理（checkParams + process）<pre class="hljs"><code><div><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserCmdImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">CommCmd</span>&lt;<span class="hljs-title">User</span>, <span class="hljs-title">Long</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">UserCmd</span> </span>{
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> UserRepo userRepo;
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> UserQuery userQuery;
+    
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-meta">@Transactional</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> User <span class="hljs-title">create</span><span class="hljs-params">(User user)</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BizTemplate&lt;User&gt;() {
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">checkParams</span><span class="hljs-params">()</span> </span>{
+                <span class="hljs-keyword">if</span> (userQuery.existsByUsername(user.getUsername())) {
+                    <span class="hljs-keyword">throw</span> ResourceExisted.of(<span class="hljs-string">"用户名已存在"</span>);
+                }
+            }
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">protected</span> User <span class="hljs-title">process</span><span class="hljs-params">()</span> </span>{
+                insert(user);
+                <span class="hljs-keyword">return</span> user;
+            }
+        }.execute();
+    }
+    
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> BaseRepository&lt;User, Long&gt; <span class="hljs-title">getRepository</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> userRepo;
+    }
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC11%E6%AD%A5%E5%BA%94%E7%94%A8%E5%B1%82query%E6%9C%8D%E5%8A%A1%E8%A7%84%E8%8C%83">第11步：应用层Query服务规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox36"><label for="checkbox36">Query接口定义读操作方法</label></li>
+<li><input type="checkbox" id="checkbox37"><label for="checkbox37">使用 </label><code>BizTemplate</code> 进行业务处理</li>
+<li><input type="checkbox" id="checkbox38"><label for="checkbox38">查询后批量设置关联数据（避免N+1问题）</label></li>
+<li><input type="checkbox" id="checkbox39"><label for="checkbox39">支持全文搜索和标准查询两种模式</label><pre class="hljs"><code><div><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserQueryImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">UserQuery</span> </span>{
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> UserRepo userRepo;
+    <span class="hljs-meta">@Resource</span>
+    <span class="hljs-keyword">private</span> UserSearchRepo userSearchRepo;  <span class="hljs-comment">// 全文搜索</span>
+    
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> User <span class="hljs-title">findAndCheck</span><span class="hljs-params">(Long id)</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BizTemplate&lt;User&gt;() {
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">protected</span> User <span class="hljs-title">process</span><span class="hljs-params">()</span> </span>{
+                <span class="hljs-keyword">return</span> userRepo.findById(id)
+                    .orElseThrow(() -&gt; ResourceNotFound.of(<span class="hljs-string">"用户不存在"</span>));
+            }
+        }.execute();
+    }
+    
+    <span class="hljs-comment">// 需要支持全文检索时</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Page&lt;User&gt; <span class="hljs-title">find</span><span class="hljs-params">(GenericSpecification&lt;User&gt; spec, PageRequest pageable,
+        <span class="hljs-keyword">boolean</span> fullTextSearch, String[] match)</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BizTemplate&lt;Page&lt;User&gt;&gt;() {
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">protected</span> Page&lt;User&gt; <span class="hljs-title">process</span><span class="hljs-params">()</span> </span>{
+              <span class="hljs-keyword">return</span> fullTextSearch
+                  ? userSearchRepo.find(spec.getCriteria(), pageable, User<span class="hljs-class">.<span class="hljs-keyword">class</span>, <span class="hljs-title">match</span>)
+                  : <span class="hljs-title">userRepo</span>.<span class="hljs-title">findAll</span>(<span class="hljs-title">spec</span>, <span class="hljs-title">pageable</span>)</span>;
+            }
+        }.execute();
+    }
+
+    <span class="hljs-comment">// 不需要支持全文检索时</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Page&lt;User&gt; <span class="hljs-title">find</span><span class="hljs-params">(GenericSpecification&lt;User&gt; spec, PageRequest pageable)</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BizTemplate&lt;Page&lt;User&gt;&gt;() {
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">protected</span> Page&lt;User&gt; <span class="hljs-title">process</span><span class="hljs-params">()</span> </span>{
+              <span class="hljs-keyword">return</span> userRepo.findAll(spec, pageable);
+            }
+        }.execute();
+    }
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC12%E6%AD%A5assembler%E7%BB%84%E8%A3%85%E5%99%A8%E8%A7%84%E8%8C%83">第12步：Assembler组装器规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox40"><label for="checkbox40">Assembler是静态工具类，提供静态方法进行转换</label></li>
+<li><input type="checkbox" id="checkbox41"><label for="checkbox41"></label><code>toCreateDomain()</code>: DTO → Domain（创建）</li>
+<li><input type="checkbox" id="checkbox42"><label for="checkbox42"></label><code>toUpdateDomain()</code>: DTO → Domain（更新）</li>
+<li><input type="checkbox" id="checkbox43"><label for="checkbox43"></label><code>toDetailVo()</code>: Domain → 详情VO</li>
+<li><input type="checkbox" id="checkbox44"><label for="checkbox44"></label><code>toListVo()</code>: Domain → 列表VO</li>
+<li><input type="checkbox" id="checkbox45"><label for="checkbox45"></label><code>getSpecification()</code>: DTO → 查询条件<pre class="hljs"><code><div><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserAssembler</span> </span>{
+    <span class="hljs-comment">// DTO -&gt; Domain（创建）</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> User <span class="hljs-title">toCreateDomain</span><span class="hljs-params">(UserCreateDto dto)</span> </span>{
+        User user = <span class="hljs-keyword">new</span> User();
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        <span class="hljs-keyword">return</span> user;
+    }
+    
+    <span class="hljs-comment">// Domain -&gt; VO</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> UserDetailVo <span class="hljs-title">toDetailVo</span><span class="hljs-params">(User user)</span> </span>{
+        UserDetailVo vo = <span class="hljs-keyword">new</span> UserDetailVo();
+        vo.setId(user.getId());
+        vo.setUsername(user.getUsername());
+        <span class="hljs-comment">// 设置审计信息</span>
+        vo.setTenantId(member.getTenantId());
+        vo.setCreatedBy(member.getCreatedBy());
+        vo.setCreatedDate(member.getCreatedDate());
+        vo.setModifiedBy(member.getModifiedBy());
+        vo.setModifiedDate(member.getModifiedDate());
+        <span class="hljs-keyword">return</span> vo;
+    }
+    
+    <span class="hljs-comment">// DTO -&gt; 查询条件</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> GenericSpecification&lt;User&gt; <span class="hljs-title">getSpecification</span><span class="hljs-params">(UserFindDto dto)</span> </span>{
+        Set&lt;SearchCriteria&gt; filters = <span class="hljs-keyword">new</span> SearchCriteriaBuilder&lt;&gt;(dto)
+            .rangeSearchFields(<span class="hljs-string">"id"</span>, <span class="hljs-string">"createdDate"</span>)
+            .orderByFields(<span class="hljs-string">"id"</span>, <span class="hljs-string">"createdDate"</span>, <span class="hljs-string">"username"</span>)
+            .matchSearchFields(<span class="hljs-string">"username"</span>, <span class="hljs-string">"email"</span>) <span class="hljs-comment">// 配置全文检索字段</span>
+            .build();
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> GenericSpecification&lt;&gt;(filters);
+    }
+}
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC13%E6%AD%A5%E6%96%B9%E6%B3%95%E9%A1%BA%E5%BA%8F%E8%A7%84%E8%8C%83">第13步：方法顺序规范</h4>
+<p><strong>接口层、门面层、业务层统一</strong>按以下顺序排列方法：</p>
+<ol>
+<li><strong>创建</strong>（create, add, insert）</li>
+<li><strong>更新</strong>（update, modify, edit）</li>
+<li><strong>修改状态</strong>（enable/disable, lock/unlock, activate, resetPassword等）</li>
+<li><strong>删除</strong>（delete, remove, batchDelete）</li>
+<li><strong>查询详细</strong>（getDetail, findById, get）</li>
+<li><strong>查询列表</strong>（list, find, search）</li>
+<li><strong>查询统计</strong>（getStats, count, statistics）</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：其他业务操作放在统计之后，按业务逻辑分组</p>
+</blockquote>
+<h4 id="%E7%AC%AC14%E6%AD%A5%E4%BB%A3%E7%A0%81%E6%B3%A8%E9%87%8A%E8%A7%84%E8%8C%83">第14步：代码注释规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox46"><label for="checkbox46">不使用分组注释分隔不同类型的方法（不需要下面注解）</label><pre class="hljs"><code><div><span class="hljs-comment">// ==================== 创建 ====================</span>
+<span class="hljs-comment">// ==================== 更新 ====================</span>
+<span class="hljs-comment">// 不需要这些分组注释</span>
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC15%E6%AD%A5jpa-json%E5%AD%97%E6%AE%B5%E8%A7%84%E8%8C%83">第15步：JPA JSON字段规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox47"><label for="checkbox47">JSON字段使用对象类型，不要手动编写序列化</label></li>
+<li><input type="checkbox" id="checkbox48"><label for="checkbox48">使用 </label><code>@Type(JsonType.class)</code> 注解<pre class="hljs"><code><div><span class="hljs-comment">// 正确示例</span>
+<span class="hljs-meta">@Type</span>(JsonType<span class="hljs-class">.<span class="hljs-keyword">class</span>)
+@<span class="hljs-title">Column</span>(<span class="hljs-title">name</span> </span>= <span class="hljs-string">"tags"</span>, columnDefinition = <span class="hljs-string">"json"</span>)
+<span class="hljs-keyword">private</span> List&lt;String&gt; tags;
+
+<span class="hljs-meta">@Type</span>(JsonType<span class="hljs-class">.<span class="hljs-keyword">class</span>)
+@<span class="hljs-title">Column</span>(<span class="hljs-title">name</span> </span>= <span class="hljs-string">"config"</span>, columnDefinition = <span class="hljs-string">"json"</span>)
+<span class="hljs-keyword">private</span> ConfigObject config;  <span class="hljs-comment">// 使用对象类型</span>
+
+<span class="hljs-comment">// 错误示例（不要手动序列化）</span>
+<span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"config"</span>)
+<span class="hljs-keyword">private</span> String configJson;  <span class="hljs-comment">// 然后手动JSON.parse/stringify</span>
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC16%E6%AD%A5%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E8%A7%84%E8%8C%83">第16步：异常处理规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox49"><label for="checkbox49">使用框架提供的统一异常类</label></li>
+<li><input type="checkbox" id="checkbox50"><label for="checkbox50">资源不存在：</label><code>ResourceNotFound.of()</code></li>
+<li><input type="checkbox" id="checkbox51"><label for="checkbox51">资源已存在：</label><code>ResourceExisted.of()</code></li>
+<li><input type="checkbox" id="checkbox52"><label for="checkbox52">协议异常：</label><code>ProtocolException.of()</code><pre class="hljs"><code><div><span class="hljs-comment">// 资源不存在</span>
+<span class="hljs-keyword">throw</span> ResourceNotFound.of(<span class="hljs-string">"用户不存在"</span>);
+
+<span class="hljs-comment">// 资源已存在</span>
+<span class="hljs-keyword">throw</span> ResourceExisted.of(<span class="hljs-string">"用户名已存在"</span>);
+</div></code></pre>
+</li>
+</ul>
+<h4 id="%E7%AC%AC17%E6%AD%A5%E5%88%86%E9%A1%B5%E5%93%8D%E5%BA%94%E8%A7%84%E8%8C%83">第17步：分页响应规范</h4>
+<ul>
+<li><input type="checkbox" id="checkbox53"><label for="checkbox53">分页查询返回 </label><code>PageResult&lt;T&gt;</code> 类型</li>
+<li><input type="checkbox" id="checkbox54"><label for="checkbox54">使用 </label><code>buildVoPageResult()</code> 构建分页结果</li>
+<li><input type="checkbox" id="checkbox55"><label for="checkbox55">分页字段：</label><code>total</code>（总数）、<code>list</code>（数据列表）<pre class="hljs"><code><div><span class="hljs-comment">// Facade层构建分页结果</span>
+<span class="hljs-keyword">return</span> buildVoPageResult(page, UserAssembler::toListVo);
+</div></code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="%E6%A8%A1%E5%9D%97%E5%A4%84%E7%90%86%E6%B8%85%E5%8D%95">模块处理清单</h2>
+<h3 id="%E5%B7%B2%E5%AE%8C%E6%88%90">已完成</h3>
+<ul>
+<li><input type="checkbox" id="checkbox56" checked="true"><label for="checkbox56"></label><strong>01-认证授权模块</strong> - AuthRest.java ✅</li>
+<li><input type="checkbox" id="checkbox57" checked="true"><label for="checkbox57"></label><strong>02-租户管理模块</strong> - TenantRest.java ✅</li>
+<li><input type="checkbox" id="checkbox58" checked="true"><label for="checkbox58"></label><strong>03-用户管理模块</strong> - UserRest.java ✅</li>
+<li><input type="checkbox" id="checkbox59" checked="true"><label for="checkbox59"></label><strong>04-部门管理模块</strong> - DepartmentRest.java ✅</li>
+<li><input type="checkbox" id="checkbox60" checked="true"><label for="checkbox60"></label><strong>05-组管理模块</strong> - GroupRest.java ✅</li>
+<li><input type="checkbox" id="checkbox61" checked="true"><label for="checkbox61"></label><strong>06-应用管理模块</strong> - ApplicationRest.java ✅</li>
+<li><input type="checkbox" id="checkbox62" checked="true"><label for="checkbox62"></label><strong>07-服务管理模块</strong> - ServiceRest.java ✅</li>
+<li><input type="checkbox" id="checkbox63" checked="true"><label for="checkbox63"></label><strong>08-接口管理模块</strong> - InterfaceRest.java ✅</li>
+<li><input type="checkbox" id="checkbox64" checked="true"><label for="checkbox64"></label><strong>09-标签管理模块</strong> - TagRest.java ✅</li>
+<li><input type="checkbox" id="checkbox65" checked="true"><label for="checkbox65"></label><strong>10-权限策略模块</strong> - PolicyRest.java ✅</li>
+<li><input type="checkbox" id="checkbox66" checked="true"><label for="checkbox66"></label><strong>11-授权管理模块</strong> - AuthorizationRest.java ✅</li>
+<li><input type="checkbox" id="checkbox67" checked="true"><label for="checkbox67"></label><strong>12-消息通知模块</strong> - NotificationRest.java ✅ （新建，路径/api/v1/notifications）</li>
+<li><input type="checkbox" id="checkbox68" checked="true"><label for="checkbox68"></label><strong>13-备份恢复模块</strong> - BackupRest.java ✅</li>
+<li><input type="checkbox" id="checkbox69" checked="true"><label for="checkbox69"></label><strong>14-短信消息模块</strong> - SmsRest.java ✅</li>
+<li><input type="checkbox" id="checkbox70" checked="true"><label for="checkbox70"></label><strong>15-电子邮件模块</strong> - EmailRest.java ✅</li>
+<li><input type="checkbox" id="checkbox71" checked="true"><label for="checkbox71"></label><strong>16-安全设置模块</strong> - SecurityRest.java ✅</li>
+<li><input type="checkbox" id="checkbox72" checked="true"><label for="checkbox72"></label><strong>17-系统监控模块</strong> - MonitoringRest.java ✅</li>
+<li><input type="checkbox" id="checkbox73" checked="true"><label for="checkbox73"></label><strong>18-接口监控模块</strong> - ApiMonitoringRest.java ✅ （路径/api/v1/interface-monitoring）</li>
+<li><input type="checkbox" id="checkbox74" checked="true"><label for="checkbox74"></label><strong>19-LDAP集成模块</strong> - LdapRest.java ✅</li>
+<li><input type="checkbox" id="checkbox75" checked="true"><label for="checkbox75"></label><strong>20-资源配额模块</strong> - QuotaRest.java ✅ （路径/api/v1/quotas）</li>
+<li><input type="checkbox" id="checkbox76" checked="true"><label for="checkbox76"></label><strong>21-审计日志模块</strong> - AuditLogRest.java ✅ （路径/api/v1/audit-logs）</li>
+<li><input type="checkbox" id="checkbox77" checked="true"><label for="checkbox77"></label><strong>22-系统版本模块</strong> - SystemVersionRest.java ✅ （路径/api/v1/system-version）</li>
+</ul>
+<h3 id="%E5%BE%85%E5%A4%84%E7%90%86">待处理</h3>
+<p>无</p>
+<hr>
+<h2 id="ddd%E5%88%86%E5%B1%82%E7%BB%93%E6%9E%84%E5%8F%82%E8%80%83">DDD分层结构参考</h2>
+<pre class="hljs"><code><div>core/src/main/java/cloud/xcan/angus/core/gm/
+│
+├── interfaces/           # 接口层
+│   └── {module}/
+│       ├── {Module}Rest.java              # REST控制器
+│       └── facade/
+│           ├── {Module}Facade.java        # 门面接口
+│           ├── dto/                       # 请求DTO
+│           │   ├── {Module}CreateDto.java
+│           │   ├── {Module}UpdateDto.java
+│           │   ├── {Module}FindDto.java
+│           │   └── {Module}XXXDto.java    # 其他操作DTO
+│           ├── vo/                        # 响应VO
+│           │   ├── {Module}DetailVo.java
+│           │   ├── {Module}ListVo.java
+│           │   ├── {Module}StatsVo.java
+│           │   └── {Module}XXXVo.java     # 其他响应VO
+│           └── internal/
+│               ├── {Module}FacadeImpl.java
+│               └── assembler/
+│                   └── {Module}Assembler.java
+│
+├── application/          # 应用层
+│   ├── cmd/
+│   │   └── {module}/
+│   │       ├── {Module}Cmd.java           # 命令接口
+│   │       └── impl/
+│   │           └── {Module}CmdImpl.java   # 命令实现
+│   └── query/
+│       └── {module}/
+│           ├── {Module}Query.java         # 查询接口
+│           └── impl/
+│               └── {Module}QueryImpl.java # 查询实现
+│
+├── domain/               # 领域层
+│   └── {module}/
+│       ├── {Module}.java                  # 领域实体
+│       ├── {Module}Repo.java              # 仓储接口
+│       └── enums/                         # 枚举目录
+│           └── {Enum}Status.java          # 状态枚举
+│
+└── infra/                # 基础设施层
+    └── persistence/
+        └── mysql/
+            └── {module}/
+                └── {Module}RepoMysql.java
+</div></code></pre>
+<hr>
+<h2 id="%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">使用说明</h2>
+<h3 id="%E5%A4%84%E7%90%86%E5%8D%95%E4%B8%AA%E6%A8%A1%E5%9D%97">处理单个模块</h3>
+<pre class="hljs"><code><div>请根据 {XX-模块名接口文档.md} 和 后端开发接口说明.md，
+按照上述优化指令，修改 {ModuleRest.java} 接口实现。
+</div></code></pre>
+<h3 id="%E7%A4%BA%E4%BE%8B%E6%8C%87%E4%BB%A4">示例指令</h3>
+<pre class="hljs"><code><div>请根据 04-部门管理模块接口文档.md 和 后端开发接口说明.md，
+对比现有的DepartmentRest.java实现，按照以下要求进行优化：
+1. 检查DTO和VO参数是否有遗漏
+2. 日期字段使用LocalDateTime
+3. 枚举值定义成枚举类（不需要考虑枚举属性字段和Message）
+4. 门面层查询使用Query类方法
+5. 方法顺序调整为：创建、更新、修改状态、删除、查询详细、查询列表、查询统计
+6. JPA JSON字段使用对象类型，不要手动序列化
+7. DTO校验注解不需要添加message属性
+</div></code></pre>
+<hr>
+<h2 id="%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">注意事项</h2>
+<ol>
+<li><strong>保持一致性</strong>: 所有模块遵循相同的规范和结构</li>
+<li><strong>先查后改</strong>: 修改前先充分了解现有实现</li>
+<li><strong>逐层修改</strong>: 按 REST → Facade → Cmd/Query 顺序修改</li>
+<li><strong>编译验证</strong>: 每次修改后确保编译通过</li>
+<li><strong>保留TODO</strong>: 未实现的业务逻辑用TODO标记</li>
+</ol>
+<hr>
+<h2 id="%E4%BC%98%E5%8C%96%E8%A6%81%E6%B1%82%E6%91%98%E8%A6%81">优化要求摘要</h2>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>优化项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>HTTP方法和状态码</td>
+<td>POST→201, PUT/PATCH→200, DELETE→204无响应体</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Swagger注解</td>
+<td>@Tag, @Operation, @ApiResponses, @Parameter, @ParameterObject</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DTO/VO参数检查</td>
+<td>与接口文档保持一致</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DTO继承规范</td>
+<td>查询DTO继承PageQuery，创建/更新DTO不继承</td>
+</tr>
+<tr>
+<td>5</td>
+<td>VO继承规范</td>
+<td>详情VO继承TenantAuditingVo，使用@NameJoinField填充关联名称</td>
+</tr>
+<tr>
+<td>6</td>
+<td>日期字段</td>
+<td>使用LocalDateTime，不手动格式化</td>
+</tr>
+<tr>
+<td>7</td>
+<td>枚举类</td>
+<td>简单枚举，不需要属性字段和Message</td>
+</tr>
+<tr>
+<td>8</td>
+<td>门面层规范</td>
+<td>注入Cmd+Query，使用Assembler转换，buildVoPageResult分页</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Cmd服务规范</td>
+<td>继承CommCmd，@Transactional事务，BizTemplate业务处理</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Query服务规范</td>
+<td>支持全文搜索，批量设置关联数据避免N+1</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Assembler规范</td>
+<td>toCreateDomain, toDetailVo, getSpecification</td>
+</tr>
+<tr>
+<td>12</td>
+<td>方法顺序</td>
+<td>创建→更新→修改状态→删除→查询详细→查询列表→查询统计</td>
+</tr>
+<tr>
+<td>13</td>
+<td>JPA JSON字段</td>
+<td>使用对象类型 + @Type(JsonType.class)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>DTO校验注解</td>
+<td>不需要添加message属性</td>
+</tr>
+<tr>
+<td>15</td>
+<td>异常处理</td>
+<td>使用ResourceNotFound, ResourceExisted等统一异常类</td>
+</tr>
+<tr>
+<td>16</td>
+<td>分页响应</td>
+<td>使用PageResult<T>，buildVoPageResult构建</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+
+</html>
