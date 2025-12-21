@@ -1,7 +1,7 @@
-package cloud.xcan.angus.core.gm.domain.authorization;
+package cloud.xcan.angus.core.gm.domain.authenticationorization;
 
-import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
 import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

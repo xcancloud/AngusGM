@@ -1,12 +1,12 @@
-package cloud.xcan.angus.core.gm.application.query.authorization.impl;
+package cloud.xcan.angus.core.gm.application.query.authenticationorization.impl;
 
 import cloud.xcan.angus.core.biz.Biz;
 import cloud.xcan.angus.core.biz.BizTemplate;
-import cloud.xcan.angus.core.gm.application.query.authorization.AuthorizationQuery;
-import cloud.xcan.angus.core.gm.domain.authorization.Authorization;
-import cloud.xcan.angus.core.gm.domain.authorization.AuthorizationRepo;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.application.query.authenticationorization.AuthorizationQuery;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.Authorization;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.AuthorizationRepo;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;

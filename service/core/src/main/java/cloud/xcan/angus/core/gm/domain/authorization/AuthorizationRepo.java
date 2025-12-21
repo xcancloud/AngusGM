@@ -1,7 +1,7 @@
-package cloud.xcan.angus.core.gm.domain.authorization;
+package cloud.xcan.angus.core.gm.domain.authenticationorization;
 
-import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

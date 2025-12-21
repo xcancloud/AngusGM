@@ -1,9 +1,9 @@
 package cloud.xcan.angus.core.gm.infra.persistence.postgres.authorization;
 
-import cloud.xcan.angus.core.gm.domain.authorization.Authorization;
-import cloud.xcan.angus.core.gm.domain.authorization.AuthorizationRepo;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.Authorization;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.AuthorizationRepo;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

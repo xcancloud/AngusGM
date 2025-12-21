@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.infra.authentication.checker;
 
-import cloud.xcan.angus.core.gm.application.query.auth.AuthUserQuery;
+import cloud.xcan.angus.core.gm.application.query.authentication.AuthUserQuery;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.security.authentication.dao.checker.DefaultPreAuthenticationChecks;
 import cloud.xcan.angus.security.model.CustomOAuth2User;

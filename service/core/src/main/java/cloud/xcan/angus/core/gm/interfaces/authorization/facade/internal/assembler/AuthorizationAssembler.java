@@ -1,12 +1,12 @@
-package cloud.xcan.angus.core.gm.interfaces.authorization.facade.internal.assembler;
+package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.internal.assembler;
 
-import cloud.xcan.angus.core.gm.domain.authorization.Authorization;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationFindDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationListVo;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.Authorization;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationFindDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationDetailVo;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationListVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;

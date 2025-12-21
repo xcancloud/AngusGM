@@ -1,7 +1,7 @@
-package cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo;
 
-import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
 import lombok.Data;
 
 import java.time.LocalDateTime;

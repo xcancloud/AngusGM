@@ -1,16 +1,16 @@
-package cloud.xcan.angus.core.gm.interfaces.authorization.facade;
+package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationBatchCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationBatchDeleteDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationFindDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationRoleAddDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationBatchVo;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationListVo;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationRoleAddVo;
-import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationTargetVo;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationBatchCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationBatchDeleteDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationFindDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationRoleAddDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationBatchVo;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationDetailVo;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationListVo;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationRoleAddVo;
+import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationTargetVo;
 import cloud.xcan.angus.remote.PageResult;
 
 /**

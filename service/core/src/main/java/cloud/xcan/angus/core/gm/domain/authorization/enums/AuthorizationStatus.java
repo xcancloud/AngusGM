@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.domain.authorization.enums;
+package cloud.xcan.angus.core.gm.domain.authenticationorization.enums;
 
 /**
  * Authorization status enum

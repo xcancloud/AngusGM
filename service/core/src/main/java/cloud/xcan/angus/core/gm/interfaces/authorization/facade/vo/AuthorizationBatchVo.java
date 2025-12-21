@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

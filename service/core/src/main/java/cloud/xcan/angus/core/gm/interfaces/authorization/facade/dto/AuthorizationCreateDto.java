@@ -1,6 +1,6 @@
-package cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto;
+package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto;
 
-import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

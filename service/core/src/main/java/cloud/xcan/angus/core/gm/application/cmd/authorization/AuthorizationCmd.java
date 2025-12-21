@@ -1,6 +1,6 @@
-package cloud.xcan.angus.core.gm.application.cmd.authorization;
+package cloud.xcan.angus.core.gm.application.cmd.authenticationorization;
 
-import cloud.xcan.angus.core.gm.domain.authorization.Authorization;
+import cloud.xcan.angus.core.gm.domain.authenticationorization.Authorization;
 
 /**
  * Authorization Command Service
