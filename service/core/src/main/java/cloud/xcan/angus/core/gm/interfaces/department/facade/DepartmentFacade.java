@@ -25,15 +25,21 @@ public interface DepartmentFacade {
 
   DepartmentDetailVo update(Long id, DepartmentUpdateDto dto);
 
+  DepartmentManagerUpdateVo updateManager(Long id, DepartmentManagerUpdateDto dto);
+
   void delete(Long id);
 
   DepartmentDetailVo getDetail(Long id);
 
   PageResult<DepartmentListVo> list(DepartmentFindDto dto);
 
-  DepartmentStatsVo getStats();
+  List<DepartmentDetailVo> getTree(Long parentId, String status, Boolean includeUsers);
 
-  List<DepartmentDetailVo> getTree(Long parentId, Boolean includeUsers);
+  DepartmentPathVo getPath(Long id);
+
+  List<DepartmentListVo> getChildren(Long id, Boolean recursive);
+
+  DepartmentStatsVo getStats();
 
   PageResult<DepartmentMemberVo> listMembers(Long id, DepartmentMemberFindDto dto);
 
@@ -44,10 +50,4 @@ public interface DepartmentFacade {
   void removeMembers(Long id, DepartmentMemberRemoveDto dto);
 
   DepartmentMemberTransferVo transferMembers(Long id, DepartmentMemberTransferDto dto);
-
-  DepartmentManagerUpdateVo updateManager(Long id, DepartmentManagerUpdateDto dto);
-
-  DepartmentPathVo getPath(Long id);
-
-  List<DepartmentListVo> getChildren(Long id, Boolean recursive);
 }

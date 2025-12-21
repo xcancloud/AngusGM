@@ -17,9 +17,10 @@ public interface TenantQuery {
   Tenant findAndCheck(Long id);
 
   /**
-   * Find tenants with pagination
+   * Find tenants with pagination and full-text search support
    */
-  Page<Tenant> find(GenericSpecification<Tenant> spec, PageRequest pageable);
+  Page<Tenant> find(GenericSpecification<Tenant> spec, PageRequest pageable,
+      boolean fullTextSearch, String[] match);
 
   /**
    * Get tenant statistics

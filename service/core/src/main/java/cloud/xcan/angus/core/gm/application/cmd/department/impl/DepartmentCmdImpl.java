@@ -116,17 +116,17 @@ public class DepartmentCmdImpl extends CommCmd<Department, Long> implements Depa
   @Transactional(rollbackFor = Exception.class)
   public void enable(Long id) {
     new BizTemplate<Void>() {
+      Department departmentDb;
+
       @Override
       protected void checkParams() {
-        departmentQuery.findAndCheck(id);
+        departmentDb = departmentQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        Department department = new Department();
-        department.setId(id);
-        department.setStatus(DepartmentStatus.ENABLED);
-        departmentRepo.save(department);
+        departmentDb.setStatus(DepartmentStatus.ENABLED);
+        departmentRepo.save(departmentDb);
         return null;
       }
     }.execute();
@@ -136,17 +136,17 @@ public class DepartmentCmdImpl extends CommCmd<Department, Long> implements Depa
   @Transactional(rollbackFor = Exception.class)
   public void disable(Long id) {
     new BizTemplate<Void>() {
+      Department departmentDb;
+
       @Override
       protected void checkParams() {
-        departmentQuery.findAndCheck(id);
+        departmentDb = departmentQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        Department department = new Department();
-        department.setId(id);
-        department.setStatus(DepartmentStatus.DISABLED);
-        departmentRepo.save(department);
+        departmentDb.setStatus(DepartmentStatus.DISABLED);
+        departmentRepo.save(departmentDb);
         return null;
       }
     }.execute();

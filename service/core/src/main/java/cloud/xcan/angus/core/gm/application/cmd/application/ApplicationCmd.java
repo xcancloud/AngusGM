@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.application.cmd.application;
 
 import cloud.xcan.angus.core.gm.domain.application.Application;
+import cloud.xcan.angus.core.gm.domain.application.enums.ApplicationStatus;
 
 /**
  * Application Command Service
@@ -18,17 +19,22 @@ public interface ApplicationCmd {
     Application update(Application application);
 
     /**
+     * Update application status
+     */
+    void updateStatus(Long id, ApplicationStatus status);
+
+    /**
      * Enable application
      */
-    void enable(String id);
+    void enable(Long id);
 
     /**
      * Disable application
      */
-    void disable(String id);
+    void disable(Long id);
 
     /**
      * Delete application
      */
-    void delete(String id);
+    void delete(Long id);
 }

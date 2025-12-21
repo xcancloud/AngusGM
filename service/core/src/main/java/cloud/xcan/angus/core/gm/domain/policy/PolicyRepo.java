@@ -1,6 +1,5 @@
 package cloud.xcan.angus.core.gm.domain.policy;
 
-import cloud.xcan.angus.core.gm.domain.policy.enums.PolicyEffect;
 import cloud.xcan.angus.core.gm.domain.policy.enums.PolicyStatus;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -10,6 +9,16 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 @NoRepositoryBean
 public interface PolicyRepo extends BaseRepository<Policy, Long> {
+
+  /**
+   * Check if name exists
+   */
+  boolean existsByName(String name);
+
+  /**
+   * Check if name exists excluding specific id
+   */
+  boolean existsByNameAndIdNot(String name, Long id);
 
   /**
    * Check if code exists
@@ -27,7 +36,12 @@ public interface PolicyRepo extends BaseRepository<Policy, Long> {
   long countByStatus(PolicyStatus status);
 
   /**
-   * Count policies by effect
+   * Count system roles
    */
-  long countByEffect(PolicyEffect effect);
+  long countByIsSystemTrue();
+
+  /**
+   * Count custom roles
+   */
+  long countByIsSystemFalse();
 }

@@ -3,7 +3,8 @@ package cloud.xcan.angus.core.gm.domain.authorization;
 import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
 import cloud.xcan.angus.core.gm.domain.authorization.enums.SubjectType;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
@@ -11,6 +12,26 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 @NoRepositoryBean
 public interface AuthorizationRepo extends BaseRepository<Authorization, Long> {
+
+  /**
+   * Find authorizations by status with pagination
+   */
+  Page<Authorization> findByStatus(AuthorizationStatus status, Pageable pageable);
+
+  /**
+   * Find authorizations by subject type with pagination
+   */
+  Page<Authorization> findBySubjectType(SubjectType subjectType, Pageable pageable);
+
+  /**
+   * Find authorizations by subject id with pagination
+   */
+  Page<Authorization> findBySubjectId(Long subjectId, Pageable pageable);
+
+  /**
+   * Find authorizations by policy id with pagination
+   */
+  Page<Authorization> findByPolicyId(Long policyId, Pageable pageable);
 
   /**
    * Count authorizations by status
@@ -21,21 +42,6 @@ public interface AuthorizationRepo extends BaseRepository<Authorization, Long> {
    * Count authorizations by subject type
    */
   long countBySubjectType(SubjectType subjectType);
-
-  /**
-   * Find authorizations by subject
-   */
-  List<Authorization> findBySubjectTypeAndSubjectId(SubjectType subjectType, Long subjectId);
-
-  /**
-   * Find authorizations by policy id
-   */
-  List<Authorization> findByPolicyId(Long policyId);
-
-  /**
-   * Count authorizations by policy id
-   */
-  long countByPolicyId(Long policyId);
 
   /**
    * Check if authorization exists for subject and policy

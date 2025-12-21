@@ -19,12 +19,12 @@ public class DepartmentStatsVo {
   @Schema(description = "已禁用部门数")
   private Long disabledDepartments;
 
-  @Schema(description = "根部门数")
-  private Long rootDepartments;
-
-  @Schema(description = "平均层级深度")
-  private Double averageLevel;
+  @Schema(description = "总用户数")
+  private Long totalUsers;
 
   @Schema(description = "最大层级深度")
   private Integer maxLevel;
+
+  @Schema(description = "本月新增部门数")
+  private Long newDepartmentsThisMonth;
 }

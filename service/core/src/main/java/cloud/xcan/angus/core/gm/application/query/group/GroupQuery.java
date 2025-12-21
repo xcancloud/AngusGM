@@ -1,7 +1,9 @@
 package cloud.xcan.angus.core.gm.application.query.group;
 
 import cloud.xcan.angus.core.gm.domain.group.Group;
+import cloud.xcan.angus.core.gm.domain.group.enums.GroupType;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -25,4 +27,19 @@ public interface GroupQuery {
    * Check if code exists
    */
   boolean existsByCode(String code);
+
+  /**
+   * Count all groups
+   */
+  long count();
+
+  /**
+   * Count groups by type
+   */
+  long countByType(GroupType type);
+
+  /**
+   * Find groups by user id
+   */
+  List<Group> findByUserId(Long userId);
 }

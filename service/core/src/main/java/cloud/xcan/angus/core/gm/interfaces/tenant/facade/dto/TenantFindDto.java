@@ -16,9 +16,6 @@ import lombok.EqualsAndHashCode;
 @Schema(description = "查询租户请求参数")
 public class TenantFindDto extends PageQuery {
 
-  @Schema(description = "搜索关键词（名称、编码）")
-  private String keyword;
-
   @Schema(description = "状态筛选")
   private TenantStatus status;
 

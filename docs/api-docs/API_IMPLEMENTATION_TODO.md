@@ -246,12 +246,12 @@ public abstract class PageQuery {
       
       @Override
       public PageResult<UserListVo> list(UserFindDto dto) {
-          // Dto有name或者description字段，需要全文检索时
+          // 需要全文检索时（Entity类有name或title或者description字段），name或title字段需要添加到Dto
           GenericSpecification<User> spec = UserAssembler.getSpecification(dto);
           Page<User> page = userQuery.find(spec, dto.tranPage(),
               dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
 
-          // Dto没有name或者description字段，不需要全文检索时
+          //  不需要全文检索时（Entity类没有name或title或者description字段）
           // GenericSpecification<User> spec = UserAssembler.getSpecification(dto);
           // Page<User> page = userQuery.find(spec, dto.tranPage());
           return buildVoPageResult(page, UserAssembler::toListVo);

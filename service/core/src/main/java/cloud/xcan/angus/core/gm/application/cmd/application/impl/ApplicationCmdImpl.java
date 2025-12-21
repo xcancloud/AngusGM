@@ -1,98 +1,165 @@
 package cloud.xcan.angus.core.gm.application.cmd.application.impl;
 
+import cloud.xcan.angus.core.biz.Biz;
+import cloud.xcan.angus.core.biz.BizTemplate;
+import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.application.ApplicationCmd;
+import cloud.xcan.angus.core.gm.application.query.application.ApplicationQuery;
 import cloud.xcan.angus.core.gm.domain.application.Application;
 import cloud.xcan.angus.core.gm.domain.application.ApplicationRepo;
 import cloud.xcan.angus.core.gm.domain.application.enums.ApplicationStatus;
-import cloud.xcan.grapefruit.infra.exception.ResourceExisted;
-import cloud.xcan.grapefruit.infra.exception.ResourceNotFound;
-import cloud.xcan.grapefruit.infra.template.BizTemplate;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.remote.message.http.ResourceExisted;
+import jakarta.annotation.Resource;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Application Command Service Implementation
  */
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class ApplicationCmdImpl implements ApplicationCmd {
+@Biz
+public class ApplicationCmdImpl extends CommCmd<Application, Long> implements ApplicationCmd {
 
-    private final ApplicationRepo applicationRepo;
-    private final BizTemplate bizTemplate;
+    @Resource
+    private ApplicationRepo applicationRepo;
+
+    @Resource
+    private ApplicationQuery applicationQuery;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Application create(Application application) {
-        return bizTemplate.execute(() -> {
-            // Check if client ID already exists
-            if (application.getClientId() != null && applicationRepo.findByClientId(application.getClientId()).isPresent()) {
-                throw new ResourceExisted("Application with clientId already exists");
+        return new BizTemplate<Application>() {
+            @Override
+            protected void checkParams() {
+                if (application.getClientId() != null 
+                    && applicationRepo.findByClientId(application.getClientId()).isPresent()) {
+                    throw ResourceExisted.of("Application with clientId already exists", new Object[]{});
+                }
             }
 
-            // Generate OAuth 2.0 credentials
-            if (application.getClientId() == null) {
-                application.setClientId(UUID.randomUUID().toString());
-            }
-            if (application.getClientSecret() == null) {
-                application.setClientSecret(UUID.randomUUID().toString());
-            }
+            @Override
+            protected Application process() {
+                // Generate OAuth 2.0 credentials
+                if (application.getClientId() == null) {
+                    application.setClientId(UUID.randomUUID().toString());
+                }
+                if (application.getClientSecret() == null) {
+                    application.setClientSecret(UUID.randomUUID().toString());
+                }
 
-            // Set default status
-            application.setStatus(ApplicationStatus.ENABLED);
-            application.setServiceCount(0);
+                // Set default status
+                if (application.getStatus() == null) {
+                    application.setStatus(ApplicationStatus.ENABLED);
+                }
+                if (application.getServiceCount() == null) {
+                    application.setServiceCount(0L);
+                }
 
-            return applicationRepo.save(application);
-        });
+                insert(application);
+                return application;
+            }
+        }.execute();
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Application update(Application application) {
-        return bizTemplate.execute(() -> {
-            Application existing = applicationRepo.findById(application.getId())
-                    .orElseThrow(() -> new ResourceNotFound("Application not found"));
+        return new BizTemplate<Application>() {
+            Application appDb;
 
-            return applicationRepo.save(application);
-        });
+            @Override
+            protected void checkParams() {
+                appDb = applicationQuery.findById(application.getId());
+            }
+
+            @Override
+            protected Application process() {
+                update(application, appDb);
+                return appDb;
+            }
+        }.execute();
     }
 
     @Override
-    @Transactional
-    public void enable(String id) {
-        bizTemplate.execute(() -> {
-            Application application = applicationRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFound("Application not found"));
-            application.setStatus(ApplicationStatus.ENABLED);
-            applicationRepo.save(application);
-            return null;
-        });
+    @Transactional(rollbackFor = Exception.class)
+    public void updateStatus(Long id, ApplicationStatus status) {
+        new BizTemplate<Void>() {
+            Application appDb;
+
+            @Override
+            protected void checkParams() {
+                appDb = applicationQuery.findById(id);
+            }
+
+            @Override
+            protected Void process() {
+                appDb.setStatus(status);
+                applicationRepo.save(appDb);
+                return null;
+            }
+        }.execute();
     }
 
     @Override
-    @Transactional
-    public void disable(String id) {
-        bizTemplate.execute(() -> {
-            Application application = applicationRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFound("Application not found"));
-            application.setStatus(ApplicationStatus.DISABLED);
-            applicationRepo.save(application);
-            return null;
-        });
+    @Transactional(rollbackFor = Exception.class)
+    public void enable(Long id) {
+        new BizTemplate<Void>() {
+            Application appDb;
+
+            @Override
+            protected void checkParams() {
+                appDb = applicationQuery.findById(id);
+            }
+
+            @Override
+            protected Void process() {
+                appDb.setStatus(ApplicationStatus.ENABLED);
+                applicationRepo.save(appDb);
+                return null;
+            }
+        }.execute();
     }
 
     @Override
-    @Transactional
-    public void delete(String id) {
-        bizTemplate.execute(() -> {
-            Application application = applicationRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFound("Application not found"));
-            applicationRepo.delete(application);
-            return null;
-        });
+    @Transactional(rollbackFor = Exception.class)
+    public void disable(Long id) {
+        new BizTemplate<Void>() {
+            Application appDb;
+
+            @Override
+            protected void checkParams() {
+                appDb = applicationQuery.findById(id);
+            }
+
+            @Override
+            protected Void process() {
+                appDb.setStatus(ApplicationStatus.DISABLED);
+                applicationRepo.save(appDb);
+                return null;
+            }
+        }.execute();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long id) {
+        new BizTemplate<Void>() {
+            @Override
+            protected void checkParams() {
+                applicationQuery.findById(id);
+            }
+
+            @Override
+            protected Void process() {
+                applicationRepo.deleteById(id);
+                return null;
+            }
+        }.execute();
+    }
+
+    @Override
+    protected BaseRepository<Application, Long> getRepository() {
+        return applicationRepo;
     }
 }

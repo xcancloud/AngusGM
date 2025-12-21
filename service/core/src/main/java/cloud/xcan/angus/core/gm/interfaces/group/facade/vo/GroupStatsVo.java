@@ -13,18 +13,18 @@ public class GroupStatsVo {
   @Schema(description = "总组数")
   private Long totalGroups;
 
-  @Schema(description = "已启用组数")
-  private Long enabledGroups;
+  @Schema(description = "项目组数")
+  private Long projectGroups;
 
-  @Schema(description = "已禁用组数")
-  private Long disabledGroups;
+  @Schema(description = "职能组数")
+  private Long functionGroups;
 
-  @Schema(description = "系统组数")
-  private Long systemGroups;
+  @Schema(description = "临时组数")
+  private Long tempGroups;
 
-  @Schema(description = "自定义组数")
-  private Long customGroups;
+  @Schema(description = "活跃成员数")
+  private Long activeMembers;
 
-  @Schema(description = "平均成员数")
-  private Double averageMemberCount;
+  @Schema(description = "本月新增组数")
+  private Long newGroupsThisMonth;
 }

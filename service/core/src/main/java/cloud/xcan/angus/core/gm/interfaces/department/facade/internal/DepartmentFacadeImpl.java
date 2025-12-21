@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.department.facade.internal;
 
-import static cloud.xcan.angus.spec.BizConstant.buildVoPageResult;
-import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
+import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
+import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.department.DepartmentCmd;
 import cloud.xcan.angus.core.gm.application.query.department.DepartmentQuery;
@@ -78,13 +78,12 @@ public class DepartmentFacadeImpl implements DepartmentFacade {
 
   @Override
   public DepartmentStatsVo getStats() {
-    // TODO: Implement using DepartmentQuery instead of Repo
-    return new DepartmentStatsVo();
+    return departmentQuery.getStats();
   }
 
   @Override
-  public List<DepartmentDetailVo> getTree(Long parentId, Boolean includeUsers) {
-    List<Department> departments = departmentQuery.findTree(parentId);
+  public List<DepartmentDetailVo> getTree(Long parentId, String status, Boolean includeUsers) {
+    List<Department> departments = departmentQuery.findTree(parentId, status);
     return departments.stream()
         .map(DepartmentAssembler::toDetailVo)
         .collect(Collectors.toList());

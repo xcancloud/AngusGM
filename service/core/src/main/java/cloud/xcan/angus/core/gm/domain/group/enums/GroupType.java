@@ -5,12 +5,17 @@ package cloud.xcan.angus.core.gm.domain.group.enums;
  */
 public enum GroupType {
   /**
-   * 系统组
+   * 项目组
    */
-  SYSTEM,
+  PROJECT,
   
   /**
-   * 自定义组
+   * 职能组
    */
-  CUSTOM
+  FUNCTION,
+  
+  /**
+   * 临时组
+   */
+  TEMP
 }

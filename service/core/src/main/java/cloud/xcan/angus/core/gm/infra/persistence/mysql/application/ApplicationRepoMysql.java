@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @Repository
 @Profile("mysql")
-public interface ApplicationRepoMysql extends ApplicationRepo, JpaRepository<Application, String> {
+public interface ApplicationRepoMysql extends ApplicationRepo, JpaRepository<Application, Long> {
 
     @Override
     default Optional<Application> findByClientId(String clientId) {
@@ -42,7 +42,7 @@ public interface ApplicationRepoMysql extends ApplicationRepo, JpaRepository<App
     }
 
     @Override
-    default Page<Application> findByOwnerId(String ownerId, Pageable pageable) {
+    default Page<Application> findByOwnerId(Long ownerId, Pageable pageable) {
         return findAll(pageable);
     }
 

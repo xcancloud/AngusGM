@@ -14,7 +14,7 @@ public interface ApplicationQuery {
     /**
      * Find application by ID
      */
-    Application findById(String id);
+    Application findById(Long id);
 
     /**
      * Find applications

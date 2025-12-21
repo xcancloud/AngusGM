@@ -61,6 +61,16 @@ public class TagQueryImpl implements TagQuery {
   }
 
   @Override
+  public List<Tag> findAll() {
+    return new BizTemplate<List<Tag>>() {
+      @Override
+      protected List<Tag> process() {
+        return tagRepo.findAll();
+      }
+    }.execute();
+  }
+
+  @Override
   public boolean existsByName(String name) {
     return tagRepo.existsByName(name);
   }

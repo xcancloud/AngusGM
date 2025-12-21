@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.application.query.department;
 
 import cloud.xcan.angus.core.gm.domain.department.Department;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentStatsVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -25,10 +26,15 @@ public interface DepartmentQuery {
   /**
    * Find department tree structure
    */
-  List<Department> findTree(Long parentId);
+  List<Department> findTree(Long parentId, String status);
 
   /**
    * Check if code exists
    */
   boolean existsByCode(String code);
+
+  /**
+   * Get department statistics
+   */
+  DepartmentStatsVo getStats();
 }

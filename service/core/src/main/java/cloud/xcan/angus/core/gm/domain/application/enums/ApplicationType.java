@@ -5,22 +5,17 @@ package cloud.xcan.angus.core.gm.domain.application.enums;
  */
 public enum ApplicationType {
   /**
-   * Web应用
+   * Base application
    */
-  WEB,
+  BASE,
   
   /**
-   * 移动应用
+   * Business application
    */
-  MOBILE,
+  BUSINESS,
   
   /**
-   * 桌面应用
+   * System application
    */
-  DESKTOP,
-  
-  /**
-   * API应用
-   */
-  API
+  SYSTEM
 }

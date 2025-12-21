@@ -26,21 +26,15 @@ import cloud.xcan.angus.remote.PageResult;
  */
 public interface UserFacade {
 
-  // ==================== 创建 ====================
-
   /**
    * Create user
    */
   UserDetailVo create(UserCreateDto dto);
 
-  // ==================== 更新 ====================
-
   /**
    * Update user
    */
   UserDetailVo update(Long id, UserUpdateDto dto);
-
-  // ==================== 修改状态 ====================
 
   /**
    * Update user status (enable/disable)
@@ -57,8 +51,6 @@ public interface UserFacade {
    */
   UserResetPasswordVo resetPassword(Long id, UserResetPasswordDto dto);
 
-  // ==================== 删除 ====================
-
   /**
    * Delete user
    */
@@ -69,28 +61,20 @@ public interface UserFacade {
    */
   void batchDelete(UserBatchDeleteDto dto);
 
-  // ==================== 查询详细 ====================
-
   /**
    * Get user detail
    */
   UserDetailVo getDetail(Long id);
-
-  // ==================== 查询列表 ====================
 
   /**
    * List users with pagination
    */
   PageResult<UserListVo> list(UserFindDto dto);
 
-  // ==================== 查询统计 ====================
-
   /**
    * Get user statistics
    */
   UserStatsVo getStats();
-
-  // ==================== 邀请相关 ====================
 
   /**
    * Invite user
@@ -111,8 +95,6 @@ public interface UserFacade {
    * Resend invite
    */
   UserInviteResendVo resendInvite(Long id);
-
-  // ==================== 当前用户相关 ====================
 
   /**
    * Change current user password

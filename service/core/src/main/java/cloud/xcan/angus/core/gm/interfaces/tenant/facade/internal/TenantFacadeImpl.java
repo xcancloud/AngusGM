@@ -1,6 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal;
 
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
+import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
@@ -77,7 +78,8 @@ public class TenantFacadeImpl implements TenantFacade {
   @Override
   public PageResult<TenantListVo> list(TenantFindDto dto) {
     GenericSpecification<Tenant> spec = TenantAssembler.getSpecification(dto);
-    Page<Tenant> page = tenantQuery.find(spec, dto.tranPage());
+    Page<Tenant> page = tenantQuery.find(spec, dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, TenantAssembler::toListVo);
   }
 

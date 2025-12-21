@@ -110,17 +110,17 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Transactional(rollbackFor = Exception.class)
   public void enable(Long id) {
     new BizTemplate<Void>() {
+      User userDb;
+
       @Override
       protected void checkParams() {
-        userQuery.findAndCheck(id);
+        userDb = userQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        User user = new User();
-        user.setId(id);
-        user.setEnableStatus(EnableStatus.ENABLED);
-        userRepo.save(user);
+        userDb.setEnableStatus(EnableStatus.ENABLED);
+        userRepo.save(userDb);
         return null;
       }
     }.execute();
@@ -130,17 +130,17 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Transactional(rollbackFor = Exception.class)
   public void disable(Long id) {
     new BizTemplate<Void>() {
+      User userDb;
+
       @Override
       protected void checkParams() {
-        userQuery.findAndCheck(id);
+        userDb = userQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        User user = new User();
-        user.setId(id);
-        user.setEnableStatus(EnableStatus.DISABLED);
-        userRepo.save(user);
+        userDb.setEnableStatus(EnableStatus.DISABLED);
+        userRepo.save(userDb);
         return null;
       }
     }.execute();
@@ -150,17 +150,17 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Transactional(rollbackFor = Exception.class)
   public void lock(Long id) {
     new BizTemplate<Void>() {
+      User userDb;
+
       @Override
       protected void checkParams() {
-        userQuery.findAndCheck(id);
+        userDb = userQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        User user = new User();
-        user.setId(id);
-        user.setIsLocked(true);
-        userRepo.save(user);
+        userDb.setIsLocked(true);
+        userRepo.save(userDb);
         return null;
       }
     }.execute();
@@ -170,17 +170,17 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Transactional(rollbackFor = Exception.class)
   public void unlock(Long id) {
     new BizTemplate<Void>() {
+      User userDb;
+
       @Override
       protected void checkParams() {
-        userQuery.findAndCheck(id);
+        userDb = userQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        User user = new User();
-        user.setId(id);
-        user.setIsLocked(false);
-        userRepo.save(user);
+        userDb.setIsLocked(false);
+        userRepo.save(userDb);
         return null;
       }
     }.execute();
@@ -190,17 +190,17 @@ public class UserCmdImpl extends CommCmd<User, Long> implements UserCmd {
   @Transactional(rollbackFor = Exception.class)
   public void resetPassword(Long id, String newPassword) {
     new BizTemplate<Void>() {
+      User userDb;
+
       @Override
       protected void checkParams() {
-        userQuery.findAndCheck(id);
+        userDb = userQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        User user = new User();
-        user.setId(id);
-        user.setPassword(newPassword); // Should be encrypted
-        userRepo.save(user);
+        userDb.setPassword(newPassword); // Should be encrypted
+        userRepo.save(userDb);
         return null;
       }
     }.execute();

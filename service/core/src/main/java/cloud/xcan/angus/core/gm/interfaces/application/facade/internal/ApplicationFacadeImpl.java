@@ -86,13 +86,12 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
   public ApplicationStatsVo getStats() {
     Map<String, Object> stats = applicationQuery.getStats();
     ApplicationStatsVo vo = new ApplicationStatsVo();
-    vo.setTotalApplications((Long) stats.get("totalApplications"));
-    vo.setEnabledApplications((Long) stats.get("enabledApplications"));
-    vo.setDisabledApplications((Long) stats.get("disabledApplications"));
-    vo.setWebApplications((Long) stats.get("webApplications"));
-    vo.setMobileApplications((Long) stats.get("mobileApplications"));
-    vo.setDesktopApplications((Long) stats.get("desktopApplications"));
-    vo.setApiApplications((Long) stats.get("apiApplications"));
+    vo.setTotalApplications((Long) stats.getOrDefault("totalApplications", 0L));
+    vo.setEnabledApplications((Long) stats.getOrDefault("enabledApplications", 0L));
+    vo.setDisabledApplications((Long) stats.getOrDefault("disabledApplications", 0L));
+    vo.setBaseApplications((Long) stats.getOrDefault("baseApplications", 0L));
+    vo.setBusinessApplications((Long) stats.getOrDefault("businessApplications", 0L));
+    vo.setSystemApplications((Long) stats.getOrDefault("systemApplications", 0L));
     return vo;
   }
 

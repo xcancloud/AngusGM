@@ -1,87 +1,130 @@
 package cloud.xcan.angus.core.gm.application.cmd.authorization.impl;
 
+import cloud.xcan.angus.core.biz.Biz;
+import cloud.xcan.angus.core.biz.BizTemplate;
+import cloud.xcan.angus.core.biz.cmd.CommCmd;
 import cloud.xcan.angus.core.gm.application.cmd.authorization.AuthorizationCmd;
+import cloud.xcan.angus.core.gm.application.query.authorization.AuthorizationQuery;
 import cloud.xcan.angus.core.gm.domain.authorization.Authorization;
 import cloud.xcan.angus.core.gm.domain.authorization.AuthorizationRepo;
 import cloud.xcan.angus.core.gm.domain.authorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.share.exception.BizAssert;
-import cloud.xcan.angus.share.template.BizTemplate;
-import org.springframework.stereotype.Service;
+import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import cloud.xcan.angus.remote.message.http.ResourceNotFound;
+import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
 
 /**
  * Authorization Command Service Implementation
  */
-@Service
-public class AuthorizationCmdImpl implements AuthorizationCmd {
-    
-    @Resource
-    private AuthorizationRepo authorizationRepo;
-    
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Authorization create(Authorization authorization) {
-        return BizTemplate.execute(() -> {
-            // Set default status
-            if (authorization.getStatus() == null) {
-                authorization.setStatus(AuthorizationStatus.ENABLED);
-            }
-            
-            // Save authorization
-            return authorizationRepo.save(authorization);
-        });
-    }
-    
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Authorization update(Authorization authorization) {
-        return BizTemplate.execute(() -> {
-            // Check if authorization exists
-            Authorization existing = authorizationRepo.findById(authorization.getId()).orElse(null);
-            BizAssert.notNull(existing, "Authorization not found");
-            
-            // Update authorization
-            return authorizationRepo.save(authorization);
-        });
-    }
-    
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void enable(Long id) {
-        BizTemplate.execute(() -> {
-            Authorization authorization = authorizationRepo.findById(id).orElse(null);
-            BizAssert.notNull(authorization, "Authorization not found");
-            
-            authorization.setStatus(AuthorizationStatus.ENABLED);
-            authorizationRepo.save(authorization);
-            return null;
-        });
-    }
-    
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void disable(Long id) {
-        BizTemplate.execute(() -> {
-            Authorization authorization = authorizationRepo.findById(id).orElse(null);
-            BizAssert.notNull(authorization, "Authorization not found");
-            
-            authorization.setStatus(AuthorizationStatus.DISABLED);
-            authorizationRepo.save(authorization);
-            return null;
-        });
-    }
-    
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        BizTemplate.execute(() -> {
-            Authorization authorization = authorizationRepo.findById(id).orElse(null);
-            BizAssert.notNull(authorization, "Authorization not found");
-            
-            authorizationRepo.delete(authorization);
-            return null;
-        });
-    }
+@Biz
+public class AuthorizationCmdImpl extends CommCmd<Authorization, Long> implements AuthorizationCmd {
+
+  @Resource
+  private AuthorizationRepo authorizationRepo;
+
+  @Resource
+  private AuthorizationQuery authorizationQuery;
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Authorization create(Authorization authorization) {
+    return new BizTemplate<Authorization>() {
+      @Override
+      protected void checkParams() {
+        // No specific validation needed for creation
+      }
+
+      @Override
+      protected Authorization process() {
+        // Set default status
+        if (authorization.getStatus() == null) {
+          authorization.setStatus(AuthorizationStatus.ENABLED);
+        }
+
+        insert(authorization);
+        return authorization;
+      }
+    }.execute();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Authorization update(Authorization authorization) {
+    return new BizTemplate<Authorization>() {
+      Authorization authorizationDb;
+
+      @Override
+      protected void checkParams() {
+        authorizationDb = authorizationQuery.findAndCheck(authorization.getId());
+      }
+
+      @Override
+      protected Authorization process() {
+        update(authorization, authorizationDb);
+        return authorizationDb;
+      }
+    }.execute();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void enable(Long id) {
+    new BizTemplate<Void>() {
+      Authorization authorizationDb;
+
+      @Override
+      protected void checkParams() {
+        authorizationDb = authorizationQuery.findAndCheck(id);
+      }
+
+      @Override
+      protected Void process() {
+        authorizationDb.setStatus(AuthorizationStatus.ENABLED);
+        authorizationRepo.save(authorizationDb);
+        return null;
+      }
+    }.execute();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void disable(Long id) {
+    new BizTemplate<Void>() {
+      Authorization authorizationDb;
+
+      @Override
+      protected void checkParams() {
+        authorizationDb = authorizationQuery.findAndCheck(id);
+      }
+
+      @Override
+      protected Void process() {
+        authorizationDb.setStatus(AuthorizationStatus.DISABLED);
+        authorizationRepo.save(authorizationDb);
+        return null;
+      }
+    }.execute();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void delete(Long id) {
+    new BizTemplate<Void>() {
+      @Override
+      protected void checkParams() {
+        authorizationQuery.findAndCheck(id);
+      }
+
+      @Override
+      protected Void process() {
+        authorizationRepo.deleteById(id);
+        return null;
+      }
+    }.execute();
+  }
+
+  @Override
+  protected BaseRepository<Authorization, Long> getRepository() {
+    return authorizationRepo;
+  }
 }

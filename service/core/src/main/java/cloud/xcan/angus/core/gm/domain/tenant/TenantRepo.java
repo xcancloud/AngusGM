@@ -1,6 +1,8 @@
 package cloud.xcan.angus.core.gm.domain.tenant;
 
-import cloud.xcan.angus.core.jpa.BaseRepository;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantStatus;
+import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import java.time.LocalDateTime;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
@@ -22,5 +24,10 @@ public interface TenantRepo extends BaseRepository<Tenant, Long> {
   /**
    * Count tenants by status
    */
-  long countByStatus(String status);
+  long countByStatus(TenantStatus status);
+
+  /**
+   * Count tenants created after a given date
+   */
+  long countByCreatedDateAfter(LocalDateTime date);
 }

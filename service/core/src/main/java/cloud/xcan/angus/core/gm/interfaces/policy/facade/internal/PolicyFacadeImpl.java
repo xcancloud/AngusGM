@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.internal;
 
-import static cloud.xcan.angus.spec.BizConstant.buildVoPageResult;
-import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
+import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
+import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.policy.PolicyCmd;
 import cloud.xcan.angus.core.gm.application.query.policy.PolicyQuery;

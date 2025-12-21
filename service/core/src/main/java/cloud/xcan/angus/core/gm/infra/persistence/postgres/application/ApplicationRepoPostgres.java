@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @Repository
 @Profile("postgres")
-public interface ApplicationRepoPostgres extends ApplicationRepo, JpaRepository<Application, String> {
+public interface ApplicationRepoPostgres extends ApplicationRepo, JpaRepository<Application, Long> {
 
     @Override
     default Optional<Application> findByClientId(String clientId) {
@@ -42,7 +42,7 @@ public interface ApplicationRepoPostgres extends ApplicationRepo, JpaRepository<
     }
 
     @Override
-    default Page<Application> findByOwnerId(String ownerId, Pageable pageable) {
+    default Page<Application> findByOwnerId(Long ownerId, Pageable pageable) {
         return findAll(pageable);
     }
 

@@ -2,7 +2,9 @@ package cloud.xcan.angus.core.gm.domain.department;
 
 import cloud.xcan.angus.core.gm.domain.department.enums.DepartmentStatus;
 import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
@@ -45,4 +47,20 @@ public interface DepartmentRepo extends BaseRepository<Department, Long> {
    * Find all root departments (parent_id is null)
    */
   List<Department> findByParentIdIsNull();
+
+  /**
+   * Find all root departments with status filter
+   */
+  List<Department> findByParentIdIsNullAndStatus(DepartmentStatus status);
+
+  /**
+   * Count departments created after specified date
+   */
+  long countByCreatedDateAfter(LocalDateTime date);
+
+  /**
+   * Find max level
+   */
+  @Query("SELECT MAX(d.level) FROM Department d")
+  Integer findMaxLevel();
 }

@@ -5,6 +5,7 @@ import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.user.User;
 import cloud.xcan.angus.core.gm.domain.user.UserRepo;
+import cloud.xcan.angus.core.gm.domain.user.UserSearchRepo;
 import cloud.xcan.angus.core.gm.domain.user.enums.EnableStatus;
 import cloud.xcan.angus.core.gm.domain.user.enums.UserStatus;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
@@ -21,6 +22,9 @@ public class UserQueryImpl implements UserQuery {
 
   @Resource
   private UserRepo userRepo;
+
+  @Resource
+  private UserSearchRepo userSearchRepo;
 
   @Override
   public User findAndCheck(Long id) {
@@ -39,12 +43,13 @@ public class UserQueryImpl implements UserQuery {
     return new BizTemplate<Page<User>>() {
       @Override
       protected Page<User> process() {
-        Page<User> page = userRepo.findAll(spec, pageable);
+        Page<User> page = fullTextSearch
+            ? userSearchRepo.find(spec.getCriteria(), pageable, User.class, match)
+            : userRepo.findAll(spec, pageable);
         
         // Set associated data for users if needed
         if (page.hasContent()) {
           // TODO: Set role names, department names, online status, etc.
-          // This would typically involve querying related services/repositories
         }
         
         return page;

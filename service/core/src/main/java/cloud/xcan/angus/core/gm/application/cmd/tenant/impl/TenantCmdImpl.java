@@ -102,17 +102,17 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
   @Transactional(rollbackFor = Exception.class)
   public void enable(Long id) {
     new BizTemplate<Void>() {
+      Tenant tenantDb;
+
       @Override
       protected void checkParams() {
-        tenantQuery.findAndCheck(id);
+        tenantDb = tenantQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        Tenant tenant = new Tenant();
-        tenant.setId(id);
-        tenant.setStatus(TenantStatus.ENABLED);
-        tenantRepo.save(tenant);
+        tenantDb.setStatus(TenantStatus.ENABLED);
+        tenantRepo.save(tenantDb);
         return null;
       }
     }.execute();
@@ -122,17 +122,17 @@ public class TenantCmdImpl extends CommCmd<Tenant, Long> implements TenantCmd {
   @Transactional(rollbackFor = Exception.class)
   public void disable(Long id) {
     new BizTemplate<Void>() {
+      Tenant tenantDb;
+
       @Override
       protected void checkParams() {
-        tenantQuery.findAndCheck(id);
+        tenantDb = tenantQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        Tenant tenant = new Tenant();
-        tenant.setId(id);
-        tenant.setStatus(TenantStatus.DISABLED);
-        tenantRepo.save(tenant);
+        tenantDb.setStatus(TenantStatus.DISABLED);
+        tenantRepo.save(tenantDb);
         return null;
       }
     }.execute();

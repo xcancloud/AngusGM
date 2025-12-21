@@ -1,12 +1,11 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade.internal;
 
-import static cloud.xcan.angus.spec.BizConstant.buildVoPageResult;
-import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
+import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
+import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
 import cloud.xcan.angus.core.gm.domain.group.Group;
-import cloud.xcan.angus.core.gm.domain.group.enums.GroupStatus;
 import cloud.xcan.angus.core.gm.domain.group.enums.GroupType;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.GroupFacade;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupCreateDto;
@@ -95,19 +94,20 @@ public class GroupFacadeImpl implements GroupFacade {
     GroupStatsVo stats = new GroupStatsVo();
     
     long totalGroups = groupQuery.count();
-    long enabledGroups = groupQuery.countByStatus(GroupStatus.ENABLED);
-    long disabledGroups = groupQuery.countByStatus(GroupStatus.DISABLED);
-    long systemGroups = groupQuery.countByType(GroupType.SYSTEM);
-    long customGroups = groupQuery.countByType(GroupType.CUSTOM);
+    long projectGroups = groupQuery.countByType(GroupType.PROJECT);
+    long functionGroups = groupQuery.countByType(GroupType.FUNCTION);
+    long tempGroups = groupQuery.countByType(GroupType.TEMP);
     
     stats.setTotalGroups(totalGroups);
-    stats.setEnabledGroups(enabledGroups);
-    stats.setDisabledGroups(disabledGroups);
-    stats.setSystemGroups(systemGroups);
-    stats.setCustomGroups(customGroups);
+    stats.setProjectGroups(projectGroups);
+    stats.setFunctionGroups(functionGroups);
+    stats.setTempGroups(tempGroups);
     
-    // TODO: Calculate average member count
-    stats.setAverageMemberCount(0.0);
+    // TODO: Calculate active members from user-group relation
+    stats.setActiveMembers(0L);
+    
+    // TODO: Calculate new groups this month
+    stats.setNewGroupsThisMonth(0L);
     
     return stats;
   }

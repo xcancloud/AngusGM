@@ -96,17 +96,17 @@ public class TagCmdImpl extends CommCmd<Tag, Long> implements TagCmd {
   @Transactional(rollbackFor = Exception.class)
   public void enable(Long id) {
     new BizTemplate<Void>() {
+      Tag tagDb;
+
       @Override
       protected void checkParams() {
-        tagQuery.findAndCheck(id);
+        tagDb = tagQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        Tag tag = new Tag();
-        tag.setId(id);
-        tag.setStatus(TagStatus.ENABLED);
-        tagRepo.save(tag);
+        tagDb.setStatus(TagStatus.ENABLED);
+        tagRepo.save(tagDb);
         return null;
       }
     }.execute();
@@ -116,17 +116,17 @@ public class TagCmdImpl extends CommCmd<Tag, Long> implements TagCmd {
   @Transactional(rollbackFor = Exception.class)
   public void disable(Long id) {
     new BizTemplate<Void>() {
+      Tag tagDb;
+
       @Override
       protected void checkParams() {
-        tagQuery.findAndCheck(id);
+        tagDb = tagQuery.findAndCheck(id);
       }
 
       @Override
       protected Void process() {
-        Tag tag = new Tag();
-        tag.setId(id);
-        tag.setStatus(TagStatus.DISABLED);
-        tagRepo.save(tag);
+        tagDb.setStatus(TagStatus.DISABLED);
+        tagRepo.save(tagDb);
         return null;
       }
     }.execute();

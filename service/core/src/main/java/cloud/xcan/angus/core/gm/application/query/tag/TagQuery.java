@@ -28,6 +28,11 @@ public interface TagQuery {
   List<Tag> findByCategory(String category);
 
   /**
+   * Find all tags
+   */
+  List<Tag> findAll();
+
+  /**
    * Check if name exists
    */
   boolean existsByName(String name);

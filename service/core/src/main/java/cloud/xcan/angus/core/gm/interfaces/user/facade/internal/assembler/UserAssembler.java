@@ -73,8 +73,7 @@ public class UserAssembler {
     vo.setAccountType(user.getAccountType());
     vo.setIsLocked(nullSafe(user.getIsLocked(), false));
     vo.setIsOnline(nullSafe(user.getIsOnline(), false));
-    vo.setLastLogin(user.getLastLogin() != null 
-        ? user.getLastLogin().format(DATETIME_FORMATTER) : null);
+    vo.setLastLogin(user.getLastLogin());
 
     // Set auditing fields
     vo.setTenantId(user.getTenantId());
@@ -108,8 +107,7 @@ public class UserAssembler {
     vo.setAccountType(user.getAccountType());
     vo.setIsLocked(nullSafe(user.getIsLocked(), false));
     vo.setIsOnline(nullSafe(user.getIsOnline(), false));
-    vo.setLastLogin(user.getLastLogin() != null 
-        ? user.getLastLogin().format(DATETIME_FORMATTER) : null);
+    vo.setLastLogin(user.getLastLogin());
 
     // Set auditing fields
     vo.setTenantId(user.getTenantId());

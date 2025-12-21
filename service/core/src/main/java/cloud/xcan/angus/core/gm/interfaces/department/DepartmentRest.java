@@ -139,7 +139,7 @@ public class DepartmentRest {
   public ApiLocaleResult<List<DepartmentDetailVo>> getTree(
       @Parameter(description = "状态筛选") @RequestParam(required = false) String status,
       @Parameter(description = "是否包含用户信息") @RequestParam(required = false, defaultValue = "false") Boolean includeUsers) {
-    return ApiLocaleResult.success(departmentFacade.getTree(null, includeUsers));
+    return ApiLocaleResult.success(departmentFacade.getTree(null, status, includeUsers));
   }
 
   @Operation(operationId = "getDepartmentMembers", summary = "获取部门成员列表", description = "获取指定部门的成员列表")

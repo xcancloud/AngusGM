@@ -2,10 +2,19 @@ package cloud.xcan.angus.core.gm.interfaces.backup.facade.internal.assembler;
 
 import cloud.xcan.angus.core.gm.domain.backup.Backup;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.dto.BackupCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.backup.facade.dto.BackupFindDto;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.dto.BackupUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.backup.facade.vo.BackupContentVo;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.vo.BackupDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.vo.BackupListVo;
+import cloud.xcan.angus.core.gm.interfaces.backup.facade.vo.RestoreHistoryVo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
+import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
+import cloud.xcan.angus.remote.search.SearchCriteria;
+
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Component
 public class BackupAssembler {
@@ -49,6 +58,21 @@ public class BackupAssembler {
         vo.setVerified(backup.getVerified());
         vo.setDescription(backup.getDescription());
         vo.setCreatedAt(backup.getCreatedAt());
+        
+        // 设置备份内容信息
+        BackupContentVo backupContent = new BackupContentVo();
+        backupContent.setDatabase(true);
+        backupContent.setFiles(true);
+        backupContent.setConfigurations(true);
+        vo.setBackupContent(backupContent);
+        
+        // 设置是否可恢复
+        vo.setCanRestore(true);
+        
+        // 设置恢复历史记录（模拟数据）
+        // 在实际实现中，这里应该从数据库或其他存储中获取真实的恢复历史记录
+        // vo.setRestoreHistory(restoreHistory);
+        
         return vo;
     }
     
@@ -61,5 +85,19 @@ public class BackupAssembler {
         vo.setFileSize(backup.getFileSize());
         vo.setCreatedAt(backup.getCreatedAt());
         return vo;
+    }
+    
+    /**
+     * Build query specification from FindDto
+     */
+    public static GenericSpecification<Backup> getSpecification(BackupFindDto dto) {
+        Set<SearchCriteria> filters = new SearchCriteriaBuilder<>(dto)
+            .rangeSearchFields("id", "createdDate")
+            .orderByFields("id", "createdDate", "name")
+            .matchSearchFields("name")
+            .equalSearchFields("type", "status")
+            .rangeSearchFields("startDate", "endDate")
+            .build();
+        return new GenericSpecification<>(filters);
     }
 }
