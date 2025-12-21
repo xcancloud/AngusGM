@@ -1,16 +1,16 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationBatchCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationBatchDeleteDto;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationFindDto;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationRoleAddDto;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto.AuthorizationUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationBatchVo;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationListVo;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationRoleAddVo;
-import cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo.AuthorizationTargetVo;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationBatchCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationBatchDeleteDto;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationFindDto;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationRoleAddDto;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto.AuthorizationUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationBatchVo;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationDetailVo;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationListVo;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationRoleAddVo;
+import cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo.AuthorizationTargetVo;
 import cloud.xcan.angus.remote.PageResult;
 
 /**
@@ -24,9 +24,24 @@ public interface AuthorizationFacade {
   AuthorizationDetailVo create(AuthorizationCreateDto dto);
 
   /**
+   * Batch create authorizations
+   */
+  AuthorizationBatchVo batchCreate(AuthorizationBatchCreateDto dto);
+
+  /**
    * Update authorization
    */
   AuthorizationDetailVo update(Long id, AuthorizationUpdateDto dto);
+
+  /**
+   * Add roles to authorization
+   */
+  AuthorizationRoleAddVo addRoles(Long id, AuthorizationRoleAddDto dto);
+
+  /**
+   * Remove role from authorization
+   */
+  void removeRole(Long id, Long roleId);
 
   /**
    * Delete authorization
@@ -34,9 +49,19 @@ public interface AuthorizationFacade {
   void delete(Long id);
 
   /**
+   * Batch delete authorizations
+   */
+  void batchDelete(AuthorizationBatchDeleteDto dto);
+
+  /**
    * Get authorization detail
    */
   AuthorizationDetailVo getDetail(Long id);
+
+  /**
+   * Get target authorization info
+   */
+  AuthorizationTargetVo getTargetAuthorization(String targetType, String targetId);
 
   /**
    * List authorizations with pagination
@@ -58,28 +83,5 @@ public interface AuthorizationFacade {
    */
   PageResult<AuthorizationListVo> listGroups(AuthorizationFindDto dto);
 
-  /**
-   * Batch create authorizations
-   */
-  AuthorizationBatchVo batchCreate(AuthorizationBatchCreateDto dto);
-
-  /**
-   * Batch delete authorizations
-   */
-  void batchDelete(AuthorizationBatchDeleteDto dto);
-
-  /**
-   * Get target authorization info
-   */
-  AuthorizationTargetVo getTargetAuthorization(String targetType, String targetId);
-
-  /**
-   * Add roles to authorization
-   */
-  AuthorizationRoleAddVo addRoles(Long id, AuthorizationRoleAddDto dto);
-
-  /**
-   * Remove role from authorization
-   */
-  void removeRole(Long id, Long roleId);
+  // TODO: 添加统计相关接口
 }

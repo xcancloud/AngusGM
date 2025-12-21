@@ -1,9 +1,10 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Batch delete authorization DTO
@@ -13,6 +14,6 @@ import lombok.Data;
 public class AuthorizationBatchDeleteDto {
 
   @NotEmpty
-  @Schema(description = "授权ID列表")
-  private List<String> authorizationIds;
+  @Schema(description = "授权ID列表", requiredMode = Schema.RequiredMode.REQUIRED)
+  private List<Long> authorizationIds;
 }

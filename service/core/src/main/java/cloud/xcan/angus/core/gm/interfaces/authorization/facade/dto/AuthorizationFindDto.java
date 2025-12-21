@@ -1,42 +1,27 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto;
 
-import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
+import cloud.xcan.angus.remote.PageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Authorization Find DTO
  */
 @Data
-public class AuthorizationFindDto {
+@EqualsAndHashCode(callSuper = true)
+@Schema(description = "查询授权请求参数")
+public class AuthorizationFindDto extends PageQuery {
     
-    /**
-     * Authorization status
-     */
-    private AuthorizationStatus status;
+    @Schema(description = "目标类型（user、department、group）")
+    private String targetType;
     
-    /**
-     * Subject type (USER, DEPARTMENT, GROUP)
-     */
-    private SubjectType subjectType;
+    @Schema(description = "应用ID筛选")
+    private Long appId;
     
-    /**
-     * Subject ID
-     */
-    private Long subjectId;
+    @Schema(description = "角色ID筛选")
+    private Long roleId;
     
-    /**
-     * Policy ID
-     */
-    private Long policyId;
-    
-    /**
-     * Page number
-     */
-    private Integer page = 0;
-    
-    /**
-     * Page size
-     */
-    private Integer size = 20;
+    @Schema(description = "搜索关键词")
+    private String keyword;
 }

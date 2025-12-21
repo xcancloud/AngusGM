@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -34,7 +34,7 @@ public class AuthorizationBatchVo {
   public static class BatchResultItem {
 
     @Schema(description = "目标ID")
-    private String targetId;
+    private Long targetId;
 
     @Schema(description = "目标名称")
     private String targetName;

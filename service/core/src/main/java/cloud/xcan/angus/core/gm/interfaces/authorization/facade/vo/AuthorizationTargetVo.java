@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -15,7 +15,7 @@ public class AuthorizationTargetVo {
   private String targetType;
 
   @Schema(description = "目标ID")
-  private String targetId;
+  private Long targetId;
 
   @Schema(description = "目标名称")
   private String targetName;
@@ -31,7 +31,7 @@ public class AuthorizationTargetVo {
   public static class RoleInfo {
 
     @Schema(description = "角色ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "角色名称")
     private String name;
@@ -40,7 +40,7 @@ public class AuthorizationTargetVo {
     private String code;
 
     @Schema(description = "应用ID")
-    private String appId;
+    private Long appId;
 
     @Schema(description = "应用名称")
     private String appName;

@@ -1,50 +1,19 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto;
 
-import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Authorization Update DTO
  */
 @Data
+@Schema(description = "更新授权请求参数")
 public class AuthorizationUpdateDto {
     
-    /**
-     * Authorization ID
-     */
-    @NotNull
-    private Long id;
-    
-    /**
-     * Subject type (USER, DEPARTMENT, GROUP)
-     */
-    private SubjectType subjectType;
-    
-    /**
-     * Subject ID
-     */
-    private Long subjectId;
-    
-    /**
-     * Policy ID
-     */
-    private Long policyId;
-    
-    /**
-     * Valid from date
-     */
-    private LocalDateTime validFrom;
-    
-    /**
-     * Valid to date
-     */
-    private LocalDateTime validTo;
-    
-    /**
-     * Remark
-     */
-    private String remark;
+    @NotEmpty
+    @Schema(description = "角色ID列表", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<Long> roleIds;
 }

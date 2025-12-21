@@ -1,47 +1,28 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto;
 
-import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Authorization Create DTO
  */
 @Data
+@Schema(description = "创建授权请求参数")
 public class AuthorizationCreateDto {
     
-    /**
-     * Subject type (USER, DEPARTMENT, GROUP)
-     */
-    @NotNull
-    private SubjectType subjectType;
+    @NotBlank
+    @Schema(description = "目标类型（user、department、group）", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String targetType;
     
-    /**
-     * Subject ID
-     */
-    @NotNull
-    private Long subjectId;
+    @jakarta.validation.constraints.NotNull
+    @Schema(description = "目标ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Long targetId;
     
-    /**
-     * Policy ID
-     */
-    @NotNull
-    private Long policyId;
-    
-    /**
-     * Valid from date
-     */
-    private LocalDateTime validFrom;
-    
-    /**
-     * Valid to date
-     */
-    private LocalDateTime validTo;
-    
-    /**
-     * Remark
-     */
-    private String remark;
+    @NotEmpty
+    @Schema(description = "角色ID列表", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<Long> roleIds;
 }

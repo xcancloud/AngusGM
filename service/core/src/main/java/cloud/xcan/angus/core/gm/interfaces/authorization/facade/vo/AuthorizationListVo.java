@@ -1,54 +1,69 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo;
 
-import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.AuthorizationStatus;
-import cloud.xcan.angus.core.gm.domain.authenticationorization.enums.SubjectType;
+import cloud.xcan.angus.spec.TenantAuditingVo;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Authorization List VO
  */
 @Data
-public class AuthorizationListVo {
+@EqualsAndHashCode(callSuper = true)
+@Schema(description = "授权列表VO")
+public class AuthorizationListVo extends TenantAuditingVo {
     
-    /**
-     * Authorization ID
-     */
+    @Schema(description = "授权ID")
     private Long id;
     
-    /**
-     * Subject type (USER, DEPARTMENT, GROUP)
-     */
-    private SubjectType subjectType;
+    @Schema(description = "目标类型（user、department、group）")
+    private String targetType;
     
-    /**
-     * Subject ID
-     */
-    private Long subjectId;
+    @Schema(description = "目标ID")
+    private Long targetId;
     
-    /**
-     * Policy ID
-     */
-    private Long policyId;
+    @Schema(description = "目标名称")
+    private String targetName;
     
-    /**
-     * Authorization status
-     */
-    private AuthorizationStatus status;
+    @Schema(description = "目标头像（用户）")
+    private String targetAvatar;
     
-    /**
-     * Valid from date
-     */
-    private LocalDateTime validFrom;
+    @Schema(description = "目标部门（用户）")
+    private String targetDepartment;
     
-    /**
-     * Valid to date
-     */
-    private LocalDateTime validTo;
+    @Schema(description = "目标邮箱（用户）")
+    private String targetEmail;
     
-    /**
-     * Create time
-     */
-    private LocalDateTime createTime;
+    @Schema(description = "上级部门（部门）")
+    private String targetParent;
+    
+    @Schema(description = "用户数量（部门/组）")
+    private Integer targetUserCount;
+    
+    @Schema(description = "描述（组）")
+    private String targetDescription;
+    
+    @Schema(description = "角色列表")
+    private List<RoleInfo> roles;
+    
+    @Data
+    @Schema(description = "角色信息")
+    public static class RoleInfo {
+        @Schema(description = "角色ID")
+        private Long id;
+        
+        @Schema(description = "角色名称")
+        private String name;
+        
+        @Schema(description = "角色编码")
+        private String code;
+        
+        @Schema(description = "应用ID")
+        private Long appId;
+        
+        @Schema(description = "应用名称")
+        private String appName;
+    }
 }

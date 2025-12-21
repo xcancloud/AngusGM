@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.vo;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import lombok.Data;
 public class AuthorizationRoleAddVo {
 
   @Schema(description = "授权ID")
-  private String authorizationId;
+  private Long authorizationId;
 
   @Schema(description = "添加的角色列表")
   private List<AddedRole> addedRoles;
@@ -26,7 +26,7 @@ public class AuthorizationRoleAddVo {
   public static class AddedRole {
 
     @Schema(description = "角色ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "角色名称")
     private String name;

@@ -1,4 +1,4 @@
-package cloud.xcan.angus.core.gm.interfaces.authenticationorization.facade.dto;
+package cloud.xcan.angus.core.gm.interfaces.authorization.facade.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -19,9 +19,9 @@ public class AuthorizationBatchCreateDto {
 
   @NotEmpty
   @Schema(description = "目标ID列表")
-  private List<String> targetIds;
+  private List<Long> targetIds;
 
   @NotEmpty
   @Schema(description = "角色ID列表")
-  private List<String> roleIds;
+  private List<Long> roleIds;
 }
