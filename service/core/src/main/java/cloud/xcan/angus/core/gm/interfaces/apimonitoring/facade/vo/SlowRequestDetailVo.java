@@ -13,7 +13,7 @@ import java.util.Map;
 public class SlowRequestDetailVo implements Serializable {
     
     @Schema(description = "记录ID")
-    private String id;
+    private Long id;
     
     @Schema(description = "链路追踪ID")
     private String traceId;

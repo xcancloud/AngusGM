@@ -10,10 +10,11 @@ import org.hibernate.annotations.Type;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
- * API监控实体
+ * API监控信息实体（用于查询，不包含大文本字段）
  * API接口调用监控、性能分析、异常追踪
  * </p>
  */
@@ -21,7 +22,7 @@ import java.util.Map;
 @Setter
 @Entity
 @Table(name = "gm_api_monitoring")
-public class ApiMonitoring extends TenantAuditingEntity<ApiMonitoring, Long> {
+public class ApiMonitoringInfo extends TenantAuditingEntity<ApiMonitoringInfo, Long> {
 
     @Id
     private Long id;
@@ -76,11 +77,7 @@ public class ApiMonitoring extends TenantAuditingEntity<ApiMonitoring, Long> {
     @Column(name = "response_headers", columnDefinition = "jsonb")
     private Map<String, String> responseHeaders;
 
-    @Column(name = "request_body", columnDefinition = "text")
-    private String requestBody;
-
-    @Column(name = "response_body", columnDefinition = "text")
-    private String responseBody;
+    // 忽略大文本字段：requestBody, responseBody, stackTrace
 
     @Column(name = "error_message", length = 2000)
     private String errorMessage;
@@ -88,8 +85,7 @@ public class ApiMonitoring extends TenantAuditingEntity<ApiMonitoring, Long> {
     @Column(name = "error_type", length = 200)
     private String errorType;
 
-    @Column(name = "stack_trace", columnDefinition = "text")
-    private String stackTrace;
+    // 忽略大文本字段：stackTrace
 
     @Column(name = "resolved")
     private Boolean resolved;
@@ -106,4 +102,21 @@ public class ApiMonitoring extends TenantAuditingEntity<ApiMonitoring, Long> {
     public Long identity() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ApiMonitoringInfo that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
+

@@ -3,14 +3,17 @@ package cloud.xcan.angus.core.gm.domain.apimonitoring;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * <p>
  * API监控仓储接口
+ * </p>
  */
-public interface ApiMonitoringRepo extends JpaRepository<ApiMonitoring, Long> {
+public interface ApiMonitoringRepo extends JpaRepository<ApiMonitoring, Long>, JpaSpecificationExecutor<ApiMonitoring> {
 
     /**
      * 根据端点查找
@@ -26,6 +29,11 @@ public interface ApiMonitoringRepo extends JpaRepository<ApiMonitoring, Long> {
      * 根据状态查找
      */
     Page<ApiMonitoring> findByStatus(ApiMonitoringStatus status, Pageable pageable);
+
+    /**
+     * 根据状态统计数量
+     */
+    long countByStatus(ApiMonitoringStatus status);
 
     /**
      * 根据时间范围查找

@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class InterfaceStatsVo implements Serializable {
     
     @Schema(description = "统计ID")
-    private String id;
+    private Long id;
     
     @Schema(description = "服务名称")
     private String serviceName;

@@ -4,7 +4,6 @@ import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.ApiMonitoringFac
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.ErrorRequestFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.InterfaceStatsFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.SlowRequestFindDto;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.TopRequestFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo.ErrorRequestDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo.ErrorRequestVo;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo.InterfaceMonitoringOverviewVo;
@@ -103,7 +102,7 @@ public class ApiMonitoringRest {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/slow-requests/{id}")
   public ApiLocaleResult<SlowRequestDetailVo> getSlowRequestDetail(
-      @Parameter(description = "慢请求记录ID") @PathVariable String id) {
+      @Parameter(description = "慢请求记录ID") @PathVariable Long id) {
     return ApiLocaleResult.success(apiMonitoringFacade.getSlowRequestDetail(id));
   }
 
@@ -125,7 +124,7 @@ public class ApiMonitoringRest {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/error-requests/{id}")
   public ApiLocaleResult<ErrorRequestDetailVo> getErrorRequestDetail(
-      @Parameter(description = "错误请求记录ID") @PathVariable String id) {
+      @Parameter(description = "错误请求记录ID") @PathVariable Long id) {
     return ApiLocaleResult.success(apiMonitoringFacade.getErrorRequestDetail(id));
   }
 
@@ -155,8 +154,10 @@ public class ApiMonitoringRest {
   })
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/top/calls")
-  public ApiLocaleResult<List<TopCallsVo>> getTopCalls(@Valid TopRequestFindDto dto) {
-    return ApiLocaleResult.success(apiMonitoringFacade.getTopCalls(dto));
+  public ApiLocaleResult<List<TopCallsVo>> getTopCalls(
+      @Parameter(description = "返回数量") @RequestParam(required = false, defaultValue = "10") Integer limit,
+      @Parameter(description = "时间周期（1h、6h、24h、7d、30d）") @RequestParam(required = false) String period) {
+    return ApiLocaleResult.success(apiMonitoringFacade.getTopCalls(limit, period));
   }
 
   @Operation(operationId = "getTopSlow", summary = "获取响应时间TOP接口", description = "获取响应时间最长的接口列表")
@@ -165,8 +166,10 @@ public class ApiMonitoringRest {
   })
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/top/slow")
-  public ApiLocaleResult<List<TopSlowVo>> getTopSlow(@Valid TopRequestFindDto dto) {
-    return ApiLocaleResult.success(apiMonitoringFacade.getTopSlow(dto));
+  public ApiLocaleResult<List<TopSlowVo>> getTopSlow(
+      @Parameter(description = "返回数量") @RequestParam(required = false, defaultValue = "10") Integer limit,
+      @Parameter(description = "时间周期（1h、6h、24h、7d、30d）") @RequestParam(required = false) String period) {
+    return ApiLocaleResult.success(apiMonitoringFacade.getTopSlow(limit, period));
   }
 
   @Operation(operationId = "getTopErrors", summary = "获取错误率TOP接口", description = "获取错误率最高的接口列表")
@@ -175,7 +178,9 @@ public class ApiMonitoringRest {
   })
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/top/errors")
-  public ApiLocaleResult<List<TopErrorsVo>> getTopErrors(@Valid TopRequestFindDto dto) {
-    return ApiLocaleResult.success(apiMonitoringFacade.getTopErrors(dto));
+  public ApiLocaleResult<List<TopErrorsVo>> getTopErrors(
+      @Parameter(description = "返回数量") @RequestParam(required = false, defaultValue = "10") Integer limit,
+      @Parameter(description = "时间周期（1h、6h、24h、7d、30d）") @RequestParam(required = false) String period) {
+    return ApiLocaleResult.success(apiMonitoringFacade.getTopErrors(limit, period));
   }
 }

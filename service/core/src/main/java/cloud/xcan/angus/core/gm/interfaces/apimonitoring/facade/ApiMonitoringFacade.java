@@ -3,7 +3,6 @@ package cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.InterfaceStatsFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.SlowRequestFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.ErrorRequestFindDto;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.TopRequestFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo.*;
 import cloud.xcan.angus.remote.PageResult;
 
@@ -43,7 +42,7 @@ public interface ApiMonitoringFacade {
     /**
      * 获取慢请求详情
      */
-    SlowRequestDetailVo getSlowRequestDetail(String id);
+    SlowRequestDetailVo getSlowRequestDetail(Long id);
     
     // ==================== 错误请求分析 ====================
     
@@ -55,7 +54,7 @@ public interface ApiMonitoringFacade {
     /**
      * 获取错误请求详情
      */
-    ErrorRequestDetailVo getErrorRequestDetail(String id);
+    ErrorRequestDetailVo getErrorRequestDetail(Long id);
     
     // ==================== 实时监控 ====================
     
@@ -74,15 +73,15 @@ public interface ApiMonitoringFacade {
     /**
      * 获取调用量TOP接口
      */
-    List<TopCallsVo> getTopCalls(TopRequestFindDto dto);
+    List<TopCallsVo> getTopCalls(Integer limit, String period);
     
     /**
      * 获取响应时间TOP接口
      */
-    List<TopSlowVo> getTopSlow(TopRequestFindDto dto);
+    List<TopSlowVo> getTopSlow(Integer limit, String period);
     
     /**
      * 获取错误率TOP接口
      */
-    List<TopErrorsVo> getTopErrors(TopRequestFindDto dto);
+    List<TopErrorsVo> getTopErrors(Integer limit, String period);
 }

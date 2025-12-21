@@ -1,17 +1,20 @@
 package cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo;
 
+import cloud.xcan.angus.spec.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "错误请求VO")
-public class ErrorRequestVo implements Serializable {
+public class ErrorRequestVo extends TenantAuditingVo implements Serializable {
     
     @Schema(description = "记录ID")
-    private String id;
+    private Long id;
     
     @Schema(description = "链路追踪ID")
     private String traceId;
@@ -45,7 +48,4 @@ public class ErrorRequestVo implements Serializable {
     
     @Schema(description = "用户ID")
     private String userId;
-    
-    @Schema(description = "创建时间")
-    private LocalDateTime createdDate;
 }
