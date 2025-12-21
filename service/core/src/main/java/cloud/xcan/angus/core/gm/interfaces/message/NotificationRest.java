@@ -28,8 +28,6 @@ public class NotificationRest {
     
     private final NotificationFacade notificationFacade;
     
-    // ==================== 通知管理 ====================
-    
     @Operation(summary = "获取通知统计数据", description = "获取通知统计数据")
     @GetMapping("/stats")
     public ApiLocaleResult<NotificationStatsVo> getStats() {
@@ -99,8 +97,6 @@ public class NotificationRest {
         notificationFacade.deleteBatch(dto);
     }
     
-    // ==================== 通知渠道 ====================
-    
     @Operation(summary = "获取通知渠道列表", description = "获取通知渠道列表")
     @GetMapping("/channels")
     public ApiLocaleResult<List<NotificationChannelVo>> listChannels() {
@@ -137,8 +133,6 @@ public class NotificationRest {
         return ApiLocaleResult.success(notificationFacade.testChannel(id));
     }
     
-    // ==================== 通知规则 ====================
-    
     @Operation(summary = "获取通知规则列表", description = "获取通知规则列表")
     @GetMapping("/rules")
     public ApiLocaleResult<List<NotificationRuleVo>> listRules() {
@@ -152,8 +146,6 @@ public class NotificationRest {
             @Valid @RequestBody NotificationRuleCreateDto dto) {
         return ApiLocaleResult.success(notificationFacade.createRule(dto));
     }
-    
-    // ==================== 通知历史 ====================
     
     @Operation(summary = "获取通知历史", description = "分页获取通知历史")
     @GetMapping("/history")

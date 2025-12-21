@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.user.facade.internal;
 
-import static cloud.xcan.angus.spec.BizConstant.buildVoPageResult;
-import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
+import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
+import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
@@ -51,8 +51,6 @@ public class UserFacadeImpl implements UserFacade {
   @Resource
   private UserQuery userQuery;
 
-  // ==================== 创建 ====================
-
   @Override
   public UserDetailVo create(UserCreateDto dto) {
     User user = UserAssembler.toCreateDomain(dto);
@@ -60,16 +58,12 @@ public class UserFacadeImpl implements UserFacade {
     return UserAssembler.toDetailVo(saved);
   }
 
-  // ==================== 更新 ====================
-
   @Override
   public UserDetailVo update(Long id, UserUpdateDto dto) {
     User user = UserAssembler.toUpdateDomain(id, dto);
     User saved = userCmd.update(user);
     return UserAssembler.toDetailVo(saved);
   }
-
-  // ==================== 修改状态 ====================
 
   @Override
   public UserStatusUpdateVo updateStatus(Long id, UserStatusUpdateDto dto) {
@@ -111,8 +105,6 @@ public class UserFacadeImpl implements UserFacade {
     return vo;
   }
 
-  // ==================== 删除 ====================
-
   @Override
   public void delete(Long id) {
     userCmd.delete(id);
@@ -123,15 +115,11 @@ public class UserFacadeImpl implements UserFacade {
     userCmd.batchDelete(new HashSet<>(dto.getUserIds()));
   }
 
-  // ==================== 查询详细 ====================
-
   @Override
   public UserDetailVo getDetail(Long id) {
     User user = userQuery.findAndCheck(id);
     return UserAssembler.toDetailVo(user);
   }
-
-  // ==================== 查询列表 ====================
 
   @Override
   public PageResult<UserListVo> list(UserFindDto dto) {
@@ -140,8 +128,6 @@ public class UserFacadeImpl implements UserFacade {
         dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, UserAssembler::toListVo);
   }
-
-  // ==================== 查询统计 ====================
 
   @Override
   public UserStatsVo getStats() {
@@ -164,8 +150,6 @@ public class UserFacadeImpl implements UserFacade {
     
     return stats;
   }
-
-  // ==================== 邀请相关 ====================
 
   @Override
   public UserInviteVo invite(UserInviteDto dto) {
@@ -199,8 +183,6 @@ public class UserFacadeImpl implements UserFacade {
     vo.setResentTime(LocalDateTime.now());
     return vo;
   }
-
-  // ==================== 当前用户相关 ====================
 
   @Override
   public void changePassword(UserChangePasswordDto dto) {

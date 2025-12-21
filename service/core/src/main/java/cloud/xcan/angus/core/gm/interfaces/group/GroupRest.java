@@ -53,10 +53,6 @@ public class GroupRest {
   @Resource
   private GroupFacade groupFacade;
 
-  // ================================
-  // 创建
-  // ================================
-
   @Operation(operationId = "createGroup", summary = "创建组", description = "创建新组")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "组创建成功")
@@ -67,10 +63,6 @@ public class GroupRest {
       @Valid @RequestBody GroupCreateDto dto) {
     return ApiLocaleResult.success(groupFacade.create(dto));
   }
-
-  // ================================
-  // 更新
-  // ================================
 
   @Operation(operationId = "updateGroup", summary = "更新组", description = "更新组基本信息")
   @ApiResponses(value = {
@@ -83,10 +75,6 @@ public class GroupRest {
       @Valid @RequestBody GroupUpdateDto dto) {
     return ApiLocaleResult.success(groupFacade.update(id, dto));
   }
-
-  // ================================
-  // 修改状态
-  // ================================
 
   @Operation(operationId = "updateGroupStatus", summary = "归档/激活组", description = "修改组状态")
   @ApiResponses(value = {
@@ -112,10 +100,6 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.updateOwner(id, dto));
   }
 
-  // ================================
-  // 删除
-  // ================================
-
   @Operation(operationId = "deleteGroup", summary = "删除组", description = "删除指定组")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -126,10 +110,6 @@ public class GroupRest {
       @Parameter(description = "组ID") @PathVariable Long id) {
     groupFacade.delete(id);
   }
-
-  // ================================
-  // 查询详细
-  // ================================
 
   @Operation(operationId = "getGroupDetail", summary = "获取组详情", 
       description = "获取指定组的详细信息")
@@ -144,10 +124,6 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.getDetail(id));
   }
 
-  // ================================
-  // 查询列表
-  // ================================
-
   @Operation(operationId = "getGroupList", summary = "获取组列表", 
       description = "获取组列表，支持分页、搜索和筛选")
   @ApiResponses(value = {
@@ -160,10 +136,6 @@ public class GroupRest {
     return ApiLocaleResult.success(groupFacade.list(dto));
   }
 
-  // ================================
-  // 查询统计
-  // ================================
-
   @Operation(operationId = "getGroupStats", summary = "获取组统计数据", 
       description = "获取组统计数据，包括总数、类型分布等")
   @ApiResponses(value = {
@@ -174,10 +146,6 @@ public class GroupRest {
   public ApiLocaleResult<GroupStatsVo> getStats() {
     return ApiLocaleResult.success(groupFacade.getStats());
   }
-
-  // ================================
-  // 成员管理
-  // ================================
 
   @Operation(operationId = "getGroupMembers", summary = "获取组成员列表", 
       description = "获取指定组的成员列表，支持分页")
@@ -227,10 +195,6 @@ public class GroupRest {
       @Valid @RequestBody GroupMemberRemoveDto dto) {
     groupFacade.removeMembers(id, dto);
   }
-
-  // ================================
-  // 用户组查询
-  // ================================
 
   @Operation(operationId = "getGroupsByUser", summary = "获取用户所在的组列表", 
       description = "获取指定用户所在的所有组")

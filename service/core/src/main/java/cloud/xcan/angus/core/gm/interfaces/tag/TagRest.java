@@ -42,7 +42,6 @@ public class TagRest {
   @Resource
   private TagFacade tagFacade;
 
-  // 创建
   @Operation(operationId = "createTag", summary = "创建标签", description = "创建新标签")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "标签创建成功")
@@ -54,7 +53,6 @@ public class TagRest {
     return ApiLocaleResult.success(tagFacade.create(dto));
   }
 
-  // 更新
   @Operation(operationId = "updateTag", summary = "更新标签", description = "更新标签基本信息")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "更新成功")
@@ -67,7 +65,6 @@ public class TagRest {
     return ApiLocaleResult.success(tagFacade.update(id, dto));
   }
 
-  // 删除
   @Operation(operationId = "deleteTag", summary = "删除标签", description = "删除指定标签")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -79,7 +76,6 @@ public class TagRest {
     tagFacade.delete(id);
   }
 
-  // 查询详细
   @Operation(operationId = "getTagDetail", summary = "获取标签详情", 
       description = "获取指定标签的详细信息")
   @ApiResponses(value = {
@@ -93,7 +89,6 @@ public class TagRest {
     return ApiLocaleResult.success(tagFacade.getDetail(id));
   }
 
-  // 查询列表
   @Operation(operationId = "getTagList", summary = "获取标签列表", 
       description = "获取标签列表，支持分页、搜索和筛选")
   @ApiResponses(value = {
@@ -106,7 +101,6 @@ public class TagRest {
     return ApiLocaleResult.success(tagFacade.list(dto));
   }
 
-  // 获取所有标签（不分页）
   @Operation(operationId = "getAllTags", summary = "获取所有标签", 
       description = "获取所有标签，不分页")
   @ApiResponses(value = {

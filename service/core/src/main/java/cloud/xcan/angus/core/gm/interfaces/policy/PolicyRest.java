@@ -51,7 +51,6 @@ public class PolicyRest {
   @Resource
   private PolicyFacade policyFacade;
 
-  // 创建
   @Operation(operationId = "createRole", summary = "创建角色", description = "创建新角色")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "角色创建成功")
@@ -63,7 +62,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.create(dto));
   }
 
-  // 更新
   @Operation(operationId = "updateRole", summary = "更新角色", description = "更新角色基本信息")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "更新成功")
@@ -76,7 +74,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.update(id, dto));
   }
 
-  // 删除
   @Operation(operationId = "deleteRole", summary = "删除角色", description = "删除指定角色")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -88,7 +85,6 @@ public class PolicyRest {
     policyFacade.delete(id);
   }
 
-  // 查询详情
   @Operation(operationId = "getRoleDetail", summary = "获取角色详情", 
       description = "获取指定角色的详细信息")
   @ApiResponses(value = {
@@ -102,7 +98,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.getDetail(id));
   }
 
-  // 查询列表
   @Operation(operationId = "getRoleList", summary = "获取角色列表", 
       description = "获取角色列表，支持分页、搜索和筛选")
   @ApiResponses(value = {
@@ -115,7 +110,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.list(dto));
   }
 
-  // 查询统计
   @Operation(operationId = "getRoleStats", summary = "获取角色统计数据", 
       description = "获取角色统计数据")
   @ApiResponses(value = {
@@ -127,7 +121,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.getStats());
   }
 
-  // 获取角色权限配置
   @Operation(operationId = "getRolePermissions", summary = "获取角色权限配置", 
       description = "获取指定角色的权限配置")
   @ApiResponses(value = {
@@ -140,7 +133,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.getPermissions(id));
   }
 
-  // 更新角色权限
   @Operation(operationId = "updateRolePermissions", summary = "更新角色权限", 
       description = "更新指定角色的权限配置")
   @ApiResponses(value = {
@@ -154,7 +146,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.updatePermissions(id, dto));
   }
 
-  // 获取角色用户列表
   @Operation(operationId = "getRoleUsers", summary = "获取角色用户列表", 
       description = "获取指定角色下的用户列表")
   @ApiResponses(value = {
@@ -168,7 +159,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.getUsers(id, dto));
   }
 
-  // 设置默认角色
   @Operation(operationId = "setDefaultRole", summary = "设置默认角色", 
       description = "设置指定角色为默认角色")
   @ApiResponses(value = {
@@ -182,7 +172,6 @@ public class PolicyRest {
     return ApiLocaleResult.success(policyFacade.setDefault(id, dto));
   }
 
-  // 获取可用权限列表
   @Operation(operationId = "getAvailablePermissions", summary = "获取可用权限列表", 
       description = "获取指定应用的可用权限列表")
   @ApiResponses(value = {

@@ -49,10 +49,6 @@ public class ServiceRest {
   @Resource
   private ServiceFacade serviceFacade;
 
-  // ================================
-  // 服务列表和统计
-  // ================================
-
   @Operation(operationId = "refreshServices", summary = "刷新服务列表", description = "从注册中心刷新服务列表")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "刷新成功")
@@ -108,10 +104,6 @@ public class ServiceRest {
     return ApiLocaleResult.success(serviceFacade.getStats());
   }
 
-  // ================================
-  // 实例健康检查
-  // ================================
-
   @Operation(operationId = "getInstanceHealth", summary = "获取服务实例健康状态", description = "获取指定服务实例的健康状态")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "获取成功")
@@ -123,10 +115,6 @@ public class ServiceRest {
       @Parameter(description = "实例ID") @PathVariable String instanceId) {
     return ApiLocaleResult.success(serviceFacade.getInstanceHealth(serviceName, instanceId));
   }
-
-  // ================================
-  // Eureka配置
-  // ================================
 
   @Operation(operationId = "getEurekaConfig", summary = "获取Eureka配置", description = "获取Eureka注册中心配置")
   @ApiResponses(value = {
@@ -159,10 +147,6 @@ public class ServiceRest {
       @Valid @RequestBody EurekaTestDto dto) {
     return ApiLocaleResult.success(serviceFacade.testEurekaConnection(dto));
   }
-
-  // ================================
-  // 服务调用统计
-  // ================================
 
   @Operation(operationId = "getServiceCallStats", summary = "获取服务调用统计", description = "获取指定服务的调用统计信息")
   @ApiResponses(value = {

@@ -46,7 +46,6 @@ public class AuthorizationRest {
   @Resource
   private AuthorizationFacade authorizationFacade;
 
-  // 创建
   @Operation(operationId = "createAuthorization", summary = "创建授权", description = "创建新授权记录")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "授权创建成功")
@@ -58,7 +57,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.create(dto));
   }
 
-  // 更新
   @Operation(operationId = "updateAuthorization", summary = "更新授权", description = "更新授权信息")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "更新成功")
@@ -71,7 +69,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.update(id, dto));
   }
 
-  // 删除
   @Operation(operationId = "deleteAuthorization", summary = "删除授权", description = "删除指定授权")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -83,7 +80,6 @@ public class AuthorizationRest {
     authorizationFacade.delete(id);
   }
 
-  // 查询详情
   @Operation(operationId = "getAuthorizationDetail", summary = "获取授权详情", 
       description = "获取指定授权的详细信息")
   @ApiResponses(value = {
@@ -97,7 +93,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.getDetail(id));
   }
 
-  // 查询列表
   @Operation(operationId = "getAuthorizationList", summary = "获取授权列表", 
       description = "获取授权记录列表，支持分页和筛选")
   @ApiResponses(value = {
@@ -110,7 +105,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.list(dto));
   }
 
-  // 获取用户授权列表
   @Operation(operationId = "getUserAuthorizationList", summary = "获取用户授权列表", 
       description = "获取用户类型的授权记录")
   @ApiResponses(value = {
@@ -123,7 +117,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.listUsers(dto));
   }
 
-  // 获取部门授权列表
   @Operation(operationId = "getDepartmentAuthorizationList", summary = "获取部门授权列表", 
       description = "获取部门类型的授权记录")
   @ApiResponses(value = {
@@ -136,7 +129,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.listDepartments(dto));
   }
 
-  // 获取组授权列表
   @Operation(operationId = "getGroupAuthorizationList", summary = "获取组授权列表", 
       description = "获取组类型的授权记录")
   @ApiResponses(value = {
@@ -149,7 +141,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.listGroups(dto));
   }
 
-  // 批量授权
   @Operation(operationId = "batchCreateAuthorization", summary = "批量授权", 
       description = "为多个目标批量创建授权")
   @ApiResponses(value = {
@@ -162,7 +153,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.batchCreate(dto));
   }
 
-  // 批量删除授权
   @Operation(operationId = "batchDeleteAuthorization", summary = "批量删除授权", 
       description = "批量删除授权记录")
   @ApiResponses(value = {
@@ -175,7 +165,6 @@ public class AuthorizationRest {
     authorizationFacade.batchDelete(dto);
   }
 
-  // 获取指定目标的授权信息
   @Operation(operationId = "getTargetAuthorization", summary = "获取目标授权信息", 
       description = "获取指定目标的授权信息")
   @ApiResponses(value = {
@@ -189,7 +178,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.getTargetAuthorization(targetType, targetId));
   }
 
-  // 添加角色到授权
   @Operation(operationId = "addRolesToAuthorization", summary = "添加角色到授权", 
       description = "向指定授权添加角色")
   @ApiResponses(value = {
@@ -203,7 +191,6 @@ public class AuthorizationRest {
     return ApiLocaleResult.success(authorizationFacade.addRoles(id, dto));
   }
 
-  // 从授权中移除角色
   @Operation(operationId = "removeRoleFromAuthorization", summary = "从授权中移除角色", 
       description = "从指定授权中移除角色")
   @ApiResponses(value = {

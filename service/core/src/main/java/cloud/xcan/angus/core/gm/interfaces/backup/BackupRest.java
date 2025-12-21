@@ -53,7 +53,6 @@ public class BackupRest {
   @Resource
   private BackupFacade backupFacade;
 
-  // 获取备份统计数据
   @Operation(operationId = "getBackupStats", summary = "获取备份统计数据")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "统计数据获取成功")
@@ -64,7 +63,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.getStats());
   }
 
-  // 获取备份记录列表
   @Operation(operationId = "getBackupRecords", summary = "获取备份记录列表")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "备份记录列表获取成功")
@@ -76,7 +74,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.listRecords(dto));
   }
 
-  // 创建备份
   @Operation(operationId = "createBackup", summary = "创建备份")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "备份任务已创建")
@@ -88,7 +85,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.createBackup(dto));
   }
 
-  // 获取备份详情
   @Operation(operationId = "getBackupDetail", summary = "获取备份详情")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "备份详情获取成功")
@@ -100,7 +96,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.getBackupDetail(id));
   }
 
-  // 删除备份
   @Operation(operationId = "deleteBackup", summary = "删除备份")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -112,7 +107,6 @@ public class BackupRest {
     backupFacade.deleteBackup(id);
   }
 
-  // 下载备份文件
   @Operation(operationId = "downloadBackup", summary = "下载备份文件")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "文件下载")
@@ -123,7 +117,6 @@ public class BackupRest {
     return backupFacade.downloadBackup(id);
   }
 
-  // 恢复备份
   @Operation(operationId = "restoreBackup", summary = "恢复备份")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "恢复任务已创建")
@@ -136,7 +129,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.restoreBackup(id, dto));
   }
 
-  // 获取恢复进度
   @Operation(operationId = "getRestoreProgress", summary = "获取恢复进度")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "恢复进度获取成功")
@@ -148,7 +140,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.getRestoreProgress(restoreId));
   }
 
-  // 获取备份计划列表
   @Operation(operationId = "getBackupSchedules", summary = "获取备份计划列表")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "备份计划列表获取成功")
@@ -159,7 +150,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.listSchedules());
   }
 
-  // 创建备份计划
   @Operation(operationId = "createSchedule", summary = "创建备份计划")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "备份计划创建成功")
@@ -171,7 +161,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.createSchedule(dto));
   }
 
-  // 更新备份计划
   @Operation(operationId = "updateSchedule", summary = "更新备份计划")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "备份计划更新成功")
@@ -184,7 +173,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.updateSchedule(id, dto));
   }
 
-  // 删除备份计划
   @Operation(operationId = "deleteSchedule", summary = "删除备份计划")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -196,7 +184,6 @@ public class BackupRest {
     backupFacade.deleteSchedule(id);
   }
 
-  // 启用/禁用备份计划
   @Operation(operationId = "updateScheduleStatus", summary = "启用/禁用备份计划")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "状态更新成功")
@@ -209,7 +196,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.updateScheduleStatus(id, dto));
   }
 
-  // 立即执行备份计划
   @Operation(operationId = "runSchedule", summary = "立即执行备份计划")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "备份任务已启动")

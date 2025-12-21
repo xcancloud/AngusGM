@@ -11,16 +11,12 @@ import cloud.xcan.angus.core.gm.interfaces.user.facade.vo.UserListVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
 import cloud.xcan.angus.remote.search.SearchCriteria;
-import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 /**
  * User assembler for DTO/Domain/VO conversion
  */
 public class UserAssembler {
-
-  private static final DateTimeFormatter DATETIME_FORMATTER = 
-      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   /**
    * Convert CreateDto to Domain

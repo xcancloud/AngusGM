@@ -46,10 +46,6 @@ public class InterfaceRest {
   @Resource
   private InterfaceFacade interfaceFacade;
 
-  // ================================
-  // 同步操作
-  // ================================
-
   @Operation(operationId = "syncInterfaces", summary = "同步服务接口", description = "同步指定服务的接口文档")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "同步成功")
@@ -71,10 +67,6 @@ public class InterfaceRest {
     return ApiLocaleResult.success(interfaceFacade.syncAll());
   }
 
-  // ================================
-  // 状态操作
-  // ================================
-
   @Operation(operationId = "deprecateInterface", summary = "标记接口为废弃", description = "标记指定接口为废弃状态")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "标记成功")
@@ -86,10 +78,6 @@ public class InterfaceRest {
       @Valid @RequestBody InterfaceDeprecateDto dto) {
     return ApiLocaleResult.success(interfaceFacade.deprecate(id, dto));
   }
-
-  // ================================
-  // 查询接口
-  // ================================
 
   @Operation(operationId = "getInterfaceDetail", summary = "获取接口详情", description = "获取指定接口的详细信息")
   @ApiResponses(value = {
@@ -137,10 +125,6 @@ public class InterfaceRest {
     return ApiLocaleResult.success(interfaceFacade.listByTag(tag, dto));
   }
 
-  // ================================
-  // 服务和标签查询
-  // ================================
-
   @Operation(operationId = "getInterfaceServices", summary = "获取所有服务列表", description = "获取所有服务列表（带接口数量）")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "获取成功")
@@ -160,10 +144,6 @@ public class InterfaceRest {
   public ApiLocaleResult<List<InterfaceTagVo>> getTags() {
     return ApiLocaleResult.success(interfaceFacade.getTags());
   }
-
-  // ================================
-  // 统计查询
-  // ================================
 
   @Operation(operationId = "getInterfaceCallStats", summary = "获取接口调用统计", description = "获取指定接口的调用统计信息")
   @ApiResponses(value = {

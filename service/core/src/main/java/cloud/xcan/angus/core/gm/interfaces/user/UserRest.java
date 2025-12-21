@@ -55,8 +55,6 @@ public class UserRest {
   @Resource
   private UserFacade userFacade;
 
-  // ==================== 创建 ====================
-
   @Operation(operationId = "createUser", summary = "创建用户", description = "创建新用户")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "用户创建成功")
@@ -67,8 +65,6 @@ public class UserRest {
       @Valid @RequestBody UserCreateDto dto) {
     return ApiLocaleResult.success(userFacade.create(dto));
   }
-
-  // ==================== 更新 ====================
 
   @Operation(operationId = "updateUser", summary = "更新用户", description = "更新用户基本信息")
   @ApiResponses(value = {
@@ -81,8 +77,6 @@ public class UserRest {
       @Valid @RequestBody UserUpdateDto dto) {
     return ApiLocaleResult.success(userFacade.update(id, dto));
   }
-
-  // ==================== 修改状态 ====================
 
   @Operation(operationId = "updateUserStatus", summary = "启用/禁用用户", description = "更新用户启用状态")
   @ApiResponses(value = {
@@ -120,8 +114,6 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.resetPassword(id, dto));
   }
 
-  // ==================== 删除 ====================
-
   @Operation(operationId = "deleteUser", summary = "删除用户", description = "删除指定用户")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -143,8 +135,6 @@ public class UserRest {
     userFacade.batchDelete(dto);
   }
 
-  // ==================== 查询详细 ====================
-
   @Operation(operationId = "getUserDetail", summary = "获取用户详情", 
       description = "获取指定用户的详细信息")
   @ApiResponses(value = {
@@ -158,8 +148,6 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.getDetail(id));
   }
 
-  // ==================== 查询列表 ====================
-
   @Operation(operationId = "getUserList", summary = "获取用户列表", 
       description = "获取用户列表，支持分页、搜索和筛选")
   @ApiResponses(value = {
@@ -172,8 +160,6 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.list(dto));
   }
 
-  // ==================== 查询统计 ====================
-
   @Operation(operationId = "getUserStats", summary = "获取用户统计数据", 
       description = "获取用户统计数据，包括总数、激活/禁用数量等")
   @ApiResponses(value = {
@@ -184,8 +170,6 @@ public class UserRest {
   public ApiLocaleResult<UserStatsVo> getStats() {
     return ApiLocaleResult.success(userFacade.getStats());
   }
-
-  // ==================== 邀请相关接口 ====================
 
   @Operation(operationId = "inviteUser", summary = "邀请用户", description = "发送用户邀请")
   @ApiResponses(value = {
@@ -229,15 +213,13 @@ public class UserRest {
     return ApiLocaleResult.success(userFacade.resendInvite(id));
   }
 
-  // ==================== 当前用户相关接口 ====================
-
   @Operation(operationId = "changePassword", summary = "修改密码", description = "当前用户修改密码")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "密码修改成功")
   })
   @ResponseStatus(HttpStatus.OK)
   @PostMapping("/change-password")
-  public ApiLocaleResult<Void> changePassword(@Valid @RequestBody UserChangePasswordDto dto) {
+  public ApiLocaleResult<?> changePassword(@Valid @RequestBody UserChangePasswordDto dto) {
     userFacade.changePassword(dto);
     return ApiLocaleResult.success(null);
   }

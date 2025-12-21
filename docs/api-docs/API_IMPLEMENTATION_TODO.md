@@ -484,6 +484,18 @@ public abstract class PageQuery {
 
 ---
 
+## 📋 接口优化检查清单
+
+**详细检查清单请参考**: [API_OPTIMIZATION_CHECKLIST.md](./API_OPTIMIZATION_CHECKLIST.md)
+
+该文档包含：
+- ✅ 17个通用优化检查项（适用于所有模块）
+- ✅ 22个模块的专项检查项
+- ✅ 优先级分类（高/中/低）
+- ✅ 检查执行建议（分阶段执行）
+
+---
+
 ## DDD分层结构参考
 
 ```

@@ -50,10 +50,6 @@ public class ApplicationRest {
   @Resource
   private ApplicationFacade applicationFacade;
 
-  // ================================
-  // 创建
-  // ================================
-
   @Operation(operationId = "createApplication", summary = "创建应用", description = "创建新应用")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "应用创建成功")
@@ -64,10 +60,6 @@ public class ApplicationRest {
       @Valid @RequestBody ApplicationCreateDto dto) {
     return ApiLocaleResult.success(applicationFacade.create(dto));
   }
-
-  // ================================
-  // 更新
-  // ================================
 
   @Operation(operationId = "updateApplication", summary = "更新应用", description = "更新应用信息")
   @ApiResponses(value = {
@@ -81,10 +73,6 @@ public class ApplicationRest {
     return ApiLocaleResult.success(applicationFacade.update(id, dto));
   }
 
-  // ================================
-  // 修改状态
-  // ================================
-
   @Operation(operationId = "updateApplicationStatus", summary = "启用/禁用应用", description = "修改应用状态")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "状态更新成功")
@@ -97,10 +85,6 @@ public class ApplicationRest {
     return ApiLocaleResult.success(applicationFacade.updateStatus(id, dto));
   }
 
-  // ================================
-  // 删除
-  // ================================
-
   @Operation(operationId = "deleteApplication", summary = "删除应用", description = "删除指定应用")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "删除成功")
@@ -111,10 +95,6 @@ public class ApplicationRest {
       @Parameter(description = "应用ID") @PathVariable Long id) {
     applicationFacade.delete(id);
   }
-
-  // ================================
-  // 查询详细
-  // ================================
 
   @Operation(operationId = "getApplicationDetail", summary = "获取应用详情", 
       description = "获取指定应用的详细信息")
@@ -129,10 +109,6 @@ public class ApplicationRest {
     return ApiLocaleResult.success(applicationFacade.getDetail(id));
   }
 
-  // ================================
-  // 查询列表
-  // ================================
-
   @Operation(operationId = "getApplicationList", summary = "获取应用列表", 
       description = "获取应用列表，支持分页、搜索和筛选")
   @ApiResponses(value = {
@@ -145,10 +121,6 @@ public class ApplicationRest {
     return ApiLocaleResult.success(applicationFacade.find(dto));
   }
 
-  // ================================
-  // 查询统计
-  // ================================
-
   @Operation(operationId = "getApplicationStats", summary = "获取应用统计数据", 
       description = "获取应用统计数据")
   @ApiResponses(value = {
@@ -159,10 +131,6 @@ public class ApplicationRest {
   public ApiLocaleResult<ApplicationStatsVo> getStats() {
     return ApiLocaleResult.success(applicationFacade.getStats());
   }
-
-  // ================================
-  // 菜单管理
-  // ================================
 
   @Operation(operationId = "getApplicationMenus", summary = "获取应用菜单列表", 
       description = "获取指定应用的菜单树")
@@ -225,10 +193,6 @@ public class ApplicationRest {
     applicationFacade.sortMenus(id, dto);
     return ApiLocaleResult.success(null);
   }
-
-  // ================================
-  // 标签管理
-  // ================================
 
   @Operation(operationId = "getAvailableTags", summary = "获取可用标签列表", 
       description = "获取应用可用的标签列表")
