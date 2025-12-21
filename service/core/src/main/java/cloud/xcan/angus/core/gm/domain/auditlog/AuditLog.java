@@ -1,33 +1,39 @@
 package cloud.xcan.angus.core.gm.domain.auditlog;
 
-import cloud.xcan.angus.core.gm.domain.BaseEntity;
-import jakarta.persistence.*;
+import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 /**
- * 审计日志实体
- * 系统审计日志管理
+ * <p>
+ * Audit log domain entity
+ * </p>
  */
 @Getter
 @Setter
 @Entity
 @Table(name = "gm_audit_log")
-public class AuditLog extends BaseEntity {
+public class AuditLog extends TenantAuditingEntity<AuditLog, Long> {
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", length = 50, nullable = false)
-    private AuditLogType type;
+    @Id
+    private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "action", length = 20, nullable = false)
-    private AuditLogAction action;
+    @Column(name = "module", length = 50)
+    private String module;
 
-    @Column(name = "resource_type", length = 100, nullable = false)
-    private String resourceType;
+    @Column(name = "operation", length = 50)
+    private String operation;
 
-    @Column(name = "resource_id", length = 100)
-    private String resourceId;
+    @Column(name = "level", length = 20)
+    private String level;
 
     @Column(name = "user_id")
     private Long userId;
@@ -38,23 +44,62 @@ public class AuditLog extends BaseEntity {
     @Column(name = "ip_address", length = 50)
     private String ipAddress;
 
+    @Column(name = "location", length = 100)
+    private String location;
+
+    @Column(name = "device", length = 200)
+    private String device;
+
     @Column(name = "user_agent", length = 500)
     private String userAgent;
 
-    @Column(name = "before_data", columnDefinition = "jsonb")
-    @org.hibernate.annotations.Type(org.hibernate.annotations.type.JsonType.class)
-    private Object beforeData;
+    @Column(name = "request_url", length = 500)
+    private String requestUrl;
 
-    @Column(name = "after_data", columnDefinition = "jsonb")
-    @org.hibernate.annotations.Type(org.hibernate.annotations.type.JsonType.class)
-    private Object afterData;
+    @Column(name = "request_method", length = 10)
+    private String requestMethod;
+
+    @Type(JsonType.class)
+    @Column(name = "query_parameters", columnDefinition = "jsonb")
+    private Map<String, String> queryParameters;
+
+    @Type(JsonType.class)
+    @Column(name = "request_headers", columnDefinition = "jsonb")
+    private Map<String, String> requestHeaders;
+
+    @Type(JsonType.class)
+    @Column(name = "request_data", columnDefinition = "jsonb")
+    private Map<String, Object> requestData;
+
+    @Column(name = "response_status")
+    private Integer responseStatus;
+
+    @Type(JsonType.class)
+    @Column(name = "response_headers", columnDefinition = "jsonb")
+    private Map<String, String> responseHeaders;
+
+    @Type(JsonType.class)
+    @Column(name = "response_data", columnDefinition = "jsonb")
+    private Map<String, Object> responseData;
 
     @Column(name = "description", length = 1000)
     private String description;
 
+    @Column(name = "operation_time")
+    private LocalDateTime operationTime;
+
+    @Column(name = "duration")
+    private Integer duration;
+
     @Column(name = "success", nullable = false)
     private Boolean success = true;
 
-    @Column(name = "error_message", length = 1000)
-    private String errorMessage;
+    @Type(JsonType.class)
+    @Column(name = "changes", columnDefinition = "jsonb")
+    private Map<String, Object> changes;
+
+    @Override
+    public Long identity() {
+        return id;
+    }
 }

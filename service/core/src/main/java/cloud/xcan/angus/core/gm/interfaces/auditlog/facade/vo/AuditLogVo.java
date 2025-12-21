@@ -1,15 +1,17 @@
 package cloud.xcan.angus.core.gm.interfaces.auditlog.facade.vo;
 
+import cloud.xcan.angus.spec.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Schema(description = "审计日志VO")
-public class AuditLogVo implements Serializable {
+public class AuditLogVo extends TenantAuditingVo {
     
     @Schema(description = "日志ID")
     private String id;
@@ -61,7 +63,4 @@ public class AuditLogVo implements Serializable {
     
     @Schema(description = "响应数据")
     private Map<String, Object> responseData;
-    
-    @Schema(description = "创建时间")
-    private LocalDateTime createdDate;
 }

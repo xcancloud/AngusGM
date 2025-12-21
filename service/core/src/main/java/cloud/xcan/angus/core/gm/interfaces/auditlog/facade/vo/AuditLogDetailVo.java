@@ -1,16 +1,18 @@
 package cloud.xcan.angus.core.gm.interfaces.auditlog.facade.vo;
 
+import cloud.xcan.angus.spec.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Schema(description = "审计日志详情VO")
-public class AuditLogDetailVo implements Serializable {
+public class AuditLogDetailVo extends TenantAuditingVo {
     
     @Schema(description = "日志ID")
     private String id;
@@ -81,6 +83,9 @@ public class AuditLogDetailVo implements Serializable {
     @Schema(description = "响应状态码")
     private Integer responseStatus;
     
+    @Schema(description = "响应头")
+    private Map<String, String> responseHeaders;
+    
     @Schema(description = "响应数据")
     private Map<String, Object> responseData;
     
@@ -89,7 +94,7 @@ public class AuditLogDetailVo implements Serializable {
     
     @Data
     @Schema(description = "变更记录")
-    public static class Change implements Serializable {
+    public static class Change {
         @Schema(description = "字段")
         private String field;
         

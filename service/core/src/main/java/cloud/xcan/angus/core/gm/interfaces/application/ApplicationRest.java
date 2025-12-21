@@ -191,7 +191,7 @@ public class ApplicationRest {
       @Parameter(description = "应用ID") @PathVariable Long id,
       @Valid @RequestBody AppMenuSortDto dto) {
     applicationFacade.sortMenus(id, dto);
-    return ApiLocaleResult.success(null);
+    return ApiLocaleResult.success();
   }
 
   @Operation(operationId = "getAvailableTags", summary = "获取可用标签列表", 

@@ -1,49 +1,58 @@
 package cloud.xcan.angus.core.gm.domain.auditlog;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 审计日志仓储接口
+ * <p>
+ * Audit log repository interface
+ * </p>
  */
-public interface AuditLogRepo extends JpaRepository<AuditLog, Long> {
+public interface AuditLogRepo extends JpaRepository<AuditLog, Long>, JpaSpecificationExecutor<AuditLog> {
 
     /**
-     * 根据类型查找
+     * Delete logs by level and created date before
      */
-    List<AuditLog> findByType(AuditLogType type);
+    void deleteByLevelAndCreatedDateBefore(String level, LocalDateTime beforeDate);
 
     /**
-     * 根据操作查找
+     * Delete logs by created date before
      */
-    List<AuditLog> findByAction(AuditLogAction action);
+    void deleteByCreatedDateBefore(LocalDateTime beforeDate);
 
     /**
-     * 根据用户ID查找
+     * Count logs by date range
      */
-    Page<AuditLog> findByUserId(Long userId, Pageable pageable);
+    @Query("SELECT COUNT(a) FROM AuditLog a WHERE a.operationTime >= :startDate AND a.operationTime <= :endDate")
+    long countByOperationTimeBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
-     * 根据资源类型查找
+     * Count logs by level and date range
      */
-    List<AuditLog> findByResourceType(String resourceType);
+    @Query("SELECT a.level, COUNT(a) FROM AuditLog a WHERE a.operationTime >= :startDate AND a.operationTime <= :endDate GROUP BY a.level")
+    List<Object[]> countByLevelGroupBy(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
-     * 根据资源ID查找
+     * Count logs by module and date range
      */
-    List<AuditLog> findByResourceId(String resourceId);
+    @Query("SELECT a.module, COUNT(a) FROM AuditLog a WHERE a.operationTime >= :startDate AND a.operationTime <= :endDate GROUP BY a.module")
+    List<Object[]> countByModuleGroupBy(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
-     * 根据时间范围查找
+     * Count logs by user and date range, return top N users
      */
-    Page<AuditLog> findByCreatedAtBetween(LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
+    @Query("SELECT a.userId, a.username, COUNT(a) as cnt FROM AuditLog a WHERE a.operationTime >= :startDate AND a.operationTime <= :endDate AND a.userId IS NOT NULL GROUP BY a.userId, a.username ORDER BY cnt DESC")
+    List<Object[]> countByUserGroupBy(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, Pageable pageable);
 
     /**
-     * 根据用户和时间范围查找
+     * Count logs by module and operation type
      */
-    List<AuditLog> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime startTime, LocalDateTime endTime);
+    @Query("SELECT a.module, a.operation, COUNT(a) FROM AuditLog a WHERE a.operationTime >= :startDate AND a.operationTime <= :endDate GROUP BY a.module, a.operation")
+    List<Object[]> countByModuleAndOperationGroupBy(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
