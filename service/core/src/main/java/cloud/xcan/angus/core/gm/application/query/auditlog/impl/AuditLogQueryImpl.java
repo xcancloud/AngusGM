@@ -18,7 +18,6 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -78,22 +77,6 @@ public class AuditLogQueryImpl implements AuditLogQuery {
       @Override
       protected Page<AuditLog> process() {
         return auditLogRepo.findAll(spec, pageable);
-      }
-    }.execute();
-  }
-
-  @Override
-  @Transactional
-  public void cleanup(String level, LocalDateTime beforeDate) {
-    new BizTemplate<Void>() {
-      @Override
-      protected Void process() {
-        if (level != null) {
-          auditLogRepo.deleteByLevelAndCreatedDateBefore(level, beforeDate);
-        } else {
-          auditLogRepo.deleteByCreatedDateBefore(beforeDate);
-        }
-        return null;
       }
     }.execute();
   }

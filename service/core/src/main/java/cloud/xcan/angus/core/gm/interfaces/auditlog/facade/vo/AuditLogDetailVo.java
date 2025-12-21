@@ -68,27 +68,6 @@ public class AuditLogDetailVo extends TenantAuditingVo {
     @Schema(description = "是否成功")
     private Boolean success;
     
-    @Schema(description = "请求URL")
-    private String requestUrl;
-    
-    @Schema(description = "请求方法")
-    private String requestMethod;
-    
-    @Schema(description = "请求头")
-    private Map<String, String> requestHeaders;
-    
-    @Schema(description = "请求数据")
-    private Map<String, Object> requestData;
-    
-    @Schema(description = "响应状态码")
-    private Integer responseStatus;
-    
-    @Schema(description = "响应头")
-    private Map<String, String> responseHeaders;
-    
-    @Schema(description = "响应数据")
-    private Map<String, Object> responseData;
-    
     @Schema(description = "变更记录")
     private List<Change> changes;
     

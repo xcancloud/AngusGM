@@ -21,8 +21,6 @@ public interface AuditLogQuery {
     
     Page<AuditLog> findFailureLogs(GenericSpecification<AuditLog> spec, PageRequest pageable);
     
-    void cleanup(String level, LocalDateTime beforeDate);
-    
     /**
      * Get statistics for audit logs
      */

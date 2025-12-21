@@ -53,35 +53,6 @@ public class AuditLog extends TenantAuditingEntity<AuditLog, Long> {
     @Column(name = "user_agent", length = 500)
     private String userAgent;
 
-    @Column(name = "request_url", length = 500)
-    private String requestUrl;
-
-    @Column(name = "request_method", length = 10)
-    private String requestMethod;
-
-    @Type(JsonType.class)
-    @Column(name = "query_parameters", columnDefinition = "jsonb")
-    private Map<String, String> queryParameters;
-
-    @Type(JsonType.class)
-    @Column(name = "request_headers", columnDefinition = "jsonb")
-    private Map<String, String> requestHeaders;
-
-    @Type(JsonType.class)
-    @Column(name = "request_data", columnDefinition = "jsonb")
-    private Map<String, Object> requestData;
-
-    @Column(name = "response_status")
-    private Integer responseStatus;
-
-    @Type(JsonType.class)
-    @Column(name = "response_headers", columnDefinition = "jsonb")
-    private Map<String, String> responseHeaders;
-
-    @Type(JsonType.class)
-    @Column(name = "response_data", columnDefinition = "jsonb")
-    private Map<String, Object> responseData;
-
     @Column(name = "description", length = 1000)
     private String description;
 

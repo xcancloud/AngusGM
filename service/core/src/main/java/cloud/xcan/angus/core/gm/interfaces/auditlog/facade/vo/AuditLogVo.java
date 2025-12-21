@@ -57,10 +57,4 @@ public class AuditLogVo extends TenantAuditingVo {
     
     @Schema(description = "是否成功")
     private Boolean success;
-    
-    @Schema(description = "请求数据")
-    private Map<String, Object> requestData;
-    
-    @Schema(description = "响应数据")
-    private Map<String, Object> responseData;
 }

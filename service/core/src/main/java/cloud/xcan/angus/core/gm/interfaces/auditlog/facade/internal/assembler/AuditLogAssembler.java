@@ -45,8 +45,6 @@ public class AuditLogAssembler {
     vo.setOperationTime(log.getOperationTime());
     vo.setDuration(log.getDuration());
     vo.setSuccess(log.getSuccess());
-    vo.setRequestData(log.getRequestData() != null ? (Map<String, Object>) log.getRequestData() : null);
-    vo.setResponseData(log.getResponseData() != null ? (Map<String, Object>) log.getResponseData() : null);
     
     // Set auditing fields
     vo.setTenantId(log.getTenantId());
@@ -79,13 +77,6 @@ public class AuditLogAssembler {
     vo.setOperationTime(log.getOperationTime());
     vo.setDuration(log.getDuration());
     vo.setSuccess(log.getSuccess());
-    vo.setRequestUrl(log.getRequestUrl());
-    vo.setRequestMethod(log.getRequestMethod());
-    vo.setRequestHeaders(log.getRequestHeaders() != null ? (Map<String, String>) log.getRequestHeaders() : null);
-    vo.setRequestData(log.getRequestData() != null ? (Map<String, Object>) log.getRequestData() : null);
-    vo.setResponseStatus(log.getResponseStatus());
-    vo.setResponseHeaders(log.getResponseHeaders() != null ? (Map<String, String>) log.getResponseHeaders() : null);
-    vo.setResponseData(log.getResponseData() != null ? (Map<String, Object>) log.getResponseData() : null);
     
     // Convert changes
     if (log.getChanges() != null) {

@@ -2,6 +2,7 @@ package cloud.xcan.angus.core.gm.interfaces.auditlog.facade.internal;
 
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
+import cloud.xcan.angus.core.gm.application.cmd.auditlog.AuditLogCmd;
 import cloud.xcan.angus.core.gm.application.query.auditlog.AuditLogQuery;
 import cloud.xcan.angus.core.gm.domain.auditlog.AuditLog;
 import cloud.xcan.angus.core.gm.interfaces.auditlog.facade.AuditLogFacade;
@@ -43,6 +44,9 @@ public class AuditLogFacadeImpl implements AuditLogFacade {
 
   @Resource
   private AuditLogQuery auditLogQuery;
+
+  @Resource
+  private AuditLogCmd auditLogCmd;
 
   // In-memory storage for export tasks (in production, should use database or cache)
   private final Map<String, AuditLogExportStatusVo> exportTasks = new ConcurrentHashMap<>();
@@ -198,7 +202,7 @@ public class AuditLogFacadeImpl implements AuditLogFacade {
   public void cleanup(AuditLogCleanupDto dto) {
     LocalDateTime beforeDate = LocalDateTime.parse(dto.getBeforeDate() + " 00:00:00", 
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    auditLogQuery.cleanup(dto.getLevel(), beforeDate);
+    auditLogCmd.cleanup(dto.getLevel(), beforeDate);
   }
 
   @Override
