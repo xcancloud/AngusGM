@@ -1,82 +1,116 @@
 package cloud.xcan.angus.core.gm.interfaces.policy.facade.internal;
 
-import cloud.xcan.angus.common.exception.ResourceNotFound;
+import static cloud.xcan.angus.spec.BizConstant.buildVoPageResult;
+import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
+
 import cloud.xcan.angus.core.gm.application.cmd.policy.PolicyCmd;
 import cloud.xcan.angus.core.gm.application.query.policy.PolicyQuery;
 import cloud.xcan.angus.core.gm.domain.policy.Policy;
-import cloud.xcan.angus.core.gm.domain.policy.enums.PolicyEffect;
-import cloud.xcan.angus.core.gm.domain.policy.enums.PolicyStatus;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.PolicyFacade;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.PolicyCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.PolicyDefaultDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.PolicyFindDto;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.PolicyPermissionUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.PolicyUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.dto.PolicyUserFindDto;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.internal.assembler.PolicyAssembler;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.AvailablePermissionVo;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.PolicyDefaultVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.PolicyDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.PolicyListVo;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.PolicyPermissionVo;
 import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.PolicyStatsVo;
-import lombok.RequiredArgsConstructor;
+import cloud.xcan.angus.core.gm.interfaces.policy.facade.vo.PolicyUserVo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
+import cloud.xcan.angus.remote.PageResult;
+import jakarta.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of policy (role) facade
+ */
 @Service
-@RequiredArgsConstructor
 public class PolicyFacadeImpl implements PolicyFacade {
-    private final PolicyCmd policyCmd;
-    private final PolicyQuery policyQuery;
-    private final PolicyAssembler policyAssembler;
 
-    @Override
-    public PolicyDetailVo create(PolicyCreateDto dto) {
-        Policy policy = policyAssembler.toEntity(dto);
-        Policy created = policyCmd.create(policy);
-        return policyAssembler.toDetailVo(created);
-    }
+  @Resource
+  private PolicyCmd policyCmd;
 
-    @Override
-    public PolicyDetailVo update(PolicyUpdateDto dto) {
-        Policy policy = policyAssembler.toEntity(dto);
-        Policy updated = policyCmd.update(policy);
-        return policyAssembler.toDetailVo(updated);
-    }
+  @Resource
+  private PolicyQuery policyQuery;
 
-    @Override
-    public void enable(Long id) {
-        policyCmd.enable(id);
-    }
+  @Override
+  public PolicyDetailVo create(PolicyCreateDto dto) {
+    Policy policy = PolicyAssembler.toCreateDomain(dto);
+    Policy saved = policyCmd.create(policy);
+    return PolicyAssembler.toDetailVo(saved);
+  }
 
-    @Override
-    public void disable(Long id) {
-        policyCmd.disable(id);
-    }
+  @Override
+  public PolicyDetailVo update(Long id, PolicyUpdateDto dto) {
+    Policy policy = PolicyAssembler.toUpdateDomain(id, dto);
+    Policy saved = policyCmd.update(policy);
+    return PolicyAssembler.toDetailVo(saved);
+  }
 
-    @Override
-    public void delete(Long id) {
-        policyCmd.delete(id);
-    }
+  @Override
+  public void delete(Long id) {
+    policyCmd.delete(id);
+  }
 
-    @Override
-    public PolicyDetailVo getById(Long id) {
-        Policy policy = policyQuery.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("Policy not found"));
-        return policyAssembler.toDetailVo(policy);
-    }
+  @Override
+  public PolicyDetailVo getDetail(Long id) {
+    Policy policy = policyQuery.findAndCheck(id);
+    return PolicyAssembler.toDetailVo(policy);
+  }
 
-    @Override
-    public Page<PolicyListVo> find(PolicyFindDto dto) {
-        PageRequest pageRequest = PageRequest.of(dto.getPage(), dto.getSize());
-        return policyQuery.find(dto.getStatus(), dto.getEffect(), dto.getPriority(), pageRequest)
-                .map(policyAssembler::toListVo);
-    }
+  @Override
+  public PageResult<PolicyListVo> list(PolicyFindDto dto) {
+    GenericSpecification<Policy> spec = PolicyAssembler.getSpecification(dto);
+    Page<Policy> page = policyQuery.find(spec, dto.tranPage(),
+        dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
+    return buildVoPageResult(page, PolicyAssembler::toListVo);
+  }
 
-    @Override
-    public PolicyStatsVo getStats() {
-        PolicyStatsVo stats = new PolicyStatsVo();
-        stats.setTotal(policyQuery.countTotal());
-        stats.setEnabled(policyQuery.countByStatus(PolicyStatus.ENABLED));
-        stats.setDisabled(policyQuery.countByStatus(PolicyStatus.DISABLED));
-        stats.setAllowCount(policyQuery.countByEffect(PolicyEffect.ALLOW));
-        stats.setDenyCount(policyQuery.countByEffect(PolicyEffect.DENY));
-        return stats;
-    }
+  @Override
+  public PolicyStatsVo getStats() {
+    PolicyStatsVo stats = new PolicyStatsVo();
+    stats.setTotalRoles(policyQuery.countTotal());
+    stats.setSystemRoles(policyQuery.countSystemRoles());
+    stats.setCustomRoles(policyQuery.countCustomRoles());
+    stats.setTotalUsers(policyQuery.countTotalUsers());
+    return stats;
+  }
+
+  @Override
+  public PolicyPermissionVo getPermissions(Long id) {
+    Policy policy = policyQuery.findAndCheck(id);
+    return PolicyAssembler.toPermissionVo(policy);
+  }
+
+  @Override
+  public PolicyPermissionVo updatePermissions(Long id, PolicyPermissionUpdateDto dto) {
+    Policy policy = policyCmd.updatePermissions(id, PolicyAssembler.toPermissionsDomain(dto));
+    return PolicyAssembler.toPermissionVo(policy);
+  }
+
+  @Override
+  public PageResult<PolicyUserVo> getUsers(Long id, PolicyUserFindDto dto) {
+    // TODO: Implement user query for role
+    return PageResult.of(new ArrayList<>(), 0L);
+  }
+
+  @Override
+  public PolicyDefaultVo setDefault(Long id, PolicyDefaultDto dto) {
+    Policy policy = policyCmd.setDefault(id, dto.getIsDefault());
+    return PolicyAssembler.toDefaultVo(policy);
+  }
+
+  @Override
+  public List<AvailablePermissionVo> getAvailablePermissions(String appId) {
+    // TODO: Implement available permissions query
+    return new ArrayList<>();
+  }
 }

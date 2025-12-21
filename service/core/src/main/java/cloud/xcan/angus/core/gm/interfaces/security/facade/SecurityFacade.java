@@ -1,21 +1,52 @@
 package cloud.xcan.angus.core.gm.interfaces.security.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.SecurityCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.SecurityFindDto;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.SecurityUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityListVo;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityStatsVo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cloud.xcan.angus.common.result.PageResult;
+import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.*;
 
 public interface SecurityFacade {
-    SecurityDetailVo create(SecurityCreateDto dto);
-    SecurityDetailVo update(Long id, SecurityUpdateDto dto);
-    void delete(Long id);
-    void enable(Long id);
-    void disable(Long id);
-    SecurityDetailVo findById(Long id);
-    Page<SecurityListVo> find(SecurityFindDto dto, Pageable pageable);
-    SecurityStatsVo getStats();
+    
+    // ==================== 概览 ====================
+    
+    SecurityOverviewVo getOverview();
+    
+    // ==================== 密码策略 ====================
+    
+    PasswordPolicyVo getPasswordPolicy();
+    
+    PasswordPolicyVo updatePasswordPolicy(PasswordPolicyUpdateDto dto);
+    
+    // ==================== 双因素认证 ====================
+    
+    TwoFactorConfigVo getTwoFactorConfig();
+    
+    TwoFactorConfigVo updateTwoFactorConfig(TwoFactorConfigUpdateDto dto);
+    
+    // ==================== IP白名单管理 ====================
+    
+    PageResult<IpWhitelistVo> listIpWhitelist(IpWhitelistFindDto dto);
+    
+    IpWhitelistVo addIpWhitelist(IpWhitelistCreateDto dto);
+    
+    IpWhitelistVo updateIpWhitelist(Long id, IpWhitelistUpdateDto dto);
+    
+    void deleteIpWhitelist(Long id);
+    
+    // ==================== 会话管理 ====================
+    
+    SessionConfigVo getSessionConfig();
+    
+    SessionConfigVo updateSessionConfig(SessionConfigUpdateDto dto);
+    
+    PageResult<ActiveSessionVo> listActiveSessions(ActiveSessionFindDto dto);
+    
+    void terminateSession(String sessionId);
+    
+    // ==================== 安全审计 ====================
+    
+    PageResult<SecurityEventVo> listSecurityEvents(SecurityEventFindDto dto);
+    
+    SecurityEventHandleVo handleSecurityEvent(Long id, SecurityEventHandleDto dto);
+    
+    SecurityAuditStatsVo getAuditStats(SecurityAuditStatsFindDto dto);
 }

@@ -1,85 +1,171 @@
 package cloud.xcan.angus.core.gm.interfaces.monitoring;
 
-import cloud.xcan.angus.core.common.result.ApiLocaleResult;
+import cloud.xcan.angus.common.result.ApiLocaleResult;
+import cloud.xcan.angus.common.result.PageResult;
 import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.MonitoringFacade;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.MonitoringCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.MonitoringFindDto;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.MonitoringUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringListVo;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringStatsVo;
+import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Monitoring Management", description = "Monitoring management API")
+import java.util.List;
+
+@Tag(name = "Monitoring", description = "系统监控 - 系统资源监控、性能指标、告警管理")
 @RestController
 @RequestMapping("/api/v1/monitoring")
 @RequiredArgsConstructor
 public class MonitoringRest {
-    
+
     private final MonitoringFacade monitoringFacade;
-    
-    @Operation(summary = "Create monitoring")
-    @PostMapping
-    public ApiLocaleResult<MonitoringDetailVo> create(@RequestBody MonitoringCreateDto dto) {
-        return ApiLocaleResult.success(monitoringFacade.create(dto));
+
+    // ==================== 系统概览 ====================
+
+    @Operation(summary = "获取系统监控概览", description = "获取系统监控整体概览")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/overview")
+    public ApiLocaleResult<MonitoringOverviewVo> getOverview() {
+        return ApiLocaleResult.success(monitoringFacade.getOverview());
     }
-    
-    @Operation(summary = "Update monitoring")
-    @PatchMapping("/{id}")
-    public ApiLocaleResult<MonitoringDetailVo> update(
-            @Parameter(description = "Monitoring ID") @PathVariable Long id,
-            @RequestBody MonitoringUpdateDto dto) {
-        return ApiLocaleResult.success(monitoringFacade.update(id, dto));
+
+    @Operation(summary = "获取系统健康检查", description = "获取系统健康状态")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/health")
+    public ApiLocaleResult<HealthCheckVo> getHealth() {
+        return ApiLocaleResult.success(monitoringFacade.getHealth());
     }
-    
-    @Operation(summary = "Delete monitoring")
-    @DeleteMapping("/{id}")
-    public ApiLocaleResult<Void> delete(
-            @Parameter(description = "Monitoring ID") @PathVariable Long id) {
-        monitoringFacade.delete(id);
-        return ApiLocaleResult.success();
+
+    // ==================== 资源监控 ====================
+
+    @Operation(summary = "获取CPU使用率数据", description = "获取CPU使用率历史数据")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/cpu")
+    public ApiLocaleResult<CpuUsageVo> getCpuUsage(@RequestParam(defaultValue = "1h") String period) {
+        return ApiLocaleResult.success(monitoringFacade.getCpuUsage(period));
     }
-    
-    @Operation(summary = "Enable monitoring")
-    @PostMapping("/{id}/enable")
-    public ApiLocaleResult<Void> enable(
-            @Parameter(description = "Monitoring ID") @PathVariable Long id) {
-        monitoringFacade.enable(id);
-        return ApiLocaleResult.success();
+
+    @Operation(summary = "获取内存使用数据", description = "获取内存使用历史数据")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/memory")
+    public ApiLocaleResult<MemoryUsageVo> getMemoryUsage(@RequestParam(defaultValue = "1h") String period) {
+        return ApiLocaleResult.success(monitoringFacade.getMemoryUsage(period));
     }
-    
-    @Operation(summary = "Disable monitoring")
-    @PostMapping("/{id}/disable")
-    public ApiLocaleResult<Void> disable(
-            @Parameter(description = "Monitoring ID") @PathVariable Long id) {
-        monitoringFacade.disable(id);
-        return ApiLocaleResult.success();
+
+    @Operation(summary = "获取磁盘使用数据", description = "获取磁盘使用信息")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/disk")
+    public ApiLocaleResult<DiskUsageVo> getDiskUsage() {
+        return ApiLocaleResult.success(monitoringFacade.getDiskUsage());
     }
-    
-    @Operation(summary = "Get monitoring details")
-    @GetMapping("/{id}")
-    public ApiLocaleResult<MonitoringDetailVo> findById(
-            @Parameter(description = "Monitoring ID") @PathVariable Long id) {
-        return ApiLocaleResult.success(monitoringFacade.findById(id));
+
+    @Operation(summary = "获取网络流量数据", description = "获取网络流量历史数据")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/network")
+    public ApiLocaleResult<NetworkUsageVo> getNetworkUsage(@RequestParam(defaultValue = "1h") String period) {
+        return ApiLocaleResult.success(monitoringFacade.getNetworkUsage(period));
     }
-    
-    @Operation(summary = "List monitorings")
-    @GetMapping
-    public ApiLocaleResult<Page<MonitoringListVo>> find(
-            MonitoringFindDto dto,
-            Pageable pageable) {
-        return ApiLocaleResult.success(monitoringFacade.find(dto, pageable));
+
+    @Operation(summary = "获取进程列表", description = "获取系统进程列表")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/processes")
+    public ApiLocaleResult<PageResult<ProcessInfoVo>> getProcesses(@ParameterObject ProcessFindDto dto) {
+        return ApiLocaleResult.success(monitoringFacade.getProcesses(dto));
     }
-    
-    @Operation(summary = "Get monitoring statistics")
-    @GetMapping("/stats")
-    public ApiLocaleResult<MonitoringStatsVo> getStats() {
-        return ApiLocaleResult.success(monitoringFacade.getStats());
+
+    // ==================== 数据库监控 ====================
+
+    @Operation(summary = "获取数据库连接池状态", description = "获取数据库连接池状态")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/database/pools")
+    public ApiLocaleResult<List<DatabasePoolVo>> getDatabasePools() {
+        return ApiLocaleResult.success(monitoringFacade.getDatabasePools());
+    }
+
+    @Operation(summary = "获取数据库性能指标", description = "获取数据库性能指标")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/database/performance")
+    public ApiLocaleResult<DatabasePerformanceVo> getDatabasePerformance(@RequestParam(defaultValue = "1h") String period) {
+        return ApiLocaleResult.success(monitoringFacade.getDatabasePerformance(period));
+    }
+
+    // ==================== 缓存监控 ====================
+
+    @Operation(summary = "获取Redis监控数据", description = "获取Redis缓存监控数据")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/cache/redis")
+    public ApiLocaleResult<RedisMonitorVo> getRedisMonitor() {
+        return ApiLocaleResult.success(monitoringFacade.getRedisMonitor());
+    }
+
+    // ==================== 告警规则 ====================
+
+    @Operation(summary = "获取告警规则列表", description = "分页获取告警规则列表")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/alerts/rules")
+    public ApiLocaleResult<PageResult<AlertRuleVo>> listAlertRules(@ParameterObject AlertRuleFindDto dto) {
+        return ApiLocaleResult.success(monitoringFacade.listAlertRules(dto));
+    }
+
+    @Operation(summary = "创建告警规则", description = "创建新的告警规则")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "创建成功"),
+            @ApiResponse(responseCode = "400", description = "参数错误")
+    })
+    @PostMapping("/alerts/rules")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiLocaleResult<AlertRuleVo> createAlertRule(@Valid @RequestBody AlertRuleCreateDto dto) {
+        return ApiLocaleResult.success(monitoringFacade.createAlertRule(dto));
+    }
+
+    // ==================== 告警记录 ====================
+
+    @Operation(summary = "获取告警记录列表", description = "分页获取告警记录列表")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功")
+    })
+    @GetMapping("/alerts/records")
+    public ApiLocaleResult<PageResult<AlertRecordVo>> listAlertRecords(@ParameterObject AlertRecordFindDto dto) {
+        return ApiLocaleResult.success(monitoringFacade.listAlertRecords(dto));
+    }
+
+    @Operation(summary = "处理告警记录", description = "处理告警记录")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "处理成功"),
+            @ApiResponse(responseCode = "404", description = "告警记录不存在")
+    })
+    @PatchMapping("/alerts/records/{id}/handle")
+    public ApiLocaleResult<AlertHandleVo> handleAlertRecord(
+            @Parameter(description = "告警记录ID") @PathVariable Long id,
+            @Valid @RequestBody AlertHandleDto dto) {
+        return ApiLocaleResult.success(monitoringFacade.handleAlertRecord(id, dto));
     }
 }

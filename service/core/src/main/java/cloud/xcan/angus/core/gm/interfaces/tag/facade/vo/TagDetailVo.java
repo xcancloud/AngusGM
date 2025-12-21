@@ -1,8 +1,8 @@
 package cloud.xcan.angus.core.gm.interfaces.tag.facade.vo;
 
-import cloud.xcan.angus.core.gm.domain.tag.enums.TagStatus;
 import cloud.xcan.angus.spec.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,21 +20,15 @@ public class TagDetailVo extends TenantAuditingVo {
   @Schema(description = "标签名称")
   private String name;
 
-  @Schema(description = "颜色")
-  private String color;
-
-  @Schema(description = "分类")
-  private String category;
-
   @Schema(description = "描述")
   private String description;
 
-  @Schema(description = "状态")
-  private TagStatus status;
-
-  @Schema(description = "排序")
-  private Integer sortOrder;
+  @Schema(description = "是否系统标签")
+  private Boolean isSystem;
 
   @Schema(description = "使用次数")
   private Long usageCount;
+
+  @Schema(description = "关联的应用列表")
+  private List<TagAppVo> applications;
 }

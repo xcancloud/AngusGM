@@ -5,23 +5,27 @@ import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
 import cloud.xcan.angus.core.gm.domain.tenant.Tenant;
+import cloud.xcan.angus.core.gm.domain.tenant.enums.TenantStatus;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.TenantFacade;
+import cloud.xcan.angus.core.gm.interfaces.tenant.facade.dto.TenantConfigUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.dto.TenantCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.dto.TenantFindDto;
+import cloud.xcan.angus.core.gm.interfaces.tenant.facade.dto.TenantStatusUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.dto.TenantUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal.assembler.TenantAssembler;
+import cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo.TenantConfigVo;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo.TenantDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo.TenantListVo;
 import cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo.TenantStatsVo;
+import cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo.TenantStatusUpdateVo;
+import cloud.xcan.angus.core.gm.interfaces.tenant.facade.vo.TenantUsageVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.PageResult;
 import jakarta.annotation.Resource;
+import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-/**
- * Implementation of tenant facade
- */
 @Service
 public class TenantFacadeImpl implements TenantFacade {
 
@@ -33,22 +37,30 @@ public class TenantFacadeImpl implements TenantFacade {
 
   @Override
   public TenantDetailVo create(TenantCreateDto dto) {
-    // DTO -> Domain
     Tenant tenant = TenantAssembler.toCreateDomain(dto);
-    // Create tenant
     Tenant saved = tenantCmd.create(tenant);
-    // Domain -> VO
     return TenantAssembler.toDetailVo(saved);
   }
 
   @Override
   public TenantDetailVo update(Long id, TenantUpdateDto dto) {
-    // DTO -> Domain
     Tenant tenant = TenantAssembler.toUpdateDomain(id, dto);
-    // Update tenant
     Tenant saved = tenantCmd.update(tenant);
-    // Domain -> VO
     return TenantAssembler.toDetailVo(saved);
+  }
+
+  @Override
+  public TenantStatusUpdateVo updateStatus(Long id, TenantStatusUpdateDto dto) {
+    if (TenantStatus.ENABLED.equals(dto.getStatus())) {
+      tenantCmd.enable(id);
+    } else {
+      tenantCmd.disable(id);
+    }
+    TenantStatusUpdateVo vo = new TenantStatusUpdateVo();
+    vo.setId(id);
+    vo.setStatus(dto.getStatus());
+    vo.setModifiedDate(LocalDateTime.now());
+    return vo;
   }
 
   @Override
@@ -64,11 +76,8 @@ public class TenantFacadeImpl implements TenantFacade {
 
   @Override
   public PageResult<TenantListVo> list(TenantFindDto dto) {
-    // DTO -> Specification
     GenericSpecification<Tenant> spec = TenantAssembler.getSpecification(dto);
-    // Query data
     Page<Tenant> page = tenantQuery.find(spec, dto.tranPage());
-    // Domain -> VO (with pagination)
     return buildVoPageResult(page, TenantAssembler::toListVo);
   }
 
@@ -78,12 +87,27 @@ public class TenantFacadeImpl implements TenantFacade {
   }
 
   @Override
-  public void enable(Long id) {
-    tenantCmd.enable(id);
+  public TenantConfigVo getConfig(Long id) {
+    // TODO: Implement get tenant config
+    return new TenantConfigVo();
   }
 
   @Override
-  public void disable(Long id) {
-    tenantCmd.disable(id);
+  public TenantConfigVo updateConfig(Long id, TenantConfigUpdateDto dto) {
+    // TODO: Implement update tenant config
+    TenantConfigVo vo = new TenantConfigVo();
+    vo.setMaxUsers(dto.getMaxUsers());
+    vo.setMaxStorage(dto.getMaxStorage());
+    vo.setMaxDepartments(dto.getMaxDepartments());
+    vo.setFeatures(dto.getFeatures());
+    vo.setCustomDomain(dto.getCustomDomain());
+    vo.setModifiedDate(LocalDateTime.now());
+    return vo;
+  }
+
+  @Override
+  public TenantUsageVo getUsage(Long id) {
+    // TODO: Implement get tenant usage
+    return new TenantUsageVo();
   }
 }

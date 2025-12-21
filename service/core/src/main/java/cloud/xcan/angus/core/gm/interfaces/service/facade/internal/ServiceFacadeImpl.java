@@ -1,85 +1,115 @@
 package cloud.xcan.angus.core.gm.interfaces.service.facade.internal;
 
-import cloud.xcan.angus.common.exception.ResourceNotFound;
-import cloud.xcan.angus.core.gm.application.cmd.service.ServiceCmd;
 import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
-import cloud.xcan.angus.core.gm.domain.service.Service;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.ServiceFacade;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.EurekaConfigUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.EurekaTestDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceCallStatsDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceFindDto;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.internal.assembler.ServiceAssembler;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceInstanceStatusDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.EurekaConfigVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.EurekaTestVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceCallStatsVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceDetailVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceHealthVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceInstanceStatusVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceListVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceRefreshVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceStatsVo;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
- * 服务管理门面实现
+ * Service management facade implementation
  */
-@Component
+@Service
 @RequiredArgsConstructor
 public class ServiceFacadeImpl implements ServiceFacade {
 
-    private final ServiceCmd serviceCmd;
-    private final ServiceQuery serviceQuery;
-    private final ServiceAssembler serviceAssembler;
+  private final ServiceQuery serviceQuery;
 
-    @Override
-    public ServiceDetailVo create(ServiceCreateDto dto) {
-        Service service = serviceAssembler.toEntity(dto);
-        service = serviceCmd.create(service);
-        return serviceAssembler.toDetailVo(service);
-    }
+  @Override
+  public ServiceRefreshVo refresh() {
+    // TODO: Implement refresh from Eureka
+    ServiceRefreshVo vo = new ServiceRefreshVo();
+    vo.setRefreshTime(LocalDateTime.now());
+    vo.setTotalServices(0);
+    vo.setTotalInstances(0);
+    return vo;
+  }
 
-    @Override
-    public ServiceDetailVo update(ServiceUpdateDto dto) {
-        Service service = serviceAssembler.toEntity(dto);
-        service = serviceCmd.update(service);
-        return serviceAssembler.toDetailVo(service);
-    }
+  @Override
+  public ServiceInstanceStatusVo updateInstanceStatus(String serviceName, String instanceId, ServiceInstanceStatusDto dto) {
+    // TODO: Implement instance status update
+    ServiceInstanceStatusVo vo = new ServiceInstanceStatusVo();
+    vo.setInstanceId(instanceId);
+    vo.setStatus(dto.getStatus());
+    vo.setModifiedDate(LocalDateTime.now());
+    return vo;
+  }
 
-    @Override
-    public ServiceDetailVo enable(String id) {
-        Service service = serviceCmd.enable(id);
-        return serviceAssembler.toDetailVo(service);
-    }
+  @Override
+  public ServiceDetailVo getDetail(String serviceName) {
+    // TODO: Implement get service detail from Eureka
+    return new ServiceDetailVo();
+  }
 
-    @Override
-    public ServiceDetailVo disable(String id) {
-        Service service = serviceCmd.disable(id);
-        return serviceAssembler.toDetailVo(service);
-    }
+  @Override
+  public List<ServiceListVo> list(ServiceFindDto dto) {
+    // TODO: Implement list services from Eureka
+    return new ArrayList<>();
+  }
 
-    @Override
-    public void delete(String id) {
-        serviceCmd.delete(id);
-    }
+  @Override
+  public ServiceStatsVo getStats() {
+    // TODO: Implement service statistics
+    return new ServiceStatsVo();
+  }
 
-    @Override
-    public ServiceDetailVo get(String id) {
-        Service service = serviceQuery.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("服务不存在: " + id));
-        return serviceAssembler.toDetailVo(service);
-    }
+  @Override
+  public ServiceHealthVo getInstanceHealth(String serviceName, String instanceId) {
+    // TODO: Implement instance health check
+    return new ServiceHealthVo();
+  }
 
-    @Override
-    public Page<ServiceListVo> find(ServiceFindDto dto) {
-        Page<Service> page = serviceQuery.find(
-                dto.getStatus(),
-                dto.getProtocol(),
-                dto.getApplicationId(),
-                dto.getVersion(),
-                PageRequest.of(dto.getPage(), dto.getSize())
-        );
-        return page.map(serviceAssembler::toListVo);
-    }
+  @Override
+  public EurekaConfigVo getEurekaConfig() {
+    // TODO: Implement get Eureka config
+    return new EurekaConfigVo();
+  }
 
-    @Override
-    public ServiceStatsVo stats() {
-        return serviceAssembler.toStatsVo(serviceQuery.stats());
-    }
+  @Override
+  public EurekaConfigVo updateEurekaConfig(EurekaConfigUpdateDto dto) {
+    // TODO: Implement update Eureka config
+    EurekaConfigVo vo = new EurekaConfigVo();
+    vo.setServiceUrl(dto.getServiceUrl());
+    vo.setEnableAuth(dto.getEnableAuth());
+    vo.setUsername(dto.getUsername());
+    vo.setPassword("******");
+    vo.setSyncInterval(dto.getSyncInterval());
+    vo.setEnableSsl(dto.getEnableSsl());
+    vo.setConnectTimeout(dto.getConnectTimeout());
+    vo.setReadTimeout(dto.getReadTimeout());
+    vo.setModifiedDate(LocalDateTime.now());
+    return vo;
+  }
+
+  @Override
+  public EurekaTestVo testEurekaConnection(EurekaTestDto dto) {
+    // TODO: Implement Eureka connection test
+    EurekaTestVo vo = new EurekaTestVo();
+    vo.setConnected(true);
+    vo.setResponseTime(100);
+    vo.setServicesCount(0);
+    return vo;
+  }
+
+  @Override
+  public ServiceCallStatsVo getServiceCallStats(String serviceName, ServiceCallStatsDto dto) {
+    // TODO: Implement service call statistics
+    return new ServiceCallStatsVo();
+  }
 }

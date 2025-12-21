@@ -6,16 +6,14 @@ import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
 import cloud.xcan.angus.core.gm.application.cmd.tag.TagCmd;
 import cloud.xcan.angus.core.gm.application.query.tag.TagQuery;
 import cloud.xcan.angus.core.gm.domain.tag.Tag;
-import cloud.xcan.angus.core.gm.domain.tag.TagRepo;
-import cloud.xcan.angus.core.gm.domain.tag.enums.TagStatus;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.TagFacade;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.TagCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.TagFindDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.dto.TagUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.internal.assembler.TagAssembler;
+import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.TagAllVo;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.TagDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.TagListVo;
-import cloud.xcan.angus.core.gm.interfaces.tag.facade.vo.TagStatsVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.PageResult;
 import jakarta.annotation.Resource;
@@ -36,9 +34,6 @@ public class TagFacadeImpl implements TagFacade {
   @Resource
   private TagQuery tagQuery;
 
-  @Resource
-  private TagRepo tagRepo;
-
   @Override
   public TagDetailVo create(TagCreateDto dto) {
     Tag tag = TagAssembler.toCreateDomain(dto);
@@ -51,16 +46,6 @@ public class TagFacadeImpl implements TagFacade {
     Tag tag = TagAssembler.toUpdateDomain(id, dto);
     Tag saved = tagCmd.update(tag);
     return TagAssembler.toDetailVo(saved);
-  }
-
-  @Override
-  public void enable(Long id) {
-    tagCmd.enable(id);
-  }
-
-  @Override
-  public void disable(Long id) {
-    tagCmd.disable(id);
   }
 
   @Override
@@ -83,33 +68,10 @@ public class TagFacadeImpl implements TagFacade {
   }
 
   @Override
-  public TagStatsVo getStats() {
-    TagStatsVo stats = new TagStatsVo();
-    
-    long totalTags = tagRepo.count();
-    long enabledTags = tagRepo.countByStatus(TagStatus.ENABLED);
-    long disabledTags = tagRepo.countByStatus(TagStatus.DISABLED);
-    
-    // Count unique categories
-    // TODO: Implement category count query
-    long categoryCount = 0L;
-    
-    stats.setTotalTags(totalTags);
-    stats.setEnabledTags(enabledTags);
-    stats.setDisabledTags(disabledTags);
-    stats.setCategoryCount(categoryCount);
-    
-    // TODO: Calculate total usage count
-    stats.setTotalUsageCount(0L);
-    
-    return stats;
-  }
-
-  @Override
-  public List<TagDetailVo> getByCategory(String category) {
-    List<Tag> tags = tagQuery.findByCategory(category);
+  public List<TagAllVo> getAll() {
+    List<Tag> tags = tagQuery.findAll();
     return tags.stream()
-        .map(TagAssembler::toDetailVo)
+        .map(TagAssembler::toAllVo)
         .collect(Collectors.toList());
   }
 }

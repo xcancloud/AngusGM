@@ -1,30 +1,42 @@
 package cloud.xcan.angus.core.gm.interfaces.sms.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.SmsCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.SmsFindDto;
-import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.SmsUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.SmsDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.SmsListVo;
-import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.SmsStatsVo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cloud.xcan.angus.common.result.PageResult;
+import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.*;
+
+import java.util.List;
 
 public interface SmsFacade {
-    SmsDetailVo create(SmsCreateDto dto);
     
-    SmsDetailVo update(SmsUpdateDto dto);
-    
-    SmsDetailVo send(SmsCreateDto dto);
-    
-    void retry(Long id);
-    
-    void cancel(Long id);
-    
-    void delete(Long id);
-    
-    SmsDetailVo findById(Long id);
-    
-    Page<SmsListVo> findAll(SmsFindDto dto, Pageable pageable);
+    // ==================== 统计与记录 ====================
     
     SmsStatsVo getStats();
+    
+    PageResult<SmsRecordVo> listRecords(SmsRecordFindDto dto);
+    
+    // ==================== 短信发送 ====================
+    
+    SmsSendVo send(SmsSendDto dto);
+    
+    SmsSendBatchVo sendBatch(SmsSendBatchDto dto);
+    
+    SmsTestVo test(SmsTestDto dto);
+    
+    // ==================== 短信模板管理 ====================
+    
+    PageResult<SmsTemplateVo> listTemplates(SmsTemplateFindDto dto);
+    
+    SmsTemplateVo createTemplate(SmsTemplateCreateDto dto);
+    
+    SmsTemplateVo updateTemplate(Long id, SmsTemplateUpdateDto dto);
+    
+    void deleteTemplate(Long id);
+    
+    SmsTemplateStatusVo updateTemplateStatus(Long id, SmsTemplateStatusDto dto);
+    
+    // ==================== 服务商配置 ====================
+    
+    List<SmsProviderVo> listProviders();
+    
+    SmsProviderVo createProvider(SmsProviderCreateDto dto);
 }

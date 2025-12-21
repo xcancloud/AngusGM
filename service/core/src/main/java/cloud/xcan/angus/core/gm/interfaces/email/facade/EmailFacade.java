@@ -1,31 +1,44 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailFindDto;
-import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.EmailUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailListVo;
-import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.EmailStatsVo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cloud.xcan.angus.common.result.PageResult;
+import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.*;
 
 public interface EmailFacade {
     
-    EmailDetailVo create(EmailCreateDto dto);
-    
-    EmailDetailVo update(EmailUpdateDto dto);
-    
-    EmailDetailVo send(EmailCreateDto dto);
-    
-    void retry(Long id);
-    
-    void cancel(Long id);
-    
-    void delete(Long id);
-    
-    EmailDetailVo findById(Long id);
-    
-    Page<EmailListVo> findAll(EmailFindDto dto, Pageable pageable);
+    // ==================== 统计与记录 ====================
     
     EmailStatsVo getStats();
+    
+    PageResult<EmailRecordVo> listRecords(EmailRecordFindDto dto);
+    
+    EmailTrackingVo getEmailStats(Long id);
+    
+    // ==================== 邮件发送 ====================
+    
+    EmailSendVo send(EmailSendDto dto);
+    
+    EmailSendBatchVo sendBatch(EmailSendBatchDto dto);
+    
+    EmailSendVo sendCustom(EmailSendCustomDto dto);
+    
+    // ==================== 邮件模板管理 ====================
+    
+    PageResult<EmailTemplateVo> listTemplates(EmailTemplateFindDto dto);
+    
+    EmailTemplateVo createTemplate(EmailTemplateCreateDto dto);
+    
+    EmailTemplateVo updateTemplate(Long id, EmailTemplateUpdateDto dto);
+    
+    void deleteTemplate(Long id);
+    
+    EmailTemplateStatusVo updateTemplateStatus(Long id, EmailTemplateStatusDto dto);
+    
+    // ==================== SMTP配置 ====================
+    
+    EmailSmtpVo getSmtpConfig();
+    
+    EmailSmtpVo updateSmtpConfig(EmailSmtpUpdateDto dto);
+    
+    EmailSmtpTestVo testSmtpConnection(EmailSmtpTestDto dto);
 }

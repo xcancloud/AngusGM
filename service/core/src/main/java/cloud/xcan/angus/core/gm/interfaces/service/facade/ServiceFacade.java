@@ -1,55 +1,73 @@
 package cloud.xcan.angus.core.gm.interfaces.service.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.EurekaConfigUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.EurekaTestDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceCallStatsDto;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceFindDto;
-import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.ServiceInstanceStatusDto;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.EurekaConfigVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.EurekaTestVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceCallStatsVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceDetailVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceHealthVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceInstanceStatusVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceListVo;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceRefreshVo;
 import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceStatsVo;
-import org.springframework.data.domain.Page;
+import java.util.List;
 
 /**
- * 服务管理门面接口
+ * Service management facade interface
  */
 public interface ServiceFacade {
 
-    /**
-     * 创建服务
-     */
-    ServiceDetailVo create(ServiceCreateDto dto);
+  /**
+   * Refresh service list from Eureka
+   */
+  ServiceRefreshVo refresh();
 
-    /**
-     * 更新服务
-     */
-    ServiceDetailVo update(ServiceUpdateDto dto);
+  /**
+   * Update service instance status
+   */
+  ServiceInstanceStatusVo updateInstanceStatus(String serviceName, String instanceId, ServiceInstanceStatusDto dto);
 
-    /**
-     * 启用服务
-     */
-    ServiceDetailVo enable(String id);
+  /**
+   * Get service detail
+   */
+  ServiceDetailVo getDetail(String serviceName);
 
-    /**
-     * 禁用服务
-     */
-    ServiceDetailVo disable(String id);
+  /**
+   * List services
+   */
+  List<ServiceListVo> list(ServiceFindDto dto);
 
-    /**
-     * 删除服务
-     */
-    void delete(String id);
+  /**
+   * Get service statistics
+   */
+  ServiceStatsVo getStats();
 
-    /**
-     * 查询服务详情
-     */
-    ServiceDetailVo get(String id);
+  /**
+   * Get service instance health
+   */
+  ServiceHealthVo getInstanceHealth(String serviceName, String instanceId);
 
-    /**
-     * 查询服务列表
-     */
-    Page<ServiceListVo> find(ServiceFindDto dto);
+  /**
+   * Get Eureka config
+   */
+  EurekaConfigVo getEurekaConfig();
 
-    /**
-     * 查询服务统计
-     */
-    ServiceStatsVo stats();
+  /**
+   * Update Eureka config
+   */
+  EurekaConfigVo updateEurekaConfig(EurekaConfigUpdateDto dto);
+
+  /**
+   * Test Eureka connection
+   */
+  EurekaTestVo testEurekaConnection(EurekaTestDto dto);
+
+  /**
+   * Get service call statistics
+   */
+  ServiceCallStatsVo getServiceCallStats(String serviceName, ServiceCallStatsDto dto);
 }

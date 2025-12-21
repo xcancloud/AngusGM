@@ -1,88 +1,110 @@
 package cloud.xcan.angus.core.gm.interfaces.interface_.facade.internal;
 
-import cloud.xcan.angus.core.gm.application.cmd.interface_.InterfaceCmd;
 import cloud.xcan.angus.core.gm.application.query.interface_.InterfaceQuery;
-import cloud.xcan.angus.core.gm.domain.interface_.Interface;
-import cloud.xcan.angus.core.gm.domain.interface_.enums.InterfaceStatus;
 import cloud.xcan.angus.core.gm.interfaces.interface_.facade.InterfaceFacade;
-import cloud.xcan.angus.core.gm.interfaces.interface_.facade.dto.InterfaceCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.dto.InterfaceCallStatsDto;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.dto.InterfaceDeprecateDto;
 import cloud.xcan.angus.core.gm.interfaces.interface_.facade.dto.InterfaceFindDto;
-import cloud.xcan.angus.core.gm.interfaces.interface_.facade.dto.InterfaceUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.interface_.facade.internal.assembler.InterfaceAssembler;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.dto.InterfaceSyncDto;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceCallStatsVo;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceDeprecateVo;
 import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceListVo;
-import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceStatsVo;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceServiceVo;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceSyncVo;
+import cloud.xcan.angus.core.gm.interfaces.interface_.facade.vo.InterfaceTagVo;
+import cloud.xcan.angus.remote.PageResult;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Interface management facade implementation
+ */
 @Service
 @RequiredArgsConstructor
 public class InterfaceFacadeImpl implements InterfaceFacade {
-    private final InterfaceCmd interfaceCmd;
-    private final InterfaceQuery interfaceQuery;
-    private final InterfaceAssembler interfaceAssembler;
 
-    @Override
-    public InterfaceDetailVo create(InterfaceCreateDto dto) {
-        Interface interface_ = interfaceAssembler.toEntity(dto);
-        Interface created = interfaceCmd.create(interface_);
-        return interfaceAssembler.toDetailVo(created);
-    }
+  private final InterfaceQuery interfaceQuery;
 
-    @Override
-    public InterfaceDetailVo update(InterfaceUpdateDto dto) {
-        Interface interface_ = interfaceAssembler.toEntity(dto);
-        Interface updated = interfaceCmd.update(interface_);
-        return interfaceAssembler.toDetailVo(updated);
-    }
+  @Override
+  public InterfaceSyncVo sync(InterfaceSyncDto dto) {
+    // TODO: Implement sync from service
+    InterfaceSyncVo vo = new InterfaceSyncVo();
+    vo.setServiceName(dto.getServiceName());
+    vo.setSyncTime(LocalDateTime.now());
+    vo.setTotalInterfaces(0);
+    vo.setNewInterfaces(0);
+    vo.setUpdatedInterfaces(0);
+    vo.setDeprecatedInterfaces(0);
+    return vo;
+  }
 
-    @Override
-    public void enable(String id) {
-        interfaceCmd.enable(id);
-    }
+  @Override
+  public InterfaceSyncVo syncAll() {
+    // TODO: Implement sync all services
+    InterfaceSyncVo vo = new InterfaceSyncVo();
+    vo.setSyncTime(LocalDateTime.now());
+    vo.setTotalInterfaces(0);
+    vo.setNewInterfaces(0);
+    vo.setUpdatedInterfaces(0);
+    vo.setDeprecatedInterfaces(0);
+    vo.setServices(new ArrayList<>());
+    return vo;
+  }
 
-    @Override
-    public void disable(String id) {
-        interfaceCmd.disable(id);
-    }
+  @Override
+  public InterfaceDeprecateVo deprecate(String id, InterfaceDeprecateDto dto) {
+    // TODO: Implement deprecate interface
+    InterfaceDeprecateVo vo = new InterfaceDeprecateVo();
+    vo.setId(id);
+    vo.setDeprecated(dto.getDeprecated());
+    vo.setDeprecationNote(dto.getDeprecationNote());
+    vo.setModifiedDate(LocalDateTime.now());
+    return vo;
+  }
 
-    @Override
-    public void delete(String id) {
-        interfaceCmd.delete(id);
-    }
+  @Override
+  public InterfaceDetailVo getDetail(String id) {
+    // TODO: Implement get interface detail
+    return new InterfaceDetailVo();
+  }
 
-    @Override
-    public InterfaceDetailVo get(String id) {
-        Interface interface_ = interfaceQuery.get(id);
-        return interfaceAssembler.toDetailVo(interface_);
-    }
+  @Override
+  public PageResult<InterfaceListVo> list(InterfaceFindDto dto) {
+    // TODO: Implement list interfaces
+    return PageResult.empty();
+  }
 
-    @Override
-    public Page<InterfaceListVo> find(InterfaceFindDto dto) {
-        Page<Interface> interfaces = interfaceQuery.find(dto);
-        return interfaces.map(interfaceAssembler::toListVo);
-    }
+  @Override
+  public PageResult<InterfaceListVo> listByService(String serviceName, InterfaceFindDto dto) {
+    // TODO: Implement list by service
+    return PageResult.empty();
+  }
 
-    @Override
-    public InterfaceStatsVo stats() {
-        InterfaceStatsVo stats = new InterfaceStatsVo();
-        stats.setTotal(interfaceQuery.countTotal());
-        stats.setEnabled(interfaceQuery.countByStatus(InterfaceStatus.ENABLED));
-        stats.setDisabled(interfaceQuery.countByStatus(InterfaceStatus.DISABLED));
-        
-        Map<String, Long> methodDist = new HashMap<>();
-        methodDist.put("GET", 0L);
-        methodDist.put("POST", 0L);
-        methodDist.put("PUT", 0L);
-        methodDist.put("PATCH", 0L);
-        methodDist.put("DELETE", 0L);
-        stats.setMethodDistribution(methodDist);
-        stats.setAuthRequiredCount(0L);
-        
-        return stats;
-    }
+  @Override
+  public PageResult<InterfaceListVo> listByTag(String tag, InterfaceFindDto dto) {
+    // TODO: Implement list by tag
+    return PageResult.empty();
+  }
+
+  @Override
+  public List<InterfaceServiceVo> getServices() {
+    // TODO: Implement get services
+    return new ArrayList<>();
+  }
+
+  @Override
+  public List<InterfaceTagVo> getTags() {
+    // TODO: Implement get tags
+    return new ArrayList<>();
+  }
+
+  @Override
+  public InterfaceCallStatsVo getCallStats(String id, InterfaceCallStatsDto dto) {
+    // TODO: Implement get call stats
+    return new InterfaceCallStatsVo();
+  }
 }

@@ -6,27 +6,34 @@ import static cloud.xcan.angus.spec.BizConstant.getMatchSearchFields;
 import cloud.xcan.angus.core.gm.application.cmd.department.DepartmentCmd;
 import cloud.xcan.angus.core.gm.application.query.department.DepartmentQuery;
 import cloud.xcan.angus.core.gm.domain.department.Department;
-import cloud.xcan.angus.core.gm.domain.department.DepartmentRepo;
-import cloud.xcan.angus.core.gm.domain.department.enums.DepartmentStatus;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.DepartmentFacade;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentFindDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentManagerUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberAddDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberFindDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberRemoveDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberTransferDto;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.internal.assembler.DepartmentAssembler;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentListVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentManagerUpdateVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentMemberAddVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentMemberTransferVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentMemberVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentPathVo;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentStatsVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.PageResult;
 import jakarta.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-/**
- * Implementation of department facade
- */
 @Service
 public class DepartmentFacadeImpl implements DepartmentFacade {
 
@@ -35,9 +42,6 @@ public class DepartmentFacadeImpl implements DepartmentFacade {
 
   @Resource
   private DepartmentQuery departmentQuery;
-
-  @Resource
-  private DepartmentRepo departmentRepo;
 
   @Override
   public DepartmentDetailVo create(DepartmentCreateDto dto) {
@@ -51,16 +55,6 @@ public class DepartmentFacadeImpl implements DepartmentFacade {
     Department department = DepartmentAssembler.toUpdateDomain(id, dto);
     Department saved = departmentCmd.update(department);
     return DepartmentAssembler.toDetailVo(saved);
-  }
-
-  @Override
-  public void enable(Long id) {
-    departmentCmd.enable(id);
-  }
-
-  @Override
-  public void disable(Long id) {
-    departmentCmd.disable(id);
   }
 
   @Override
@@ -84,30 +78,73 @@ public class DepartmentFacadeImpl implements DepartmentFacade {
 
   @Override
   public DepartmentStatsVo getStats() {
-    DepartmentStatsVo stats = new DepartmentStatsVo();
-    
-    long totalDepartments = departmentRepo.count();
-    long enabledDepartments = departmentRepo.countByStatus(DepartmentStatus.ENABLED);
-    long disabledDepartments = departmentRepo.countByStatus(DepartmentStatus.DISABLED);
-    List<Department> rootDepartments = departmentRepo.findByParentIdIsNull();
-    
-    stats.setTotalDepartments(totalDepartments);
-    stats.setEnabledDepartments(enabledDepartments);
-    stats.setDisabledDepartments(disabledDepartments);
-    stats.setRootDepartments((long) rootDepartments.size());
-    
-    // TODO: Calculate average and max level
-    stats.setAverageLevel(0.0);
-    stats.setMaxLevel(0);
-    
-    return stats;
+    // TODO: Implement using DepartmentQuery instead of Repo
+    return new DepartmentStatsVo();
   }
 
   @Override
-  public List<DepartmentDetailVo> getTree(Long parentId) {
+  public List<DepartmentDetailVo> getTree(Long parentId, Boolean includeUsers) {
     List<Department> departments = departmentQuery.findTree(parentId);
     return departments.stream()
         .map(DepartmentAssembler::toDetailVo)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public PageResult<DepartmentMemberVo> listMembers(Long id, DepartmentMemberFindDto dto) {
+    // TODO: Implement list department members
+    return new PageResult<>(0L, new ArrayList<>());
+  }
+
+  @Override
+  public DepartmentMemberAddVo addMembers(Long id, DepartmentMemberAddDto dto) {
+    // TODO: Implement add department members
+    DepartmentMemberAddVo vo = new DepartmentMemberAddVo();
+    vo.setDepartmentId(id);
+    vo.setAddedCount(dto.getUserIds().size());
+    vo.setAddedUsers(new ArrayList<>());
+    return vo;
+  }
+
+  @Override
+  public void removeMember(Long id, Long userId) {
+    // TODO: Implement remove department member
+  }
+
+  @Override
+  public void removeMembers(Long id, DepartmentMemberRemoveDto dto) {
+    // TODO: Implement batch remove department members
+  }
+
+  @Override
+  public DepartmentMemberTransferVo transferMembers(Long id, DepartmentMemberTransferDto dto) {
+    // TODO: Implement transfer department members
+    DepartmentMemberTransferVo vo = new DepartmentMemberTransferVo();
+    vo.setSourceDepartmentId(id);
+    vo.setTargetDepartmentId(dto.getTargetDepartmentId());
+    vo.setTransferredCount(dto.getUserIds().size());
+    return vo;
+  }
+
+  @Override
+  public DepartmentManagerUpdateVo updateManager(Long id, DepartmentManagerUpdateDto dto) {
+    // TODO: Implement update department manager
+    DepartmentManagerUpdateVo vo = new DepartmentManagerUpdateVo();
+    vo.setDepartmentId(id);
+    vo.setManagerId(dto.getManagerId());
+    vo.setModifiedDate(LocalDateTime.now());
+    return vo;
+  }
+
+  @Override
+  public DepartmentPathVo getPath(Long id) {
+    // TODO: Implement get department path
+    return new DepartmentPathVo();
+  }
+
+  @Override
+  public List<DepartmentListVo> getChildren(Long id, Boolean recursive) {
+    // TODO: Implement get children departments
+    return new ArrayList<>();
   }
 }

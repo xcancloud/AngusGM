@@ -1,21 +1,50 @@
 package cloud.xcan.angus.core.gm.interfaces.monitoring.facade;
 
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.MonitoringCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.MonitoringFindDto;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.MonitoringUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringListVo;
-import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringStatsVo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cloud.xcan.angus.common.result.PageResult;
+import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.*;
+
+import java.util.List;
 
 public interface MonitoringFacade {
-    MonitoringDetailVo create(MonitoringCreateDto dto);
-    MonitoringDetailVo update(Long id, MonitoringUpdateDto dto);
-    void delete(Long id);
-    void enable(Long id);
-    void disable(Long id);
-    MonitoringDetailVo findById(Long id);
-    Page<MonitoringListVo> find(MonitoringFindDto dto, Pageable pageable);
-    MonitoringStatsVo getStats();
+    
+    // ==================== 系统概览 ====================
+    
+    MonitoringOverviewVo getOverview();
+    
+    HealthCheckVo getHealth();
+    
+    // ==================== 资源监控 ====================
+    
+    CpuUsageVo getCpuUsage(String period);
+    
+    MemoryUsageVo getMemoryUsage(String period);
+    
+    DiskUsageVo getDiskUsage();
+    
+    NetworkUsageVo getNetworkUsage(String period);
+    
+    PageResult<ProcessInfoVo> getProcesses(ProcessFindDto dto);
+    
+    // ==================== 数据库监控 ====================
+    
+    List<DatabasePoolVo> getDatabasePools();
+    
+    DatabasePerformanceVo getDatabasePerformance(String period);
+    
+    // ==================== 缓存监控 ====================
+    
+    RedisMonitorVo getRedisMonitor();
+    
+    // ==================== 告警规则 ====================
+    
+    PageResult<AlertRuleVo> listAlertRules(AlertRuleFindDto dto);
+    
+    AlertRuleVo createAlertRule(AlertRuleCreateDto dto);
+    
+    // ==================== 告警记录 ====================
+    
+    PageResult<AlertRecordVo> listAlertRecords(AlertRecordFindDto dto);
+    
+    AlertHandleVo handleAlertRecord(Long id, AlertHandleDto dto);
 }

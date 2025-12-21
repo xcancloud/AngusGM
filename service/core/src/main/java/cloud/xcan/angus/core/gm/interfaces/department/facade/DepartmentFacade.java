@@ -2,60 +2,52 @@ package cloud.xcan.angus.core.gm.interfaces.department.facade;
 
 import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentFindDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentManagerUpdateDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberAddDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberFindDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberRemoveDto;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentMemberTransferDto;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.dto.DepartmentUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentListVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentManagerUpdateVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentMemberAddVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentMemberTransferVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentMemberVo;
+import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentPathVo;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentStatsVo;
 import cloud.xcan.angus.remote.PageResult;
 import java.util.List;
 
-/**
- * Department facade interface
- */
 public interface DepartmentFacade {
 
-  /**
-   * Create department
-   */
   DepartmentDetailVo create(DepartmentCreateDto dto);
 
-  /**
-   * Update department
-   */
   DepartmentDetailVo update(Long id, DepartmentUpdateDto dto);
 
-  /**
-   * Enable department
-   */
-  void enable(Long id);
-
-  /**
-   * Disable department
-   */
-  void disable(Long id);
-
-  /**
-   * Delete department
-   */
   void delete(Long id);
 
-  /**
-   * Get department detail
-   */
   DepartmentDetailVo getDetail(Long id);
 
-  /**
-   * List departments with pagination
-   */
   PageResult<DepartmentListVo> list(DepartmentFindDto dto);
 
-  /**
-   * Get department statistics
-   */
   DepartmentStatsVo getStats();
 
-  /**
-   * Get department tree structure
-   */
-  List<DepartmentDetailVo> getTree(Long parentId);
+  List<DepartmentDetailVo> getTree(Long parentId, Boolean includeUsers);
+
+  PageResult<DepartmentMemberVo> listMembers(Long id, DepartmentMemberFindDto dto);
+
+  DepartmentMemberAddVo addMembers(Long id, DepartmentMemberAddDto dto);
+
+  void removeMember(Long id, Long userId);
+
+  void removeMembers(Long id, DepartmentMemberRemoveDto dto);
+
+  DepartmentMemberTransferVo transferMembers(Long id, DepartmentMemberTransferDto dto);
+
+  DepartmentManagerUpdateVo updateManager(Long id, DepartmentManagerUpdateDto dto);
+
+  DepartmentPathVo getPath(Long id);
+
+  List<DepartmentListVo> getChildren(Long id, Boolean recursive);
 }
