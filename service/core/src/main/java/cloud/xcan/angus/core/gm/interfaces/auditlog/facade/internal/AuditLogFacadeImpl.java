@@ -11,18 +11,22 @@ import cloud.xcan.angus.core.gm.interfaces.auditlog.facade.internal.assembler.Au
 import cloud.xcan.angus.core.gm.interfaces.auditlog.facade.vo.AuditLogDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.auditlog.facade.vo.AuditLogListVo;
 import cloud.xcan.angus.core.gm.interfaces.auditlog.facade.vo.AuditLogStatsVo;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class AuditLogFacadeImpl implements AuditLogFacade {
     
-    private final AuditLogCmd auditLogCmd;
-    private final AuditLogQuery auditLogQuery;
-    private final AuditLogAssembler assembler;
+    @Resource
+    private AuditLogCmd auditLogCmd;
+    
+    @Resource
+    private AuditLogQuery auditLogQuery;
+    
+    @Resource
+    private AuditLogAssembler assembler;
     
     @Override
     public AuditLogDetailVo create(AuditLogCreateDto dto) {

@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class TenantFacadeImpl implements TenantFacade {
 
   @Resource

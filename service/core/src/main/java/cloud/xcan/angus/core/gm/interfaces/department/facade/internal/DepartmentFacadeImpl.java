@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class DepartmentFacadeImpl implements DepartmentFacade {
 
   @Resource

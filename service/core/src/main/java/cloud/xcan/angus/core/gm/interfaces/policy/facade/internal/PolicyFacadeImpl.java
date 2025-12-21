@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 /**
  * Implementation of policy (role) facade
  */
-@Service
+@Component
 public class PolicyFacadeImpl implements PolicyFacade {
 
   @Resource

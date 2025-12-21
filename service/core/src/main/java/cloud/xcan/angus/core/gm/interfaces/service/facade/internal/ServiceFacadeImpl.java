@@ -19,17 +19,17 @@ import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.ServiceStatsVo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 
 /**
  * Service management facade implementation
  */
-@Service
-@RequiredArgsConstructor
+@Component
 public class ServiceFacadeImpl implements ServiceFacade {
 
-  private final ServiceQuery serviceQuery;
+  @Resource
+  private ServiceQuery serviceQuery;
 
   @Override
   public ServiceRefreshVo refresh() {

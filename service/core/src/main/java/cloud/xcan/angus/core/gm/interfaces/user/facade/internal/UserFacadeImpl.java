@@ -42,7 +42,7 @@ import org.springframework.stereotype.Service;
 /**
  * Implementation of user facade
  */
-@Service
+@Component
 public class UserFacadeImpl implements UserFacade {
 
   @Resource

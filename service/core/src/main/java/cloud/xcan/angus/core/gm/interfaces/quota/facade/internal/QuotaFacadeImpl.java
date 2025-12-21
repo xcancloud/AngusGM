@@ -8,19 +8,23 @@ import cloud.xcan.angus.core.gm.interfaces.quota.facade.QuotaFacade;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.internal.assembler.QuotaAssembler;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.vo.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class QuotaFacadeImpl implements QuotaFacade {
     
-    private final QuotaCmd quotaCmd;
-    private final QuotaQuery quotaQuery;
-    private final QuotaAssembler assembler;
+    @Resource
+    private QuotaCmd quotaCmd;
+    
+    @Resource
+    private QuotaQuery quotaQuery;
+    
+    @Resource
+    private QuotaAssembler assembler;
     
     @Override
     public QuotaDetailVo create(QuotaCreateDto dto) {

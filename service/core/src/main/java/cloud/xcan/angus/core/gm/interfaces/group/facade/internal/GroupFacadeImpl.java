@@ -37,7 +37,7 @@ import org.springframework.stereotype.Service;
 /**
  * Implementation of group facade
  */
-@Service
+@Component
 public class GroupFacadeImpl implements GroupFacade {
 
   @Resource

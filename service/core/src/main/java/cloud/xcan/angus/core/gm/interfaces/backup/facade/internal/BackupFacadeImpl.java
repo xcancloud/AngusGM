@@ -9,13 +9,13 @@ import cloud.xcan.angus.core.gm.interfaces.backup.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.internal.assembler.BackupAssembler;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.vo.*;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +23,17 @@ import java.util.stream.Collectors;
 
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class BackupFacadeImpl implements BackupFacade {
     
-    private final BackupCmd backupCmd;
-    private final BackupQuery backupQuery;
-    private final BackupAssembler assembler;
+    @Resource
+    private BackupCmd backupCmd;
+    
+    @Resource
+    private BackupQuery backupQuery;
+    
+    @Resource
+    private BackupAssembler assembler;
     
     // ==================== 备份记录 ====================
     

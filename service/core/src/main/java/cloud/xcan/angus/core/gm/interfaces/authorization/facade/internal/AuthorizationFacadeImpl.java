@@ -26,12 +26,12 @@ import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * Authorization Facade Implementation
  */
-@Service
+@Component
 public class AuthorizationFacadeImpl implements AuthorizationFacade {
 
   @Resource

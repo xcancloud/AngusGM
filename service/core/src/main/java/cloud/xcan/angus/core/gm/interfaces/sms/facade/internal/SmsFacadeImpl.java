@@ -9,20 +9,22 @@ import cloud.xcan.angus.core.gm.interfaces.sms.facade.SmsFacade;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.internal.assembler.SmsAssembler;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.*;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class SmsFacadeImpl implements SmsFacade {
-    private final SmsCmd smsCmd;
-    private final SmsQuery smsQuery;
+    @Resource
+    private SmsCmd smsCmd;
+    
+    @Resource
+    private SmsQuery smsQuery;
 
     // ==================== 短信模板管理 ====================
 

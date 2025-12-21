@@ -8,19 +8,23 @@ import cloud.xcan.angus.core.gm.interfaces.ldap.facade.LdapFacade;
 import cloud.xcan.angus.core.gm.interfaces.ldap.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.ldap.facade.internal.assembler.LdapAssembler;
 import cloud.xcan.angus.core.gm.interfaces.ldap.facade.vo.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class LdapFacadeImpl implements LdapFacade {
     
-    private final LdapCmd ldapCmd;
-    private final LdapQuery ldapQuery;
-    private final LdapAssembler assembler;
+    @Resource
+    private LdapCmd ldapCmd;
+    
+    @Resource
+    private LdapQuery ldapQuery;
+    
+    @Resource
+    private LdapAssembler assembler;
     
     @Override
     public LdapDetailVo create(LdapCreateDto dto) {

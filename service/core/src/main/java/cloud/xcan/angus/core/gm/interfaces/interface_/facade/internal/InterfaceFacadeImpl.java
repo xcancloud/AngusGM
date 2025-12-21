@@ -17,17 +17,17 @@ import cloud.xcan.angus.remote.PageResult;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 
 /**
  * Interface management facade implementation
  */
-@Service
-@RequiredArgsConstructor
+@Component
 public class InterfaceFacadeImpl implements InterfaceFacade {
 
-  private final InterfaceQuery interfaceQuery;
+  @Resource
+  private InterfaceQuery interfaceQuery;
 
   @Override
   public InterfaceSyncVo sync(InterfaceSyncDto dto) {

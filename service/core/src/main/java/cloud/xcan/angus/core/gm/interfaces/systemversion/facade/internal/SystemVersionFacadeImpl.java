@@ -11,18 +11,22 @@ import cloud.xcan.angus.core.gm.interfaces.systemversion.facade.internal.assembl
 import cloud.xcan.angus.core.gm.interfaces.systemversion.facade.vo.SystemVersionDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.systemversion.facade.vo.SystemVersionListVo;
 import cloud.xcan.angus.core.gm.interfaces.systemversion.facade.vo.SystemVersionStatsVo;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class SystemVersionFacadeImpl implements SystemVersionFacade {
     
-    private final SystemVersionCmd systemVersionCmd;
-    private final SystemVersionQuery systemVersionQuery;
-    private final SystemVersionAssembler assembler;
+    @Resource
+    private SystemVersionCmd systemVersionCmd;
+    
+    @Resource
+    private SystemVersionQuery systemVersionQuery;
+    
+    @Resource
+    private SystemVersionAssembler assembler;
     
     @Override
     public SystemVersionDetailVo create(SystemVersionCreateDto dto) {

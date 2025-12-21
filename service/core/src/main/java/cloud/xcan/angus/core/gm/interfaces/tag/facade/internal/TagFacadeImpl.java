@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 /**
  * Implementation of tag facade
  */
-@Service
+@Component
 public class TagFacadeImpl implements TagFacade {
 
   @Resource

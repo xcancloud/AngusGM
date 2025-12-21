@@ -11,18 +11,22 @@ import cloud.xcan.angus.core.gm.interfaces.security.facade.internal.assembler.Se
 import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityListVo;
 import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityStatsVo;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class SecurityFacadeImpl implements SecurityFacade {
     
-    private final SecurityCmd securityCmd;
-    private final SecurityQuery securityQuery;
-    private final SecurityAssembler assembler;
+    @Resource
+    private SecurityCmd securityCmd;
+    
+    @Resource
+    private SecurityQuery securityQuery;
+    
+    @Resource
+    private SecurityAssembler assembler;
     
     @Override
     public SecurityDetailVo create(SecurityCreateDto dto) {

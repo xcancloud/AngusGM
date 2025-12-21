@@ -23,19 +23,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * Application Facade Implementation
  */
-@Service
-@RequiredArgsConstructor
+@Component
 public class ApplicationFacadeImpl implements ApplicationFacade {
 
-  private final ApplicationCmd applicationCmd;
-  private final ApplicationQuery applicationQuery;
+  @Resource
+  private ApplicationCmd applicationCmd;
+  
+  @Resource
+  private ApplicationQuery applicationQuery;
 
   @Override
   public ApplicationDetailVo create(ApplicationCreateDto dto) {

@@ -9,22 +9,26 @@ import cloud.xcan.angus.core.gm.interfaces.email.facade.EmailFacade;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.internal.assembler.EmailAssembler;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.*;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class EmailFacadeImpl implements EmailFacade {
     
-    private final EmailCmd emailCmd;
-    private final EmailQuery emailQuery;
-    private final EmailAssembler emailAssembler;
+    @Resource
+    private EmailCmd emailCmd;
+    
+    @Resource
+    private EmailQuery emailQuery;
+    
+    @Resource
+    private EmailAssembler emailAssembler;
     
     // ==================== 邮件模板管理 ====================
     

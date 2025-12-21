@@ -11,18 +11,22 @@ import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.internal.assembler.
 import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringListVo;
 import cloud.xcan.angus.core.gm.interfaces.monitoring.facade.vo.MonitoringStatsVo;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-@RequiredArgsConstructor
+@Component
 public class MonitoringFacadeImpl implements MonitoringFacade {
     
-    private final MonitoringCmd monitoringCmd;
-    private final MonitoringQuery monitoringQuery;
-    private final MonitoringAssembler assembler;
+    @Resource
+    private MonitoringCmd monitoringCmd;
+    
+    @Resource
+    private MonitoringQuery monitoringQuery;
+    
+    @Resource
+    private MonitoringAssembler assembler;
     
     @Override
     public MonitoringDetailVo create(MonitoringCreateDto dto) {
