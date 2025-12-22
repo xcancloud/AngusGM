@@ -46,4 +46,14 @@ public interface InterfaceRepo extends BaseRepository<Interface, Long> {
    * Count interfaces requiring authentication
    */
   long countByRequireAuth(Boolean requireAuth);
+
+  /**
+   * Find interfaces by deprecated status
+   */
+  List<Interface> findByDeprecated(Boolean deprecated);
+
+  /**
+   * Count interfaces by deprecated status
+   */
+  long countByDeprecated(Boolean deprecated);
 }

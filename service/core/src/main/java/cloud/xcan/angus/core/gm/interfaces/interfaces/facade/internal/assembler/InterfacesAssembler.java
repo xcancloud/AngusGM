@@ -1,63 +1,89 @@
 package cloud.xcan.angus.core.gm.interfaces.interfaces.facade.internal.assembler;
 
 import cloud.xcan.angus.core.gm.domain.interfaces.Interface;
-import cloud.xcan.angus.core.gm.interfaces.interfaces.facade.dto.InterfaceCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.interfaces.facade.dto.InterfaceUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceListVo;
-import org.springframework.stereotype.Component;
+import cloud.xcan.angus.core.gm.interfaces.interfaces.facade.dto.InterfaceFindDto;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
+import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
+import cloud.xcan.angus.remote.search.SearchCriteria;
+import cloud.xcan.angus.remote.search.SearchOperation;
+import static cloud.xcan.angus.spec.utils.ObjectUtils.nullSafe;
+import java.util.HashSet;
+import java.util.Set;
 
-@Component
-public class InterfaceAssembler {
-    public Interface toEntity(InterfaceCreateDto dto) {
-        Interface interface_ = new Interface();
-        interface_.setName(dto.getName());
-        interface_.setPath(dto.getPath());
-        interface_.setMethod(dto.getMethod());
-        interface_.setDescription(dto.getDescription());
-        interface_.setAuthRequired(dto.getAuthRequired() != null ? dto.getAuthRequired() : false);
-        interface_.setServiceId(dto.getServiceId());
-        return interface_;
+/**
+ * Interface assembler
+ */
+public class InterfacesAssembler {
+
+  /**
+   * Convert Domain to DetailVo
+   */
+  public static cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceDetailVo toDetailVo(Interface inter) {
+    cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceDetailVo vo = 
+        new cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceDetailVo();
+    vo.setId(inter.getId());
+    vo.setServiceName(inter.getServiceName());
+    vo.setCode(inter.getCode());
+    vo.setPath(inter.getPath());
+    vo.setMethod(inter.getMethod());
+    vo.setSummary(inter.getSummary());
+    vo.setDescription(inter.getDescription());
+    vo.setTags(inter.getTags());
+    vo.setParameters(inter.getParameters());
+    vo.setResponses(inter.getResponses());
+    vo.setDeprecated(nullSafe(inter.getDeprecated(), false));
+    vo.setVersion(inter.getVersion());
+    vo.setLastSyncTime(inter.getLastSyncTime());
+    return vo;
+  }
+
+  /**
+   * Convert Domain to ListVo
+   */
+  public static cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceListVo toListVo(Interface inter) {
+    cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceListVo vo = 
+        new cloud.xcan.angus.core.gm.interfaces.interfaces.facade.vo.InterfaceListVo();
+    vo.setId(inter.getId());
+    vo.setServiceName(inter.getServiceName());
+    vo.setCode(inter.getCode());
+    vo.setPath(inter.getPath());
+    vo.setMethod(inter.getMethod());
+    vo.setSummary(inter.getSummary());
+    vo.setDescription(inter.getDescription());
+    vo.setTags(inter.getTags());
+    vo.setDeprecated(nullSafe(inter.getDeprecated(), false));
+    vo.setVersion(inter.getVersion());
+    return vo;
+  }
+
+  /**
+   * Build query specification from FindDto
+   */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static GenericSpecification<Interface> getSpecification(InterfaceFindDto dto) {
+    Set<SearchCriteria> filters = new SearchCriteriaBuilder(dto)
+        .rangeSearchFields("id", "createdDate", "modifiedDate", "lastSyncTime")
+        .orderByFields("id", "createdDate", "modifiedDate", "path", "name")
+        .matchSearchFields("path", "description", "summary", "name")
+        .build();
+    
+    // Add method filter
+    if (dto.getMethod() != null) {
+      filters.add(new SearchCriteria("method", dto.getMethod().name(), SearchOperation.EQUAL));
     }
     
-    public Interface toEntity(InterfaceUpdateDto dto) {
-        Interface interface_ = new Interface();
-        interface_.setId(dto.getId());
-        interface_.setName(dto.getName());
-        interface_.setPath(dto.getPath());
-        interface_.setMethod(dto.getMethod());
-        interface_.setDescription(dto.getDescription());
-        interface_.setAuthRequired(dto.getAuthRequired());
-        interface_.setServiceId(dto.getServiceId());
-        return interface_;
+    // Add deprecated filter
+    if (dto.getDeprecated() != null) {
+      filters.add(new SearchCriteria("deprecated", dto.getDeprecated(), SearchOperation.EQUAL));
     }
     
-    public InterfaceDetailVo toDetailVo(Interface interface_) {
-        InterfaceDetailVo vo = new InterfaceDetailVo();
-        vo.setId(interface_.getId());
-        vo.setName(interface_.getName());
-        vo.setPath(interface_.getPath());
-        vo.setMethod(interface_.getMethod());
-        vo.setDescription(interface_.getDescription());
-        vo.setAuthRequired(interface_.getAuthRequired());
-        vo.setStatus(interface_.getStatus());
-        vo.setServiceId(interface_.getServiceId());
-        vo.setServiceName(interface_.getServiceName());
-        vo.setCreatedAt(interface_.getCreatedAt());
-        vo.setUpdatedAt(interface_.getUpdatedAt());
-        return vo;
+    // Add tags filter
+    if (dto.getTags() != null && !dto.getTags().isEmpty()) {
+      for (String tag : dto.getTags()) {
+        filters.add(new SearchCriteria("tags", tag, SearchOperation.MATCH));
+      }
     }
     
-    public InterfaceListVo toListVo(Interface interface_) {
-        InterfaceListVo vo = new InterfaceListVo();
-        vo.setId(interface_.getId());
-        vo.setName(interface_.getName());
-        vo.setPath(interface_.getPath());
-        vo.setMethod(interface_.getMethod());
-        vo.setAuthRequired(interface_.getAuthRequired());
-        vo.setStatus(interface_.getStatus());
-        vo.setServiceId(interface_.getServiceId());
-        vo.setServiceName(interface_.getServiceName());
-        return vo;
-    }
+    return new GenericSpecification<>(filters);
+  }
 }

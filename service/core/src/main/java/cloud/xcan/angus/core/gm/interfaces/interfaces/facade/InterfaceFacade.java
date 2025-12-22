@@ -32,12 +32,12 @@ public interface InterfaceFacade {
   /**
    * Deprecate an interface
    */
-  InterfaceDeprecateVo deprecate(String id, InterfaceDeprecateDto dto);
+  InterfaceDeprecateVo deprecate(Long id, InterfaceDeprecateDto dto);
 
   /**
    * Get interface detail
    */
-  InterfaceDetailVo getDetail(String id);
+  InterfaceDetailVo getDetail(Long id);
 
   /**
    * Find interfaces with pagination
@@ -67,5 +67,5 @@ public interface InterfaceFacade {
   /**
    * Get interface call statistics
    */
-  InterfaceCallStatsVo getCallStats(String id, InterfaceCallStatsDto dto);
+  InterfaceCallStatsVo getCallStats(Long id, InterfaceCallStatsDto dto);
 }

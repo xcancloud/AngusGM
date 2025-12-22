@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class InterfaceDeprecateVo implements Serializable {
 
-  private String id;
+  private Long id;
 
   private Boolean deprecated;
 

@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class InterfaceCallStatsVo implements Serializable {
 
-  private String interfaceId;
+  private Long interfaceId;
 
   private String path;
 

@@ -74,7 +74,7 @@ public class InterfaceRest {
   @ResponseStatus(HttpStatus.OK)
   @PatchMapping("/{id}/deprecate")
   public ApiLocaleResult<InterfaceDeprecateVo> deprecate(
-      @Parameter(description = "接口ID") @PathVariable String id,
+      @Parameter(description = "接口ID") @PathVariable Long id,
       @Valid @RequestBody InterfaceDeprecateDto dto) {
     return ApiLocaleResult.success(interfaceFacade.deprecate(id, dto));
   }
@@ -86,7 +86,7 @@ public class InterfaceRest {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{id}")
   public ApiLocaleResult<InterfaceDetailVo> getDetail(
-      @Parameter(description = "接口ID") @PathVariable String id) {
+      @Parameter(description = "接口ID") @PathVariable Long id) {
     return ApiLocaleResult.success(interfaceFacade.getDetail(id));
   }
 
@@ -152,7 +152,7 @@ public class InterfaceRest {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{id}/stats")
   public ApiLocaleResult<InterfaceCallStatsVo> getCallStats(
-      @Parameter(description = "接口ID") @PathVariable String id,
+      @Parameter(description = "接口ID") @PathVariable Long id,
       @ParameterObject InterfaceCallStatsDto dto) {
     return ApiLocaleResult.success(interfaceFacade.getCallStats(id, dto));
   }
