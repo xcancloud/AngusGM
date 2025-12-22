@@ -40,9 +40,21 @@ public class GroupDetailVo extends TenantAuditingVo {
   @Schema(description = "负责人姓名")
   private String ownerName;
 
+  @Schema(description = "负责人头像")
+  private String ownerAvatar;
+
   @Schema(description = "成员数量")
   private Long memberCount;
 
   @Schema(description = "成员ID列表")
   private List<Long> memberIds;
+
+  @Schema(description = "标签列表")
+  private List<String> tags;
+
+  @Schema(description = "最后活跃时间")
+  private String lastActive;
+
+  @Schema(description = "成员列表")
+  private List<GroupMemberVo> members;
 }

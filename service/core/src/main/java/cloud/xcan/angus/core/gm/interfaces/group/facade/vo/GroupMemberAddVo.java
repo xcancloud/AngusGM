@@ -1,30 +1,32 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade.vo;
 
-import java.io.Serializable;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.Data;
 
 /**
  * Group member add response VO
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-public class GroupMemberAddVo implements Serializable {
+@Data
+@Schema(description = "添加组成员响应")
+public class GroupMemberAddVo {
 
+  @Schema(description = "组ID")
   private Long groupId;
 
+  @Schema(description = "添加数量")
   private Integer addedCount;
 
+  @Schema(description = "已添加用户列表")
   private List<AddedUserVo> addedUsers;
 
-  @Getter
-  @Setter
-  @Accessors(chain = true)
-  public static class AddedUserVo implements Serializable {
+  @Data
+  @Schema(description = "已添加用户")
+  public static class AddedUserVo {
+    @Schema(description = "用户ID")
     private Long id;
+    
+    @Schema(description = "用户姓名")
     private String name;
   }
 }

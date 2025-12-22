@@ -1,19 +1,20 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import java.io.Serializable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import cloud.xcan.angus.core.gm.domain.group.enums.GroupStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 /**
  * Group status update DTO
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-public class GroupStatusUpdateDto implements Serializable {
+@Data
+@Schema(description = "更新组状态请求参数")
+public class GroupStatusUpdateDto {
 
-  @NotBlank
-  private String status;
+  @NotNull
+  @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, 
+      allowableValues = {"ENABLED", "DISABLED"}, 
+      example = "ENABLED")
+  private GroupStatus status;
 }

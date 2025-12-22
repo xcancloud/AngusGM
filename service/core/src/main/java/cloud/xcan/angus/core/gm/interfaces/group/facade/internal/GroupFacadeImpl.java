@@ -5,8 +5,10 @@ import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.group.GroupCmd;
 import cloud.xcan.angus.core.gm.application.query.group.GroupQuery;
+import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
 import cloud.xcan.angus.core.gm.domain.group.Group;
 import cloud.xcan.angus.core.gm.domain.group.enums.GroupType;
+import cloud.xcan.angus.core.gm.domain.user.User;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.GroupFacade;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupCreateDto;
 import cloud.xcan.angus.core.gm.interfaces.group.facade.dto.GroupFindDto;
@@ -32,7 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * Implementation of group facade
@@ -45,6 +47,9 @@ public class GroupFacadeImpl implements GroupFacade {
 
   @Resource
   private GroupQuery groupQuery;
+
+  @Resource
+  private UserQuery userQuery;
 
   @Override
   public GroupDetailVo create(GroupCreateDto dto) {
@@ -63,10 +68,11 @@ public class GroupFacadeImpl implements GroupFacade {
   @Override
   public GroupStatusUpdateVo updateStatus(Long id, GroupStatusUpdateDto dto) {
     groupCmd.updateStatus(id, dto.getStatus());
+    Group group = groupQuery.findAndCheck(id);
     GroupStatusUpdateVo vo = new GroupStatusUpdateVo();
     vo.setId(id);
-    vo.setStatus(dto.getStatus());
-    vo.setModifiedDate(LocalDateTime.now());
+    vo.setStatus(group.getStatus());
+    vo.setModifiedDate(group.getModifiedDate());
     return vo;
   }
 
@@ -103,19 +109,31 @@ public class GroupFacadeImpl implements GroupFacade {
     stats.setFunctionGroups(functionGroups);
     stats.setTempGroups(tempGroups);
     
-    // TODO: Calculate active members from user-group relation
-    stats.setActiveMembers(0L);
+    // Calculate active members from user-group relation
+    stats.setActiveMembers(groupQuery.countActiveMembers());
     
-    // TODO: Calculate new groups this month
-    stats.setNewGroupsThisMonth(0L);
+    // Calculate new groups this month
+    stats.setNewGroupsThisMonth(groupQuery.countNewGroupsThisMonth());
     
     return stats;
   }
 
   @Override
   public PageResult<GroupMemberVo> listMembers(Long id, GroupMemberFindDto dto) {
-    // TODO: Implement member listing with pagination
-    return PageResult.empty();
+    // Verify group exists
+    Group group = groupQuery.findAndCheck(id);
+    
+    // Get user IDs from group-user relation
+    List<Long> userIds = groupQuery.findUserIdsByGroupId(id);
+    
+    // Build specification for member query
+    GenericSpecification<User> spec = GroupAssembler.getMemberSpecification(id, dto, userIds);
+    
+    // Query members with pagination
+    Page<User> page = groupQuery.findMembers(id, spec, dto.tranPage());
+    
+    // Convert to VO using buildVoPageResult
+    return buildVoPageResult(page, user -> GroupAssembler.toMemberVo(user, id));
   }
 
   @Override
@@ -124,7 +142,25 @@ public class GroupFacadeImpl implements GroupFacade {
     GroupMemberAddVo vo = new GroupMemberAddVo();
     vo.setGroupId(id);
     vo.setAddedCount(dto.getUserIds().size());
-    vo.setAddedUsers(new ArrayList<>());
+    
+    // Query user names from user service
+    List<GroupMemberAddVo.AddedUserVo> addedUsers = dto.getUserIds().stream()
+        .map(userId -> {
+          try {
+            User user = userQuery.findAndCheck(userId);
+            GroupMemberAddVo.AddedUserVo userVo = new GroupMemberAddVo.AddedUserVo();
+            userVo.setId(user.getId());
+            userVo.setName(user.getName());
+            return userVo;
+          } catch (Exception e) {
+            // Skip if user not found
+            return null;
+          }
+        })
+        .filter(user -> user != null)
+        .collect(java.util.stream.Collectors.toList());
+    
+    vo.setAddedUsers(addedUsers);
     return vo;
   }
 
@@ -141,11 +177,12 @@ public class GroupFacadeImpl implements GroupFacade {
   @Override
   public GroupOwnerUpdateVo updateOwner(Long id, GroupOwnerUpdateDto dto) {
     groupCmd.updateOwner(id, dto.getOwnerId());
+    Group group = groupQuery.findAndCheck(id);
     GroupOwnerUpdateVo vo = new GroupOwnerUpdateVo();
     vo.setGroupId(id);
     vo.setOwnerId(dto.getOwnerId());
-    vo.setModifiedDate(LocalDateTime.now());
-    // TODO: Set owner name from user query
+    vo.setOwnerName(group.getOwnerName());
+    vo.setModifiedDate(group.getModifiedDate());
     return vo;
   }
 

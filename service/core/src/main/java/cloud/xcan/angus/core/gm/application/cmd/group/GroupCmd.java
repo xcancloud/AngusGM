@@ -25,16 +25,6 @@ public interface GroupCmd {
   void updateStatus(Long id, GroupStatus status);
 
   /**
-   * Enable group
-   */
-  void enable(Long id);
-
-  /**
-   * Disable group
-   */
-  void disable(Long id);
-
-  /**
    * Delete group
    */
   void delete(Long id);

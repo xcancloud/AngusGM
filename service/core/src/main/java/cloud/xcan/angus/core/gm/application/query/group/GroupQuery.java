@@ -42,4 +42,24 @@ public interface GroupQuery {
    * Find groups by user id
    */
   List<Group> findByUserId(Long userId);
+
+  /**
+   * Find user IDs by group ID (from group-user relation)
+   */
+  List<Long> findUserIdsByGroupId(Long groupId);
+
+  /**
+   * Find users by group ID with pagination
+   */
+  Page<User> findMembers(Long groupId, GenericSpecification<User> spec, PageRequest pageable);
+
+  /**
+   * Count active members (distinct users in all groups)
+   */
+  long countActiveMembers();
+
+  /**
+   * Count new groups created this month
+   */
+  long countNewGroupsThisMonth();
 }

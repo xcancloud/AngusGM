@@ -1,20 +1,18 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import java.io.Serializable;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.Data;
 
 /**
  * Group member remove DTO
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-public class GroupMemberRemoveDto implements Serializable {
+@Data
+@Schema(description = "批量移除组成员请求参数")
+public class GroupMemberRemoveDto {
 
   @NotEmpty
+  @Schema(description = "用户ID列表", requiredMode = Schema.RequiredMode.REQUIRED)
   private List<Long> userIds;
 }

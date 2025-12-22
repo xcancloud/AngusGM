@@ -1,44 +1,36 @@
 package cloud.xcan.angus.core.gm.interfaces.group.facade.vo;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import cloud.xcan.angus.spec.TenantAuditingVo;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * User's group list VO
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-public class GroupUserVo implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Schema(description = "用户所在的组列表VO")
+public class GroupUserVo extends TenantAuditingVo {
 
-  private Long tenantId;
-
-  private Long createdBy;
-
-  private String creator;
-
-  private LocalDateTime createdDate;
-
-  private Long modifiedBy;
-
-  private String modifier;
-
-  private LocalDateTime modifiedDate;
-
+  @Schema(description = "组ID")
   private Long id;
 
+  @Schema(description = "组名称")
   private String name;
 
+  @Schema(description = "组类型")
   private String type;
 
+  @Schema(description = "负责人姓名")
   private String ownerName;
 
-  private Integer memberCount;
+  @Schema(description = "成员数量")
+  private Long memberCount;
 
+  @Schema(description = "状态")
   private String status;
 
+  @Schema(description = "角色")
   private String role;
 }

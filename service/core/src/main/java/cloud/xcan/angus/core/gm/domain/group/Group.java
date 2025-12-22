@@ -55,7 +55,16 @@ public class Group extends TenantAuditingEntity<Group, Long> {
   private String ownerName;
 
   @Transient
+  private String ownerAvatar;
+
+  @Transient
   private List<Long> memberIds;
+
+  @Transient
+  private List<String> tags;
+
+  @Transient
+  private java.time.LocalDateTime lastActive;
 
   @Override
   public Long identity() {

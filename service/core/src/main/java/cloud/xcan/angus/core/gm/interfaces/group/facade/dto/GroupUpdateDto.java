@@ -31,6 +31,9 @@ public class GroupUpdateDto {
   @Schema(description = "成员ID列表")
   private List<Long> memberIds;
 
+  @Schema(description = "标签列表")
+  private List<String> tags;
+
   @Schema(description = "状态")
   private GroupStatus status;
 }
