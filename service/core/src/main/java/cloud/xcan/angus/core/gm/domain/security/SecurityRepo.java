@@ -13,9 +13,14 @@ import java.util.Optional;
 public interface SecurityRepo extends JpaRepository<Security, Long> {
 
     /**
-     * 根据类型查找
+     * <p>Find by type</p>
      */
     List<Security> findByType(SecurityType type);
+    
+    /**
+     * <p>Find by type with pagination</p>
+     */
+    Page<Security> findByType(SecurityType type, Pageable pageable);
 
     /**
      * 根据级别查找

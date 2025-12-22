@@ -1,22 +1,21 @@
 package cloud.xcan.angus.core.gm.interfaces.security.facade.internal;
 
+import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.core.gm.application.cmd.security.SecurityCmd;
 import cloud.xcan.angus.core.gm.application.query.security.SecurityQuery;
-import cloud.xcan.angus.core.gm.domain.security.Security;
 import cloud.xcan.angus.core.gm.interfaces.security.facade.SecurityFacade;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.SecurityCreateDto;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.SecurityFindDto;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.SecurityUpdateDto;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.internal.assembler.SecurityAssembler;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityDetailVo;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityListVo;
-import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.SecurityStatsVo;
+import cloud.xcan.angus.core.gm.interfaces.security.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.security.facade.vo.*;
 import jakarta.annotation.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * <p>Implementation of security facade</p>
+ */
+@Service
 public class SecurityFacadeImpl implements SecurityFacade {
     
     @Resource
@@ -25,58 +24,91 @@ public class SecurityFacadeImpl implements SecurityFacade {
     @Resource
     private SecurityQuery securityQuery;
     
-    @Resource
-    private SecurityAssembler assembler;
-    
     @Override
-    public SecurityDetailVo create(SecurityCreateDto dto) {
-        Security entity = assembler.toEntity(dto);
-        Security saved = securityCmd.create(entity);
-        return assembler.toDetailVo(saved);
+    public SecurityOverviewVo getOverview() {
+        // TODO: Implement getOverview logic
+        SecurityOverviewVo vo = new SecurityOverviewVo();
+        vo.setPasswordPolicyEnabled(true);
+        vo.setTwoFactorAuthEnabled(true);
+        vo.setIpWhitelistEnabled(false);
+        vo.setLoginAttemptLimit(5);
+        vo.setSessionTimeout(7200);
+        vo.setSecurityLevel("高");
+        return vo;
     }
     
     @Override
-    public SecurityDetailVo update(Long id, SecurityUpdateDto dto) {
-        Security entity = securityQuery.findById(id)
-            .orElseThrow(() -> new RuntimeException("Security not found"));
-        assembler.updateEntity(entity, dto);
-        Security updated = securityCmd.update(id, entity);
-        return assembler.toDetailVo(updated);
+    public PasswordPolicyVo getPasswordPolicy() {
+        return securityQuery.getPasswordPolicy();
     }
     
     @Override
-    public void delete(Long id) {
-        securityCmd.delete(id);
+    public PasswordPolicyVo updatePasswordPolicy(PasswordPolicyUpdateDto dto) {
+        return securityCmd.updatePasswordPolicy(dto);
     }
     
     @Override
-    public void enable(Long id) {
-        securityCmd.enable(id);
+    public TwoFactorConfigVo getTwoFactorConfig() {
+        return securityQuery.getTwoFactorConfig();
     }
     
     @Override
-    public void disable(Long id) {
-        securityCmd.disable(id);
+    public TwoFactorConfigVo updateTwoFactorConfig(TwoFactorConfigUpdateDto dto) {
+        return securityCmd.updateTwoFactorConfig(dto);
     }
     
     @Override
-    public SecurityDetailVo findById(Long id) {
-        return securityQuery.findById(id)
-            .map(assembler::toDetailVo)
-            .orElseThrow(() -> new RuntimeException("Security not found"));
+    public PageResult<IpWhitelistVo> listIpWhitelist(IpWhitelistFindDto dto) {
+        return securityQuery.listIpWhitelist(dto);
     }
     
     @Override
-    public Page<SecurityListVo> find(SecurityFindDto dto, Pageable pageable) {
-        return securityQuery.findAll(pageable)
-            .map(assembler::toListVo);
+    public IpWhitelistVo addIpWhitelist(IpWhitelistCreateDto dto) {
+        return securityCmd.addIpWhitelist(dto);
     }
     
     @Override
-    public SecurityStatsVo getStats() {
-        SecurityStatsVo stats = new SecurityStatsVo();
-        stats.setTotal(securityQuery.count());
-        // Add more statistics as needed
-        return stats;
+    public IpWhitelistVo updateIpWhitelist(Long id, IpWhitelistUpdateDto dto) {
+        return securityCmd.updateIpWhitelist(id, dto);
+    }
+    
+    @Override
+    public void deleteIpWhitelist(Long id) {
+        securityCmd.deleteIpWhitelist(id);
+    }
+    
+    @Override
+    public SessionConfigVo getSessionConfig() {
+        return securityQuery.getSessionConfig();
+    }
+    
+    @Override
+    public SessionConfigVo updateSessionConfig(SessionConfigUpdateDto dto) {
+        return securityCmd.updateSessionConfig(dto);
+    }
+    
+    @Override
+    public PageResult<ActiveSessionVo> listActiveSessions(ActiveSessionFindDto dto) {
+        return securityQuery.listActiveSessions(dto);
+    }
+    
+    @Override
+    public void terminateSession(String sessionId) {
+        securityCmd.terminateSession(sessionId);
+    }
+    
+    @Override
+    public PageResult<SecurityEventVo> listSecurityEvents(SecurityEventFindDto dto) {
+        return securityQuery.listSecurityEvents(dto);
+    }
+    
+    @Override
+    public SecurityEventHandleVo handleSecurityEvent(Long id, SecurityEventHandleDto dto) {
+        return securityCmd.handleSecurityEvent(id, dto);
+    }
+    
+    @Override
+    public SecurityAuditStatsVo getAuditStats(SecurityAuditStatsFindDto dto) {
+        return securityQuery.getAuditStats(dto);
     }
 }

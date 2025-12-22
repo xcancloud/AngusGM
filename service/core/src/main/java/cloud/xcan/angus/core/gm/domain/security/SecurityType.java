@@ -1,31 +1,51 @@
 package cloud.xcan.angus.core.gm.domain.security;
 
 /**
- * 安全设置类型枚举
+ * <p>Security type enumeration</p>
  */
 public enum SecurityType {
     /**
-     * 密码策略
+     * <p>Password policy</p>
      */
     PASSWORD_POLICY,
 
     /**
-     * 会话管理
+     * <p>Two factor authentication</p>
+     */
+    TWO_FACTOR,
+
+    /**
+     * <p>IP whitelist</p>
+     */
+    IP_WHITELIST,
+
+    /**
+     * <p>Session config</p>
+     */
+    SESSION_CONFIG,
+
+    /**
+     * <p>Security event</p>
+     */
+    SECURITY_EVENT,
+
+    /**
+     * <p>Session management</p>
      */
     SESSION,
 
     /**
-     * API安全
+     * <p>API security</p>
      */
     API_SECURITY,
 
     /**
-     * 数据加密
+     * <p>Data encryption</p>
      */
     DATA_ENCRYPTION,
 
     /**
-     * 访问控制
+     * <p>Access control</p>
      */
     ACCESS_CONTROL
 }
