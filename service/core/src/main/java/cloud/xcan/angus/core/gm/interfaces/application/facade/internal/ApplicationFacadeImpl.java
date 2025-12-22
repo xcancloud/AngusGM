@@ -21,7 +21,11 @@ import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.AppTagVo;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.ApplicationDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.ApplicationListVo;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.ApplicationStatsVo;
+import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
+import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
+
 import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.ApplicationStatusUpdateVo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import java.time.LocalDateTime;
@@ -90,11 +94,17 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
 
   @Override
   public PageResult<ApplicationListVo> find(ApplicationFindDto dto) {
-    Page<Application> page = applicationQuery.find(dto);
-    List<ApplicationListVo> list = page.getContent().stream()
-        .map(ApplicationAssembler::toListVo)
-        .toList();
-    return PageResult.of(page.getTotalElements(), list);
+    // Convert DTO to query specification in Facade layer
+    GenericSpecification<Application> spec = ApplicationAssembler.getSpecification(dto);
+    
+    // Call application layer with domain objects and query conditions
+    Page<Application> page = applicationQuery.find(
+        spec,
+        dto.tranPage(),
+        dto.fullTextSearch,
+        dto.fullTextSearch ? getMatchSearchFields(dto.getClass()) : null);
+    
+    return buildVoPageResult(page, ApplicationAssembler::toListVo);
   }
 
   @Override

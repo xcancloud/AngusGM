@@ -7,7 +7,7 @@ import cloud.xcan.angus.core.gm.domain.application.Application;
 import cloud.xcan.angus.core.gm.domain.application.ApplicationRepo;
 import cloud.xcan.angus.core.gm.domain.application.enums.ApplicationStatus;
 import cloud.xcan.angus.core.gm.domain.application.enums.ApplicationType;
-import cloud.xcan.angus.core.gm.interfaces.application.facade.dto.ApplicationFindDto;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import jakarta.annotation.Resource;
 import java.util.HashMap;
@@ -36,26 +36,15 @@ public class ApplicationQueryImpl implements ApplicationQuery {
     }
 
     @Override
-    public Page<Application> find(ApplicationFindDto dto) {
+    public Page<Application> find(GenericSpecification<Application> spec, PageRequest pageable,
+                                  boolean fullTextSearch, String[] match) {
         return new BizTemplate<Page<Application>>() {
             @Override
             protected Page<Application> process() {
-                PageRequest pageRequest = PageRequest.of(
-                    dto.getPage() != null ? dto.getPage() : 0,
-                    dto.getSize() != null ? dto.getSize() : 20
-                );
-
-                if (dto.getStatus() != null && dto.getType() != null) {
-                    return applicationRepo.findByStatusAndType(dto.getStatus(), dto.getType(), pageRequest);
-                } else if (dto.getStatus() != null) {
-                    return applicationRepo.findByStatus(dto.getStatus(), pageRequest);
-                } else if (dto.getType() != null) {
-                    return applicationRepo.findByType(dto.getType(), pageRequest);
-                } else if (dto.getOwnerId() != null) {
-                    return applicationRepo.findByOwnerId(dto.getOwnerId(), pageRequest);
-                }
-
-                return applicationRepo.findAll(pageRequest);
+                // Use standard repository query with specification
+                // If full-text search is needed, it should be handled by SearchRepo
+                // For now, use standard findAll with specification
+                return applicationRepo.findAll(spec, pageable);
             }
         }.execute();
     }

@@ -1,11 +1,10 @@
 package cloud.xcan.angus.core.gm.application.query.apimonitoring;
 
 import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoring;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.ErrorRequestFindDto;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.InterfaceStatsFindDto;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.SlowRequestFindDto;
+import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public interface ApiMonitoringQuery {
     /**
      * 获取接口调用统计列表
      */
-    Page<Map<String, Object>> listStats(InterfaceStatsFindDto dto, Pageable pageable);
+    Page<Map<String, Object>> listStats(Specification<ApiMonitoringInfo> spec, Pageable pageable);
     
     /**
      * 获取单个接口详细统计
@@ -42,12 +41,12 @@ public interface ApiMonitoringQuery {
     /**
      * 获取慢请求列表
      */
-    Page<ApiMonitoring> listSlowRequests(SlowRequestFindDto dto, Pageable pageable);
+    Page<ApiMonitoring> listSlowRequests(Specification<ApiMonitoringInfo> spec, Pageable pageable);
     
     /**
      * 获取错误请求列表
      */
-    Page<ApiMonitoring> listErrorRequests(ErrorRequestFindDto dto, Pageable pageable);
+    Page<ApiMonitoring> listErrorRequests(Specification<ApiMonitoringInfo> spec, Pageable pageable);
     
     /**
      * 获取实时QPS数据

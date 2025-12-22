@@ -8,11 +8,13 @@ import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.InterfaceSta
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.SlowRequestFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.internal.assembler.ApiMonitoringAssembler;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo.*;
+import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringInfo;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
 import cloud.xcan.angus.remote.PageResult;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -48,12 +50,17 @@ public class ApiMonitoringFacadeImpl implements ApiMonitoringFacade {
     
     @Override
     public PageResult<InterfaceStatsVo> listStats(InterfaceStatsFindDto dto) {
+        // Convert DTO to query specification in Facade layer
+        Specification<ApiMonitoringInfo> spec = ApiMonitoringAssembler.buildStatsSpecification(dto);
+        
+        // Build page request
         PageRequest pageRequest = PageRequest.of(
             dto.getPage() != null ? dto.getPage() - 1 : 0,
             dto.getSize() != null ? dto.getSize() : 20
         );
         
-        Page<Map<String, Object>> page = apiMonitoringQuery.listStats(dto, pageRequest);
+        // Call application layer with domain objects and query conditions
+        Page<Map<String, Object>> page = apiMonitoringQuery.listStats(spec, pageRequest);
         List<InterfaceStatsVo> list = page.getContent().stream()
             .map(this::mapToInterfaceStatsVo)
             .collect(Collectors.toList());
@@ -69,12 +76,17 @@ public class ApiMonitoringFacadeImpl implements ApiMonitoringFacade {
     
     @Override
     public PageResult<SlowRequestVo> listSlowRequests(SlowRequestFindDto dto) {
+        // Convert DTO to query specification in Facade layer
+        Specification<ApiMonitoringInfo> spec = ApiMonitoringAssembler.buildSlowRequestSpecification(dto);
+        
+        // Build page request
         PageRequest pageRequest = PageRequest.of(
             dto.getPage() != null ? dto.getPage() - 1 : 0,
             dto.getSize() != null ? dto.getSize() : 20
         );
         
-        Page<ApiMonitoring> page = apiMonitoringQuery.listSlowRequests(dto, pageRequest);
+        // Call application layer with domain objects and query conditions
+        Page<ApiMonitoring> page = apiMonitoringQuery.listSlowRequests(spec, pageRequest);
         return buildVoPageResult(page, ApiMonitoringAssembler::toSlowRequestVo);
     }
     
@@ -87,12 +99,17 @@ public class ApiMonitoringFacadeImpl implements ApiMonitoringFacade {
     
     @Override
     public PageResult<ErrorRequestVo> listErrorRequests(ErrorRequestFindDto dto) {
+        // Convert DTO to query specification in Facade layer
+        Specification<ApiMonitoringInfo> spec = ApiMonitoringAssembler.buildErrorRequestSpecification(dto);
+        
+        // Build page request
         PageRequest pageRequest = PageRequest.of(
             dto.getPage() != null ? dto.getPage() - 1 : 0,
             dto.getSize() != null ? dto.getSize() : 20
         );
         
-        Page<ApiMonitoring> page = apiMonitoringQuery.listErrorRequests(dto, pageRequest);
+        // Call application layer with domain objects and query conditions
+        Page<ApiMonitoring> page = apiMonitoringQuery.listErrorRequests(spec, pageRequest);
         return buildVoPageResult(page, ApiMonitoringAssembler::toErrorRequestVo);
     }
     

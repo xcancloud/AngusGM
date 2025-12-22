@@ -32,7 +32,7 @@ public class GroupCmdImpl extends CommCmd<Group, Long> implements GroupCmd {
   @Resource
   private GroupQuery groupQuery;
 
-  @Resource(name = "commonGroupUserRepo")
+  @Resource
   private GroupUserRepo groupUserRepo;
 
   @Resource

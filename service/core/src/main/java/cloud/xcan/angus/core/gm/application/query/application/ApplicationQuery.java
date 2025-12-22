@@ -1,10 +1,10 @@
 package cloud.xcan.angus.core.gm.application.query.application;
 
 import cloud.xcan.angus.core.gm.domain.application.Application;
-import cloud.xcan.angus.core.gm.interfaces.application.facade.dto.ApplicationFindDto;
-import org.springframework.data.domain.Page;
-
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * Application Query Service
@@ -17,9 +17,10 @@ public interface ApplicationQuery {
     Application findById(Long id);
 
     /**
-     * Find applications
+     * Find applications with pagination
      */
-    Page<Application> find(ApplicationFindDto dto);
+    Page<Application> find(GenericSpecification<Application> spec, PageRequest pageable,
+                          boolean fullTextSearch, String[] match);
 
     /**
      * Get application statistics

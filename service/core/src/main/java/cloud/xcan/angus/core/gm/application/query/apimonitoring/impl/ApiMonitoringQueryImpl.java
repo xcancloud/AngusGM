@@ -9,9 +9,6 @@ import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringInfoRepo;
 import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringInfoSearchRepo;
 import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringRepo;
 import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringStatus;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.ErrorRequestFindDto;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.InterfaceStatsFindDto;
-import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.SlowRequestFindDto;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
@@ -124,11 +121,10 @@ public class ApiMonitoringQueryImpl implements ApiMonitoringQuery {
      * </p>
      */
     @Override
-    public Page<Map<String, Object>> listStats(InterfaceStatsFindDto dto, Pageable pageable) {
+    public Page<Map<String, Object>> listStats(Specification<ApiMonitoringInfo> spec, Pageable pageable) {
         return new BizTemplate<Page<Map<String, Object>>>() {
             @Override
             protected Page<Map<String, Object>> process() {
-                Specification<ApiMonitoringInfo> spec = buildStatsSpecification(dto);
                 Page<ApiMonitoringInfo> page = apiMonitoringInfoRepo.findAll(spec, pageable);
                 
                 // 按服务名称、路径、方法分组统计
@@ -285,11 +281,10 @@ public class ApiMonitoringQueryImpl implements ApiMonitoringQuery {
      * </p>
      */
     @Override
-    public Page<ApiMonitoring> listSlowRequests(SlowRequestFindDto dto, Pageable pageable) {
+    public Page<ApiMonitoring> listSlowRequests(Specification<ApiMonitoringInfo> spec, Pageable pageable) {
         return new BizTemplate<Page<ApiMonitoring>>() {
             @Override
             protected Page<ApiMonitoring> process() {
-                Specification<ApiMonitoringInfo> spec = buildSlowRequestSpecification(dto);
                 Page<ApiMonitoringInfo> page = apiMonitoringInfoRepo.findAll(spec, pageable);
                 
                 // 转换为ApiMonitoring（不包含大文本字段）
@@ -302,31 +297,6 @@ public class ApiMonitoringQueryImpl implements ApiMonitoringQuery {
         }.execute();
     }
     
-    private Specification<ApiMonitoringInfo> buildSlowRequestSpecification(SlowRequestFindDto dto) {
-        return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            
-            if (StringUtils.hasText(dto.getServiceName())) {
-                predicates.add(cb.equal(root.get("serviceName"), dto.getServiceName()));
-            }
-            if (StringUtils.hasText(dto.getPath())) {
-                predicates.add(cb.like(root.get("path"), "%" + dto.getPath() + "%"));
-            }
-            if (dto.getMinDuration() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("duration"), dto.getMinDuration().longValue()));
-            }
-            if (StringUtils.hasText(dto.getStartDate())) {
-                LocalDateTime start = LocalDateTime.parse(dto.getStartDate() + " 00:00:00", DATE_FORMATTER);
-                predicates.add(cb.greaterThanOrEqualTo(root.get("requestTime"), start));
-            }
-            if (StringUtils.hasText(dto.getEndDate())) {
-                LocalDateTime end = LocalDateTime.parse(dto.getEndDate() + " 23:59:59", DATE_FORMATTER);
-                predicates.add(cb.lessThanOrEqualTo(root.get("requestTime"), end));
-            }
-            
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-    }
     
     /**
      * <p>
@@ -334,11 +304,10 @@ public class ApiMonitoringQueryImpl implements ApiMonitoringQuery {
      * </p>
      */
     @Override
-    public Page<ApiMonitoring> listErrorRequests(ErrorRequestFindDto dto, Pageable pageable) {
+    public Page<ApiMonitoring> listErrorRequests(Specification<ApiMonitoringInfo> spec, Pageable pageable) {
         return new BizTemplate<Page<ApiMonitoring>>() {
             @Override
             protected Page<ApiMonitoring> process() {
-                Specification<ApiMonitoringInfo> spec = buildErrorRequestSpecification(dto);
                 Page<ApiMonitoringInfo> page = apiMonitoringInfoRepo.findAll(spec, pageable);
                 
                 // 转换为ApiMonitoring（不包含大文本字段）
@@ -351,34 +320,6 @@ public class ApiMonitoringQueryImpl implements ApiMonitoringQuery {
         }.execute();
     }
     
-    private Specification<ApiMonitoringInfo> buildErrorRequestSpecification(ErrorRequestFindDto dto) {
-        return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            
-            // 只查询错误状态的记录
-            predicates.add(cb.notEqual(root.get("status"), ApiMonitoringStatus.SUCCESS));
-            
-            if (StringUtils.hasText(dto.getServiceName())) {
-                predicates.add(cb.equal(root.get("serviceName"), dto.getServiceName()));
-            }
-            if (StringUtils.hasText(dto.getPath())) {
-                predicates.add(cb.like(root.get("path"), "%" + dto.getPath() + "%"));
-            }
-            if (dto.getStatusCode() != null) {
-                predicates.add(cb.equal(root.get("statusCode"), dto.getStatusCode()));
-            }
-            if (StringUtils.hasText(dto.getStartDate())) {
-                LocalDateTime start = LocalDateTime.parse(dto.getStartDate() + " 00:00:00", DATE_FORMATTER);
-                predicates.add(cb.greaterThanOrEqualTo(root.get("requestTime"), start));
-            }
-            if (StringUtils.hasText(dto.getEndDate())) {
-                LocalDateTime end = LocalDateTime.parse(dto.getEndDate() + " 23:59:59", DATE_FORMATTER);
-                predicates.add(cb.lessThanOrEqualTo(root.get("requestTime"), end));
-            }
-            
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-    }
     
     /**
      * <p>
@@ -693,31 +634,6 @@ public class ApiMonitoringQueryImpl implements ApiMonitoringQuery {
         }.execute();
     }
     
-    private Specification<ApiMonitoringInfo> buildStatsSpecification(InterfaceStatsFindDto dto) {
-        return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            
-            if (StringUtils.hasText(dto.getServiceName())) {
-                predicates.add(cb.equal(root.get("serviceName"), dto.getServiceName()));
-            }
-            if (StringUtils.hasText(dto.getPath())) {
-                predicates.add(cb.like(root.get("path"), "%" + dto.getPath() + "%"));
-            }
-            if (StringUtils.hasText(dto.getMethod())) {
-                predicates.add(cb.equal(root.get("method"), dto.getMethod()));
-            }
-            if (StringUtils.hasText(dto.getStartDate())) {
-                LocalDateTime start = LocalDateTime.parse(dto.getStartDate() + " 00:00:00", DATE_FORMATTER);
-                predicates.add(cb.greaterThanOrEqualTo(root.get("requestTime"), start));
-            }
-            if (StringUtils.hasText(dto.getEndDate())) {
-                LocalDateTime end = LocalDateTime.parse(dto.getEndDate() + " 23:59:59", DATE_FORMATTER);
-                predicates.add(cb.lessThanOrEqualTo(root.get("requestTime"), end));
-            }
-            
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-    }
     
     /**
      * <p>

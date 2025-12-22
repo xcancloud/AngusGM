@@ -1,8 +1,18 @@
 package cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.internal.assembler;
 
 import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoring;
+import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringInfo;
+import cloud.xcan.angus.core.gm.domain.apimonitoring.ApiMonitoringStatus;
+import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.ErrorRequestFindDto;
+import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.InterfaceStatsFindDto;
+import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.dto.SlowRequestFindDto;
 import cloud.xcan.angus.core.gm.interfaces.apimonitoring.facade.vo.*;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -290,5 +300,107 @@ public class ApiMonitoringAssembler {
         vo.setCalls(((Number) data.get("calls")).longValue());
         vo.setFailedCalls(((Number) data.get("failedCalls")).longValue());
         return vo;
+    }
+
+    /**
+     * <p>
+     * Build specification for interface stats query
+     * </p>
+     */
+    public static Specification<ApiMonitoringInfo> buildStatsSpecification(InterfaceStatsFindDto dto) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            
+            if (StringUtils.hasText(dto.getServiceName())) {
+                predicates.add(cb.equal(root.get("serviceName"), dto.getServiceName()));
+            }
+            if (StringUtils.hasText(dto.getPath())) {
+                predicates.add(cb.like(root.get("path"), "%" + dto.getPath() + "%"));
+            }
+            if (StringUtils.hasText(dto.getMethod())) {
+                predicates.add(cb.equal(root.get("method"), dto.getMethod()));
+            }
+            if (StringUtils.hasText(dto.getStartDate())) {
+                LocalDateTime start = LocalDateTime.parse(dto.getStartDate() + " 00:00:00", 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("requestTime"), start));
+            }
+            if (StringUtils.hasText(dto.getEndDate())) {
+                LocalDateTime end = LocalDateTime.parse(dto.getEndDate() + " 23:59:59", 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                predicates.add(cb.lessThanOrEqualTo(root.get("requestTime"), end));
+            }
+            
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    /**
+     * <p>
+     * Build specification for slow request query
+     * </p>
+     */
+    public static Specification<ApiMonitoringInfo> buildSlowRequestSpecification(SlowRequestFindDto dto) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            
+            if (StringUtils.hasText(dto.getServiceName())) {
+                predicates.add(cb.equal(root.get("serviceName"), dto.getServiceName()));
+            }
+            if (StringUtils.hasText(dto.getPath())) {
+                predicates.add(cb.like(root.get("path"), "%" + dto.getPath() + "%"));
+            }
+            if (dto.getMinDuration() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("duration"), dto.getMinDuration().longValue()));
+            }
+            if (StringUtils.hasText(dto.getStartDate())) {
+                LocalDateTime start = LocalDateTime.parse(dto.getStartDate() + " 00:00:00", 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("requestTime"), start));
+            }
+            if (StringUtils.hasText(dto.getEndDate())) {
+                LocalDateTime end = LocalDateTime.parse(dto.getEndDate() + " 23:59:59", 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                predicates.add(cb.lessThanOrEqualTo(root.get("requestTime"), end));
+            }
+            
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    /**
+     * <p>
+     * Build specification for error request query
+     * </p>
+     */
+    public static Specification<ApiMonitoringInfo> buildErrorRequestSpecification(ErrorRequestFindDto dto) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            
+            // Only query error status records
+            predicates.add(cb.notEqual(root.get("status"), ApiMonitoringStatus.SUCCESS));
+            
+            if (StringUtils.hasText(dto.getServiceName())) {
+                predicates.add(cb.equal(root.get("serviceName"), dto.getServiceName()));
+            }
+            if (StringUtils.hasText(dto.getPath())) {
+                predicates.add(cb.like(root.get("path"), "%" + dto.getPath() + "%"));
+            }
+            if (dto.getStatusCode() != null) {
+                predicates.add(cb.equal(root.get("statusCode"), dto.getStatusCode()));
+            }
+            if (StringUtils.hasText(dto.getStartDate())) {
+                LocalDateTime start = LocalDateTime.parse(dto.getStartDate() + " 00:00:00", 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("requestTime"), start));
+            }
+            if (StringUtils.hasText(dto.getEndDate())) {
+                LocalDateTime end = LocalDateTime.parse(dto.getEndDate() + " 23:59:59", 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                predicates.add(cb.lessThanOrEqualTo(root.get("requestTime"), end));
+            }
+            
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }

@@ -4,9 +4,16 @@ import static cloud.xcan.angus.spec.BizConstant.nullSafe;
 
 import cloud.xcan.angus.core.gm.domain.application.Application;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.dto.ApplicationCreateDto;
+import cloud.xcan.angus.core.gm.interfaces.application.facade.dto.ApplicationFindDto;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.dto.ApplicationUpdateDto;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.ApplicationDetailVo;
 import cloud.xcan.angus.core.gm.interfaces.application.facade.vo.ApplicationListVo;
+import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
+import cloud.xcan.angus.core.jpa.criteria.SearchCriteriaBuilder;
+import cloud.xcan.angus.remote.search.SearchCriteria;
+import cloud.xcan.angus.remote.search.SearchOperation;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -150,5 +157,43 @@ public class ApplicationAssembler {
         // vo.setModifiedDate(application.getModifiedDate());
 
         return vo;
+    }
+
+    /**
+     * <p>
+     * Build query specification from FindDto
+     * </p>
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static GenericSpecification<Application> getSpecification(ApplicationFindDto dto) {
+        Set<SearchCriteria> filters = new SearchCriteriaBuilder(dto)
+            .rangeSearchFields("id", "createdDate", "modifiedDate")
+            .orderByFields("id", "createdDate", "modifiedDate", "name", "code", "sortOrder")
+            .matchSearchFields("name", "code", "displayName")
+            .build();
+
+        // Add status filter
+        if (dto.getStatus() != null) {
+            filters.add(new SearchCriteria("status", dto.getStatus().name(), SearchOperation.EQUAL));
+        }
+
+        // Add type filter
+        if (dto.getType() != null) {
+            filters.add(new SearchCriteria("type", dto.getType().name(), SearchOperation.EQUAL));
+        }
+
+        // Add source filter
+        if (dto.getSource() != null) {
+            filters.add(new SearchCriteria("source", dto.getSource(), SearchOperation.EQUAL));
+        }
+
+        // Add tags filter
+        if (dto.getTags() != null && !dto.getTags().isEmpty()) {
+            for (String tag : dto.getTags()) {
+                filters.add(new SearchCriteria("tags", tag, SearchOperation.MATCH));
+            }
+        }
+
+        return new GenericSpecification<>(filters);
     }
 }
