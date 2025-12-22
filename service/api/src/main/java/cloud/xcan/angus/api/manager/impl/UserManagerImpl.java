@@ -670,7 +670,7 @@ public class UserManagerImpl implements UserManager {
       return emptyMap();
     }
     return userBaseRepo.findByEmailIn(emails).stream()
-        .collect(Collectors.toMap(UserBase::getUsername,
+        .collect(Collectors.toMap(UserBase::getEmail,
             o -> new UserInfo().setId(o.getId())
                 .setUsername(o.getUsername())
                 .setFullName(o.getFullName())
