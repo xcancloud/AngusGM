@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.tenant.facade.internal;
 
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
-import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.tenant.TenantCmd;
 import cloud.xcan.angus.core.gm.application.query.tenant.TenantQuery;
@@ -25,9 +24,7 @@ import cloud.xcan.angus.remote.PageResult;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
-@Component
+import org.springframework.stereotype.Component;
 public class TenantFacadeImpl implements TenantFacade {
 
   @Resource
@@ -81,6 +78,17 @@ public class TenantFacadeImpl implements TenantFacade {
     Page<Tenant> page = tenantQuery.find(spec, dto.tranPage(),
         dto.fullTextSearch, getMatchSearchFields(dto.getClass()));
     return buildVoPageResult(page, TenantAssembler::toListVo);
+  }
+
+  /**
+   * Get match search fields for full-text search
+   * Returns fields configured in TenantAssembler.getSpecification()
+   */
+  private String[] getMatchSearchFields(Class<?> dtoClass) {
+    if (TenantFindDto.class.equals(dtoClass)) {
+      return new String[]{"name", "code"};
+    }
+    return new String[0];
   }
 
   @Override

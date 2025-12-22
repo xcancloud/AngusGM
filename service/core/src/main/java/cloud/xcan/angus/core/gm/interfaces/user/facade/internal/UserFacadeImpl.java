@@ -1,7 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.user.facade.internal;
 
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
-import static cloud.xcan.angus.core.utils.CoreUtils.getMatchSearchFields;
 
 import cloud.xcan.angus.core.gm.application.cmd.user.UserCmd;
 import cloud.xcan.angus.core.gm.application.query.user.UserQuery;
@@ -37,7 +36,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * Implementation of user facade
@@ -129,6 +128,17 @@ public class UserFacadeImpl implements UserFacade {
     return buildVoPageResult(page, UserAssembler::toListVo);
   }
 
+  /**
+   * Get match search fields for full-text search
+   * Returns fields configured in UserAssembler.getSpecification()
+   */
+  private String[] getMatchSearchFields(Class<?> dtoClass) {
+    if (UserFindDto.class.equals(dtoClass)) {
+      return new String[]{"name", "username", "email", "phone"};
+    }
+    return new String[0];
+  }
+
   @Override
   public UserStatsVo getStats() {
     UserStatsVo stats = new UserStatsVo();
@@ -167,7 +177,7 @@ public class UserFacadeImpl implements UserFacade {
   @Override
   public PageResult<UserInviteVo> listInvites(UserInviteFindDto dto) {
     // TODO: Implement invite list query
-    return new PageResult<>(0L, new ArrayList<>());
+    return PageResult.of(new ArrayList<>(), 0L);
   }
 
   @Override
