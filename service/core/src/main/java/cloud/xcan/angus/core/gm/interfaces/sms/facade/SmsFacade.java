@@ -1,11 +1,14 @@
 package cloud.xcan.angus.core.gm.interfaces.sms.facade;
 
-import cloud.xcan.angus.common.result.PageResult;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.*;
+import cloud.xcan.angus.remote.PageResult;
 
 import java.util.List;
 
+/**
+ * <p>SMS facade interface</p>
+ */
 public interface SmsFacade {
     
     // ==================== 短信模板管理 ====================

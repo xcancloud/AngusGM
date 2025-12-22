@@ -1,16 +1,20 @@
 package cloud.xcan.angus.core.gm.domain.sms;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * SMS仓储接口
+ * <p>SMS repository interface</p>
  */
-public interface SmsRepo extends JpaRepository<Sms, String>, JpaSpecificationExecutor<Sms> {
+@NoRepositoryBean
+public interface SmsRepo extends BaseRepository<Sms, Long> {
 
     /**
      * 根据状态查询SMS列表
@@ -43,7 +47,22 @@ public interface SmsRepo extends JpaRepository<Sms, String>, JpaSpecificationExe
     long countByStatus(SmsStatus status);
 
     /**
-     * 统计指定类型的SMS数量
+     * <p>Count by type</p>
      */
     long countByType(SmsType type);
+    
+    /**
+     * <p>Find by template ID</p>
+     */
+    List<Sms> findByTemplateId(Long templateId);
+    
+    /**
+     * <p>Count by template ID</p>
+     */
+    long countByTemplateId(Long templateId);
+    
+    /**
+     * <p>Find all with specification</p>
+     */
+    Page<Sms> findAll(Specification<Sms> spec, Pageable pageable);
 }

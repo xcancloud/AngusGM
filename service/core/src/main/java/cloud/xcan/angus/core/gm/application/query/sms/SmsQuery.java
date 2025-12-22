@@ -1,20 +1,33 @@
 package cloud.xcan.angus.core.gm.application.query.sms;
 
-import cloud.xcan.angus.core.gm.domain.sms.Sms;
-import cloud.xcan.angus.core.gm.domain.sms.SmsStatus;
-import cloud.xcan.angus.core.gm.domain.sms.SmsType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cloud.xcan.angus.core.gm.interfaces.sms.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.sms.facade.vo.*;
+import cloud.xcan.angus.remote.PageResult;
 
+import java.util.List;
+
+/**
+ * <p>SMS query service interface</p>
+ */
 public interface SmsQuery {
-
-    Sms findById(Long id);
-
-    Page<Sms> findAll(SmsStatus status, SmsType type, String phone, String templateCode, Pageable pageable);
-
-    long countTotal();
-
-    long countByStatus(SmsStatus status);
-
-    long countByType(SmsType type);
+    
+    /**
+     * <p>Get SMS statistics</p>
+     */
+    SmsStatsVo getStats();
+    
+    /**
+     * <p>List SMS records</p>
+     */
+    PageResult<SmsRecordVo> listRecords(SmsRecordFindDto dto);
+    
+    /**
+     * <p>List SMS templates</p>
+     */
+    PageResult<SmsTemplateVo> listTemplates(SmsTemplateFindDto dto);
+    
+    /**
+     * <p>List SMS providers</p>
+     */
+    List<SmsProviderVo> listProviders();
 }

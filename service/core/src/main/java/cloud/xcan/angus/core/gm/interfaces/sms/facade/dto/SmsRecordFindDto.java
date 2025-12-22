@@ -3,8 +3,11 @@ package cloud.xcan.angus.core.gm.interfaces.sms.facade.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
+/**
+ * <p>SMS record find DTO</p>
+ */
 @Data
 @Schema(description = "短信记录查询DTO")
 public class SmsRecordFindDto {
@@ -25,8 +28,8 @@ public class SmsRecordFindDto {
     private Long templateId;
     
     @Schema(description = "开始日期")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     
     @Schema(description = "结束日期")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 }

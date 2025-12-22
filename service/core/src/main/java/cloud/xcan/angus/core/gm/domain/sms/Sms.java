@@ -1,24 +1,38 @@
 package cloud.xcan.angus.core.gm.domain.sms;
 
-import cloud.xcan.angus.core.gm.domain.BaseEntity;
+import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
- * SMS实体
- * 短信消息管理
+ * <p>SMS domain entity</p>
  */
 @Getter
 @Setter
 @Entity
 @Table(name = "gm_sms")
-public class Sms extends BaseEntity {
+public class Sms extends TenantAuditingEntity<Sms, Long> {
+
+    @Id
+    private Long id;
 
     @Column(name = "phone", length = 20, nullable = false)
     private String phone;
+    
+    @Column(name = "template_id")
+    private Long templateId;
+    
+    @Column(name = "cost", precision = 10, scale = 2)
+    private java.math.BigDecimal cost;
+    
+    @Column(name = "message_id", length = 100)
+    private String messageId;
 
     @Column(name = "content", length = 1000, nullable = false)
     private String content;
@@ -26,8 +40,8 @@ public class Sms extends BaseEntity {
     @Column(name = "template_code", length = 50)
     private String templateCode;
 
+    @Type(JsonType.class)
     @Column(name = "template_params", columnDefinition = "jsonb")
-    @org.hibernate.annotations.Type(org.hibernate.annotations.type.JsonType.class)
     private Object templateParams;
 
     @Enumerated(EnumType.STRING)
@@ -61,4 +75,21 @@ public class Sms extends BaseEntity {
 
     @Column(name = "max_retry")
     private Integer maxRetry;
+    
+    @Override
+    public Long identity() {
+        return id;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Sms sms)) return false;
+        return Objects.equals(id, sms.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

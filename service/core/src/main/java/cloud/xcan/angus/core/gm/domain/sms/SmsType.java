@@ -22,5 +22,10 @@ public enum SmsType {
     /**
      * 系统短信
      */
-    SYSTEM
+    SYSTEM,
+    
+    /**
+     * 测试短信
+     */
+    TEST
 }
