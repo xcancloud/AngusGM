@@ -34,6 +34,11 @@ public interface AuthorizationRepo extends BaseRepository<Authorization, Long> {
   Page<Authorization> findByPolicyId(Long policyId, Pageable pageable);
 
   /**
+   * Find authorizations by policy id and subject type with pagination
+   */
+  Page<Authorization> findByPolicyIdAndSubjectType(Long policyId, SubjectType subjectType, Pageable pageable);
+
+  /**
    * Count authorizations by status
    */
   long countByStatus(AuthorizationStatus status);
@@ -42,6 +47,16 @@ public interface AuthorizationRepo extends BaseRepository<Authorization, Long> {
    * Count authorizations by subject type
    */
   long countBySubjectType(SubjectType subjectType);
+
+  /**
+   * Count authorizations by policy id and subject type
+   */
+  long countByPolicyIdAndSubjectType(Long policyId, SubjectType subjectType);
+
+  /**
+   * Count distinct users who have at least one authorization
+   */
+  long countDistinctUsers();
 
   /**
    * Check if authorization exists for subject and policy

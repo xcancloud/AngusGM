@@ -24,19 +24,9 @@ public interface PolicyCmd {
   void delete(Long id);
 
   /**
-   * Enable policy
-   */
-  void enable(Long id);
-
-  /**
-   * Disable policy
-   */
-  void disable(Long id);
-
-  /**
    * Update policy permissions
    */
-  Policy updatePermissions(Long id, List<String> permissions);
+  Policy updatePermissions(Long id, List<Policy.PermissionInfo> permissions);
 
   /**
    * Set policy as default

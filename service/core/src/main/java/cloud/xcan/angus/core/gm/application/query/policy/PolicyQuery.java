@@ -40,4 +40,15 @@ public interface PolicyQuery {
    * Count total users with policies
    */
   long countTotalUsers();
+
+  /**
+   * Find users by policy id with pagination
+   */
+  org.springframework.data.domain.Page<cloud.xcan.angus.core.gm.domain.user.User> findUsersByPolicyId(
+      Long policyId, org.springframework.data.domain.PageRequest pageable);
+
+  /**
+   * Count users by policy id
+   */
+  long countUsersByPolicyId(Long policyId);
 }

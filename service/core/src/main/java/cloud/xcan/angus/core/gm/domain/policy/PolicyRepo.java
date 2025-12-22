@@ -44,4 +44,19 @@ public interface PolicyRepo extends BaseRepository<Policy, Long> {
    * Count custom roles
    */
   long countByIsSystemFalse();
+
+  /**
+   * Find policies by appId
+   */
+  List<Policy> findByAppId(String appId);
+
+  /**
+   * Find default policy by appId
+   */
+  Policy findByAppIdAndIsDefaultTrue(String appId);
+
+  /**
+   * Count users by policy id (through authorization)
+   */
+  long countUsersByPolicyId(Long policyId);
 }
