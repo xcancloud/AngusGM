@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.department.facade.vo;
 
 import cloud.xcan.angus.core.gm.domain.department.enums.DepartmentStatus;
-import cloud.xcan.angus.spec.TenantAuditingVo;
+import cloud.xcan.angus.remote.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Data;
@@ -37,10 +37,13 @@ public class DepartmentDetailVo extends TenantAuditingVo {
   private Integer sortOrder;
 
   @Schema(description = "负责人ID")
-  private Long leaderId;
+  private Long managerId;
 
   @Schema(description = "负责人姓名")
-  private String leaderName;
+  private String managerName;
+
+  @Schema(description = "负责人头像")
+  private String managerAvatar;
 
   @Schema(description = "描述")
   private String description;
@@ -48,9 +51,31 @@ public class DepartmentDetailVo extends TenantAuditingVo {
   @Schema(description = "状态")
   private DepartmentStatus status;
 
-  @Schema(description = "成员数量")
-  private Long memberCount;
+  @Schema(description = "用户数量")
+  private Long userCount;
+
+  @Schema(description = "部门路径")
+  private String path;
+
+  @Schema(description = "成员列表")
+  private List<DepartmentMemberVo> members;
 
   @Schema(description = "子部门列表")
+  private List<DepartmentSubDepartmentVo> subDepartments;
+
+  @Schema(description = "子部门列表（树形结构）")
   private List<DepartmentDetailVo> children;
+
+  @Data
+  @Schema(description = "子部门信息")
+  public static class DepartmentSubDepartmentVo {
+    @Schema(description = "部门ID")
+    private Long id;
+
+    @Schema(description = "部门名称")
+    private String name;
+
+    @Schema(description = "用户数量")
+    private Long userCount;
+  }
 }

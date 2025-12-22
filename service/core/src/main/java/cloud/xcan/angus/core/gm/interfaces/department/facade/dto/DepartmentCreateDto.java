@@ -28,7 +28,7 @@ public class DepartmentCreateDto {
   private Long parentId;
 
   @Schema(description = "负责人ID")
-  private Long leaderId;
+  private Long managerId;
 
   @Size(max = 500)
   @Schema(description = "描述")

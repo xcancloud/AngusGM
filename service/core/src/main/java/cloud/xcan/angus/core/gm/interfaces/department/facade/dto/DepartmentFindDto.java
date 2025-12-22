@@ -1,7 +1,7 @@
 package cloud.xcan.angus.core.gm.interfaces.department.facade.dto;
 
 import cloud.xcan.angus.core.gm.domain.department.enums.DepartmentStatus;
-import cloud.xcan.angus.spec.PageQuery;
+import cloud.xcan.angus.remote.PageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,8 +23,8 @@ public class DepartmentFindDto extends PageQuery {
   @Schema(description = "父部门ID")
   private Long parentId;
 
-  @Schema(description = "负责人ID")
-  private Long leaderId;
+  @Schema(description = "层级筛选")
+  private Integer level;
 
   @Schema(description = "排序字段", allowableValues = {"id", "createdDate", "modifiedDate", "name", "sortOrder"})
   private String orderBy = "sortOrder";

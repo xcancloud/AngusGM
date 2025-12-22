@@ -37,4 +37,21 @@ public interface DepartmentQuery {
    * Get department statistics
    */
   DepartmentStatsVo getStats();
+
+  /**
+   * Find children departments
+   */
+  List<Department> findChildren(Long parentId, Boolean recursive);
+
+  /**
+   * Get department path
+   */
+  List<Department> getPath(Long id);
+
+  /**
+   * Find users by department ID with pagination
+   */
+  org.springframework.data.domain.Page<cloud.xcan.angus.core.gm.domain.user.User> findMembers(
+      Long departmentId, cloud.xcan.angus.core.jpa.criteria.GenericSpecification<cloud.xcan.angus.core.gm.domain.user.User> spec,
+      org.springframework.data.domain.PageRequest pageable);
 }

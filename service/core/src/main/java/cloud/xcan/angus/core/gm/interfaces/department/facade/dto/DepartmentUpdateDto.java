@@ -16,11 +16,15 @@ public class DepartmentUpdateDto {
   @Schema(description = "部门名称")
   private String name;
 
+  @Size(max = 50)
+  @Schema(description = "部门编码")
+  private String code;
+
   @Schema(description = "父部门ID")
   private Long parentId;
 
   @Schema(description = "负责人ID")
-  private Long leaderId;
+  private Long managerId;
 
   @Size(max = 500)
   @Schema(description = "描述")

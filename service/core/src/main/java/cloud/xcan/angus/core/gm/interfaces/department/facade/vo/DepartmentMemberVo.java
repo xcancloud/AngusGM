@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.department.facade.vo;
 
-import cloud.xcan.angus.spec.TenantAuditingVo;
+import cloud.xcan.angus.remote.TenantAuditingVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

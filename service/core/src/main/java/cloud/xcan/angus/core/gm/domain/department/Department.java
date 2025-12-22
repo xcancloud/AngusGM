@@ -41,7 +41,7 @@ public class Department extends TenantAuditingEntity<Department, Long> {
   private Integer sortOrder;
 
   @Column(name = "leader_id")
-  private Long leaderId;
+  private Long leaderId; // Database column name, but mapped to managerId in DTO/VO
 
   @Column(name = "description", length = 500)
   private String description;
@@ -52,13 +52,19 @@ public class Department extends TenantAuditingEntity<Department, Long> {
 
   // Non-persistent fields - for temporary associated data
   @Transient
-  private String leaderName;
+  private String managerName;
 
   @Transient
-  private Long memberCount;
+  private String managerAvatar;
+
+  @Transient
+  private Long userCount;
 
   @Transient
   private String parentName;
+
+  @Transient
+  private String path;
 
   @Override
   public Long identity() {

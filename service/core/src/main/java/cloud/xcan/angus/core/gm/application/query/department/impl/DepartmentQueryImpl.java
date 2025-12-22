@@ -7,6 +7,8 @@ import cloud.xcan.angus.core.gm.domain.department.Department;
 import cloud.xcan.angus.core.gm.domain.department.DepartmentRepo;
 import cloud.xcan.angus.core.gm.domain.department.DepartmentSearchRepo;
 import cloud.xcan.angus.core.gm.domain.department.enums.DepartmentStatus;
+import cloud.xcan.angus.core.gm.domain.user.User;
+import cloud.xcan.angus.core.gm.domain.user.UserRepo;
 import cloud.xcan.angus.core.gm.interfaces.department.facade.vo.DepartmentStatsVo;
 import cloud.xcan.angus.core.jpa.criteria.GenericSpecification;
 import cloud.xcan.angus.remote.message.http.ResourceNotFound;
@@ -28,6 +30,9 @@ public class DepartmentQueryImpl implements DepartmentQuery {
 
   @Resource
   private DepartmentSearchRepo departmentSearchRepo;
+
+  @Resource
+  private UserRepo userRepo;
 
   @Override
   public Department findAndCheck(Long id) {
@@ -128,6 +133,65 @@ public class DepartmentQueryImpl implements DepartmentQuery {
         stats.setNewDepartmentsThisMonth(newDepartmentsThisMonth);
         
         return stats;
+      }
+    }.execute();
+  }
+
+  @Override
+  public List<Department> findChildren(Long parentId, Boolean recursive) {
+    return new BizTemplate<List<Department>>() {
+      @Override
+      protected List<Department> process() {
+        if (parentId == null) {
+          return List.of();
+        }
+        
+        List<Department> children = departmentRepo.findByParentId(parentId);
+        
+        if (Boolean.TRUE.equals(recursive) && !children.isEmpty()) {
+          List<Department> allChildren = new java.util.ArrayList<>(children);
+          for (Department child : children) {
+            allChildren.addAll(findChildren(child.getId(), true));
+          }
+          return allChildren;
+        }
+        
+        return children;
+      }
+    }.execute();
+  }
+
+  @Override
+  public List<Department> getPath(Long id) {
+    return new BizTemplate<List<Department>>() {
+      @Override
+      protected List<Department> process() {
+        List<Department> path = new java.util.ArrayList<>();
+        Department department = findAndCheck(id);
+        
+        // Build path from current department to root
+        Department current = department;
+        while (current != null) {
+          path.add(0, current); // Add to beginning
+          if (current.getParentId() != null) {
+            current = departmentRepo.findById(current.getParentId()).orElse(null);
+          } else {
+            current = null;
+          }
+        }
+        
+        return path;
+      }
+    }.execute();
+  }
+
+  @Override
+  public Page<User> findMembers(Long departmentId, GenericSpecification<User> spec, PageRequest pageable) {
+    return new BizTemplate<Page<User>>() {
+      @Override
+      protected Page<User> process() {
+        // Ensure departmentId filter is included
+        return userRepo.findAll(spec, pageable);
       }
     }.execute();
   }
