@@ -1,40 +1,42 @@
 package cloud.xcan.angus.core.gm.interfaces.service.facade.vo;
 
-import cloud.xcan.angus.core.gm.domain.service.enums.ServiceProtocol;
-import cloud.xcan.angus.core.gm.domain.service.enums.ServiceStatus;
 import lombok.Data;
 
-import java.time.Instant;
+import java.util.List;
 
 /**
- * 服务详情VO
+ * <p>Service detail VO</p>
  */
 @Data
 public class ServiceDetailVo {
 
-    private String id;
+    /**
+     * <p>Service name</p>
+     */
+    private String serviceName;
 
-    private String name;
+    /**
+     * <p>Display name</p>
+     */
+    private String displayName;
 
-    private String code;
+    /**
+     * <p>Total instances count</p>
+     */
+    private Integer totalInstances;
 
-    private String description;
+    /**
+     * <p>Up instances count</p>
+     */
+    private Integer upInstances;
 
-    private ServiceStatus status;
+    /**
+     * <p>Down instances count</p>
+     */
+    private Integer downInstances;
 
-    private ServiceProtocol protocol;
-
-    private String version;
-
-    private String baseUrl;
-
-    private String applicationId;
-
-    private String applicationName;
-
-    private Integer interfaceCount;
-
-    private Instant createdAt;
-
-    private Instant updatedAt;
+    /**
+     * <p>Service instances</p>
+     */
+    private List<ServiceInstanceVo> instances;
 }

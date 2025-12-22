@@ -1,32 +1,42 @@
 package cloud.xcan.angus.core.gm.application.query.service;
 
-import cloud.xcan.angus.core.gm.domain.service.Service;
-import cloud.xcan.angus.core.gm.domain.service.enums.ServiceProtocol;
-import cloud.xcan.angus.core.gm.domain.service.enums.ServiceStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.*;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
 /**
- * 服务管理查询接口
+ * <p>Service query service interface</p>
  */
 public interface ServiceQuery {
-
+    
     /**
-     * 根据ID查询服务
+     * <p>Get service detail</p>
      */
-    Optional<Service> findById(String id);
-
+    ServiceDetailVo getDetail(String serviceName);
+    
     /**
-     * 查询服务列表
+     * <p>List services</p>
      */
-    Page<Service> find(ServiceStatus status, ServiceProtocol protocol, 
-                       String applicationId, String version, Pageable pageable);
-
+    List<ServiceListVo> list(ServiceFindDto dto);
+    
     /**
-     * 查询服务统计
+     * <p>Get service statistics</p>
      */
-    Map<String, Object> stats();
+    ServiceStatsVo getStats();
+    
+    /**
+     * <p>Get service instance health</p>
+     */
+    ServiceHealthVo getInstanceHealth(String serviceName, String instanceId);
+    
+    /**
+     * <p>Get Eureka config</p>
+     */
+    EurekaConfigVo getEurekaConfig();
+    
+    /**
+     * <p>Get service call statistics</p>
+     */
+    ServiceCallStatsVo getServiceCallStats(String serviceName, ServiceCallStatsDto dto);
 }

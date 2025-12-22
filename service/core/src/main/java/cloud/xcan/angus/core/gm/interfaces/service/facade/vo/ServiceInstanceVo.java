@@ -1,41 +1,73 @@
 package cloud.xcan.angus.core.gm.interfaces.service.facade.vo;
 
-import java.io.Serializable;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.Map;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 /**
- * Service instance VO
+ * <p>Service instance VO</p>
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-public class ServiceInstanceVo implements Serializable {
+@Data
+public class ServiceInstanceVo {
 
-  private String instanceId;
+    /**
+     * <p>Instance ID</p>
+     */
+    private String instanceId;
 
-  private String hostName;
+    /**
+     * <p>Host name</p>
+     */
+    private String hostName;
 
-  private String ipAddr;
+    /**
+     * <p>IP address</p>
+     */
+    private String ipAddr;
 
-  private Integer port;
+    /**
+     * <p>Port</p>
+     */
+    private Integer port;
 
-  private Integer securePort;
+    /**
+     * <p>Secure port</p>
+     */
+    private Integer securePort;
 
-  private String status;
+    /**
+     * <p>Status (UP, DOWN, OUT_OF_SERVICE)</p>
+     */
+    private String status;
 
-  private String healthCheckUrl;
+    /**
+     * <p>Health check URL</p>
+     */
+    private String healthCheckUrl;
 
-  private String statusPageUrl;
+    /**
+     * <p>Status page URL</p>
+     */
+    private String statusPageUrl;
 
-  private String homePageUrl;
+    /**
+     * <p>Home page URL</p>
+     */
+    private String homePageUrl;
 
-  private LocalDateTime lastHeartbeat;
+    /**
+     * <p>Last heartbeat time</p>
+     */
+    private LocalDateTime lastHeartbeat;
 
-  private String uptime;
+    /**
+     * <p>Uptime</p>
+     */
+    private String uptime;
 
-  private Map<String, String> metadata;
+    /**
+     * <p>Metadata</p>
+     */
+    private Map<String, String> metadata;
 }

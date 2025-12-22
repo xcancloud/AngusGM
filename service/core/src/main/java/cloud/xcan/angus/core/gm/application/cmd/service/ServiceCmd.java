@@ -1,34 +1,30 @@
 package cloud.xcan.angus.core.gm.application.cmd.service;
 
-import cloud.xcan.angus.core.gm.domain.service.Service;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.*;
 
 /**
- * 服务管理命令接口
+ * <p>Service command service interface</p>
  */
 public interface ServiceCmd {
-
+    
     /**
-     * 创建服务
+     * <p>Refresh service list from Eureka</p>
      */
-    Service create(Service service);
-
+    ServiceRefreshVo refresh();
+    
     /**
-     * 更新服务
+     * <p>Update service instance status</p>
      */
-    Service update(Service service);
-
+    ServiceInstanceStatusVo updateInstanceStatus(String serviceName, String instanceId, ServiceInstanceStatusDto dto);
+    
     /**
-     * 启用服务
+     * <p>Update Eureka config</p>
      */
-    Service enable(String id);
-
+    EurekaConfigVo updateEurekaConfig(EurekaConfigUpdateDto dto);
+    
     /**
-     * 禁用服务
+     * <p>Test Eureka connection</p>
      */
-    Service disable(String id);
-
-    /**
-     * 删除服务
-     */
-    void delete(String id);
+    EurekaTestVo testEurekaConnection(EurekaTestDto dto);
 }

@@ -30,6 +30,11 @@ public enum SecurityType {
     SECURITY_EVENT,
 
     /**
+     * <p>Eureka config</p>
+     */
+    EUREKA_CONFIG,
+
+    /**
      * <p>Session management</p>
      */
     SESSION,

@@ -2,23 +2,34 @@ package cloud.xcan.angus.core.gm.interfaces.service.facade.vo;
 
 import lombok.Data;
 
-import java.util.Map;
-
 /**
- * 服务统计VO
+ * <p>Service statistics VO</p>
  */
 @Data
 public class ServiceStatsVo {
 
-    private Long total;
+    /**
+     * <p>Total services count</p>
+     */
+    private Long totalServices;
 
-    private Long enabled;
+    /**
+     * <p>Total instances count</p>
+     */
+    private Long totalInstances;
 
-    private Long disabled;
+    /**
+     * <p>Up instances count</p>
+     */
+    private Long upInstances;
 
-    private Map<String, Long> protocolDistribution;
+    /**
+     * <p>Down instances count</p>
+     */
+    private Long downInstances;
 
-    private Long versionCount;
-
-    private Double avgInterfaceCount;
+    /**
+     * <p>Average response time</p>
+     */
+    private Integer avgResponseTime;
 }

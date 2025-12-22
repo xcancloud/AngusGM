@@ -1,104 +1,157 @@
 package cloud.xcan.angus.core.gm.application.cmd.service.impl;
 
-import cloud.xcan.angus.common.exception.ResourceExisted;
-import cloud.xcan.angus.common.exception.ResourceNotFound;
+import cloud.xcan.angus.core.biz.Biz;
+import cloud.xcan.angus.core.biz.BizTemplate;
 import cloud.xcan.angus.core.gm.application.cmd.service.ServiceCmd;
-import cloud.xcan.angus.core.gm.domain.service.Service;
-import cloud.xcan.angus.core.gm.domain.service.ServiceRepo;
-import cloud.xcan.angus.core.gm.domain.service.enums.ServiceStatus;
-import cloud.xcan.angus.infra.shared.biz.BizTemplate;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import cloud.xcan.angus.core.gm.application.query.service.ServiceQuery;
+import cloud.xcan.angus.core.gm.domain.security.Security;
+import cloud.xcan.angus.core.gm.domain.security.SecurityRepo;
+import cloud.xcan.angus.core.gm.domain.security.SecurityType;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.dto.*;
+import cloud.xcan.angus.core.gm.interfaces.service.facade.vo.*;
+import cloud.xcan.angus.remote.message.http.ResourceNotFound;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 服务管理命令实现
+ * <p>Implementation of service command service</p>
  */
-@Component
-@RequiredArgsConstructor
+@Biz
 public class ServiceCmdImpl implements ServiceCmd {
-
-    private final ServiceRepo serviceRepo;
-    private final BizTemplate bizTemplate;
-
+    
+    @Resource
+    private SecurityRepo securityRepo;
+    
+    @Resource
+    private ServiceQuery serviceQuery;
+    
+    @Resource
+    private ObjectMapper objectMapper;
+    
     @Override
-    @Transactional
-    public Service create(Service service) {
-        return bizTemplate.execute(() -> {
-            // 验证服务代码唯一性
-            if (serviceRepo.findByCode(service.getCode()).isPresent()) {
-                throw new ResourceExisted("服务代码已存在: " + service.getCode());
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceRefreshVo refresh() {
+        return new BizTemplate<ServiceRefreshVo>() {
+            @Override
+            protected void checkParams() {
+                // Add validation if needed
             }
-
-            // 设置默认状态
-            service.setStatus(ServiceStatus.ENABLED);
-            service.setInterfaceCount(0);
-
-            return serviceRepo.save(service);
-        });
+            
+            @Override
+            protected ServiceRefreshVo process() {
+                // TODO: Implement refresh from Eureka
+                ServiceRefreshVo vo = new ServiceRefreshVo();
+                vo.setRefreshTime(LocalDateTime.now());
+                vo.setTotalServices(0);
+                vo.setTotalInstances(0);
+                return vo;
+            }
+        }.execute();
     }
-
+    
     @Override
-    @Transactional
-    public Service update(Service service) {
-        return bizTemplate.execute(() -> {
-            Service existing = serviceRepo.findById(service.getId())
-                    .orElseThrow(() -> new ResourceNotFound("服务不存在: " + service.getId()));
-
-            // 如果修改了代码，验证唯一性
-            if (!existing.getCode().equals(service.getCode())) {
-                if (serviceRepo.findByCode(service.getCode()).isPresent()) {
-                    throw new ResourceExisted("服务代码已存在: " + service.getCode());
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceInstanceStatusVo updateInstanceStatus(String serviceName, String instanceId, ServiceInstanceStatusDto dto) {
+        return new BizTemplate<ServiceInstanceStatusVo>() {
+            @Override
+            protected void checkParams() {
+                // Validate service and instance exist
+                // TODO: Add validation logic
+            }
+            
+            @Override
+            protected ServiceInstanceStatusVo process() {
+                // TODO: Implement instance status update via Eureka API
+                ServiceInstanceStatusVo vo = new ServiceInstanceStatusVo();
+                vo.setInstanceId(instanceId);
+                vo.setStatus(dto.getStatus());
+                vo.setModifiedDate(LocalDateTime.now());
+                return vo;
+            }
+        }.execute();
+    }
+    
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public EurekaConfigVo updateEurekaConfig(EurekaConfigUpdateDto dto) {
+        return new BizTemplate<EurekaConfigVo>() {
+            Security securityDb;
+            
+            @Override
+            protected void checkParams() {
+                securityDb = securityRepo.findByTypeAndScope(SecurityType.EUREKA_CONFIG, "DEFAULT")
+                    .orElse(null);
+            }
+            
+            @Override
+            protected EurekaConfigVo process() {
+                if (securityDb == null) {
+                    securityDb = new Security();
+                    securityDb.setName("Eureka配置");
+                    securityDb.setType(SecurityType.EUREKA_CONFIG);
+                    securityDb.setScope("DEFAULT");
+                }
+                
+                Map<String, Object> config = new HashMap<>();
+                if (dto.getServiceUrl() != null) config.put("serviceUrl", dto.getServiceUrl());
+                if (dto.getEnableAuth() != null) config.put("enableAuth", dto.getEnableAuth());
+                if (dto.getUsername() != null) config.put("username", dto.getUsername());
+                if (dto.getPassword() != null) config.put("password", dto.getPassword());
+                if (dto.getSyncInterval() != null) config.put("syncInterval", dto.getSyncInterval());
+                if (dto.getEnableSsl() != null) config.put("enableSsl", dto.getEnableSsl());
+                if (dto.getConnectTimeout() != null) config.put("connectTimeout", dto.getConnectTimeout());
+                if (dto.getReadTimeout() != null) config.put("readTimeout", dto.getReadTimeout());
+                
+                try {
+                    securityDb.setConfig(objectMapper.writeValueAsString(config));
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to serialize config", e);
+                }
+                
+                securityDb.setEnabled(true);
+                Security saved = securityRepo.save(securityDb);
+                
+                EurekaConfigVo vo = new EurekaConfigVo();
+                vo.setServiceUrl(dto.getServiceUrl());
+                vo.setEnableAuth(dto.getEnableAuth());
+                vo.setUsername(dto.getUsername());
+                vo.setPassword("******");
+                vo.setSyncInterval(dto.getSyncInterval());
+                vo.setEnableSsl(dto.getEnableSsl());
+                vo.setConnectTimeout(dto.getConnectTimeout());
+                vo.setReadTimeout(dto.getReadTimeout());
+                vo.setModifiedDate(LocalDateTime.now());
+                
+                return vo;
+            }
+        }.execute();
+    }
+    
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public EurekaTestVo testEurekaConnection(EurekaTestDto dto) {
+        return new BizTemplate<EurekaTestVo>() {
+            @Override
+            protected void checkParams() {
+                if (dto.getServiceUrl() == null || dto.getServiceUrl().isEmpty()) {
+                    throw new IllegalArgumentException("Eureka服务URL不能为空");
                 }
             }
-
-            // 更新字段
-            existing.setName(service.getName());
-            existing.setCode(service.getCode());
-            existing.setDescription(service.getDescription());
-            existing.setProtocol(service.getProtocol());
-            existing.setVersion(service.getVersion());
-            existing.setBaseUrl(service.getBaseUrl());
-            existing.setApplicationId(service.getApplicationId());
-
-            return serviceRepo.save(existing);
-        });
-    }
-
-    @Override
-    @Transactional
-    public Service enable(String id) {
-        return bizTemplate.execute(() -> {
-            Service service = serviceRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFound("服务不存在: " + id));
-
-            service.setStatus(ServiceStatus.ENABLED);
-            return serviceRepo.save(service);
-        });
-    }
-
-    @Override
-    @Transactional
-    public Service disable(String id) {
-        return bizTemplate.execute(() -> {
-            Service service = serviceRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFound("服务不存在: " + id));
-
-            service.setStatus(ServiceStatus.DISABLED);
-            return serviceRepo.save(service);
-        });
-    }
-
-    @Override
-    @Transactional
-    public void delete(String id) {
-        bizTemplate.execute(() -> {
-            if (!serviceRepo.existsById(id)) {
-                throw new ResourceNotFound("服务不存在: " + id);
+            
+            @Override
+            protected EurekaTestVo process() {
+                // TODO: Implement Eureka connection test
+                EurekaTestVo vo = new EurekaTestVo();
+                vo.setConnected(true);
+                vo.setResponseTime(100);
+                vo.setServicesCount(0);
+                return vo;
             }
-
-            serviceRepo.deleteById(id);
-            return null;
-        });
+        }.execute();
     }
 }
