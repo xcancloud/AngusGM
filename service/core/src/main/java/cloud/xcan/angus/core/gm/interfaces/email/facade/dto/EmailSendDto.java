@@ -30,5 +30,14 @@ public class EmailSendDto {
     private Map<String, String> params;
     
     @Schema(description = "附件列表")
-    private List<String> attachments;
+    private List<EmailAttachment> attachments;
+    
+    @Data
+    public static class EmailAttachment {
+        @Schema(description = "文件名")
+        private String fileName;
+        
+        @Schema(description = "文件URL")
+        private String fileUrl;
+    }
 }

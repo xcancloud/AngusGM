@@ -194,4 +194,16 @@ public class EmailRest {
   public ApiLocaleResult<EmailSmtpTestVo> testSmtpConnection(@Valid @RequestBody EmailSmtpTestDto dto) {
     return ApiLocaleResult.success(emailFacade.testSmtpConnection(dto));
   }
+
+  @Operation(operationId = "getEmailTracking", summary = "获取邮件打开/点击统计", description = "获取指定邮件的打开和点击统计信息")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "获取成功"),
+      @ApiResponse(responseCode = "404", description = "邮件记录不存在")
+  })
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/{id}/stats")
+  public ApiLocaleResult<EmailTrackingVo> getEmailTracking(
+      @Parameter(description = "邮件记录ID") @PathVariable Long id) {
+    return ApiLocaleResult.success(emailFacade.getEmailTracking(id));
+  }
 }

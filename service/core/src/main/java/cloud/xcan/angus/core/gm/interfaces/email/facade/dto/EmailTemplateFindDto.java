@@ -1,17 +1,14 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade.dto;
 
+import cloud.xcan.angus.remote.PageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "邮件模板查询DTO")
-public class EmailTemplateFindDto {
-    
-    @Schema(description = "页码", example = "1")
-    private Integer page = 1;
-    
-    @Schema(description = "每页大小", example = "10")
-    private Integer size = 10;
+public class EmailTemplateFindDto extends PageQuery {
     
     @Schema(description = "搜索关键词")
     private String keyword;

@@ -35,8 +35,13 @@ public class EmailSendCustomDto {
     private List<EmailAttachment> attachments;
     
     @Data
+    @Schema(description = "邮件附件")
     public static class EmailAttachment {
+        
+        @Schema(description = "文件名")
         private String fileName;
+        
+        @Schema(description = "文件URL")
         private String fileUrl;
     }
 }

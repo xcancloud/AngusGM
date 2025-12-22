@@ -1,12 +1,10 @@
 package cloud.xcan.angus.core.gm.interfaces.email.facade;
 
-import cloud.xcan.angus.common.result.PageResult;
+import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.email.facade.vo.*;
 
 public interface EmailFacade {
-    
-    // ==================== 邮件模板管理 ====================
     
     EmailTemplateVo createTemplate(EmailTemplateCreateDto dto);
     
@@ -16,19 +14,13 @@ public interface EmailFacade {
     
     void deleteTemplate(Long id);
     
-    // ==================== SMTP配置 ====================
-    
     EmailSmtpVo updateSmtpConfig(EmailSmtpUpdateDto dto);
-    
-    // ==================== 邮件发送 ====================
     
     EmailSendVo send(EmailSendDto dto);
     
     EmailSendBatchVo sendBatch(EmailSendBatchDto dto);
     
     EmailSendVo sendCustom(EmailSendCustomDto dto);
-    
-    // ==================== 查询 ====================
     
     EmailStatsVo getStats();
     
@@ -39,4 +31,6 @@ public interface EmailFacade {
     EmailSmtpVo getSmtpConfig();
     
     EmailSmtpTestVo testSmtpConnection(EmailSmtpTestDto dto);
+    
+    EmailTrackingVo getEmailTracking(Long id);
 }
