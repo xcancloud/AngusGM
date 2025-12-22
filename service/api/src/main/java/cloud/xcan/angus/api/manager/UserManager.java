@@ -135,6 +135,8 @@ public interface UserManager {
 
   Map<String, UserInfo> getUserInfoMapByUsername(Collection<String> usernames);
 
+  Map<String, UserInfo> getUserInfoMapByEmail(Collection<String> emails);
+
   void setUserNameAndAvatar(Collection<?> targets, String userIdField);
 
   void setUserNameAndAvatar(Collection<?> targets, String userIdField, String userNameField,

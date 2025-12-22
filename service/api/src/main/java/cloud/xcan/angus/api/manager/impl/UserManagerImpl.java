@@ -664,6 +664,22 @@ public class UserManagerImpl implements UserManager {
         ));
   }
 
+  @Override
+  public Map<String, UserInfo> getUserInfoMapByEmail(Collection<String> emails) {
+    if (isEmpty(emails)) {
+      return emptyMap();
+    }
+    return userBaseRepo.findByEmailIn(emails).stream()
+        .collect(Collectors.toMap(UserBase::getUsername,
+            o -> new UserInfo().setId(o.getId())
+                .setUsername(o.getUsername())
+                .setFullName(o.getFullName())
+                .setEmail(o.getEmail())
+                .setMobile(o.getMobile())
+                .setAvatar(o.getAvatar())
+        ));
+  }
+
   @SneakyThrows
   @Override
   public void setUserNameAndAvatar(Collection<?> targets, String userIdField) {

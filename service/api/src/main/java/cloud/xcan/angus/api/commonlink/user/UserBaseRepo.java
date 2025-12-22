@@ -40,4 +40,5 @@ public interface UserBaseRepo extends NameJoinRepository<UserBase, Long>,
 
   Collection<UserBase> findByUsernameIn(Collection<String> usernames);
 
+  Collection<UserBase> findByEmailIn(Collection<String> emails);
 }
