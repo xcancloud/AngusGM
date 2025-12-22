@@ -3,12 +3,16 @@ package cloud.xcan.angus.core.gm.interfaces.quota.facade.internal.assembler;
 import cloud.xcan.angus.core.gm.domain.quota.Quota;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.vo.*;
-import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * <p>Quota assembler for DTO/Domain/VO conversion</p>
+ */
 public class QuotaAssembler {
     
-    public Quota toEntity(QuotaCreateDto dto) {
+    /**
+     * <p>Convert CreateDto to Domain entity</p>
+     */
+    public static Quota toEntity(QuotaCreateDto dto) {
         Quota quota = new Quota();
         quota.setName(dto.getName());
         quota.setType(dto.getType());
@@ -20,7 +24,10 @@ public class QuotaAssembler {
         return quota;
     }
     
-    public Quota toEntity(QuotaUpdateDto dto) {
+    /**
+     * <p>Convert UpdateDto to Domain entity</p>
+     */
+    public static Quota toEntity(QuotaUpdateDto dto) {
         Quota quota = new Quota();
         quota.setId(dto.getId());
         quota.setName(dto.getName());
@@ -32,7 +39,10 @@ public class QuotaAssembler {
         return quota;
     }
     
-    public QuotaDetailVo toDetailVo(Quota quota) {
+    /**
+     * <p>Convert Domain to DetailVo</p>
+     */
+    public static QuotaDetailVo toDetailVo(Quota quota) {
         QuotaDetailVo vo = new QuotaDetailVo();
         vo.setId(quota.getId());
         vo.setName(quota.getName());
@@ -49,7 +59,10 @@ public class QuotaAssembler {
         return vo;
     }
     
-    public QuotaListVo toListVo(Quota quota) {
+    /**
+     * <p>Convert Domain to ListVo</p>
+     */
+    public static QuotaListVo toListVo(Quota quota) {
         QuotaListVo vo = new QuotaListVo();
         vo.setId(quota.getId());
         vo.setName(quota.getName());

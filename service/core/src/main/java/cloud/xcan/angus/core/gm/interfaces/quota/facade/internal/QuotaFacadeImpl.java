@@ -9,12 +9,15 @@ import cloud.xcan.angus.core.gm.interfaces.quota.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.internal.assembler.QuotaAssembler;
 import cloud.xcan.angus.core.gm.interfaces.quota.facade.vo.*;
 import jakarta.annotation.Resource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+/**
+ * <p>Implementation of quota facade</p>
+ */
+@Service
 public class QuotaFacadeImpl implements QuotaFacade {
     
     @Resource
@@ -23,21 +26,18 @@ public class QuotaFacadeImpl implements QuotaFacade {
     @Resource
     private QuotaQuery quotaQuery;
     
-    @Resource
-    private QuotaAssembler assembler;
-    
     @Override
     public QuotaDetailVo create(QuotaCreateDto dto) {
-        Quota quota = assembler.toEntity(dto);
+        Quota quota = QuotaAssembler.toEntity(dto);
         Quota created = quotaCmd.create(quota);
-        return assembler.toDetailVo(created);
+        return QuotaAssembler.toDetailVo(created);
     }
     
     @Override
     public QuotaDetailVo update(QuotaUpdateDto dto) {
-        Quota quota = assembler.toEntity(dto);
+        Quota quota = QuotaAssembler.toEntity(dto);
         Quota updated = quotaCmd.update(quota);
-        return assembler.toDetailVo(updated);
+        return QuotaAssembler.toDetailVo(updated);
     }
     
     @Override
@@ -48,13 +48,13 @@ public class QuotaFacadeImpl implements QuotaFacade {
     @Override
     public QuotaDetailVo findById(Long id) {
         Quota quota = quotaQuery.findById(id).orElseThrow();
-        return assembler.toDetailVo(quota);
+        return QuotaAssembler.toDetailVo(quota);
     }
     
     @Override
     public List<QuotaListVo> findAll(QuotaFindDto dto) {
         return quotaQuery.findAll().stream()
-                .map(assembler::toListVo)
+                .map(QuotaAssembler::toListVo)
                 .collect(Collectors.toList());
     }
     
