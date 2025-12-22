@@ -1,6 +1,6 @@
 package cloud.xcan.angus.core.gm.interfaces.backup.facade;
 
-import cloud.xcan.angus.common.result.PageResult;
+import cloud.xcan.angus.remote.PageResult;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.dto.*;
 import cloud.xcan.angus.core.gm.interfaces.backup.facade.vo.*;
 
@@ -14,8 +14,6 @@ public interface BackupFacade {
     
     BackupDetailVo getBackupDetail(Long id);
     
-    BackupDetailVo updateBackup(Long id, BackupUpdateDto dto);
-    
     void deleteBackup(Long id);
     
     org.springframework.http.ResponseEntity<org.springframework.core.io.InputStreamResource> downloadBackup(Long id);
@@ -28,7 +26,7 @@ public interface BackupFacade {
     
     BackupStatsVo getStats();
     
-    RestoreProgressVo getRestoreProgress(String restoreId);
+    RestoreProgressVo getRestoreProgress(Long restoreId);
     
     // ==================== 备份计划 ====================
     

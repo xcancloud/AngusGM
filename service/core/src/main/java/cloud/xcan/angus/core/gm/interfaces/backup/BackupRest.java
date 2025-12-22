@@ -66,18 +66,6 @@ public class BackupRest {
     return ApiLocaleResult.success(backupFacade.createBackup(dto));
   }
 
-  @Operation(operationId = "updateBackup", summary = "更新备份", description = "根据备份ID更新指定备份记录的信息")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "备份更新成功")
-  })
-  @ResponseStatus(HttpStatus.OK)
-  @PutMapping("/records/{id}")
-  public ApiLocaleResult<BackupDetailVo> updateBackup(
-      @Parameter(description = "备份ID") @PathVariable Long id,
-      @Valid @RequestBody BackupUpdateDto dto) {
-    return ApiLocaleResult.success(backupFacade.updateBackup(id, dto));
-  }
-
   @Operation(operationId = "deleteBackup", summary = "删除备份", description = "根据备份ID删除指定的备份记录")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "备份删除成功")
@@ -152,7 +140,7 @@ public class BackupRest {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/restore/{restoreId}/progress")
   public ApiLocaleResult<RestoreProgressVo> getRestoreProgress(
-      @Parameter(description = "恢复任务ID") @PathVariable String restoreId) {
+      @Parameter(description = "恢复任务ID") @PathVariable Long restoreId) {
     return ApiLocaleResult.success(backupFacade.getRestoreProgress(restoreId));
   }
 

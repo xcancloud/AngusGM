@@ -1,21 +1,26 @@
 package cloud.xcan.angus.core.gm.domain.backup;
 
-import cloud.xcan.angus.core.gm.domain.BaseEntity;
+import cloud.xcan.angus.core.jpa.multitenancy.TenantAuditingEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
- * 备份实体
- * 备份和恢复管理
+ * <p>
+ * Backup domain entity
+ * </p>
  */
 @Getter
 @Setter
 @Entity
 @Table(name = "gm_backup")
-public class Backup extends BaseEntity {
+public class Backup extends TenantAuditingEntity<Backup, Long> {
+
+    @Id
+    private Long id;
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
@@ -57,4 +62,25 @@ public class Backup extends BaseEntity {
 
     @Column(name = "description", length = 500)
     private String description;
+
+    @Override
+    public Long identity() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Backup backup)) {
+            return false;
+        }
+        return Objects.equals(id, backup.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

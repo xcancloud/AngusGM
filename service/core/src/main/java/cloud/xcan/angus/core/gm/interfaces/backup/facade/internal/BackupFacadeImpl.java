@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cloud.xcan.angus.remote.PageResult;
 import static cloud.xcan.angus.core.utils.CoreUtils.buildVoPageResult;
 
 @Component
@@ -32,37 +33,25 @@ public class BackupFacadeImpl implements BackupFacade {
     @Resource
     private BackupQuery backupQuery;
     
-    @Resource
-    private BackupAssembler assembler;
-    
     // ==================== 备份记录 ====================
     
     @Override
     public BackupDetailVo createBackup(BackupCreateDto dto) {
         // 使用Assembler将DTO转换为Domain对象
-        Backup backup = assembler.toEntity(dto);
+        Backup backup = BackupAssembler.toEntity(dto);
         // 调用Cmd服务创建备份
         Backup created = backupCmd.create(backup);
         // 使用Assembler将Domain对象转换为VO
-        return assembler.toDetailVo(created);
+        return BackupAssembler.toDetailVo(created);
     }
     
     @Override
     public BackupDetailVo getBackupDetail(Long id) {
         // 调用Query服务根据ID查找备份
-        Backup backup = backupQuery.findById(id).orElse(null);
-        // 如果找不到备份，返回null或者抛出异常
-        if (backup == null) {
-            return null;
-        }
+        Backup backup = backupQuery.findById(id)
+            .orElseThrow(() -> cloud.xcan.angus.remote.message.http.ResourceNotFound.of("备份记录不存在", new Object[]{}));
         // 使用Assembler将Domain对象转换为VO
-        return assembler.toDetailVo(backup);
-    }
-    
-    @Override
-    public BackupDetailVo updateBackup(Long id, BackupUpdateDto dto) {
-        // TODO: 实现更新备份逻辑
-        return null;
+        return BackupAssembler.toDetailVo(backup);
     }
     
     @Override
@@ -73,26 +62,41 @@ public class BackupFacadeImpl implements BackupFacade {
     
     @Override
     public ResponseEntity<InputStreamResource> downloadBackup(Long id) {
-        // TODO: 实现下载备份文件的具体逻辑
-        // 这里需要根据ID找到备份文件并返回文件流
-        return null;
+        // 查找备份记录
+        Backup backup = backupQuery.findById(id)
+            .orElseThrow(() -> cloud.xcan.angus.remote.message.http.ResourceNotFound.of("备份记录不存在", new Object[]{}));
+        
+        // 检查备份文件是否存在
+        if (backup.getBackupPath() == null || backup.getBackupPath().isEmpty()) {
+            throw cloud.xcan.angus.remote.message.http.ResourceNotFound.of("备份文件不存在", new Object[]{});
+        }
+        
+        // TODO: 实际实现中需要从文件系统读取文件并返回流
+        // 这里返回一个占位实现，实际应该使用FileSystemResource或类似的方式
+        throw new UnsupportedOperationException("文件下载功能待实现");
     }
     
     @Override
     public BackupRestoreVo restoreBackup(Long id, BackupRestoreDto dto) {
+        // 查找备份记录
+        Backup backup = backupQuery.findById(id)
+            .orElseThrow(() -> cloud.xcan.angus.remote.message.http.ResourceNotFound.of("备份记录不存在", new Object[]{}));
+        
+        // 检查备份状态
+        if (backup.getStatus() != BackupStatus.COMPLETED) {
+            throw new IllegalArgumentException("只能恢复已完成的备份");
+        }
+        
         // 调用Cmd服务恢复备份
         backupCmd.restore(id);
         
-        // 获取备份信息
-        Backup backup = backupQuery.findById(id).orElse(null);
-        if (backup == null) {
-            return null;
-        }
+        // 生成恢复任务ID
+        Long restoreId = System.currentTimeMillis();
         
         // 构造返回VO
         BackupRestoreVo vo = new BackupRestoreVo();
-        vo.setBackupId(String.valueOf(id));
-        vo.setRestoreId("RESTORE" + System.currentTimeMillis()); // 生成恢复ID
+        vo.setBackupId(id);
+        vo.setRestoreId(restoreId);
         vo.setStatus("进行中");
         vo.setStartTime(java.time.LocalDateTime.now());
         
@@ -108,7 +112,7 @@ public class BackupFacadeImpl implements BackupFacade {
         Page<Backup> page = backupQuery.find(spec, dto.tranPage());
         
         // 使用buildVoPageResult构建分页结果
-        return buildVoPageResult(page, assembler::toListVo);
+        return buildVoPageResult(page, BackupAssembler::toListVo);
     }
     
     // ==================== 备份统计 ====================
@@ -117,26 +121,37 @@ public class BackupFacadeImpl implements BackupFacade {
     public BackupStatsVo getStats() {
         List<Backup> all = backupQuery.findAll();
         BackupStatsVo stats = new BackupStatsVo();
-        stats.setTotalCount((long) all.size());
-        stats.setCompletedCount(all.stream().filter(b -> b.getStatus() == BackupStatus.COMPLETED).count());
-        stats.setFailedCount(all.stream().filter(b -> b.getStatus() == BackupStatus.FAILED).count());
-        stats.setTotalSize(all.stream().mapToLong(b -> b.getFileSize() != null ? b.getFileSize() : 0).sum());
+        stats.setTotalBackups((long) all.size());
+        stats.setSuccessBackups(all.stream().filter(b -> b.getStatus() == BackupStatus.COMPLETED).count());
+        stats.setFailedBackups(all.stream().filter(b -> b.getStatus() == BackupStatus.FAILED).count());
+        
+        // 计算总大小（字节）
+        long totalSizeBytes = all.stream()
+            .mapToLong(b -> b.getFileSize() != null ? b.getFileSize() : 0)
+            .sum();
+        
+        // 格式化总大小
+        stats.setTotalSize(formatFileSize(totalSizeBytes));
         
         // 设置最后备份时间
         if (!all.isEmpty()) {
-            LocalDateTime lastBackupTime = all.stream()
-                .map(Backup::getCreatedAt)
-                .max(LocalDateTime::compareTo)
+            java.time.LocalDateTime lastBackupTime = all.stream()
+                .map(Backup::getCreatedDate)
+                .filter(date -> date != null)
+                .max(java.time.LocalDateTime::compareTo)
                 .orElse(null);
-            stats.setLastBackupTime(lastBackupTime);
+            if (lastBackupTime != null) {
+                stats.setLastBackupTime(lastBackupTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            }
         }
         
         return stats;
     }
     
     @Override
-    public RestoreProgressVo getRestoreProgress(String restoreId) {
-        // 模拟恢复进度信息
+    public RestoreProgressVo getRestoreProgress(Long restoreId) {
+        // TODO: 实际实现中应该从恢复任务存储中获取进度信息
+        // 这里返回一个模拟实现
         RestoreProgressVo vo = new RestoreProgressVo();
         vo.setRestoreId(restoreId);
         vo.setStatus("进行中");
@@ -197,13 +212,31 @@ public class BackupFacadeImpl implements BackupFacade {
     
     @Override
     public ScheduleRunVo runSchedule(Long id) {
-        // 模拟立即执行备份计划，等待后续实现
+        // TODO: 实际实现中应该调用备份计划执行服务
+        // 这里返回一个模拟实现
         ScheduleRunVo vo = new ScheduleRunVo();
-        vo.setScheduleId(String.valueOf(id));
-        vo.setBackupId("BK" + System.currentTimeMillis()); // 生成备份ID
+        vo.setScheduleId(id);
+        vo.setBackupId(System.currentTimeMillis()); // 生成备份ID
         vo.setStartTime(java.time.LocalDateTime.now());
         
         return vo;
+    }
+    
+    /**
+     * <p>
+     * Format file size to human readable string
+     * </p>
+     */
+    private String formatFileSize(long bytes) {
+        if (bytes < 1024) {
+            return bytes + " B";
+        } else if (bytes < 1024 * 1024) {
+            return String.format("%.2f KB", bytes / 1024.0);
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return String.format("%.2f MB", bytes / (1024.0 * 1024.0));
+        } else {
+            return String.format("%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0));
+        }
     }
     
     @Override

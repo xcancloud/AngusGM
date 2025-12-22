@@ -1,14 +1,18 @@
 package cloud.xcan.angus.core.gm.domain.backup;
 
-import cloud.xcan.angus.core.gm.domain.BaseRepo;
+import cloud.xcan.angus.core.jpa.repository.BaseRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * 备份仓储接口
+ * <p>
+ * Backup repository interface
+ * </p>
  */
-public interface BackupRepo extends BaseRepo<Backup> {
+@NoRepositoryBean
+public interface BackupRepo extends BaseRepository<Backup, Long> {
     
     Optional<Backup> findByName(String name);
     

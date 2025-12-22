@@ -32,14 +32,23 @@ public class BackupDetailVo extends TenantAuditingVo {
     @Schema(description = "备份路径")
     private String backupPath;
     
-    @Schema(description = "文件大小")
-    private Long fileSize;
+    @Schema(description = "文件大小（格式化的字符串，如：2.5 GB）")
+    private String size;
+    
+    @Schema(description = "备份文件路径")
+    private String path;
+    
+    @Schema(description = "持续时间（格式化的字符串，如：15分钟）")
+    private String duration;
     
     @Schema(description = "开始时间")
     private LocalDateTime startTime;
     
     @Schema(description = "结束时间")
     private LocalDateTime endTime;
+    
+    @Schema(description = "文件大小（字节数）")
+    private Long fileSize;
     
     @Schema(description = "保留天数")
     private Integer retentionDays;
