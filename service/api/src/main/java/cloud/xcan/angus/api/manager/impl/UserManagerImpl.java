@@ -669,15 +669,18 @@ public class UserManagerImpl implements UserManager {
     if (isEmpty(emails)) {
       return emptyMap();
     }
-    return userBaseRepo.findByEmailIn(emails).stream()
-        .collect(Collectors.toMap(UserBase::getEmail,
-            o -> new UserInfo().setId(o.getId())
-                .setUsername(o.getUsername())
-                .setFullName(o.getFullName())
-                .setEmail(o.getEmail())
-                .setMobile(o.getMobile())
-                .setAvatar(o.getAvatar())
-        ));
+    Collection<UserBase> users = userBaseRepo.findByEmailIn(emails);
+    if (users.isEmpty()) {
+      return emptyMap();
+    }
+    return users.stream().collect(Collectors.toMap(UserBase::getEmail,
+        o -> new UserInfo().setId(o.getId())
+            .setUsername(o.getUsername())
+            .setFullName(o.getFullName())
+            .setEmail(o.getEmail())
+            .setMobile(o.getMobile())
+            .setAvatar(o.getAvatar())
+    ));
   }
 
   @SneakyThrows
